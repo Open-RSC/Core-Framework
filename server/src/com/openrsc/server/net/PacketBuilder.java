@@ -1,5 +1,7 @@
 package com.openrsc.server.net;
 
+import com.openrsc.server.constants.AppearanceId;
+import com.openrsc.server.util.rsc.CipheredMessage;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -95,6 +97,21 @@ public class PacketBuilder {
 		value &= Integer.MAX_VALUE;
 		if (value <= Short.MAX_VALUE)
 			writeShort(value);
+		else
+			writeInt(Integer.MIN_VALUE + value);
+		return this;
+	}
+
+	/**
+	 * Writes an integer if number cannot be contained in a byte
+	 *
+	 * @param value The number
+	 * @return The PacketBuilder instance, for chaining.
+	 */
+	public PacketBuilder writeUnsignedByteInt(int value) {
+		value &= Integer.MAX_VALUE;
+		if (value < 128)
+			writeByte(value);
 		else
 			writeInt(Integer.MIN_VALUE + value);
 		return this;
@@ -274,30 +291,19 @@ public class PacketBuilder {
 	public void writeSmart08_16(int value) {
 		if (value >= 0 && value < 128) {
 			this.writeByte(value);
-		} else if (value >= 0 && value < '\u8000') {
-			this.writeShort('\u8000' + value);
+		} else if (value >= 0 && value < 32768) {
+			this.writeShort(value + 32768);
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 
-	//TODO: Make this more efficient
 	public void writeRSCString(String string) {
-		byte[] data = DataConversions.stringToBytes(string);
+		CipheredMessage message = new CipheredMessage();
+		DataConversions.encryption.encipher(string, message);
 
-		byte[] packet = new byte[256];
-		int value = data.length;
-		int pointer = 0;
-		if (value >= 0 && value < 128) {
-			packet[pointer++] = (byte) value;
-		} else if (value >= 0 && value < '\u8000') {
-			packet[pointer++] = (byte) (value >> 8);
-			packet[pointer++] = (byte) value;
-		}
-
-		DataConversions.encryption.encryptString(data.length, packet, pointer, data, 0);
-		payload.writeBytes(packet);
-
+		writeSmart08_16(message.decipheredLength);
+		payload.writeBytes(message.messageBuffer, 0, message.encipheredLength);
 	}
 
 	public void writeZeroQuotedString(String string) {
@@ -306,13 +312,23 @@ public class PacketBuilder {
 		payload.writeByte(0);
 	}
 
-	/*public void writeRSCString(String string) {
-		string = DataConversions.formatToRSCString(string);
-		byte[] data = DataConversions.stringToBytes(string);
+	public void writeNonTerminatedString(String string) {
+		payload.writeBytes(string.getBytes());
+	}
 
-		writeSmart08_16(data.length);
-		byte[] dest = new byte[data.length + 1];
-//		RSBufferUtils.stringEncryption.encryptString(data.length, dest.dataBuffer, dest.packetEnd, data, 0, 119);
-		DataConversions.encryption.encryptString(data.length, dest, 0, data, 0);
-	}*/
+	/**
+	 * Writes a byte in the range that is safe for the client to receive in the animation update packet
+	 *
+	 * @param i The byte to write.
+	 * @param clientVersion used to check if the client knows how to display the appearance id being sent.
+	 * @return The PacketBuilder instance, for chaining.
+	 */
+	public PacketBuilder writeAppearanceByte(int i, int clientVersion) {
+		if (i <= AppearanceId.maximumAnimationSprite(clientVersion)) {
+			payload.writeByte(i);
+		} else {
+			payload.writeByte(AppearanceId.NOTHING.id());
+		}
+		return this;
+	}
 }

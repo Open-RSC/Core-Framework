@@ -7,12 +7,13 @@ import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ItemOnGroundItemStruct;
 
-public class ItemUseOnGroundItem implements PacketHandler {
+public class ItemUseOnGroundItem implements PayloadProcessor<ItemOnGroundItemStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, final Player player) throws Exception {
+	public void process(ItemOnGroundItemStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
@@ -23,18 +24,13 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		}
 
 		player.resetAll();
-		Point location = Point.location(packet.readShort(), packet.readShort());
+		Point location = Point.location(payload.groundItemCoord.getX(), payload.groundItemCoord.getY());
 
 		int groundItemId;
 		int inventorySlot;
 
-		if (player.isUsingAuthenticClient()) {
-			groundItemId = packet.readShort();
-			inventorySlot = packet.readShort();
-		} else { // inauthentic has them swapped.
-			inventorySlot = packet.readShort();
-			groundItemId = packet.readShort();
-		}
+		groundItemId = payload.groundItemId;
+		inventorySlot = payload.slotIndex;
 		if (player.getConfig().WANT_EQUIPMENT_TAB && inventorySlot > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;

@@ -1,21 +1,23 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
+import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.GameSettingStruct;
 
-public final class GameSettingHandler implements PacketHandler {
+public final class GameSettingHandler implements PayloadProcessor<GameSettingStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) {
+	public void process(GameSettingStruct payload, Player player) throws Exception {
 
-		final int idx = (int) packet.readByte();
+		final int idx = payload.index;
 		if (idx < 0 || idx > 99) {
 			player.setSuspiciousPlayer(true, "game setting idx < 0 or idx > 99");
 			return;
 		}
 
-		final byte value = packet.readByte();
+		final byte value = (byte) payload.value;
 
 		if (idx >= 4) {
 			if (idx == 4) {
@@ -86,12 +88,19 @@ public final class GameSettingHandler implements PacketHandler {
 			return;
 		}
 
-		if (player.isUsingAuthenticClient()) {
-			// setting 1 is unused :-)
+		if (player.getClientVersion() <= 235) {
 			if (idx == 0) { // Camera Mode Auto
-				player.getSettings().setGameSetting(idx, value == 1);
-			} else { // 2: Number of Mouse Buttons & 3: Sound Enabled
-				player.getSettings().setGameSetting(idx - 1, value == 1);
+				player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_AUTO_CAMERA, payload.cameraModeAuto == 1);
+			} else if (idx == 1) { // 1: Change in PkMode
+				int changesLeft = player.getPkChanges();
+				if (changesLeft > 0) {
+					player.setPkMode(payload.playerKiller);
+					player.setPkChanges(changesLeft - 1);
+				}
+			} else if (idx == 2) { // 2: Number of Mouse Buttons
+				player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS, payload.mouseButtonOne == 1);
+			} else if (idx == 3) { // 3: Sound Enabled
+				player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS, payload.soundDisabled == 1);
 			}
 		} else {
 			player.getSettings().setGameSetting(idx, value == 1);

@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static orsc.Config.isAndroid;
+
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
@@ -102,9 +104,12 @@ public class PacketHandler {
 		put(34, "FREEZE_EXPERIENCE_TOGGLE");
 		put(113, "SEND_IRONMAN");
 		put(115, "SEND_ON_BLACK_HOLE");
+		put(129, "COMBAT_STYLE_CHANGED");
 		put(135, "BANK_PIN_INTERFACE");
 		put(136, "ONLINE_LIST");
+		put(144, "SHOW_POINTS_TO_GP");
 		put(147, "SEND_KILLS2");
+		put(148, "SET_OPENPK_POINTS");
 		put(150, "UPDATE_PRESET");
 		put(254, "UPDATE_EQUIPMENT");
 		put(255, "UPDATE_EQUIPMENT_SLOT");
@@ -392,7 +397,12 @@ public class PacketHandler {
 			else if (opcode == 117) showSleepScreen(length);
 
 				// Not Sleeping
-			else if (opcode == 84) mc.setIsSleeping(false);
+			else if (opcode == 84) {
+				mc.setIsSleeping(false);
+				if (isAndroid() && osConfig.F_SHOWING_KEYBOARD) {
+					mc.clientPort.closeKeyboard();
+				}
+			}
 
 				// Wrong Sleep Word
 			else if (opcode == 194) mc.setSleepingStatusText("Incorrect - Please wait...");
@@ -415,6 +425,9 @@ public class PacketHandler {
 				// Kills2
 			else if (opcode == 147)
 				mc.setStatKills2(packetsIncoming.getShort());
+
+			else if (opcode == 148) // Set OpenPK Points
+				mc.setPoints(packetsIncoming.getLong(0));
 
 			else if (opcode == 98)
 				mc.setExpShared(packetsIncoming.getShort());
@@ -443,6 +456,9 @@ public class PacketHandler {
 				// Shop Dialog
 			else if (opcode == 101) showShopDialog();
 
+			    // OpenPK gp exchange
+			else if (opcode == 144) showPointsToGp();
+
 				// Trade Dialog Update
 			else if (opcode == 97) updateTradeDialog();
 
@@ -466,6 +482,9 @@ public class PacketHandler {
 
 				//toggle experience freeze
 			else if (opcode == 34) mc.toggleExperienceFreeze(packetsIncoming.getByte());
+
+			    //sync combat style with server (needed to compensate for network errors)
+			else if (opcode == 129) gotCombatStylePacket();
 
 			else mc.closeConnection(true);
 
@@ -908,7 +927,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, customProtocol, wantExtendedCatsBehavior;
+		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio;
 
 		String logoSpriteID;
 
@@ -989,8 +1008,11 @@ public class PacketHandler {
 			hideLoginBox = this.getClientStream().getUnsignedByte(); // 74
 			globalFriendChat = this.getClientStream().getUnsignedByte(); // 75
 			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
-			customProtocol = this.getClientStream().getUnsignedByte(); // 77
+			featuresSleep = this.getClientStream().getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 78
+			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
+			wantOpenPkPoints = this.getClientStream().getUnsignedByte(); // 80
+			openPkPointsToGpRatio = this.getClientStream().getUnsignedByte(); // 81
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1068,8 +1090,11 @@ public class PacketHandler {
 			hideLoginBox = packetsIncoming.getUnsignedByte(); // 74
 			globalFriendChat = packetsIncoming.getUnsignedByte(); // 75
 			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
-			customProtocol = packetsIncoming.getUnsignedByte(); // 77
+			featuresSleep = packetsIncoming.getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 78
+			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
+			wantOpenPkPoints = packetsIncoming.getUnsignedByte(); // 80
+			openPkPointsToGpRatio = packetsIncoming.getUnsignedByte(); // 81
 		}
 
 		if (Config.DEBUG) {
@@ -1146,12 +1171,15 @@ public class PacketHandler {
 					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
-					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
-					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
-					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
-					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
-					"\nS_CUSTOM_PROTOCOL " + customProtocol + // 78
-					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior // 79
+					"\nS_WANT_HARVESTING " + wantHarvesting + // 73
+					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 74
+					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 75
+					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 76
+					"\nS_FEATURES_SLEEP " + featuresSleep + // 77
+					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 78
+					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
+					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
+					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio // 81
 			);
 		}
 
@@ -1231,12 +1259,15 @@ public class PacketHandler {
 		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //70
 		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
 		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
-		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
-		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
-		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
-		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
-		props.setProperty("S_CUSTOM_PROTOCOL", customProtocol == 1 ? "true" : "false"); // 78
-		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 79
+		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 73
+		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 74
+		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 75
+		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 76
+		props.setProperty("S_FEATURES_SLEEP", featuresSleep == 1 ? "true" : "false"); // 77
+		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 78
+		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 79
+		props.setProperty("S_WANT_OPENPK_POINTS", wantOpenPkPoints == 1 ? "true" : "false"); // 80
+		props.setProperty("S_OPENPK_POINTS_TO_GP_RATIO", String.valueOf(openPkPointsToGpRatio)); // 81
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1463,6 +1494,12 @@ public class PacketHandler {
 		}
 	}
 
+
+	private void gotCombatStylePacket() {
+		mc.timeOfLastCombatStylePacket = System.currentTimeMillis();
+		mc.proposedStyle = packetsIncoming.getByte();
+	}
+
 	private void updateInventoryItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		int itemID = packetsIncoming.getShort();
@@ -1495,10 +1532,10 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setInventoryItemID(i, itemID);
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
-			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
-				noted = packetsIncoming.getByte() == 1;
-			}
+
+			// must always check for this even if server config has notes off, in case they were enabled previously
+			boolean noted = packetsIncoming.getByte() == 1;
+
 			mc.getInventoryItem(i).setNoted(noted);
 			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, noted).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
@@ -1738,6 +1775,9 @@ public class PacketHandler {
 						mc.showMessage(false, null,
 							com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
 							MessageType.QUEST, 0, null, "@yel@");
+
+						// Discord update
+						Discord.setLastUpdate("Questing");
 					}
 				}
 
@@ -1823,7 +1863,7 @@ public class PacketHandler {
 
 	private void loadExperience() {
 		for (int skill = 0; skill < mudclient.skillCount; ++skill) {
-			mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+			mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 		}
 	}
 
@@ -2018,6 +2058,9 @@ public class PacketHandler {
 
 			mc.setQuestStage(questID, stage);
 		}
+
+		// Discord status
+		Discord.setLastUpdate("Questing");
 	}
 
 	private void showBank() {
@@ -2028,11 +2071,14 @@ public class PacketHandler {
 		for (int slot = 0; slot < mc.getNewBankItemCount(); ++slot) {
 			mc.getBank().addBank(slot, packetsIncoming.getShort(), packetsIncoming.get32());
 		}
+
+		// Discord update
+		Discord.setLastUpdate("Banking");
 	}
 
 	private void updateIndividualExperience() {
 		int skill = packetsIncoming.getUnsignedByte();
-		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 	}
 
 	private void closeDuelDialog() {
@@ -2051,7 +2097,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeRecipientConfirmItem(var4).setNoted(noted);
@@ -2064,7 +2110,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeConfirmItem(var4).setNoted(noted);
@@ -2079,7 +2125,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelOpponentItem(var4).setNoted(noted);
@@ -2132,8 +2178,19 @@ public class PacketHandler {
 		int oldLvl = mc.getPlayerStatBase(skill);
 		mc.setPlayerStatCurrent(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerStatBase(skill, packetsIncoming.getUnsignedByte());
-		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 		updateExperienceTracker(skill, oldXP, oldLvl);
+
+		// Update the discord status
+		final String[] skillNames = {"Attack", "Defense", "Strength", "Hits",
+			"Ranged", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching",
+			"Fishing", "Firemaking", "Crafting", "Smithing", "Mining", "Herblaw",
+			"Agility", "Thieving", "Runecraft", "Harvesting"};
+		if (skill == 0 || skill == 1 || skill == 2 || skill == 3) {
+			Discord.setLastUpdate("Training Combat");
+		} else {
+			Discord.setLastUpdate("Training " + skillNames[skill]);
+		}
 	}
 
 	private void updateExperienceTracker(int skill, int oldXp, int oldLvl) {
@@ -2181,7 +2238,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelOpponentConfirmItem(var4).setNoted(noted);
@@ -2194,7 +2251,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelConfirmItem(var4).setNoted(noted);
@@ -2245,6 +2302,10 @@ public class PacketHandler {
 		mc.getSurface().createCaptchaSprite(sprite);
 
 		mc.setSleepingStatusText(null);
+
+		if (isAndroid() && !osConfig.F_SHOWING_KEYBOARD) {
+			mc.clientPort.drawKeyboard();
+		}
 	}
 
 	private void showServerMessageDialogTwo() {
@@ -2350,6 +2411,13 @@ public class PacketHandler {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
+
+		// Discord status
+		Discord.setLastUpdate("Shopping");
+	}
+
+	private void showPointsToGp() {
+		mc.setShowPointsToGp(true);
 	}
 
 	private void updateTradeDialog() {
@@ -2359,7 +2427,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeRecipientItem(var4).setNoted(noted);
@@ -2372,7 +2440,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeItem(var4).setNoted(noted);

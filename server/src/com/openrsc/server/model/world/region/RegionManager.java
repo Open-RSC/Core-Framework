@@ -10,9 +10,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RegionManager {
@@ -47,7 +49,7 @@ public class RegionManager {
 	 */
 	public Collection<Player> getLocalPlayers(final Entity entity) {
 		final LinkedHashSet<Player> localPlayers = new LinkedHashSet<Player>();
-		for (final Region region : getSurroundingRegions(entity.getLocation())) {
+		for (final Region region : getVisibleRegions(entity.getLocation())) {
 			for (final Player player : region.getPlayers()) {
 				if (player.withinRange(entity)) {
 					localPlayers.add(player);
@@ -65,7 +67,7 @@ public class RegionManager {
 	 */
 	public Collection<Npc> getLocalNpcs(final Entity entity) {
 		final LinkedHashSet<Npc> localNpcs = new LinkedHashSet<>();
-		for (final Region region : getSurroundingRegions(entity.getLocation())) {
+		for (final Region region : getVisibleRegions(entity.getLocation())) {
 			for (final Npc npc : region.getNpcs()) {
 				if (npc.withinRange(entity)) {
 					localNpcs.add(npc);
@@ -77,13 +79,18 @@ public class RegionManager {
 
 	public Collection<GameObject> getLocalObjects(final Mob entity) {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
-		for (final Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext(); ) {
+		for (final Iterator<Region> region = getVisibleRegions(entity.getLocation()).iterator(); region.hasNext(); ) {
 			Collection<GameObject> objects = region.next().getGameObjects();
 			synchronized (objects) {
 				for (final Iterator<GameObject> o = objects.iterator(); o.hasNext(); ) {
-					if (o == null) continue;
 					final GameObject gameObject = o.next();
-					if (gameObject.getLocation().withinGridRange(entity.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE)) {
+					if (gameObject
+						.getLocation()
+						.withinGridRange(
+							entity.getLocation(),
+							getWorld().getServer().getConfig().VIEW_DISTANCE
+						)
+					) {
 						localObjects.add(gameObject);
 					}
 				}
@@ -94,7 +101,7 @@ public class RegionManager {
 
 	public Collection<GroundItem> getLocalGroundItems(final Mob entity) {
 		final LinkedHashSet<GroundItem> localItems = new LinkedHashSet<GroundItem>();
-		for (final Region region : getSurroundingRegions(entity.getLocation())) {
+		for (final Region region : getVisibleRegions(entity.getLocation())) {
 			for (final GroundItem o : region.getGroundItems()) {
 				if (o.getLocation().withinGridRange(entity.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE)) {
 					localItems.add(o);
@@ -102,6 +109,54 @@ public class RegionManager {
 			}
 		}
 		return localItems;
+	}
+
+	/**
+	 * Gets regions within range of the given location
+	 * @param location location
+	 * @return regions within range of the given location
+	 */
+	public LinkedHashSet<Region> getVisibleRegions(final Point location) {
+		// View distance is in multiples of 8
+		final int viewDistance = getWorld().getServer().getConfig().VIEW_DISTANCE << 3;
+
+		final int regionX = location.getX() / Constants.REGION_SIZE;
+		final int regionY = location.getY() / Constants.REGION_SIZE;
+
+		final int offsetX = location.getX() % Constants.REGION_SIZE;
+		final int offsetY = location.getY() % Constants.REGION_SIZE;
+
+		List<Integer> xMod = new ArrayList<>(2);
+		List<Integer> yMod = new ArrayList<>(2);
+		xMod.add(0);
+		yMod.add(0);
+
+		final LinkedHashSet<Region> visible = new LinkedHashSet<>();
+		if(offsetX <= viewDistance) {
+			xMod.add(-1);
+		} else if(Constants.REGION_SIZE - offsetX <= viewDistance) {
+			xMod.add(1);
+		}
+
+		if(offsetY <= viewDistance) {
+			yMod.add(-1);
+		} else if(Constants.REGION_SIZE - offsetY <= viewDistance) {
+			yMod.add(1);
+		}
+
+		for(int x : xMod) {
+			for(int y : yMod) {
+				final Region tmpRegion = getRegionFromSectorCoordinates(
+						regionX + x,
+						regionY + y
+				);
+				if (tmpRegion != null) {
+					visible.add(tmpRegion);
+				}
+			}
+		}
+
+		return visible;
 	}
 
 	/**
@@ -169,7 +224,8 @@ public class RegionManager {
 		return getTile(point.getX(), point.getY());
 	}
 
-	private ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Region>> getRegions() {
+	// originally private, set to public to access for reset event
+	public ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Region>> getRegions() {
 		return regions;
 	}
 

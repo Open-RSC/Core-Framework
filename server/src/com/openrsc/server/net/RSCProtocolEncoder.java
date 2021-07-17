@@ -13,9 +13,8 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
     public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 
     private boolean isInauthenticPacket(int opcode) {
-        switch (opcode) {
+    	switch (opcode) {
             case 19: // server configs for inauthentic client
-            case 76: // recovery questions
                 return true;
             default:
                 return false;
@@ -34,30 +33,25 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
 		}
 
 		if (!message.isRaw()) {
-            byte authenticClient;
-            try {
-                if (att.authenticClient.get()) {
-                    authenticClient = 1;
-                } else {
-                    authenticClient = 0;
-                }
-            } catch (NullPointerException e) {
-                authenticClient = 127;
-            }
-            if (isInauthenticPacket(message.getID()) || authenticClient == 0) {
-                // This is code only to support RSCL based clients which simplified the network protocol
-                int packetLength = message.getBuffer().readableBytes();
-                ByteBuf buffer = Unpooled.buffer(packetLength + 3);
+            Short authenticClient = null;
+			if (att.authenticClient.get() != null) {
+				authenticClient = att.authenticClient.get();
+			}
 
-                buffer.writeShort(buffer.capacity());
-                buffer.writeByte(message.getID());
+			if (authenticClient == null || isInauthenticPacket(message.getID()) || authenticClient == -1) {
+				// This is code only to support RSCL based clients which simplified the network protocol
+				int packetLength = message.getBuffer().readableBytes();
+				ByteBuf buffer = Unpooled.buffer(packetLength + 3);
 
-                buffer.writeBytes(message.getBuffer());
-                outBuffer.writeBytes(buffer);
+				buffer.writeShort(buffer.capacity());
+				buffer.writeByte(message.getID());
 
-            } else {
-                // Authentic Packet Handling
-                int packetLength = message.getBuffer().readableBytes() + 1; // + 1 for opcode
+				buffer.writeBytes(message.getBuffer());
+				outBuffer.writeBytes(buffer);
+			} else if (authenticClient >= 183) {
+				// Modern Authentic Packet Handling (With ISAAC)
+				// Don't know exactly when ISAAC started getting used, but mudclient 183 from 2004-02-04 uses opcode shuffling
+				int packetLength = message.getBuffer().readableBytes() + 1; // + 1 for opcode
 
 				/* debug info
 				if (message.getID() != 191 && message.getID() != 79 && message.getID() != 48) {
@@ -65,25 +59,25 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
 				}
 				*/
 
-                ByteBuf buffer;
-                int encodedOpcode;
-                if (packetLength >= 160) {
-                    buffer = Unpooled.buffer(packetLength + 2); // + 2 to hold length
-                    buffer.writeByte((byte) (packetLength / 256 + 160));
-                    buffer.writeByte((byte) (packetLength & 0xFF));
+				ByteBuf buffer;
+				int encodedOpcode;
+				if (packetLength >= 160) {
+					buffer = Unpooled.buffer(packetLength + 2); // + 2 to hold length
+					buffer.writeByte((byte) (packetLength / 256 + 160));
+					buffer.writeByte((byte) (packetLength & 0xFF));
 
-                    encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
-                    buffer.writeByte(encodedOpcode);
+					encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
+					buffer.writeByte(encodedOpcode);
 
-                    buffer.writeBytes(message.getBuffer());
+					buffer.writeBytes(message.getBuffer());
 
-                } else {
-                    buffer = Unpooled.buffer(packetLength + 1); // + 1 to hold length
-                    buffer.writeByte((byte) packetLength);
-                    int bufferLen = message.getBuffer().readableBytes();
+				} else {
+					buffer = Unpooled.buffer(packetLength + 1); // + 1 to hold length
+					buffer.writeByte((byte) packetLength);
+					int bufferLen = message.getBuffer().readableBytes();
 
-                    if (packetLength != 1) {
-                        // Strangely, the last byte of the Payload goes between length and encoded opcode
+					if (packetLength != 1) {
+						// Strangely, the last byte of the Payload goes between length and encoded opcode
 						try {
 							buffer.writeByte(message.getBuffer().slice(bufferLen - 1, 1).readByte());
 						} catch (IndexOutOfBoundsException e) {
@@ -96,27 +90,69 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
 							}
 						}
 
-                        encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
-                        buffer.writeByte(encodedOpcode);
+						encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
+						buffer.writeByte(encodedOpcode);
 
-                        buffer.writeBytes(message.getBuffer().slice(0, bufferLen - 1));
-                    } else {
-                        // single opcode payload
-                        encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
-                        buffer.writeByte(encodedOpcode);
-                    }
-                }
+						buffer.writeBytes(message.getBuffer().slice(0, bufferLen - 1));
+					} else {
+						// single opcode payload
+						encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
+						buffer.writeByte(encodedOpcode);
+					}
+				}
 
+				outBuffer.writeBytes(buffer);
+			} else if (authenticClient >= 93) {
+				int packetLength = message.getBuffer().readableBytes() + 1; // + 1 for opcode
 
-                /* debug info
-                if (message.getID() != 191 && message.getID() != 79 && message.getID() != 48) {
-                    System.out.println(String.format("OPCODE CLEAR: %d; CODED: %d", message.getID(), encodedOpcode));
-                    Packet.printBuffer(buffer, "Outgoing");
-                }
-                */
+				ByteBuf buffer;
+				if (packetLength >= 160) {
+					buffer = Unpooled.buffer(packetLength + 2); // + 2 to hold length
+					buffer.writeByte((byte) (packetLength / 256 + 160));
+					buffer.writeByte((byte) (packetLength & 0xFF));
 
-                outBuffer.writeBytes(buffer);
-            }
+					buffer.writeByte(message.getID());
+					buffer.writeBytes(message.getBuffer());
+
+				} else {
+					buffer = Unpooled.buffer(packetLength + 1); // + 1 to hold length
+					buffer.writeByte((byte) packetLength);
+					int bufferLen = message.getBuffer().readableBytes();
+
+					if (packetLength != 1) {
+						// Strangely, the last byte of the Payload goes between length and encoded opcode
+						try {
+							buffer.writeByte(message.getBuffer().slice(bufferLen - 1, 1).readByte());
+						} catch (IndexOutOfBoundsException e) {
+							// This should probably never happen, but "Just In Case" it is good to handle it b/c otherwise it fails silently
+							System.out.println(String.format("Warning: index out of bounds on sending last byte of opcode %d", message.getID()));
+							System.out.println(e.toString());
+							if (message.getBuffer().hasArray()) {
+								byte[] bArr = message.getBuffer().array();
+								buffer.writeByte(bArr[bArr.length - 1]);
+							}
+						}
+
+						buffer.writeByte(message.getID());
+						buffer.writeBytes(message.getBuffer().slice(0, bufferLen - 1));
+					} else {
+						// single opcode payload
+						buffer.writeByte(message.getID());
+					}
+				}
+
+				outBuffer.writeBytes(buffer);
+			} else if (authenticClient >= 14) {
+				//TODO: verify if always holds like this
+				int packetLength = message.getBuffer().readableBytes();
+				ByteBuf buffer = Unpooled.buffer(packetLength + 3);
+
+				buffer.writeShort(packetLength + 1);
+				buffer.writeByte(message.getID());
+
+				buffer.writeBytes(message.getBuffer());
+				outBuffer.writeBytes(buffer);
+			}
 		} else {
             outBuffer.writeBytes(message.getBuffer());
 		}

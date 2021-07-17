@@ -3,16 +3,17 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.NoPayloadStruct;
 
 import java.util.Optional;
 
-public class BlackHoleHandler implements PacketHandler {
+public class BlackHoleHandler implements PayloadProcessor<NoPayloadStruct, OpcodeIn> {
 
 	@Override
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(NoPayloadStruct payload, Player player) throws Exception {
 		if (player == null) {
 			return;
 		}

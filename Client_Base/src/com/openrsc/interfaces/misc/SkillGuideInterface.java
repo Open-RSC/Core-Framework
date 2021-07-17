@@ -269,6 +269,7 @@ public final class SkillGuideInterface {
 		}
 		if (mc.getSkillGuideChosen().equals("Strength")) {
 			skillMenuEntries.add(new SkillMenuItem(90, "", "Strength raises your max hit with melee"));
+			skillMenuEntries.add(new SkillMenuItem(1288, "50", "Legend's Guild (with completion of Legend's Quest)"));
 			if (Config.S_WANT_CUSTOM_SPRITES) {
 				skillMenuEntries.add(new SkillMenuItem(1381, "99", "Strength Cape"));
 			}
@@ -424,20 +425,24 @@ public final class SkillGuideInterface {
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Prayer")) {
-			skillMenuEntries.add(new SkillMenuItem(44, "1", "Thick skin - Increases your defense by 5%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "4", "Burst of strength - Increases your strength by 5%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "7", "Clarity of thought - Increases your attack by 5%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "10", "Rock skin - Increases your defense by 10%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "13", "Superhuman strength - Increases your strength by 10%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "16", "Improved reflexes + Increases your attack by 10%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "19", "Rapid restore - 2x restore rate for all stats except hits"));
-			skillMenuEntries.add(new SkillMenuItem(44, "22", "Rapid heal - 2x restore rate for hitpoints stat"));
-			skillMenuEntries.add(new SkillMenuItem(44, "25", "Protect items - Keep 1 extra item if you die"));
-			skillMenuEntries.add(new SkillMenuItem(44, "28", "Steel skin - Increases your defense by 15%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "31", "Ultimate strength - Increases your strength by 15%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "34", "Incredible reflexes - Increases your attack by 15%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "37", "Paralyze monster - Stops monsters from fighting back"));
-			skillMenuEntries.add(new SkillMenuItem(44, "40", "Protect from missiles - 100% protection from ranged attacks"));
+			if (curTab == 0) {
+				skillMenuEntries.add(new SkillMenuItem(44, "1", "Thick skin - Increases your defense by 5%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "4", "Burst of strength - Increases your strength by 5%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "7", "Clarity of thought - Increases your attack by 5%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "10", "Rock skin - Increases your defense by 10%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "13", "Superhuman strength - Increases your strength by 10%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "16", "Improved reflexes + Increases your attack by 10%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "19", "Rapid restore - 2x restore rate for all stats except hits"));
+				skillMenuEntries.add(new SkillMenuItem(44, "22", "Rapid heal - 2x restore rate for hitpoints stat"));
+				skillMenuEntries.add(new SkillMenuItem(44, "25", "Protect items - Keep 1 extra item if you die"));
+				skillMenuEntries.add(new SkillMenuItem(44, "28", "Steel skin - Increases your defense by 15%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "31", "Ultimate strength - Increases your strength by 15%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "34", "Incredible reflexes - Increases your attack by 15%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "37", "Paralyze monster - Stops monsters from fighting back"));
+				skillMenuEntries.add(new SkillMenuItem(44, "40", "Protect from missiles - 100% protection from ranged attacks"));
+			} else if (curTab == 1) {
+				skillMenuEntries.add(new SkillMenuItem(388, "31", "Monastery"));
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Magic")) {
 			if (curTab == 0) {
@@ -493,15 +498,17 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(184, "1", "Wizard hats and robes"));
 				skillMenuEntries.add(new SkillMenuItem(702, "1", "Robes of Zamorak"));
 				skillMenuEntries.add(new SkillMenuItem(1215, "60", "God capes"));
-				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Magic Cape"));
-				}
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(101, "1", "Basic staves"));
 				skillMenuEntries.add(new SkillMenuItem(617, "30", "Battlestaves"));
 				skillMenuEntries.add(new SkillMenuItem(684, "40", "Enchanted battlestaves"));
 				skillMenuEntries.add(new SkillMenuItem(1000, "50", "Staff of Iban"));
 				skillMenuEntries.add(new SkillMenuItem(1218, "60", "God staves"));
+			} else if (curTab == 3) {
+				skillMenuEntries.add(new SkillMenuItem(185, "66", "Wizards' Guild"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Magic Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Cooking")) {
@@ -561,6 +568,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(909, "30", "Worm Hole"));
 				skillMenuEntries.add(new SkillMenuItem(910, "30", "Tangled Toads Legs"));
 			} else if (curTab == 7) {
+				skillMenuEntries.add(new SkillMenuItem(192, "32", "Cooks' Guild"));
 				skillMenuEntries.add(new SkillMenuItem(142, "35", "Wine"));
 				skillMenuEntries.add(new SkillMenuItem(1269, "50", "Oomlie Meat Parcel"));
 				skillMenuEntries.add(new SkillMenuItem(1102, "58", "Tasty Ugthanki Kebab"));
@@ -581,6 +589,8 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(636, "75", "Magic trees"));
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(405, "1", "All axes"));
+			} else if (curTab == 2) {
+				skillMenuEntries.add(new SkillMenuItem(88, "", "Woodcutting Guild (Coming soon)"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Fletching")) {
@@ -645,6 +655,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1192, "79", "Sea Turtle - Fishing Trawler"));
 				skillMenuEntries.add(new SkillMenuItem(1190, "81", "Manta Ray - Fishing Trawler"));
 			} else if (curTab == 1) {
+				skillMenuEntries.add(new SkillMenuItem(379, "68", "Fishing Guild"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1380, "99", "Fishing Cape"));
 				}
@@ -665,9 +676,6 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(16, "1", "Leather Gloves"));
 				skillMenuEntries.add(new SkillMenuItem(17, "7", "Boots"));
 				skillMenuEntries.add(new SkillMenuItem(15, "14", "Leather Armour"));
-				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Crafting Cape"));
-				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(135, "1", "Pot"));
 				skillMenuEntries.add(new SkillMenuItem(251, "4", "Pie Dish"));
@@ -693,6 +701,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(285, "18", "Emerald Ring"));
 				skillMenuEntries.add(new SkillMenuItem(290, "24", "Emerald Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(298, "30", "Emerald Amulet"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1321, "30", "Opal Ring"));
 				skillMenuEntries.add(new SkillMenuItem(286, "30", "Ruby Ring"));
 				skillMenuEntries.add(new SkillMenuItem(291, "40", "Ruby Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(287, "42", "Diamond Ring"));
@@ -721,8 +730,10 @@ public final class SkillGuideInterface {
 					skillMenuEntries.add(new SkillMenuItem(1385, "1", "Uncharged talismans"));
 				}
 				skillMenuEntries.add(new SkillMenuItem(779, "34", "Oyster Pearls"));
+				skillMenuEntries.add(new SkillMenuItem(191, "40", "Crafting Guild"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1347, "90", "King Black Dragon Scale"));
+					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Crafting Cape"));
 				}
 			}
 		}
@@ -889,6 +900,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1261, "31", "Adamant Pickaxe"));
 				skillMenuEntries.add(new SkillMenuItem(1262, "41", "Rune Pickaxe"));
 			} else if (curTab == 2) {
+				skillMenuEntries.add(new SkillMenuItem(1259, "60", "Mining Guild"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1377, "99", "Mining Cape"));
 				}

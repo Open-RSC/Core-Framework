@@ -2,17 +2,14 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.EquipRequest;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.EquipStruct;
 
-import static com.openrsc.server.net.rsc.OpcodeIn.ITEM_EQUIP_FROM_BANK;
-import static com.openrsc.server.net.rsc.OpcodeIn.ITEM_EQUIP_FROM_INVENTORY;
+public final class ItemEquip implements PayloadProcessor<EquipStruct, OpcodeIn> {
 
-public final class ItemEquip implements PacketHandler {
-
-	public void handlePacket(Packet packet, Player player) throws Exception {
-		OpcodeIn opcode = OpcodeIn.get(packet.getID());
+	public void process(EquipStruct payload, Player player) throws Exception {
+		OpcodeIn opcode = payload.getOpcode();
 
 		// Make sure the opcode is valid
 		if (opcode == null) {
@@ -28,10 +25,10 @@ public final class ItemEquip implements PacketHandler {
 		request.player = player;
 		request.sound = true;
 
-		if (opcode == ITEM_EQUIP_FROM_INVENTORY) {
+		if (opcode == OpcodeIn.ITEM_EQUIP_FROM_INVENTORY) {
 			player.resetAllExceptDueling();
 
-			int inventorySlot = packet.readShort();
+			int inventorySlot = payload.slotIndex;
 			if (inventorySlot < 0 || inventorySlot >= 30) {
 				player.setSuspiciousPlayer(true, "inventorySlot < 0 or inventorySlot >= 30");
 				return;
@@ -40,15 +37,15 @@ public final class ItemEquip implements PacketHandler {
 			request.item = player.getCarriedItems().getInventory().get(inventorySlot);
 			request.requestType = EquipRequest.RequestType.FROM_INVENTORY;
 			request.inventorySlot = inventorySlot;
-		} else if (opcode == ITEM_EQUIP_FROM_BANK) {
+		} else if (opcode == OpcodeIn.ITEM_EQUIP_FROM_BANK) {
 			if (!player.getConfig().WANT_EQUIPMENT_TAB) {
 				player.setSuspiciousPlayer(true, "tried to equip from bank on a classic world");
 				return;
 			}
 			player.resetAllExceptBank();
-			int bankSlot = packet.readShort();
+			int bankSlot = payload.slotIndex;
 
-			if (bankSlot < 0 || bankSlot >= player.getBankSize()) {
+			if (bankSlot < 0 || bankSlot >= player.getWorld().getMaxBankSize()) {
 				player.setSuspiciousPlayer(true, "bankSlot < 0 or bankSlot >= bank size");
 				return;
 			}
@@ -71,7 +68,7 @@ public final class ItemEquip implements PacketHandler {
 		}
 
 		//Make sure the item isn't already wielded
-		if (opcode == ITEM_EQUIP_FROM_INVENTORY) {
+		if (opcode == OpcodeIn.ITEM_EQUIP_FROM_INVENTORY) {
 			if (request.item.isWielded()) {
 				player.setSuspiciousPlayer(true, "tried to equip an item that was already wielded");
 				return;

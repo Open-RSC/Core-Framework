@@ -6,11 +6,11 @@ import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ItemOnObjectStruct;
 
-public class ItemUseOnObject implements PacketHandler {
+public class ItemUseOnObject implements PayloadProcessor<ItemOnObjectStruct, OpcodeIn> {
 
 	private void handleDoor(final Player player, final Point location,
 							final GameObject object, final int dir, final Item item) {
@@ -74,7 +74,7 @@ public class ItemUseOnObject implements PacketHandler {
 		});
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ItemOnObjectStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
@@ -83,27 +83,27 @@ public class ItemUseOnObject implements PacketHandler {
 			player.resetPath();// sendSound
 			return;
 		}
-		int pID = packet.getID();
+		OpcodeIn pID = payload.getOpcode();
 		player.resetAll();
 		GameObject object;
 		Item item;
-		int packetOne = OpcodeIn.USE_WITH_BOUNDARY.getOpcode();
-		int packetTwo = OpcodeIn.USE_ITEM_ON_SCENERY.getOpcode();
+		OpcodeIn packetOne = OpcodeIn.USE_WITH_BOUNDARY;
+		OpcodeIn packetTwo = OpcodeIn.USE_ITEM_ON_SCENERY;
 
 		if (pID == packetOne) { // Use Item on Boundary
-			object = player.getViewArea().getWallObjectWithDir(Point.location(packet.readShort(), packet.readShort()), packet.readByte());
+			object = player.getViewArea().getWallObjectWithDir(Point.location(payload.coordObject.getX(), payload.coordObject.getY()), payload.direction);
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null door");
 				player.resetPath();
 				return;
 			}
 			int dir = object.getDirection();
-			int slotID = packet.readShort();
+			int slotID = payload.slotID;
 			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
-				//they used the item from their equipment slot
-				if (!player.isUsingAuthenticClient()) {
-					int itemID = packet.readShort();
+				// they used an item from their equipment slot
+				if (player.isUsingCustomClient()) {
+					int itemID = payload.itemID;
 					int realSlot = player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID);
 					if (realSlot == -1)
 						return;
@@ -111,7 +111,7 @@ public class ItemUseOnObject implements PacketHandler {
 					if (item == null)
 						return;
 				} else {
-					player.message("authentic client can't use item from non-existent equipment slot.");
+					player.message("only custom clients can use items from the equipment slots.");
 					return;
 				}
 			} else
@@ -122,13 +122,13 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			handleDoor(player, object.getLocation(), object, dir, item);
 		} else if (pID == packetTwo) { // Use Item on Scenery
-			object = player.getViewArea().getGameObject(Point.location(packet.readShort(), packet.readShort()));
+			object = player.getViewArea().getGameObject(Point.location(payload.coordObject.getX(), payload.coordObject.getY()));
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null GameObject");
 				player.resetPath();
 				return;
 			}
-			int slotID = packet.readShort();
+			int slotID = payload.slotID;
 			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
 				item = player.getCarriedItems().getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else

@@ -2,8 +2,9 @@ package com.openrsc.server.plugins.authentic.defaults;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.TelePoint;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -118,6 +119,7 @@ public class Ladders {
 			}
 		} else if (obj.getID() == 776) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.PARAMAYA_REST_TICKET.id(), Optional.of(false))) {
+				player.getCarriedItems().remove(new Item(ItemId.PARAMAYA_REST_TICKET.id()));
 				player.message("The barman takes your ticket and allows you up to");
 				player.message("the dormitory.");
 				player.teleport(395, 2713);
@@ -143,7 +145,7 @@ public class Ladders {
 						"Oh sorry");
 					if (op == 0) {
 						say(player, abbot, "Well can I join your order?");
-						if (getCurrentLevel(player, Skills.PRAYER) >= 31) {
+						if (getCurrentLevel(player, Skill.PRAYER.id()) >= 31) {
 							npcsay(player, abbot, "Ok I see you are someone suitable for our order",
 								"You may join");
 							player.getCache().set("prayer_guild", 1);
@@ -167,7 +169,7 @@ public class Ladders {
 		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
 			// Ladder
-			if (getCurrentLevel(player, Skills.MINING) < 60) {
+			if (getCurrentLevel(player, Skill.MINING.id()) < 60) {
 				Npc dwarf = player.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {
 					npcYell(player, dwarf,
@@ -178,7 +180,7 @@ public class Ladders {
 			} else {
 				player.teleport(274, 3397, false);
 			}
-		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
+		} else if (obj.getID() == 199) { // ladder to black hole
 			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
 				mes("you seem to be missing a disk to use the ladder");
 				delay(3);

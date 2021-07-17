@@ -1,9 +1,13 @@
 package com.openrsc.server.model.world.region;
 
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GameObjectType;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,12 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 public class Region {
-	/**
-	 * The asynchronous logger.
-	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
@@ -26,22 +26,22 @@ public class Region {
 	/**
 	 * A list of players in this region.
 	 */
-	final private HashSet<Player> players = new HashSet<Player>();
+	final private Multimap<Point, Player> players = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of NPCs in this region.
 	 */
-	final private HashSet<Npc> npcs = new HashSet<Npc>();
+	final private Multimap<Point, Npc> npcs = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of objects in this region.
 	 */
-	final private HashSet<GameObject> objects = new HashSet<>();
+	final private Multimap<Point, GameObject> objects = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of objects in this region.
 	 */
-	final private HashSet<GroundItem> items = new HashSet<>();
+	final private Multimap<Point, GroundItem> items = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of tiles in this region.
@@ -65,6 +65,7 @@ public class Region {
 
 	/**
 	 * This constructor is used to create a blank region
+	 *
 	 * @param regionManager
 	 * @param regionX
 	 * @param regionY
@@ -98,10 +99,8 @@ public class Region {
 	 *
 	 * @return The list of players.
 	 */
-	public Collection<Player> getPlayers() {
-		synchronized (players) {
-			return players;
-		}
+	protected Collection<Player> getPlayers() {
+		return players.values();
 	}
 
 	/**
@@ -109,10 +108,8 @@ public class Region {
 	 *
 	 * @return The list of NPCs.
 	 */
-	public Collection<Npc> getNpcs() {
-		synchronized (npcs) {
-			return npcs;
-		}
+	protected Collection<Npc> getNpcs() {
+		return npcs.values();
 	}
 
 	/**
@@ -121,190 +118,133 @@ public class Region {
 	 * @return The list of objects.
 	 */
 	public Collection<GameObject> getGameObjects() {
-		synchronized (objects) {
-			return objects;
+		return objects.values();
+	}
+
+	protected Collection<GroundItem> getGroundItems() {
+		return items.values();
+	}
+
+	public void removeEntity(Entity entity) {
+		removeEntity(entity.getLocation(), entity);
+	}
+
+	public void removeEntity(Point location, final Entity entity) {
+		if (entity.isPlayer()) {
+			players.remove(location, entity);
+		} else if (entity.isNpc()) {
+			npcs.remove(location, entity);
+		} else if (entity instanceof GameObject) {
+			objects.remove(location, entity);
+		} else if (entity instanceof GroundItem) {
+			items.remove(location, entity);
 		}
 	}
 
-	public Iterable<GroundItem> getGroundItems() {
-		synchronized (items) {
-			return items;
-		}
-	}
-
-	public void removeEntity(final Entity e) {
-		if (e.isPlayer()) {
-			synchronized (players) {
-				players.remove(e);
-			}
-		} else if (e.isNpc()) {
-			synchronized (npcs) {
-				npcs.remove(e);
-			}
-		} else if (e instanceof GameObject) {
-			synchronized (objects) {
-				objects.remove(e);
-			}
-		} else if (e instanceof GroundItem) {
-			synchronized (items) {
-				items.remove(e);
-			}
-		}
-	}
-
-	public void addEntity(final Entity e) {
-		if (e.isRemoved()) {
+	public void addEntity(final Entity entity) {
+		if (entity.isRemoved()) {
 			return;
 		}
-		if (e.isPlayer()) {
-			synchronized (players) {
-				players.add((Player) e);
-			}
-		} else if (e.isNpc()) {
-			synchronized (npcs) {
-				npcs.add((Npc) e);
-			}
-		} else if (e instanceof GameObject) {
-			synchronized (objects) {
-				objects.add((GameObject) e);
-			}
-		} else if (e instanceof GroundItem) {
-			synchronized (items) {
-				items.add((GroundItem) e);
-			}
+		switch (entity.getEntityType()) {
+			case PLAYER:
+				players.put(entity.getLocation(), (Player) entity);
+				break;
+			case NPC:
+				npcs.put(entity.getLocation(), (Npc) entity);
+				break;
+			case GAME_OBJECT:
+				objects.put(entity.getLocation(), (GameObject) entity);
+				break;
+			case GROUND_ITEM:
+				items.put(entity.getLocation(), (GroundItem) entity);
+				break;
 		}
+	}
+
+	private String stringifyEntities(String title, Multimap<Point, ? extends Entity> multimap) {
+		StringBuilder sb = new StringBuilder(2000);
+		sb.append(title).append(":\n");
+		for (Entity entity : multimap.values()) {
+			sb.append("\t").append(entity).append("\n");
+		}
+		return sb.toString();
 	}
 
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(2000);
-		sb.append("Players:\n");
-		for (final Player p : players) {
-			sb.append("\t").append(p).append("\n");
-		}
-
-		sb.append("\nNpcs:\n");
-		for (final Npc n : npcs) {
-			sb.append("\t").append(n).append("\n");
-		}
-
-		sb.append("\nItems:\n");
-		for (final GroundItem i : items) {
-			sb.append("\t").append(i).append("\n");
-		}
-
-		sb.append("\nObjects:\n");
-		for (final Object o : objects) {
-			sb.append("\t").append(o).append("\n");
-		}
-
-		return sb.toString();
+		return toString(true, true, true, true);
 	}
 
 	public String toString(final boolean debugPlayers, final boolean debugNpcs, final boolean debugItems, final boolean debugObjects) {
 		final StringBuilder sb = new StringBuilder(2000);
 		if (debugPlayers) {
-			sb.append("Players:\n");
-			for (final Player p : players) {
-				sb.append("\t").append(p).append("\n");
-			}
+			sb.append(stringifyEntities("Players", players)).append("\n");
 		}
 		if (debugNpcs) {
-			sb.append("\nNpcs:\n");
-			for (final Npc n : npcs) {
-				sb.append("\t").append(n).append("\n");
-			}
+			sb.append(stringifyEntities("Npcs", npcs)).append("\n");
 		}
 		if (debugItems) {
-			sb.append("\nItems:\n");
-			for (final GroundItem i : items) {
-				sb.append("\t").append(i).append("\n");
-			}
+			sb.append(stringifyEntities("Items", items)).append("\n");
 		}
 		if (debugObjects) {
-			sb.append("\nObjects:\n");
-			for (final Object o : objects) {
-				sb.append("\t").append(o).append("\n");
-			}
+			sb.append(stringifyEntities("Objects", objects)).append("\n");
 		}
-
 		return sb.toString();
 	}
 
-	public GameObject getGameObject(final int x, final int y, final Entity e) {
-		synchronized (objects) {
-			for (final GameObject o : objects) {
-				if (o.getX() == x && o.getY() == y && (e == null || !o.isInvisibleTo(e))) {
-					return o;
-				}
-			}
-		}
-		return null;
+	private GameObject getGameObject(Point location, Entity observer, GameObjectType type, Integer direction) {
+		return objects.get(location)
+			.stream()
+			.filter(obj -> type == null || obj.getGameObjectType() == type)
+			.filter(obj -> observer == null || !obj.isInvisibleTo(observer))
+			.filter(obj -> direction == null || obj.getDirection() == direction)
+			.findFirst()
+			.orElse(null);
 	}
 
-	public GameObject getGameObject(final Point point, final Entity e) {
-		synchronized (objects) {
-			for (final GameObject o : objects) {
-				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 0 && (e == null || !o.isInvisibleTo(e))) {
-					return o;
-				}
-			}
-		}
-		return null;
+	public GameObject getGameObject(Point location) {
+		return getGameObject(location, null, null, null);
 	}
 
-	public GameObject getWallGameObject(final Point point, final int direction, final Entity e) {
-		synchronized (objects) {
-			for (final GameObject o : objects) {
-				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 1 && o.getDirection() == direction && (e == null || !o.isInvisibleTo(e))) {
-					return o;
-				}
-			}
-		}
-		return null;
+	public GameObject getGameObject(Point location, Entity entity) {
+		return getGameObject(location, entity, GameObjectType.SCENERY, null);
 	}
 
-	public GameObject getWallGameObject(final Point point, final Entity e) {
-		synchronized (objects) {
-			for (final GameObject o : objects) {
-				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 1 && (e == null || !o.isInvisibleTo(e))) {
-					return o;
-				}
-			}
-		}
-		return null;
+	public GameObject getWallGameObject(Point location, int direction) {
+		return getGameObject(location, null, GameObjectType.BOUNDARY, direction);
 	}
 
-	public Npc getNpc(final int x, final int y, final Entity e) {
-		synchronized (npcs) {
-			for (final Npc n : npcs) {
-				if (n.getLocation().getX() == x && n.getLocation().getY() == y && (e == null || !n.isInvisibleTo(e))) {
-					return n;
-				}
-			}
-		}
-		return null;
+	public GameObject getWallGameObject(Point location, Entity entity) {
+		return getGameObject(location, entity, GameObjectType.BOUNDARY, null);
 	}
 
-	public Player getPlayer(final int x, final int y, final Entity e) {
-		synchronized (players) {
-			for (final Player p : players) {
-				if (p.getX() == x && p.getY() == y && (e == null || !p.isInvisibleTo(e))) {
-					return p;
-				}
-			}
-		}
-		return null;
+	public Npc getNpc(Point location, Entity observer) {
+		return npcs.get(location)
+			.stream()
+			.filter(npc -> observer == null || !npc.isInvisibleTo(observer))
+			.findFirst()
+			.orElse(null);
 	}
 
-	public GroundItem getItem(final int id, final Point location, final Entity e) {
-		final int x = location.getX();
-		final int y = location.getY();
-		for (final GroundItem i : getGroundItems()) {
-			if (i.getID() == id && i.getX() == x && i.getY() == y && (e == null || !i.isInvisibleTo(e))) {
-				return i;
-			}
-		}
-		return null;
+	public Player getPlayer(int x, int y, Entity observer, boolean includeSelf) {
+		return players.get(new Point(x, y))
+			.stream()
+			.filter(player -> observer == null || !player.isInvisibleTo(observer))
+			.filter(player -> observer == null || (includeSelf && player.equals(observer)))
+			.findFirst()
+			.orElse(null);
+	}
+
+	public Player getPlayer(int x, int y, Entity observer) {
+		return getPlayer(x, y, observer, true);
+	}
+
+	public GroundItem getItem(final int id, final Point location, final Entity observer) {
+		return items.get(location)
+				.stream()
+				.filter(item -> id == item.getID())
+				.filter(item -> observer == null || !item.isInvisibleTo(observer))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public TileValue getTileValue(final int regionX, final int regionY) {
@@ -340,5 +280,22 @@ public class Region {
 			tile = tiles[0][0];
 			tiles = null;
 		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) {
+			return true;
+		}
+		if(obj instanceof Region) {
+			Region other = (Region) obj;
+			return other.regionX == regionX && other.regionY == other.getRegionY();
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return new Point(regionX, regionY).hashCode();
 	}
 }

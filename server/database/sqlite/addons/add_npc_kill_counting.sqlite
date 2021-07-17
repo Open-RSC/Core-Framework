@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS `npckills`;
+CREATE TABLE IF NOT EXISTS `npckills`
+(
+    `ID`        INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `npcID`     int(10) DEFAULT NULL,
+    `playerID`  int(10) DEFAULT NULL,
+    `killCount` int(10) DEFAULT 0
+);

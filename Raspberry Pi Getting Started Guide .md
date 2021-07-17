@@ -16,7 +16,7 @@ KiB Swap:   499708 total,   479484 free,    20224 used.   207656 avail Mem
  ```
 
 
-You will want to have a bootable microSD card running a fresh install of CentOS aarch64:
+You will want to have a bootable microSD card running a fresh install of CentOS arch64:
 http://isoredirect.centos.org/altarch/7/isos/armhfp/CentOS-Userland-7-armv7hl-RaspberryPI-GNOME-1908-sda.raw.xz
 
 You can write to your microSD card using various utilities. Here is a great open source tool for any platform:
@@ -39,14 +39,14 @@ You will need to expand the filesystem to use the entire microSD card:
 /usr/bin/rootfs-expand
 ```
 
-You next should turbo / overclock your Pi as it is generally pretty slow otherwise:
+You should overclock your Pi 3B+ as it is generally pretty slow otherwise:
 https://haydenjames.io/raspberry-pi-3-overclock/
 ```
 yum install -y nano
 nano /boot/config.txt
 ```
 
-Paste the following:
+Paste the following: (3B+ only!)
 ```
 core_freq=500 # GPU Frequency
 arm_freq=1350 # CPU Frequency
@@ -59,14 +59,9 @@ boot_delay=1
 ```
 
 
-Once installed, perform OS updates and install MariaDB (SQL server), and various utilities via:
+Once installed, perform OS updates and various utilities via:
 ```
-yum update -y && sudo yum install git wget mariadb mariadb-server ant screen -y
-```
-
-Enable MariaDB to start up:
-```
-systemctl enable --now mariadb
+yum update -y && sudo yum install git wget sqlite3 ant screen -y
 ```
 
 Verify Java is installed correctly:
@@ -82,22 +77,6 @@ OpenJDK Zero VM (build 25.222-b10, interpreted mode)
 ```
 
 Now download the zip release of this repo - or clone it with Git.
-```
-git clone https://gitlab.openrsc.com/open-rsc/Open-Pi-Scape.git && cd Open-Pi-Scape
-```
-
-
-Set the root user's password to "root" instead of the default and it being blank:
-```
-mysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root');"
-```
-
-Create the database(s) and import:
-```
-mysql -uroot -proot -e "create database openrsc;" && mysql openrsc < Required/openrsc_game_server.sql && mysql openrsc < Required/openrsc_game_players.sql
-
-mysql -uroot -proot -e "create database cabbage;" && mysql cabbage < Required/cabbage_game_server.sql && mysql cabbage < Required/cabbage_game_players.sql
-```
 
 Open the firewall ports:
 ```

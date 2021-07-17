@@ -3,9 +3,11 @@ package com.openrsc.server.plugins.authentic.minigames.mage_arena;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
+import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -51,7 +53,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		if (getMaxLevel(player, Skills.MAGIC) < 60) { // TODO: Enter the arena game.
+		if (getMaxLevel(player, Skill.MAGIC.id()) < 60) { // TODO: Enter the arena game.
 			say(player, n, "hello there", "what is this place?");
 			npcsay(player, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");
@@ -73,8 +75,8 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				}
 				teleport(player, 229, 130);
 				delay();
-				setCurrentLevel(player, Skills.ATTACK, 0);
-				setCurrentLevel(player, Skills.STRENGTH, 0);
+				setCurrentLevel(player, Skill.ATTACK.id(), 0);
+				setCurrentLevel(player, Skill.STRENGTH.id(), 0);
 				spawnKolodion(player, player.getCache().getInt("kolodion_stage"), true);
 
 			} else if (stage == 2) {
@@ -203,8 +205,8 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				}
 				teleport(player, 229, 130);
 				delay();
-				setCurrentLevel(player, Skills.ATTACK, 0);
-				setCurrentLevel(player, Skills.STRENGTH, 0);
+				setCurrentLevel(player, Skill.ATTACK.id(), 0);
+				setCurrentLevel(player, Skill.STRENGTH.id(), 0);
 
 				// first time
 				spawnKolodion(player, NpcId.KOLODION_HUMAN.id(), false);
@@ -239,9 +241,13 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					getOwner().setAttribute("maged_kolodion", false);
 					return;
 				}
-				if (getOwner().getSkills().getLevel(Skills.ATTACK) > 0 || getOwner().getSkills().getLevel(Skills.STRENGTH) > 0) {
-					getOwner().getSkills().setLevel(Skills.ATTACK, 0);
-					getOwner().getSkills().setLevel(Skills.STRENGTH, 0);
+				boolean sendUpdate = getOwner().getClientLimitations().supportsSkillUpdate;
+				if (getOwner().getSkills().getLevel(Skill.ATTACK.id()) > 0 || getOwner().getSkills().getLevel(Skill.STRENGTH.id()) > 0) {
+					getOwner().getSkills().setLevel(Skill.ATTACK.id(), 0, sendUpdate);
+					getOwner().getSkills().setLevel(Skill.STRENGTH.id(), 0, sendUpdate);
+					if (!sendUpdate) {
+						getOwner().getSkills().sendUpdateAll();
+					}
 				}
 				Npc Guthix = ifnearvisnpc(player, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
 				Npc Zamorak = ifnearvisnpc(player, NpcId.BATTLE_MAGE_ZAMORAK.id(), 2);
@@ -251,26 +257,26 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 33);
 					player.message(randomMessage[2]);
-					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
+					if (getCurrentLevel(getOwner(), Skill.HITS.id()) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skills.HITS) * 0.08));
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.HITS.id()) * 0.08));
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 35);
 					player.message(randomMessage[0]);
-					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
+					if (getCurrentLevel(getOwner(), Skill.HITS.id()) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skills.HITS) * 0.08));
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.HITS.id()) * 0.08));
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 34);
 					player.message(randomMessage[1]);
-					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
+					if (getCurrentLevel(getOwner(), Skill.HITS.id()) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skills.HITS) * 0.08));
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.HITS.id()) * 0.08));
 					}
 				}
 			}
@@ -360,9 +366,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 						break;
 				}
 				// how many lvls needed for +1 dmg (min 16, max 25)
-				int reciprocalSlope = (int) Math.floor(1.0 / (0.06 - (0.01 / 48.0) * getMaxLevel(getOwner(), Skills.HITS)));
+				int reciprocalSlope = (int) Math.floor(1.0 / (0.06 - (0.01 / 48.0) * getMaxLevel(getOwner(), Skill.HITS.id())));
 				// what is the lvl "shift" per new transformation to calculate dmg
-				int shiftPerPhase = (int) Math.round((0.004 * getMaxLevel(getOwner(), Skills.HITS) + 0.4) * reciprocalSlope);
+				int shiftPerPhase = (int) Math.round((0.004 * getMaxLevel(getOwner(), Skill.HITS.id()) + 0.4) * reciprocalSlope);
 				ArrayList<String[]> messages = new ArrayList<String[]>() {
 					{
 						add(new String[]{"@yel@kolodion: roooaar", "claws grab you from below"});
@@ -383,7 +389,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					delay(2);
 				}
 				delay(3);
-				getOwner().damage((int) Math.ceil(Math.max(getCurrentLevel(getOwner(), Skills.HITS) + (transformStage - 1.0) * shiftPerPhase, 0) / reciprocalSlope) + 1);
+				getOwner().damage((int) Math.ceil(Math.max(getCurrentLevel(getOwner(), Skill.HITS.id()) + (transformStage - 1.0) * shiftPerPhase, 0) / reciprocalSlope) + 1);
 			}
 		};
 		if (kolE != null) {
@@ -414,18 +420,56 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		startKolodionEvent(player);
 	}
 
+	private int[] staves = {
+		ItemId.STAFF.id(),
+		ItemId.MAGIC_STAFF.id(),
+		ItemId.STAFF_OF_AIR.id(),
+		ItemId.STAFF_OF_WATER.id(),
+		ItemId.STAFF_OF_EARTH.id(),
+		ItemId.STAFF_OF_FIRE.id(),
+		ItemId.STAFF_OF_SARADOMIN.id(),
+		ItemId.STAFF_OF_ZAMORAK.id(),
+		ItemId.STAFF_OF_GUTHIX.id()
+	};
+
+	private boolean isNotAllowed(Player player, Item item) {
+		ItemDefinition def = item.getDef(player.getWorld());
+		if (def.isWieldable()) {
+			// allow anything in necklace and cape slot
+			if (def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_NECK.getIndex()
+				|| def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_CAPE.getIndex()) return false;
+			// if is one of the allowed staves, then it's good
+			if (inArray(item.getCatalogId(), staves)) return false;
+			// disallow any other weapon
+			if (def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_MAINHAND.getIndex()
+				|| def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_OFFHAND.getIndex()) return true;
+			// allow "low-tier" magic / prayer related equipment, with low melee bonus
+			// per rs2 guides seems higher tier would not have been permitted
+			if (((def.getMagicBonus() > 0 && def.getMagicBonus() <= 10)
+				|| (def.getPrayerBonus() > 0 && def.getPrayerBonus() <= 10)) && def.getMeleeBonus() <= 5) return false;
+			// allow "very basic" armour, per rs2 guides seems leather boots and gloves
+			// were ok in apr 2004
+			if ((def.getArmourBonus() <= 2 && def.getWeaponPowerBonus() == 0 && def.getWeaponAimBonus() == 0)
+				|| (item.getCatalogId() == ItemId.ICE_GLOVES.id())) return false;
+			// disallow any other wearable
+			return true;
+		}
+		// non wearables are ok
+		return false;
+	}
+
 	private boolean cantGo(Player player) {
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
-					|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
-					&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-					|| name.contains("mace") || name.contains("helmet") || name.contains("axe")
-					|| name.contains("arrow") || name.contains("bow") || name.contains("spear")
-					|| name.contains("battlestaff")) {
+				if (isNotAllowed(player, item)) return true;
+			}
 
-					return true;
+			if (config().WANT_EQUIPMENT_TAB) {
+				Item item;
+				for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+					item = player.getCarriedItems().getEquipment().get(i);
+					if (item == null) continue;
+					if (isNotAllowed(player, item)) return true;
 				}
 			}
 			return false;
@@ -494,23 +538,23 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				delay(3);
 				player.message("kolodion teleports you to his cave");
 				player.teleport(446, 3370);
-				Npc kolodion = ifnearvisnpc(player, NpcId.KOLODION.id(), 5);
+				Npc kolodion = ifnearvisnpc(player, NpcId.KOLODION.id(), 8);
 				if (kolodion == null) {
 					player.message("kolodion is currently busy");
-					return;
-				}
-				say(player, kolodion, "what now kolodion? how can i learn some of those spells?");
-				npcsay(player, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
-					"...you will represent in the mage arena");
-				say(player, kolodion, "cool");
-				npcsay(player, kolodion, "step into the magic pool, it will carry you to the chamber");
-				say(player, kolodion, "the chamber?");
+				} else {
+					say(player, kolodion, "what now kolodion? how can i learn some of those spells?");
+					npcsay(player, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
+						"...you will represent in the mage arena");
+					say(player, kolodion, "cool");
+					npcsay(player, kolodion, "step into the magic pool, it will carry you to the chamber");
+					say(player, kolodion, "the chamber?");
 
-				npcsay(player, kolodion, "there you must decide your loyalty");
-				say(player, kolodion, "ok kolodion , thanks for the battle");
-				npcsay(player, kolodion, "remember young mage, you must use the spells...",
-					"...many times in the arena before you can use them outside");
-				say(player, kolodion, "no problem");
+					npcsay(player, kolodion, "there you must decide your loyalty");
+					say(player, kolodion, "ok kolodion , thanks for the battle");
+					npcsay(player, kolodion, "remember young mage, you must use the spells...",
+						"...many times in the arena before you can use them outside");
+					say(player, kolodion, "no problem");
+				}
 				player.getCache().set("mage_arena", 2);
 				player.getCache().remove("kolodion_stage");
 			}

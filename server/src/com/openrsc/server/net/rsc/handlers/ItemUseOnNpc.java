@@ -1,19 +1,21 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ItemOnMobStruct;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 
-public class ItemUseOnNpc implements PacketHandler {
+public class ItemUseOnNpc implements PayloadProcessor<ItemOnMobStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ItemOnMobStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
@@ -23,9 +25,9 @@ public class ItemUseOnNpc implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		int npcIndex = packet.readShort();
+		int npcIndex = payload.serverIndex;
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
-		int slotIndex = packet.readShort();
+		int slotIndex = payload.slotIndex;
 		if (player.getConfig().WANT_EQUIPMENT_TAB && slotIndex > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
@@ -39,18 +41,23 @@ public class ItemUseOnNpc implements PacketHandler {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				getPlayer().resetFollowing();
-				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
+				if ((!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
 					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
-					|| affectedNpc.isBusy()) {
+					|| affectedNpc.isBusy()) && item.getCatalogId() != ItemId.RESETCRYSTAL.id()) {
 					return;
 				}
 				getPlayer().resetAll();
 				getPlayer().face(affectedNpc);
 
 				// Lazy bugfix for "notes shouldn't be able to be used on NPCs... except for the bankers!"
-				int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
+				int[] BANKERS = {NpcId.BANKER.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_ALKHARID.id(),
 					NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
-				if (item.getNoted() && !inArray(affectedNpc.getID(), BANKERS)) {
+				int[] CERTERS = {NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(),
+					NpcId.WATTO.id(), NpcId.OWEN.id(), NpcId.CHUCK.id(), NpcId.ORVEN.id(),
+					NpcId.PADIK.id(), NpcId.SETH.id(), NpcId.FORESTER.id(), NpcId.SIDNEY_SMITH.id()};
+
+				if (item.getNoted() &&
+					!(inArray(affectedNpc.getID(), BANKERS) || inArray(affectedNpc.getID(), CERTERS))) {
 					getPlayer().message("Nothing interesting happens");
 					return;
 				}

@@ -45,6 +45,7 @@ public final class BriansBattleAxes extends AbstractShop {
 				"So are you selling something?", "ello");
 		switch (option) {
 			case 0:
+				say(player, n, "So are you selling something?");
 				npcsay(player, n, "Yep take a look at these great axes");
 				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);

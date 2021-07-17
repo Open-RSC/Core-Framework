@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.custom.skills.harvesting;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ObjectHarvestingDef;
 import com.openrsc.server.model.TimePoint;
 import com.openrsc.server.model.container.Item;
@@ -180,7 +180,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
-			if (!ifbatchcompleted()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -190,7 +190,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			handleXmasHarvesting(player, object);
 		}
 	}
@@ -204,7 +204,7 @@ public final class Harvesting implements OpLocTrigger {
 		final HerbsProduce prodEnum = HerbsProduce.find(object.getID());
 		int reqLevel = prodEnum != null ? prodEnum.produceTable.get(0).getLevel() : 1;
 
-		if (!objName.contains("herb") && player.getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
+		if (!objName.contains("herb") && player.getSkills().getLevel(Skill.HARVESTING.id()) < reqLevel) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
 				+ " harvesting to clip from the " + objName);
 			return;
@@ -220,7 +220,7 @@ public final class Harvesting implements OpLocTrigger {
 			return;
 		}
 
-		int repeat = Formulae.getRepeatTimes(player, Skills.HARVESTING);
+		int repeat = Formulae.getRepeatTimes(player, Skill.HARVESTING.id());
 		startbatch(repeat);
 		batchClipping(player, object, objName, prodEnum);
 	}
@@ -244,13 +244,13 @@ public final class Harvesting implements OpLocTrigger {
 				return;
 			}
 		}
-		if (!objName.contains("herb") && player.getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
+		if (!objName.contains("herb") && player.getSkills().getLevel(Skill.HARVESTING.id()) < reqLevel) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
 				+ " harvesting to clip from the " + objName);
 			return;
 		}
 
-		if (getProduce(prodEnum.get(prodId).getLevel(), player.getSkills().getLevel(Skills.HARVESTING))) {
+		if (getProduce(prodEnum.get(prodId).getLevel(), player.getSkills().getLevel(Skill.HARVESTING.id()))) {
 			//check if the object is still up
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			if (obj == null) {
@@ -260,7 +260,7 @@ public final class Harvesting implements OpLocTrigger {
 				player.getCarriedItems().getInventory().add(produce);
 				player.playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
 					: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
-				player.incExp(Skills.HARVESTING, prodEnum.get(prodId).getXp(), true);
+				player.incExp(Skill.HARVESTING.id(), prodEnum.get(prodId).getXp(), true);
 			}
 			if (DataConversions.random(1, 100) <= (!objName.contains("herb") ? 20 : 10)) {
 				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -274,7 +274,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
-			if (!ifbatchcompleted()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -284,7 +284,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchClipping(player, object, objName, prodEnum);
 		}
 	}
@@ -299,7 +299,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		final int toolId = getTool(player, object);
 
-		int repeat = Formulae.getRepeatTimes(player, Skills.HARVESTING);
+		int repeat = Formulae.getRepeatTimes(player, Skill.HARVESTING.id());
 		startbatch(repeat);
 		batchHarvest(player, toolId, object, def);
 	}
@@ -318,7 +318,7 @@ public final class Harvesting implements OpLocTrigger {
 				return;
 			}
 		}
-		if (player.getSkills().getLevel(Skills.HARVESTING) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.HARVESTING.id()) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST,"You need a harvesting level of " + def.getReqLevel() + " to get produce from here");
 			return;
 		}
@@ -327,7 +327,7 @@ public final class Harvesting implements OpLocTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You accidentally damage the produce and throw it away");
 		} else if (evt.get() == HarvestingEvents.NEGLECTED.getID()) {
 			player.playerServerMessage(MessageType.QUEST, "But the spot seems weak, you decide to wait");
-		} else if (getProduce(def.getReqLevel(), player.getSkills().getLevel(Skills.HARVESTING))) {
+		} else if (getProduce(def.getReqLevel(), player.getSkills().getLevel(Skill.HARVESTING.id()))) {
 			//check if the object is still up
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			if (obj == null) {
@@ -343,7 +343,7 @@ public final class Harvesting implements OpLocTrigger {
 				}
 				player.playerServerMessage(MessageType.QUEST, "You get " +
 					(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
-				player.incExp(Skills.HARVESTING, def.getExp(), true);
+				player.incExp(Skill.HARVESTING.id(), def.getExp(), true);
 			}
 			if (DataConversions.random(1, 100) <= def.getExhaust()) {
 				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -381,7 +381,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
-			if (!ifbatchcompleted()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -391,7 +391,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			batchHarvest(player, toolId, obj, def);
 		}
@@ -464,6 +464,6 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	private boolean getProduce(int reqLevel, int harvestingLevel) {
-		return Formulae.calcGatheringSuccessful(reqLevel, harvestingLevel, 0);
+		return Formulae.calcGatheringSuccessfulLegacy(reqLevel, harvestingLevel, 0);
 	}
 }

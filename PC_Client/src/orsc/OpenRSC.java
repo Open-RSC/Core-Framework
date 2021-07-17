@@ -20,7 +20,8 @@ public class OpenRSC extends ORSCApplet {
 		try {
 			jframe = new JFrame(Config.getServerNameWelcome());
 			final Applet applet = new OpenRSC();
-			applet.setPreferredSize(new Dimension(512, 346));
+			//Here we add 12 because 12 was added back in 2009 for the skip tutorial line.
+			applet.setPreferredSize(new Dimension(512, 334 + 12));
 			jframe.getContentPane().setLayout(new BorderLayout());
 			jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			jframe.setIconImage(Utils.getImage("icon.png").getImage());
@@ -30,7 +31,9 @@ public class OpenRSC extends ORSCApplet {
 			jframe.setVisible(true);
 			//jframe.setAlwaysOnTop(true);
 			jframe.setBackground(Color.black);
-			jframe.setMinimumSize(new Dimension(528, 385));
+			//Just like above, here we add 12 because 12 was added back in 2009 for the skip tutorial line.
+			//We also add 32 for the custom login screen.
+			jframe.setMinimumSize(new Dimension(512, 334 + 12 + 32));
 			jframe.pack();
 			jframe.setLocationRelativeTo(null);
 			applet.init();
@@ -46,8 +49,17 @@ public class OpenRSC extends ORSCApplet {
 
 	public void setIconImage(String serverName) {
 		switch (serverName) {
+			case "RSC Coleslaw":
+				jframe.setIconImage(Utils.getImage("coleslaw.icon.png").getImage());
+				break;
+			case "RSC Uranium":
+				jframe.setIconImage(Utils.getImage("uranium.icon.png").getImage());
+				break;
 			case "RSC Cabbage":
 				jframe.setIconImage(Utils.getImage("cabbage.icon.png").getImage());
+				break;
+			case "OpenPK":
+				jframe.setIconImage(Utils.getImage("openpk.icon.png").getImage());
 				break;
 			default:
 				jframe.setIconImage(Utils.getImage("icon.png").getImage());

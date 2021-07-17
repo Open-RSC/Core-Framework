@@ -85,6 +85,8 @@ public class Inventory {
 
 	public Boolean add(Item itemToAdd, boolean sendInventory) {
 		synchronized (list) {
+			final int MAXSTACK = !player.getConfig().SHORT_MAX_STACKS ? Integer.MAX_VALUE : (Short.MAX_VALUE - Short.MIN_VALUE);
+
 			// Confirm we aren't attempting to add 0 or less of the item.
 			if (itemToAdd.getAmount() <= 0) {
 				return false;
@@ -114,7 +116,7 @@ public class Inventory {
 						continue;
 
 					//Make sure there's room in the stack
-					if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+					if (inventoryItem.getAmount() == MAXSTACK)
 						continue;
 
 					existingStack = inventoryItem;
@@ -142,8 +144,7 @@ public class Inventory {
 				}
 
 				// Update the Database - Add to the last slot and create a new itemID
-				int itemID = player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
-
+				int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 				itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted(), itemID);
 
 				// Update the server inventory
@@ -157,7 +158,7 @@ public class Inventory {
 			} else {
 
 				// Determine if the existing stack will overflow.
-				int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
+				int remainingSize = MAXSTACK - existingStack.getAmount();
 
 				// The added items will not overflow the stack, add them to it normally.
 				if (remainingSize >= itemToAdd.getAmount()) {
@@ -189,11 +190,8 @@ public class Inventory {
 					}
 
 					// Update the existing stack amount to max value
-					existingStack.setAmount(Integer.MAX_VALUE);
-
-					// Update the Database - Add new stack to the last slot and create a new itemID
-					int itemID = player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
-
+					existingStack.setAmount(MAXSTACK);
+					int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted(), itemID);
 
 					// Update the server inventory
@@ -246,9 +244,6 @@ public class Inventory {
 						// Update the Server
 						iterator.remove();
 
-						// Update the Database - Remove item status
-						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
-
 						// Update the client
 						if (sendInventory)
 							ActionSender.sendRemoveItem(player, index);
@@ -277,9 +272,6 @@ public class Inventory {
 
 					// Update the Server Bank
 					iterator.remove();
-
-					// Update the Database
-					player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
 
 					// Update the client
 					if (sendInventory)
@@ -429,9 +421,13 @@ public class Inventory {
 				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player, item.getNoted());
 			} else {
 				dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
-				if (opponent != null) dropOwner = opponent.isPlayer() && ((Player)opponent).getIronMan() > 0 ? null : dropOwner;
+				if (opponent != null) dropOwner = opponent.isPlayer() && ((Player)opponent).getIronMan() != IronmanMode.None.id() ? player : dropOwner;
 				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
 				groundItem.setAttribute("playerKill", true);
+				if (opponent != null && opponent.isPlayer()) {
+					// show loot to killer instantly
+					groundItem.setAttribute("killerHash", ((Player)opponent).getUsernameHash());
+				}
 			}
 			player.getWorld().registerItem(groundItem, player.getConfig().GAME_TICK * 1000);
 
@@ -633,10 +629,12 @@ public class Inventory {
 
 	public int getRequiredSlots(int itemCatalogId, int amount, boolean isNoted) {
 		synchronized(list) {
+			final int MAXSTACK = !player.getConfig().SHORT_MAX_STACKS ? Integer.MAX_VALUE : (Short.MAX_VALUE - Short.MIN_VALUE);
+
 			// Check item definition
 			ItemDefinition itemDef =  player.getWorld().getServer().getEntityHandler().getItemDef(itemCatalogId);
 			if (itemDef == null)
-				return Integer.MAX_VALUE;
+				return MAXSTACK;
 
 			// Check if the item is a stackable
 			if (itemDef.isStackable() || isNoted) {
@@ -651,11 +649,11 @@ public class Inventory {
 						continue;
 
 					// Make sure there's room in the stack
-					if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+					if (inventoryItem.getAmount() == MAXSTACK)
 						continue;
 
 					// Check if all of the stack can fit in the existing stack
-					int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+					int remainingSize = MAXSTACK - inventoryItem.getAmount();
 					return remainingSize < amount ? 1 : 0;
 				}
 

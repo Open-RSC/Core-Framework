@@ -7,7 +7,7 @@ public class osConfig {
 	public static final String ANDROID_DOWNLOAD_PATH = "http://" + DL_URL + "/static/downloads/";
 	public static final String CACHE_URL = "http://" + DL_URL + "/static/downloads/";
 	public static final String MD5_TABLENAME = "MD5.SUM";
-	public static final int ANDROID_CLIENT_VERSION = 123; // Important! Depends on web server android_version.txt to check for an updated version
+	public static final int ANDROID_CLIENT_VERSION = 133; // Important! Depends on web server android_version.txt to check for an updated version
 	public static boolean F_SHOWING_KEYBOARD = false;
 	public static boolean C_HOLD_AND_CHOOSE = true;
 	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting

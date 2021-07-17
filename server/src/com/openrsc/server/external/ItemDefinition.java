@@ -206,6 +206,15 @@ public final class ItemDefinition extends EntityDef {
 		this.isNoteable = isNoteable;
 	}
 
+	public ItemDefinition(ItemDefinitionBuilder builder) {
+		this(builder.id, builder.name, builder.description, builder.command, builder.isFemaleOnly, builder.isMembersOnly,
+			builder.isStackable, builder.isUntradable, builder.isWearable, builder.appearanceId, builder.wearableId,
+			builder.wornItemIndex, builder.requiredLevel, builder.requiredSkillIndex, builder.armourBonus, builder.weaponAimBonus,
+			builder.weaponPowerBonus, builder.magicBonus, builder.prayerBonus, builder.defaultPrice, builder.isNoteable);
+	}
+
+	public ItemDefinition() { }
+
 
 	/**
 	 * Returns the current command for this
@@ -416,6 +425,16 @@ public final class ItemDefinition extends EntityDef {
 	}
 
 	/**
+	 * Returns a virtual melee-bonus
+	 * for this <code>ItemDefinition</code>.
+	 *
+	 * @return Returns the melee-bonus.
+	 */
+	public final long getMeleeBonus() {
+		return armourBonus + weaponAimBonus + weaponAimBonus;
+	}
+
+	/**
 	 * Returns the current wearable-ID
 	 * for this <code>ItemDefinition</code>.
 	 *
@@ -462,4 +481,59 @@ public final class ItemDefinition extends EntityDef {
 	}
 
 	public void nullCommand() { this.command = null; }
+
+	public static class ItemDefinitionBuilder
+	{
+		private String[] command;
+		private String description;
+		private String name;
+		private boolean isFemaleOnly;
+		private boolean isMembersOnly;
+		private boolean isStackable;
+		private boolean isUntradable;
+		private boolean isWearable;
+		private int appearanceId;
+		private long armourBonus;
+		private int defaultPrice;
+		private int id;
+		private int magicBonus;
+		private int prayerBonus;
+		private int requiredLevel;
+		private int requiredSkillIndex;
+		private int weaponAimBonus;
+		private int weaponPowerBonus;
+		private int wearableId;
+		private int wornItemIndex;
+		private boolean isNoteable;
+
+		public ItemDefinitionBuilder(int id, String name) {
+			this.id = id;
+			this.name = name;
+		}
+
+		public ItemDefinitionBuilder description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public ItemDefinitionBuilder command(String[] command) {
+			this.command = command;
+			return this;
+		}
+
+		public ItemDefinitionBuilder isStackable(boolean isStackable) {
+			this.isStackable = isStackable;
+			return this;
+		}
+
+		public ItemDefinitionBuilder defaultPrice(int defaultPrice) {
+			this.defaultPrice = defaultPrice;
+			return this;
+		}
+
+		public ItemDefinition build() {
+			ItemDefinition definition =  new ItemDefinition(this);
+			return definition;
+		}
+	}
 }

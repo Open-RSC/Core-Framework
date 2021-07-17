@@ -9,6 +9,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -54,14 +57,22 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.BIOHAZARD.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
 
 	@Override
 	public void handleReward(Player player) {
-		player.message("@gre@You haved gained 3 quest points!");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BIOHAZARD), true);
+		final QuestReward reward = Quest.BIOHAZARD.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP(), true);
+		}
 		player.message("you have completed the biohazard quest");
 	}
 

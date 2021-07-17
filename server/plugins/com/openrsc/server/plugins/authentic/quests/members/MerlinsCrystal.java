@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,6 +12,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
@@ -42,6 +45,11 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.MERLINS_CRYSTAL.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -50,8 +58,11 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	public void handleReward(Player player) {
 		player.getCache().remove("magic_words");
 		player.message("Well done you have completed the Merlin's crystal quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.MERLINS_CRYSTAL), true);
-		player.message("@gre@You haved gained 6 quest points!");
+		final QuestReward reward = Quest.MERLINS_CRYSTAL.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override
@@ -132,7 +143,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				npc.getCombatEvent().resetCombat();
 			}
 			// from replay should do full heal
-			npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
+			npc.getSkills().setLevel(Skill.HITS.id(), npc.getDef().hits);
 			Npc leFaye = ifnearvisnpc(player, NpcId.MORGAN_LE_FAYE.id(), 8);
 			if (leFaye == null) {
 				leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));
@@ -530,6 +541,10 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			}
 			switch (player.getQuestStage(this)) {
 				case 0:
+				case 2:
+				case 3:
+				case 4:
+				case 5:
 					npcsay(player, n, "Good day to you sir");
 					int opt = multi(player, n, false, //do not send over
 						"Good day",
@@ -572,19 +587,6 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 						if (sub_option == 0) {
 							npcsay(player, n, "No you've got me stumped there");
 						}
-					}
-					break;
-				case 2:
-					npcsay(player, n, "Good day to you sir");
-					int op = multi(player, n, false, //do not send over
-						"Good day",
-						"Know you of any quests Sir knight?");
-					if (op == 0) {
-						say(player, n, "good day");
-					} else if (op == 1) {
-						say(player, n, "Know you of any quests sir knight?");
-						npcsay(player, n,
-							"The king is the man to talk to if you want a quest");
 					}
 					break;
 				case -1:
@@ -652,6 +654,9 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 					}
 					break;
 				case 2:
+				case 3:
+				case 4:
+				case 5:
 				case -1:
 					npcsay(player,
 						n,

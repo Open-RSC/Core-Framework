@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.minigames.gnomeball;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.model.container.Item;
@@ -310,13 +310,13 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				player.playerServerMessage(MessageType.QUEST, "and push the gnome to the floor");
 				npcsay(player, n, "grrrr");
 				give(player, ItemId.GNOME_BALL.id(), 1);
-				player.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,1)], true);
+				player.incExp(Skill.AGILITY.id(), TACKLING_XP[DataConversions.random(0,1)], true);
 				player.setAttribute("gnomeball_npc", 0);
 				n.setCombatTimer(-player.getConfig().GAME_TICK * 4);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You're pushed away by the gnome");
 				say(player, n, "ouch");
-				player.damage((int)(Math.ceil(player.getSkills().getLevel(Skills.HITS)*0.05)));
+				player.damage((int)(Math.ceil(player.getSkills().getLevel(Skill.HITS.id())*0.05)));
 				npcsay(player, n, "hee hee");
 			}
 		}

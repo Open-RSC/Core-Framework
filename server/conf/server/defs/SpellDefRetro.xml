@@ -1,0 +1,214 @@
+<SpellDef-array>
+    <SpellDef>
+      <reqLevel>1</reqLevel>
+      <type>2</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>35</int>
+          <int>2</int>
+        </entry>
+        <entry>
+          <int>36</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>88</exp>
+      <name>Confuse (R)</name>
+      <description>Reduces your opponent's fighting skills</description>
+	  <members>false</members>
+	  <evil>true</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>1</reqLevel>
+      <type>2</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>32</int>
+          <int>2</int>
+        </entry>
+        <entry>
+          <int>33</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>88</exp>
+      <name>Chill bolt</name>
+      <description>A strengh 1 missile attack</description>
+	  <members>false</members>
+	  <evil>false</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>1</reqLevel>
+      <type>0</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>34</int>
+          <int>2</int>
+        </entry>
+        <entry>
+          <int>36</int>
+          <int>2</int>
+        </entry>
+      </requiredRunes>
+      <exp>88</exp>
+      <name>Thick skin</name>
+      <description>Increases your defence</description>
+	  <members>false</members>
+	  <evil>true</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>2</reqLevel>
+      <type>0</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>36</int>
+          <int>2</int>
+        </entry>
+        <entry>
+          <int>34</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>96</exp>
+      <name>Burst of strength</name>
+      <description>Increase your strength</description>
+	  <members>false</members>
+	  <evil>false</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>4</reqLevel>
+      <type>2</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>31</int>
+          <int>2</int>
+        </entry>
+        <entry>
+          <int>33</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>112</exp>
+      <name>Shock bolt</name>
+      <description>A strength 1 missile attack</description>
+	  <members>false</members>
+	  <evil>true</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>4</reqLevel>
+      <type>0</type>
+      <runeCount>3</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>31</int>
+          <int>1</int>
+        </entry>
+        <entry>
+          <int>35</int>
+          <int>1</int>
+        </entry>
+        <entry>
+          <int>36</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>112</exp>
+      <name>Camouflage</name>
+      <description>Increasing your hiding skill</description>
+	  <members>false</members>
+	  <evil>false</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>9</reqLevel>
+      <type>2</type>
+      <runeCount>4</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>31</int>
+          <int>1</int>
+        </entry>
+        <entry>
+          <int>33</int>
+          <int>1</int>
+        </entry>
+        <entry>
+          <int>34</int>
+          <int>1</int>
+        </entry>
+        <entry>
+          <int>32</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>152</exp>
+      <name>Elemental bolt</name>
+      <description>A strength 2 missile attack</description>
+	  <members>false</members>
+	  <evil>true</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>11</reqLevel>
+      <type>0</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>34</int>
+          <int>3</int>
+        </entry>
+        <entry>
+          <int>36</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>168</exp>
+      <name>Rock skin</name>
+      <description>Increases your defence</description>
+	  <members>false</members>
+	  <evil>false</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>12</reqLevel>
+      <type>2</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>35</int>
+          <int>3</int>
+        </entry>
+        <entry>
+          <int>32</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>176</exp>
+      <name>Fear</name>
+      <description>Causes some opponents to retreat</description>
+	  <members>false</members>
+	  <evil>true</evil>
+    </SpellDef>
+    <SpellDef>
+      <reqLevel>14</reqLevel>
+      <type>2</type>
+      <runeCount>2</runeCount>
+      <requiredRunes>
+        <entry>
+          <int>33</int>
+          <int>3</int>
+        </entry>
+        <entry>
+          <int>31</int>
+          <int>1</int>
+        </entry>
+      </requiredRunes>
+      <exp>192</exp>
+      <name>Wind bolt (R)</name>
+      <description>A strength 2 missile attack</description>
+	  <members>false</members>
+	  <evil>false</evil>
+    </SpellDef>
+</SpellDef-array>

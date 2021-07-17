@@ -94,13 +94,24 @@ public final class LostOnDeathInterface {
 			}
 
 			if (curItem.getNoted()) {
-				mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
-					curX, curY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-					EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+				if (Config.S_WANT_CERT_AS_NOTES) {
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
+						curX, curY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+						EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+						curX + 7, curY + 8, 29, 19, def.getPictureMask(), 0,
+						def.getBlueMask(),false,
+						0, 1);
+				} else {
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.certificateDef),
+						curX, curY, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+						EntityHandler.certificateDef.getBlueMask(), false, 0, 1);
+				}
+			} else {
+				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+					curX, curY, 48, 32, def.getPictureMask(), 0,
+					def.getBlueMask(), false, 0, 1);
 			}
-			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-				curX, curY, 48, 32, def.getPictureMask(), 0,
-				def.getBlueMask(), false, 0, 1);
 
 
 			if (def.isStackable()) {

@@ -2,6 +2,10 @@ package com.openrsc.server.external;
 
 public class ItemLoc {
 	/**
+	 * Is item noted?
+	 */
+	public int noted;
+	/**
 	 * Amount of item (stackables)
 	 */
 	public int amount;
@@ -25,12 +29,19 @@ public class ItemLoc {
 	public ItemLoc() { }
 
 	public ItemLoc(int id, int x, int y, int amount, int respawnTime) {
+		this(id, x, y, amount, respawnTime, 0);
+	}
+
+	public ItemLoc(int id, int x, int y, int amount, int respawnTime, int noted) {
 		this.id = id;
 		this.x = x;
 		this.y = y;
 		this.amount = amount;
 		this.respawnTime = respawnTime;
+		this.noted = noted;
 	}
+
+	public int getNoted() { return noted; }
 
 	public int getAmount() {
 		return amount;

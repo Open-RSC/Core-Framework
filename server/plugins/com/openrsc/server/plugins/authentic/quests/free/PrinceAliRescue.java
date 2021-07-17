@@ -8,6 +8,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -34,6 +37,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.PRINCE_ALI_RESCUE.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -51,8 +59,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 			give(player, ItemId.COINS.id(), 700);
 		}
 		player.message("You have completed the quest of the Prince of Al Kharid");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PRINCE_ALI_RESCUE), true);
-		player.message("@gre@You haved gained 3 quest points!");
+		final QuestReward reward = Quest.PRINCE_ALI_RESCUE.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override

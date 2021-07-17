@@ -1,5 +1,6 @@
 package com.openrsc.server.model;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -27,7 +28,7 @@ public final class Shop {
 		this.priceModifier = priceModifier;
 		this.items = items;
 		for (Item item : items) {
-			shopItems.add(new Item(item.getCatalogId(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
+			shopItems.add(new Item(item.getCatalogId(), item.getAmount())); // comparing the two later, CAN NOT use the same reference
 		}
 	}
 
@@ -42,7 +43,7 @@ public final class Shop {
 		this.ownerIDs = ids;
 
 		for (Item item : items) {
-			shopItems.add(new Item(item.getCatalogId(), item.getAmount())); // comparing the two later, CAN NOT use the same refference
+			shopItems.add(new Item(item.getCatalogId(), item.getAmount())); // comparing the two later, CAN NOT use the same reference
 		}
 	}
 
@@ -162,8 +163,13 @@ public final class Shop {
 		}
 	}
 
+	public int currentStock(Item item) {
+		return getItemCount(item.getCatalogId());
+	}
+
 	public boolean canHoldItem(Item item) {
-		return (40 - shopItems.size()) >= (shopItems.contains(item) ? 0 : 1);
+		return (40 - shopItems.size()) >= (shopItems.contains(item) ? 0 : 1)
+			&& currentStock(item) < (Short.MAX_VALUE - Short.MIN_VALUE);
 	}
 
 	public int getItemBuyPrice(int itemID, int defaultPrice, int totalBought) {
@@ -272,5 +278,13 @@ public final class Shop {
 			}
 		}
 		return 0;
+	}
+
+	public int getFilteredSize(int maxID) {
+		if (maxID <= ItemId.NOTHING.id()) {
+			return this.getShopSize();
+		} else {
+			return (int)(this.shopItems.stream().filter(i -> i.getCatalogId() <= maxID).count());
+		}
 	}
 }

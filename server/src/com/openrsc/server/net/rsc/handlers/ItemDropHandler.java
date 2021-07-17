@@ -3,14 +3,15 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ItemCommandStruct;
 
 import java.util.Optional;
 
-public final class ItemDropHandler implements PacketHandler {
+public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception{
+	public void process(ItemCommandStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			player.resetPath();
@@ -22,10 +23,11 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		player.resetAll();
-		int inventorySlot = (int) packet.readShort();
+		int inventorySlot = payload.index;
 		int amount;
-		if (!player.isUsingAuthenticClient()) {
-			amount = packet.readInt();
+		boolean respectDropX = player.isUsingCustomClient() && player.getWorld().getServer().getConfig().WANT_DROP_X;
+		if (respectDropX) {
+			amount = payload.amount;
 		} else {
 			amount = 0;
 		}
@@ -36,16 +38,20 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 		Item tempitem = null;
 
-		//User wants to drop the item from equipment tab
-		if (inventorySlot == -1 && !player.isUsingAuthenticClient()) {
-			int realid = (int) packet.readShort();
+		// User wants to drop the item from equipment tab
+		if (inventorySlot == -1 && player.isUsingCustomClient() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			int realid = payload.realIndex;
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
-			if (slot != -1)
+			if (slot != -1) {
 				tempitem = player.getCarriedItems().getEquipment().get(slot);
+				if (!respectDropX) {
+					amount = tempitem.getAmount();
+				}
+			}
 		} else {
 			if (inventorySlot != -1) {
 				tempitem = player.getCarriedItems().getInventory().get(inventorySlot);
-				if (player.isUsingAuthenticClient()) {
+				if (!respectDropX) {
 					amount = tempitem.getAmount();
 				}
 			}
@@ -57,6 +63,12 @@ public final class ItemDropHandler implements PacketHandler {
 		final Item item = new Item(tempitem.getCatalogId(), amount, tempitem.getNoted(), tempitem.getItemId());
 
 		if (amount <= 0) {
+			return;
+		}
+
+		if (item.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+			player.message("Notes have been disabled; you cannot drop them anymore.");
+			player.message("You may either deposit it in the bank or sell to a shop instead.");
 			return;
 		}
 

@@ -37,6 +37,8 @@ public class FishingTrawler extends DelayedEvent {
 	private final int LEAK1 = 1077;
 	private final int LEAK2 = 1071;
 
+	private final int BASE_TICK = 640;
+
 	private Area shipArea;
 	private Point spawnLocation;
 	private Area shipAreaWater;
@@ -92,7 +94,7 @@ public class FishingTrawler extends DelayedEvent {
 	// fairness rule, if 4 minutes is remaining just play with current players
 	public boolean isAvailable() {
 		return this.currentStage == State.STANDBY || (this.currentStage == State.FIRST_SHIP &&
-				timeTillReturn >= 400 && players.size() < MAX_PLAYERS);
+				timeTillReturn >= 4 * (60 * 1000) / getWorld().getServer().getConfig().GAME_TICK && players.size() < MAX_PLAYERS);
 	}
 
 	public boolean register(SimpleSubscriber<FishingTrawler> subscriber) {
@@ -130,7 +132,7 @@ public class FishingTrawler extends DelayedEvent {
 					resetGame();
 					stop();
 					subscribers.parallelStream().forEach(subscriber -> {
-	                    subscriber.update(this);
+	                    subscriber.update(FishingTrawler.this);
 	                });
 					unregisterAll();
 				}
@@ -239,7 +241,7 @@ public class FishingTrawler extends DelayedEvent {
 						maximumBreak = 24;
 					}
 
-					ticksTillNextLeak = DataConversions.random(minimumBreak, maximumBreak);
+					ticksTillNextLeak = DataConversions.random(minimumBreak, maximumBreak) * BASE_TICK / getWorld().getServer().getConfig().GAME_TICK;
 				}
 				setWaterLevel(getWaterLevel() + ((int) (getLeakCount())));
 				updateInterfaces();
@@ -254,7 +256,7 @@ public class FishingTrawler extends DelayedEvent {
 	}
 
 	private void updateInterfaces() {
-		int minutesLeft = timeTillReturn / 100;// think its correct?
+		int minutesLeft = timeTillReturn * getWorld().getServer().getConfig().GAME_TICK / (1000 * 60);
 		for (Player player : players) {
 			ActionSender.updateFishingTrawler(player, waterLevel, minutesLeft, fishCaught, isNetBroken());
 		}
@@ -325,7 +327,8 @@ public class FishingTrawler extends DelayedEvent {
 	}
 
 	public void start() {
-		timeTillReturn = DataConversions.random(5,12) * 100;
+		timeTillReturn = DataConversions.random(5,12) * 60 * 1000; // time in ms
+		timeTillReturn = timeTillReturn / getWorld().getServer().getConfig().GAME_TICK; // corresponding ticks for world
 		currentStage = State.FIRST_SHIP;
 	}
 
@@ -384,7 +387,7 @@ public class FishingTrawler extends DelayedEvent {
 			/* The ship is leaking hardcore. */
 			if (freeLeakIndex == -1) {
 				break;
-			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y, null) != null) {
+			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(new Point(x, y)) != null) {
 				continue;
 			}
 			int southSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() - 1 : shipAreaWaterSpawn.getY() - 1;

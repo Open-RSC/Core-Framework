@@ -3,12 +3,14 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -39,6 +41,11 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.FIGHT_ARENA.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -52,13 +59,10 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 		mes("you gain two quest points");
 		delay(3);
 		give(player, ItemId.COINS.id(), 1000);
-		player.message("@gre@You haved gained 2 quest points!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FIGHT_ARENA);
-		//keep order kosher
-		int[] skillIDs = {Skills.ATTACK, Skills.THIEVING};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.FIGHT_ARENA.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
 		player.getCache().remove("freed_servil");
 		player.getCache().remove("killed_ogre");

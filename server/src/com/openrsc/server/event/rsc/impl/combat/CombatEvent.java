@@ -2,6 +2,7 @@ package com.openrsc.server.event.rsc.impl.combat;
 
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.container.Item;
@@ -20,6 +21,7 @@ public class CombatEvent extends GameTickEvent {
 
 	private final Mob attackerMob, defenderMob;
 	private int roundNumber = 0;
+	private int[] poisonedWeapons = {ItemId.POISONED_BRONZE_DAGGER.id(), ItemId.POISONED_IRON_DAGGER.id(), ItemId.POISONED_STEEL_DAGGER.id(), ItemId.POISONED_BLACK_DAGGER.id(), ItemId.POISONED_MITHRIL_DAGGER.id(), ItemId.POISONED_ADAMANTITE_DAGGER.id(), ItemId.POISONED_RUNE_DAGGER.id(), ItemId.POISONED_DRAGON_DAGGER.id()};
 
 	public CombatEvent(World world, Mob attacker, Mob defender) {
 		super(world, null, 0, "Combat Event", false);
@@ -34,21 +36,27 @@ public class CombatEvent extends GameTickEvent {
 	}
 
 	private void onDeath(Mob killed, Mob killer) {
+
+		/* Commented out useless codeblock. Can be put back if these plugins are implemented some day. 2021-03-05
 		if (killer.isPlayer() && killed.isNpc()) {
+			// this interface doesn't even exist anymore, so this code block is dead, never returns. 2021-03-05
 			if (killed.getWorld().getServer().getPluginHandler().handlePlugin((Player)killer, "PlayerKilledNpc", new Object[]{((Player) killer), ((Npc) killed)})) {
 				return;
 			}
-		} else if(killer.isPlayer() && killed.isPlayer()) {
+		} else if (killer.isPlayer() && killed.isPlayer()) {
+			// no default action currently, so this code block is dead, never returns. 2021-03-05
 			if (killed.getWorld().getServer().getPluginHandler().handlePlugin((Player)killer, "PlayerKilledPlayer", new Object[]{((Player) killer), ((Player) killed)})) {
 				return;
 			}
 		}
+		*/
 
 		killed.setLastCombatState(CombatState.LOST);
 		killer.setLastCombatState(CombatState.WON);
 
 		if (killed.isPlayer() && killer.isPlayer()) {
-			int skillsDist[] = {0, 0, 0, 0};
+			int[] skillsDist = new int[Skill.maxId(Skill.ATTACK.name(), Skill.DEFENSE.name(),
+				Skill.STRENGTH.name(), Skill.HITS.name()) + 1];
 
 			Player playerKiller = (Player) killer;
 			Player playerKilled = (Player) killed;
@@ -56,23 +64,26 @@ public class CombatEvent extends GameTickEvent {
 			int exp = Formulae.combatExperience(playerKilled);
 			switch (playerKiller.getCombatStyle()) {
 				case Skills.CONTROLLED_MODE:
-					for (int x = 0; x < 3; x++) {
-						skillsDist[x] = 1;
+					for (int skillId : new int[]{Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()}) {
+						skillsDist[skillId] = 1;
 					}
 					break;
 				case Skills.AGGRESSIVE_MODE:
-					skillsDist[Skills.STRENGTH] = 3;
+					skillsDist[Skill.STRENGTH.id()] = 3;
 					break;
 				case Skills.ACCURATE_MODE:
-					skillsDist[Skills.ATTACK] = 3;
+					skillsDist[Skill.ATTACK.id()] = 3;
 					break;
 				case Skills.DEFENSIVE_MODE:
-					skillsDist[Skills.DEFENSE] = 3;
+					skillsDist[Skill.DEFENSE.id()] = 3;
 					break;
 			}
-			skillsDist[Skills.HITS] = 1;
+			skillsDist[Skill.HITS.id()] = 1;
 			playerKiller.incExp(skillsDist, exp, true);
 		}
+
+		// If `killed` is an NPC, xp distribution is handled by Npc.handleXpDistribution()
+
 		killer.setKillType(0);
 		killed.killedBy(killer);
 		if (killer.isPlayer()) {
@@ -97,6 +108,13 @@ public class CombatEvent extends GameTickEvent {
 			target.setLastCombatState(CombatState.ERROR);
 			resetCombat();
 		} else {
+
+			if (hitter.isPlayer() && hitter.getConfig().WANT_POISON_NPCS && checkPoisonousWeapons(hitter) && target.getCurrentPoisonPower() < 10 && DataConversions.random(1, 50) == 1) {
+				target.setPoisonDamage(60);
+				target.startPoisonEvent();
+				((Player) hitter).message("@gr3@You @gr2@have @gr1@poisioned @gr2@the " + ((Npc) target).getDef().name + "!");
+			}
+
 			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
 			int damage = CombatFormula.doMeleeDamage(hitter, target);
 			inflictDamage(hitter, target, damage);
@@ -125,6 +143,15 @@ public class CombatEvent extends GameTickEvent {
 		}
 	}
 
+	private boolean checkPoisonousWeapons(Mob hitter) {
+		for (int itemId : poisonedWeapons) {
+			if (((Player) hitter).getCarriedItems().getEquipment().hasEquipped(itemId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private void inflictDamage(final Mob hitter, final Mob target, int damage) {
 		hitter.incHitsMade();
 
@@ -146,8 +173,8 @@ public class CombatEvent extends GameTickEvent {
 		}
 
 		// Reduce targets hits by supplied damage amount.
-		int lastHits = target.getLevel(Skills.HITPOINTS);
-		target.getSkills().subtractLevel(Skills.HITS, damage, false);
+		int lastHits = target.getLevel(Skill.HITS.id());
+		target.getSkills().subtractLevel(Skill.HITS.id(), damage, false);
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
@@ -166,7 +193,7 @@ public class CombatEvent extends GameTickEvent {
 			updateParty((Player)hitter);
 		}
 
-		if (target.getSkills().getLevel(Skills.HITS) > 0) {
+		if (target.getSkills().getLevel(Skill.HITS.id()) > 0) {
 
 			// NPCs can run special combat scripts.
 			// Custom: Ring of Life execution

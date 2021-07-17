@@ -2,6 +2,7 @@ package com.openrsc.server.plugins;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.ShopRestockEvent;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.PluginTickEvent;
 import com.openrsc.server.model.Shop;
@@ -49,7 +50,7 @@ public final class PluginHandler {
 
 	public PluginHandler (final Server server) {
 		this.server = server;
-		this.threadFactory = new NamedThreadFactory(getServer().getName()+" : PluginThread");
+		this.threadFactory = new NamedThreadFactory(server.getName()+" : PluginThread", server.getConfig());
 		this.knownInterfaces = new ArrayList<>();
 		this.plugins = new HashMap<>();
 		this.loadedClassFiles = new ArrayList<>();
@@ -211,6 +212,14 @@ public final class PluginHandler {
 				}
 			}
 		}
+		// Call initialization for Registrars
+		for (final Class<?> plugin : loadedClassFiles) {
+			if (AbstractRegistrar.class.isAssignableFrom(plugin)) {
+				final Method m = plugin.getMethod("init", Server.class);
+				final Object instance = plugin.getConstructor().newInstance();
+				m.invoke(instance, getServer());
+			}
+		}
 
 		LOGGER.info("Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
 		LOGGER.info("Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");
@@ -333,8 +342,24 @@ public final class PluginHandler {
 				}
 
 				try {
+
 					final Method m = cls.getClass().getMethod("on" + interfce, dataClasses);
 					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
+
+					boolean shouldFire = true;
+					HashMap<String, GameTickEvent> events = getServer().getGameEventHandler().getEvents();
+					for (GameTickEvent e : events.values()) {
+						if (e instanceof PluginTickEvent) {
+							PluginTickEvent pluginTickEvent = (PluginTickEvent)e;
+
+							if (pluginTickEvent.getPluginName().equals(pluginName) && pluginTickEvent.getOwner().equals(owner) ) {
+								shouldFire = false;
+							}
+						}
+					}
+
+					if (!shouldFire) return;
+
 					final PluginTask task = new PluginTask(world, owner, interfce, data) {
 						@Override
 						public int action() {

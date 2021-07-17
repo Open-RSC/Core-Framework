@@ -1,19 +1,22 @@
 package com.openrsc.server.plugins.authentic.npcs.yanille;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.authentic.npcs.Certer;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 
-	public static final int SIDNEY_SMITH = 778;
+	public static final int SIDNEY_SMITH = NpcId.SIDNEY_SMITH.id();
 
 	/**
 	 * ITEM UNCERTED
@@ -24,6 +27,7 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 	public static final int SUPER_DEFENSE_POT = ItemId.FULL_SUPER_DEFENSE_POTION.id();
 	public static final int DRAGON_BONES = ItemId.DRAGON_BONES.id();
 	public static final int LIMPWURT_ROOT = ItemId.LIMPWURT_ROOT.id();
+
 	/**
 	 * ITEM CERTED
 	 */
@@ -50,11 +54,22 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 		if (cID == -1) {
 			npcsay(player, n, "Hello, I'm Sidney Smith, the certification Clerk.",
 				"How can I help you ?");
+
+			ArrayList<String> options = new ArrayList<>();
+			if (!player.getCertOptOut()) {
+				options.add("I'd like to certificate some goods please.");
+			}
+			options.add("I'd like to change some certificates for goods please.");
+			options.add("What is certification ?");
+			options.add("Which goods do you certificate ?");
+			String[] finalOptions = new String[options.size()];
+
 			int menu = multi(player, n, false, //do not send over
-				"I'd like to certificate some goods please.",
-				"I'd like to change some certificates for goods please.",
-				"What is certification ?",
-				"Which goods do you certificate ?");
+				options.toArray(finalOptions));
+			if (menu >= 0 && player.getCertOptOut()) {
+				++menu;
+			}
+
 			if (menu == 0) {
 				say(player, n, "I'd like to certificate some goods please.");
 				sidneyCert(player, n, Sidney.GOODS_TO_CERTIFICATE);
@@ -78,11 +93,21 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 					"Super Strength Potion,",
 					"Dragon Bones,",
 					"and Limpwurt Root.");
+				ArrayList<String> options1 = new ArrayList<>();
+				options1.add("How many items do you need to make a certificate.");
+				if (!player.getCertOptOut()) {
+					options1.add("I'd like to certificate some goods please.");
+				}
+				options1.add("I'd like to change some certificates for goods please.");
+				options1.add("Ok, thanks.");
+				String[] finalOptions = new String[options1.size()];
 				int SUB_MENU_ONE = multi(player, n,
-					"How many items do you need to make a certificate.",
-					"I'd like to certificate some goods please.",
-					"I'd like to change some certificates for goods please.",
-					"Ok, thanks.");
+					options1.toArray(finalOptions));
+
+				if (SUB_MENU_ONE >= 1 && player.getCertOptOut()) {
+					++SUB_MENU_ONE;
+				}
+
 				if (SUB_MENU_ONE == 0) {
 					sidneyCert(player, n, Sidney.HOW_MANY_ITEMS_TO_MAKE_CERTIFICATE);
 				} else if (SUB_MENU_ONE == 1) {
@@ -96,10 +121,22 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 					"You swap some goods for certificates which are easier to store.",
 					"I specialise in certificating very rare items.",
 					"The kinds of items only Legendary Runescape citizens will own.");
+
+				ArrayList<String> options2 = new ArrayList<>();
+				if (!player.getCertOptOut()) {
+					options2.add("I'd like to certificate some goods please.");
+				}
+				options2.add("I'd like to change some certificates for goods please.");
+				options2.add("Ok thanks.");
+				String[] finalOptions2 = new String[options2.size()];
+
 				int SUB_MENU_TWO = multi(player, n,
-					"I'd like to certificate some goods please.",
-					"I'd like to change some certificates for goods please.",
-					"Ok thanks.");
+					options2.toArray(finalOptions2));
+
+				if (SUB_MENU_TWO >= 0 && player.getCertOptOut()) {
+					++SUB_MENU_TWO;
+				}
+
 				if (SUB_MENU_TWO == 0) {
 					sidneyCert(player, n, Sidney.GOODS_TO_CERTIFICATE);
 				} else if (SUB_MENU_TWO == 1) {
@@ -380,6 +417,10 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (Certer.UIMCertBlock(player, npc, item)) {
+			Certer.UIMCert(player, npc, item);
+			return;
+		}
 		if (npc.getID() == SIDNEY_SMITH && inArray(item.getCatalogId(), PRAYER_RESTORE_POT,
 			SUPER_ATTACK_POT, SUPER_STRENGTH_POT, SUPER_DEFENSE_POT, DRAGON_BONES,
 			LIMPWURT_ROOT, PRAYER_CERT, SUPER_ATTACK_CERT, SUPER_DEFENSE_CERT,

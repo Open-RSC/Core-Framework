@@ -2,10 +2,11 @@ package com.openrsc.server.plugins.custom.npcs;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.misc.FishingCape;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -20,14 +21,14 @@ public class MasterFisher implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
 		if (config().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.MASTER_FISHER.id()) {
-			if (getCurrentLevel(player, Skills.FISHING) < 68) {
+			if (getCurrentLevel(player, Skill.FISHING.id()) < 68) {
 				npcsay(player, n, "Hello only the top fishers are allowed in here");
 				player.message("You need a fishing level of 68 to enter");
 			} else {
 				npcsay(player, n, "Hello, welcome to the fishing guild",
 					"Please feel free to make use of any of our facilities");
 				if (config().WANT_CUSTOM_SPRITES
-					&& getMaxLevel(player, Skills.FISHING) >= 99) {
+					&& getMaxLevel(player, Skill.FISHING.id()) >= 99) {
 
 					if (multi(player, n, "I like your cape", "Thank you") == 0) {
 						npcsay(player, n, "Huh?", "Oh it's just me Fishing cape",
@@ -41,8 +42,12 @@ public class MasterFisher implements TalkNpcTrigger {
 									mes("And hands you a Fishing cape");
 									delay(3);
 									give(player, ItemId.FISHING_CAPE.id(), 1);
+									player.getCache().set("fishing_cape_charges", FishingCape.MAX_CHARGES);
 									npcsay(player, n, "There",
-										"Wear this to catch manta rays and sea turtles while fishing for sharks");
+										"This cape allows you to form a special bond with sharks.",
+										"Don't ask me how it works, but just think very hard about sharks,",
+										"and surround yourself with sharks, and you'll find yourself back here.",
+										"You might also have a better haul at the fishing trawler.");
 								}
 							} else {
 								npcsay(player, n, "You don't have enough coins " + (player.isMale() ? "lad" : "lass"));

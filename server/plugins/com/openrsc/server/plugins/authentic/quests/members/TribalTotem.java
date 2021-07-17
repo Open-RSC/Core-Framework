@@ -3,17 +3,20 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -42,6 +45,11 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.TRIBAL_TOTEM.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -49,8 +57,11 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the tribal totem quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TRIBAL_TOTEM), true);
-		player.message("@gre@You haved gained 1 quest point!");
+		final QuestReward reward = Quest.TRIBAL_TOTEM.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override
@@ -392,7 +403,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
-				if (getCurrentLevel(player, Skills.THIEVING) < 21) {
+				if (getCurrentLevel(player, Skill.THIEVING.id()) < 21) {
 					mes("You don't find anything interesting");
 					delay(3);
 				} else {

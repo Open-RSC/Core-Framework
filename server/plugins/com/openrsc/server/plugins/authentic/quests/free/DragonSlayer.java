@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,6 +10,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -55,22 +57,24 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.DRAGON_SLAYER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
 
 	@Override
 	public void handleReward(Player player) {
-		player.teleport(410, 3481, false);
 		player.message("Well done you have completed the dragon slayer quest");
-		player.message("@gre@You haved gained 2 quest points!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DRAGON_SLAYER);
-		//keep order kosher
-		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.DRAGON_SLAYER.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
+		player.teleport(410, 3481, false);
 	}
 
 	@Override
@@ -255,9 +259,9 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				} else if (menu2 == 1) {
 					oziachDialogue(player, n, Oziach.FIRST_PIECE);
-				} else if (menu2 == 1) {
+				} else if (menu2 == 2) {
 					oziachDialogue(player, n, Oziach.THIRD_PIECE);
-				} else if (menu2 == 1) {
+				} else if (menu2 == 3) {
 					npcsay(player, n, "Fare ye well");
 				}
 				break;
@@ -272,9 +276,9 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				} else if (menu3 == 1) {
 					oziachDialogue(player, n, Oziach.FIRST_PIECE);
-				} else if (menu3 == 1) {
+				} else if (menu3 == 2) {
 					oziachDialogue(player, n, Oziach.SECOND_PIECE);
-				} else if (menu3 == 1) {
+				} else if (menu3 == 3) {
 					npcsay(player, n, "Fare ye well");
 				}
 				break;

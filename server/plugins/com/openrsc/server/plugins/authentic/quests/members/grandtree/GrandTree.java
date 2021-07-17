@@ -3,13 +3,16 @@ package com.openrsc.server.plugins.authentic.quests.members.grandtree;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -58,6 +61,11 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.GRAND_TREE.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -65,20 +73,11 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	@Override
 	public void handleReward(Player player) {
 		player.message("well done you have completed the grand tree quest");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GRAND_TREE);
-		//keep order kosher
-		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK, Skills.MAGIC};
-		//1600 for agility, 1600 for attack, 600 for magic
-		int[] baseAmounts = {1600, 1600, 600};
-		//1200 for agility, 1200 for attack, 200 for magic
-		int[] varAmounts = {1200, 1200, 200};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			questData[Quests.MAPIDX_BASE] = baseAmounts[i];
-			questData[Quests.MAPIDX_VAR] = varAmounts[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.GRAND_TREE.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
-		player.message("@gre@You haved gained 5 quest points!");
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override
@@ -1407,10 +1406,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			delay(3);
 		}
 		else if (obj.getID() == WATCH_TOWER_UP) {
-			if (getCurrentLevel(player, Skills.AGILITY) >= 25) {
+			if (getCurrentLevel(player, Skill.AGILITY.id()) >= 25) {
 				player.message("you jump up and grab hold of the platform");
 				player.teleport(710, 2364);
-				player.incExp(Skills.AGILITY, 30, true);
+				player.incExp(Skill.AGILITY.id(), 30, true);
 				delay(5);
 				player.message("and pull yourself up");
 			} else {

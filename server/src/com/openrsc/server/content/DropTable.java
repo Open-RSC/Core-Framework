@@ -82,6 +82,10 @@ public class DropTable {
 	}
 
 	public void addEmptyDrop(int weight) {
+		if (weight < 0) {
+			LOGGER.error("The drop table for \"" + this.description + "\" doesn't add up as expected!!!");
+			System.exit(0);
+		}
 		drops.add(new Drop(ItemId.NOTHING.id(), 0, weight, false, dropType.NOTHING));
 		this.totalWeight += weight;
 	}
@@ -264,7 +268,7 @@ public class DropTable {
 		TABLE;
 	}
 
-	public class Accessor {
+	public static class Accessor {
 		int id;
 		int numerator;
 		int denominator;
@@ -283,16 +287,13 @@ public class DropTable {
 				numerator = ringOfWealth ? (RING_OF_WEALTH_BOOST_NUMERATOR * mob.denominator) + (RING_OF_WEALTH_BOOST_DENOMINATOR * mob.numerator) : mob.numerator;
 				denominator = ringOfWealth ? RING_OF_WEALTH_BOOST_DENOMINATOR * mob.denominator : mob.denominator;
 				int hit = DataConversions.random(1, denominator);
-				if (hit <= numerator) {
-					return true;
-				} else
-					return false;
+				return hit <= numerator;
 			}
 		}
 		return false;
 	}
 
-	private class Drop {
+	private static class Drop {
 		DropTable table = null;
 		dropType type;
 		int id = -1;

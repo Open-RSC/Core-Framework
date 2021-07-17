@@ -1,11 +1,12 @@
 package com.openrsc.server.plugins.authentic.misc;
 
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.mes;
 
 public class Dummy implements OpLocTrigger {
 
@@ -19,11 +20,11 @@ public class Dummy implements OpLocTrigger {
 		mes("You swing at the dummy");
 		delay(5);
 		if (obj.getID() == 49) { // Dummy
-			if (player.getSkills().getLevel(Skills.ATTACK) > 7) {
+			if (player.getSkills().getLevel(Skill.ATTACK.id()) > 7) {
 				player.message("There is only so much you can learn from hitting a dummy");
 			} else {
 				player.message("You hit the dummy");
-				player.incExp(Skills.ATTACK, 20, true);
+				player.incExp(Skill.ATTACK.id(), 20, true);
 			}
 		} else if (obj.getID() == 562) { // fight Dummy
 			if (player.getCache().hasKey("combat_dummy")) {
@@ -38,7 +39,7 @@ public class Dummy implements OpLocTrigger {
 
 			// TODO: Proper message for this prop.
 			player.message("You hit the dummy");
-			player.incExp(Skills.ATTACK, 200, true);
+			player.incExp(Skill.ATTACK.id(), 200, true);
 		}
 	}
 }

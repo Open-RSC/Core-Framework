@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -12,6 +12,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -48,6 +51,11 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.WITCHS_HOUSE.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -55,8 +63,11 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the Witches house quest");
-		player.message("@gre@You haved gained 4 quest points!");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_HOUSE), true);
+		final QuestReward reward = Quest.WITCHS_HOUSE.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
 		player.getCache().remove("witch_gone");
 		player.getCache().remove("shapeshifter");
 		player.getCache().remove("found_magnet");
@@ -264,7 +275,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			}
 			if (shouldShock) {
 				int damage;
-				if (player.getSkills().getLevel(Skills.HITS) < 20) {
+				if (player.getSkills().getLevel(Skill.HITS.id()) < 20) {
 					damage = DataConversions.getRandom().nextInt(9) + 1;
 				} else {
 					damage = DataConversions.getRandom().nextInt(14) + 1;
@@ -433,13 +444,17 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		player.message("The shapeshifter glares at you");
 		//delay of about 2 ticks
 		player.message("You feel slightly weakened");
-		int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
+		int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
 			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) - 4) / 15.0));
 			/* New current level */
 			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
-			player.getSkills().setLevel(affectedStat, newStat);
+			player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+		}
+		if (!sendUpdate) {
+			player.getSkills().sendUpdateAll();
 		}
 	}
 

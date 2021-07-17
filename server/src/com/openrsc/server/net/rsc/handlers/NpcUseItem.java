@@ -4,21 +4,22 @@ import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ItemOnMobStruct;
 
-public class NpcUseItem implements PacketHandler {
+public class NpcUseItem implements PayloadProcessor<ItemOnMobStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ItemOnMobStruct payload, Player player) throws Exception {
 
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		int npcIndex = packet.readShort();
+		int npcIndex = payload.serverIndex;
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
-		final Item item = player.getCarriedItems().getInventory().get(packet.readShort());
+		final Item item = player.getCarriedItems().getInventory().get(payload.slotIndex);
 		if (affectedNpc == null || item == null) {
 			return;
 		}

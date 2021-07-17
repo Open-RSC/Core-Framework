@@ -95,9 +95,9 @@ public class Social {
 	}
 
 	public void alertOfLogin(Player player) {
-		boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+		boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
 			== PlayerSettings.BlockingMode.All.id();
-		boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+		boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
 			== PlayerSettings.BlockingMode.None.id();
 		if (friendList.containsKey(player.getUsernameHash())
 			&& (blockNone

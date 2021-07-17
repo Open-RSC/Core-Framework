@@ -14,11 +14,14 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Bankers.class);
-	public static int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
+	public static int[] BANKERS = {NpcId.BANKER.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_ALKHARID.id(),
 		NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
 
 	@Override
@@ -73,8 +76,13 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				} else {
 					npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 				}
-				player.setAccessingBank(true);
-				ActionSender.showBank(player);
+
+				if (!config().COIN_BANK && player.getClientLimitations().supportsItemBank) {
+					player.setAccessingBank(true);
+					ActionSender.showBank(player);
+				} else {
+					showCoinBank(player, npc);
+				}
 			}
 		} else if (menu == 1) {
 			if (npc.getID() == NpcId.GNOME_BANKER.id()) {
@@ -99,7 +107,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 		} else if (menu == 2 && config().WANT_BANK_PINS) {
 			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
-				if (player.isUsingAuthenticClient()) {
+				if (!player.isUsingCustomClient()) {
 					npcsay(player, npc, "ok but i have to warn you that this is going to be pretty annoying.");
 				}
 				setbankpin(player, npc);
@@ -148,13 +156,14 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return (player.isUsingAuthenticClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
-			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK);
+		return (!player.isUsingCustomClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
+			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK
+			&& !item.getDef(player.getWorld()).getName().toLowerCase().endsWith("cracker"));
 	}
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		if (item.getNoted() && player.isUsingAuthenticClient()) {
+		if (item.getNoted() && !player.isUsingCustomClient()) {
 			npcsay(player, npc, "Is that a Shantay pass?");
 			npcsay(player, npc, "What do you want me to do with this?");
 			say(player, npc, "Yeah it is, but look at the back.");
@@ -185,6 +194,24 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				delay(1);
 				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to deposit these notes at this time.");
 			}
+		} else if (player.getIronMan() == IronmanMode.Ultimate.id()) {
+			// If a UIM uses a certable item on a banker (or a note cert of said item)
+			// they will be able to note cert/un-note cert it.
+			for (int[] ids : Certer.certerTable.values()) {
+				for (int id : ids) {
+					if (item.getCatalogId() == id) {
+						Certer.UIMCert(player, npc, item);
+						return;
+					}
+				}
+			}
+
+			// If a UIM uses a market cert on a banker, they will be able to exchange for
+			// bank certs.
+			if (Certer.certExchangeBlock(player, npc, item)) {
+				Certer.exchangeMarketForBankCerts(player, npc, item);
+			}
+
 		} else if (player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
 				quickFeature(npc, player, false);
@@ -207,6 +234,107 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			}
+		}
+	}
+
+	private void showCoinBank(Player player, Npc npc) {
+		// Transaction Menu
+		int transactionType = transactionMenu(player, npc);
+		if (transactionType == 0) {
+			player.message("How much would you like to withdraw?");
+		} else if (transactionType == 1) {
+			player.message("How much would you like to deposit?");
+		}
+
+		int amountChoice;
+		int requestedAmount = 0;
+
+		// Amount
+		if (transactionType != 2) {
+			amountChoice = amountMenu(player, npc, transactionType);
+			if (amountChoice < 0)
+				return;
+
+			final int[] possibleAmounts = new int[]{1, 10, 100, 1000, 2500};
+			requestedAmount = possibleAmounts[amountChoice];
+		}
+
+		// Perform transaction
+		switch(transactionType) {
+			case 0: // withdraw
+				withdraw(player, npc, requestedAmount);
+				break;
+			case 1: // deposit
+				deposit(player, npc, requestedAmount);
+				break;
+			case 2: // display balance
+				balance(player, npc);
+				break;
+		}
+	}
+
+	private int transactionMenu(Player player, Npc npc) {
+		ArrayList<String> options = new ArrayList<>();
+		Collections.addAll(options,
+			"I'd like to withdraw some gold",
+			"I'd like to deposit some gold",
+			"I'd like to see my banks balance");
+		String[] finalOptions = new String[options.size()];
+
+		return multi(player, options.toArray(finalOptions));
+	}
+
+	private int amountMenu(Player player, Npc npc, int transactionType) {
+		if (transactionType == -1)
+			return -1;
+
+		ArrayList<String> options = new ArrayList<>();
+		Collections.addAll(options,
+			"1 gp",
+			"10 gp",
+			"100 gp"); // early on there was no 1000 nor 2500 options. 1000 option added in 12 June 2001, 2500 unmentioned hidden update
+		// We will allow those options as well if world is item bank
+		// per Leclerc the amounts were like they were
+		if (!player.getConfig().COIN_BANK) {
+			Collections.addAll(options,
+				"1000 gp",
+				"2500 gp");
+		}
+		String[] finalOptions = new String[options.size()];
+
+		return multi(player, options.toArray(finalOptions));
+	}
+
+	private void withdraw(Player player, Npc npc, int amount) {
+		if (player.getBank().countId(ItemId.COINS.id()) >= amount) {
+			player.getBank().remove(ItemId.COINS.id(), amount, false);
+			give(player, ItemId.COINS.id(), amount);
+		} else {
+			player.message("Sorry you don't have enough balance to complete the transaction");
+		}
+		askAnotherTransaction(player, npc);
+	}
+
+	private void deposit(Player player, Npc npc, int amount) {
+		if (ifheld(player, ItemId.COINS.id(), amount)) {
+			player.getCarriedItems().remove(new Item(ItemId.COINS.id(), amount));
+			player.getBank().add(new Item(ItemId.COINS.id(), amount));
+		} else {
+			player.message("Sorry you don't have enough gold to complete the transaction");
+		}
+		askAnotherTransaction(player, npc);
+	}
+
+	private void balance(Player player, Npc npc) {
+		player.message("Your current balance is: " + player.getBank().countId(ItemId.COINS.id()) + " gp");
+		askAnotherTransaction(player, npc);
+	}
+
+	private void askAnotherTransaction(Player player, Npc npc) {
+		player.message("Do you want to perform another transaction?");
+		int response = multi(player, "Yes", "No");
+		if (response == 0) {
+			showCoinBank(player, npc);
 		}
 	}
 }

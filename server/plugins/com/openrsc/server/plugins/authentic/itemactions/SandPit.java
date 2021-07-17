@@ -45,7 +45,7 @@ public class SandPit implements UseLocTrigger {
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchSand(player, item);
 		}
 	}

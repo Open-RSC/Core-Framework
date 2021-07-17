@@ -1,7 +1,7 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.constants.*;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -14,8 +14,8 @@ import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.login.PlayerRemoveRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
@@ -23,24 +23,25 @@ import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.Entity;
-import com.openrsc.server.model.entity.GameObject;
-import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.net.rsc.PacketHandlerLookup;
+import com.openrsc.server.net.rsc.ClientLimitations;
+import com.openrsc.server.net.rsc.PayloadProcessorManager;
+import com.openrsc.server.net.rsc.parsers.PayloadParser;
+import com.openrsc.server.net.rsc.parsers.impl.Payload177Parser;
+import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
+import com.openrsc.server.net.rsc.parsers.impl.Payload38Parser;
+import com.openrsc.server.net.rsc.parsers.impl.PayloadCustomParser;
+import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import com.openrsc.server.util.rsc.PrerenderedSleepword;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,7 +66,7 @@ public final class Player extends Mob {
 	// 1 walked step is +1 activity, 1 5-min warn to move is +25 activity (saved each 30 secs => 2.5 per save)
 	// so everything is multiplied by 2 to avoid decimals
 	private final int KITTEN_ACTIVITY_THRESHOLD = 50;
-	public int bankSize = getWorld().getServer().getConfig().MEMBER_WORLD ? (getConfig().WANT_CUSTOM_BANKS ? ItemId.maxCustom : 192) : 48; //Maximum bank items allowed
+	public int sessionId;
 	private int totalLevel = 0;
 	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
 	private long lastSave = System.currentTimeMillis();
@@ -81,6 +82,7 @@ public final class Player extends Mob {
 	private boolean sleeping = false;
 	private int activity = 0;
 	private int kills = 0;
+	private long openPkPoints = 0;
 	private int npcKills = 0;
 	private int expShared = 0;
 	private int deaths = 0;
@@ -122,6 +124,13 @@ public final class Player extends Mob {
 	public int preferredIcon = -1;
 	private boolean denyAllLogoutRequests = false;
 	private boolean qolOptOutWarned = false;
+	private boolean certOptOutWarned = false;
+	public boolean speakTongues = false;
+	private ClientLimitations clientLimitations;
+
+	public int knownPlayersCount = 0;
+	public int[] knownPlayerPids = new int[500];
+	public int[] knownPlayerAppearanceIds = new int[500];
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -289,10 +298,10 @@ public final class Player extends Mob {
 	 */
 	private String sleepword;
 
-    /**
-     * Player sleep word
-     */
-    private int prerenderedSleepwordIndex;
+	/**
+	 * Player sleep word
+	 */
+	private int prerenderedSleepwordIndex;
 
 	/**
 	 * If the player has been sending suspicious packets
@@ -365,7 +374,7 @@ public final class Player extends Mob {
 	 * @param request
 	 */
 	public Player(final World world, final LoginRequest request) {
-		super(world);
+		super(world, EntityType.PLAYER);
 
 		password = request.getPassword();
 		usernameHash = DataConversions.usernameToHash(request.getUsername());
@@ -398,8 +407,7 @@ public final class Player extends Mob {
 	public void setOneXp(final boolean isOneXp) {
 		if (getCache().hasKey("onexp_mode") && !isOneXp) {
 			getCache().remove("onexp_mode");
-		}
-		else if (!getCache().hasKey("onexp_mode") && isOneXp) {
+		} else if (!getCache().hasKey("onexp_mode") && isOneXp) {
 			getCache().store("onexp_mode", true);
 		}
 	}
@@ -425,6 +433,23 @@ public final class Player extends Mob {
 		this.IRON_MAN_HC_DEATH = int1;
 	}
 
+	/**
+	 * Checks if the player is any type of Iron Man (except a transfer character)
+	 *
+	 * @return True if the player is any type of Iron Man, false otherwise
+	 */
+	public boolean isIronMan() {
+		return getIronMan() == IronmanMode.Ironman.id()
+			|| getIronMan() == IronmanMode.Ultimate.id()
+			|| getIronMan() == IronmanMode.Hardcore.id();
+	}
+
+	/**
+	 * Checks if the player is the specified type of Iron Man
+	 *
+	 * @param mode The Iron Man type to check for
+	 * @return True if the player is of the specified Iron Man Type, false otherwise
+	 */
 	public boolean isIronMan(final int mode) {
 		if (mode == IronmanMode.Ironman.id() && getIronMan() == IronmanMode.Ironman.id()) {
 			return true;
@@ -443,6 +468,22 @@ public final class Player extends Mob {
 			return getCache().getBoolean("onexp_mode");
 		}
 		return false;
+	}
+
+	public void setPkMode(int isPk) {
+		getCache().set("pk_mode", isPk);
+	}
+
+	public int getPkMode() {
+		return getCache().hasKey("pk_mode") ? getCache().getInt("pk_mode") : 0;
+	}
+
+	public void setPkChanges(int changesLeft) {
+		getCache().set("pk_changes_left", changesLeft);
+	}
+
+	public int getPkChanges() {
+		return getCache().hasKey("pk_changes_left") ? getCache().getInt("pk_changes_left") : 0;
 	}
 
 	public void resetCannonEvent() {
@@ -468,7 +509,7 @@ public final class Player extends Mob {
 		lastSaveTime = save;
 	}
 
-	private int getAppearanceID() {
+	public int getAppearanceID() {
 		return appearanceID;
 	}
 
@@ -614,7 +655,7 @@ public final class Player extends Mob {
 		if (denyAllLogoutRequests && System.currentTimeMillis() - getLastClientActivity() < 30000) {
 			return false;
 		}
-		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
+		return !isBusy() && (System.currentTimeMillis() - getLastClientActivity() > 30000 || System.currentTimeMillis() - getCombatTimer() > 10000)
 			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
 			&& System.currentTimeMillis() - getLastExchangeTime() > 3000;
 	}
@@ -623,8 +664,9 @@ public final class Player extends Mob {
 		return System.currentTimeMillis() - lastReport > 60000;
 	}
 
-	public boolean castTimer() {
-		return System.currentTimeMillis() - lastSpellCast > 1250;
+	public boolean castTimer(boolean allowRapid) {
+		final int holdTimer = allowRapid ? 0 : 1250;
+		return System.currentTimeMillis() - lastSpellCast > holdTimer;
 	}
 
 	public boolean addOwnedPlugin(final PluginTask plugin) {
@@ -640,8 +682,7 @@ public final class Player extends Mob {
 			for (final PluginTask ownedPlugin : ownedPlugins) {
 				ownedPlugin.getScriptContext().setInterrupted(true);
 			}
-		}
-		catch (ConcurrentModificationException e) {
+		} catch (ConcurrentModificationException e) {
 			LOGGER.error(e);
 		}
 	}
@@ -665,22 +706,30 @@ public final class Player extends Mob {
 				}
 			}
 
-			int myWildLvl = getLocation().wildernessLevel();
-			int victimWildLvl = victim.getLocation().wildernessLevel();
-			if (myWildLvl < 1 || victimWildLvl < 1) {
-				message("You can't attack other players here. Move to the wilderness");
-				return false;
-			}
-			int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
-			if (combDiff > myWildLvl) {
-				message("You can only attack players within " + (myWildLvl) + " levels of your own here");
-				message("Move further into the wilderness for less restrictions");
-				return false;
-			}
-			if (combDiff > victimWildLvl) {
-				message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
-				message("Move further into the wilderness for less restrictions");
-				return false;
+			if (getConfig().USES_PK_MODE) {
+				if (getPkMode() == 0 || victim.getPkMode() == 0) {
+					message("You are not allowed to attack that person");
+					return false;
+				}
+				// TODO: make Lumbridge safe
+			} else {
+				int myWildLvl = getLocation().wildernessLevel();
+				int victimWildLvl = victim.getLocation().wildernessLevel();
+				if (myWildLvl < 1 || victimWildLvl < 1) {
+					message("You can't attack other players here. Move to the wilderness");
+					return false;
+				}
+				int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
+				if (combDiff > myWildLvl) {
+					message("You can only attack players within " + (myWildLvl) + " levels of your own here");
+					message("Move further into the wilderness for less restrictions");
+					return false;
+				}
+				if (combDiff > victimWildLvl) {
+					message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
+					message("Move further into the wilderness for less restrictions");
+					return false;
+				}
 			}
 
 			if (victim.isInvulnerableTo(this) || victim.isInvisibleTo(this)) {
@@ -708,13 +757,13 @@ public final class Player extends Mob {
 
 	public int combatStyleToIndex() {
 		if (getCombatStyle() == Skills.AGGRESSIVE_MODE) {
-			return Skills.STRENGTH;
+			return Skill.STRENGTH.id();
 		}
 		if (getCombatStyle() == Skills.ACCURATE_MODE) {
-			return Skills.ATTACK;
+			return Skill.ATTACK.id();
 		}
 		if (getCombatStyle() == Skills.DEFENSIVE_MODE) {
-			return Skills.DEFENSE;
+			return Skill.DEFENSE.id();
 		}
 		return -1;
 	}
@@ -735,6 +784,9 @@ public final class Player extends Mob {
 				updateSkullRemaining();
 			if (isCharged())
 				updateChargeRemaining();
+			if (getConfig().WANT_OPENPK_POINTS) {
+				getCache().store("openpk_points", getOpenPkPoints());
+			}
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -812,17 +864,17 @@ public final class Player extends Mob {
 				);
 			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
+				optionalSkillIndex = Optional.of(Skill.AGILITY.id());
 			}
 			//staff of iban (usable)
 			if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
+				optionalSkillIndex = Optional.of(Skill.AGILITY.id());
 			}
 			//battlestaves (incl. enchanted version)
 			if (itemLower.contains("battlestaff")) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
+				optionalSkillIndex = Optional.of(Skill.AGILITY.id());
 			}
 
 			if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -847,7 +899,7 @@ public final class Player extends Mob {
 				request.player = this;
 				request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
 				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
-				if(!getCarriedItems().getEquipment().unequipItem(request)) {
+				if (!getCarriedItems().getEquipment().unequipItem(request)) {
 					request.requestType = UnequipRequest.RequestType.FROM_BANK;
 					getCarriedItems().getEquipment().unequipItem(request, false);
 				}
@@ -886,17 +938,17 @@ public final class Player extends Mob {
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+					optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 				}
 				//staff of iban (usable)
 				if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+					optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 				}
 				//battlestaves (incl. enchanted version)
 				if (itemLower.contains("battlestaff")) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+					optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 				}
 
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -925,16 +977,8 @@ public final class Player extends Mob {
 		}
 	}
 
-	public int getBankSize() {
-		return bankSize;
-	}
-
-	public void setBankSize(final int size) {
-		this.bankSize = size;
-	}
-
 	public int getFreeBankSlots() {
-		return bankSize - getBank().size();
+		return getWorld().getMaxBankSize() - getBank().size();
 	}
 
 	public synchronized Bank getBank() {
@@ -984,6 +1028,7 @@ public final class Player extends Mob {
 
 	public void setCombatStyle(final int style) {
 		combatStyle = style;
+		ActionSender.sendCombatStyle(this);
 	}
 
 	public String getCorrectSleepword() {
@@ -1113,13 +1158,24 @@ public final class Player extends Mob {
 		getCache().store("global_mute", l);
 	}
 
+	public void setMuteNotify(final boolean n) {
+		getCache().store("mute_notify", n);
+	}
+
+	public boolean getMuteNotify() {
+		if (getCache().hasKey("mute_notify"))
+			return getCache().getBoolean("mute_notify");
+		else
+			return false;
+	}
+
 	public synchronized int getOption() {
 		return questionOption;
 	}
 
 	public synchronized void setOption(final int option) {
 		this.questionOption = option;
-		if(this.questionOption == -1) {
+		if (this.questionOption == -1) {
 			this.menuHandler = null;
 		}
 	}
@@ -1142,11 +1198,9 @@ public final class Player extends Mob {
 
 	public int calculateQuestPoints() {
 		int qps = 0;
-		for (Map.Entry<Integer, int[]> quest : getWorld().getServer().getConstants().getQuests().questData.entrySet()) {
-			Integer q = quest.getKey();
-			int[] data = quest.getValue();
-			if (this.getQuestStage(q) < 0) {
-				qps += data[0];
+		for (QuestInterface quest : getWorld().getQuests()) {
+			if (this.getQuestStage(quest.getQuestId()) < 0) {
+				qps += quest.getQuestPoints();
 			}
 		}
 		this.setQuestPoints(qps);
@@ -1178,7 +1232,7 @@ public final class Player extends Mob {
 				}
 			}
 		} else {
-			synchronized(getCarriedItems().getInventory().getItems()) {
+			synchronized (getCarriedItems().getInventory().getItems()) {
 				for (Item item : getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
 						|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
@@ -1200,7 +1254,7 @@ public final class Player extends Mob {
 				}
 			}
 		} else {
-			synchronized(getCarriedItems().getInventory().getItems()) {
+			synchronized (getCarriedItems().getInventory().getItems()) {
 				for (Item item : getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
 						return item.getCatalogId();
@@ -1306,20 +1360,35 @@ public final class Player extends Mob {
 		return sleepword;
 	}
 
-    public int getPrerenderedSleepwordIndex() {
-        return prerenderedSleepwordIndex;
-    }
+	public int getPrerenderedSleepwordIndex() {
+		return prerenderedSleepwordIndex;
+	}
 
 	public void setSleepword(final String sleepword) {
 		this.sleepword = sleepword;
 	}
 
-    public void setSleepword(int sleepwordIndex) {
-        this.prerenderedSleepwordIndex = sleepwordIndex;
-    }
+	public void setSleepword(int sleepwordIndex) {
+		this.prerenderedSleepwordIndex = sleepwordIndex;
+	}
 
 	public int getSpellWait() {
 		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
+	}
+
+	public boolean hasNoTradeConfirm() {
+		return hasNoTradeConfirm(0);
+	}
+
+	public boolean hasNoTradeConfirm(int atLeastMinutes) {
+		return System.currentTimeMillis() - getNoTradeConfirmTime() < Math.max(0L, (5L - atLeastMinutes)) * 60000;
+	}
+
+	public long getNoTradeConfirmTime() {
+		if (this.getCache().hasKey("last_noconfirm")) {
+			return this.getCache().getLong("last_noconfirm");
+		}
+		return 0;
 	}
 
 	public String getUsername() {
@@ -1331,8 +1400,9 @@ public final class Player extends Mob {
 	}
 
 	public long getUsernameHash() {
-		if (getAttribute("fakeuser", null) != null)
+		if (getAttribute("fakeuser", null) != null) {
 			return DataConversions.usernameToHash(getAttribute("fakeuser", null));
+		}
 		return usernameHash;
 	}
 
@@ -1368,6 +1438,13 @@ public final class Player extends Mob {
 		return Math.max(getCarriedItems().getEquipment().getMagic(), 1);
 	}
 
+	public int getHidingPoints() {
+		//Currently the only thing that affects hiding is the equipment
+		//no equipment known to have given hiding
+		return 1;
+		//return Math.max(getCarriedItems().getEquipment().getHiding(), 1);
+	}
+
 	public int[] getWornItems() {
 		return wornItems;
 	}
@@ -1377,91 +1454,75 @@ public final class Player extends Mob {
 		getUpdateFlags().setAppearanceChanged(true);
 	}
 
-	public int getPrayerStatePoints() { return prayerStatePoints; }
+	public int getPrayerStatePoints() {
+		return prayerStatePoints;
+	}
 
-	public void setPrayerStatePoints(int prayerStatePoints) { this.prayerStatePoints = prayerStatePoints; }
+	public void setPrayerStatePoints(int prayerStatePoints) {
+		this.prayerStatePoints = prayerStatePoints;
+	}
 
 	public void handleWakeup() {
 		fatigue = sleepStateFatigue;
 		ActionSender.sendFatigue(this);
 	}
 
-	public void incQuestExp(final int i, final int amount) {
+	public void incQuestExp(final int i, final int amount, final boolean useFatigue) {
 		int appliedAmount = amount;
 		if (!isOneXp())
 			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
 		if (isExperienceFrozen()) {
-			ActionSender.sendMessage(this, "You passed on " + appliedAmount/4 + " " +
+			ActionSender.sendMessage(this, "You passed on " + appliedAmount / 4 + " " +
 				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
 			return;
 		}
-		getSkills().addExperience(i, appliedAmount);
+		incExp(i, appliedAmount, useFatigue);
 	}
 
-	private List<Double> getExperienceRate(final int skill) {
-		// total possible multiplier
+	/**
+	 * Gets the experience multiplier for the player, based on the server's configurations
+	 *
+	 * @param skill The skill the player is training
+	 * @return The modifier that should be applied to the player's gained XP
+	 */
+	private double getExperienceMultiplier(final int skill) {
 		double multiplier = 1.0;
-		// multiplier for the player
-		double effectiveMultiplier = 1.0;
-		// minimum multiplier (used shared xp party)
-		double minMultiplier = 1.0;
 
-		/*
-		 Skilling Experience Rate
-		 */
-		if (skill >= 4 && skill <= getWorld().getServer().getConstants().getSkills().getSkillsCount() - 1) {
-			multiplier = getWorld().getServer().getConfig().SKILLING_EXP_RATE;
-			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
-				multiplier += getWorld().getServer().getConfig().WILDERNESS_BOOST;
-				if (isSkulled()) {
-					multiplier += getWorld().getServer().getConfig().SKULL_BOOST;
-				}
+		// Check to see if the server has double XP enabled.
+		if (getConfig().IS_DOUBLE_EXP) {
+			multiplier *= 2.0;
+		}
+
+		// If the player has opted into 1x, they get no multipliers
+		// (save for the DXP multiplier if enabled).
+		if (isOneXp()) return multiplier;
+
+		// Check if the skill is a non-combat skill and
+		// apply the non-combat skilling rate.
+		int[] skillIDs = {
+			Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.HITS.id(),
+			Skill.RANGED.id(), Skill.PRAYGOOD.id(), Skill.PRAYEVIL.id(), Skill.PRAYER.id(),
+			Skill.GOODMAGIC.id(), Skill.EVILMAGIC.id(), Skill.MAGIC.id()
+		};
+		if (!DataConversions.inArray(skillIDs, skill)) {
+			multiplier = getConfig().SKILLING_EXP_RATE;
+		}
+
+		// Otherwise apply the combat skilling rate.
+		else {
+			multiplier = getConfig().COMBAT_EXP_RATE;
+		}
+
+		// Apply the Wilderness and Skull multipliers.
+		// You won't get the Wilderness multiplier if you're standing in the mage bank entrance.
+		if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
+			multiplier += getConfig().WILDERNESS_BOOST;
+			if (isSkulled()) {
+				multiplier += getConfig().SKULL_BOOST;
 			}
 		}
 
-		/*
-		Combat Experience Rate
-		 */
-		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
-			multiplier = getWorld().getServer().getConfig().COMBAT_EXP_RATE;
-			if (getLocation().inWilderness()) {
-				multiplier += getWorld().getServer().getConfig().WILDERNESS_BOOST;
-				if (isSkulled()) {
-					multiplier += getWorld().getServer().getConfig().SKULL_BOOST;
-				}
-			}
-		}
-
-		if (!isOneXp()) {
-			effectiveMultiplier = multiplier;
-		}
-
-		/*
-		  Double Experience
-		 */
-		if (getWorld().getServer().getConfig().IS_DOUBLE_EXP) {
-			multiplier *= 2;
-			effectiveMultiplier *= 2;
-			minMultiplier *= 2;
-		}
-
-		/*
-		  Experience Elixir
-		 */
-		if (getCache().hasKey("elixir_time")) {
-			if (getElixir() <= 0) {
-				getCache().remove("elixir_time");
-				ActionSender.sendElixirTimer(this, 0);
-			} else {
-				multiplier += 1;
-				if (!isOneXp()) effectiveMultiplier += 1;
-			}
-		}
-
-		double finalMultiplier = multiplier;
-		double finalEffectiveMultiplier = effectiveMultiplier;
-		double finalMinMultiplier = minMultiplier;
-		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); add(finalMinMultiplier); }};
+		return multiplier;
 	}
 
 	public void incExp(final int[] skillDist, int skillXP, final boolean useFatigue) {
@@ -1471,9 +1532,7 @@ public final class Player extends Mob {
 			for (int i = 0; i < 4; i++) {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
 			}
-			return;
-		}
-		else {
+		} else {
 			int xp;
 			for (int i = 0; i < skillDist.length; i++) {
 				xp = skillXP * skillDist[i];
@@ -1484,13 +1543,26 @@ public final class Player extends Mob {
 	}
 
 	public void incExp(final int skill, int skillXP, final boolean useFatigue) {
+		// Warn the player that they currently cannot gain XP.
 		if (isExperienceFrozen()) {
-			if (getWorld().getServer().getConfig().WANT_FATIGUE)
+			if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 				ActionSender.sendMessage(this, "You can not gain experience right now!");
+			}
+
+			// If we have fatigue disabled, that means the player has slept to disable XP
+			// gain. We will tell them once per login, to make sure that they didn't do it
+			// by accident.
+			else if (!this.getAttribute("warned_xp_off", false)) {
+				ActionSender.sendMessage(this, "You have disabled experience gain." +
+					"Use a sleeping bag or bed to re-enable,");
+				this.setAttribute("warned_xp_off", true);
+			}
 			return;
 		}
 
 		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+			// If the action uses fatigue, and the player is too tired,
+			// send a message saying so, and do not give xp.
 			if (useFatigue) {
 				if (fatigue >= this.MAX_FATIGUE) {
 					ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
@@ -1499,9 +1571,17 @@ public final class Player extends Mob {
 				//if (fatigue >= 139500) {
 				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
 				//}
-				if (skill >= 4) {
+
+				// Give fatigue for non-melee skills (all skills after skill ID 4)
+				int[] skillIDs = {
+					Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.HITS.id()
+				};
+				if (!DataConversions.inArray(skillIDs, skill)) {
 					fatigue += skillXP * 8;
-				} else if (skill >= 0) {
+				}
+
+				// Give fatigue for melee skills (all skills between skill ID 0 and 3 inclusive)
+				else {
 					fatigue += skillXP * 5;
 				}
 				if (fatigue > this.MAX_FATIGUE) {
@@ -1510,56 +1590,118 @@ public final class Player extends Mob {
 			}
 		}
 
+		// Player cannot gain more than 200 fishing xp on tutorial island
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill == Skills.FISHING) {
+				if (skill == Skill.FISHING.id()) {
 					getSkills().setExperience(skill, 200);
 				}
 			}
 		}
-		List<Double> multipliers = getExperienceRate(skill);
-		if (this.getParty() != null) {
-			PartyPlayer partyLeader = this.getParty().getLeader();
-			if (partyLeader.getShareExp() > 0) {
-				if (skill > 6) {
-					// apply combined multiplier
-					skillXP *= multipliers.get(0);
-					double ratio;
-					for (PartyPlayer player : this.getParty().getPlayers()) {
-						if (player.getPlayerReference().getFatigue() < player.getPlayerReference().MAX_FATIGUE) {
-							ratio = player.getPlayerReference().isOneXp() ? (multipliers.get(2) / multipliers.get(0)) : 1.0;
-							if (player.getPlayerReference().getUsername() != this.getUsername()) {
-								player.getPlayerReference().setFatigue(player.getPlayerReference().getFatigue() + (int)(ratio * skillXP) * 4);
-								ActionSender.sendFatigue(this);
-							}
-							player.getPlayerReference().getSkills().addExperience(skill, (int) (ratio * skillXP) / player.getPartyMembersNotTired() - 1);
-						}
-					}
-					int p11 = partyLeader.getPartyMembersNotTired() - 1;
-					if (partyLeader.getPartyMembersNotTired() - 1 > 0) {
-						int skill1 = skillXP / 4;
-						int p1 = partyLeader.getPartyMembersNotTired();
-						int p3 = partyLeader.getPartyMembersNotTired() - 1;
-						ActionSender.sendMessage(this, skill1 + " total exp. " + p1 + " members to share");
-						int shared = this.getExpShared() + skill1 / p1;
-						this.setExpShared(this.getExpShared() + skill1 / p1 * p3);
-						ActionSender.sendExpShared(this);
-						this.getParty().sendParty();
-					}
-				} else {
-					// cb skill -> apply effective multiplier
-					skillXP *= multipliers.get(1);
-					getSkills().addExperience(skill, (int) skillXP);
+
+		// This is how much XP will be given to this player at the end.
+		// If they aren't in a party, or if there aren't any players that are close
+		// enough, this player will get all the XP.
+		int thisXp = skillXP;
+
+		// Check if the player is an Iron Man and in a party
+		final boolean notIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !this.isIronMan();
+		if (this.getParty() != null && notIronMan) {
+			ArrayList<PartyPlayer> sharers = new ArrayList<PartyPlayer>();
+			int xpLeftToReward = skillXP;
+
+			// Get the players to share with
+			for (PartyPlayer partyMember : getParty().getPlayers()) {
+				final Player partyMemberPlayer = partyMember.getPlayerReference();
+
+				// Make sure the player is in range.
+				final boolean inRange = getConfig().PARTY_SHARE_INFINITE_RANGE
+					|| (Math.abs(this.getX() - partyMemberPlayer.getX()) <= getConfig().PARTY_SHARE_MAX_X
+					&& Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY())) <= getConfig().PARTY_SHARE_MAX_Y);
+
+				// Make sure the player isn't on the same IP
+				final boolean notSameIp = getConfig().PARTY_SHARE_WITH_SAME_IP || !this.getCurrentIP().equals(partyMemberPlayer.getCurrentIP());
+
+				// Make sure the player isn't an Iron Man
+				final boolean isntIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !partyMemberPlayer.isIronMan();
+
+				// Make sure the party member isn't this!!
+				final boolean notMe = this != partyMemberPlayer;
+
+				if (inRange && notSameIp && isntIronMan && notMe) {
+					sharers.add(partyMember);
 				}
-			} else {
-				// no shared xp -> apply effective multiplier
-				skillXP *= multipliers.get(1);
-				getSkills().addExperience(skill, (int) skillXP);
 			}
+
+			int shareCount = sharers.size();
+			if (shareCount > 0) {
+				// Include this player in the math
+				shareCount++;
+
+				// Do some maths to get the XP to reward
+				switch (getConfig().PARTY_SHARE_SIZE_ALGORITHM) {
+					case "linear":
+						xpLeftToReward *= 1.0 + (getConfig().PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER
+							* Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
+						break;
+					case "exponential":
+						xpLeftToReward *= Math.pow(1.0 + getConfig().PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER,
+							Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
+						break;
+					default:
+						LOGGER.error("Unrecognized PARTY_SHARE_SIZE_ALGORITHM provided in config");
+						break;
+				}
+
+				// The total XP that should be awarded out to the party
+				final int totalXpToReward = xpLeftToReward;
+				// The max XP that each player besides the skiller should get
+				final int maxXpPerSharedPlayer = (int) (((1.0 / shareCount) * (1.0 - getConfig().PARTY_SAVE_XP_FOR_SKILLER_PERCENT)) * totalXpToReward);
+
+				// Calculate and award XP to each party member
+				for (PartyPlayer partyMember : sharers) {
+					final Player partyMemberPlayer = partyMember.getPlayerReference();
+
+					double xpDropoffPercent = 1.0;
+					final int playerDistance = Math.abs(this.getX() - partyMemberPlayer.getX())
+						+ Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY()));
+
+					// Decrease the amount of XP the player gets depending on how far away they are
+					switch (getConfig().PARTY_SHARE_DISTANCE_ALGORITHM) {
+						case "linear":
+							xpDropoffPercent *= 1.0 - (getConfig().PARTY_DISTANCE_PERCENT_DECREASE
+								* playerDistance);
+							break;
+						case "exponential":
+							xpDropoffPercent *= Math.pow(1.0 - getConfig().PARTY_DISTANCE_PERCENT_DECREASE,
+								playerDistance);
+							break;
+						default:
+							LOGGER.error("Unrecognized PARTY_SHARE_DISTANCE_ALGORITHM provided in config");
+							break;
+					}
+
+					// Award XP to the party member
+					int playerXp = (int) (maxXpPerSharedPlayer * xpDropoffPercent);
+					xpLeftToReward -= playerXp;
+					playerXp *= partyMemberPlayer.getExperienceMultiplier(skill);
+					if (getConfig().WANT_OPENPK_POINTS) {
+						partyMemberPlayer.addOpenPkPoints(playerXp);
+					} else {
+						partyMemberPlayer.getSkills().addExperience(skill, playerXp);
+					}
+				}
+				thisXp = xpLeftToReward;
+			}
+		}
+
+		// Update this player's XP.
+		thisXp = Math.min(thisXp, skillXP);
+		thisXp *= getExperienceMultiplier(skill);
+		if (getConfig().WANT_OPENPK_POINTS) {
+			addOpenPkPoints(thisXp);
 		} else {
-			// effective multiplier
-			skillXP *= multipliers.get(1);
-			getSkills().addExperience(skill, (int) skillXP);
+			getSkills().addExperience(skill, thisXp);
 		}
 
 		// packet order; fatigue update comes after XP update authentically.
@@ -1569,7 +1711,6 @@ public final class Player extends Mob {
 				ActionSender.sendFatigue(this);
 			}
 		}
-		// ActionSender.sendExperience(this, skill);
 	}
 
 	public void incQuestPoints(final int amount) {
@@ -1710,9 +1851,11 @@ public final class Player extends Mob {
 				PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
 				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
 			}
-			prayerStatePoints = getSkills().getLevel(Skills.PRAYER) * 120;
-			prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
-			getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
+			if (!getConfig().LACKS_PRAYERS) {
+				prayerStatePoints = getSkills().getLevel(Skill.PRAYER.id()) * 120;
+				prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
+				getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
+			}
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 		}
 		this.loggedIn = loggedIn;
@@ -1741,10 +1884,6 @@ public final class Player extends Mob {
 
 	public void setMale(final boolean male) {
 		maleGender = male;
-	}
-
-	public boolean isMaleGender() {
-		return maleGender;
 	}
 
 	public boolean isMuted() {
@@ -1872,7 +2011,7 @@ public final class Player extends Mob {
 		this.setLastOpponent(null);
 		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
-			setLocation(Point.location(120, 648), true);
+			setLocation(Point.location(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y), true);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
 		}
@@ -1916,7 +2055,7 @@ public final class Player extends Mob {
 			if (i != null)
 				return i.getCatalogId();
 		} else {
-			synchronized(getCarriedItems().getInventory().getItems()) {
+			synchronized (getCarriedItems().getInventory().getItems()) {
 				for (Item i : getCarriedItems().getInventory().getItems()) {
 					if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
 						return i.getCatalogId();
@@ -1947,29 +2086,6 @@ public final class Player extends Mob {
 	public void addPrivateMessage(final PrivateMessage privateMessage) {
 		if (getPrivateMessageQueue().size() < 2) {
 			getPrivateMessageQueue().add(privateMessage);
-		}
-	}
-
-	public void addToPacketQueue(final Packet packet) {
-		updateClientActivity();
-		int packetID = packet.getID();
-		if ((packetID != OpcodeIn.ITEM_USE_ITEM.getOpcode()
-				&& packetID != OpcodeIn.BANK_DEPOSIT.getOpcode()
-				&& packetID != OpcodeIn.BANK_WITHDRAW.getOpcode()
-				&& packetID != OpcodeIn.SHOP_BUY.getOpcode()
-				&& packetID != OpcodeIn.SHOP_SELL.getOpcode()
-				&& packetID != OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode()
-				&& packetID != OpcodeIn.DUEL_OFFER_ITEM.getOpcode()
-				&& packetID != OpcodeIn.PRAYER_ACTIVATED.getOpcode()
-				&& packetID != OpcodeIn.PRAYER_DEACTIVATED.getOpcode())
-			&& activePackets.contains(packetID)) {
-			return;
-		}
-		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
-			synchronized (incomingPackets) {
-				incomingPackets.add(packet);
-				activePackets.add(packetID);
-			}
 		}
 	}
 
@@ -2011,6 +2127,18 @@ public final class Player extends Mob {
 		}
 	}
 
+	public void addToPacketQueue(final Packet packet) {
+		updateClientActivity();
+		int packetID = packet.getID();
+
+		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
+			synchronized (incomingPackets) {
+				incomingPackets.add(packet);
+				activePackets.add(packetID);
+			}
+		}
+	}
+
 	public void processIncomingPackets() {
 		if (!channel.isOpen() && !channel.isWritable()) {
 			return;
@@ -2023,12 +2151,26 @@ public final class Player extends Mob {
 				final long packetTime = getWorld().getServer().bench(
 					() -> {
 						activePackets.remove(activePackets.indexOf(curPacket.getID()));
-						final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
-						if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
+						PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
+						if (isRetroClient()) {
+							parser = new Payload38Parser();
+						} else if (isUsing233CompatibleClient()) {
+							parser = new Payload235Parser();
+						} else if (isUsing177CompatibleClient()) {
+							parser = new Payload177Parser();
+						} else {
+							parser = new PayloadCustomParser();
+						}
+						AbstractStruct<com.openrsc.server.net.rsc.enums.OpcodeIn> res = parser.parse(curPacket, this);
+						if (res != null) {
+							boolean couldProcess;
 							try {
-								ph.handlePacket(curPacket, this);
+								couldProcess = PayloadProcessorManager.processed(res, this);
 							} catch (final Exception e) {
 								LOGGER.catching(e);
+								couldProcess = false;
+							}
+							if (!couldProcess) {
 								unregister(false, "Malformed packet!");
 							}
 						}
@@ -2038,7 +2180,7 @@ public final class Player extends Mob {
 				getWorld().getServer().incrementIncomingPacketCount(curPacket.getID());
 
 				packet = incomingPackets.poll();
-			};
+			}
 
 			incomingPackets.clear();
 		}
@@ -2117,7 +2259,7 @@ public final class Player extends Mob {
 		resetCannonEvent();
 		setAttribute("bank_pin_entered", "cancel");
 
-		if(resetWalkAction && getWalkToAction() != null) {
+		if (resetWalkAction && getWalkToAction() != null) {
 			setWalkToAction(null);
 		}
 
@@ -2134,6 +2276,9 @@ public final class Player extends Mob {
 			resetShop();
 		}
 		if (resetFollowing && isFollowing()) {
+			resetFollowing();
+		}
+		if (resetFollowing && getPossessing() != null) {
 			resetFollowing();
 		}
 		if (isRanging()) {
@@ -2204,9 +2349,13 @@ public final class Player extends Mob {
 		if (trawlerInstance != null && trawlerInstance.getPlayers().contains(this)) {
 			trawlerInstance.disconnectPlayer(this, true);
 		}
-		if (getLocation().inMageArena()) {
-			teleport(228, 109);
+		if (getLocation().inMageArenaLogOutZone()) {
+			teleport(228, 109); // see note in Point.java (Goto declaration of inMageArenaLogOutZone())
 		}
+		if (getLocation().inIbansChamberLogOutZone()) {
+			teleport(791, 3469); // see [Logg/Tylerbeg/07-19-2018 11.11.46 log back in outside iban's chamber]
+		}
+
 		if (getParty() != null) {
 			getParty().removePlayer(this.getUsername());
 		}
@@ -2219,26 +2368,6 @@ public final class Player extends Mob {
 		getCache().set("gnomeball_npc", getAttribute("gnomeball_npc", 0));
 
 		save(true);
-	}
-
-	public void logoutSaveSuccess() {
-
-		setLoggedIn(false);
-
-		/* IP Tracking in wilderness removal */
-		/*if(player.getLocation().inWilderness())
-		{
-			wildernessIPTracker.remove(player.getCurrentIP());
-		}*/
-
-		for (Player other : getWorld().getPlayers()) {
-			other.getSocial().alertOfLogout(this);
-		}
-
-		getWorld().getClanManager().checkAndUnattachFromClan(this);
-		getWorld().getPartyManager().checkAndUnattachFromParty(this);
-
-		getWorld().getServer().getLoginExecutor().add(new PlayerRemoveRequest(getWorld().getServer(), this));
 	}
 
 	public void sendMemberErrorMessage() {
@@ -2260,7 +2389,7 @@ public final class Player extends Mob {
 		getWorld().getMiniGame(miniGameId).handleReward(this);
 		getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this,
 			"has completed the " + getWorld().getMiniGame(miniGameId).getMiniGameName()
-			+ " minigame! " + (message.orElse(""))));
+				+ " minigame! " + (message.orElse(""))));
 	}
 
 	public void setAccessingBank(final boolean b) {
@@ -2440,21 +2569,59 @@ public final class Player extends Mob {
 		return true;
 	}
 
+	public void updateWornItems(final AppearanceId appearanceId) {
+		this.updateWornItems(appearanceId.getSuggestedWieldPosition(), appearanceId.id());
+	}
+
+	public void updateWornItems(final int indexPosition, final AppearanceId appearanceId) {
+		this.updateWornItems(indexPosition, appearanceId.id());
+	}
+
 	public void updateWornItems(final int indexPosition, final int appearanceId) {
 		this.updateWornItems(indexPosition, appearanceId, 0, false);
 	}
 
-	public void updateWornItems(final int indexPosition, final int appearanceId, final int wearableId,final  boolean isEquipped) {
+	public void updateWornItems(final int indexPosition, final int appearanceId, final int wearableId, final boolean isEquipped) {
 		// metal skirts (ideally all !full pants should update pants appearance to minishorts when that anim exists)
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES && wearableId == 640) {
-			if (isEquipped) wornItems[2] = 0;
-			else wornItems[2] = 3;
+			if (isEquipped) wornItems[AppearanceId.SLOT_PANTS] = 0;
+			else wornItems[AppearanceId.SLOT_PANTS] = 3;
 		}
-		//Don't need to show arrows or rings
+
+		// Generally don't need to show arrows or rings
 		if (indexPosition <= 11) {
-			wornItems[indexPosition] = appearanceId;
-			getUpdateFlags().setAppearanceChanged(true);
+			if (ringMorphAllows()) {
+				wornItems[indexPosition] = appearanceId;
+				getUpdateFlags().setAppearanceChanged(true);
+			}
+		} else {
+			if (indexPosition == AppearanceId.SLOT_MORPHING_RING) {
+				final AppearanceId newAppearance = AppearanceId.getById(appearanceId);
+				if (newAppearance != AppearanceId.NOTHING) {
+					// update is for equipping (not unequipping)
+					if (appearanceId != AppearanceId.NOTHING.id()) {
+						// ring has an appearance id, so it is a morphing ring
+						enterMorph(appearanceId);
+					}
+				} else {
+					// may or may not be morphed, but a ring was removed.
+					exitMorph();
+				}
+			}
 		}
+	}
+
+	private boolean ringMorphAllows() {
+		if (getCarriedItems().getEquipment() == null) {
+			return true;
+		} else {
+			final Item wornRing = getCarriedItems().getEquipment().getRingItem();
+			if (wornRing == null ||
+				wornRing.getDef(getWorld()).getAppearanceId() == AppearanceId.NOTHING.id()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private Queue<PrivateMessage> getPrivateMessageQueue() {
@@ -2471,6 +2638,25 @@ public final class Player extends Mob {
 
 	public void setKills(int i) {
 		this.kills = i;
+	}
+
+	public long getOpenPkPoints() {
+		return openPkPoints;
+	}
+
+	public void setOpenPkPoints(long openPkPoints) {
+		this.openPkPoints = openPkPoints;
+		ActionSender.sendPoints(this);
+	}
+
+	public void addOpenPkPoints(long openPkPoints) {
+		this.openPkPoints += openPkPoints;
+		ActionSender.sendPoints(this);
+	}
+
+	public void subtractOpenPkPoints(long openPkPoints) {
+		this.openPkPoints -= openPkPoints;
+		ActionSender.sendPoints(this);
 	}
 
 	public int getDeaths() {
@@ -2830,14 +3016,6 @@ public final class Player extends Mob {
 		return getPartyInviteSetting();
 	}
 
-	public boolean isPlayer() {
-		return true;
-	}
-
-	public boolean isNpc() {
-		return false;
-	}
-
 	public PlayerSettings getSettings() {
 		return playerSettings;
 	}
@@ -2892,13 +3070,13 @@ public final class Player extends Mob {
 		if (preferredIcon != -1) {
 			// You can choose icon > 2 for cool effect e.g. 15 is a Log icon.
 			if (isAdmin() || isMod() || isDev() || isEvent()) {
-				return (byte)(preferredIcon & 0xFF);
+				return (byte) (preferredIcon & 0xFF);
 			}
 			if (isPlayerMod()) {
 				// Don't allow PMod to pose as admin. :-)
 				// but otherwise it is cool for them to have a weird tree icon if they want
-				if ((byte)(preferredIcon & 0xFF) != 2) {
-					return (byte)(preferredIcon & 0xFF);
+				if ((byte) (preferredIcon & 0xFF) != 2) {
+					return (byte) (preferredIcon & 0xFF);
 				}
 			}
 		}
@@ -3000,12 +3178,12 @@ public final class Player extends Mob {
 
 	public boolean hasHigherRankThan(final Entity observer) {
 		// Players always have a higher rank than NPCs/GameObject/GroundItem
-		if(!(observer instanceof Player)) {
+		if (!(observer instanceof Player)) {
 			return true;
 		}
 
 		final Player subject = this;
-		final Player obs = (Player)observer;
+		final Player obs = (Player) observer;
 
 		return subject.getGroupID() < obs.getGroupID();
 	}
@@ -3201,12 +3379,11 @@ public final class Player extends Mob {
 			itemFinal.setAttribute("npcdrop", true);
 		}
 
-		if (item.getAttribute("isIronmanItem", false) && getIronMan() == IronmanMode.None.id()) {
-			message("That belongs to an Ironman player.");
+		if (!getCarriedItems().getInventory().canHold(itemFinal)) {
 			return false;
 		}
 
-		if (!getCarriedItems().getInventory().canHold(itemFinal)) {
+		if (item.isRemoved()) {
 			return false;
 		}
 
@@ -3223,7 +3400,7 @@ public final class Player extends Mob {
 		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
-			if (((float) this.getSkills().getLevel(Skills.HITS)) / ((float) this.getSkills().getMaxStat(Skills.HITS)) <= 0.1f) {
+			if (((float) this.getSkills().getLevel(Skill.HITS.id())) / ((float) this.getSkills().getMaxStat(Skill.HITS.id())) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();
 				this.resetAll();
@@ -3232,7 +3409,7 @@ public final class Player extends Mob {
 				if (hitter.isPlayer()) {
 					((Player) hitter).resetAll();
 				}
-				this.teleport(120, 648, false);
+				this.teleport(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y, false);
 				this.message("Your ring of Life shines brightly");
 				getCarriedItems().shatter(new Item(ItemId.RING_OF_LIFE.id()));
 				return true;
@@ -3286,17 +3463,40 @@ public final class Player extends Mob {
 		this.lastExchangeTime = System.currentTimeMillis();
 	}
 
-	public void setClientVersion(int cv) { this.clientVersion = cv; }
+	public void setClientVersion(int cv) {
+		this.clientVersion = cv;
+	}
 
-	public int getClientVersion() { return this.clientVersion; }
+	public int getClientVersion() {
+		return this.clientVersion;
+	}
 
-	public boolean isUsingAuthenticClient() {
-		return this.clientVersion == 235;
+	// TODO: needs to be redefined
+	public boolean isRetroClient() {
+		// temporary for setversion command to not break if player enters in range
+		return this.clientVersion >= 14 && this.clientVersion < 93;
+	}
+
+	public boolean isUsingClientBeforeQP() {
+		return this.clientVersion >= 14 && this.clientVersion <= 38;
+	}
+
+	public boolean isUsing177CompatibleClient() {
+		return this.clientVersion == 177;
+	}
+
+	public boolean isUsing233CompatibleClient() {
+		return this.clientVersion >= 233 && this.clientVersion <= 235;
+	}
+
+	public boolean isUsingCustomClient() {
+		return this.clientVersion > 10000;
 	}
 
 	public boolean getQolOptOutWarned() {
 		return this.qolOptOutWarned;
 	}
+
 	public void setQolOptOutWarned(boolean warned) {
 		this.qolOptOutWarned = warned;
 	}
@@ -3304,8 +3504,95 @@ public final class Player extends Mob {
 	public void setQolOptOut() {
 		getCache().store("qol_optout", true);
 	}
+
 	public boolean getQolOptOut() {
 		return getCache().hasKey("qol_optout");
 	}
 
+	public boolean getCertOptOutWarned() {
+		return this.certOptOutWarned;
+	}
+
+	public void setCertOptOutWarned(boolean warned) {
+		this.certOptOutWarned = warned;
+	}
+
+	public void setCertOptOut() {
+		getCache().store("cert_optout", true);
+	}
+
+	public boolean getCertOptOut() {
+		return getCache().hasKey("cert_optout");
+	}
+
+	private void enterMorph(int appearanceId) {
+		for (int i = 0; i < 12; i++) {
+			wornItems[i] = AppearanceId.NOTHING.id();
+		}
+		wornItems[AppearanceId.SLOT_BODY] = appearanceId;
+		getUpdateFlags().setAppearanceChanged(true);
+	}
+
+	public void exitMorph() {
+		getSettings().getAppearance().restorePlayerAppearance();
+		for (int i = 0; i < 12; i++) {
+			updateWornItems(i, getSettings().getAppearance().getSprite(i));
+		}
+
+		if (getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (getCarriedItems().getEquipment().getList()) {
+				for (Item item : getCarriedItems().getEquipment().getList()) {
+					if (item == null) continue;
+					ItemDefinition itemDef = item.getDef(getWorld());
+					if (itemDef.getWieldPosition() < 12) {
+						updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+					}
+				}
+			}
+		} else {
+			for (Item item : getCarriedItems().getInventory().getItems()) {
+				if (item == null) continue;
+				ItemDefinition itemDef = item.getDef(getWorld());
+				if (item.getItemStatus().isWielded()) {
+					updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+				}
+			}
+		}
+	}
+
+	public void setClientLimitations(ClientLimitations cl) {
+		this.clientLimitations = cl;
+	}
+	public ClientLimitations getClientLimitations() {
+		return this.clientLimitations;
+	}
+
+	public boolean isKnownPlayer(int pid) {
+		for (int i = 0; i < knownPlayersCount; i++) {
+			if (knownPlayerPids[i] == pid) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean skipTutorial() {
+		if (getLocation().onTutorialIsland()) {
+			if (inCombat()) {
+				message("You cannot do that whilst fighting!");
+				return false;
+			}
+			if (isBusy()) {
+				return false;
+			}
+			if (getCache().hasKey("tutorial")) {
+				getCache().remove("tutorial");
+			}
+			teleport(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y, false);
+			message("Skipped tutorial, welcome to Lumbridge");
+			ActionSender.sendPlayerOnTutorial(this);
+			return true;
+		}
+		return false;
+	}
 }

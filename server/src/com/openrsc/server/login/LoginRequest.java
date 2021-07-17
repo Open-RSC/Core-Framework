@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
+import com.openrsc.server.util.rsc.RegisterLoginResponse;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,16 +29,19 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	private String password;
 	private long usernameHash;
 	private int clientVersion;
+	private boolean authenticClient;
+	private boolean reconnecting;
 
-
-	protected LoginRequest(final Server server, final Channel channel, final String username, final String password, final int clientVersion) {
+	protected LoginRequest(final Server server, final Channel channel, final String username, final String password, final boolean isAuthenticClient, final int clientVersion, final boolean reconnecting) {
 		this.server = server;
 		this.channel = channel;
-		this.setUsername(username);
+		this.setUsername(DataConversions.sanitizeUsername(username));
 		this.setPassword(password);
+		this.setAuthenticClient(isAuthenticClient);
 		this.setIpAddress(((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress());
 		this.setClientVersion(clientVersion);
 		this.setUsernameHash(DataConversions.usernameToHash(username));
+		this.reconnecting = reconnecting;
 	}
 
 	public String getIpAddress() {
@@ -72,6 +76,14 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		this.usernameHash = usernameHash;
 	}
 
+	public boolean getAuthenticClient() {
+		return authenticClient;
+	}
+
+	private void setAuthenticClient(final boolean authenticClient) {
+		this.authenticClient = authenticClient;
+	}
+
 	public Channel getChannel() {
 		return channel;
 	}
@@ -93,10 +105,15 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	public abstract void loadingComplete(Player loadedPlayer);
 
 	protected void processInternal() {
-		final int loginResponse = validateLogin();
+		int loginResponse = validateLogin();
+
+		if (clientVersion <= 204) {
+			loginResponse = RegisterLoginResponse.translateNewToOld(loginResponse);
+		}
 		loginValidated(loginResponse);
-		if ((loginResponse & 0x40) != LoginResponse.LOGIN_UNSUCCESSFUL) {
-			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
+
+		if (isLoginSuccessful(loginResponse)) {
+			final Player loadedPlayer = getServer().getPlayerService().loadPlayer(this);
 			loadedPlayer.setLoggedIn(true);
 
 			LOGGER.info("Player Loaded: " + getUsername() +  String.format("; Client Version: %d", clientVersion));
@@ -116,6 +133,10 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		PlayerLoginData playerData;
 		int groupId = Group.USER;
 		try {
+			if (getServer().isRestarting() || getServer().isShuttingDown() || !getServer().getLoginExecutor().isRunning()) {
+				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
+			}
+
 			if(!getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
@@ -133,10 +154,12 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			}
 
 			if (getServer().getPacketFilter().isHostIpBanned(getIpAddress()) && !isAdmin) {
+				LOGGER.debug(getIpAddress() + " denied for being host ip banned...!");
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin && getClientVersion() != 235) {
+			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION
+				&& !isAdmin && getClientVersion() < 14) {
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 
@@ -159,6 +182,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			}
 
 			if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+				LOGGER.debug(getIpAddress() + " is using " + getServer().getPacketFilter().getPlayersCount(getIpAddress()) + " out of " + getServer().getConfig().MAX_PLAYERS_PER_IP + " allowed sessions.");
 				return (byte) LoginResponse.IP_IN_USE;
 			}
 
@@ -169,6 +193,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 
 			final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
 			if (timeBanLeft >= 1 && !isAdmin) {
+				LOGGER.debug(getIpAddress() + " denied for being *actually* temp banned...!");
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
@@ -187,6 +212,16 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			LOGGER.catching(e);
 			return (byte) LoginResponse.LOGIN_UNSUCCESSFUL;
 		}
+
+		if (reconnecting && clientVersion <= 204) {
+			return (byte) LoginResponse.RECONNECT_SUCCESFUL;
+		}
+
 		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
+	}
+
+	public boolean isLoginSuccessful(int loginResponse) {
+		return (loginResponse & 0x40) != LoginResponse.LOGIN_UNSUCCESSFUL ||
+			((loginResponse == 0 || loginResponse == 1) && clientVersion <= 204);
 	}
 }

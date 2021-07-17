@@ -1,14 +1,14 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.PrayerStruct;
 
-public class PrayerHandler implements PacketHandler {
+public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 
 	private boolean activatePrayer(Player player, int prayerID) {
 		if (!player.getPrayers().isPrayerActivated(prayerID)) {
@@ -59,9 +59,16 @@ public class PrayerHandler implements PacketHandler {
 		return false;
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
-		int pID = packet.getID();
-		int prayerID = (int) packet.readByte();
+	public void process(PrayerStruct payload, Player player) throws Exception {
+		OpcodeIn pID = payload.getOpcode();
+		int prayerID = payload.prayerID;
+
+		if (player.getConfig().LACKS_PRAYERS) {
+			player.getPrayers().resetPrayers();
+			player.message("World does not feature prayers!");
+			return;
+		}
+
 		if (prayerID < 0 || prayerID >= 14) {
 			player.setSuspiciousPlayer(true, "prayer id < 0 or prayer id >= 14");
 //			ActionSender.sendPrayers(player);TODO
@@ -79,16 +86,18 @@ public class PrayerHandler implements PacketHandler {
 		}
 
 		PrayerDef prayer = player.getWorld().getServer().getEntityHandler().getPrayerDef(prayerID);
-		int packetOne = OpcodeIn.PRAYER_ACTIVATED.getOpcode();
-		int packetTwo = OpcodeIn.PRAYER_DEACTIVATED.getOpcode();
+		OpcodeIn packetOne = OpcodeIn.PRAYER_ACTIVATED;
+		OpcodeIn packetTwo = OpcodeIn.PRAYER_DEACTIVATED;
 		if (pID == packetOne) {
-			if (player.getSkills().getMaxStat(Skills.PRAYER) < prayer.getReqLevel()) {
+			if (player.getSkills().getMaxStat(Skill.PRAYER.id()) < prayer.getReqLevel()) {
 				player.setSuspiciousPlayer(true, "max stat prayer < req level");
 				player.message("Your prayer ability is not high enough to use this prayer");
+				return;
 			}
-			if (player.getSkills().getLevel(Skills.PRAYER) <= 0) {
+			if (player.getSkills().getLevel(Skill.PRAYER.id()) <= 0) {
 				player.getPrayers().setPrayer(prayerID, false);
 				player.message("You have run out of prayer points. Return to a church to recharge");
+				return;
 			}
 			activatePrayer(player, prayerID);
 		} else if (pID == packetTwo) {

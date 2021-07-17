@@ -351,7 +351,7 @@ public final class Apothecary implements
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPotion(player);
 		}
 	}

@@ -18,7 +18,7 @@ public class Config {
 	public static String WELCOME_TEXT = "You need a members account to use this server";
 	public static String SERVER_IP = null; // Modify this to override "Cache/ip.txt"
 	public static int SERVER_PORT; // Modify SERVER_IP above to override "Cache/port.txt" with this value
-	public static final int CLIENT_VERSION = 8;
+	public static final int CLIENT_VERSION = 10008;
 	private static final int CACHE_VERSION = 4;
 	public static boolean MEMBER_WORLD = false;
 	public static boolean DISPLAY_LOGO_SPRITE = false;
@@ -137,8 +137,11 @@ public class Config {
 	public static int S_CHARACTER_CREATION_MODE = 0;
 	public static int S_SKILLING_EXP_RATE = 1;
 	public static boolean S_WANT_HARVESTING = false;
-	public static boolean S_CUSTOM_PROTOCOL = true;
+	public static boolean S_FEATURES_SLEEP = true;
 	public static boolean S_WANT_EXTENDED_CATS_BEHAVIOR = false;
+	public static boolean S_WANT_CERT_AS_NOTES = false;
+	public static boolean S_WANT_OPENPK_POINTS = false;
+	public static int S_OPENPK_POINTS_TO_GP_RATIO = 1;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

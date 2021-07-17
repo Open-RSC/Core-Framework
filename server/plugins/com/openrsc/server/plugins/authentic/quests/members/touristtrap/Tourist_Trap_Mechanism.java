@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.touristtrap;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -12,6 +12,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 
@@ -30,6 +31,9 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	private static int MINING_CART_ABOVE = 1025;
 	private static int DISTURBED_SAND1 = 944;
 	private static int DISTURBED_SAND2 = 945;
+
+	public static double[] protoDartSmithRates;
+	public static double[] protoDartFletchRates;
 
 	@Override
 	public boolean blockRemoveObj(Player player, Integer invIndex, UnequipRequest request) {
@@ -111,9 +115,9 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			} else {
 				npcsay(player, npc, "Oh great!");
 				mes("The guard rolls his eyes in glee.");
-				delay(3);
+				delay(2);
 				mes("and takes a bite of the pineapple.");
-				delay(3);
+				delay(2);
 				mes("His face turns from pleasure to pain as he spits the mouthful of pineapple out.");
 				delay(3);
 				npcsay(player, npc, "Yeuch!",
@@ -169,45 +173,40 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		if (obj.getID() == 1006) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 				mes("This anvil is experimental...");
-				delay(3);
+				delay(2);
 				mes("You need detailed plans of the item you want to make in order to use it.");
-				delay(3);
 				return;
 			}
 			mes("Do you want to follow the technical plans ?");
-			delay(3);
 			int menu = multi(player, "Yes. I'd like to try.", "No, not just yet.");
 			if (menu == 0) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.HAMMER.id(), Optional.of(false))) {
 					player.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
-				if (getCurrentLevel(player, Skills.SMITHING) < 20) {
+				if (getCurrentLevel(player, Skill.SMITHING.id()) < 20) {
 					player.message("You need level 20 in smithing before you can attempt this.");
 					return;
 				}
 				mes("You begin experimenting in forging the weapon...");
-				delay(3);
-				mes("You follow the plans carefully.");
-				delay(3);
-				mes("And after a long time of careful work.");
-				delay(3);
+				delay(2);
 				player.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
-				if (succeedRate(player)) {
+				mes("You follow the plans carefully.");
+				delay(2);
+				mes("And after a long time of careful work.");
+				delay(2);
+				if (protoDartSmithSuccessful(player.getSkills().getLevel(Skill.SMITHING.id()))) {
 					mes("You finally manage to forge a sharp, pointed...");
-					delay(3);
+					delay(2);
 					mes("... dart tip...");
-					delay(3);
+					delay(2);
 					if (!player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_DART_TIP.id(), Optional.of(false))) {
 						give(player, ItemId.PROTOTYPE_DART_TIP.id(), 1);
 					}
 					mes("You study the technical plans even more...");
-					delay(3);
 					mes("You need to attach feathers to the tip to complete the weapon.");
-					delay(3);
 				} else {
 					mes("You waste the bronze bar through an unlucky accident.");
-					delay(3);
 				}
 			} else if (menu == 1) {
 				player.message("You decide not follow the technical plans.");
@@ -221,37 +220,82 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				player.message("You need at least ten feathers to make this item.");
 				return;
 			}
-			if (getCurrentLevel(player, Skills.FLETCHING) < 10) {
+			if (getCurrentLevel(player, Skill.FLETCHING.id()) < 10) {
 				player.message("You need a fletching level of at least 10 to complete this.");
 				return;
 			}
 			mes("You try to attach feathers to the bronze dart tip.");
-			delay(3);
+			delay(2);
 			mes("Following the plans is tricky, but you persevere.");
-			delay(3);
+			delay(2);
 			player.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10));
-			if (succeedRate(player)) {
+			if (protoDartFletchSuccessful(player.getSkills().getLevel(Skill.FLETCHING.id()))) {
 				mes("You succesfully attach the feathers to the dart tip.");
-				delay(3);
+				delay(2);
 				player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_DART_TIP.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 				//kosher: dependent on fletching level!
-				player.incExp(Skills.FLETCHING, getMaxLevel(player, Skills.FLETCHING) * 50, true);
+				player.incExp(Skill.FLETCHING.id(), getMaxLevel(player, Skill.FLETCHING.id()) * 50, true);
 			} else {
 				mes("An unlucky accident causes you to waste the feathers.");
-				delay(3);
+				delay(2);
 				mes("But you feel that you're close to making this item though.");
-				delay(3);
 			}
 		}
 	}
 
-	private boolean succeedRate(Player player) {
+
+	// TODO: this is entirely made up as far as I know. 60% successful cart.
+	private boolean getIntoCartSuccessful(Player player) {
 		int random = DataConversions.getRandom().nextInt(5);
 		if (random == 4 || random == 3) {
 			return false;
 		} else {
 			return true;
+		}
+	}
+
+	// Note: there is only very limited information on these success rates in replays.
+	// The rates implemented here are the ones that existed in OSRS in 2021, which we are using mostly blindly,
+	// but with the very little data we do have, it seems possible these could have been the RSC rates as well.
+	// See https://oldschool.runescape.wiki/w/Prototype_dart
+	public static boolean protoDartSmithSuccessful(int smithingLevel) {
+		if (protoDartSmithRates == null) {
+			defineSuccessRates();
+		}
+		double successRate = protoDartSmithRates[smithingLevel];
+		double roll = Math.random();
+		return successRate > roll;
+	}
+
+	// Note: there is only very limited information on these success rates in replays.
+	// The rates implemented here are the ones that existed in OSRS in 2021, which we are using mostly blindly,
+	// but with the very little data we do have, it seems possible these could have been the RSC rates as well.
+	// See https://oldschool.runescape.wiki/w/Prototype_dart_tip
+	public static boolean protoDartFletchSuccessful(int fletchingLevel) {
+		if (protoDartFletchRates == null) {
+			defineSuccessRates();
+		}
+		double successRate = protoDartFletchRates[fletchingLevel];
+		double roll = Math.random();
+		return successRate > roll;
+	}
+
+	private static void defineSuccessRates() {
+		int maxLevelToCalcFor = 138;
+
+		protoDartSmithRates = new double[maxLevelToCalcFor];
+		for (int level = 0; level < maxLevelToCalcFor; level++) {
+			if (level >= 20) {
+				protoDartSmithRates[level] = Formulae.interp(61, 245, level);
+			}
+		}
+
+		protoDartFletchRates = new double[maxLevelToCalcFor];
+		for (int level = 0; level < maxLevelToCalcFor; level++) {
+			if (level >= 10) {
+				protoDartFletchRates[level] = Formulae.interp(61, 254, level);
+			}
 		}
 	}
 
@@ -381,7 +425,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				player.message("Would you like to try?");
 				int menu = multi(player, "Yes, of course.", "No Thanks, it looks pretty dangerous.");
 				if (menu == 0) {
-					if (succeedRate(player)) {
+					if (getIntoCartSuccessful(player)) {
 						player.message("You succeed!");
 						if (obj.getX() == 56 && obj.getY() == 3631) {
 							player.teleport(62, 3640);

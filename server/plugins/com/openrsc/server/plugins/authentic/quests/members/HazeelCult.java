@@ -9,6 +9,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
@@ -41,23 +44,33 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.THE_HAZEEL_CULT.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
 
 	@Override
 	public void handleReward(Player player) {
+		final QuestReward reward = Quest.THE_HAZEEL_CULT.reward();
 		if (player.getCache().hasKey("good_side")) {
 			player.message("Well done you have completed the Hazeel cult quest");
-			incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
-			player.message("@gre@You haved gained 1 quest point!");
+			for (XPReward xpReward : reward.getXpRewards()) {
+				incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+			}
+			incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 			player.message("ceril gives you 2000 gold coins");
 			give(player, ItemId.COINS.id(), 2000);
 		} else if (player.getCache().hasKey("evil_side")) {
 			player.message("Hazeel gives you some coins");
 			give(player, ItemId.COINS.id(), 2000);
-			incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HAZEEL_CULT), true);
-			player.message("@gre@You haved gained 1 quest point!");
+			for (XPReward xpReward : reward.getXpRewards()) {
+				incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+			}
+			incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 			player.message("you have completed the hazeel cult quest");
 		}
 	}

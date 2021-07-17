@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS `equipped`;
+CREATE TABLE IF NOT EXISTS `equipped`
+(
+    `playerID` int(10) NOT NULL,
+    `itemID`   int(10) NOT NULL
+);

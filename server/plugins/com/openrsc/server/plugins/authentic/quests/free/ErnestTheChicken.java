@@ -10,6 +10,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +41,11 @@ public class ErnestTheChicken implements QuestInterface,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.ERNEST_THE_CHICKEN.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -46,13 +54,17 @@ public class ErnestTheChicken implements QuestInterface,
 	public void handleReward(Player player) {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), 300));
 		player.message("Well done. You have completed the Ernest the chicken quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.ERNEST_THE_CHICKEN), true);
-		player.message("@gre@You haved gained 4 quest points!");
+		final QuestReward reward = Quest.ERNEST_THE_CHICKEN.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id())
+			|| (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.FISH_FOOD.id())
 				|| (obj.getID() == QuestObjects.COMPOST && item.getCatalogId() == ItemId.SPADE.id());
 	}
 
@@ -228,7 +240,7 @@ public class ErnestTheChicken implements QuestInterface,
 
 	public String nameToMsg(String leverName) {
 		int length = leverName.length();
-		return leverName.substring(0, length - 2).toLowerCase() + " " + leverName.substring(length - 1);
+		return leverName.substring(0, length - 1).toLowerCase() + " " + leverName.substring(length - 1);
 	}
 
 	@Override

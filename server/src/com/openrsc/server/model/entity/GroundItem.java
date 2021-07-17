@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
@@ -57,24 +58,28 @@ public class GroundItem extends Entity {
 	}
 
 	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawnTime, final boolean noted) {
-		super(world);
+		super(world, EntityType.GROUND_ITEM);
 		setID(id);
 		setNoted(noted);
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = spawnTime;
-		setLocation(Point.location(x, y));
-		if (owner != null && owner.getIronMan() >= IronmanMode.Ironman.id() && owner.getIronMan() <= IronmanMode.Transfer.id())
-			this.setAttribute("isIronmanItem", true);
+		trySetLocation(Point.location(x, y));
+		if (owner != null) {
+			if (owner.getIronMan() == IronmanMode.Transfer.id()) {
+				// disallow everyone from picking up transfer ironman items
+				this.setAttribute("isTransferIronmanItem", true);
+			}
+		}
 	}
 
 	public GroundItem(final World world, final ItemLoc loc) {
-		super(world);
+		super(world, EntityType.GROUND_ITEM);
 		this.loc = loc;
 		setID(loc.id);
 		setAmount(loc.amount);
 		spawnedTime = System.currentTimeMillis();
-		setLocation(Point.location(loc.x, loc.y));
+		trySetLocation(Point.location(loc.x, loc.y));
 	}
 
 	public boolean equals(final Entity o) {
@@ -86,6 +91,13 @@ public class GroundItem extends Entity {
 				&& item.getLocation().equals(getLocation());
 		}
 		return false;
+	}
+
+	public void trySetLocation(Point point) {
+		if (getWorld().getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id()
+			|| this.getID() < getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
+			setLocation(point);
+		}
 	}
 
 	public boolean isOn(final int x, final int y) {
@@ -107,15 +119,18 @@ public class GroundItem extends Entity {
 	}
 
 	public void remove() {
-		if (!isRemoved() && loc != null && loc.getRespawnTime() > 0) {
-			getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, loc.getRespawnTime(), "Respawn Ground Item") {
-				public void run() {
-					getWorld().registerItem(new GroundItem(getWorld(), loc));
-					stop();
-				}
-			});
+		if (getWorld().getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id()
+			|| this.getID() < getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
+			if (!isRemoved() && loc != null && loc.getRespawnTime() > 0) {
+				getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, loc.getRespawnTime(), "Respawn Ground Item") {
+					public void run() {
+						getWorld().registerItem(new GroundItem(getWorld(), loc));
+						stop();
+					}
+				});
+			}
+			super.remove();
 		}
-		super.remove();
 	}
 
 	public boolean isInvisibleTo(final Player player) {
@@ -125,8 +140,13 @@ public class GroundItem extends Entity {
 			return true;
 		if (getDef().isUntradable())
 			return true;
-		if (!belongsTo(player) && player.getIronMan() >= IronmanMode.Ironman.id() && player.getIronMan() <= IronmanMode.Transfer.id())
+		if (!belongsTo(player) && this.getAttribute("killerHash", -1L) == player.getUsernameHash())
+			return false;
+		if (this.getID() > player.getClientLimitations().maxItemId)
 			return true;
+		// should be visible to everyone else after a time, just not lootable for ironmen
+		// if (!belongsTo(player) && player.getIronMan() != IronmanMode.None.id())
+		//	return true;
 
 		// One minute and four seconds to show to all.
 		return System.currentTimeMillis() - spawnedTime <= 64000;
@@ -149,7 +169,9 @@ public class GroundItem extends Entity {
 		return ownerUsernameHash;
 	}
 
-	public boolean getNoted() { return noted; }
+	public boolean getNoted() {
+		return noted;
+	}
 
 	public void setNoted(final boolean noted) {
 		this.noted = noted;

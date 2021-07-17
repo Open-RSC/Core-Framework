@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,6 +11,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -35,14 +38,22 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.FAMILY_CREST.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
 
 	@Override
 	public void handleReward(Player player) {
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FAMILY_CREST), true);
-		player.message("@gre@You haved gained 1 quest point!");
+		final QuestReward reward = Quest.FAMILY_CREST.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 		player.message("Well done you have completed the family crest quest");
 	}
 
@@ -818,7 +829,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				}
 			}
 			if (regenerate) {
-				npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
+				npc.getSkills().setLevel(Skill.HITS.id(), npc.getDef().hits);
 				player.message("Chronozon regenerates");
 				npc.killed = false;
 			} else {

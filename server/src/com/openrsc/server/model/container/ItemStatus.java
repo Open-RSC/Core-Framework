@@ -1,8 +1,5 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.database.GameDatabase;
-import com.openrsc.server.database.GameDatabaseException;
-
 public class ItemStatus {
 	private int catalogId;
 	private int amount;

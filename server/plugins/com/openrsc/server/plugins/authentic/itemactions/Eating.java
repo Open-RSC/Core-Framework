@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.itemactions;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
@@ -9,6 +9,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -31,7 +33,9 @@ public class Eating implements OpInvTrigger {
 				return;
 			}
 
-			if (player.getCarriedItems().remove(item) == -1) {
+			Item toRemove = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
+			if (player.getCarriedItems().remove(toRemove) == -1) {
 				return;
 			}
 
@@ -40,14 +44,19 @@ public class Eating implements OpInvTrigger {
 			int id = item.getCatalogId();
 			boolean isKebabVariant = false;
 			boolean gaveMessage = false;
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id() || id == ItemId.RED_CABBAGE.id()) {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 					player.playerServerMessage(MessageType.QUEST, "It seems to taste nicer than normal");
-					int lv = player.getSkills().getMaxStat(Skills.DEFENSE);
-					int newStat = player.getSkills().getLevel(Skills.DEFENSE) + 1;
-					if (newStat <= (lv + 1))
-						player.getSkills().setLevel(Skills.DEFENSE, newStat);
+					int lv = player.getSkills().getMaxStat(Skill.DEFENSE.id());
+					int newStat = player.getSkills().getLevel(Skill.DEFENSE.id()) + 1;
+					if (newStat <= (lv + 1)) {
+						player.getSkills().setLevel(Skill.DEFENSE.id(), newStat, sendUpdate);
+						if (!sendUpdate) {
+							player.getSkills().sendUpdateAll();
+						}
+					}
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase()
 						+ ". Yuck!");
@@ -201,13 +210,18 @@ public class Eating implements OpInvTrigger {
 			} else
 				player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 
-			final boolean heals = player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS);
+			final boolean heals = player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id());
 			if (heals) {
-				int newHp = player.getSkills().getLevel(Skills.HITS) + item.eatingHeals(player.getWorld());
-				if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
-					newHp = player.getSkills().getMaxStat(Skills.HITS);
+				int baseHeal = item.eatingHeals(player.getWorld());
+				int extraHeal = item.canLevelDependentHeal(player.getWorld()) ? player.getSkills().getMaxStat(Skill.COOKING.id()) / 15 : 0;
+				int newHp = player.getSkills().getLevel(Skill.HITS.id()) + baseHeal + extraHeal;
+				if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+					newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 				}
-				player.getSkills().setLevel(Skills.HITS, newHp);
+				player.getSkills().setLevel(Skill.HITS.id(), newHp, sendUpdate);
+				if (!sendUpdate) {
+					player.getSkills().sendUpdateAll();
+				}
 			}
 			if (heals && !isKebabVariant && !gaveMessage) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
@@ -224,18 +238,22 @@ public class Eating implements OpInvTrigger {
 		} else if (item.getCatalogId() == ItemId.FISH_OIL.id()) {
 			ActionSender.sendSound(player, "eat");
 			int id = item.getCatalogId();
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 
 			player.playerServerMessage(MessageType.QUEST, "You eat the fish oil");
 
 			// Heal
-			if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
+			if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
 				// See if it heals
 				if (DataConversions.random(1, 2) == 1) {
-					int newHp = player.getSkills().getLevel(Skills.HITS) + 1;
-					if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
-						newHp = player.getSkills().getMaxStat(Skills.HITS);
+					int newHp = player.getSkills().getLevel(Skill.HITS.id()) + 1;
+					if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+						newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 					}
-					player.getSkills().setLevel(Skills.HITS, newHp);
+					player.getSkills().setLevel(Skill.HITS.id(), newHp, sendUpdate);
+					if (!sendUpdate) {
+						player.getSkills().sendUpdateAll();
+					}
 					player.playerServerMessage(MessageType.QUEST, "It heals some health");
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You don't feel a difference");
@@ -246,16 +264,20 @@ public class Eating implements OpInvTrigger {
 		} else if (item.getCatalogId() == ItemId.SWEETENED_SLICES.id() || item.getCatalogId() == ItemId.SWEETENED_CHUNKS.id()) {
 			ActionSender.sendSound(player, "eat");
 			int id = item.getCatalogId();
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 
 			player.playerServerMessage(MessageType.QUEST, "You eat the sweetened fruit");
 
 			// Heal
-			if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
-				int newHp = player.getSkills().getLevel(Skills.HITS) + DataConversions.random(1, 2);
-				if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
-					newHp = player.getSkills().getMaxStat(Skills.HITS);
+			if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+				int newHp = player.getSkills().getLevel(Skill.HITS.id()) + DataConversions.random(1, 2);
+				if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+					newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 				}
-				player.getSkills().setLevel(Skills.HITS, newHp);
+				player.getSkills().setLevel(Skill.HITS.id(), newHp, sendUpdate);
+				if (!sendUpdate) {
+					player.getSkills().sendUpdateAll();
+				}
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 			}
 			// Remove
@@ -265,25 +287,34 @@ public class Eating implements OpInvTrigger {
 
 	private void handleKebab(Player player, Item item) {
 		int rand = DataConversions.random(0, 31);
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		player.playerServerMessage(MessageType.QUEST, "You eat the Kebab");
 		int hpRestored = 0;
 		if (rand == 0) { // 1/32 or 3% chance chance of 2-4 damage (can never kill)
 			player.playerServerMessage(MessageType.QUEST, "That tasted a bit dodgy");
 			player.message("You feel a bit ill");
-			if (player.getSkills().getLevel(Skills.HITS) > 2) {
+			if (player.getSkills().getLevel(Skill.HITS.id()) > 2) {
 				int dmg = DataConversions.random(2, 4);
-				int newHp = Math.max(player.getSkills().getLevel(Skills.HITS) - dmg, 1);
-				player.getSkills().setLevel(Skills.HITS, newHp);
+				int newHp = Math.max(player.getSkills().getLevel(Skill.HITS.id()) - dmg, 1);
+				player.getSkills().setLevel(Skill.HITS.id(), newHp, sendUpdate);
+				if (!sendUpdate) {
+					player.getSkills().sendUpdateAll();
+				}
 			}
 		} else if (rand <= 1) { // 1/32 or 3% chance to heal 30 hits and gaining 1-3 levels att, str, def
 			player.playerServerMessage(MessageType.QUEST, "Wow that was an amazing kebab!");
 			player.message("You feel slightly invigorated");
 			int boost = DataConversions.random(1, 3);
-			int[] skills = {Skills.ATTACK, Skills.STRENGTH, Skills.DEFENSE};
+			int[] skills = {Skill.ATTACK.id(), Skill.STRENGTH.id(), Skill.DEFENSE.id()};
+			boolean boosted = false;
 			for (int skill : skills) {
 				if (player.getSkills().getLevel(skill) <= player.getSkills().getMaxStat(skill)) {
-					player.getSkills().setLevel(skill, player.getSkills().getLevel(skill) + boost);
+					player.getSkills().setLevel(skill, player.getSkills().getLevel(skill) + boost, sendUpdate);
+					boosted = true;
 				}
+			}
+			if (!sendUpdate && boosted) {
+				player.getSkills().sendUpdateAll();
 			}
 			hpRestored = 30;
 		} else if (rand <= 8) { // 7/32 or 21% chance of healing 10-20 hits
@@ -292,30 +323,37 @@ public class Eating implements OpInvTrigger {
 			hpRestored = DataConversions.random(10, 20);
 		} else if (rand <= 28) { // 20/32 or 62% chance of healing 10% max hits
 			player.playerServerMessage(MessageType.QUEST, "It heals some health");
-			hpRestored = player.getSkills().getMaxStat(Skills.HITS) * 10 / 100;
+			hpRestored = player.getSkills().getMaxStat(Skill.HITS.id()) * 10 / 100;
 		} else { // 3/32 or 9% that does nothing
 			player.playerServerMessage(MessageType.QUEST, "The kebab didn't seem to do a lot");
 			hpRestored = 0;
 		}
-		if (hpRestored > 0 && player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
-			int newStat = player.getSkills().getLevel(Skills.HITS) + hpRestored;
-			if (newStat > player.getSkills().getMaxStat(Skills.HITS)) {
-				newStat = player.getSkills().getMaxStat(Skills.HITS);
+		if (hpRestored > 0 && player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + hpRestored;
+			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITS, newStat);
+			player.getSkills().setLevel(Skill.HITS.id(), newStat, sendUpdate);
+			if (!sendUpdate) {
+				player.getSkills().sendUpdateAll();
+			}
 		}
 	}
 
 	private void handleTastyKebab(Player player, Item item) {
 		thinkbubble(item);
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "It heals some health");
 		// restores up to 19
-		int newStat = player.getSkills().getLevel(Skills.HITS) + 19;
-		if (newStat > player.getSkills().getMaxStat(Skills.HITS)) {
-			newStat = player.getSkills().getMaxStat(Skills.HITS);
+		int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 19;
+		if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+			newStat = player.getSkills().getMaxStat(Skill.HITS.id());
 		}
-		player.getSkills().setLevel(Skills.HITS, newStat);
+		player.getSkills().setLevel(Skill.HITS.id(), newStat, sendUpdate);
+		if (!sendUpdate) {
+			player.getSkills().sendUpdateAll();
+		}
 		switch(DataConversions.random(0,2)) {
 			case 0:
 				say(player, null, "Yummmmm!");
@@ -400,7 +438,7 @@ public class Eating implements OpInvTrigger {
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
-		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id()
+		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY_UNUSED.id()
 			|| id == ItemId.SEAWEED_SOUP.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 	}

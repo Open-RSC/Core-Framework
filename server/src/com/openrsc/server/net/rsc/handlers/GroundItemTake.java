@@ -6,12 +6,14 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.TargetPositionStruct;
+import com.openrsc.server.util.rsc.CertUtil;
 
-public class GroundItemTake implements PacketHandler {
+public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(TargetPositionStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
@@ -22,13 +24,13 @@ public class GroundItemTake implements PacketHandler {
 		}
 		player.resetAll();
 
-		final short x = packet.readShort();
-		final short y = packet.readShort();
+		final int x = payload.coordinate.getX();
+		final int y = payload.coordinate.getY();
 		if (x < 0 || y < 0) return;
 
 		final Point location = Point.location(x, y);
 
-		final int itemId = packet.readShort();
+		final int itemId = payload.itemId;
 		if (itemId < 0 || itemId >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
 			return;
 		}
@@ -41,7 +43,7 @@ public class GroundItemTake implements PacketHandler {
 		}
 
 		int distance = item.getRegion().getGameObject(location, player) != null ? 1 : 0;
-		Player onTile = item.getRegion().getPlayer(location.getX(), location.getY(), player);
+		Player onTile = item.getRegion().getPlayer(location.getX(), location.getY(), player, true);
 		if (onTile != null && onTile.inCombat()) {
 			distance = 1;
 		}
@@ -71,6 +73,17 @@ public class GroundItemTake implements PacketHandler {
 					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 					getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
+					return;
+				}
+
+				if (!item.belongsTo(getPlayer()) && item.getAttribute("isTransferIronmanItem", false)) {
+					getPlayer().message("That belongs to a Transfer Ironman player.");
+					return;
+				}
+
+				if (CertUtil.isCert(item.getID()) && getPlayer().getCertOptOut()
+					&& item.getOwnerUsernameHash() != 0 && !item.belongsTo(getPlayer())) {
+					getPlayer().message("You have opted out of taking certs that other players have dropped.");
 					return;
 				}
 

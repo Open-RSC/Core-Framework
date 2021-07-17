@@ -40,16 +40,15 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	public abstract void run();
 
 	public final long doRun() {
-		final long eventStart	= System.currentTimeMillis();
-		tick();
-		if (shouldRun()) {
-			run();
-			resetCountdown();
-		}
-		final long eventEnd		= System.currentTimeMillis();
-		final long eventTime	= eventEnd - eventStart;
-		lastEventDuration		= eventTime;
-		return eventTime;
+		lastEventDuration = getWorld().getServer().bench(() -> {
+			tick();
+			if (shouldRun()) {
+				run();
+				resetCountdown();
+			}
+		});
+
+		return lastEventDuration;
 	}
 
 	@Override

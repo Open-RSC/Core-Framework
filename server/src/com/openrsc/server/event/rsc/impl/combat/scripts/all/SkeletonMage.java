@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -16,18 +16,22 @@ public class SkeletonMage implements CombatAggroScript, OnCombatStartScript {
 		if (attacker.isNpc()) {
 			Player player = (Player) victim;
 			Npc npc = (Npc) attacker;
-			
+
 			npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, "i infect your body with rot", player));
 
 			player.message("You feel slightly weakened");
-			
-			int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
+
+			int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));
 				/* New current level */
 				final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
-				player.getSkills().setLevel(affectedStat, newStat);
+				player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+			}
+			if (!sendUpdate) {
+				player.getSkills().sendUpdateAll();
 			}
 		}
 	}

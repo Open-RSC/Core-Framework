@@ -1,87 +1,132 @@
 package com.openrsc.server.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.openrsc.server.model.entity.Entity;
 
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.AbstractCollection;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public final class EntityList<T extends Entity> extends AbstractCollection<T> {
+@SuppressWarnings("ConstantConditions")
+public class EntityList<T extends Entity> extends AbstractCollection<T> {
 
-	private static final int DEFAULT_CAPACITY = 2000;
-	private final Set<Integer> indices = Collections
-		.synchronizedSet(new HashSet<>());
-	private int capacity;
-	private Object[] entities;
-	private int curIndex = 0;
+    private static final int DEFAULT_CAPACITY = 2000;
+    private final Queue<Integer> priorityIdPool;
+    private final ConcurrentHashMap<Integer, Object> occupiedIndices;
+    private final int capacity;
+    private final Object[] entities;
 
-	public EntityList() {
-		this(DEFAULT_CAPACITY);
-	}
+    public EntityList() {
+        this(DEFAULT_CAPACITY);
+    }
 
-	public EntityList(final int capacity) {
-		this.entities = new Object[capacity];
-		this.capacity = capacity;
-	}
+    public EntityList(final int capacity) {
+        this.priorityIdPool = IntStream.range(0, capacity)
+                .boxed()
+                .collect(Collectors.toCollection(() -> new PriorityQueue<>(capacity)));
+        this.occupiedIndices = new ConcurrentHashMap<>();
+        this.entities = new Object[capacity];
+        this.capacity = capacity;
+    }
 
-	public boolean add(final T entity) {
-		if (entities[curIndex] != null) {
-			increaseIndex();
-			add(entity);
-		} else {
-			entities[curIndex] = entity;
-			entity.setIndex(curIndex);
-			indices.add(curIndex);
-			increaseIndex();
-		}
-		return true;
-	}
+    public synchronized boolean add(final T entity) {
+        if (size() >= capacity) {
+            throw new IllegalStateException(
+                    MessageFormat.format(
+                            "Attempt to add entity would exceed capacity of {0}",
+                            capacity
+                    )
+            );
+        }
 
-	public boolean contains(final T entity) {
-		return indexOf(entity) > -1;
-	}
+        int nextId = priorityIdPool.poll();
+        entities[nextId] = entity;
+        entity.setIndex(nextId);
+        occupiedIndices.put(nextId, new Object());
+        return true;
+    }
 
-	public int count() {
-		return indices.size();
-	}
+    public boolean contains(final T entity) {
+        return indexOf(entity) > -1;
+    }
 
-	public int size() {
-		return indices.size();
-	}
+    public int count() {
+        return getOccupiedIndices().size();
+    }
 
-	@SuppressWarnings("unchecked")
-	public T get(final int index) {
-		return (T) entities[index];
-	}
+    public int size() {
+        return getOccupiedIndices().size();
+    }
 
-	private void increaseIndex() {
-		curIndex++;
-		if (curIndex >= capacity) {
-			curIndex = 0;
-		}
-	}
+    @SuppressWarnings("unchecked")
+    public T get(final int index) {
+        if(entities[index] != null) {
+            return (T) entities[index];
+        }
+        return null;
+    }
 
-	private int indexOf(final T entity) {
-		for (int index : indices) {
-			if (entities[index].equals(entity)) {
-				return index;
-			}
-		}
-		return -1;
-	}
+    private int indexOf(final T entity) {
+        // Check if the entity at the index provided by the entity matches first
+        final int candidateIndex = entity.getIndex();
+        if (candidateIndex >= 0 && candidateIndex < capacity) {
+            if (entity.equals(entities[candidateIndex])) {
+                return candidateIndex;
+            }
+        }
 
-	public Iterator<T> iterator() {
-		return new EntityListIterator<T>(entities, indices, this);
-	}
+        // If it wasn't a match, iterate and find it
+        for (int index : getOccupiedIndices()) {
+            if (entities[index].equals(entity)) {
+                return index;
+            }
+        }
+        return -1;
+    }
 
-	@SuppressWarnings("unchecked")
-	public T remove(final int index) {
-		Object temp = entities[index];
-		entities[index] = null;
-		indices.remove(index);
-		return (T) temp;
-	}
+    @SuppressWarnings("unchecked")
+    public Iterator<T> iterator() {
+        return Arrays.stream(entities)
+                .filter(Objects::nonNull)
+                .map(entity -> (T) entity)
+                .collect(ImmutableList.toImmutableList())
+                .iterator();
+    }
 
-	public void remove(final T entity) {
-		entities[entity.getIndex()] = null;
-		indices.remove(entity.getIndex());
-	}
+    @SuppressWarnings("unchecked")
+    public synchronized T remove(final int index) {
+        if(index >= 0) {
+            T entity = (T) entities[index];
+            if (entity != null) {
+                entity.setIndex(-1);
+            }
+            entities[index] = null;
+            occupiedIndices.remove(index);
+            priorityIdPool.offer(index);
+            return entity;
+        }
+        return null;
+    }
+
+    public synchronized void remove(final T entity) {
+        final int index = entity.getIndex();
+        remove(index);
+    }
+
+    private ConcurrentHashMap.KeySetView<Integer, Object> getOccupiedIndices() {
+        return occupiedIndices.keySet();
+    }
+
+    public Set<Integer> indices() {
+        return ImmutableSet.copyOf(getOccupiedIndices());
+    }
 }

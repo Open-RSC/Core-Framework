@@ -4,19 +4,19 @@ import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Equipment.EquipmentSlot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.EquipStruct;
 
 import static com.openrsc.server.net.rsc.handlers.ItemEquip.passCheck;
 
-public class ItemUnequip implements PacketHandler {
+public class ItemUnequip implements PayloadProcessor<EquipStruct, OpcodeIn> {
 	// Packets handled by this class:
 	//	bind(OpcodeIn.ITEM_UNEQUIP_FROM_INVENTORY.getOpcode(), ItemUnequip.class);
 	//	bind(OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT.getOpcode(), ItemUnequip.class);
 	//	bind(OpcodeIn.ITEM_REMOVE_TO_BANK.getOpcode(), ItemUnequip.class);
-	public void handlePacket(Packet packet, Player player) throws Exception {
-		OpcodeIn opcode = OpcodeIn.get(packet.getID());
+	public void process(EquipStruct payload, Player player) throws Exception {
+		OpcodeIn opcode = payload.getOpcode();
 
 		// Make sure the opcode is valid
 		if (opcode == null) {
@@ -35,7 +35,7 @@ public class ItemUnequip implements PacketHandler {
 		if (opcode == OpcodeIn.ITEM_UNEQUIP_FROM_INVENTORY) {
 			player.resetAllExceptDueling();
 
-			int inventorySlot = packet.readShort();
+			int inventorySlot = payload.slotIndex;
 			if (inventorySlot < 0 || inventorySlot >= 30) {
 				player.setSuspiciousPlayer(true, "inventorySlot < 0 or inventorySlot >= 30");
 				return;
@@ -49,7 +49,7 @@ public class ItemUnequip implements PacketHandler {
 
 			player.resetAllExceptDueling();
 
-			request.equipmentSlot = EquipmentSlot.get(packet.readByte());
+			request.equipmentSlot = EquipmentSlot.get(payload.slotIndex);
 			if (request.equipmentSlot == null) {
 				player.setSuspiciousPlayer(true, "tried to unequip something out of range");
 				return;
@@ -64,7 +64,7 @@ public class ItemUnequip implements PacketHandler {
 
 			player.resetAllExceptBank();
 
-			request.equipmentSlot = EquipmentSlot.get(packet.readByte());
+			request.equipmentSlot = EquipmentSlot.get(payload.slotIndex);
 			if (request.equipmentSlot == null) {
 				player.setSuspiciousPlayer(true, "tried to unequip something out of range");
 				return;

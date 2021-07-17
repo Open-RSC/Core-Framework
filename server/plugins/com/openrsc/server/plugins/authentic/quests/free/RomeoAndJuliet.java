@@ -7,6 +7,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -26,6 +29,11 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.ROMEO_N_JULIET.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -33,8 +41,11 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the quest of Romeo and Juliet");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.ROMEO_N_JULIET), true);
-		player.message("@gre@You haved gained 5 quest points!");
+		final QuestReward reward = Quest.ROMEO_N_JULIET.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	private void romeoDialogue(Player player, Npc n) {

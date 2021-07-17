@@ -346,8 +346,8 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		 * Items that are normally unobtainable & kind of make sense to give as xmas gifts
 		 * These are both food items.
 		 */
-		unobtainableTable.addItemDrop(ItemId.SPECIAL_CURRY.id(), 1, 2); // unobtainable item
-		unobtainableTable.addItemDrop(ItemId.GNOME_BATTA.id(), 1, 1); // unobtainable item
+		unobtainableTable.addItemDrop(ItemId.SPECIAL_CURRY_UNUSED.id(), 1, 2); // unobtainable item
+		unobtainableTable.addItemDrop(ItemId.GNOME_BATTA_UNUSED.id(), 1, 1); // unobtainable item
 
 		/**
 		 * Bring all the tables together
@@ -401,7 +401,8 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())) {
+		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+			|| player.isIronMan(IronmanMode.Hardcore.id())) {
 
 			String playerDialogue;
 			if (player.isMale()) {
@@ -521,21 +522,22 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			otherPlayer.playerServerMessage(MessageType.QUEST, player.getUsername() + " handed you a present...");
 			delay();
 
-			if (prize.getDef(player.getWorld()).getId() == 1096 && otherPlayer.getQuestStage(Quests.GERTRUDES_CAT) != -1) {
+			if (prize.getDef(player.getWorld()).getId() == ItemId.KITTEN.id() && otherPlayer.getQuestStage(Quests.GERTRUDES_CAT) != -1) {
 				// kitten selected, but otherPlayer ineligible to receive it, swamp toad substituted
 				player.playerServerMessage(MessageType.QUEST, "You hope they enjoy the swamp toad you got them!");
-			} else if ((prize.getDef(player.getWorld()).getId() >= 966 && prize.getDef(player.getWorld()).getId() <= 970) || prize.getDef(player.getWorld()).getId() == 990) {
+			} else if ((prize.getDef(player.getWorld()).getId() >= ItemId.BOOTS_PINK.id() && prize.getDef(player.getWorld()).getId() <= ItemId.BOOTS_BLUE.id())
+				|| prize.getDef(player.getWorld()).getId() == ItemId.DESERT_BOOTS.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You hope they enjoy the socks you got them!");
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You hope they enjoy the " + prizeName + " you got them!");
 			}
 
-			switch (prize.getDef(player.getWorld()).getId()) {
+			switch (ItemId.getById(prize.getDef(player.getWorld()).getId())) {
 
 				/**
 				 * Pet table
 				 */
-				case 1096: // Kitten
+				case KITTEN:
 					if (otherPlayer.getQuestStage(Quests.GERTRUDES_CAT) == -1) { // has completed quest requirement
 						otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you hear a mewing noise...!!");
 						delay(unwrapDelay);
@@ -547,10 +549,10 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 
 						break;
 					} else {
-						prize = new Item(895);
+						prize = new Item(ItemId.SWAMP_TOAD.id());
 						// fall through to swamp toad case
 					}
-				case 895: // Swamp Toad
+				case SWAMP_TOAD:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you hear a croaking noise...!!");
 					delay(unwrapDelay);
 					player.playerServerMessage(MessageType.QUEST, "@yel@" + otherPlayer.getUsername() + ": oh my gosh a toad!!?!");
@@ -565,19 +567,19 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				/**
 				 * Food table
 				 */
-				case 18: // Cabbage
+				case CABBAGE:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something weird...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a cabbage...!!!");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
 
-				case 911: // Choc crunchies
-				case 914: // Spice crunchies
-				case 336: // Chocolate slice
+				case CHOC_CRUNCHIES:
+				case SPICE_CRUNCHIES:
+				case CHOCOLATE_SLICE:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
-					if (prize.getDef(player.getWorld()).getId() == 336) {
+					if (prize.getDef(player.getWorld()).getId() == ItemId.CHOCOLATE_SLICE.id()) {
 						otherPlayer.playerServerMessage(MessageType.QUEST, "Awh, it's some really nice homemade chocolate cake!");
 					} else {
 						otherPlayer.playerServerMessage(MessageType.QUEST, "Awh, it's some really nice homemade " + prizeName + "!");
@@ -588,15 +590,15 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 					otherPlayer.getCarriedItems().getInventory().add(new Item(ItemId.MILK.id()));
 					break;
 
-				case 923: // Ugthanki kebab
-				case 1102: // Tasty ugthanki kebab
+				case UGTHANKI_KEBAB:
+				case TASTY_UGTHANKI_KEBAB:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something weird...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's an ugthanki kebab!!");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
 
-				case 137: // bread dough
+				case BREAD_DOUGH:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "Ah! it's an Amish Friendship Bread starter...!");
@@ -614,16 +616,16 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				/**
 				 * Alcohol table
 				 */
-				case 876: // brandy
-				case 868: // whisky
-				case 869: // vodka
-				case 870: // gin
+				case BRANDY:
+				case WHISKY:
+				case VODKA:
+				case GIN:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "Oh, nice! It's some gnome " + prizeName + "!");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
-				case 737: // poison chalice
+				case POISON_CHALICE:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "... it's some kind of strange cocktail of random spirits!");
@@ -634,19 +636,19 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				/**
 				 * Unique gift ideas!
 				 */
-				case 790: // Oyster pearl bolt tips
+				case OYSTER_PEARL_BOLT_TIPS:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "Ooh! It's some pointed pearls!");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
-				case 981: // gnome ball
+				case GNOME_BALL:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "Oh, fun! A gnome ball! I always wanted one of those");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
-				case 987: // Paramaya Rest Ticket
+				case PARAMAYA_REST_TICKET:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "It's a gift card for a free stay in the Paramaya Inn!");
@@ -657,7 +659,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 						otherPlayer.playerServerMessage(MessageType.QUEST, "... Wonder where that is?");
 					}
 					break;
-				case 988: // Ship Ticket
+				case SHIP_TICKET:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "WOW!! it's a ticket for @mag@a trip on a cruise ship!!!!");
@@ -667,31 +669,31 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				/**
 				 * Clothes table (Just gnome clothing minus boots)
 				 */
-				case 836: // gnome robe skirts
-				case 837:
-				case 838:
-				case 839:
-				case 840:
+				case GNOME_ROBE_PINK: // gnome robe skirts
+				case GNOME_ROBE_GREEN:
+				case GNOME_ROBE_PURPLE:
+				case GNOME_ROBE_CREAM:
+				case GNOME_ROBE_BLUE:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a very nice pastel dress");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
-				case 841: // gnome hats
-				case 842:
-				case 843:
-				case 844:
-				case 845:
+				case GNOMESHAT_PINK: // gnome hats
+				case GNOMESHAT_GREEN:
+				case GNOMESHAT_PURPLE:
+				case GNOMESHAT_CREAM:
+				case GNOMESHAT_BLUE:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a very nice pastel hat");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
-				case 846: // gnome robe tops
-				case 847:
-				case 848:
-				case 849:
-				case 850:
+				case GNOME_TOP_PINK: // gnome robe tops
+				case GNOME_TOP_GREEN:
+				case GNOME_TOP_PURPLE:
+				case GNOME_TOP_CREAM:
+				case GNOME_TOP_BLUE:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a very nice pastel shirt");
@@ -701,17 +703,17 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				/**
 				 * Socks for Christmas!
 				 */
-				case 966: // gnome boots
-				case 967:
-				case 968:
-				case 969:
-				case 970:
+				case BOOTS_PINK: // gnome boots
+				case BOOTS_GREEN:
+				case BOOTS_PURPLE:
+				case BOOTS_CREAM:
+				case BOOTS_BLUE:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "oh! it's a pair of cute socks");
 					otherPlayer.getCarriedItems().getInventory().add(prize);
 					break;
-				case 990: // desert boots
+				case DESERT_BOOTS:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "oh! it's a pair of socks...!");
@@ -721,7 +723,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				/**
 				 * Unobtainable items
 				 */
-				case 924:
+				case SPECIAL_CURRY_UNUSED:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something strange...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a special christmas curry!!!");
@@ -729,7 +731,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 					delay(readingDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "I wonder how they made it?"); // reference to it being unobtainable
 					break;
-				case 903:
+				case GNOME_BATTA_UNUSED:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something weird...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a homemade gnome batta... kind of smells like pants");

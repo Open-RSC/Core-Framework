@@ -1,5 +1,6 @@
 package com.openrsc.server.database;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -8,6 +9,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,8 +46,20 @@ public final class WorldPopulator {
 		try {
 			// LOAD OBJECTS //
 			int countOBJ = 0;
-			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/BoundaryLocs.json", LocType.Boundary);
-			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocs.json", LocType.Scenery);
+			String authenticSceneryFile, authenticBoundaryFile, authenticGroundItemsFile, authenticMobFile;
+			if (getWorld().getServer().getConfig().BASED_MAP_DATA == 14) {
+				authenticSceneryFile = "/defs/locs/SceneryLocs14.json";
+				authenticBoundaryFile = "/defs/locs/BoundaryLocs14.json";
+				authenticGroundItemsFile = "/defs/locs/GroundItems14.json";
+				authenticMobFile = "/defs/locs/NpcLocs14.json";
+			} else {
+				authenticSceneryFile = "/defs/locs/SceneryLocs.json";
+				authenticBoundaryFile = "/defs/locs/BoundaryLocs.json";
+				authenticGroundItemsFile = "/defs/locs/GroundItems.json";
+				authenticMobFile = "/defs/locs/NpcLocs.json";
+			}
+			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticBoundaryFile, LocType.Boundary);
+			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticSceneryFile, LocType.Scenery);
 			loadCustomLocs(LocType.Scenery);
 			// SceneryObject objects[] = getWorld().getServer().getDatabase().getObjects();
 			// for (SceneryObject object : objects) {
@@ -62,12 +76,13 @@ public final class WorldPopulator {
 					object.direction, object.type);
 
 				getWorld().registerGameObject(obj);
+				getWorld().addSceneryLoc(obj.getLocation(), obj.getID());
 				countOBJ++;
 			}
 			LOGGER.info("Loaded {}", box(countOBJ) + " Objects.");
 
 			// LOAD NPC LOCS //
-			loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocs.json");
+			loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticMobFile);
 			loadCustomLocs(LocType.NPC);
 			// NpcLocation[] npcLocations = getWorld().getServer().getDatabase().getNpcLocs();
 			// for (NpcLocation npcLocation : npcLocations) {
@@ -108,7 +123,7 @@ public final class WorldPopulator {
 
 			// LOAD GROUND ITEMS //
 			int countGI = 0;
-			loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItems.json");
+			loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticGroundItemsFile);
 			loadCustomLocs(LocType.GroundItem);
 			// FloorItem[] groundItems = getWorld().getServer().getDatabase().getGroundItems();
 			// for (FloorItem groundItem : groundItems) {
@@ -144,7 +159,7 @@ public final class WorldPopulator {
 
 		} catch (Exception e) {
 			LOGGER.catching(e);
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 	}
 
@@ -178,6 +193,11 @@ public final class WorldPopulator {
 				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
 				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsDiscontinued.json");
 			}
+			if (getWorld().getServer().getConfig().LOCATION_DATA == 4) {
+				if (getWorld().getServer().getConfig().WANT_PK_BOTS) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsPkBots.json");
+				}
+			}
 			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
 				if (getWorld().getServer().getConfig().WANT_DECORATED_MOD_ROOM) {
 					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsModRoom.json");
@@ -196,6 +216,19 @@ public final class WorldPopulator {
 				}
 				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsCustomQuest.json");
+					// If the Ester's Bunnies event isn't active, move all the bunnies to the top floor of Ester's house.
+					if (!getWorld().getServer().getConfig().ESTERS_BUNNIES_EVENT) {
+						for (NPCLoc loc : npclocs) {
+							if (loc.id == NpcId.BUNNY.id()) {
+								loc.startX = 317;
+								loc.startY = 1607;
+								loc.maxX = 319;
+								loc.maxY = 1608;
+								loc.minX = 314;
+								loc.minY = 1603;
+							}
+						}
+					}
 				}
 				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
 			}

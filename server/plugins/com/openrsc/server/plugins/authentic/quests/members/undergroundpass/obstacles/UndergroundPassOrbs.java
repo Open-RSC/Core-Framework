@@ -2,15 +2,15 @@ package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obst
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -56,7 +56,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 					new GameObject(obj.getWorld(), obj.getLocation(), 826, obj.getDirection(), obj
 						.getType()));
 				obj.getWorld().delayedSpawnObject(obj.getLoc(), config().GAME_TICK * 8);
-				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
+				player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5);
 				say(player, null, "aaarghh");
 			} else {
 				mes("you search the rocks");
@@ -122,7 +122,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			} else {
 				player.teleport(709, 3472);
 				player.message("throwing you onto a pit of spikes");
-				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
+				player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5);
 				say(player, null, "aaarrrgh");
 			}
 		}
@@ -133,7 +133,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				mes("but you fall back to the floor");
 				delay(3);
 				player.message("impailing yourself on the spike's once more");
-				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
+				player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5);
 				say(player, null, "aaarrrgh");
 			} else { // succeed
 				player.teleport(737, 3453);
@@ -351,7 +351,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 	}
 
 	private void damageOfTrap(Player player, GameObject obj, GameObject _new, int objectID) {
-		player.damage((int) ((getCurrentLevel(player, Skills.HITS) / 16) + 2));
+		player.damage((int) ((getCurrentLevel(player, Skill.HITS.id()) / 16) + 2));
 		if (_new == null) {
 			obj.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), 773, obj.getDirection(), obj

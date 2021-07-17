@@ -1,0 +1,86 @@
+<PrayerDef-array>
+    <PrayerDef>
+      <reqLevel>1</reqLevel>
+      <drainRate>15</drainRate>
+      <name>Thick skin</name>
+      <description>Increases your defense by 5%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>4</reqLevel>
+      <drainRate>15</drainRate>
+      <name>Burst of strength</name>
+      <description>Increases your strength by 5%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>7</reqLevel>
+      <drainRate>15</drainRate>
+      <name>Clarity of thought</name>
+      <description>Increases your attack by 5%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>10</reqLevel>
+      <drainRate>30</drainRate>
+      <name>Rock skin</name>
+      <description>Increases your defense by 10%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>13</reqLevel>
+      <drainRate>30</drainRate>
+      <name>Superhuman strength</name>
+      <description>Increases your strength by 10%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>16</reqLevel>
+      <drainRate>30</drainRate>
+      <name>Improved reflexes</name>
+      <description>Increases your attack by 10%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>19</reqLevel>
+      <drainRate>5</drainRate>
+      <name>Rapid restore</name>
+      <description>2x restore rate for all stats except hits</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>22</reqLevel>
+      <drainRate>10</drainRate>
+      <name>Rapid heal</name>
+      <description>2x restore rate for hitpoints stat</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>25</reqLevel>
+      <drainRate>10</drainRate>
+      <name>Protect items</name>
+      <description>Keep 1 extra item if you die</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>28</reqLevel>
+      <drainRate>60</drainRate>
+      <name>Steel skin</name>
+      <description>Increases your defense by 15%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>31</reqLevel>
+      <drainRate>60</drainRate>
+      <name>Ultimate strength</name>
+      <description>Increases your strength by 15%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>34</reqLevel>
+      <drainRate>60</drainRate>
+      <name>Incredible reflexes</name>
+      <description>Increases your attack by 15%</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>37</reqLevel>
+      <drainRate>60</drainRate>
+      <name>Paralyze monster</name>
+      <description>Stops monsters from fighting back</description>
+    </PrayerDef>
+    <PrayerDef>
+      <reqLevel>40</reqLevel>
+      <drainRate>60</drainRate>
+      <name>Protect from missiles</name>
+      <description>100% protection from ranged attack</description>
+    </PrayerDef>
+</PrayerDef-array>

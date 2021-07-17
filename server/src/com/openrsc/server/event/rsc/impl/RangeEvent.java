@@ -2,7 +2,7 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
@@ -19,13 +19,15 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Objects;
+
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 
 public class RangeEvent extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;
 
-	private int[][] allowedArrows = {{ItemId.SHORTBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id()}, // Shortbow
+	private final int[][] allowedArrows = {{ItemId.SHORTBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id()}, // Shortbow
 		{ItemId.LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id()}, // Longbow
 		{ItemId.OAK_SHORTBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id()}, // Oak Shortbow
 		{ItemId.OAK_LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id(), ItemId.STEEL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id()}, // Oak Longbow
@@ -40,19 +42,19 @@ public class RangeEvent extends GameTickEvent {
 		{ItemId.DRAGON_LONGBOW.id(), ItemId.DRAGON_ARROWS.id(), ItemId.POISON_DRAGON_ARROWS.id()} // Dragon Longbow
 	};
 
-	private int[][] allowedBolts = {
+	private final int[][] allowedBolts = {
 		{ItemId.CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()}, // Crossbow
 		{ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()}, // Phoenix Crossbow
 		{ItemId.DRAGON_CROSSBOW.id(), ItemId.DRAGON_BOLTS.id(), ItemId.POISON_DRAGON_BOLTS.id()} // Dragon Crossbow
 	};
-	private Mob target;
+	private final Mob target;
 
 	public RangeEvent(World world, Player owner, Mob victim) {
 		super(world, owner, 1, "Range Event", false);
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
-		boolean canShoot = diff >= getPlayerOwner().getConfig().GAME_TICK * 3;
+		boolean canShoot = diff >= getPlayerOwner().getConfig().GAME_TICK * 3L;
 		if (!canShoot) {
 			long delay = diff / getPlayerOwner().getConfig().GAME_TICK;
 			setDelayTicks(Math.max(2, delay));
@@ -80,7 +82,7 @@ public class RangeEvent extends GameTickEvent {
 		int bowID = getPlayerOwner().getRangeEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
-			|| target.getSkills().getLevel(Skills.HITS) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| target.getSkills().getLevel(Skill.HITS.id()) <= 0 || !getPlayerOwner().checkAttack(target, true)
 			|| !getPlayerOwner().withinRange(target) || bowID < 0) {
 			getPlayerOwner().resetRange();
 			stop();
@@ -106,8 +108,13 @@ public class RangeEvent extends GameTickEvent {
 			return;
 		}
 
-		// Authentic player always faced NW
-		getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
+		if (getWorld().getServer().getConfig().WANT_RANGED_FACE_PLAYER) {
+			// 	Player faces victim when ranging
+			getPlayerOwner().face(target.getX(), target.getY());
+		} else {
+			// Authentic player always faced NW
+			getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
+		}
 		getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
 		if (target.isPlayer()) {
@@ -119,6 +126,7 @@ public class RangeEvent extends GameTickEvent {
 		}
 
 		if (target.isNpc()) {
+			assert target instanceof Npc;
 			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc) target})) {
 				getPlayerOwner().resetRange();
 				stop();
@@ -245,8 +253,10 @@ public class RangeEvent extends GameTickEvent {
 
 					boolean canFire = false;
 					for (int i = 0; i < allowedArrows[temp].length; i++)
-						if (allowedArrows[temp][i] == aID)
+						if (allowedArrows[temp][i] == aID) {
 							canFire = true;
+							break;
+						}
 
 					if (!canFire) {
 						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_BOLTS.id())) {
@@ -291,17 +301,17 @@ public class RangeEvent extends GameTickEvent {
 					}
 					getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 				}
-				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITS) * percentage / 100.0);
+				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skill.HITS.id()) * percentage / 100.0);
 				getPlayerOwner().damage(fireDamage);
 
 				//reduce ranged level (case for KBD)
 				if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-					int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
-					getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
+					int newLevel = getCurrentLevel(getPlayerOwner(), Skill.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
+					getPlayerOwner().getSkills().setLevel(Skill.RANGED.id(), newLevel);
 				}
 			}
 		} else if (target.isPlayer() && damage > 0) {
-			getPlayerOwner().incExp(Skills.RANGED, Formulae.rangedHitExperience(target, damage), true);
+			getPlayerOwner().incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
 		}
 		if (Formulae.looseArrow(damage)) {
 			GroundItem arrows = getArrows(arrowID);
@@ -315,10 +325,21 @@ public class RangeEvent extends GameTickEvent {
 			}
 		}
 		ActionSender.sendSound(getPlayerOwner(), "shoot");
-		if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
+		if (Objects.requireNonNull(getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID)).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 			if (DataConversions.random(1, 8) == 1) {
 				target.setPoisonDamage(20);
 				target.startPoisonEvent();
+			}
+		}
+		// Poison Arrows/Bolts Ability to Poison an NPC
+		if (getPlayerOwner().getConfig().WANT_POISON_NPCS) {
+			if (Objects.requireNonNull(getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID)).getName().toLowerCase().contains("poison") && target.isNpc()) {
+					if (target.getCurrentPoisonPower() < 10 && DataConversions.random(1, 50) == 1) {
+						target.setPoisonDamage(60);
+						target.startPoisonEvent();
+						getPlayerOwner().message("@gr3@You @gr2@have @gr1@poisioned @gr2@the " + ((Npc) target).getDef().name + "!");
+					}
+
 			}
 		}
 		getOwner().setKillType(2);

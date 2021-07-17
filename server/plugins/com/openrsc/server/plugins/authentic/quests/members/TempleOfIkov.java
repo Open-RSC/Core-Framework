@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -11,6 +11,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -41,6 +44,11 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.TEMPLE_OF_IKOV.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -50,14 +58,11 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 		player.getCache().remove("openSpiderDoor");
 		player.getCache().remove("completeLever");
 		player.getCache().remove("killedLesarkus");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TEMPLE_OF_IKOV);
-		//keep order kosher
-		int[] skillIDs = {Skills.RANGED, Skills.FLETCHING};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.TEMPLE_OF_IKOV.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
-		player.message("@gre@You haved gained 1 quest point!");
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 		player.message("Well done you have completed the temple of Ikov quest");
 	}
 
@@ -488,7 +493,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			if (command.equals("pull")) {
 				if (!player.getCache().hasKey("ikovLever")) {
 					player.message("You have activated a trap on the lever");
-					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skills.HITS) / 5));
+					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skill.HITS.id()) / 5));
 				} else {
 					mes("You pull the lever");
 					delay(3);
@@ -505,7 +510,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				}
 			} else if (command.equals("searchfortraps")) {
 				player.message("You search the lever for traps");
-				if (getCurrentLevel(player, Skills.THIEVING) < 42) {
+				if (getCurrentLevel(player, Skill.THIEVING.id()) < 42) {
 					player.message("You have not high thieving enough to disable this trap");
 					return;
 				}
@@ -627,11 +632,11 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 		else if (npc.getID() == NpcId.LUCIEN_EDGE.id()) {
 			if (player.getQuestStage(this) == -1 || player.getQuestStage(this) == -2) {
 				player.message("You have already completed this quest");
-				npc.getSkills().setLevel(Skills.HITS, npc.getSkills().getMaxStat(Skills.HITS));
+				npc.getSkills().setLevel(Skill.HITS.id(), npc.getSkills().getMaxStat(Skill.HITS.id()));
 				npc.killed = false;
 				return;
 			}
-			npc.getSkills().setLevel(Skills.HITS, npc.getSkills().getMaxStat(Skills.HITS));
+			npc.getSkills().setLevel(Skill.HITS.id(), npc.getSkills().getMaxStat(Skill.HITS.id()));
 			npcsay(player, npc, "You may have defeated me for now",
 				"But I will be back");
 			player.sendQuestComplete(Quests.TEMPLE_OF_IKOV);

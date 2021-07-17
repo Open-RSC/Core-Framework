@@ -2,12 +2,12 @@ package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obst
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -113,7 +113,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 				player.message("you climb the ledge");
 				if (DataConversions.getRandom().nextInt(10) <= 1) {
 					player.message("but you slip");
-					player.damage((int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
+					player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 42) + 1);
 					say(player, null, "aargh");
 				} else
 					player.teleport(764, 3463);
@@ -123,7 +123,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 				player.teleport(764, 3461);
 				delay(3);
 				player.message("you land way short of the other platform");
-				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
+				player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5);
 				player.teleport(764, 3467);
 				say(player, null, "ooof");
 			}
@@ -149,22 +149,22 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			switch (obj.getID()) {
 				case 859:
 				case 858:
-					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 5) + 5, false, 5); // fall side 5.
+					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5, false, 5); // fall side 5.
 					break;
 				case 854:
 				case 853:
 				case 855:
 				case 857:
-					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 5) + 5, false, 4); // fall side 4.
+					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5, false, 4); // fall side 4.
 					break;
 				case 852:
-					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 5) + 5, false, 3); // fall side 3.
+					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5, false, 3); // fall side 3.
 					break;
 				case 851:
-					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 5) + 5, false, 2); // fall side 2.
+					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5, false, 2); // fall side 2.
 					break;
 				default:
-					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 5) + 5, false, 1); // fall side 1
+					UndergroundPassObstaclesMap1.doRock(obj, player, (int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5, false, 1); // fall side 1
 					break;
 			}
 		}
@@ -172,7 +172,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			player.message("you climb onto the rock");
 			if (DataConversions.getRandom().nextInt(5) == 4) {
 				player.message("but you slip");
-				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
+				player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5);
 				player.teleport(734, 3483);
 				say(player, null, "aargh");
 			} else {
@@ -198,7 +198,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 				new GameObject(obj.getWorld(), obj.getLocation(), 826, obj.getDirection(), obj
 					.getType()));
 			player.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
+			player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 5) + 5);
 			say(player, null, "aaarghh");
 		}
 		else if (obj.getID() == CAGE_REMAINS) {
@@ -268,7 +268,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 					return;
 				}
 				player.message("you attempt to pick the lock");
-				if (obj.getID() == 169 && getCurrentLevel(player, Skills.THIEVING) < 50) {
+				if (obj.getID() == 169 && getCurrentLevel(player, Skill.THIEVING.id()) < 50) {
 					player.message("you need a level of 50 thieving to pick this lock");
 					return;
 				}
@@ -286,7 +286,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 					else
 						player.teleport(obj.getX(), obj.getY());
 				}
-				player.incExp(Skills.THIEVING, 15, true);
+				player.incExp(Skill.THIEVING.id(), 15, true);
 				delay(3);
 				player.message("the cage slams shut behind you");
 			} else if (click == 1) {

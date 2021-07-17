@@ -6,12 +6,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
 
-public final class NpcTalkTo implements PacketHandler {
+public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(TargetMobStruct payload, Player player) throws Exception {
 
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
@@ -25,7 +26,7 @@ public final class NpcTalkTo implements PacketHandler {
 		}
 
 		player.resetAll();
-		final Npc n = player.getWorld().getNpc(packet.readShort());
+		final Npc n = player.getWorld().getNpc(payload.serverIndex);
 
 		if (n == null) {
 			return;

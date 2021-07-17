@@ -2,6 +2,7 @@ package com.openrsc.server;
 
 import com.google.common.collect.ImmutableList;
 import com.openrsc.server.database.DatabaseType;
+import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.YMLReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,11 +37,10 @@ public class ServerConfiguration {
 	public int CLIENT_VERSION;
 	public int MAX_PLAYERS;
 	public int MAX_PLAYERS_PER_IP;
+	public int SESSION_ID_SENDER_TIMER;
 	int SERVER_PORT;
 	int IDLE_TIMER;
 	int AUTO_SAVE;
-	private String SERVER_LOCATION;
-	private String HMAC_PRIVATE_KEY;
 	public int AGGRO_RANGE;
 	public DatabaseType DB_TYPE;
 	public String DB_HOST;
@@ -49,6 +49,8 @@ public class ServerConfiguration {
 	public String DB_PASS;
 	public String DB_TABLE_PREFIX;
 	public int PLAYER_LEVEL_LIMIT;
+	public boolean WANT_EXPERIENCE_CAP;
+	public int EXPERIENCE_LIMIT;
 	public double COMBAT_EXP_RATE;
 	public double SKILLING_EXP_RATE;
 	public double WILDERNESS_BOOST;
@@ -57,14 +59,15 @@ public class ServerConfiguration {
 	public int VIEW_DISTANCE;
 	public String LOGO_SPRITE_ID;
 	public int NPC_BLOCKING;
+	public int PLAYER_BLOCKING;
 	public int MAX_CONNECTIONS_PER_IP;
 	public int MAX_CONNECTIONS_PER_SECOND;
 	public int MAX_PACKETS_PER_SECOND;
 	public int MAX_LOGINS_PER_SECOND;
 	public int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES;
 	public int NETWORK_FLOOD_IP_BAN_MINUTES;
-	private int SUSPICIOUS_PLAYER_IP_BAN_MINUTES;
 	public boolean WANT_PCAP_LOGGING;
+	public boolean WANT_THREADING__BREAK_PID_PRIORITY;
 
 	// Location of the server conf files.
 	public String CONFIG_DIR = "conf" + File.separator + "server";
@@ -97,6 +100,7 @@ public class ServerConfiguration {
 	public boolean WANT_REMEMBER;
 	public boolean WANT_GLOBAL_CHAT;
 	public boolean WANT_GLOBAL_FRIEND;
+	public int GLOBAL_MESSAGE_COOLDOWN;
 	public boolean WANT_SKILL_MENUS;
 	public boolean WANT_QUEST_MENUS;
 	public boolean WANT_EXPERIENCE_ELIXIRS;
@@ -122,7 +126,6 @@ public class ServerConfiguration {
 	public boolean VALUABLE_DROP_MESSAGES;
 	public double VALUABLE_DROP_RATIO;
 	public boolean VALUABLE_DROP_EXTRAS;
-	private String VALUABLE_DROP_ITEMS;
 	public boolean WANT_CUSTOM_RANK_DISPLAY;
 	public boolean RIGHT_CLICK_BANK;
 	public boolean RIGHT_CLICK_TRADE;
@@ -136,6 +139,7 @@ public class ServerConfiguration {
 	public int MAX_WALKING_SPEED;
 	public boolean SHOW_UNIDENTIFIED_HERB_NAMES;
 	public boolean WANT_QUEST_STARTED_INDICATOR;
+	public boolean WANT_POISON_NPCS;
 	public boolean WANT_CUSTOM_QUESTS;
 	public boolean FISHING_SPOTS_DEPLETABLE;
 	public boolean IMPROVED_ITEM_OBJECT_NAMES;
@@ -156,6 +160,22 @@ public class ServerConfiguration {
 	public boolean WANT_EQUIPMENT_TAB;
 	public boolean WANT_BANK_PRESETS;
 	public boolean WANT_PARTIES;
+	public boolean WANT_OPENPK_POINTS;
+	public int OPENPK_POINTS_TO_GP_RATIO;
+	public boolean WANT_PK_BOTS;
+	public int RESPAWN_LOCATION_X;
+	public int RESPAWN_LOCATION_Y;
+	public double PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER;
+	public double PARTY_DISTANCE_PERCENT_DECREASE;
+	public double PARTY_SAVE_XP_FOR_SKILLER_PERCENT;
+	public int PARTY_SHARE_MAX_X;
+	public int PARTY_SHARE_MAX_Y;
+	public boolean PARTY_SHARE_INFINITE_RANGE;
+	public boolean PARTY_SHARE_WITH_SAME_IP;
+	public String PARTY_SHARE_SIZE_ALGORITHM;
+	public String PARTY_SHARE_DISTANCE_ALGORITHM;
+	public int PARTY_MAX_SIZE_FOR_ADDITIONAL_XP;
+	public boolean PARTY_IRON_MAN_CAN_SHARE;
 	public boolean MINING_ROCKS_EXTENDED;
 	public boolean WANT_NEW_RARE_DROP_TABLES;
 	public boolean WANT_LEFTCLICK_WEBS;
@@ -174,10 +194,9 @@ public class ServerConfiguration {
 	public boolean LENIENT_CONTACT_DETAILS;
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
-	public boolean CUSTOM_PROTOCOL;
+	public boolean FEATURES_SLEEP;
+	public int RESTRICT_ITEM_ID;
 	public int PACKET_LIMIT;
-	private int CONNECTION_LIMIT;
-	private int CONNECTION_TIMEOUT;
 	//quest-minigame related
 	public boolean WANT_GIANNE_BADGE;
 	public boolean WANT_BLURBERRY_BADGE;
@@ -197,12 +216,46 @@ public class ServerConfiguration {
 	public int LOCATION_DATA;
 	public boolean WANT_FIXED_BROKEN_MECHANICS;
 	public boolean WANT_DECORATED_MOD_ROOM;
+	public boolean WANT_AUTO_SERVER_SHUTDOWN;
+	public int RESTART_HOUR;
+	public boolean WANT_RESET_EVENT = false;
 	public boolean CHAR_NAME_CAN_CONTAIN_MOD;
+	public boolean CHAR_NAME_CAN_EQUAL_GLOBAL;
 	public boolean WANT_CHAIN_LEGS;
 	public boolean WANT_APOTHECARY_QOL;
+	public boolean WANT_CERT_AS_NOTES;
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
+	public boolean WANT_RANGED_FACE_PLAYER = false;
+	public boolean ESTERS_BUNNIES_EVENT = false;
+	public int BASED_MAP_DATA = 64;
+	public int BASED_CONFIG_DATA = 85;
+
+	public boolean GATHER_TOOL_ON_SCENERY;
+	public boolean COIN_BANK;
+	public boolean INFLUENCE_INSTEAD_QP;
+	public boolean USES_CLASSES;
+	public boolean USES_PK_MODE;
+	public boolean ARRIVE_LUMBRIDGE;
+	public boolean SCALED_WOODCUT_XP;
+	public boolean OLD_PRAY_XP;
+	public boolean DIVIDED_GOOD_EVIL;
+	public boolean LACKS_PRAYERS;
+	public boolean HAS_FEAR_SPELL;
+	public boolean WAIT_TO_REBOOST;
+	public boolean NO_LEVEL_REQUIREMENT_WIELD;
+	public boolean FERMENTED_WINE;
+	public boolean OLD_QUEST_MECHANICS;
+	public boolean CAN_INFLUENCE_NPCS;
+	public boolean NO_CONFIRM_TRADES;
+	public boolean SHORT_MAX_STACKS;
+	public boolean BLOCK_USE_MAGIC_IN_COMBAT;
+	public boolean RAPID_CAST_SPELLS;
+	public boolean MEAT_HEAL_LEVEL_DEPENDENT;
+	public boolean ONLY_REGULAR_BONES;
+	public boolean SHARED_GATHERING_RESOURCES;
+	public boolean HAS_PLAYER_OWNED_HOUSES;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -212,7 +265,7 @@ public class ServerConfiguration {
 		ImmutableList.of("Connection reset by peer", "Connection reset");
 
 	public String configFile;
-	private String[] deprecatedKeys = new String[]{
+	private final String[] deprecatedKeys = new String[]{
 		"bank_size", "want_password_massage", "mysql_db",
 		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix"
 	};
@@ -222,51 +275,29 @@ public class ServerConfiguration {
 	 * @throws IOException
 	 * Config file for server configurations.
 	 */
-	private YMLReader serverProps = new YMLReader();
+	private final YMLReader serverProps = new YMLReader();
 
 	void initConfig(String defaultFile) throws IOException {
-		// Try to load the connections.conf. If not, we'll use the defaults
-		// (But you really want this file)
+		// Try to load the connections.conf
 		try {
 			serverProps.loadFromYML("connections.conf");
 			LOGGER.info("Loaded connections.conf");
 		} catch (Exception e) {
-			LOGGER.info("Properties file connections.conf not found, using default properties.");
+			LOGGER.info("Properties file connections.conf not found, terminating server.");
+			SystemUtil.exit(1);
 		}
 
-		// Always try to load from local.conf first.
-		try {
-			serverProps.loadFromYML("local.conf");
-			configFile = "local.conf";
-		} catch (Exception e) { // Otherwise try to load from command line.
-			try {
-				serverProps.loadFromYML(defaultFile);
-				LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
-				configFile = defaultFile;
-			} catch (Exception ex) { // If not, we use the defaults listed below.
-				LOGGER.info("Properties file local.conf not found, no other properties file provided." +
-					" Using default properties.");
-				configFile = "Default values";
-			}
-		}
+		configFile = ServerConfiguration.loadServerProps(serverProps, defaultFile);
 
 		notifyDeprecated();
 
 		// Database settings
-		DB_TYPE = DatabaseType.getByType(tryReadInt("db_type").orElse(0));
-		DB_NAME = tryReadString("db_name").orElse("openrsc");
+		DB_TYPE = DatabaseType.resolveType(tryReadString("db_type").orElse(null));
+		DB_NAME = tryReadString("db_name").orElse("preservation");
 		DB_HOST = tryReadString("db_host").orElse("localhost:3306");
 		DB_USER = tryReadString("db_user").orElse("root");
 		DB_PASS = tryReadString("db_pass").orElse("root");
 		DB_TABLE_PREFIX = tryReadString("db_table_prefix").orElse("");
-
-		// Discord settings
-		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
-		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
-		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false);
-		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false);
-		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false);
-		CROSS_CHAT_CHANNEL = tryReadInt("cross_chat_channel").orElse(0);
 
 		// World settings
 		SERVER_NAME = tryReadString("server_name").orElse("Runescape");
@@ -279,34 +310,38 @@ public class ServerConfiguration {
 		WANT_CUSTOM_WALK_SPEED = tryReadBool("want_custom_walking_speed").orElse(false);
 		IDLE_TIMER = tryReadInt("idle_timer").orElse(300000); // 5 minutes
 		AUTO_SAVE = tryReadInt("auto_save").orElse(30000); // 30 seconds
-		CLIENT_VERSION = tryReadInt("client_version").orElse(6);
+		CLIENT_VERSION = tryReadInt("client_version").orElse(10008); // version 10008
 		SERVER_PORT = tryReadInt("server_port").orElse(43594);
-		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(10);
-		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(10);
-		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(1000);
+		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(20);
+		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
+		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(50);
 		MAX_LOGINS_PER_SECOND = tryReadInt("max_logins_per_second").orElse(1);
 		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = tryReadInt("max_password_guesses_per_five_minutes").orElse(10);
-		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(20);
-		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = tryReadInt("suspicious_player_ip_ban_minutes").orElse(60);
-		SERVER_LOCATION = tryReadString("server_location").orElse("USA");
-		MAX_PLAYERS = tryReadInt("max_players").orElse(100);
+		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(5);
+		int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = tryReadInt("suspicious_player_ip_ban_minutes").orElse(60);
+		String SERVER_LOCATION = tryReadString("server_location").orElse("USA");
+		MAX_PLAYERS = tryReadInt("max_players").orElse(2000);
 		MAX_PLAYERS_PER_IP = tryReadInt("max_players_per_ip").orElse(10);
+		SESSION_ID_SENDER_TIMER = tryReadInt("session_id_sender_timer").orElse(640);
 		AVATAR_GENERATOR = tryReadBool("avatar_generator").orElse(false);
 		MEMBER_WORLD = tryReadBool("member_world").orElse(true);
-		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(true);
+		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(false);
+		WANT_THREADING__BREAK_PID_PRIORITY = tryReadBool("want_threading__break_pid_priority").orElse(false);
 		WORLD_NUMBER = tryReadInt("world_number").orElse(1);
 		PLAYER_LEVEL_LIMIT = tryReadInt("player_level_limit").orElse(99);
+		WANT_EXPERIENCE_CAP = tryReadBool("want_experience_cap").orElse(false);
+		EXPERIENCE_LIMIT = tryReadInt("experience_limit").orElse(-1);
 		COMBAT_EXP_RATE = tryReadDouble("combat_exp_rate").orElse(1.0);
 		SKILLING_EXP_RATE = tryReadDouble("skilling_exp_rate").orElse(1.0);
 		WILDERNESS_BOOST = tryReadDouble("wilderness_boost").orElse(0.0);
 		SKULL_BOOST = tryReadDouble("skull_boost").orElse(0.0);
 		IS_DOUBLE_EXP = tryReadBool("double_exp").orElse(false);
 		NPC_RESPAWN_MULTIPLIER = tryReadDouble("npc_respawn_multiplier").orElse(1.0);
-		HMAC_PRIVATE_KEY = tryReadString("HMAC_PRIVATE_KEY").orElse("root");
 		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
-		CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
-		CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
+		GLOBAL_MESSAGE_COOLDOWN = tryReadInt("global_message_cooldown").orElse(0);
+		int CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
+		int CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
 		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);
 		STOP_SKILLING_FATIGUED = tryReadInt("stop_skilling_fatigued").orElse(1);
 		AGGRO_RANGE = tryReadInt("aggro_range").orElse(1);
@@ -315,14 +350,18 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
-		CUSTOM_PROTOCOL = tryReadBool("custom_protocol").orElse(false);
+		//CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
+		//ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
 		LOCATION_DATA = tryReadInt("location_data").orElse(0);
 		WANT_FIXED_BROKEN_MECHANICS = tryReadBool("want_fixed_broken_mechanics").orElse(false);
 		WANT_DECORATED_MOD_ROOM = tryReadBool("want_decorated_mod_room").orElse(false);
-		/*
-		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
-		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
-		*/
+		WANT_AUTO_SERVER_SHUTDOWN = tryReadBool("want_auto_server_shutdown").orElse(false);
+		RESTART_HOUR = tryReadInt("restart_hour").orElse(7);
+		WANT_RESET_EVENT = tryReadBool("want_reset_event").orElse(false);
+		BASED_MAP_DATA = tryReadInt("based_map_data").orElse(100);
+		BASED_CONFIG_DATA = tryReadInt("based_config_data").orElse(85);
+		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
+		RESTRICT_ITEM_ID = tryReadInt("restrict_item_id").orElse(1289);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -345,6 +384,33 @@ public class ServerConfiguration {
 		ALLOW_RESIZE = tryReadBool("allow_resize").orElse(false);
 		LENIENT_CONTACT_DETAILS = tryReadBool("lenient_contact_details").orElse(false);
 		CHAR_NAME_CAN_CONTAIN_MOD = tryReadBool("char_name_can_contain_mod").orElse(false);
+		CHAR_NAME_CAN_EQUAL_GLOBAL = tryReadBool("char_name_can_equal_global").orElse(false);
+
+		// Retro features
+		GATHER_TOOL_ON_SCENERY = tryReadBool("gather_tool_on_scenery").orElse(false);
+		COIN_BANK = tryReadBool("coin_bank").orElse(false);
+		INFLUENCE_INSTEAD_QP = tryReadBool("influence_instead_qp").orElse(false);
+		USES_CLASSES = tryReadBool("uses_classes").orElse(false);
+		USES_PK_MODE = tryReadBool("uses_pk_mode").orElse(false);
+		ARRIVE_LUMBRIDGE = tryReadBool("arrive_lumbridge").orElse(false);
+		SCALED_WOODCUT_XP = tryReadBool("scaled_woodcut_xp").orElse(false);
+		OLD_PRAY_XP = tryReadBool("old_pray_xp").orElse(false);
+		DIVIDED_GOOD_EVIL = tryReadBool("divided_good_evil").orElse(false);
+		LACKS_PRAYERS = tryReadBool("lacks_prayers").orElse(false);
+		HAS_FEAR_SPELL = tryReadBool("has_fear_spell").orElse(false);
+		WAIT_TO_REBOOST = tryReadBool("wait_to_reboost").orElse(false);
+		NO_LEVEL_REQUIREMENT_WIELD = tryReadBool("no_level_requirement_wield").orElse(false);
+		FERMENTED_WINE = tryReadBool("fermented_wine").orElse(false);
+		OLD_QUEST_MECHANICS = tryReadBool("old_quest_mechanics").orElse(false);
+		CAN_INFLUENCE_NPCS = tryReadBool("can_influence_npcs").orElse(false);
+		NO_CONFIRM_TRADES = tryReadBool("no_confirm_trades").orElse(false);
+		SHORT_MAX_STACKS = tryReadBool("short_max_stacks").orElse(false);
+		BLOCK_USE_MAGIC_IN_COMBAT = tryReadBool("block_use_magic_in_combat").orElse(false);
+		RAPID_CAST_SPELLS = tryReadBool("rapid_cast_spells").orElse(false);
+		MEAT_HEAL_LEVEL_DEPENDENT = tryReadBool("meat_heal_level_dependent").orElse(false);
+		ONLY_REGULAR_BONES = tryReadBool("only_regular_bones").orElse(false);
+		SHARED_GATHERING_RESOURCES = tryReadBool("shared_gathering_resources").orElse(false);
+		HAS_PLAYER_OWNED_HOUSES = tryReadBool("has_player_owned_houses").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);
@@ -374,6 +440,7 @@ public class ServerConfiguration {
 		WANT_DECANTING = tryReadBool("want_decanting").orElse(false);
 		PLAYER_COMMANDS = tryReadBool("player_commands").orElse(false);
 		NPC_BLOCKING = tryReadInt("npc_blocking").orElse(2);
+		PLAYER_BLOCKING = tryReadInt("player_blocking").orElse(1);
 		NPC_DONT_RETREAT = tryReadBool("npc_dont_retreat").orElse(false);
 		MESSAGE_FULL_INVENTORY = tryReadBool("message_full_inventory").orElse(false);
 		WANT_PETS = tryReadBool("want_pets").orElse(false);
@@ -386,22 +453,56 @@ public class ServerConfiguration {
 		LOOTED_CHESTS_STUCK = tryReadBool("looted_chests_stuck").orElse(false);
 		WANT_RUNECRAFT = tryReadBool("want_runecraft").orElse(false);
 		WANT_HARVESTING = tryReadBool("want_harvesting").orElse(false);
+		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
 		WANT_CUSTOM_LANDSCAPE = tryReadBool("custom_landscape").orElse(false);
 		WANT_EQUIPMENT_TAB = tryReadBool("want_equipment_tab").orElse(false);
 		WANT_BANK_PRESETS = tryReadBool("want_bank_presets").orElse(false);
-		WANT_PARTIES = tryReadBool("want_parties").orElse(false);
 		MINING_ROCKS_EXTENDED = tryReadBool("mining_rocks_extended").orElse(false);
 		WANT_NEW_RARE_DROP_TABLES = tryReadBool("want_new_rare_drop_tables").orElse(false);
 		WANT_LEFTCLICK_WEBS = tryReadBool("want_leftclick_webs").orElse(false);
 		WANT_IMPROVED_PATHFINDING = tryReadBool("want_improved_pathfinding").orElse(false);
 		CAN_USE_CRACKER_ON_SELF = tryReadBool("can_use_cracker_on_self").orElse(false);
 		FIX_OVERHEAD_CHAT = tryReadBool("fix_overhead_chat").orElse(false);
-		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
 		WANT_BETTER_JEWELRY_CRAFTING = tryReadBool("want_better_jewelry_crafting").orElse(false);
 		MORE_SHAFTS_PER_BETTER_LOG = tryReadBool("more_shafts_per_better_log").orElse(false);
 		FASTER_YOHNUS = tryReadBool("faster_yohnus").orElse(false);
 		WANT_CHAIN_LEGS = tryReadBool("want_chain_legs").orElse(false);
 		WANT_APOTHECARY_QOL = tryReadBool("want_apothecary_qol").orElse(false);
+		WANT_RANGED_FACE_PLAYER = tryReadBool("want_ranged_face_player").orElse(false);
+		WANT_POISON_NPCS = tryReadBool("want_poison_npcs").orElse(false);
+		WANT_OPENPK_POINTS = tryReadBool("want_openpk_points").orElse(false);
+		OPENPK_POINTS_TO_GP_RATIO = tryReadInt("openpk_points_to_gp_ratio").orElse(1);
+		WANT_PK_BOTS = tryReadBool("want_pk_bots").orElse(false);
+		RESPAWN_LOCATION_X = tryReadInt("respawn_location_x").orElse(120);
+		RESPAWN_LOCATION_Y = tryReadInt("respawn_location_y").orElse(648);
+
+		// Party settings
+		WANT_PARTIES = tryReadBool("want_parties").orElse(false);
+		PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER = tryReadDouble("party_additional_xp_percent_per_player")
+			.orElse(0.1);
+		PARTY_DISTANCE_PERCENT_DECREASE = tryReadDouble("party_distance_percent_decrease")
+			.orElse(0.05);
+		PARTY_SAVE_XP_FOR_SKILLER_PERCENT = tryReadDouble("party_save_xp_for_skiller_percent")
+			.orElse(0.1);
+		PARTY_SHARE_MAX_X = tryReadInt("party_share_max_x").orElse(20);
+		PARTY_SHARE_MAX_Y = tryReadInt("party_share_max_y").orElse(20);
+		PARTY_SHARE_INFINITE_RANGE = tryReadBool("party_share_infinite_range").orElse(false);
+		PARTY_SHARE_WITH_SAME_IP = tryReadBool("party_share_with_same_ip").orElse(false);
+		PARTY_SHARE_SIZE_ALGORITHM = tryReadString("party_share_size_algorithm")
+			.orElse("exponential");
+		PARTY_SHARE_DISTANCE_ALGORITHM = tryReadString("party_share_distance_algorithm")
+			.orElse("exponential");
+		PARTY_MAX_SIZE_FOR_ADDITIONAL_XP = tryReadInt("party_max_size_for_additional_xp")
+			.orElse(1000);
+		PARTY_IRON_MAN_CAN_SHARE = tryReadBool("party_iron_man_can_share").orElse(false);
+
+		// Discord settings
+		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
+		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
+		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false);
+		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false);
+		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false);
+		CROSS_CHAT_CHANNEL = tryReadInt("cross_chat_channel").orElse(0);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);
@@ -410,6 +511,7 @@ public class ServerConfiguration {
 		WANT_BANK_NOTES = tryReadBool("want_bank_notes").orElse(false);
 		WANT_CERT_DEPOSIT = tryReadBool("want_cert_deposit").orElse(false);
 		WANT_CERTER_BANK_EXCHANGE = tryReadBool("want_certer_bank_exchange").orElse(false);
+		WANT_CERT_AS_NOTES = tryReadBool("want_cert_as_notes").orElse(false);
 
 		//Shop
 		RIGHT_CLICK_TRADE = tryReadBool("right_click_trade").orElse(false);
@@ -425,7 +527,8 @@ public class ServerConfiguration {
 		VALUABLE_DROP_MESSAGES = tryReadBool("valuable_drop_messages").orElse(false);
 		VALUABLE_DROP_RATIO = tryReadDouble("valuable_drop_ratio").orElse(0.0);
 		VALUABLE_DROP_EXTRAS = tryReadBool("valuable_drop_extras").orElse(false);
-		VALUABLE_DROP_ITEMS = tryReadString("valuable_drop_items").orElse("Half of a key,Half Dragon Square Shield");
+		String VALUABLE_DROP_ITEMS = tryReadString("valuable_drop_items").orElse("Half of a key,Half Dragon Square Shield");
+		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
 
 		// Glitch checks
 		STRICT_CHECK_ALL = tryReadBool("strict_check_all").orElse(true);
@@ -441,17 +544,34 @@ public class ServerConfiguration {
 		WANT_BARTER_WORMBRAINS = tryReadBool("want_barter_wormbrains").orElse(false);
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
-
-		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
+		ESTERS_BUNNIES_EVENT = tryReadBool("esters_bunnies").orElse(false);
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
+	}
+
+	protected static String loadServerProps(YMLReader reader, String defaultFile) {
+		// Always try to load from local.conf first.
+		try {
+			reader.loadFromYML("local.conf");
+			return "local.conf";
+		} catch (Exception e) { // Otherwise try to load from command line.
+			try {
+				reader.loadFromYML(defaultFile);
+				LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
+				return defaultFile;
+			} catch (Exception ex) { // If not, we use the defaults listed below.
+				LOGGER.info("Properties file local.conf not found, no other properties file provided." +
+					" Using default properties.");
+				return "Default values";
+			}
+		}
 	}
 
 	// Notify the user if they have any deprecated
 	// keys in their config files.
 	private void notifyDeprecated() {
-		for (int i = 0; i < deprecatedKeys.length; ++i) {
-			if (serverProps.keyExists(deprecatedKeys[i])) {
-				LOGGER.info(deprecatedKeys[i] + " is a deprecated key. You can remove it from " +
+		for (String deprecatedKey : deprecatedKeys) {
+			if (serverProps.keyExists(deprecatedKey)) {
+				LOGGER.info(deprecatedKey + " is a deprecated key. You can remove it from " +
 					configFile + ".");
 			}
 		}
@@ -469,7 +589,7 @@ public class ServerConfiguration {
 		catch (NumberFormatException ex) {
 			LOGGER.error("Error reading value for key \"" + key + "\" " + ex.getMessage() +
 				". Should be an integer. Terminating server.");
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
@@ -487,7 +607,7 @@ public class ServerConfiguration {
 		catch (NumberFormatException ex) {
 			LOGGER.error("Error reading value for key \"" + key + "\" " + ex.getMessage() +
 				". Should be a double. Terminating server.");
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
@@ -508,7 +628,7 @@ public class ServerConfiguration {
 				LOGGER.error("Error reading value for key \"" + key + "\" for input string \"" +
 					serverProps.getAttribute(key) + ".\"" +
 					" Should be true or false. Terminating server.");
-				System.exit(1);
+				SystemUtil.exit(1);
 			}
 		}
 		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");

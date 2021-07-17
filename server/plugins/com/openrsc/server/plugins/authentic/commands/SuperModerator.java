@@ -63,6 +63,8 @@ public final class SuperModerator implements CommandTrigger {
 			releasePlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("ban")) {
 			banPlayer(player, command, args);
+		} else if (command.equalsIgnoreCase("unban")) {
+			unbanPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("viewipbans")) {
 			queryIPBans(player, command, args);
 		} else if (command.equalsIgnoreCase("ipban")) {
@@ -446,6 +448,14 @@ public final class SuperModerator implements CommandTrigger {
 		}
 	}
 
+	private void unbanPlayer(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
+			return;
+		}
+		banPlayer(player, command, new String[]{ args[0], "0" });
+	}
+
 	private void banPlayer(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unban]");
@@ -455,6 +465,11 @@ public final class SuperModerator implements CommandTrigger {
 		final long userToBan = DataConversions.usernameToHash(args[0]);
 		final String usernameToBan = DataConversions.hashToUsername(userToBan);
 		final Player targetPlayer = player.getWorld().getPlayer(userToBan);
+
+		if (targetPlayer == player) {
+			player.message(messagePrefix + "You can't ban or unban yourself");
+			return;
+		}
 
 		int time;
 		if (args.length >= 2) {
@@ -483,14 +498,11 @@ public final class SuperModerator implements CommandTrigger {
 			return;
 		}
 
-		if(targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
-
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
-			return;
+		if (targetPlayer != null) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
+				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
+				return;
+			}
 		}
 
 		player.message(messagePrefix + player.getWorld().getServer().getDatabase().banPlayer(usernameToBan, player, time));

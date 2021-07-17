@@ -1,7 +1,12 @@
 package com.openrsc.server.model.world;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.openrsc.server.Server;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.avatargenerator.AvatarGenerator;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.clan.ClanManager;
@@ -41,6 +46,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
@@ -72,8 +78,10 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final Server server;
 	private final RegionManager regionManager;
 	private final EntityList<Npc> npcs;
-	private final EntityList<Player> players;
+	private final PlayerList players;
 
+	//Maximum bank items allowed
+	private final int maxBankSize;
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
 	private final List<Shop> shops;
@@ -81,38 +89,43 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final ClanManager clanManager;
 	private final Market market;
 	private final WorldLoader worldLoader;
-	private HashMap<String, ArrayList<Npc>> npcPositions;
+	private final Multimap<Point, Npc> npcPositions;
+	private final HashMap<Point, Integer> sceneryLocs;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 
-	private ConcurrentMap<Player, Boolean> playerUnderAttackMap;
-	private ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
-	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<>();
+	private final ConcurrentMap<Player, Boolean> playerUnderAttackMap;
+	private final ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
+	private final Queue<GlobalMessage> globalMessageQueue = new LinkedList<>();
 	private PathfindingDebug pathfindingDebug = null;
 	public NpcDrops npcDrops;
-	private Deque<Snapshot> snapshots;
+	private final Deque<Snapshot> snapshots;
 
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 
 	public World(final Server server) {
 		this.server = server;
 		this.npcs = new EntityList<>(4000);
-		this.players = new EntityList<>(2000);
-		this.npcPositions = new HashMap<>();
+		this.players = new PlayerList(2000);
+		this.npcPositions = Multimaps.synchronizedMultimap(HashMultimap.create());
+		this.sceneryLocs = new HashMap<>();
 		this.npcDrops = new NpcDrops(this);
-		this.quests = Collections.synchronizedList( new LinkedList<>() );
-		this.minigames = Collections.synchronizedList( new LinkedList<>() );
-		this.shops = Collections.synchronizedList( new ArrayList<>() );
+		this.quests = new CopyOnWriteArrayList<>();
+		this.minigames = new CopyOnWriteArrayList<>();
+		this.shops = new CopyOnWriteArrayList<>();
 		this.wildernessIPTracker = new ThreadSafeIPTracker<>();
 		this.playerUnderAttackMap = new ConcurrentHashMap<>();
 		this.npcUnderAttackMap = new ConcurrentHashMap<>();
 		this.fishingTrawler = new ConcurrentHashMap<>();
 		this.snapshots = new LinkedList<>();
-		this.avatarGenerator = getServer().getConfig().AVATAR_GENERATOR ? new AvatarGenerator(this) : null;
 		this.worldLoader = new WorldLoader(this);
 		this.regionManager = new RegionManager(this);
 		this.clanManager = new ClanManager(this);
 		this.partyManager = new PartyManager(this);
-		this.market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
+
+		final ServerConfiguration config = server.getConfig();
+		this.avatarGenerator = config.AVATAR_GENERATOR ? new AvatarGenerator(this) : null;
+		this.market = config.SPAWN_AUCTION_NPCS ? new Market(this) : null;
+		this.maxBankSize = config.MEMBER_WORLD ? (config.WANT_CUSTOM_BANKS ? ItemId.maxCustom : 192) : 48;
 	}
 
 	/**
@@ -223,25 +236,14 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	 * Gets a Player by their server index
 	 */
 	public Player getPlayer(final int idx) {
-		try {
-			final Player player = getPlayers().get(idx);
-			return player;
-		} catch (Exception e) {
-			return null;
-		}
-
+		return players.get(idx);
 	}
 
 	/**
 	 * Gets a player by their username hash
 	 */
 	public Player getPlayer(final long usernameHash) {
-		for (final Player player : getPlayers()) {
-			if (player.getUsernameHash() == usernameHash) {
-				return player;
-			}
-		}
-		return null;
+		return players.getPlayerByHash(usernameHash);
 	}
 
 	/**
@@ -259,7 +261,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	/**
 	 * Gets a player by their UUID
 	 */
-	public Player getPlayerUUID(final UUID uuid) {
+	public Player getPlayerByUUID(final UUID uuid) {
 		for (final Player player : getPlayers()) {
 			if (player.getUUID().equals(uuid)) {
 				return player;
@@ -270,6 +272,19 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public EntityList<Player> getPlayers() {
 		return players;
+	}
+
+	/**
+	 * Gets a random online player
+	 * @return
+	 */
+	public Player getRandomPlayer() {
+		if(!players.isEmpty()) {
+			List<Integer> indices = new ArrayList<>(players.indices());
+			int randomIndex = (int)(Math.random() * indices.size());
+			return players.get(indices.get(randomIndex));
+		}
+		return null;
 	}
 
 	/**
@@ -358,15 +373,15 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public void unload() {
 		LOGGER.info("Saving clans for shutdown");
 		if (getServer().getConfig().WANT_CLANS) {
-			getServer().getWorld().getClanManager().saveClans();
+			getClanManager().saveClans();
 		}
 		LOGGER.info("Processing Market for shutdown");
-		if (getServer().getWorld().getMarket() != null) {
+		if (getMarket() != null) {
 			// Finish processing world market.
-			getServer().getWorld().getMarket().run();
+			getMarket().run();
 		}
 		LOGGER.info("Saving players for shutdown...");
-		for (final Player p : getServer().getWorld().getPlayers()) {
+		for (final Player p : getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 		}
 		LOGGER.info("Players saved");
@@ -386,6 +401,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		getNpcDrops().unload();
 		npcs.clear();
 		npcPositions.clear();
+		sceneryLocs.clear();
 		players.clear();
 		snapshots.clear();
 		wildernessIPTracker.clear();
@@ -408,7 +424,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public void registerGameObject(final GameObject o) {
 		Point objectCoordinates = Point.location(o.getLoc().getX(), o.getLoc().getY());
 		final GameObject collidingGameObject = getRegionManager().getRegion(objectCoordinates).getGameObject(objectCoordinates, null);
-		final GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection(), null);
+		final GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection());
 		if (collidingGameObject != null && o.getType() == 0) {
 			unregisterGameObject(collidingGameObject);
 		}
@@ -421,8 +437,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		if (o.getID() == 1147) {
 			return;
 		}
-		switch (o.getType()) {
-			case 0:
+		switch (o.getGameObjectType()) {
+			case SCENERY:
 				if (o.getGameObjectDef().getType() != 1 && o.getGameObjectDef().getType() != 2) {
 					return;
 				}
@@ -462,7 +478,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				}
 				break;
 
-			case 1:
+			case BOUNDARY:
 				if (o.getDoorDef().getDoorType() != 1) {
 					return;
 				}
@@ -683,8 +699,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public void unregisterGameObject(final GameObject o) {
 		o.remove();
 		final int dir = o.getDirection();
-		switch (o.getType()) {
-			case 0:
+		switch (o.getGameObjectType()) {
+			case SCENERY:
 				if (o.getGameObjectDef().getType() != 1 && o.getGameObjectDef().getType() != 2) {
 					return;
 				}
@@ -716,7 +732,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 					}
 				}
 				break;
-			case 1:
+			case BOUNDARY:
 				if (o.getDoorDef().getDoorType() != 1) {
 					return;
 				}
@@ -780,6 +796,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				pcap.exportPCAP(player);
 				LOGGER.info("Wrote out pcap for " + player.getUsername() + " at " + pcap.fname);
 			}
+
+			player.getChannel().attr(attachment).set(null);
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
@@ -840,7 +858,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	@Override
 	public void update(final FishingTrawler ctx) {
 		if (ctx != null && ctx.getPlayers().size() == 0) {
-			fishingTrawler.put(ctx.getBoat(), null);
+			fishingTrawler.remove(ctx.getBoat());
 		}
 	}
 
@@ -920,35 +938,33 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		return globalMessageQueue;
 	}
 
-	public HashMap<String, ArrayList<Npc>> getNpcPositions() {
+	public Multimap<Point, Npc> getNpcPositions() {
 		return npcPositions;
 	}
 
-	public void setNpcPosition(final Npc n) {
-		final String key = n.getX() + "," + n.getY();
-		npcPositions.putIfAbsent(key, new ArrayList<>());
-		npcPositions.get(key).add(n);
+	public void setNpcPosition(final Npc npc) {
+		final Point key = npc.getLocation();
+		npcPositions.put(key, npc);
 	}
 
-	public void removeNpcPosition(final Npc n) {
-		final String key = n.getX() + "," + n.getY();
-		if (npcPositions.containsKey(key)) {
-			final ArrayList<Npc> ar = npcPositions.get(key);
-			if (ar.size() > 1) {
-				for (int i = 0; i < ar.size(); i++) {
-					if (n.getUUID().equals(ar.get(i).getUUID())) {
-						ar.remove(i);
-						break;
-					}
-				}
-			}
-			else {
-				npcPositions.remove(key);
-			}
-		}
+	public void removeNpcPosition(final Npc npc) {
+		final Point key = npc.getLocation();
+		npcPositions.remove(key, npc);
+	}
+
+	public void addSceneryLoc(final Point point, final Integer id) {
+		sceneryLocs.put(point, id);
+	}
+
+	public Integer getSceneryLoc(final Point point) {
+		return sceneryLocs.getOrDefault(point, -1);
 	}
 
 	@Override
 	public void run() {
+	}
+
+	public int getMaxBankSize() {
+		return maxBankSize;
 	}
 }

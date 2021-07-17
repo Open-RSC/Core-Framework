@@ -1,29 +1,30 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.PlayerTradeStruct;
+import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.List;
 import java.util.Optional;
 
-public class PlayerTradeHandler implements PacketHandler {
+public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, OpcodeIn> {
 
 	private boolean busy(Player player) {
 		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getDuel().isDuelActive() || player.inCombat();
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(PlayerTradeStruct payload, Player player) throws Exception {
 
 		/**
 		 * Opcodes covered by this handler
@@ -43,10 +44,7 @@ public class PlayerTradeHandler implements PacketHandler {
 
 		player.interruptPlugins();
 
-		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
-			OpcodeIn.PLAYER_INIT_TRADE_REQUEST, OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST,
-			OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER, OpcodeIn.PLAYER_DECLINED_TRADE,
-			OpcodeIn.PLAYER_ACCEPTED_TRADE);
+		OpcodeIn opcode = payload.getOpcode();
 
 		if (opcode == null)
 			return;
@@ -54,7 +52,7 @@ public class PlayerTradeHandler implements PacketHandler {
 		switch (opcode) {
 			case PLAYER_INIT_TRADE_REQUEST:
 				if (player.getWorld() != null) {
-					affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+					affectedPlayer = player.getWorld().getPlayer(payload.targetPlayerID);
 				}
 
 				if (affectedPlayer == null) {
@@ -86,9 +84,9 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.getTrade().resetAll();
 					return;
 				}
-				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.All.id();
-				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.NonFriends.id();
 				if ((blockAll || (blockNonFriends && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
 					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) && !player.isMod()) {
@@ -121,11 +119,62 @@ public class PlayerTradeHandler implements PacketHandler {
 
 					ActionSender.sendTradeWindowOpen(player);
 					ActionSender.sendTradeWindowOpen(affectedPlayer);
+
+					boolean warnPlayerNoConfirm, warnPlayerConfirm, warnOtherPlayerNoConfirm, warnOtherPlayerConfirm;
+					warnPlayerNoConfirm = player.getClientLimitations().supportsConfirmTrade && player.getConfig().NO_CONFIRM_TRADES;
+					warnPlayerConfirm = !player.getClientLimitations().supportsConfirmTrade && !player.getConfig().NO_CONFIRM_TRADES;
+					warnOtherPlayerNoConfirm = affectedPlayer.getClientLimitations().supportsConfirmTrade && affectedPlayer.getConfig().NO_CONFIRM_TRADES;
+					warnOtherPlayerConfirm = !affectedPlayer.getClientLimitations().supportsConfirmTrade && !affectedPlayer.getConfig().NO_CONFIRM_TRADES;
+					if (player.getConfig().NO_CONFIRM_TRADES) {
+						if (warnPlayerNoConfirm) {
+							ActionSender.sendMessage(player, "Reminder: This world does not support confirm trades");
+							ActionSender.sendMessage(player, "Please double check transaction before accepting");
+						}
+						if (warnOtherPlayerNoConfirm) {
+							ActionSender.sendMessage(affectedPlayer, "Reminder: This world does not support confirm trades");
+							ActionSender.sendMessage(affectedPlayer, "Please double check transaction before accepting");
+						}
+					} else {
+						int timeSince, timeRemain;
+						if (warnPlayerConfirm == warnOtherPlayerConfirm) {
+							// both players set to same trade mechanism client, no need to warn
+						} else if (warnPlayerConfirm) {
+							ActionSender.sendMessage(player, "Reminder: This world requires confirm trades");
+							ActionSender.sendMessage(player, "Other player may only finish trade if they use ::oldtrade");
+							if (!affectedPlayer.hasNoTradeConfirm(1)) {
+								ActionSender.sendMessage(affectedPlayer,"The other player will not be able to complete trade");
+								ActionSender.sendMessage(affectedPlayer,"To overcome this use ::oldtrade to temporary disable confirm trade");
+							} else {
+								timeSince = (int) ((System.currentTimeMillis() - affectedPlayer.getNoTradeConfirmTime()) / 60000);
+								timeRemain = Math.max(1, 5 - timeSince);
+								ActionSender.sendMessage(affectedPlayer,"The other player cannot confirm trades");
+								ActionSender.sendMessage(affectedPlayer,"You still have " + timeRemain + " minutes for no confirm trade");
+								ActionSender.sendMessage(affectedPlayer,"You can renew the time with ::oldtrade");
+							}
+						} else if (warnOtherPlayerConfirm) {
+							ActionSender.sendMessage(affectedPlayer, "Reminder: This world requires confirm trades");
+							ActionSender.sendMessage(affectedPlayer, "Other player may only finish trade if they use ::oldtrade");
+							if (!player.hasNoTradeConfirm(1)) {
+								ActionSender.sendMessage(player,"The other player will not be able to complete trade");
+								ActionSender.sendMessage(player,"To overcome this use ::oldtrade to temporary disable confirm trade");
+							} else {
+								timeSince = (int) ((System.currentTimeMillis() - player.getNoTradeConfirmTime()) / 60000);
+								timeRemain = Math.max(1, 5 - timeSince);
+								ActionSender.sendMessage(player,"The other player cannot confirm trades");
+								ActionSender.sendMessage(player,"You still have " + timeRemain + " minutes for no confirm trade");
+								ActionSender.sendMessage(player,"You can renew the time with ::oldtrade");
+							}
+						}
+					}
 				} else {
 					ActionSender.sendMessage(player, null,  MessageType.INVENTORY, affectedPlayer.getTrade().isTradeActive()
 						? affectedPlayer.getUsername() + " is already in a trade" : "Sending trade request", 0, null);
 
-					ActionSender.sendMessage(affectedPlayer, player,  MessageType.TRADE, "", player.getIcon(), null);
+					if (affectedPlayer.getClientVersion() <= 204) {
+						ActionSender.sendMessage(affectedPlayer, player,  MessageType.INVENTORY, player.getUsername() + ": wishes to trade with you", 0, null);
+					} else {
+						ActionSender.sendMessage(affectedPlayer, player,  MessageType.TRADE, "", player.getIcon(), null);
+					}
 
 				}
 				break;
@@ -137,13 +186,34 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.getTrade().resetAll();
 					return;
 				}
-				player.getTrade().setTradeAccepted(true);
+				boolean ownAccepted = player.getClientLimitations().supportsConfirmTrade || payload.tradeAccepted == 1;
+				player.getTrade().setTradeAccepted(ownAccepted);
 				ActionSender.sendTradeAcceptUpdate(affectedPlayer);
 
+				boolean willPlayerNoConfirm = !player.getClientLimitations().supportsConfirmTrade || player.hasNoTradeConfirm();
+				boolean willOtherPlayerNoConfirm = !affectedPlayer.getClientLimitations().supportsConfirmTrade || affectedPlayer.hasNoTradeConfirm();
+
 				if (affectedPlayer.getTrade().isTradeAccepted()) {
-					ActionSender.sendSecondTradeScreen(player);
-					ActionSender.sendSecondTradeScreen(affectedPlayer);
+					// check perform trade or send confirm screen
+					if (!player.getConfig().NO_CONFIRM_TRADES
+						&& player.getClientLimitations().supportsConfirmTrade
+						&& affectedPlayer.getClientLimitations().supportsConfirmTrade) {
+						// world set to confirm and both players are capable of confirm trade
+						ActionSender.sendSecondTradeScreen(player);
+						ActionSender.sendSecondTradeScreen(affectedPlayer);
+					} else if (player.getConfig().NO_CONFIRM_TRADES
+						|| ((willPlayerNoConfirm == willOtherPlayerNoConfirm) && willPlayerNoConfirm)) {
+						// world set to not confirm or both players are capable of no confirm trade
+						performTrade(player, affectedPlayer);
+					} else {
+						// world set to confirm and one of the two players not able to confirm trade
+						player.getTrade().resetAll();
+						affectedPlayer.getTrade().resetAll();
+						player.message("Trade could not complete");
+						affectedPlayer.message("Trade could not complete");
+					}
 				}
+
 				break;
 			case PLAYER_ADDED_ITEMS_TO_TRADE_OFFER:
 				affectedPlayer = player.getTrade().getTradeRecipient();
@@ -169,17 +239,19 @@ public class PlayerTradeHandler implements PacketHandler {
 				affectedPlayer.getTrade().setTradeConfirmAccepted(false);
 
 				player.getTrade().resetOffer();
-				int count = (int) packet.readByte();
+				int count = payload.tradeCount;
 				for (int slot = 0; slot < count; slot++) {
 					Item tItem;
-					if (player.isUsingAuthenticClient()) {
-						tItem = new Item(packet.readShort(), packet.readInt(), false);
-					} else {
-						tItem = new Item(packet.readShort(), packet.readInt(), packet.readShort() == 1);
-					}
+					tItem = new Item(payload.tradeCatalogIDs[slot], payload.tradeAmounts[slot], payload.tradeNoted[slot]);
 
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "item less than 0");
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
+					if (tItem.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+						player.message("Notes can no longer be traded with other players.");
+						player.message("You may either deposit it in the bank or sell to a shop instead.");
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
@@ -188,7 +260,22 @@ public class PlayerTradeHandler implements PacketHandler {
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
+					if (tItem.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
+						player.message("The other player is unable to receive the offered object");
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
 					if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
+					if (CertUtil.isCert(tItem.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
+						if (player.getCertOptOut()) {
+							player.message("You have opted out of trading certs with other players");
+						}
+						if (affectedPlayer.getCertOptOut()) {
+							player.message("The other player has opted out of trading certs with players");
+						}
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
@@ -228,108 +315,112 @@ public class PlayerTradeHandler implements PacketHandler {
 				player.getTrade().setTradeConfirmAccepted(true);
 
 				if (affectedPlayer.getTrade().isTradeConfirmAccepted()) {
-					List<Item> myOffer = player.getTrade().getTradeOffer().getItems();
-					List<Item> theirOffer = affectedPlayer.getTrade().getTradeOffer().getItems();
-
-					synchronized(myOffer) {
-						synchronized(theirOffer) {
-							int myRequiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(theirOffer);
-							int myAvailableSlots = (30 - player.getCarriedItems().getInventory().size())
-								+ player.getCarriedItems().getInventory().getFreedSlots(myOffer);
-
-							int theirRequiredSlots = affectedPlayer.getCarriedItems().getInventory().getRequiredSlots(myOffer);
-							int theirAvailableSlots = (30 - affectedPlayer.getCarriedItems().getInventory().size())
-								+ affectedPlayer.getCarriedItems().getInventory().getFreedSlots(theirOffer);
-
-							if (theirRequiredSlots > theirAvailableSlots) {
-								player.message("Other player doesn't have enough inventory space to receive the objects");
-								affectedPlayer.message("You don't have enough inventory space to receive the objects");
-								player.getTrade().resetAll();
-								return;
-							}
-							if (myRequiredSlots > myAvailableSlots) {
-								player.message("You don't have enough inventory space to receive the objects");
-								affectedPlayer.message("Other player doesn't have enough inventory space to receive the objects");
-								player.getTrade().resetAll();
-								return;
-							}
-
-							if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null
-								|| affectedPlayer.getWorld().getPlayer(DataConversions.usernameToHash(affectedPlayer.getUsername())) == null) {
-								break;
-							}
-
-							for (Item item : myOffer) {
-								Item affectedItem = player.getCarriedItems().getInventory().get(item);
-								if (affectedItem == null) {
-									player.setSuspiciousPlayer(true, "trade item is null");
-									player.getTrade().resetAll();
-									return;
-								}
-								if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
-									player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
-								}
-
-								// Create item to be traded.
-								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
-
-								// Create item to be traded.
-								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
-
-								// Remove item to be traded quantity from inventory.
-								player.getCarriedItems().getInventory().remove(affectedItem, true);
-							}
-
-							for (Item item : theirOffer) {
-								Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);
-								if (affectedItem == null) {
-									affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
-									player.getTrade().resetAll();
-									return;
-								}
-								if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
-									affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
-								}
-
-								int amount = Math.min(affectedItem.getAmount(), item.getAmount());
-
-								// Create item to be traded.
-								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
-
-								// Remove item to be traded quantity from inventory.
-								affectedPlayer.getCarriedItems().getInventory().remove(affectedItem, true);
-							}
-
-							for (Item item : myOffer) {
-								if (affectedPlayer.getWorld().getPlayer(DataConversions.usernameToHash(affectedPlayer.getUsername())) == null) {
-									break;
-								}
-								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
-								affectedPlayer.getCarriedItems().getInventory().add(item);
-							}
-							for (Item item : theirOffer) {
-								if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
-									break;
-								}
-								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
-								player.getCarriedItems().getInventory().add(item);
-							}
-
-							player.getWorld().getServer().getGameLogger().addQuery(
-								new TradeLog(player.getWorld(), player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
-							player.save();
-							affectedPlayer.save();
-							player.message("Trade completed successfully");
-
-							affectedPlayer.message("Trade completed successfully");
-							player.getTrade().resetAll();
-							affectedPlayer.getTrade().resetAll();
-						}
-					}
+					performTrade(player, affectedPlayer);
 				}
 				break;
 			default:
 				return;
+		}
+	}
+
+	private void performTrade(Player player, Player affectedPlayer) {
+		List<Item> myOffer = player.getTrade().getTradeOffer().getItems();
+		List<Item> theirOffer = affectedPlayer.getTrade().getTradeOffer().getItems();
+
+		synchronized(myOffer) {
+			synchronized(theirOffer) {
+				int myRequiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(theirOffer);
+				int myAvailableSlots = (30 - player.getCarriedItems().getInventory().size())
+					+ player.getCarriedItems().getInventory().getFreedSlots(myOffer);
+
+				int theirRequiredSlots = affectedPlayer.getCarriedItems().getInventory().getRequiredSlots(myOffer);
+				int theirAvailableSlots = (30 - affectedPlayer.getCarriedItems().getInventory().size())
+					+ affectedPlayer.getCarriedItems().getInventory().getFreedSlots(theirOffer);
+
+				if (theirRequiredSlots > theirAvailableSlots) {
+					player.message("Other player doesn't have enough inventory space to receive the objects");
+					affectedPlayer.message("You don't have enough inventory space to receive the objects");
+					player.getTrade().resetAll();
+					return;
+				}
+				if (myRequiredSlots > myAvailableSlots) {
+					player.message("You don't have enough inventory space to receive the objects");
+					affectedPlayer.message("Other player doesn't have enough inventory space to receive the objects");
+					player.getTrade().resetAll();
+					return;
+				}
+
+				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null
+					|| affectedPlayer.getWorld().getPlayer(DataConversions.usernameToHash(affectedPlayer.getUsername())) == null) {
+					return;
+				}
+
+				for (Item item : myOffer) {
+					Item affectedItem = player.getCarriedItems().getInventory().get(item);
+					if (affectedItem == null) {
+						player.setSuspiciousPlayer(true, "trade item is null");
+						player.getTrade().resetAll();
+						return;
+					}
+					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
+						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+					}
+
+					// Create item to be traded.
+					int amount = Math.min(affectedItem.getAmount(), item.getAmount());
+
+					// Create item to be traded.
+					affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
+
+					// Remove item to be traded quantity from inventory.
+					player.getCarriedItems().getInventory().remove(affectedItem, true);
+				}
+
+				for (Item item : theirOffer) {
+					Item affectedItem = affectedPlayer.getCarriedItems().getInventory().get(item);
+					if (affectedItem == null) {
+						affectedPlayer.setSuspiciousPlayer(true, "other trade item is null");
+						player.getTrade().resetAll();
+						return;
+					}
+					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
+						affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+					}
+
+					int amount = Math.min(affectedItem.getAmount(), item.getAmount());
+
+					// Create item to be traded.
+					affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
+
+					// Remove item to be traded quantity from inventory.
+					affectedPlayer.getCarriedItems().getInventory().remove(affectedItem, true);
+				}
+
+				for (Item item : myOffer) {
+					if (affectedPlayer.getWorld().getPlayer(DataConversions.usernameToHash(affectedPlayer.getUsername())) == null) {
+						break;
+					}
+					item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
+					affectedPlayer.getCarriedItems().getInventory().add(item);
+				}
+				for (Item item : theirOffer) {
+					if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+						break;
+					}
+					item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
+					player.getCarriedItems().getInventory().add(item);
+				}
+
+				player.getWorld().getServer().getGameLogger().addQuery(
+					new TradeLog(player.getWorld(), player.getUsername(), affectedPlayer.getUsername(), myOffer, theirOffer, player.getCurrentIP(), affectedPlayer.getCurrentIP()).build());
+				player.save();
+				affectedPlayer.save();
+				player.message("Trade completed successfully");
+
+				affectedPlayer.message("Trade completed successfully");
+				player.getTrade().resetAll();
+				affectedPlayer.getTrade().resetAll();
+			}
 		}
 	}
 

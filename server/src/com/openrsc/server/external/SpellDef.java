@@ -31,7 +31,7 @@ public final class SpellDef extends EntityDef {
 
 	/**
 	 * The type of the spell
-	 * 0 - Teleport
+	 * 0 - Boost, Teleport
 	 * 1 -
 	 * 2 - Curse, strike, bolt, blast, god spell
 	 * 3 - Enchant, alchemy, telegrab, superheat
@@ -42,9 +42,15 @@ public final class SpellDef extends EntityDef {
 	private int type;
 
 	/**
-	 * Wether the spell is members only
+	 * Whether the spell is members only
 	 */
 	private boolean members;
+
+	/**
+	 * For retro world with good and evil magic
+	 * Is spell on evil magic
+	 */
+	private boolean evil;
 
 	public int getExp() {
 		return exp;
@@ -68,5 +74,9 @@ public final class SpellDef extends EntityDef {
 
 	public boolean isMembers() {
 		return members;
+	}
+
+	public boolean isEvil() {
+		return evil;
 	}
 }

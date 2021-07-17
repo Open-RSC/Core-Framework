@@ -22,7 +22,7 @@ public class boatman implements TalkNpcTrigger {
 		if (menu == 0) {
 			npcsay(player, n, "Lets go then");
 			player.message("You have completed the tutorial");
-			player.teleport(120, 648, false);
+			player.teleport(player.getConfig().RESPAWN_LOCATION_X, player.getConfig().RESPAWN_LOCATION_Y, false);
 			if (player.getCache().hasKey("tutorial")) {
 				player.getCache().remove("tutorial");
 			}

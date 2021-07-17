@@ -1,34 +1,12 @@
 ### Guide for running Open RuneScape Classic on Linux
 
-## Using the built in installation script with Docker
+## Using the built-in installation script with Docker
 
 ** Note: It is suggested to only run the installation scripts on a fresh Ubuntu install or within a VM. These are used for the production server hosting. **
-
-If you are okay with Docker running on your Linux OS, the installation script that is used in "Start-Linux.sh" can obtain Docker for you, download the MariaDB SQL server container, configure your firewall, SSH permissions and port, as well as install other packages that are used when hosting a public game server. It is not recommended unless you are okay with these changes. Example: port 22 for SSH is changed to port 55555 and the firewall modified to allow entry for all game server ports and the new SSH port. If in question, open "scripts/combined-install.sh" and "scripts/docker-install.sh" to get a better idea about what the built-in installer does.
 
 ## Installing Java
 
 You will need to have Java 8 or above installed in order to run the game server and client. We recommend the latest version of OpenJDK.
-
-## Database Server
-
-The game operates using MySQL. We recommend MariaDB for the SQL server with username "root" and password "root". If you wish to use a different username and password for your SQL server, you will need to edit ".env" and set the variables in there accordingly.
-
-You will need to create the necessary databases and import the SQL needed by the game server. Utilize the following make commands as needed:
-```
-make create db=openrsc
-make create db=cabbage
-make create db=preservation
-
-make import db=openrsc
-make import db=cabbage
-make import db=preservation
-```
-
-If you need to upgrade a database due to changes in the repository, utilize:
-```
-make upgrade db=openrsc
-```
 
 ## Starting the game
 
@@ -45,12 +23,6 @@ At this point, you may wish to use different game features than the default RSC 
 
 Now navigate to "server" and delete the existing file named "local.conf", then make a copy of "rsccabbage.conf", renaming the duplicate file "local.conf". Same applies for "openrsc.conf" and the other files in that directory. If "local.conf" exists, the game server will override the settings that are in "default.conf". Think of "openrsc.conf" and "rsccabbage.conf" as ready to go config presets.
 
-
-If you opt to use different named databases, edit the following line in your "local.conf" (or default.conf) to match the name of your database:
-```
-<entry key = "mysql_db">cabbage</entry>
-```
-
 Depending on server configuration, your server port may differ. If 43594 is instead now 43595 because "rsccabbage.conf" is being used, and you do not wish to edit it any, you will need to go into "core -> Client_Base -> Cache" and edit "port.txt" to reflect the new port being used by the game server.
 
 Developers should avoid editing "default.conf" and instead make a copy the chosen .conf file, rename it to "local.conf" and use that instead. That way, they always have working config to fall back on if something doesn't work the way they expect.
@@ -58,7 +30,6 @@ Developers should avoid editing "default.conf" and instead make a copy the chose
 Last but not least, always restart the game server after fully exiting it when you have made changes to your "local.conf" in order to have them be applied. An already running server will not read any changes to the file.
 
 ## Changing a player's role
-
 Are you ready to set a player role as an admin, moderator, or back to a player? It is possible to set the role / group ID while in-game using a command but you can also use the make command of:
 ```
 make rank db=cabbage group=0 username=wolf

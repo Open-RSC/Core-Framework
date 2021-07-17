@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.custom.misc;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Spells;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,17 +10,18 @@ import com.openrsc.server.plugins.triggers.SpellInvTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.multi;
 
 public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
-	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
-		return (player.getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
+	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Spells spellEnum) {
+		return (player.getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellEnum == Spells.ENCHANT_LVL5_AMULET);
 	}
 
 	@Override
-	public void onSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
-		SpellDef spellDef = player.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
+	public void onSpellInv(Player player, Integer invIndex, Integer itemID, Spells spellEnum) {
+		SpellDef spellDef = player.getWorld().getServer().getEntityHandler().getSpellDef(spellEnum);
 		if (spellDef == null)
 			return;
 		Item item = player.getCarriedItems().getInventory().get(

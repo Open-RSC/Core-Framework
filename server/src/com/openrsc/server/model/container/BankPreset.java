@@ -127,7 +127,7 @@ public class BankPreset {
 			items.add(itemHeld.getCatalogId());
 		}
 
-		if (slotsNeeded + player.getBank().size() > player.getBankSize()) {
+		if (slotsNeeded + player.getBank().size() > player.getWorld().getMaxBankSize()) {
 			player.message("Not enough room in your bank to deposit your inventory.");
 			return;
 		}

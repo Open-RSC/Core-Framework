@@ -213,7 +213,7 @@ public class Point {
 
 		return xDiff <= radius && xDiff >= -radius && yDiff <= radius
 			&& yDiff >= -radius;*/
-		return getDistanceTo(point) <= radius;
+		return getDistancePythagoras(point) <= radius;
 	}
 
 	public final boolean withinGridRange(Point point, int gridSize) {
@@ -232,6 +232,7 @@ public class Point {
 		return y;
 	}
 
+	@Override
 	public int hashCode() {
 		return (x << 16) | y;
 	}
@@ -399,9 +400,12 @@ public class Point {
 	}
 
 	public int getDistanceTo(Point o2) {
-		/*int xDiff = Math.abs(getX() - o2.getX());
+		int xDiff = Math.abs(getX() - o2.getX());
 		int yDiff = Math.abs(getY() - o2.getY());
-		return xDiff + yDiff;*/
+		return xDiff + yDiff;
+	}
+
+	public int getDistancePythagoras(Point o2) {
 		return (int)Math.sqrt(Math.pow(getX() - o2.getX(), 2) + Math.pow(getY() - o2.getY(), 2));
 	}
 
@@ -413,8 +417,44 @@ public class Point {
 		return inBounds(492, 614, 498, 620);
 	}
 
+	// This is the bounds of the Mage Arena which are actually as far as it needs to be for Mage Arena spell-giving to work correctly.
+	// inMageArenaLogOutZone() might authentically be the only check that exists.
 	public boolean inMageArena() {
-		return inBounds(220, 122, 236, 137);
+		return inBounds(217, 119, 239, 141);
+	}
+
+	// Attempting to emulate the "Anywhere along the water" described by zephyr in a replay.
+	// The replays don't thoroughly test every single point near the water to determine the real bounds
+	// however, enough tests were done to say that the bounding box for this is NOT rectangular
+	// and that "anywhere along the water" could be accurate.
+	// See the series of replays between [08-05-2018 13.25.12 drop disk of returning, something cool happened, go to wildy]
+	// and [08-05-2018 13.53.26 more pvp mechanics slash bugs with zephyr]
+	//
+	// Hard to believe this is how it was actually implemented, but not sure how else it would have been done.
+	public boolean inMageArenaLogOutZone() {
+		int bottom = 141; // standing against member's gate
+		// follow the river... yup, this is definitely how jagex wrote it...
+		return inBounds(221, 113, 235, bottom) // top flat
+			|| inBounds(220, 114, 220, bottom) // little slivers to the right 1
+			|| inBounds(218, 116, 219, bottom) // 2
+			|| inBounds(217, 117, 217, bottom) // 3
+			|| inBounds(215, 118, 216, bottom) // 4
+			|| inBounds(214, 119, 214, bottom) // 5
+			|| inBounds(213, 120, 213, bottom) // 6, this extends all the way down to the nook where Zephyr & Beast Fable show off one of the known weird logout locations
+			|| inBounds(236, 114, 236, bottom) // little slivers to the left 1
+			|| inBounds(237, 115, 239, bottom) // 2
+			|| inBounds(240, 117, 240, bottom) // 3
+			|| inBounds(241, 118, 241, bottom) // 4
+			|| inBounds(242, 120, 242, bottom) // 5
+			|| inBounds(243, 122, 243, bottom) // 6
+			|| inBounds(244, 123, 244, bottom) // 7
+			|| inBounds(245, 127, 241, 130) // 8
+			|| inBounds(245, 137, 241, bottom) // 9
+			;
+	}
+
+	public boolean inIbansChamberLogOutZone() {
+		return inBounds(794, 3463, 807, 3475);
 	}
 
 	public boolean inTouristTrapCave() {

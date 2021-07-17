@@ -1,7 +1,9 @@
 package com.openrsc.server.model.world.region;
 
+import com.openrsc.server.util.rsc.CollisionFlag;
+
 public class TileValue {
-	public byte traversalMask = 0;
+	public byte traversalMask = CollisionFlag.FULL_BLOCK;
 	public short diagWallVal = 0;
 	public byte horizontalWallVal = 0;
 	public byte overlay = 0;

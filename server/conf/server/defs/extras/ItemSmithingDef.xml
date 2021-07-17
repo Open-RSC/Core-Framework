@@ -1,0 +1,800 @@
+<ItemSmithingDef-array>
+	<!-- BRONZE -->
+	<ItemSmithingDef><!-- Dagger -->
+		<level>1</level>
+		<bars>1</bars>
+		<itemID>62</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Throwing Knife -->
+		<level>7</level>
+		<bars>1</bars>
+		<itemID>1076</itemID>
+		<amount>2</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Short Sword -->
+		<level>4</level>
+		<bars>1</bars>
+		<itemID>66</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Long Sword -->
+		<level>6</level>
+		<bars>2</bars>
+		<itemID>70</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Scimitar -->
+		<level>5</level>
+		<bars>2</bars>
+		<itemID>82</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- 2-handed Sword -->
+		<level>14</level>
+		<bars>3</bars>
+		<itemID>76</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Hatchet -->
+		<level>1</level>
+		<bars>1</bars>
+		<itemID>87</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Pickaxe -->
+		<level>1</level>
+		<bars>1</bars>
+		<itemID>156</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Battle Axe -->
+		<level>10</level>
+		<bars>3</bars>
+		<itemID>205</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Mace -->
+		<level>2</level>
+		<bars>1</bars>
+		<itemID>94</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Medium Helmet -->
+		<level>3</level>
+		<bars>1</bars>
+		<itemID>104</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Large Helmet -->
+		<level>7</level>
+		<bars>2</bars>
+		<itemID>108</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Square Shield -->
+		<level>8</level>
+		<bars>2</bars>
+		<itemID>124</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Kite Shield -->
+		<level>12</level>
+		<bars>3</bars>
+		<itemID>128</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Body -->
+		<level>11</level>
+		<bars>3</bars>
+		<itemID>113</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Body -->
+		<level>18</level>
+		<bars>5</bars>
+		<itemID>117</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Legs -->
+		<level>16</level>
+		<bars>3</bars>
+		<itemID>206</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plated Skirt -->
+		<level>16</level>
+		<bars>3</bars>
+		<itemID>214</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x10 -->
+		<level>5</level>
+		<bars>1</bars>
+		<itemID>669</itemID>
+		<amount>10</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x50 -->
+		<level>18</level>
+		<bars>5</bars>
+		<itemID>669</itemID>
+		<amount>50</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Dart Tips -->
+		<level>4</level>
+		<bars>1</bars>
+		<itemID>1062</itemID>
+		<amount>7</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Legs -->
+		<level>9</level>
+		<bars>2</bars>
+		<itemID>1418</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<!-- IRON -->
+	<ItemSmithingDef><!-- Dagger -->
+		<level>15</level>
+		<bars>1</bars>
+		<itemID>28</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Throwing Knife -->
+		<level>22</level>
+		<bars>1</bars>
+		<itemID>1075</itemID>
+		<amount>2</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Short Sword -->
+		<level>19</level>
+		<bars>1</bars>
+		<itemID>1</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Long Sword -->
+		<level>21</level>
+		<bars>2</bars>
+		<itemID>71</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Scimitar -->
+		<level>20</level>
+		<bars>2</bars>
+		<itemID>83</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- 2-handed Sword -->
+		<level>29</level>
+		<bars>3</bars>
+		<itemID>77</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Hatchet -->
+		<level>16</level>
+		<bars>1</bars>
+		<itemID>12</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Pickaxe -->
+		<level>16</level>
+		<bars>1</bars>
+		<itemID>1258</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Battle Axe -->
+		<level>25</level>
+		<bars>3</bars>
+		<itemID>89</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Mace -->
+		<level>17</level>
+		<bars>1</bars>
+		<itemID>0</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Medium Helmet -->
+		<level>18</level>
+		<bars>1</bars>
+		<itemID>5</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Large Helmet -->
+		<level>22</level>
+		<bars>2</bars>
+		<itemID>6</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Square Shield -->
+		<level>23</level>
+		<bars>2</bars>
+		<itemID>3</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Kite Shield -->
+		<level>27</level>
+		<bars>3</bars>
+		<itemID>2</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Body -->
+		<level>25</level>
+		<bars>3</bars>
+		<itemID>7</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Body -->
+		<level>33</level>
+		<bars>5</bars>
+		<itemID>8</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Legs -->
+		<level>31</level>
+		<bars>3</bars>
+		<itemID>9</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plated Skirt -->
+		<level>31</level>
+		<bars>3</bars>
+		<itemID>215</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x10 -->
+		<level>20</level>
+		<bars>1</bars>
+		<itemID>670</itemID>
+		<amount>10</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x50 -->
+		<level>33</level>
+		<bars>5</bars>
+		<itemID>670</itemID>
+		<amount>50</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Dart Tips -->
+		<level>19</level>
+		<bars>1</bars>
+		<itemID>1063</itemID>
+		<amount>7</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Legs -->
+		<level>23</level>
+		<bars>2</bars>
+		<itemID>1419</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<!-- STEEL -->
+	<ItemSmithingDef><!-- Dagger -->
+		<level>30</level>
+		<bars>1</bars>
+		<itemID>63</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Throwing Knife -->
+		<level>37</level>
+		<bars>1</bars>
+		<itemID>1077</itemID>
+		<amount>2</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Short Sword -->
+		<level>34</level>
+		<bars>1</bars>
+		<itemID>67</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Long Sword -->
+		<level>36</level>
+		<bars>2</bars>
+		<itemID>72</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Scimitar -->
+		<level>35</level>
+		<bars>2</bars>
+		<itemID>84</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- 2-handed Sword -->
+		<level>44</level>
+		<bars>3</bars>
+		<itemID>78</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Hatchet -->
+		<level>31</level>
+		<bars>1</bars>
+		<itemID>88</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Pickaxe -->
+		<level>31</level>
+		<bars>1</bars>
+		<itemID>1259</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Battle Axe -->
+		<level>40</level>
+		<bars>3</bars>
+		<itemID>90</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Mace -->
+		<level>32</level>
+		<bars>1</bars>
+		<itemID>95</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Medium Helmet -->
+		<level>33</level>
+		<bars>1</bars>
+		<itemID>105</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Large Helmet -->
+		<level>37</level>
+		<bars>2</bars>
+		<itemID>109</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Square Shield -->
+		<level>38</level>
+		<bars>2</bars>
+		<itemID>125</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Kite Shield -->
+		<level>42</level>
+		<bars>3</bars>
+		<itemID>129</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Body -->
+		<level>41</level>
+		<bars>3</bars>
+		<itemID>114</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Body -->
+		<level>48</level>
+		<bars>5</bars>
+		<itemID>118</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Legs -->
+		<level>46</level>
+		<bars>3</bars>
+		<itemID>121</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plated Skirt -->
+		<level>46</level>
+		<bars>3</bars>
+		<itemID>225</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x10 -->
+		<level>35</level>
+		<bars>1</bars>
+		<itemID>671</itemID>
+		<amount>10</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x50 -->
+		<level>48</level>
+		<bars>5</bars>
+		<itemID>671</itemID>
+		<amount>50</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Dart Tips -->
+		<level>34</level>
+		<bars>1</bars>
+		<itemID>1064</itemID>
+		<amount>7</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Legs -->
+		<level>39</level>
+		<bars>2</bars>
+		<itemID>1420</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<!-- MITHRIL -->
+	<ItemSmithingDef><!-- Dagger -->
+		<level>50</level>
+		<bars>1</bars>
+		<itemID>64</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Throwing Knife -->
+		<level>57</level>
+		<bars>1</bars>
+		<itemID>1078</itemID>
+		<amount>2</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Short Sword -->
+		<level>54</level>
+		<bars>1</bars>
+		<itemID>68</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Long Sword -->
+		<level>56</level>
+		<bars>2</bars>
+		<itemID>73</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Scimitar -->
+		<level>55</level>
+		<bars>2</bars>
+		<itemID>85</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- 2-handed Sword -->
+		<level>64</level>
+		<bars>3</bars>
+		<itemID>79</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Hatchet -->
+		<level>51</level>
+		<bars>1</bars>
+		<itemID>203</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Pickaxe -->
+		<level>51</level>
+		<bars>1</bars>
+		<itemID>1260</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Battle Axe -->
+		<level>60</level>
+		<bars>3</bars>
+		<itemID>91</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Mace -->
+		<level>52</level>
+		<bars>1</bars>
+		<itemID>96</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Medium Helmet -->
+		<level>53</level>
+		<bars>1</bars>
+		<itemID>106</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Large Helmet -->
+		<level>57</level>
+		<bars>2</bars>
+		<itemID>110</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Square Shield -->
+		<level>58</level>
+		<bars>2</bars>
+		<itemID>126</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Kite Shield -->
+		<level>62</level>
+		<bars>3</bars>
+		<itemID>130</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Body -->
+		<level>61</level>
+		<bars>3</bars>
+		<itemID>115</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Body -->
+		<level>68</level>
+		<bars>5</bars>
+		<itemID>119</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Legs -->
+		<level>66</level>
+		<bars>3</bars>
+		<itemID>122</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plated Skirt -->
+		<level>66</level>
+		<bars>3</bars>
+		<itemID>226</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x10 -->
+		<level>55</level>
+		<bars>1</bars>
+		<itemID>672</itemID>
+		<amount>10</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x50 -->
+		<level>68</level>
+		<bars>5</bars>
+		<itemID>672</itemID>
+		<amount>50</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Dart Tips -->
+		<level>54</level>
+		<bars>1</bars>
+		<itemID>1065</itemID>
+		<amount>7</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Legs -->
+		<level>59</level>
+		<bars>2</bars>
+		<itemID>1421</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<!-- ADAMANTITE -->
+	<ItemSmithingDef><!-- Dagger -->
+		<level>70</level>
+		<bars>1</bars>
+		<itemID>65</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Throwing Knife -->
+		<level>77</level>
+		<bars>1</bars>
+		<itemID>1079</itemID>
+		<amount>2</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Short Sword -->
+		<level>74</level>
+		<bars>1</bars>
+		<itemID>69</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Long Sword -->
+		<level>76</level>
+		<bars>2</bars>
+		<itemID>74</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Scimitar -->
+		<level>75</level>
+		<bars>2</bars>
+		<itemID>86</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- 2-handed Sword -->
+		<level>84</level>
+		<bars>3</bars>
+		<itemID>80</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Hatchet -->
+		<level>71</level>
+		<bars>1</bars>
+		<itemID>204</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Pickaxe -->
+		<level>71</level>
+		<bars>1</bars>
+		<itemID>1261</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Battle Axe -->
+		<level>80</level>
+		<bars>3</bars>
+		<itemID>92</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Mace -->
+		<level>72</level>
+		<bars>1</bars>
+		<itemID>97</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Medium Helmet -->
+		<level>73</level>
+		<bars>1</bars>
+		<itemID>107</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Large Helmet -->
+		<level>77</level>
+		<bars>2</bars>
+		<itemID>111</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Square Shield -->
+		<level>78</level>
+		<bars>2</bars>
+		<itemID>127</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Kite Shield -->
+		<level>82</level>
+		<bars>3</bars>
+		<itemID>131</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Body -->
+		<level>81</level>
+		<bars>3</bars>
+		<itemID>116</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Body -->
+		<level>88</level>
+		<bars>5</bars>
+		<itemID>120</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Legs -->
+		<level>86</level>
+		<bars>3</bars>
+		<itemID>123</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plated Skirt -->
+		<level>86</level>
+		<bars>3</bars>
+		<itemID>227</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x10 -->
+		<level>75</level>
+		<bars>1</bars>
+		<itemID>673</itemID>
+		<amount>10</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x50 -->
+		<level>88</level>
+		<bars>5</bars>
+		<itemID>673</itemID>
+		<amount>50</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Dart Tips -->
+		<level>74</level>
+		<bars>1</bars>
+		<itemID>1066</itemID>
+		<amount>7</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Legs -->
+		<level>79</level>
+		<bars>2</bars>
+		<itemID>1422</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<!-- RUNITE -->
+	<ItemSmithingDef><!-- Dagger -->
+		<level>85</level>
+		<bars>1</bars>
+		<itemID>396</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Throwing Knife -->
+		<level>92</level>
+		<bars>1</bars>
+		<itemID>1080</itemID>
+		<amount>2</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Short Sword -->
+		<level>89</level>
+		<bars>1</bars>
+		<itemID>397</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Long Sword -->
+		<level>91</level>
+		<bars>2</bars>
+		<itemID>75</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Scimitar -->
+		<level>90</level>
+		<bars>2</bars>
+		<itemID>398</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- 2-handed Sword -->
+		<level>99</level>
+		<bars>3</bars>
+		<itemID>81</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Hatchet -->
+		<level>86</level>
+		<bars>1</bars>
+		<itemID>405</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Pickaxe -->
+		<level>86</level>
+		<bars>1</bars>
+		<itemID>1262</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Battle Axe -->
+		<level>95</level>
+		<bars>3</bars>
+		<itemID>93</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Mace -->
+		<level>87</level>
+		<bars>1</bars>
+		<itemID>98</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Medium Helmet -->
+		<level>88</level>
+		<bars>1</bars>
+		<itemID>399</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Large Helmet -->
+		<level>92</level>
+		<bars>2</bars>
+		<itemID>112</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Square Shield -->
+		<level>93</level>
+		<bars>2</bars>
+		<itemID>403</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Kite Shield -->
+		<level>97</level>
+		<bars>3</bars>
+		<itemID>404</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Body -->
+		<level>96</level>
+		<bars>3</bars>
+		<itemID>400</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Body -->
+		<level>99</level>
+		<bars>5</bars>
+		<itemID>401</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Legs -->
+		<level>99</level>
+		<bars>3</bars>
+		<itemID>402</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plated Skirt -->
+		<level>99</level>
+		<bars>3</bars>
+		<itemID>406</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x10 -->
+		<level>90</level>
+		<bars>1</bars>
+		<itemID>674</itemID>
+		<amount>10</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Arrow Heads x50 -->
+		<level>99</level>
+		<bars>5</bars>
+		<itemID>674</itemID>
+		<amount>50</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Dart Tips -->
+		<level>89</level>
+		<bars>1</bars>
+		<itemID>1067</itemID>
+		<amount>7</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Legs -->
+		<level>94</level>
+		<bars>2</bars>
+		<itemID>1423</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+</ItemSmithingDef-array>

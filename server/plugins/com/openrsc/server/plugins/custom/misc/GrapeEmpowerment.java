@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.custom.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -41,7 +41,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 				return;
 			}
 
-			if (player.getLevel(Skills.HARVESTING) < 85) {
+			if (player.getLevel(Skill.HARVESTING.id()) < 85) {
 				player.playerServerMessage(MessageType.QUEST, "Your harvesting level is not high enough");
 				player.playerServerMessage(MessageType.QUEST, "to hold blessed grapes and they would just wither");
 				delay(2);
@@ -58,7 +58,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 			}
 
 			int repeat = 1;
-			int currentPrayer = player.getSkills().getLevel(Skills.PRAYER);
+			int currentPrayer = player.getSkills().getLevel(Skill.PRAYER.id());
 			if (currentPrayer < 1) {
 				player.message("You do not feel devout enough to bless the grapes");
 				delay(2);
@@ -90,7 +90,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 				return;
 			}
 
-			if (player.getLevel(Skills.HARVESTING) < 85) {
+			if (player.getLevel(Skill.HARVESTING.id()) < 85) {
 				player.playerServerMessage(MessageType.QUEST, "Your harvesting level is not high enough");
 				player.playerServerMessage(MessageType.QUEST, "to hold cursed grapes and they would just wither");
 				delay(2);
@@ -107,7 +107,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 			}
 
 			int repeat = 1;
-			int currentPrayer = player.getSkills().getLevel(Skills.PRAYER);
+			int currentPrayer = player.getSkills().getLevel(Skill.PRAYER.id());
 			if (currentPrayer < 1) {
 				player.message("You do not feel devout enough to curse the grapes");
 				delay(2);
@@ -132,13 +132,13 @@ public class GrapeEmpowerment implements UseInvTrigger {
 	}
 
 	private void makePowerfulWine(Player player, Item item1, Item item2, int resultWineId) {
-		if (player.getSkills().getLevel(Skills.COOKING) < 70) {
+		if (player.getSkills().getLevel(Skill.COOKING.id()) < 70) {
 			player.message("You need level 70 cooking to do this");
 			return;
 		}
 		if (player.getCarriedItems().getInventory().contains(item1)
 			&& player.getCarriedItems().getInventory().contains(item2)) {
-			if (player.getSkills().getLevel(Skills.COOKING) < 70) {
+			if (player.getSkills().getLevel(Skill.COOKING.id()) < 70) {
 				player.playerServerMessage(MessageType.QUEST, "You need level 70 cooking to do this");
 				return;
 			}
@@ -146,10 +146,10 @@ public class GrapeEmpowerment implements UseInvTrigger {
 			player.getCarriedItems().remove(new Item(item1.getCatalogId()));
 			player.getCarriedItems().remove(new Item(item2.getCatalogId()));
 			delay(5);
-			if (Formulae.calcProductionSuccessful(70, player.getSkills().getLevel(Skills.COOKING), true, 105)) {
+			if (Formulae.calcProductionSuccessfulLegacy(70, player.getSkills().getLevel(Skill.COOKING.id()), true, 105)) {
 				player.playerServerMessage(MessageType.QUEST, "You make some powerful wine");
 				player.getCarriedItems().getInventory().add(new Item(resultWineId));
-				player.incExp(Skills.COOKING, 550, true);
+				player.incExp(Skill.COOKING.id(), 550, true);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
@@ -165,12 +165,16 @@ public class GrapeEmpowerment implements UseInvTrigger {
 
 		player.message(processString);
 		player.getCarriedItems().remove(grapes);
-		player.getSkills().setLevel(Skills.PRAYER, player.getSkills().getLevel(Skills.PRAYER) - 1);
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
+		player.getSkills().setLevel(Skill.PRAYER.id(), player.getSkills().getLevel(Skill.PRAYER.id()) - 1, sendUpdate);
+		if (!sendUpdate) {
+			player.getSkills().sendUpdateAll();
+		}
 		give(player, poweredGrapesId, 1);
 		delay();
 
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPower(player, grapes, poweredGrapesId, processString);
 		}
 	}

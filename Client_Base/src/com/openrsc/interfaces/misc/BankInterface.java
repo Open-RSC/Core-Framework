@@ -243,7 +243,7 @@ public class BankInterface {
 		if (membersWorld) {
 			drawPageButtons(currMouseX, currMouseY, relativeX, relativeY);
 		}
-		
+
 		// Draw Top Descriptions & Close Button
 		int closeButtonColour = 0xffffff;
 		if (currMouseX > relativeX + 320 && currMouseY >= relativeY + 3 && currMouseX < relativeX + 408 && currMouseY < relativeY + 15)
@@ -340,19 +340,29 @@ public class BankInterface {
 							continue;
 						}
 						if (i.getNoted() && Config.S_WANT_CUSTOM_BANKS) {
-							// Draw the note background
-							mc.getSurface().drawSpriteClipping(
-								mc.spriteSelect(EntityHandler.noteDef),
-								slotX, slotY, 48, 32,
-								EntityHandler.noteDef.getPictureMask(),
-								0, EntityHandler.noteDef.getBlueMask(),
-								false, 0, 1);
-							// Draw the item on top of the note background
-							mc.getSurface().drawSpriteClipping(
-								mc.spriteSelect(def),
-								slotX + 7, slotY + 5, 29, 19,
-								def.getPictureMask(), 0, def.getBlueMask(), false,
-								0, 1);
+							if (S_WANT_CERT_AS_NOTES) {
+								// Draw the note background
+								mc.getSurface().drawSpriteClipping(
+									mc.spriteSelect(EntityHandler.noteDef),
+									slotX, slotY, 48, 32,
+									EntityHandler.noteDef.getPictureMask(),
+									0, EntityHandler.noteDef.getBlueMask(),
+									false, 0, 1);
+								// Draw the item on top of the note background
+								mc.getSurface().drawSpriteClipping(
+									mc.spriteSelect(def),
+									slotX + 7, slotY + 5, 29, 19,
+									def.getPictureMask(), 0, def.getBlueMask(), false,
+									0, 1);
+							} else {
+								// Draw the certificate sprite
+								mc.getSurface().drawSpriteClipping(
+									mc.spriteSelect(EntityHandler.certificateDef),
+									slotX, slotY, 48, 32,
+									EntityHandler.certificateDef.getPictureMask(),
+									0, EntityHandler.certificateDef.getBlueMask(),
+									false, 0, 1);
+							}
 						} else {
 							// Draw the item in the correct slot.
 							mc.getSurface().drawSpriteClipping(
@@ -399,7 +409,11 @@ public class BankInterface {
 				if (currMouseX >= relativeX + 220 && currMouseY >= relativeY + 240 &&
 					currMouseX < relativeX + 250 && currMouseY <= relativeY + 251)
 					quantityColour = 0xff0000;
-				drawString("Note: ", relativeX + 222, relativeY + 248, 1, quantityColour);
+				if (S_WANT_CERT_AS_NOTES) {
+					drawString("Note: ", relativeX + 222, relativeY + 248, 1, quantityColour);
+				} else {
+					drawString("Certificate: ", relativeX + 187, relativeY + 248, 1, quantityColour);
+				}
 				drawString(swapNoteMode ? "On" : "Off",
 					relativeX + 257, relativeY + 248, 1, swapNoteMode ? 0x00FF00 : 0xFF0000);
 
@@ -622,6 +636,16 @@ public class BankInterface {
 			}
 		}
 		return null;
+	}
+
+	public int maximumBankItemsSupported() {
+		if (bankItems instanceof ArrayList) {
+			// Depends on ArrayList implementation, but this is a generally safe upper limit for its capacity
+			return Integer.MAX_VALUE;
+		} else {
+			// this just gets arbitrarily resized by the server & isn't a real limitation
+			return mc.bankItemsMax;
+		}
 	}
 
 	class BankItem {

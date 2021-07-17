@@ -4,23 +4,24 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ItemCommandStruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ItemActionHandler implements PacketHandler {
+public class ItemActionHandler implements PayloadProcessor<ItemCommandStruct, OpcodeIn> {
 
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
-		int idx = packet.readShort();
+	public void process(ItemCommandStruct payload, Player player) throws Exception {
+		int idx = payload.index;
 		int amount = 1;
-		if (!player.isUsingAuthenticClient()) {
-			amount = packet.readInt();
+		if (player.isUsingCustomClient()) {
+			amount = payload.amount;
 		}
 		int commandIndex = 0;
 
@@ -40,17 +41,17 @@ public class ItemActionHandler implements PacketHandler {
 
 
 		//User wants to use the item from equipment tab
-		if (idx == -1 && !player.isUsingAuthenticClient()) {
-			idx = packet.readShort();
+		if (idx == -1 && player.isUsingCustomClient()) {
+			idx = payload.realIndex;
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(idx);
 			if (slot != -1) {
 				tempitem = player.getCarriedItems().getEquipment().get(slot);
 			}
-			commandIndex = packet.readByte();
+			commandIndex = payload.commandIndex;
 		} else {
 			tempitem = player.getCarriedItems().getInventory().get(idx);
-			if (!player.isUsingAuthenticClient()) {
-				commandIndex = packet.readByte();
+			if (player.isUsingCustomClient()) {
+				commandIndex = payload.commandIndex;
 			}
 		}
 

@@ -3,16 +3,19 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -40,6 +43,11 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.VAMPIRE_SLAYER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -47,9 +55,11 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the vampire slayer quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.VAMPIRE_SLAYER), true);
-		player.message("@gre@You haved gained 3 quest points!");
-
+		final QuestReward reward = Quest.VAMPIRE_SLAYER.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	private void morganDialogue(Player player, Npc n) {
@@ -287,7 +297,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 					player.sendQuestComplete(Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				npc.getSkills().setLevel(Skills.HITS, 25);
+				npc.getSkills().setLevel(Skill.HITS.id(), 25);
 				player.message("The vampire seems to regenerate");
 				npc.killed = false;
 			}

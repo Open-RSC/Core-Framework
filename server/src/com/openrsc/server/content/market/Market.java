@@ -1,11 +1,13 @@
 package com.openrsc.server.content.market;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.openrsc.server.Server;
 import com.openrsc.server.content.market.task.*;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.util.ServerAwareThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -168,7 +170,13 @@ public class Market implements Runnable {
 
 	public void start() {
 		synchronized(running) {
-			this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getWorld().getServer().getName()+" : AuctionHouseThread").build());
+			Server server = getWorld().getServer();
+			this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+					new ServerAwareThreadFactory(
+							server.getName() + " : AuctionHouseThread",
+							server.getConfig()
+					)
+			);
 			scheduledExecutor.scheduleAtFixedRate(this, 50, 50, TimeUnit.MILLISECONDS);
 			running = true;
 			LOGGER.info("Market executor running");

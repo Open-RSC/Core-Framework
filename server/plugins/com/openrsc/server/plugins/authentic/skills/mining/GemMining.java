@@ -1,19 +1,20 @@
 package com.openrsc.server.plugins.authentic.skills.mining;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GemMining implements OpLocTrigger {
+public class GemMining implements OpLocTrigger, UseLocTrigger {
 
 	private static final int GEM_ROCK = 588;
 
@@ -32,7 +33,7 @@ public class GemMining implements OpLocTrigger {
 	private void handleGemRockMining(final GameObject obj, Player player, int click) {
 		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(obj.getID());
 		final int axeId = Mining.getAxe(player);
-		final int mineLvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
+		final int mineLvl = player.getSkills().getLevel(Skill.MINING.id());
 		int repeat = 1;
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
@@ -98,7 +99,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
+			repeat = Formulae.getRepeatTimes(player, Skill.MINING.id());
 		}
 
 		startbatch(repeat);
@@ -107,7 +108,8 @@ public class GemMining implements OpLocTrigger {
 
 	private void batchMining(Player player, GameObject obj, int axeId, int mineLvl) {
 		player.playSound("mine");
-		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
+		int pickBubbleId = player.getClientLimitations().supportsTypedPickaxes ? ItemId.IRON_PICKAXE.id() : ItemId.BRONZE_PICKAXE.id();
+		thinkbubble(new Item(pickBubbleId));
 		player.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 		delay(3);
 		if (config().WANT_FATIGUE) {
@@ -119,16 +121,16 @@ public class GemMining implements OpLocTrigger {
 				return;
 			}
 		}
-		if (getGem(player, 40, player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= 40) { // always 40 required mining.
+		if (getGem(player, 40, player.getSkills().getLevel(Skill.MINING.id()), axeId) && mineLvl >= 40) { // always 40 required mining.
 			Item gem = new Item(getGemFormula(player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 			//check if there is still gem at the rock
 			GameObject object = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
-			if (object == null) {
-				player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
-			} else {
+			if (!player.getConfig().SHARED_GATHERING_RESOURCES || object != null) {
 				player.message(minedString(gem.getCatalogId()));
-				player.incExp(com.openrsc.server.constants.Skills.MINING, 200, true); // always 50XP
+				player.incExp(Skill.MINING.id(), 200, true); // always 50XP
 				player.getCarriedItems().getInventory().add(gem);
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 			}
 
 			if (!config().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
@@ -141,7 +143,7 @@ public class GemMining implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
-			if (!ifbatchcompleted()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 				if (checkObj == null) {
 					return;
@@ -152,7 +154,7 @@ public class GemMining implements OpLocTrigger {
 		// Repeat
 		updatebatch();
 		boolean customBatch = config().BATCH_PROGRESSION;
-		if (!ifbatchcompleted()) {
+		if (!isbatchcomplete()) {
 			if ((customBatch && !ifinterrupted()) || !customBatch) {
 				batchMining(player, obj, axeId, mineLvl);
 			}
@@ -167,6 +169,10 @@ public class GemMining implements OpLocTrigger {
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
+			if (command.equals("mine") && player.getConfig().GATHER_TOOL_ON_SCENERY) {
+				player.playerServerMessage(MessageType.QUEST, "You need to use the pickaxe on the rock to mine it");
+				return;
+			}
 			handleGemRockMining(obj, player, player.click);
 		}
 	}
@@ -196,7 +202,7 @@ public class GemMining implements OpLocTrigger {
 	}
 
 	private boolean getGem(Player player, int req, int miningLevel, int axeId) {
-		return Formulae.calcGatheringSuccessful(req, miningLevel, calcAxeBonus(axeId));
+		return Formulae.calcGatheringSuccessfulLegacy(req, miningLevel, calcAxeBonus(axeId));
 	}
 
 	/**
@@ -225,5 +231,20 @@ public class GemMining implements OpLocTrigger {
 			return "You just found a diamond!";
 		}
 		return null;
+	}
+
+	@Override
+	public void onUseLoc(Player player, GameObject object, Item item) {
+		if (inArray(item.getCatalogId(), Formulae.miningAxeIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickMine)
+			&& object.getID() == GEM_ROCK) {
+			player.click = 0;
+			handleGemRockMining(object, player, 0);
+		}
+	}
+
+	@Override
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return (inArray(item.getCatalogId(), Formulae.miningAxeIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickMine)
+			&& obj.getID() == GEM_ROCK);
 	}
 }

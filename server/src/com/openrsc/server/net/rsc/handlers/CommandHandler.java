@@ -1,20 +1,16 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.CommandStruct;
 
-public final class CommandHandler implements PacketHandler {
-	public void handlePacket(Packet packet, Player player) throws Exception {
+public final class CommandHandler implements PayloadProcessor<CommandStruct, OpcodeIn> {
+	public void process(CommandStruct payload, Player player) throws Exception {
 		if (System.currentTimeMillis() - player.getLastCommand() < 1000 && !player.isAdmin()) {
 			player.message(player.getConfig().MESSAGE_PREFIX + "There's a second delay between using commands");
 		} else {
-			String s;
-			if (player.isUsingAuthenticClient()) {
-				s = packet.readZeroPaddedString();
-			} else {
-				s = packet.readString();
-			}
+			String s = payload.command;
 			int firstSpace = s.indexOf(" ");
 			String cmd = s;
 			String[] args = new String[0];

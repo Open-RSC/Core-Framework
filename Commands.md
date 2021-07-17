@@ -28,7 +28,7 @@ Admin Commands
   - Stops the currently running holiday drop.
 - getholidaydrop
   - Usage: `::getholidaydrop`
-  - Alias: `::checkholidaydrop`
+  - Alias: `::checkholidaydrop` or `::checkholidayevent` or `::drop`
   - Gets information about the currently running holiday drop.
 - restart
   - Usage: `::restart`
@@ -52,13 +52,18 @@ Admin Commands
   - Usage: `::update (reason)`
   - Shuts down the server with a warning to users and a graceful timer to allow players to save their status.
 - item
-  - Usage: `::item [id] (amount) (player)`
+  - Usage: `::item [id or ItemID name] (amount) (player)`
   - Spawns an item for the specified player.
   - If no amount is specified, then 1 is used.
-  - If no player is specified, then it shows the appearance change screen to the current player.
+  - If no player is specified, then it spawns the item to the current player.
   - For non-stackable items, only up to 30 may be spawned at one time.
+- certeditem
+  - Usage: `::certeditem [id or ItemID name] (amount) (player)`
+  - Alias: `::noteditem`
+  - Spawns an item as a (custom server addition) certificate for the specified player.
+  - If no player is specified, then it spawns the item to the current player.
 - bankitem
-  - Usage: `::bankitem [id] (amount) (player)`
+  - Usage: `::bankitem [id or ItemID name] (amount) (player)`
   - Alias: `::bitem` or `::addbank`
   - Spawns an item into the bank of the specified player.
   - If no amount is specified, then 1 is used.
@@ -95,11 +100,9 @@ Admin Commands
   - Usage: `::wipeinventory [name]`
   - Alias: `::wipeinv`
   - Removes all items from the specified player's inventory.
-  - You can not wipe the inventory of a staff member of equal or greater rank.
 - wipebank
   - Usage: `::wipebank [name]`
   - Removes all items from the specified player's bank.
-  - You can not wipe the bank of a staff member of equal or greater rank.
 - massitem
   - Usage: `::massitem [id] [amount]`
   - Spawn the specified amount of the specified item on the ground temporarily for 3 minutes.
@@ -107,9 +110,6 @@ Admin Commands
   - Usage: `::massnpc [id] [amount] (duration_minutes)`
   - Spawn the specified amount of the specified NPCs for the specified amount of time.
   - If no duration is supplied, then 10 minutes is used.
-- npctalk
-  - Usage: `::npctalk [npc_id] [msg]`
-  - Causes the specified NPC to say the specified message to all players in the area.
 - npckills
   - Usage: `::npckills [name]`
   - Shows kill counts for name.
@@ -117,6 +117,7 @@ Admin Commands
   - Usage: `::playertalk [name] [msg]`
   - Causes the specified player to say the specified message to all players in the area.
   - You can not talk as a staff member of equal or greater rank.
+  - A similar effect is possible by using the `::possess` command (but only if you are an admin).
 - smitenpc
   - Usage: `::smitenpc [npc_id] (damage)`
   - Alias: `::damagenpc` or `::dmgnpc`
@@ -207,7 +208,12 @@ Admin Commands
 - winterholidayevent
   - Usage: `::winterholidayevent`
   - Turns on the winter holiday event (spawns tree objects).
-  
+- givemodtools
+  - Usage: `::givemodtools`
+  - Gives you info document, resetcrystal, superchisel, ball of wool, fluffs, and digsite info, if you don't already have the item.
+- givetools
+  - Usage: `::givetools`
+  - Gives you rune pick, rune axe, harpoon, and sleeping bag, if you don't already have the item.
 ------------------------
 Developer Commands
 ------------------------
@@ -219,20 +225,21 @@ Developer Commands
 - removenpc
   - Usage: `::removenpc [npc_instance_id]`
   - Alias: `::rnpc` or `::rpc`
-  - Removes the specified NPC permanently from the database.
-- removeobject
-  - Usage: `::removeobject (x) (y)`
-  - Alias: `::robject`
-  - Removes the object permanently from the database at the specified coordinates.
+  - Removes the specified NPC.
+- removescenery
+  - Usage: `::removescenery (x) (y)`
+  - Alias: `::rscenery`, `::robject`, `::removeobject`
+  - Removes the scenery at the specified coordinates.
   - If no coordinates are supplied, then the current player's position is used.
-- createobject
-  - Usage: `::createobject [id] (x) (y)`
-  - Alias: `::cobject` or `::addobject` or `::aobject`
-  - Adds the specified object to the database permanently at the specified coordinates.
+- createscenery
+  - Usage: `::createscenery [id] (x) (y)`
+  - Alias: `::cscenery` or `::ascenery` or `::createobject`or `::cobject` or `::addobject` or `::aobject`
+  - Adds the scenery at the specified coordinates.
   - If no coordinates are supplied, then the current player's position is used.
-- rotateobject
-  - Usage: `::createobject (x) (y) (direction)`
-  - Rotates the object at the specified coordinates permanently in the database.
+- rotatescenery
+  - Usage: `::rotatescenery (x) (y) (direction)`
+  - Alias: `::rotateobject`
+  - Rotates the scenery at the specified coordinates.
   - If no direction is specified, then the next incremental number is used looping from 0 to 8.
   - If no coordinates are supplied, then the current player's position is used.
 - tile
@@ -252,6 +259,9 @@ Developer Commands
 - droptest
   - Usage: `::droptest [npc_id] [count]`
   - Returns drop outcomes of `[count]` executions of drops on npc `[npc_id]`
+- error
+  - Usage: `::error (output to stdout)`
+  - Causes an ArrayOutOfBounds exception to occur if not passed an argument. Otherwise prints the first argument to stdout.
 ------------------------
 Super/Senior Moderator Commands
 ------------------------
@@ -332,13 +342,14 @@ Moderator Commands
   - Shows information about the specified player.
   - If no player is specified, then it show info about the current player.
 - inventory
-  - Usage: `::inventory (player)`
+  - Usage: `::inventory (player) (want catalog ids)`
   - Shows inventory information about the specified player.
   - If no player is specified, then it show inventory info about the current player.
 - bank
-  - Usage: `::bank (player)`
+  - Usage: `::bank (player) (want box) (want catalog ids)`
   - Shows bank information for the specified player.
   - If no player is specified, then it show bank info about the current player.
+  - Shows items in the normal bank interface by default, unless (want box) is specified
 - summon
   - Usage: `::summon [player]`
   - Summons the specified player to the current player's location.
@@ -357,6 +368,9 @@ Moderator Commands
   - Usage: `::kick [player]`
   - Kicks the specified player from the server.
   - You can not kick a staff member of equal or greater rank.
+- wilderness
+  - Usage: `::wilderness`
+  - Shows how many players are in the wilderness and where they are.
 ------------------------
 Event Commands
 ------------------------
@@ -390,6 +404,24 @@ Event Commands
   - Turn the specified player invulnerable.
   - If no player is specified, then the current player is turned invulnerable.
   - If no boolean is supplied, then this command works as a toggle.
+- possess
+  - Usage: `::possess [player]`
+  - Sets yourself invisible and constantly at the same coordinates as the player being possessed.
+  - Alias: `::pos`
+- possessnpc
+  - Usage: `::possessnpc [npc instance id]`
+  - Sets yourself invisible and constantly at the same coordinates as the npc being possessed.
+  - Npc instance id can be seen with RSC+ (ctrl-n with extended tooltip on), or by using the ResetCrystal on an npc.
+  - Alias: `::posnpc`or `::pnpc`
+- possessrandom 
+  - Usage: `::possessrandom`
+  - Selects a random player other than yourself to possess.
+  - Alias: `::pr`
+- npctalk
+  - Usage: `::npctalk [npc_id] [msg]`
+  - Causes the specified NPC to say the specified message to all players in the area.
+  - Can use `::possessnpc` & then just chat normally for longer conversations
+  - Alias: `::npcsay`
 - check
   - Usage: `::check (player)`
   - Shows all of the characters that were created by the same IP address.
@@ -420,7 +452,7 @@ Event Commands
   - Usage: `::setstats [player]` to set all of your stats to the specified level
   - Usage: `::setstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
   - Usage: `::setstats [level] [stat]` to set your specified stat to the specified level
-  - Alias: `::stats` or `::stat` or ::setstat`
+  - Alias: `::stats` or `::stat` or `::setstat` or `::setstats`
   - Set the specified stats of the specified player to the specified level.
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
@@ -430,8 +462,18 @@ Event Commands
   - Usage: `::setcurrentstats [player]` to set all of your stats to the specified level
   - Usage: `::setcurrentstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
   - Usage: `::setcurrentstats [level] [stat]` to set your specified stat to the specified level
-  - Alias: `::currentstats` or `::currentstat` or ::setcurrentstat` or `::curstat` or `::curstats` or `::setcurstat` or `::setcurstats`
+  - Alias: `::currentstats` or `::currentstat` or `::setcurrentstat` or `::curstat` or `::curstats` or `::setcurstat` or `::setcurstats`
   - Set the specified current stats of the specified player to the specified level.
+  - Accepts name or stat id of the specified stat.
+  - If no player is specified, then the current player is targeted.
+  - If no stat is specified, then all stats are modified.
+- setxpstats
+  - Usage: `::setxpstats [player] [experience]` to set all of the specified player's stats to the specified experience.
+  - Usage: `::setxpstats [player]` to set all of your stats to the specified experience
+  - Usage: `::setxpstats [player] [experience] [stat]` to set the specified player's specified stat to the specified experience.
+  - Usage: `::setxpstats [experience] [stat]` to set your specified stat to the specified experience
+  - Alias: `::xpstats` or `::xpstat` or `::setxpstat` or `::setxpstats` or `::setxp`
+  - Set the specified current stats of the specified player to the specified experience.
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
   - If no stat is specified, then all stats are modified.
@@ -444,33 +486,65 @@ Player Moderator Commands
   - Moderators are only allowed to mute for up to 2 hours.
   - Player Moderators are only allowed to mute for up to 1 hour.
   - You can not mute a staff member of equal or greater rank.
+- ungmute
+  - Usage: `::ungmute [name]`
+  - Unmutes the specified player from global chat.
+  - You can not unmute a staff member of equal or greater rank.
 - mute
   - Usage: `::mute [name] (time in minutes, -1 or exclude for permanent)`
   - Moderators are only allowed to mute for up to 2 hours.
   - Player Moderators are only allowed to mute for up to 1 hour.
   - Mutes the specified player from both in game and global chat.
   - You can not mute a staff member of equal or greater rank.
+- unmute
+  - Usage: `::unmute [name]`
+  - Unmutes the specified player
 - alert
   - Usage: `::alert [player] [message]`
   - Sends the specified player an alert box message.
+- set_icon
+  - Usage:  `::set_icon [integer] (0 for regular player, -1 to reset)`
+  - Changes the player's chat prefix icon (crown)
+- redhat
+  - Usage: `::redhat`
+  - Alias: `::rhel`
+  - Temporarily overlays unobtainable Zamorak hat as well as Zamorak robes on the player
+- robe
+  - Usage: `::robe [color] (player)`
+  - Alias: `::setrobe [color (player)`
+  - Alias: `::setrobes [color] (player)`
+  - Temporarily overlays robes of a specified color on the player
+- becomeNpc
+  - Usage: `::becomenpc [npc name]  (player)`
+  - Alias: `::morph [npc name]  (player)`
+  - Alias: `::morphnpc [npc name]  (player)`
+  - Alias: `::become [npc name]  (player)`
+  - Temporarily replaces the player sprites with a NPC (scaled to the size of the player)
+- restoreHumanity
+  - Usage: `::restorehumanity  (player)`
+  - Alias: `::resetappearance  (player)`
+  - Resets the player to display the regular player sprites
+- becomeGod
+  - Usage: `::becomegod`
+  - Alias: `::become god`
+  - Temporarily sets the player sprite to a mix of random player and NPC sprites at once
+- speakTongues
+  - Usage: `::speaktongues`
+  - Translates player chat messages to random characters while enabled
 ------------------------
 Regular Player Commands
 ------------------------
 - gang
   - Usage: `::gang`
   - Shows which gang you are in: Black Arm, Phoneix, or none.
-- bankpin
-  - Usage: `::bankpin (name)`
-  - Shows the change bankpin screen to the specified player.
-  - Only admins may show the bank screen to another player.
-- wilderness
-  - Usage: `::wilderness`
-  - Shows server wilderness rules.
 - c
   - Usage: `::c [message]
   - Send message to clan chat.
   - Clans must be enabled to use this command.
   - You must be in a clan to use this command.
+- joinclan
+  - Usage: `::joinclan [clan name]`
+  - Allows a player to request to join a clan.
 - clanaccept
   - Usage: `::clanaccept`
   - Accept an invication to a clan.
@@ -488,21 +562,30 @@ Regular Player Commands
   - You must be in a clan to use this command.
   - You can not kick the clan leader.
   - You must be a clan general or clan leader to kick from the clan.
+- partyaccept
+  - Usage: `::partyaccept [name]`
+  - Accepts a player's party join request
+- leaveparty
+  - Usage: `::leaveparty`
+  - Causes the player to leave the current party
 - gameinfo
   - Usage: `::gameinfo`
   - Shows your coordinates and total time played.
 - event
-  - Usage: `::event
+  - Usage: `::event`
   - Join the currently running server PK Event.
   - You can not participate in PK Events while you are jailed.
   - You can not join PK Events while you are in the wilderness.
   - You must meet the PK Event requirements to join.
 - g
   - Usage: `::g [message]`
-  - Alias: `::p`
+  - Alias: `::pk`
   - Send a message to global or PK chat.
-  - `::g` is for global and `::p` is for PK chat.
+  - `::g` is for global and `::pk` is for PK chat.
   - You can only send one global chat message per 15 seconds.
+- p
+  - Usage: `::p [message]`
+  - Send a message to party members chat.
 - online
   - Usage: `::online`
   - Shows the number of players currently online
@@ -522,19 +605,43 @@ Regular Player Commands
   - Shows the current date and time of the server.
 - commands
   - Usage: `::commands`
-  - Shows a list of the Regular Player commands
+  - Shows a list of the Regular Player commands.
+- oldtrade
+  - Usage: `::oldtrade`
+  - Sets the client temporarily to no confirm trade mode. Lasts for 5 minutes.
 - toggleglobalchat
   - Usage: `::toggleglobalchat`
-  - Toggles seeing global chat received via Global$ friend 
+  - Toggles seeing global chat received via Global$ friend.
 - toggleblockchat
   - Usage: `::toggleblockchat`
-  - Toggles the block of seeing all chat messages, including from friends
+  - Toggles the block of seeing all chat messages, including from friends.
 - toggleblockprivate
   - Usage: `::toggleblockprivate`
-  - Toggles the block of seeing all private messages, including from friends
+  - Toggles the block of seeing all private messages, including from friends.
 - toggleblocktrade
   - Usage: `::toggleblocktrade`
-  - Toggles the block of receiving all trade requests, including from friends
+  - Toggles the block of receiving all trade requests, including from friends.
 - toggleblockduel
   - Usage: `::toggleblockduel`
-  - Toggles the block of receiving all duel requests, including from friends
+  - Toggles the block of receiving all duel requests, including from friends.
+- shareloot
+  - Usage: `::shareloot`
+  - Toggles loot sharing for the party.
+- shareexp
+  - Usage: `::shareexp`
+  - Toggles experience sharing for the party.
+- kills
+  - Usage: `::kills`
+  - Displays the top NPC kill counts for the player
+- qoloptout
+  - Usage: `::qoloptout`
+  - Allows the player to permanently opt out of QoL features for their account.
+- qoloptoutconfirm
+  - Usage: `::qoloptoutconfirm`
+  - Confirms permanent QoL opt out for the player's account.
+- certoptout
+  - Usage: `::certoptout`
+  - Allows the player to permanently opt out of being able to use item certs.
+- certoptoutconfirm
+  - Usage: `::certoptoutconfirm`
+  - Confirms permanent opt out of being able to use item certs.

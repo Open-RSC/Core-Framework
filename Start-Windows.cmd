@@ -3,7 +3,7 @@
 
 :# Variable paths:
 SET Portable_Windows="Portable_Windows\"
-SET mariadbpath="Portable_Windows\mariadb-10.5.8-winx64\bin\"
+SET sqlitepath="Portable_Windows\"
 
 :<------------Begin Start------------>
 REM Initial menu displayed to the user
@@ -16,10 +16,11 @@ echo Choices:
 echo   %RED%1%NC% - Compile and start the game
 echo   %RED%2%NC% - Start the game (faster if already compiled)
 echo   %RED%3%NC% - Change a player's in-game role
-echo   %RED%4%NC% - Backup database
-echo   %RED%5%NC% - Restore database
-echo   %RED%6%NC% - Perform a fresh install
-echo   %RED%7%NC% - Exit
+echo   %RED%4%NC% - Change a player's name
+echo   %RED%5%NC% - Backup database
+echo   %RED%6%NC% - Restore database
+echo   %RED%7%NC% - Perform a fresh install
+echo   %RED%8%NC% - Exit
 echo:
 SET /P action=Please enter a number choice from above:
 echo:
@@ -27,10 +28,11 @@ echo:
 if /i "%action%"=="1" goto compileandrun
 if /i "%action%"=="2" goto run
 if /i "%action%"=="3" goto role
-if /i "%action%"=="4" goto backup
-if /i "%action%"=="5" goto import
-if /i "%action%"=="6" goto reset
-if /i "%action%"=="7" goto exit
+if /i "%action%"=="4" goto name
+if /i "%action%"=="5" goto backup
+if /i "%action%"=="6" goto import
+if /i "%action%"=="7" goto reset
+if /i "%action%"=="8" goto exit
 
 echo Error! %action% is not a valid option. Press enter to try again.
 echo:
@@ -41,9 +43,8 @@ goto start
 
 :<------------Begin Exit------------>
 :exit
-REM Shuts down existing processes
+REM Shuts down existing java processes
 taskkill /F /IM Java*
-taskkill /F /IM mysqld*
 exit
 :<------------End Exit------------>
 
@@ -98,19 +99,23 @@ SET /P role=""
 goto start
 
 :admin
+cls
 echo:
 echo Make sure you are logged out first!
-echo Type the username of the player you wish to set as an admin and press enter.
+echo Type the username of the player you wish to set and press enter.
 echo:
 SET /P username=""
+cls
+echo Type the name of the database where the player is saved.
 echo:
-echo Type the name of the database where the player is saved. (Generally named "preservation", "openrsc", or "cabbage")
+echo (preservation, openrsc, cabbage, uranium, coleslaw, 2001scape, or openpk)
+echo:
+echo The default player database is named preservation.
+echo:
 echo:
 SET /P db=""
-call START "" %mariadbpath%mysqld.exe --console
-echo Player update will occur in 5 seconds (gives time to start the database server on slow PCs)
-PING localhost -n 6 >NUL
-call %mariadbpath%mysql.exe -uroot -proot  -D %db% -e "USE %db%; UPDATE `players` SET `group_id` = '0' WHERE `players`.`username` = '%username%';"
+cls
+echo UPDATE `players` SET `group_id` = '0' WHERE `players`.`username` = '%username%' | %sqlitepath%sqlite3.exe .\server\inc\sqlite\%db%.db
 echo:
 echo %username% has been made an admin in database %db%!
 echo:
@@ -118,45 +123,83 @@ pause
 goto start
 
 :mod
+cls
 echo:
 echo Make sure you are logged out first!
-echo Type the username of the player you wish to set as a mod and press enter.
+echo Type the username of the player you wish to set and press enter.
 echo:
 SET /P username=""
+cls
+echo Type the name of the database where the player is saved.
 echo:
-echo Type the name of the database where the player is saved. (Generally named "preservation", "openrsc", or "cabbage")
+echo (preservation, openrsc, cabbage, uranium, coleslaw, 2001scape, or openpk)
+echo:
+echo The default player database is named preservation.
+echo:
 echo:
 SET /P db=""
-call START "" %mariadbpath%mysqld.exe --console
-echo Player update will occur in 5 seconds (gives time to start the database server on slow PCs)
-PING localhost -n 6 >NUL
-call %mariadbpath%mysql.exe -uroot -proot -D %db% -e "USE %db%; UPDATE `players` SET `group_id` = '2' WHERE `players`.`username` = '%username%';"
+cls
+echo UPDATE `players` SET `group_id` = '2' WHERE `players`.`username` = '%username%' | %sqlitepath%sqlite3.exe .\server\inc\sqlite\%db%.db
 echo:
-echo %username% has been made a mod in database %db%!
+echo %username% has been made an mod in database %db%!
 echo:
 pause
 goto start
 
 :regular
+cls
 echo:
 echo Make sure you are logged out first!
-echo Type the username of the player you wish to set as a regular player and press enter.
+echo Type the username of the player you wish to set and press enter.
 echo:
 SET /P username=""
+cls
+echo Type the name of the database where the player is saved.
 echo:
-echo Type the name of the database where the player is saved. (Generally named "preservation", "openrsc", or "cabbage")
+echo (preservation, openrsc, cabbage, uranium, coleslaw, 2001scape, or openpk)
+echo:
+echo The default player database is named preservation.
+echo:
 echo:
 SET /P db=""
-call START "" %mariadbpath%mysqld.exe --console
-echo Player update will occur in 5 seconds (gives time to start the database server on slow PCs)
-PING localhost -n 6 >NUL
-call %mariadbpath%mysql.exe -uroot -proot -D %db% -e "USE %db%; UPDATE `players` SET `group_id` = '10' WHERE `players`.`username` = '%username%';"
+cls
+echo UPDATE `players` SET `group_id` = '10' WHERE `players`.`username` = '%username%' | %sqlitepath%sqlite3.exe .\server\inc\sqlite\%db%.db
 echo:
-echo %username% has been made an admin in database %db%!
+echo %username% has been made a player in database %db%!
 echo:
 pause
 goto start
 :<------------End Role------------>
+
+
+:<------------Begin Name Change------------>
+:name
+cls
+echo Make sure you are logged out first!
+echo What existing player should have their name changed?
+echo:
+SET /P oldname=""
+echo:
+echo What would you like to change "%oldname%"'s name to?
+echo:
+SET /P newname=""
+cls
+echo Type the name of the database where the player is saved.
+echo:
+echo (preservation, openrsc, cabbage, uranium, coleslaw, 2001scape, or openpk)
+echo:
+echo The default player database is named preservation.
+echo:
+echo:
+SET /P db=""
+cls
+echo UPDATE `players` SET `username` = '%newname%' WHERE `players`.`username` = '%oldname%' | %sqlitepath%sqlite3.exe .\server\inc\sqlite\%db%.db
+echo:
+echo %oldname% has been renamed to %newname%!
+echo:
+pause
+goto start
+:<------------End Name Change------------>
 
 
 :<------------Begin Backup------------>
@@ -166,14 +209,17 @@ taskkill /F /IM Java*
 
 REM Performs a full database export
 cls
+echo Type the name of the database that you wish to backup.
 echo:
-echo Type the name of the database you wish to back up. (Generally named "preservation", "openrsc", or "cabbage")
+echo (preservation, openrsc, cabbage, uranium, coleslaw, 2001scape, or openpk)
+echo:
+echo The default player database is named preservation.
 echo:
 SET /P db=""
-call START "" %mariadbpath%mysqld.exe --console
-call START "" %mariadbpath%mysqldump.exe -uroot -proot --database %db% --result-file="Backups/%db%-%DATE:~-4%-%DATE:~4,2%-%DATE:~7,2%T%time:~-11,2%-%time:~-8,2%-%time:~-5,2%.sql"
+cls
+echo .dump | %sqlitepath%sqlite3.exe .\server\inc\sqlite\%db%.db > "Backups/%db%-%DATE:~-4%-%DATE:~4,2%-%DATE:~7,2%T%time:~-11,2%-%time:~-8,2%-%time:~-5,2%.sql"
 echo:
-echo Player database backup complete.
+echo Database "%db%" backup complete.
 echo:
 pause
 goto start
@@ -187,20 +233,22 @@ taskkill /F /IM Java*
 
 cls
 REM Performs a full database import
+echo ===========================================================================
+dir Backups
+echo ===========================================================================
 echo:
-dir /B *.sql
-echo:
-echo Type the full name of the database listed above that you wish to restore.
+echo Type the filename of the backup file listed above that you wish to restore.
+echo (Copy and paste it exactly)
 echo:
 SET /P filename=""
-echo:
-echo Which database should this be restored to? (Generally named "preservation", "openrsc", or "cabbage")
+cls
+echo Which database should this be restored to? (preservation, openrsc, cabbage, uranium, coleslaw, 2001scape, or openpk)
 echo:
 SET /P db=""
-call START "" %mariadbpath%mysqld.exe --console
-call %mariadbpath%mysql.exe -uroot -proot %db% < "Backups/%filename%.sql"
+cls
+echo .read Backups/%filename% | %sqlitepath%sqlite3.exe .\server\inc\sqlite\%db%.db
 echo:
-echo Player database restore complete.
+echo File "%filename%" was restored to database "%db%".
 echo:
 pause
 goto start
@@ -228,34 +276,29 @@ pause
 goto start
 
 :wipe
-REM Starts up the database server and imports both server and database files to replace anything previously existing
-call START "" %mariadbpath%mysqld.exe --console
 cls
-call %mariadbpath%mysqlcheck -uroot -proot -o --all-databases
-cls
-call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS preservation;"
-call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS openrsc;"
-call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS cabbage;"
-
-call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `preservation`;"
-call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `openrsc`;"
-call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `cabbage`;"
-
-call %mariadbpath%mysql.exe -uroot -proot preservation < Databases\core.sql
-call %mariadbpath%mysql.exe -uroot -proot openrsc < Databases\core.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases\core.sql
-
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_auctionhouse.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_bank_presets.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_clans.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_custom_items.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_custom_npcs.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_custom_objects.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_equipment_tab.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_harvesting.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_ironman.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_npc_kill_counting.sql
-call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_runecraft.sql
+echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\preservation.db
+echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openrsc.db
+echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\uranium.db
+echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
+echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/retro.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\2001scape.db
+echo .read ./server/database/sqlite/addons/add_auctionhouse.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
+echo .read ./server/database/sqlite/addons/add_bank_presets.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
+echo .read ./server/database/sqlite/addons/add_clans.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
+echo .read ./server/database/sqlite/addons/add_equipment_tab.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
+echo .read ./server/database/sqlite/addons/add_npc_kill_counting.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
+echo .read ./server/database/sqlite/addons/add_auctionhouse.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/addons/add_bank_presets.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/addons/add_clans.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/addons/add_equipment_tab.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/addons/add_npc_kill_counting.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/addons/add_auctionhouse.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_bank_presets.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_clans.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_equipment_tab.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_npc_kill_counting.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
 echo:
 echo Fresh install complete!
 echo:

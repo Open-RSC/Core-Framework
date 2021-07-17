@@ -74,14 +74,12 @@ public class Bank {
 			// There is none of this item in the bank yet - create a new stack.
 			if (existingStack == null) {
 				// Make sure they have room in the bank
-				if (list.size() >= player.getBankSize())
+				if (list.size() >= player.getWorld().getMaxBankSize())
 					return false;
 
 				// TODO: Durability
 				itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount());
-
-				// Update the database
-				int itemID = player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
+				int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 
 				itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), false, itemID);
 
@@ -118,9 +116,7 @@ public class Bank {
 
 					// Adjust quantity of second stack to reflect that which was added to the first stack.
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
-
-					// Update the database - second stack
-					int itemID = player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
+					int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), false, itemID);
 
@@ -172,9 +168,6 @@ public class Bank {
 				// Update the Server Bank
 				list.remove(bankIndex);
 
-				// Update the Database
-				player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
-
 				// Update the Client
 				if (updateClient) {
 					ActionSender.updateBankItem(player, bankIndex, bankItem, 0);
@@ -212,7 +205,7 @@ public class Bank {
 
 	public boolean canHold(Item item) {
 		synchronized(list) {
-			return (getPlayer().getBankSize() - list.size()) >= getRequiredSlots(item);
+			return (getPlayer().getWorld().getMaxBankSize() - list.size()) >= getRequiredSlots(item);
 		}
 	}
 
@@ -236,7 +229,7 @@ public class Bank {
 
 	public boolean full() {
 		synchronized(list) {
-			return list.size() >= getPlayer().getBankSize();
+			return list.size() >= getPlayer().getWorld().getMaxBankSize();
 		}
 	}
 
@@ -469,6 +462,8 @@ public class Bank {
 					withdrawNoted = false;
 				}
 
+				int originalAmount = requestedAmount;
+
 				// Make sure they actually have the item in the bank
 				requestedAmount = Math.min(requestedAmount, countId(catalogID));
 				int requiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(
@@ -491,7 +486,7 @@ public class Bank {
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
 
-				if (!player.isUsingAuthenticClient()) {
+				if (player.isUsingCustomClient()) {
 					// Remove the item from the bank (or fail out).
 					if (!remove(withdrawItem, updateClient)) return;
 				} else {
@@ -501,10 +496,14 @@ public class Bank {
 
 				addToInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
 
+				if (originalAmount > requestedAmount) {
+					player.message("You don't have room to hold everything!");
+				}
+
 				// TODO: there are safeguards here which might be fine, but it may be better to
 				// implement a way to sort the packets in Player.outgoingPackets instead?
 				// Not sure how Jagex would have done it.
-				if (player.isUsingAuthenticClient()) {
+				if (!player.isUsingCustomClient()) {
 					boolean successfulRemove = false;
 					try {
 						successfulRemove = remove(withdrawItem, updateClient);
@@ -534,7 +533,7 @@ public class Bank {
 				// Ensure they have the item in their inventory.
 				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID));
 				if (requestedAmount <= 0) {
-					if (player.isUsingAuthenticClient() && catalogID == 1030) { //shantay pass placeholder item
+					if (!player.isUsingCustomClient() && catalogID == 1030) { //shantay pass placeholder item
 						player.playerServerMessage(MessageType.QUEST, "Try using the note on the Banker instead.");
 					}
 					return;
@@ -605,13 +604,13 @@ public class Bank {
 			// Add the item to the inventory (or fail and place it back into the bank).
 			if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
 				add(item);
-				if (updateClient && !player.isUsingAuthenticClient()) {
+				if (updateClient && player.isUsingCustomClient()) {
 					ActionSender.sendInventory(player);
 				}
 				return;
 			}
 		}
-		if (updateClient && !player.isUsingAuthenticClient()) {
+		if (updateClient && player.isUsingCustomClient()) {
 			ActionSender.sendInventory(player);
 		}
 	}
@@ -634,23 +633,6 @@ public class Bank {
 			);
 			removeFromInventory(item, def, requestedAmount - slotAmount, updateClient);
 		}
-	}
-
-	private static boolean isCert(int itemID) {
-		int[] certIds = {
-			/* Ores **/
-			517, 518, 519, 520, 521,
-			/* Bars **/
-			528, 529, 530, 531, 532,
-			/* Fish **/
-			533, 534, 535, 536, 628, 629, 630, 631,
-			/* Logs **/
-			711, 712, 713,
-			/* Misc **/
-			1270, 1271, 1272, 1273, 1274, 1275
-		};
-
-		return DataConversions.inArray(certIds, itemID);
 	}
 
 	private static int uncertedID(int itemID) {

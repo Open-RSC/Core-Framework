@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.skills.thieving;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -11,9 +11,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.plugins.triggers.OpNpcTrigger;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -24,8 +24,8 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.constants.ItemId.THIEVING_CAPE;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
@@ -33,12 +33,12 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
 		//lockpick said to make picking a bit easier
-		int effectiveLevel = player.getSkills().getLevel(Skills.THIEVING) + (player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) ? 10 : 0);
-		return Formulae.calcGatheringSuccessful(req_level, effectiveLevel);
+		int effectiveLevel = player.getSkills().getLevel(Skill.THIEVING.id()) + (player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) ? 10 : 0);
+		return Formulae.calcGatheringSuccessfulLegacy(req_level, effectiveLevel);
 	}
 
 	private boolean succeedThieving(Player player, int req_level) {
-		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING), 40);
+		return Formulae.calcGatheringSuccessfulLegacy(req_level, player.getSkills().getLevel(Skill.THIEVING.id()), 40);
 	}
 
 	public void stallThieving(Player player, GameObject object, final Stall stall) {
@@ -66,7 +66,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		if (!failNoun.endsWith("s")) {
 			failNoun += "s";
 		}
-		if (player.getSkills().getLevel(Skills.THIEVING) < stall.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skill.THIEVING.id()) < stall.getRequiredLevel()) {
 			player.message("You are not a high enough level to steal the " + failNoun);
 			return;
 		}
@@ -126,7 +126,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef(player.getWorld()).getName().toLowerCase();
 		player.message("You steal a " + stall.getLootPrefix() + loot);
 
-		player.incExp(Skills.THIEVING, stall.getXp(), true);
+		player.incExp(Skill.THIEVING.id(), stall.getXp(), true);
 
 		if (stall.equals(Stall.BAKERS_STALL)) { // Cake
 			player.getCache().put("cakeStolen", Instant.now().getEpochSecond());
@@ -202,7 +202,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		player.message("You search the chest for traps");
 		boolean makeChestStuck = config().LOOTED_CHESTS_STUCK;
 		AtomicReference<GameObject> tempChest = new AtomicReference<GameObject>();
-		if (player.getSkills().getLevel(Skills.THIEVING) < req) {
+		if (player.getSkills().getLevel(Skill.THIEVING.id()) < req) {
 			player.message("You find nothing");
 			return;
 		}
@@ -243,7 +243,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.getCarriedItems().getInventory().add(new Item(l.getId(), l.getAmount()));
 			}
 		}
-		player.incExp(Skills.THIEVING, xp, true);
+		player.incExp(Skill.THIEVING.id(), xp, true);
 		mes("You find treasure inside!");
 		delay(3);
 		if (!makeChestStuck) {
@@ -340,7 +340,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
+			repeat = Formulae.getRepeatTimes(player, Skill.THIEVING.id());
 			npc.setBusy(true);
 		}
 
@@ -353,7 +353,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			npc.setBusy(false);
 			return;
 		}
-		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skill.THIEVING.id()) < pickpocket.getRequiredLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobString + "'s pocket");
 			npc.setBusy(false);
 			return;
@@ -405,7 +405,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.getCarriedItems().getInventory().add(selectedLoot);
 			}
 
-			player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
+			player.incExp(Skill.THIEVING.id(), pickpocket.getXp(), true);
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobString + "'s pocket");
 			npc.getUpdateFlags()
@@ -418,7 +418,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			if (!player.withinRange(npc, 1)) {
 				player.message("The " + thievedMobString + " has moved.");
 				npc.setBusy(false);
@@ -443,13 +443,16 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			if (stall != null) {
 				stallThieving(player, obj, stall);
 			}
-		} else if (obj.getID() >= 334 && obj.getID() <= 339) {
-			if (command.contains("trap")) {
-				handleChestThieving(player, obj);
-			} else {
+		} else if (obj.getID() >= 334 && obj.getID() < 339) {
+			if (command.equalsIgnoreCase("Open")) {
 				player.playerServerMessage(MessageType.QUEST, "You have activated a trap on the chest");
 				player.damage(DataConversions.random(0, 8));
+			} else {
+				handleChestThieving(player, obj);
 			}
+		} else if (obj.getID() == 339) {
+			player.message("You search the chest for traps");
+			player.message("You find nothing");
 		} else if (obj.getID() == 379) { // HEMENSTER CHEST HARDCODE
 			if (command.equalsIgnoreCase("Open")) {
 				player.playerServerMessage(MessageType.QUEST, "This chest is locked");
@@ -462,7 +465,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 						return;
 					}
 				}
-				if (player.getSkills().getLevel(Skills.THIEVING) < 47) {
+				if (player.getSkills().getLevel(Skill.THIEVING.id()) < 47) {
 					player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
 					return;
 				}
@@ -479,7 +482,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				mes("You find a treasure inside!");
 				delay(3);
 
-				player.incExp(Skills.THIEVING, 600, true);
+				player.incExp(Skill.THIEVING.id(), 600, true);
 				give(player, ItemId.COINS.id(), 20);
 				give(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
@@ -620,7 +623,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 			int repeat = 1;
 			if (config().BATCH_PROGRESSION) {
-				repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
+				repeat = Formulae.getRepeatTimes(player, Skill.THIEVING.id());
 			}
 
 			startbatch(repeat);
@@ -632,7 +635,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 							  int exp, boolean goThrough, boolean requiresLockpick) {
 		player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 
-		if (getCurrentLevel(player, Skills.THIEVING) < req) {
+		if (getCurrentLevel(player, Skill.THIEVING.id()) < req) {
 			player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
 			return;
 		}
@@ -652,13 +655,13 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 			doDoor(obj, player);
 			player.message("You go through the door");
-			player.incExp(Skills.THIEVING, (int) exp, true);
+			player.incExp(Skill.THIEVING.id(), (int) exp, true);
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
 
 			// Repeat on failure
 			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay();
 				batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
 			}
@@ -668,16 +671,18 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("pickpocket")) {
-			Npc npc = player.getWorld().getNpc(n.getID(),
-				player.getX() - 2, player.getX() + 2,
-				player.getY() - 2, player.getY() + 2);
-			if (npc == null) return;
-			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
-			if (pickpocket != null) {
-				doPickpocket(player, n, pickpocket);
-			} else {
-				player.message("ERROR: Pickpocket handler not found.");
+			Npc npc = player.getWorld().getNpc(
+					n.getID(),
+					player.getX() - 2,
+					player.getX() + 2,
+					player.getY() - 2,
+					player.getY() + 2
+			);
+			if (npc == null) {
+				return;
 			}
+			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
+			doPickpocket(player, n, pickpocket);
 		}
 	}
 
@@ -802,8 +807,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		SILK_STALL(20, 96, NpcId.SILK_MERCHANT.id(), 8000,
 			piece_of, new LootItem(ItemId.SILK.id(), 1, 100)),
 		FUR_STALL(35, 144, NpcId.FUR_TRADER.id(), 15000,
-			piece_of, new LootItem(ItemId.GREY_WOLF_FUR.id(), 1, 10),
-			new LootItem(ItemId.FUR.id(), 1, 100)),
+			piece_of, new LootItem(ItemId.GREY_WOLF_FUR.id(), 1, 100)),
 		SILVER_STALL(50, 216, NpcId.SILVER_MERCHANT.id(), 30000,
 			piece_of, new LootItem(ItemId.SILVER.id(), 1, 100)),
 		SPICES_STALL(65, 324, NpcId.SPICE_MERCHANT.id(), 80000,

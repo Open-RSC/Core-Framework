@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../sql_queries.xsd">
+    <query key="player.getPlayerByUsername">
+        select *
+        from _PREFIX_players
+        left join _PREFIX_ironman on _PREFIX_players.id = _PREFIX_ironman.playerID
+        where username like {username};
+    </query>
+</queries>

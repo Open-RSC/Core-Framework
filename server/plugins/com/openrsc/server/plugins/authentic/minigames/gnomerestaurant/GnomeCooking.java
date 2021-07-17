@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.minigames.gnomerestaurant;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -196,7 +196,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 		if (player.getCarriedItems().remove(item) > -1) {
 			mes(gc.messages[0]);
 			delay(5);
-			if (!burnFood(player, item.getCatalogId(), player.getSkills().getLevel(Skills.COOKING))) {
+			if (!burnFood(player, item.getCatalogId(), player.getSkills().getLevel(Skill.COOKING.id()))) {
 				player.message(gc.messages[1]);
 
 				// Cooking Gnomebatta and Gnomebowl base
@@ -208,7 +208,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				// Successful recipe
 				boolean recipeSuccess = addGnomeRecipeCache(player, -1, item.getCatalogId());
 				if (recipeSuccess) {
-					player.incExp(Skills.COOKING, gc.experience, true);
+					player.incExp(Skill.COOKING.id(), gc.experience, true);
 
 					// Toad Batta
 					if (player.getCache().getString("gnome_recipe").equals(recipeStrings[TOAD_BATTA])) {
@@ -257,7 +257,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 		if (menu != -1) {
 			player.setOption(-1);
 			if (menu == 0) {
-				if (player.getSkills().getLevel(Skills.COOKING) < 25) {
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 25) {
 					player.message("you need a cooking level of 25 to mould dough batta's");
 					return false;
 				}
@@ -273,7 +273,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				addGnomeRecipeCache(player, -1, ItemId.GIANNE_DOUGH.id());
 
 			} else if (menu == 1) {
-				if (player.getSkills().getLevel(Skills.COOKING) < 30) {
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 30) {
 					player.message("you need a cooking level of 30 to mould dough bowls");
 					return false;
 				}
@@ -289,7 +289,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				addGnomeRecipeCache(player, -1, ItemId.GIANNE_DOUGH.id());
 
 			} else if (menu == 2) {
-				if (player.getSkills().getLevel(Skills.COOKING) < 15) {
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 15) {
 					player.message("you need a cooking level of 15 to mould crunchies");
 					return false;
 				}
@@ -304,7 +304,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				// Add Gianne Dough to our current recipe
 				addGnomeRecipeCache(player, -1, ItemId.GIANNE_DOUGH.id());
 			}
-			player.incExp(Skills.COOKING, 100, true);
+			player.incExp(Skill.COOKING.id(), 100, true);
 		}
 		return true;
 

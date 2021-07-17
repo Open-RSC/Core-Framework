@@ -54,7 +54,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		} else if (options.get(option).equalsIgnoreCase(optionPin)) {
 			int menu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (menu == 0) {
-				if (player.isUsingAuthenticClient()) {
+				if (!player.isUsingCustomClient()) {
 					npcsay(player, n, "ok but i have to warn you that this is going to be pretty annoying.");
 				}
 				setbankpin(player, n);

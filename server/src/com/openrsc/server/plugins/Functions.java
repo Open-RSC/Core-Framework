@@ -1,11 +1,13 @@
 package com.openrsc.server.plugins;
 
 import com.openrsc.server.ServerConfiguration;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.login.BankPinChangeRequest;
 import com.openrsc.server.login.BankPinVerifyRequest;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -24,6 +26,12 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /** Functions.java
  *
@@ -94,6 +102,13 @@ public class Functions {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	/**
+	 * Used for the ifstatrandom RuneScript function.
+	 */
+	public static float lerp(final float v0, final float v1, final float t) {
+		return v0 + t * (v1 - v0);
+	}
 
 	/**
 	 * Displays item bubble above players head.
@@ -239,7 +254,7 @@ public class Functions {
 						say(player, npc, options[player.getOption()]);
 				}
 				return player.getOption();
-			} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+			} else if (System.currentTimeMillis() - start > 500L * player.getConfig().GAME_TICK || player.getMenuHandler() == null) {
 				player.resetMenuHandler();
 				return -1;
 			}
@@ -541,7 +556,7 @@ public class Functions {
 
 	private static String showbankpin(Player player, final Npc n) {
 		String enteredPin = null;
-		if (!player.isUsingAuthenticClient()) {
+		if (player.isUsingCustomClient()) {
 			ActionSender.sendBankPinInterface(player);
 			player.setAttribute("bank_pin_entered", "");
 			while (true) {
@@ -733,7 +748,7 @@ public class Functions {
 			return false;
 		}
 
-		if (player.isUsingAuthenticClient()) {
+		if (!player.isUsingCustomClient()) {
 			npcsay(player, n, "ok now the new one.");
 		}
 
@@ -799,58 +814,48 @@ public class Functions {
 	 */
 	public static void startbatch(int totalBatch) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return;
+		if (scriptContext == null) {
+			return;
+		}
 		Player player = scriptContext.getContextPlayer();
-		if (player == null) return;
+		if (player == null) {
+			return;
+		}
 		Batch batch = new Batch(player);
 		batch.initialize(totalBatch);
 		batch.start();
-
 		scriptContext.setBatch(batch);
 	}
 
-	/**
-	 * Increments the current batch progress by 1
-	 * @return Returns false if batch is completed
-	 */
-	public static void updatebatchlocation(Point location) {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return;
+	private static Batch sniffBatchFromCurrentThread() {
+		ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		Player player = scriptContext.getContextPlayer();
+		if (player == null) {
+			return null;
+		}
+		return scriptContext.getBatch();
+	}
 
-		batch.setLocation(location);
+	public static void stopbatch() {
+		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::stop);
+	}
+
+	public static void updatebatchlocation(Point location) {
+		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(batch -> batch.setLocation(location));
 	}
 
 	public static void updatebatch() {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return;
-		Player player = scriptContext.getContextPlayer();
-		if (player == null) return;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return;
-
-		batch.update();
+		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::update);
 	}
 
-	public static boolean ifbatchcompleted() {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return true;
-		Player player = scriptContext.getContextPlayer();
-		if (player == null) return true;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return true;
-		return batch.isCompleted();
+	public static boolean isbatchcomplete() {
+		Batch batch = sniffBatchFromCurrentThread();
+		return batch == null || batch.isComplete();
 	}
 
-	public static boolean ifbeginningbatch() {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return false;
-		Player player = scriptContext.getContextPlayer();
-		if (player == null) return false;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return false;
-		return batch.getBeginningBatch();
+	public static boolean isfirstinbatch() {
+		Batch batch = sniffBatchFromCurrentThread();
+		return batch != null && batch.isFirstInBatch();
 	}
 
 	/**
@@ -861,9 +866,88 @@ public class Functions {
 		return message.length() >= 65 ? 4 : 3;
 	}
 
+	/**
+	 * Concats two arrays to one
+	 * @param array1 the first array
+	 * @param array2 the second array
+	 * @return the combined array
+	 */
+	public static <T> T concat(T array1, T array2) {
+		if (!array1.getClass().isArray() || !array2.getClass().isArray()) {
+			throw new IllegalArgumentException("Only arrays are accepted.");
+		}
+
+		Class<?> compType1 = array1.getClass().getComponentType();
+		Class<?> compType2 = array2.getClass().getComponentType();
+
+		if (!compType1.equals(compType2)) {
+			throw new IllegalArgumentException("Two arrays have different types.");
+		}
+
+		int len1 = Array.getLength(array1);
+		int len2 = Array.getLength(array2);
+
+		@SuppressWarnings("unchecked")
+		//the cast is safe due to the previous checks
+		T result = (T) Array.newInstance(compType1, len1 + len2);
+
+		System.arraycopy(array1, 0, result, 0, len1);
+		System.arraycopy(array2, 0, result, len1, len2);
+
+		return result;
+	}
+
+	public static boolean inArray(Object[] os, Object... oArray) {
+		boolean found = false;
+		for (Object o : os) {
+			if (inArray(o, oArray)) {
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+
+	/**
+	 * Returns an object of type T made from the base object and patched by diff
+	 * @param base The base object
+	 * @param diff The object containing attributes to patch
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public static <T> T patchObject(T base, T diff) throws InstantiationException, IllegalAccessException{
+		if (!diff.getClass().equals(base.getClass())) {
+			throw new IllegalArgumentException("Two objects have different types.");
+		}
+
+		@SuppressWarnings("unchecked")
+		T result = (T) base.getClass().newInstance();
+		Object[] fields = Arrays.stream(base.getClass().getDeclaredFields()).filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList()).toArray();
+		boolean accessibleChange = false;
+		for (Object fieldObj : fields) {
+			Field field = (Field) fieldObj;
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+				accessibleChange = true;
+			}
+			boolean isPrimitive = field.getType().isPrimitive();
+			field.set(result, !isPrimitive ? (field.get(diff) != null ? field.get(diff) : field.get(base)) : (
+				!field.get(diff).toString().equals("0") && !field.get(diff).toString().equals("0.0")
+					&& !field.get(diff).toString().equals("false") && !field.get(diff).toString().equals("")
+					? field.get(diff) : field.get(base)
+				));
+			if (accessibleChange) {
+				accessibleChange = false;
+				field.setAccessible(false);
+			}
+		}
+		return result;
+	}
+
 	public static boolean inArray(Object o, Object... oArray) {
 		for (Object object : oArray) {
-			if (o.equals(object) || o == object) {
+			if (o == object || o.equals(object)) {
 				return true;
 			}
 		}
@@ -899,16 +983,38 @@ public class Functions {
 	 * @param questData - the data, if skill id is < 0 means no exp is applied
 	 * @param applyQP   - apply the quest point increase
 	 */
-	public static void incQuestReward(Player player, int[] questData, boolean applyQP) {
-		int qp = questData[0];
-		int skillId = questData[1];
-		int baseXP = questData[2];
-		int varXP = questData[3];
-		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
-			player.incQuestExp(skillId, player.getSkills().getMaxStat(skillId) * varXP + baseXP);
+	@Deprecated
+	public static void incQuestReward(Player player, Either<Integer, String>[] questData, boolean applyQP) {
+		int qp = questData[0].fromLeft().get();
+		String skill = questData[1].fromRight().get();
+		int baseXP = questData[2].fromLeft().get();
+		int varXP = questData[3].fromLeft().get();
+		if (skill != Skill.NONE.name() && baseXP > 0 && varXP >= 0) {
+			player.incQuestExp(Skill.of(skill).id(),
+				player.getSkills().getMaxStat(Skill.of(skill).id()) * varXP + baseXP, false);
 		}
 		if (applyQP) {
 			player.incQuestPoints(qp);
+		}
+	}
+
+	public static void incStat(Player player, Integer skillId, Integer baseXP, Integer varXP) {
+		incStat(player, skillId, baseXP, varXP, false);
+	}
+
+	public static void incStat(Player player, Integer skillId, Integer baseXP, Integer varXP, Boolean useFatigue) {
+		if (skillId != Skill.NONE.id() && baseXP > 0 && varXP >= 0) {
+			player.incQuestExp(skillId,
+				player.getSkills().getMaxStat(skillId) * varXP + baseXP, useFatigue);
+		}
+	}
+
+	public static void incQP(Player player, Integer questPoints, boolean showMessage) {
+		if (showMessage) {
+			player.message("@gre@You haved gained " + questPoints + " quest point" + (questPoints > 1 ? "s" : "") + "!");
+		}
+		if (questPoints > 0) {
+			player.incQuestPoints(questPoints);
 		}
 	}
 
@@ -965,6 +1071,10 @@ public class Functions {
 	 */
 	public static boolean atQuestStage(Player player, QuestInterface quest, int stage) {
 		return getQuestStage(player, quest) == stage;
+	}
+
+	public static boolean isNormalLevel(Player player, int i) {
+		return getCurrentLevel(player, i) == getMaxLevel(player, i);
 	}
 
 	public static int getCurrentLevel(Player player, int i) {

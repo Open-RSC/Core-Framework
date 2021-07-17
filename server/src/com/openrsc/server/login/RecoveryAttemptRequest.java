@@ -136,6 +136,12 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 
 				//enough threshold to allow pass change for recovery
 				if (numCorrect >= 4) {
+					if (getNewPassword().length() < 4 || getNewPassword().length() > 20) {
+						LOGGER.info("Recover attempt for " + getUsername() + " is not successful. Password is either too long or too short");
+						getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+						getChannel().close();
+						return;
+					}
 					final String hashedNewPassword = DataConversions.hashPassword(getNewPassword(), salt);
 					getServer().getDatabase().saveNewPassword(pid, hashedNewPassword);
 					getServer().getDatabase().saveLastRecoveryTryId(pid, tryID);

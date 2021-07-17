@@ -8,6 +8,7 @@ import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.plugins.Functions.multi;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isPhoenixGang;
 
@@ -50,8 +52,6 @@ public final class RegularPlayer implements CommandTrigger {
 
 		if (command.equalsIgnoreCase("gang")) {
 			queryGang(player);
-		} else if (command.equalsIgnoreCase("wilderness")) {
-			queryWildernessState(player);
 		} else if (command.equalsIgnoreCase("c") && config().WANT_CLANS) {
 			sendMessageClan(player, args);
 		} else if (command.equalsIgnoreCase("clanaccept") && config().WANT_CLANS) {
@@ -95,7 +95,7 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("d")) {
 			sendMessageDiscord(player, args);
 		} else if (command.equalsIgnoreCase("commands")) {
-			queryCommands(player);
+			queryCommands(player, 0);
 		} else if (command.equalsIgnoreCase("b") && config().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
 				if (player.getLocation().isInBank()) {
@@ -110,6 +110,10 @@ public final class RegularPlayer implements CommandTrigger {
 			handleQOLOptOut(player);
 		} else if (command.equalsIgnoreCase("qoloptoutconfirm")) {
 			confirmQOLOptOut(player);
+		} else if (command.equalsIgnoreCase("certoptout")) {
+			handleCertOptOut(player);
+		} else if (command.equalsIgnoreCase("certoptoutconfirm")) {
+			confirmCertOptOut(player);
 		} else if (command.equalsIgnoreCase("toggleglobalchat")) {
 			player.getSocial().toggleGlobalFriend(player);
 		} else if (command.equalsIgnoreCase("getholidaydrop") ||
@@ -125,6 +129,15 @@ public final class RegularPlayer implements CommandTrigger {
 			player.getSettings().toggleBlockTrade(player);
 		} else if (command.equalsIgnoreCase("toggleblockduel")) {
 			player.getSettings().toggleBlockDuel(player);
+		} else if (command.equalsIgnoreCase("clientlimitations")) {
+			ActionSender.sendBox(player, player.getClientLimitations().toString(), true);
+		} else if (command.equalsIgnoreCase("setversion")) {
+			setClientVersion(player, args);
+		} else if (command.equalsIgnoreCase("skiptutorial")) {
+			skipTutorial(player);
+		} else if (command.equalsIgnoreCase("oldtrade")
+			|| command.equalsIgnoreCase("notradeconfirm")) {
+			setOldTrade(player);
 		}
 	}
 
@@ -136,33 +149,6 @@ public final class RegularPlayer implements CommandTrigger {
 		} else {
 			player.message(messagePrefix + "You are not in a gang - you need to start the shield of arrav quest");
 		}
-	}
-
-	private void queryWildernessState(Player player) {
-		int TOTAL_PLAYERS_IN_WILDERNESS = 0;
-		int PLAYERS_IN_F2P_WILD = 0;
-		int PLAYERS_IN_P2P_WILD = 0;
-		int EDGE_DUNGEON = 0;
-		for (Player p : player.getWorld().getPlayers()) {
-			if (p.getLocation().inWilderness()) {
-				TOTAL_PLAYERS_IN_WILDERNESS++;
-			}
-			if (p.getLocation().inFreeWild() && !p.getLocation().inBounds(195, 3206, 234, 3258)) {
-				PLAYERS_IN_F2P_WILD++;
-			}
-			if ((p.getLocation().wildernessLevel() >= 48 && p.getLocation().wildernessLevel() <= 56)) {
-				PLAYERS_IN_P2P_WILD++;
-			}
-			if (p.getLocation().inBounds(195, 3206, 234, 3258)) {
-				EDGE_DUNGEON++;
-			}
-		}
-
-		ActionSender.sendBox(player, "There are currently @red@" + TOTAL_PLAYERS_IN_WILDERNESS + " @whi@player" + (TOTAL_PLAYERS_IN_WILDERNESS == 1 ? "" : "s") + " in wilderness % %"
-				+ "F2P wilderness(Wild Lvl. 1-48) : @dre@" + PLAYERS_IN_F2P_WILD + "@whi@ player" + (PLAYERS_IN_F2P_WILD == 1 ? "" : "s") + " %"
-				+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
-				+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
-			, false);
 	}
 
 	private void sendMessageClan(Player player, String[] args) {
@@ -281,9 +267,11 @@ public final class RegularPlayer implements CommandTrigger {
 	}
 
 	private void sendMessageGlobal(Player player, String command, String[] args) {
-		if (!config().WANT_GLOBAL_CHAT) return;
+		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
 		if (player.isMuted()) {
-			player.message(messagePrefix + "You are muted, you cannot send messages");
+			if (player.getMuteNotify()) {
+				player.message(messagePrefix + "You are muted, you cannot send messages");
+			}
 			return;
 		}
 		if (player.getCache().hasKey("global_mute") && (player.getCache().getLong("global_mute") - System.currentTimeMillis() > 0 || player.getCache().getLong("global_mute") == -1) && command.equals("g")) {
@@ -296,7 +284,7 @@ public final class RegularPlayer implements CommandTrigger {
 			sayDelay = player.getCache().getLong("say_delay");
 		}
 
-		long waitTime = 15000;
+		long waitTime = config().GLOBAL_MESSAGE_COOLDOWN;
 
 		if (player.isMod()) {
 			waitTime = 0;
@@ -317,43 +305,50 @@ public final class RegularPlayer implements CommandTrigger {
 		for (String arg : args) {
 			newStr.append(arg).append(" ");
 		}
-		newStr = new StringBuilder(newStr.toString().replace('~', ' '));
-		newStr = new StringBuilder(newStr.toString().replace('@', ' '));
-		String channelPrefix = command.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
-		int channel = command.equalsIgnoreCase("g") ? 1 : 2;
-		for (Player p : player.getWorld().getPlayers()) {
-			if (p.getSocial().isIgnoring(player.getUsernameHash()))
-				continue;
-			if (p.getGlobalBlock() == 3 && channel == 2) {
-				continue;
-			}
-			if (p.getGlobalBlock() == 4 && channel == 1) {
-				continue;
-			}
-			if (p.getGlobalBlock() != 2) {
-				String header = "";
-				if (p.isUsingAuthenticClient()) {
-					ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
 
-				} else {
-					ActionSender.sendMessage(p, player, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+		if (config().WANT_GLOBAL_CHAT) {
+			String channelPrefix = command.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
+			int channel = command.equalsIgnoreCase("g") ? 1 : 2;
+			for (Player p : player.getWorld().getPlayers()) {
+				if (p.getSocial().isIgnoring(player.getUsernameHash()))
+					continue;
+				if (p.getGlobalBlock() == 3 && channel == 2) {
+					continue;
+				}
+				if (p.getGlobalBlock() == 4 && channel == 1) {
+					continue;
+				}
+				if (p.getGlobalBlock() != 2) {
+					String header = "";
+					if (!p.isUsingCustomClient()) {
+						ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
+
+					} else {
+						ActionSender.sendMessage(p, player, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+					}
 				}
 			}
-		}
-		if (command.equalsIgnoreCase("g")) {
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
+			if (command.equalsIgnoreCase("g")) {
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
+			} else {
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
+			}
+		} else if (config().WANT_GLOBAL_FRIEND && command.equalsIgnoreCase("g")) {
+			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(newStr.toString()));
+			player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
-		} else {
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
-			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 		}
 	}
 
 	private void sendMessageParty(Player player, String command, String[] args) {
 		if (player.isMuted()) {
-			player.message(messagePrefix + "You are muted, you cannot send messages");
+			if (player.getMuteNotify()) {
+				player.message(messagePrefix + "You are muted, you cannot send messages");
+			}
 			return;
 		}
 		if (player.getCache().hasKey("global_mute") && (player.getCache().getLong("global_mute") - System.currentTimeMillis() > 0 || player.getCache().getLong("global_mute") == -1) && command.equals("g")) {
@@ -490,11 +485,21 @@ public final class RegularPlayer implements CommandTrigger {
 					online++;
 				}
 			}
-		}
-		else {
+		} else {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
-				byte privacy = targetPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, targetPlayer.isUsingAuthenticClient());
-				if (targetPlayer.isDefaultUser() && privacy == PlayerSettings.BlockingMode.None.id()) {
+				byte privacy = targetPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, targetPlayer.isUsingCustomClient());
+
+				boolean privacyAllows = false;
+				if (privacy == PlayerSettings.BlockingMode.None.id()) {
+					privacyAllows = true;
+				} else if (privacy == PlayerSettings.BlockingMode.NonFriends.id() && targetPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+					// mods, pmods, admins, may only appear in the online list if their privacy block isn't set to block all
+					if (player.isDefaultUser()) {
+						privacyAllows = true;
+					}
+				}
+
+				if (privacyAllows) {
 					players.add(targetPlayer);
 					locations.add(""); // No locations for regular players.
 					online++;
@@ -591,6 +596,52 @@ public final class RegularPlayer implements CommandTrigger {
 			|| config().FASTER_YOHNUS
 			|| config().WANT_APOTHECARY_QOL
 			|| config().WANT_BETTER_JEWELRY_CRAFTING;
+	}
+
+	private void confirmCertOptOut(Player player) {
+		if (player.getCertOptOut()) {
+			player.playerServerMessage(MessageType.QUEST,"You are already opted out of the traditional 'cert' system");
+			return;
+		}
+
+		if (player.getCertOptOutWarned()) {
+			player.setCertOptOut();
+			player.playerServerMessage(MessageType.QUEST, "@ran@Congratulations! @whi@You have successfully opted out of the traditional 'cert' system");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "Please read the warning first with @lre@::certoptout@whi@.");
+		}
+	}
+
+	private void handleCertOptOut(Player player) {
+		StringBuilder certExplanation = new StringBuilder("@lre@Traditional 'Cert' System Opt-Out%");
+
+		if (player.getCertOptOut()) {
+			certExplanation.append(" %@red@ Your account has been opted out of the traditional 'cert' system!% %");
+		}
+		certExplanation.append("@yel@When opted out of the traditional 'cert' system %@yel@the following applies:%");
+
+		certExplanation.append(String.format("@lre@0) @whi@Converting items to certificates is disabled.%%"));
+
+		certExplanation.append(String.format("@lre@1) @whi@Trading certificates is disabled.%%"));
+
+		certExplanation.append(String.format("@lre@2) @whi@Picking up certificates dropped by other players is disabled.%%"));
+
+
+		certExplanation.append(" %@red@");
+		certExplanation.append(player.getCertOptOut() ? "Notice:" : "Warning:");
+		certExplanation.append("@lre@ you will not be able to opt back in%@lre@to the traditional 'cert' system without manual intervention ");
+		certExplanation.append("@lre@from an @or1@admin@lre@, who may or may not fulfil your request%@lre@to opt back in to 'cert' system.% %");
+		if (!player.getCertOptOut()) {
+			certExplanation.append("@whi@If you have read this warning and still wish to opt out,% type @lre@::certoptoutconfirm @whi@to opt out.% %");
+			certExplanation.append("@red@If you don't wish to opt out,%@red@ you should @dre@log out now@red@ to avoid accidentally opting out.");
+		}
+
+		ActionSender.sendBox(player, certExplanation.toString(), true);
+		if (player.getCertOptOut()) {
+			player.playerServerMessage(MessageType.QUEST, "@ran@Congratulations! @whi@Your account is already opted out of the traditional 'cert' system.");
+		} else {
+			player.setCertOptOutWarned(true);
+		}
 	}
 
 	private void checkHolidayDrop(Player player) {
@@ -700,7 +751,7 @@ public final class RegularPlayer implements CommandTrigger {
 				player.getCache().store("pair_token", builder.toString());
 
 				try {
-					player.getWorld().getServer().getDatabase().savePlayerCache(player);
+					player.getWorld().getServer().getPlayerService().savePlayerCache(player);
 					player.message("Your pair token is: " + builder.toString());
 				} catch (final GameDatabaseException ex) {
 					LOGGER.catching(ex);
@@ -722,28 +773,90 @@ public final class RegularPlayer implements CommandTrigger {
 			player.message("Discord bot disabled");
 	}
 
-	private void queryCommands(Player player) {
-		ActionSender.sendBox(player, ""
-			+ "@yel@Commands available: %"
-			+ "@lre@Type :: before you enter your command, see the list below. %"
-			// + " %" // Uncomment when this command is refactored
-			+ "@whi@::gameinfo - shows player and server information %"
-			+ "@whi@::online - shows players currently online %"
-			+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
-			+ "@whi@::onlinelist - shows players currently online in a list %"
-			+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
-			+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
-			+ "@whi@::c <message> - talk in clan chat %"
-			+ "@whi@::claninvite <name> - invite player to clan %"
-			+ "@whi@::clankick <name> - kick player from clan %"
-			+ "@whi@::clanaccept - accept clan invitation %"
-			+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
-			+ "@whi@::groups - shows available ranks on the server %"
-			+ "@whi@::wilderness - shows the wilderness activity %"
-			+ "@whi@::time - shows the current server time %"
-			+ "@whi@::event - to enter an ongoing server event %"
-			+ "@whi@::kills <name(optional)> - shows kill counts of npcs %"
-			+ "@whi@::qoloptout - opts you out of Quality of Life features", true
-		);
+	private void queryCommands(Player player, int page) {
+		if (page == 0) {
+			ActionSender.sendBox(player, ""
+				+ "@yel@Commands available: %"
+				+ "@lre@Type :: before you enter your command, see the list below. %"
+				+ " %" // this adds a line of whitespace for readability
+				+ "@whi@::gameinfo - shows player and server information %"
+				+ "@whi@::online - shows players currently online %"
+				+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
+				+ "@whi@::onlinelist - shows players currently online in a list %"
+				+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
+				+ "@whi@::pk <message> - to talk in @or1@pking @whi@global chat channel %"
+				+ "@whi@::c <message> - talk in clan chat %"
+				+ "@whi@::p <message> - talk in party chat %"
+				+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
+				+ "@whi@::wilderness - shows the wilderness activity %"
+				+ "@whi@::event - to enter an ongoing server event %"
+				+ "@whi@::kills - shows kill counts of npcs %"
+				+ "@whi@::qoloptout - opts you out of Quality of Life features %"
+				+ "@whi@::certoptout - opts you out of the traditional 'cert' system %",true
+			);
+			int cont = multi(player, "continue reading", "finished reading");
+			if (cont == 0) {
+				queryCommands(player, 1);
+			}
+		} else if (page == 1) {
+			ActionSender.sendBox(player, ""
+				+ "@yel@Commands available: %"
+				+ "@lre@Type :: before you enter your command, see the list below. %"
+				+ " %" // this adds a line of whitespace for readability
+				+ "@whi@::time - shows the current server time %"
+				+ "@whi@::toggleglobalchat - toggle blocking Global$ messages %"
+				+ "@whi@::toggleblockchat - toggle blocking all chat messages %"
+				+ "@whi@::toggleblockprivate - toggle block all private messages %"
+				+ "@whi@::toggleblocktrade - toggle blocking all trade requests %"
+				+ "@whi@::toggleblockduel - toggle blocking all duel requests %"
+				+ "@whi@::groups - shows available ranks on the server %",true
+			);
+		}
+
+	}
+
+	private void setClientVersion(Player player, String[] args) {
+		int currentVersion = player.getClientVersion();
+		int desiredVersion = 0;
+		if (currentVersion > 14 && currentVersion < 93) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + "setversion" + " [clientVersion]");
+				return;
+			}
+
+			try {
+				desiredVersion = Integer.parseInt(args[0]);
+			} catch (NumberFormatException nfe) {
+				player.message(badSyntaxPrefix + "setversion" + " [clientVersion]");
+				return;
+			}
+
+			if (desiredVersion > 14 && desiredVersion < 93) {
+				player.setClientVersion(desiredVersion);
+				player.message("The client version was successfully set to " + desiredVersion + "!");
+				player.message("For best user experience, issue the setversion command when switching versions");
+				player.getCache().set("client_version", desiredVersion);
+			} else {
+				player.message("The requested client version is out of bounds of what we think your client could be.");
+				player.message("Select a protocol version between 14 and 93."); // TODO: can probably restrict this narrower depending on what the detected version was
+			}
+		} else {
+			player.message("Sorry this command is only for old clients");
+		}
+	}
+
+	private void skipTutorial(Player player) {
+		if (player.getLocation().onTutorialIsland()) {
+			player.setBusy(false);
+			if (!player.skipTutorial()) {
+				player.message("Couldn't skip tutorial.");
+			}
+		}
+	}
+
+	private void setOldTrade(Player player) {
+		player.getCache().store("last_noconfirm", System.currentTimeMillis());
+		player.message("You have set trading to not require confirm");
+		player.message("This will last for 5 minutes");
 	}
 }

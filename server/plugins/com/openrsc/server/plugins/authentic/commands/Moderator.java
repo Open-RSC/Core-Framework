@@ -1,5 +1,8 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -53,6 +56,8 @@ public final class Moderator implements CommandTrigger {
 			kickPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("stayin")) {
 			player.toggleDenyAllLogoutRequests();
+		} else if (command.equalsIgnoreCase("wilderness")) {
+			queryWildernessState(player);
 		}
 	}
 
@@ -65,7 +70,7 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 		newStr.insert(0, player.getStaffName() + ": @yel@");
 		for (Player playerToUpdate : player.getWorld().getPlayers()) {
-			if (playerToUpdate.isUsingAuthenticClient()) {
+			if (!playerToUpdate.isUsingCustomClient()) {
 				ActionSender.sendMessage(playerToUpdate, null, MessageType.QUEST, newStr.toString(), player.getIcon(), null);
 			} else {
 				ActionSender.sendMessage(playerToUpdate, player, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon(), null);
@@ -130,37 +135,109 @@ public final class Moderator implements CommandTrigger {
 	}
 
 	private void queryPlayerInventory(Player player, String command, String[] args) {
-		Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
+		boolean targetOffline = false;
+		String username;
+		Player targetPlayer;
+		if (args.length > 0) {
+			username = args[0];
+			targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(username));
+		} else {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (username) (want item ids)");
+			username = player.getUsername();
+			targetPlayer = player;
+		}
+		boolean showId = args.length > 1; // don't care what the second arg is
+
 		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
+			targetOffline = true;
 		}
 
-		List<Item> inventory = targetPlayer.getCarriedItems().getInventory().getItems();
+		List<Item> inventory;
+		if (targetOffline) {
+			try {
+				username = username.replaceAll("\\.", " ");
+				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(username);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+		} else {
+			// use the online player if they are online, because it will be more up-to-date than the database
+			username = targetPlayer.getUsername(); // can fix capitalization easy enough
+			inventory = targetPlayer.getCarriedItems().getInventory().getItems();
+		}
+
 		ArrayList<String> itemStrings = new ArrayList<>();
 
 		synchronized(inventory) {
-			for (Item invItem : inventory)
-				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef(player.getWorld()).getName());
+			for (Item invItem : inventory) {
+				StringBuilder item = new StringBuilder();
+				item.append("@gre@").append(invItem.getAmount()).append(" @whi@").append(invItem.getDef(player.getWorld()).getName());
+				if (showId) {
+					item.append(" @yel@(").append(invItem.getCatalogId()).append(")");
+				}
+				itemStrings.add(item.toString());
+			}
 		}
 
-		ActionSender.sendBox(player, "@lre@Inventory of " + targetPlayer.getUsername() + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
+		ActionSender.sendBox(player, "@lre@Inventory of " + username + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
 	}
 
 	private void queryPlayerBank(Player player, String command, String[] args) {
-		Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
+		boolean targetOffline = false;
+		String username;
+		Player targetPlayer;
+		if (args.length > 0) {
+			username = args[0];
+			targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(username));
+		} else {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (username) (want box) (want item ids)");
+			username = player.getUsername();
+			targetPlayer = player;
 		}
-		List<Item> inventory = targetPlayer.getBank().getItems();
-		ArrayList<String> itemStrings = new ArrayList<>();
-		synchronized(inventory) {
-			for (Item bankItem : inventory) {
-				itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef(player.getWorld()).getName());
+		boolean showBox = args.length > 1; // don't care what the second arg is
+		boolean showId = args.length > 2; // don't care what the third arg is
+
+		if (targetPlayer == null) {
+			targetOffline = true;
+		}
+
+		List<Item> bank;
+		if (targetOffline) {
+			try {
+				username = username.replaceAll("\\.", " ");
+				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(username);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+		} else {
+			// use the online player if they are online, because it will be more up-to-date than the database
+			username = targetPlayer.getUsername(); // can fix capitalization easy enough
+			bank = targetPlayer.getBank().getItems();
+		}
+
+		if (showBox) {
+			ArrayList<String> itemStrings = new ArrayList<>();
+			synchronized (bank) {
+				for (Item bankItem : bank) {
+					StringBuilder item = new StringBuilder();
+					item.append("@gre@").append(bankItem.getAmount()).append(" @whi@").append(bankItem.getDef(player.getWorld()).getName());
+					if (showId) {
+						item.append(" @yel@(").append(bankItem.getCatalogId()).append(")");
+					}
+					itemStrings.add(item.toString());
+				}
+			}
+			ActionSender.sendBox(player, "@lre@Bank of " + username + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
+		} else {
+			// TODO: would be neat to set mode to be able to deposit/withdraw from other player's bank.
+			mes("@whi@Bank of @lre@" + username + "@whi@ shown.");
+			mes("@whi@Note that your own inventory items may be shown as well.");
+			synchronized (bank) {
+				ActionSender.showBankOther(player, bank);
 			}
 		}
-		ActionSender.sendBox(player, "@lre@Bank of " + targetPlayer.getUsername() + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
 	}
 
 	private void sendAnnouncement(Player player, String command, String[] args) {
@@ -173,7 +250,7 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 
 		for (Player playerToUpdate : player.getWorld().getPlayers()) {
-			if (playerToUpdate.isUsingAuthenticClient()) {
+			if (!playerToUpdate.isUsingCustomClient()) {
 				ActionSender.sendMessage(playerToUpdate, null, MessageType.QUEST, "@ran@ANNOUNCEMENT: @cya@" + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIconAuthentic(), null);
 			} else {
 				ActionSender.sendMessage(playerToUpdate, player, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIcon(), null);
@@ -191,6 +268,10 @@ public final class Moderator implements CommandTrigger {
 			player.message(messagePrefix + "Invalid name or player is not online");
 			return;
 		}
+		if (targetPlayer == player) {
+			player.message(messagePrefix + "You can't kick yourself");
+			return;
+		}
 		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 			player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
 			return;
@@ -200,5 +281,32 @@ public final class Moderator implements CommandTrigger {
 				+ " has been kicked by " + player.getUsername()));
 		targetPlayer.unregister(true, "You have been kicked by " + player.getUsername());
 		player.message(targetPlayer.getUsername() + " has been kicked.");
+	}
+
+	private void queryWildernessState(Player player) {
+		int TOTAL_PLAYERS_IN_WILDERNESS = 0;
+		int PLAYERS_IN_F2P_WILD = 0;
+		int PLAYERS_IN_P2P_WILD = 0;
+		int EDGE_DUNGEON = 0;
+		for (Player p : player.getWorld().getPlayers()) {
+			if (p.getLocation().inWilderness()) {
+				TOTAL_PLAYERS_IN_WILDERNESS++;
+			}
+			if (p.getLocation().inFreeWild() && !p.getLocation().inBounds(195, 3206, 234, 3258)) {
+				PLAYERS_IN_F2P_WILD++;
+			}
+			if ((p.getLocation().wildernessLevel() >= 48 && p.getLocation().wildernessLevel() <= 56)) {
+				PLAYERS_IN_P2P_WILD++;
+			}
+			if (p.getLocation().inBounds(195, 3206, 234, 3258)) {
+				EDGE_DUNGEON++;
+			}
+		}
+
+		ActionSender.sendBox(player, "There are currently @red@" + TOTAL_PLAYERS_IN_WILDERNESS + " @whi@player" + (TOTAL_PLAYERS_IN_WILDERNESS == 1 ? "" : "s") + " in wilderness % %"
+				+ "F2P wilderness(Wild Lvl. 1-48) : @dre@" + PLAYERS_IN_F2P_WILD + "@whi@ player" + (PLAYERS_IN_F2P_WILD == 1 ? "" : "s") + " %"
+				+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
+				+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
+			, false);
 	}
 }

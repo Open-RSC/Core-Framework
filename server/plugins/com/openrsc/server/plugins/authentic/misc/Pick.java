@@ -54,7 +54,7 @@ public final class Pick implements OpLocTrigger {
 		if (player.getCarriedItems().getInventory().full()) return;
 
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchCropPickup(player, objId, pickMessage);
 		}

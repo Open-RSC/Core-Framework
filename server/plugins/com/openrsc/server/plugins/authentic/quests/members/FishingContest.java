@@ -3,16 +3,19 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
@@ -36,6 +39,11 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.FISHING_CONTEST.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -44,14 +52,11 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	public void handleReward(final Player player) {
 		player.updateQuestStage(Quests.FISHING_CONTEST, -1);
 		player.message("Well done you have completed the fishing competition quest");
-		player.message("@gre@You haved gained 1 quest point!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FISHING_CONTEST);
-		if (player.getSkills().getMaxStat(Skills.FISHING) <= 23) {
-			questData[Quests.MAPIDX_BASE] = 900;
-			incQuestReward(player, questData, true);
-		} else if (player.getSkills().getMaxStat(Skills.FISHING) >= 24) {
-			questData[Quests.MAPIDX_BASE] = 1700;
-			incQuestReward(player, questData, true);
+		final QuestReward reward = Quest.FISHING_CONTEST.reward();
+		final int extraXP = player.getSkills().getMaxStat(Skill.FISHING.id()) >= 24 ? 800 : 0;
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP() + extraXP, xpReward.getVarXP());
 		}
 	}
 
@@ -600,7 +605,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				//cases: not enough level
 				//no bait
 				//else do catch
-				if (player.getSkills().getLevel(Skills.FISHING) < 10) {
+				if (player.getSkills().getLevel(Skill.FISHING.id()) < 10) {
 					player.message("You need at least level 10 fishing to lure these fish");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
@@ -652,7 +657,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				//no rod
 				//no bait
 				//else do catch
-				if (player.getSkills().getLevel(Skills.FISHING) < 10) {
+				if (player.getSkills().getLevel(Skill.FISHING.id()) < 10) {
 					player.message("You need at least level 10 fishing to lure these fish");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
@@ -765,6 +770,8 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			switch (player.getQuestStage(this)) {
 				case 1:
 				case 2:
+				case 3:
+				case -1:
 					npcsay(player, n, "..");
 					//do not send over
 					final int first = multi(player, n, false, "..?",

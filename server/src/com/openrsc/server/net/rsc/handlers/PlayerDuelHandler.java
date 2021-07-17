@@ -9,21 +9,22 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.PlayerDuelStruct;
+import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-public class PlayerDuelHandler implements PacketHandler {
+public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, OpcodeIn> {
 
 	private boolean busy(Player player) {
 		return player.inCombat() || player.isBusy() || player.isRanging() || player.accessingBank() || player.getTrade().isTradeActive();
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(PlayerDuelStruct payload, Player player) throws Exception {
 		Player affectedPlayer = player.getDuel().getDuelRecipient();
 
 		if (player == affectedPlayer) {
@@ -64,17 +65,14 @@ public class PlayerDuelHandler implements PacketHandler {
 			return;
 		}
 
-		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
-			OpcodeIn.DUEL_DECLINED, OpcodeIn.DUEL_OFFER_ITEM,
-			OpcodeIn.DUEL_FIRST_ACCEPTED, OpcodeIn.DUEL_SECOND_ACCEPTED,
-			OpcodeIn.PLAYER_DUEL, OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED);
+		OpcodeIn opcode = payload.getOpcode();
 
 		if (opcode == null)
 			return;
 
 		switch (opcode) {
 			case PLAYER_DUEL:
-				int playerIndex = packet.readShort();
+				int playerIndex = payload.targetPlayerID;
 				affectedPlayer = player.getWorld().getPlayer(playerIndex);
 				if (affectedPlayer == null || affectedPlayer.getDuel().isDuelActive()
 					|| !player.withinRange(affectedPlayer, 8) || player.getDuel().isDuelActive()) {
@@ -91,9 +89,9 @@ public class PlayerDuelHandler implements PacketHandler {
 					return;
 				}
 
-				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.All.id();
-				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.NonFriends.id();
 				if ((blockAll || (blockNonFriends && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
 					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) && !player.isMod()) {
@@ -327,21 +325,36 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.getDuel().setDuelConfirmAccepted(false);
 
 				player.getDuel().resetDuelOffer();
-				int count = packet.readByte();
+				int count = payload.duelCount;
 				for (int slot = 0; slot < count; slot++) {
-					int catalogID = packet.readShort();
-					int amount = packet.readInt();
-					int noted = 0;
-					if (!player.isUsingAuthenticClient()) {
-						noted = packet.readShort();
-					}
-					Item tItem = new Item(catalogID, amount, noted == 1);
+					Item tItem = new Item(payload.duelCatalogIDs[slot], payload.duelAmounts[slot], payload.duelNoted[slot]);
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "duel item amount < 1");
 						continue;
 					}
+					if (tItem.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+						player.message("Notes can no longer be staked with other players.");
+						player.message("You may either deposit it in the bank or sell to a shop instead.");
+						ActionSender.sendDuelOpponentItems(player);
+						continue;
+					}
 					if (tItem.getDef(player.getWorld()).isUntradable()) {
 						player.message("This object cannot be added to a duel offer");
+						ActionSender.sendDuelOpponentItems(player);
+						continue;
+					}
+					if (tItem.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
+						player.message("The other player is unable to receive the staked object");
+						ActionSender.sendDuelOpponentItems(player);
+						continue;
+					}
+					if (CertUtil.isCert(tItem.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
+						if (player.getCertOptOut()) {
+							player.message("You have opted out of dueling certs with other players");
+						}
+						if (affectedPlayer.getCertOptOut()) {
+							player.message("The other player has opted out of dueling certs with players");
+						}
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}
@@ -385,8 +398,9 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.getDuel().setDuelAccepted(false);
 
 				// Read each setting and set them accordingly.
+				int[] settings = new int[] { payload.disallowRetreat, payload.disallowMagic, payload.disallowPrayer, payload.disallowWeapons };
 				for (int i = 0; i < 4; i++) {
-					boolean b = packet.readByte() == 1;
+					boolean b = (byte)settings[i] == 1;
 					player.getDuel().setDuelSetting(i, b);
 					affectedPlayer.getDuel().setDuelSetting(i, b);
 				}

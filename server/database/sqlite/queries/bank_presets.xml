@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../sql_queries.xsd">
+    <query key="bank.removePresetByPlayerId">
+        delete from _PREFIX_bankpresets where playerID = {playerId}
+    </query>
+    <query key="bank.addBankPreset">
+        insert into _PREFIX_bankpresets (playerID, slot, inventory, equipment) values
+        ({playerId}, {slot}, "{inventory}", "{equipment}")
+    </query>
+    <query key="bank.getBankPresetsByPlayerId">
+        select * from _PREFIX_bankpresets where playerID = {playerId}
+    </query>
+</queries>
