@@ -59,51 +59,51 @@ if [ "$compiling" == "1" ]; then
     echo ""
 elif [ "$compiling" == "2" ]; then
     # PC Client
-    yes | sudo cp -f Client_Base/*.jar ../Website/site/public/downloads/
+    yes | sudo cp -f Client_Base/*.jar ../Website/portal/public/downloads/
 
     # Android client
-    yes | sudo find . -type f -path '*Android_Client*/*Open RSC Android Client*/*' -name \*.apk | xargs -I {} sudo cp "{}" ../Website/site/public/downloads/
-    ##yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/site/public/downloads/
+    yes | sudo find . -type f -path '*Android_Client*/*Open RSC Android Client*/*' -name \*.apk | xargs -I {} sudo cp "{}" ../Website/portal/public/downloads/
+    ##yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/portal/public/downloads/
 
     # Launcher
-    yes | sudo cp -rf PC_Launcher/*.jar ../Website/site/public/downloads/
+    yes | sudo cp -rf PC_Launcher/*.jar ../Website/portal/public/downloads/
 
     # Set file permissions within the Website downloads folder
-    sudo chmod +x ../Website/site/public/downloads/*.jar
-    sudo chmod +x ../Website/site/public/downloads/*.jar
-    sudo chmod +x ../Website/site/public/downloads/*.apk
-    sudo chmod -R 777 ../Website/site/public/downloads
+    sudo chmod +x ../Website/portal/public/downloads/*.jar
+    sudo chmod +x ../Website/portal/public/downloads/*.jar
+    sudo chmod +x ../Website/portal/public/downloads/*.apk
+    sudo chmod -R 777 ../Website/portal/public/downloads
 
     # Cache copy and file permissions
     sudo chmod 777 -R 'Client_Base/Cache'                                                       # Normal cache related files
-    yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/site/public/downloads/"                          # Normal cache related files
+    yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/portal/public/downloads/"                          # Normal cache related files
 
-    cd '../Website/site/public/downloads/' || exit
+    cd '../Website/portal/public/downloads/' || exit
     find -type f \( -not -name "MD5.SUM" \) -exec md5sum '{}' \; >MD5.SUM # Performs md5 hashing of all files in cache and writes to a text file for the launcher to read
     cd '../../../../Game' || exit
 elif [ "$compiling" == "3" ]; then
     # PC Client
 	sudo mv Client_Base/*.jar Client_Base/Open_RSC_Client_dev.jar
-    yes | sudo cp -f Client_Base/Open_RSC_Client_dev.jar ../Website/site/public/downloads/
+    yes | sudo cp -f Client_Base/Open_RSC_Client_dev.jar ../Website/portal/public/downloads/
 
     # Android client
-    yes | sudo find . -type f -path '*Android_Client*/*Open RSC Android Client*/*' -name \*.apk | xargs -I {} sudo cp "{}" ../Website/site/public/downloads/
-    ##yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/site/public/downloads/
+    yes | sudo find . -type f -path '*Android_Client*/*Open RSC Android Client*/*' -name \*.apk | xargs -I {} sudo cp "{}" ../Website/portal/public/downloads/
+    ##yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/portal/public/downloads/
 
     # Launcher
-    #yes | sudo cp -rf PC_Launcher/*.jar ../Website/site/public/downloads/
+    #yes | sudo cp -rf PC_Launcher/*.jar ../Website/portal/public/downloads/
 
     # Set file permissions within the Website downloads folder
-    sudo chmod +x ../Website/site/public/downloads/*.jar
-    sudo chmod +x ../Website/site/public/downloads/*.jar
-    sudo chmod +x ../Website/site/public/downloads/*.apk
-    sudo chmod -R 777 ../Website/site/public/downloads
+    sudo chmod +x ../Website/portal/public/downloads/*.jar
+    sudo chmod +x ../Website/portal/public/downloads/*.jar
+    sudo chmod +x ../Website/portal/public/downloads/*.apk
+    sudo chmod -R 777 ../Website/portal/public/downloads
 
     # Cache copy and file permissions
     #sudo chmod 777 -R 'Client_Base/Cache'                                                       # Normal cache related files
-    #yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/site/public/downloads/"                          # Normal cache related files
+    #yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/portal/public/downloads/"                          # Normal cache related files
 
-    cd '../Website/site/public/downloads/' || exit
+    cd '../Website/portal/public/downloads/' || exit
     find -type f \( -not -name "MD5.SUM" \) -exec md5sum '{}' \; >MD5.SUM # Performs md5 hashing of all files in cache and writes to a text file for the launcher to read
     cd '../../../../Game' || exit
 fi
