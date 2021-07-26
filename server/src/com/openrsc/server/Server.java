@@ -11,36 +11,29 @@ import com.openrsc.server.database.patches.JDBCPatchApplier;
 import com.openrsc.server.database.patches.PatchApplier;
 import com.openrsc.server.event.custom.DailyShutdownEvent;
 import com.openrsc.server.event.custom.HourlyResetEvent;
+import com.openrsc.server.event.rsc.FinitePeriodicEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.DiscordService;
-import com.openrsc.server.net.RSCConnectionHandler;
-import com.openrsc.server.net.RSCPacketFilter;
-import com.openrsc.server.net.RSCProtocolDecoder;
-import com.openrsc.server.net.RSCProtocolEncoder;
+import com.openrsc.server.net.*;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
-import com.openrsc.server.util.LogUtil;
 import com.openrsc.server.service.IPlayerService;
+import com.openrsc.server.service.PcapLoggerService;
 import com.openrsc.server.service.PlayerService;
+import com.openrsc.server.util.LogUtil;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.ServerAwareThreadFactory;
 import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
+import com.openrsc.server.util.rsc.StringUtil;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -49,12 +42,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -82,6 +70,7 @@ public class Server implements Runnable {
 	private final CombatScriptLoader combatScriptLoader;
 	private final EntityHandler entityHandler;
 	private final MySqlGameLogger gameLogger;
+	private final PcapLoggerService pcapLogger;
 	private final GameDatabase database;
 	private final AchievementSystem achievementSystem;
 	private final Constants constants;
@@ -249,6 +238,7 @@ public class Server implements Runnable {
 		gameEventHandler = new GameEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
 		gameLogger = new MySqlGameLogger(this, (MySqlGameDatabase)database);
+		pcapLogger = new PcapLoggerService(this);
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
 		playerService = new PlayerService(world, config, database);
@@ -353,6 +343,10 @@ public class Server implements Runnable {
 				getGameLogger().start();
 				LOGGER.info("GameLogger Completed");
 
+				LOGGER.info("Loading PcapLogger...");
+				getPcapLogger().start();
+				LOGGER.info("PcapLogger Completed");
+
 				LOGGER.info("Loading Packet Filter...");
 				getPacketFilter().load();
 				LOGGER.info("Packet Filter Completed");
@@ -420,14 +414,18 @@ public class Server implements Runnable {
 					return;
 				}
 
-				for (Player player : getWorld().getPlayers()) {
-					getWorld().unregisterPlayer(player);
-				}
+				getWorld().unloadPlayers();
 
 				scheduledExecutor.shutdown();
-				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
-				if (!terminationResult) {
-					throw new Exception("Server thread termination failed");
+				try {
+					final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+					if (!terminationResult) {
+						LOGGER.error("Server thread termination failed");
+						List<Runnable> skippedTasks = scheduledExecutor.shutdownNow();
+						LOGGER.error("{} task(s) never commenced execution", skippedTasks.size());
+					}
+				} catch (final InterruptedException e) {
+					LOGGER.catching(e);
 				}
 				getLoginExecutor().stop();
 				if (getDiscordService() != null) {
@@ -440,6 +438,7 @@ public class Server implements Runnable {
 				getPluginHandler().unload();
 				getCombatScriptLoader().unload();
 				getPacketFilter().unload();
+				getPcapLogger().stop();
 				//getAchievementSystem().unload();
 				getWorld().unload();
 				getDatabase().close();
@@ -489,6 +488,7 @@ public class Server implements Runnable {
 		return end - start;
 	}
 
+	@Override
 	public void run() {
 		LogUtil.populateThreadContext(getConfig());
 		synchronized (running) {
@@ -644,16 +644,28 @@ public class Server implements Runnable {
 		if (shutdownEvent != null) {
 			return false;
 		}
-		shutdownEvent = new SingleTickEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, "Server shut down") {
+		shutdownEvent = new FinitePeriodicEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, 1, "Server shut down") {
+			int ticksElapsed = 0;
+
+			@Override
 			public void action() {
-				shuttingDown = true;
+				int secs = (int) (getTimeLeftMillis() / 1000);
+				if (ticksElapsed % 10 == 0) {
+					for (final Player playerToUpdate : getWorld().getPlayers()) {
+						if (playerToUpdate.getClientLimitations().supportsSystemUpdateTimer) {
+							ActionSender.sendSystemUpdateTimer(playerToUpdate,  secs);
+						} else if (ticksElapsed % 50 == 0) {
+							ActionSender.sendSystemMessage(playerToUpdate, "System update in " + StringUtil.formatTime(secs));
+						}
+					}
+				}
+				if (ticksElapsed >= getNumIterations()) {
+					shuttingDown = true;
+				}
+				ticksElapsed++;
 			}
 		};
 		getGameEventHandler().add(shutdownEvent);
-
-		for (final Player playerToUpdate : getWorld().getPlayers()) {
-			ActionSender.startShutdown(playerToUpdate, seconds);
-		}
 
 		return true;
 	}
@@ -662,17 +674,29 @@ public class Server implements Runnable {
 		if (shutdownEvent != null) {
 			return false;
 		}
-		shutdownEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Server shut down") {
+		shutdownEvent = new FinitePeriodicEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, 1, "Server shut down") {
+			int ticksElapsed = 0;
+
+			@Override
 			public void action() {
-				shuttingDown = true;
-				restarting = true;
+				int secs = (int) (getTimeLeftMillis() / 1000);
+				if (ticksElapsed % 10 == 0) {
+					for (final Player playerToUpdate : getWorld().getPlayers()) {
+						if (playerToUpdate.getClientLimitations().supportsSystemUpdateTimer) {
+							ActionSender.sendSystemUpdateTimer(playerToUpdate,  secs);
+						} else if (ticksElapsed % 50 == 0) {
+							ActionSender.sendSystemMessage(playerToUpdate, "System update in: " + StringUtil.formatTime(secs));
+						}
+					}
+				}
+				if (ticksElapsed >= getNumIterations()) {
+					shuttingDown = true;
+					restarting = true;
+				}
+				ticksElapsed++;
 			}
 		};
 		getGameEventHandler().add(shutdownEvent);
-
-		for (final Player playerToUpdate : getWorld().getPlayers()) {
-			ActionSender.startShutdown(playerToUpdate, seconds);
-		}
 
 		return true;
 	}
@@ -681,7 +705,7 @@ public class Server implements Runnable {
 		if (shutdownEvent == null) {
 			return -1;
 		}
-		return Math.max(shutdownEvent.timeTillNextRun() - System.currentTimeMillis(), 0);
+		return Math.max(((FinitePeriodicEvent)shutdownEvent).getTimeLeftMillis(), 0);
 	}
 
 	public final long getLastGameStateDuration() {
@@ -778,6 +802,10 @@ public class Server implements Runnable {
 
 	public MySqlGameLogger getGameLogger() {
 		return gameLogger;
+	}
+
+	public PcapLoggerService getPcapLogger() {
+		return pcapLogger;
 	}
 
 	public EntityHandler getEntityHandler() {

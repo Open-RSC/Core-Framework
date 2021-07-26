@@ -20,6 +20,7 @@ public class ClientLimitations {
 	public boolean supportsClickFish = false;
 	public boolean supportsTypedPickaxes = false;
 	public boolean supportsSkillUpdate = false;
+	public boolean supportsSystemUpdateTimer = false;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);
@@ -104,6 +105,9 @@ public class ClientLimitations {
 		}
 		if (clientVersion >= 170) {
 			supportsTypedPickaxes = true;
+		}
+		if (clientVersion >= 185) {
+			supportsSystemUpdateTimer = true;
 		}
 	}
 

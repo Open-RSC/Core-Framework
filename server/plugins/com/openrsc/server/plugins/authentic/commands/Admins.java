@@ -612,7 +612,9 @@ public final class Admins implements CommandTrigger {
 					reason.append(args[i]).append(" ");
 				}
 			}
-			reason = new StringBuilder(reason.substring(0, reason.length() - 1));
+			if (args.length > 1) {
+				reason = new StringBuilder(reason.substring(0, reason.length() - 1));
+			}
 		}
 		int minutes = seconds / 60;
 		int remainder = seconds % 60;

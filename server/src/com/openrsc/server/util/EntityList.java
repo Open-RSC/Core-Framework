@@ -102,6 +102,18 @@ public class EntityList<T extends Entity> extends AbstractCollection<T> {
                 .iterator();
     }
 
+	public void clear() {
+		Iterator<T> it = Arrays.stream(entities)
+			.filter(Objects::nonNull)
+			.map(entity -> (T) entity)
+			.collect(Collectors.toList())
+			.iterator();
+		while (it.hasNext()) {
+			it.next();
+			it.remove();
+		}
+	}
+
     @SuppressWarnings("unchecked")
     public synchronized T remove(final int index) {
         if(index >= 0) {

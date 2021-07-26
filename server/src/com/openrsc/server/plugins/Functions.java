@@ -386,7 +386,7 @@ public class Functions {
 	 * @return
 	 */
 	public static boolean ifheld(final Player player, final int id, final int amt) {
-		int amount = player.getCarriedItems().getInventory().countId(id);
+		int amount = player.getCarriedItems().getInventory().countId(id, Optional.of(false));
 		int equipslot = -1;
 		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			if ((equipslot = player.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
