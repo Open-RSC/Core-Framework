@@ -16,19 +16,17 @@ import java.util.Arrays;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class GeneralStore extends AbstractShop {
+public final class PointsStore extends AbstractShop {
 
-	private final Item[] shopItems = new Item[] { new Item(
-		ItemId.POT.id(), 3), new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(),
-		2), new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.HAMMER.id(), 5),
-		new Item(ItemId.SLEEPING_BAG.id(), 10) };
+	private final Item[] openPkShopItems = new Item[] { //TODO: OpenPK general shop needs more items.
+		new Item(ItemId.IRON_2_HANDED_SWORD.id(), 10), new Item(ItemId.LOBSTER.id(), 1000), new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 100)
+	};
 
-	private final Shop dwarvenShop = new Shop(true, 12400, 130, 40, 3, Arrays.copyOfRange(shopItems, 0, 7));
 	private Shop[] shops = null;
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
-		if (player.getConfig().WANT_OPENPK_POINTS) {
+		if (!player.getConfig().WANT_OPENPK_POINTS) {
 			return false;
 		}
 		for (final Shop s : shops) {
@@ -46,19 +44,9 @@ public final class GeneralStore extends AbstractShop {
 	@Override
 	public Shop[] getShops(World world) {
 		if (shops == null) {
-			shops = new Shop[9];
-			final int toIndex = world.getServer().getConfig().FEATURES_SLEEP ? 8 : 7; // do not stock sleeping bag if server does not feature sleep
-			final Shop genShop = new Shop(true, 12400, 130, 40, 3, Arrays.copyOfRange(shopItems, 0, toIndex));
-
-			shops[0] = new Shop(dwarvenShop, "Dwarven Mine", NpcId.DWARVEN_SHOPKEEPER.id());
-			shops[1] = new Shop(genShop, "Varrock", NpcId.SHOPKEEPER_VARROCK.id(), NpcId.SHOP_ASSISTANT_VARROCK.id());
-			shops[2] = new Shop(genShop, "Falador", NpcId.SHOPKEEPER_FALADOR.id(), NpcId.SHOP_ASSISTANT_FALADOR.id());
-			shops[3] = new Shop(genShop, "Lumbridge", NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id());
-			shops[4] = new Shop(genShop, "Rimmington", NpcId.SHOPKEEPER_RIMMINGTON.id(), NpcId.SHOP_ASSISTANT_RIMMINGTON.id());
-			shops[5] = new Shop(genShop, "Karamja", NpcId.SHOPKEEPER_KARAMJA.id(), NpcId.SHOP_ASSISTANT_KARAMJA.id());
-			shops[6] = new Shop(genShop, "Al_Kharid", NpcId.SHOPKEEPER_ALKHARID.id(), NpcId.SHOP_ASSISTANT_ALKHARID.id());
-			shops[7] = new Shop(genShop, "Edgeville", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id());
-			shops[8] = new Shop(genShop, "Lostcity", NpcId.FAIRY_SHOPKEEPER.id(), NpcId.FAIRY_SHOP_ASSISTANT.id());
+			shops = new Shop[1];
+			final Shop genShop = new Shop(true, 12400, 130, 40, 3, Arrays.copyOfRange(openPkShopItems, 0, openPkShopItems.length));
+			shops[0] = new Shop(genShop, "General Store", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id(), NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id());
 
 		}
 		return shops;
@@ -77,12 +65,16 @@ public final class GeneralStore extends AbstractShop {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		Shop shop = getShop(n, player);
-		if (shop != null) {
-			npcsay(player, n, "Can I help you at all?");
-			int menu = multi(player, n, "Yes please, what are you selling?", "No thanks");
-			if (menu == 0) {
-				npcsay(player, n, "Take a look");
-
+		if (player.getConfig().WANT_OPENPK_POINTS) {
+			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs " + player.getConfig().OPENPK_POINTS_TO_GP_RATIO + " Points.");
+			int option = multi(player, n, false,
+				"Yes please", "No thanks", "I would like to see your items for sale");
+			if (option == 0) {
+				say(player, n, "Yes Please");
+				ActionSender.showPointsToGp(player);
+			} else if (option == 1) {
+				say(player, n, "No thanks");
+			} else if (option == 2) {
 				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);
 			}
@@ -96,13 +88,18 @@ public final class GeneralStore extends AbstractShop {
 			player.getY() - 2, player.getY() + 2);
 		if (storeOwner == null) return;
 		Shop shop = getShop(n, player);
-		if (command.equalsIgnoreCase("Trade") && config().RIGHT_CLICK_TRADE) {
-			if (!player.getQolOptOut()) {
+		if (player.getConfig().WANT_OPENPK_POINTS) {
+			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs  " + player.getConfig().OPENPK_POINTS_TO_GP_RATIO + " Points.");
+			int option = multi(player, n, false,
+				"Yes please", "No thanks", "I would like to see your items for sale");
+			if (option == 0) {
+				say(player, n, "Yes Please");
+				ActionSender.showPointsToGp(player);
+			} else if (option == 1) {
+				say(player, n, "No thanks");
+			} else if (option == 2) {
 				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);
-			} else {
-				player.playerServerMessage(MessageType.QUEST, "Right click trading is a QoL feature which you are opted out of.");
-				player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
 			}
 		}
 	}
@@ -114,19 +111,19 @@ public final class GeneralStore extends AbstractShop {
 		// Lumbridge
 		if (location.getX() >= 132 && location.getX() <= 137
 			&& location.getY() >= 639 && location.getY() <= 644) {
-			accessedShop = shops[3];
+			accessedShop = shops[0];
 		}
 
 		// Falador
 		else if (location.getX() >= 317 && location.getX() <= 322
 			&& location.getY() >= 530 && location.getY() <= 536) {
-			accessedShop = shops[2];
+			accessedShop = shops[0];
 		}
 
 		// Varrock
 		else if (location.getX() >= 124 && location.getX() <= 129
 			&& location.getY() >= 513 && location.getY() <= 518) {
-			accessedShop = shops[1];
+			accessedShop = shops[0];
 		}
 
 		// Unique shop keepers

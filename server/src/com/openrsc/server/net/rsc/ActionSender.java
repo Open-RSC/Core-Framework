@@ -1925,9 +1925,15 @@ public class ActionSender {
 				if (player.getLastLogin() == 0L) {
 					sendAppearanceScreen(player);
 					if (!player.getConfig().USES_CLASSES) {
-						for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
-							Item i = new Item(itemId);
-							player.getCarriedItems().getInventory().add(i, false);
+						if (player.getConfig().WANT_OPENPK_POINTS) {
+							for (Item item : player.getWorld().getServer().getConstants().OPENPK_STARTER_ITEMS) {
+								player.getCarriedItems().getInventory().add(item, false);
+							}
+						} else {
+							for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
+								Item i = new Item(itemId);
+								player.getCarriedItems().getInventory().add(i, false);
+							}
 						}
 					}
 					//Block PK chat by default.

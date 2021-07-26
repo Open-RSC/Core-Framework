@@ -169,6 +169,11 @@ public final class WorldPopulator {
 
 	private void loadCustomLocs(LocType type) {
 		if (type == LocType.Scenery) {
+			if (getWorld().getServer().getConfig().LOCATION_DATA == 4) {
+				if (getWorld().getServer().getConfig().WANT_OPENPK_POINTS) {
+					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOpenPk.json", type);
+				}
+			}
 			if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
 				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
 				loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsDiscontinued.json", type);
