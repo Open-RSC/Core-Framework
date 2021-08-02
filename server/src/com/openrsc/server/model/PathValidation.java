@@ -565,22 +565,19 @@ public class PathValidation {
 	}
 
 	public static boolean isMobBlocking(Mob mob, int x, int y) {
+		Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
+
 		if (mob.getX() == x && mob.getY() == y) {
 			return false;
 		}
 
-		// all npcs on loc, may include dead (not visible) ones
-		Collection<Npc> npcsOnLoc = new ArrayList<>(mob.getWorld().getNpcPositions().get(new Point(x, y)));
 		// visible (&alive) npcs
-		Npc npc = npcsOnLoc.stream()
-					.filter(n -> !n.isRemoved() && !n.killed)
-					.findFirst()
-					.orElse(null);
+		Npc npc = region.getNpc(Point.location(x, y), mob);
 
 		/*
 		 * NPC blocking config controlled
 		 */
-		if (npc != null) {
+		if (npc != null && !npc.killed && !npc.isRemoved()) {
 			final int npcBlocking = mob.getConfig().NPC_BLOCKING;
 			if (npcBlocking == 0) { // No NPC blocks
 				return false;
@@ -599,7 +596,6 @@ public class PathValidation {
 		}
 
 		if (mob.isNpc()) {
-			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
 			Player player = region.getPlayer(x, y, mob, false);
 			return player != null;
 		}
