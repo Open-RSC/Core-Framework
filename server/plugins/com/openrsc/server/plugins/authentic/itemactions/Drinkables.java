@@ -289,7 +289,8 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void tryGiveBeerGlass(Player player) {
-		if (player.getConfig().RESTRICT_ITEM_ID < ItemId.BEER_GLASS.id() || player.getClientLimitations().maxItemId < ItemId.BEER_GLASS.id())
+		if ((player.getConfig().RESTRICT_ITEM_ID >= 0 && player.getConfig().RESTRICT_ITEM_ID < ItemId.BEER_GLASS.id())
+			|| player.getClientLimitations().maxItemId < ItemId.BEER_GLASS.id())
 			return;
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 	}

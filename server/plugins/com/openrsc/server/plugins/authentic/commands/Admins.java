@@ -622,7 +622,7 @@ public final class Admins implements CommandTrigger {
 		String message = "The server will be shutting down for updates in "
 			+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
 			+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
-			+ (reason.toString() == "" ? "" : ": % % " + reason);
+			+ (reason.toString().equals("") ? "" : ": % % " + reason);
 
 		player.getWorld().getServer().closeProcess(seconds, message);
 		// Services.lookup(DatabaseManager.class).addQuery(new

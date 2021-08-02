@@ -916,6 +916,9 @@ public final class Player extends Mob {
 	}
 
 	public void checkEquipment() {
+		if (getWorld().getServer().getConfig().NO_LEVEL_REQUIREMENT_WIELD) {
+			return;
+		}
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			checkEquipment2();
 			return;

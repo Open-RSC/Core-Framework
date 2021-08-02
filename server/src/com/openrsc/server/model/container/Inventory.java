@@ -97,7 +97,22 @@ public class Inventory {
 			if (itemDef == null)
 				return false;
 
+			// Confirm world allows giving item
+			if (player.getConfig().RESTRICT_ITEM_ID >= 0 && player.getConfig().RESTRICT_ITEM_ID < itemToAdd.getCatalogId()) {
+				return false;
+			}
+
 			if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+				return false;
+			}
+
+			if (player.getClientLimitations().maxItemId < itemToAdd.getCatalogId()) {
+				player.message("Your client could not receive " + itemToAdd.getDef(player.getWorld()).getName() + ", it drops to the ground!");
+				player.getWorld().registerItem(
+					new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(),
+						itemToAdd.getAmount(), player, itemToAdd.getNoted()),
+					player.getConfig().GAME_TICK * 150);
+
 				return false;
 			}
 
@@ -495,11 +510,11 @@ public class Inventory {
 		return hasCatalogID(i.getCatalogId());
 	}
 
-	public int countId(long id) {
-		return countId(id, Optional.empty());
+	public int countId(int id) {
+		return countId(id, Optional.of(false));
 	}
 
-	public int countId(long id, Optional<Boolean> noted) {
+	public int countId(int id, Optional<Boolean> noted) {
 		synchronized (list) {
 			int temp = 0;
 			for (Item i : list) {
@@ -608,7 +623,7 @@ public class Inventory {
 	}
 
 	public int getFreedSlots(Item item) {
-		return (item.getDef(player.getWorld()).isStackable() && countId(item.getCatalogId()) > item.getAmount() ? 0 : 1);
+		return ((item.getDef(player.getWorld()).isStackable() || item.getNoted()) && countId(item.getCatalogId(), Optional.of(item.getNoted())) > item.getAmount() ? 0 : 1);
 	}
 
 	public int getFreedSlots(List<Item> items) {

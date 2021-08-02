@@ -137,8 +137,15 @@ public class Server implements Runnable {
 
 		for (final Server server : serversList.values()) {
 			if (message != null) {
+				String[] messages = message.split(": % %");
 				for (final Player playerToUpdate : server.getWorld().getPlayers()) {
-					ActionSender.sendBox(playerToUpdate, message, false);
+					if (playerToUpdate.getClientLimitations().supportsMessageBox) {
+						ActionSender.sendBox(playerToUpdate, message, false);
+					} else {
+						for (String msg : messages) {
+							playerToUpdate.playerServerMessage(MessageType.QUEST, msg);
+						}
+					}
 				}
 			}
 

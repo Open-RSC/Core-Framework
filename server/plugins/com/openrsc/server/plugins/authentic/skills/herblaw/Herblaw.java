@@ -95,7 +95,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = player.getCarriedItems().getInventory().countId(herb.getCatalogId());
+			repeat = player.getCarriedItems().getInventory().countId(herb.getCatalogId(), Optional.of(false));
 		}
 
 		startbatch(repeat);
@@ -103,6 +103,10 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 	}
 
 	private void batchIdentify(Player player, Item herb, ItemUnIdentHerbDef herbDef) {
+		if (!canReceive(player, new Item(herbDef.getNewId()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.HERBLAW.id()) < herbDef.getLevelRequired()) {
 			player.playerServerMessage(MessageType.QUEST, "You cannot identify this herb");
 			player.playerServerMessage(MessageType.QUEST, "you need a higher herblaw level");
@@ -431,6 +435,10 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 	}
 
 	private void batchPotionMaking(Player player, Item herb, ItemHerbDef herbDef, Item vial) {
+		if (!canReceive(player, new Item(herbDef.getPotionId()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		CarriedItems ci = player.getCarriedItems();
 		if (player.getSkills().getLevel(Skill.HERBLAW.id()) < herbDef.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "you need level " + herbDef.getReqLevel()
@@ -496,8 +504,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Math.min(player.getCarriedItems().getInventory().countId(secondID),
-				player.getCarriedItems().getInventory().countId(unfinishedID));
+			repeat = Math.min(player.getCarriedItems().getInventory().countId(secondID, Optional.of(false)),
+				player.getCarriedItems().getInventory().countId(unfinishedID, Optional.of(false)));
 		}
 
 		startbatch(repeat);
@@ -505,6 +513,10 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 	}
 
 	private void batchPotionSecondary(Player player, Item unfinished, Item second, ItemHerbSecond def, AtomicReference<Item> bubbleItem) {
+		if (!canReceive(player, new Item(def.getPotionID()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.HERBLAW.id()) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a herblaw level of "
 				+ def.getReqLevel() + " to make this potion");
@@ -603,7 +615,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			return;
 		}
 
-		if (player.getCarriedItems().getInventory().countId(secondaryId) < requiredCount && secondaryId == ItemId.FISH_OIL.id()) {
+		if (player.getCarriedItems().getInventory().countId(secondaryId, Optional.of(false)) < requiredCount && secondaryId == ItemId.FISH_OIL.id()) {
 			player.message("You don't have enough Fish oil to make this potion");
 			return;
 		}
@@ -612,8 +624,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Math.min((player.getCarriedItems().getInventory().countId(secondaryId)/requiredCount),
-				player.getCarriedItems().getInventory().countId(unfinishedPotId));
+			repeat = Math.min((player.getCarriedItems().getInventory().countId(secondaryId, Optional.of(false))/requiredCount),
+				player.getCarriedItems().getInventory().countId(unfinishedPotId, Optional.of(false)));
 		}
 
 		startbatch(repeat);
@@ -622,6 +634,10 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 	private void batchCustomHerbSecond(Player player, int unfinishedPotId,
 									   int secondaryId, int resultId, int xp, int requiredSecondaries) {
+		if (!canReceive(player, new Item(resultId))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
@@ -759,7 +775,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
 		startbatch(repeat);
@@ -767,6 +783,10 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 	}
 
 	private void batchGrind(Player player, Item item, int newID) {
+		if (!canReceive(player, new Item(newID))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		item = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
 		);

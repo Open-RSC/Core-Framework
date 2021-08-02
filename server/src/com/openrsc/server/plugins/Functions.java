@@ -968,6 +968,10 @@ public class Functions {
 		return vowels.indexOf(Character.toLowerCase(testString.charAt(0))) != -1;
 	}
 
+	public static boolean canReceive(Player player, Item item) {
+		return player.getClientLimitations().maxItemId >= item.getCatalogId();
+	}
+
 	/**
 	 * Determines if the id of item1 is idA and the id of item2 is idB
 	 * and does the check the other way around as well

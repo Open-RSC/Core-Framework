@@ -7,7 +7,10 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MathUtil;
 import com.openrsc.server.util.rsc.MessageType;
+
+import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -64,8 +67,23 @@ public class InvCooking implements UseInvTrigger {
 			int waterContainer = isWaterItem(item1) ? item1.getCatalogId() : item2.getCatalogId();
 
 			player.message("What would you like to make?");
-			int option = multi(player, "Bread dough", "Pastry dough", "Pizza dough", "Pitta dough");
-			if (option < 0 || option > 3) {
+			ArrayList<String> options = new ArrayList<>();
+			int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
+
+			options.add("Bread dough");
+			if (MathUtil.maxUnsigned(maxItemId, ItemId.PASTRY_DOUGH.id()) == maxItemId) {
+				options.add("Pastry dough");
+			}
+			if (MathUtil.maxUnsigned(maxItemId, ItemId.PIZZA_BASE.id()) == maxItemId) {
+				options.add("Pizza dough");
+			}
+			if (MathUtil.maxUnsigned(maxItemId, ItemId.UNCOOKED_PITTA_BREAD.id()) == maxItemId) {
+				options.add("Pitta dough");
+			}
+
+			String[] finalOptions = new String[options.size()];
+			int option = multi(player, options.toArray(finalOptions));
+			if (option < 0 || option > finalOptions.length) {
 				return;
 			}
 			int productID = -1;
@@ -77,7 +95,12 @@ public class InvCooking implements UseInvTrigger {
 				productID = ItemId.PIZZA_BASE.id();
 			} else if (option == 3) {
 				productID = ItemId.UNCOOKED_PITTA_BREAD.id();
+				if (!config().MEMBER_WORLD) {
+					player.message("This feature is members only");
+					return;
+				}
 			}
+
 			if (player.getCarriedItems().remove(new Item(waterContainer)) != -1
 				&& player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id())) != -1 && productID > -1) {
 				int emptyContainer = 0;

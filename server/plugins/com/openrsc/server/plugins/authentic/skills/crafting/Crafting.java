@@ -16,9 +16,12 @@ import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MathUtil;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
@@ -234,11 +237,12 @@ public class Crafting implements UseInvTrigger,
 
 		player.playerServerMessage(MessageType.QUEST,"what would you like to make");
 
+		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
 		if (item.getCatalogId() == ItemId.GOLD_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
 			doGoldJewelry(item, player);
 		} else if (item.getCatalogId() == ItemId.SILVER_BAR.id()) {
 			doSilverJewelry(item, player);
-		} else if (item.getCatalogId() == ItemId.SOFT_CLAY.id()) {
+		} else if (item.getCatalogId() == ItemId.SOFT_CLAY.id() && MathUtil.maxUnsigned(maxItemId, ItemId.UNFIRED_POT.id()) == maxItemId) {
 			doPotteryMolding(item, player);
 		}
 	}
@@ -359,6 +363,10 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchGoldJewelry(Player player, Item item, ItemCraftingDef def, int gem, int[] gems, int type, AtomicReference<String> reply) {
+		if (!canReceive(player, new Item(def.getItemID()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
 			return;
@@ -440,15 +448,21 @@ public class Crafting implements UseInvTrigger,
 		AtomicReference<String> reply = new AtomicReference<String>();
 
 		// select type
-		String[] options = new String[]{
-			"Holy Symbol of Saradomin",
-			"Unholy symbol of Zamorak"
-		};
-		int type = multi(player, options);
-		if (type < 0 || type > 1) {
+		ArrayList<String> options = new ArrayList<>();
+		options.addAll(Arrays.asList(
+			"Holy Symbol of Saradomin"
+		));
+		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
+		int jewelryId = ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id();
+		if (MathUtil.maxUnsigned(maxItemId, jewelryId) == maxItemId) {
+			options.add("Unholy symbol of Zamorak");
+		}
+		String[] finalOptions = new String[options.size()];
+		int type = multi(player, options.toArray(finalOptions));
+		if (type < 0 || type > finalOptions.length) {
 			return;
 		}
-		reply.set(options[type]);
+		reply.set(finalOptions[type]);
 
 		final int[] results = {
 			ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
@@ -469,6 +483,11 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchSilverJewelry(Player player, Item item, int[] results, int type, AtomicReference<String> reply) {
+		Item result = new Item(results[type]);
+		if (!canReceive(player, result)) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < 16) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
 			return;
@@ -492,7 +511,6 @@ public class Crafting implements UseInvTrigger,
 		player.getCarriedItems().remove(silver);
 		delay(2);
 
-		Item result = new Item(results[type]);
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
 		player.incExp(Skill.CRAFTING.id(), 200, true);
@@ -506,9 +524,19 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void doPotteryMolding(final Item item, final Player player) {
-		String[] options = new String[]{"Pie dish", "Pot", "Bowl"};
-		int type = multi(player, options);
-		if (type < 0 || type > 2) {
+		ArrayList<String> options = new ArrayList<>();
+		options.addAll(Arrays.asList(
+			"Pie dish",
+			"Pot"
+		));
+		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
+		int bowlId = ItemId.UNFIRED_BOWL.id();
+		if (MathUtil.maxUnsigned(maxItemId, bowlId) == maxItemId) {
+			options.add("Bowl");
+		}
+		String[] finalOptions = new String[options.size()];
+		int type = multi(player, options.toArray(finalOptions));
+		if (type < 0 || type > finalOptions.length) {
 			return;
 		}
 
@@ -550,6 +578,10 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchPotteryMoulding(Player player, Item item, int reqLvl, Item result, AtomicReference<String> msg, int exp) {
+		if (!canReceive(player, result)) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < reqLvl) {
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 			return;
@@ -617,6 +649,10 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchPotteryFiring(Player player, Item item, int reqLvl, Item result, AtomicReference<String> msg, int exp) {
+		if (!canReceive(player, result)) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < reqLvl) {
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 			return;
@@ -671,6 +707,10 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchGlassMaking(Player player, Item item, int otherItem) {
+		if (!canReceive(player, new Item(ItemId.MOLTEN_GLASS.id()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (checkFatigue(player)) return;
 
 		Inventory inventory = player.getCarriedItems().getInventory();
@@ -753,6 +793,10 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchGlassBlowing(Player player, Item glass, Item result, int reqLvl, int exp, String resultGen) {
+		if (!canReceive(player, result)) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		Inventory inventory = player.getCarriedItems().getInventory();
 		ServerConfiguration config = config();
 		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < reqLvl) {
@@ -840,6 +884,10 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchGemCutting(Player player, Item gem, ItemGemDef gemDef) {
+		if (!canReceive(player, new Item(gemDef.getGemID()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < gemDef.getReqLevel()) {
 			boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
 			player.playerServerMessage(MessageType.QUEST,
@@ -996,6 +1044,10 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchLeather(Player player, Item leather, Item result, int reqLvl, int exp) {
+		if (!canReceive(player, result)) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < reqLvl) {
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
 			return;
