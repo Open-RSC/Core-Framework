@@ -249,7 +249,7 @@ public class ObjectCooking implements UseLocTrigger {
 	private void cookMethod(final Player player, final int itemID, final int product, final boolean hasBubble, final String... messages) {
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = player.getCarriedItems().getInventory().countId(itemID);
+			repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
 		}
 
 		startbatch(repeat);

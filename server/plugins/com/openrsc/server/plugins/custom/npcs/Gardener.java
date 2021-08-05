@@ -101,7 +101,7 @@ public final class Gardener extends AbstractShop {
 		if (gardener == null) return;
 		if (command.equalsIgnoreCase("Trade") && config().RIGHT_CLICK_TRADE) {
 			if (!player.getQolOptOut()) {
-				Shop shop = getShop();
+				Shop shop = getShop(player.getWorld());
 				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);
 			} else {

@@ -243,7 +243,7 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);
-						builder.writeByte((byte) s.price[i]); //TODO: probably index of shop file
+						builder.writeByte((s.baseAmount[i] - s.amount[i]) & 0xFF);
 					}
 					break;
 

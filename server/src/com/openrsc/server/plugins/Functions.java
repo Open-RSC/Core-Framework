@@ -386,7 +386,7 @@ public class Functions {
 	 * @return
 	 */
 	public static boolean ifheld(final Player player, final int id, final int amt) {
-		int amount = player.getCarriedItems().getInventory().countId(id);
+		int amount = player.getCarriedItems().getInventory().countId(id, Optional.of(false));
 		int equipslot = -1;
 		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			if ((equipslot = player.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
@@ -966,6 +966,10 @@ public class Functions {
 	public static boolean startsWithVowel(String testString) {
 		String vowels = "aeiou";
 		return vowels.indexOf(Character.toLowerCase(testString.charAt(0))) != -1;
+	}
+
+	public static boolean canReceive(Player player, Item item) {
+		return player.getClientLimitations().maxItemId >= item.getCatalogId();
 	}
 
 	/**

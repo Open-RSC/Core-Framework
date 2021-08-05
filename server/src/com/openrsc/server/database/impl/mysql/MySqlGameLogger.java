@@ -1,6 +1,5 @@
 package com.openrsc.server.database.impl.mysql;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
 import com.openrsc.server.database.GameLogger;
 import com.openrsc.server.database.impl.mysql.queries.Query;
@@ -13,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -66,6 +66,8 @@ public final class MySqlGameLogger extends GameLogger {
 				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
 				if (!terminationResult) {
 					LOGGER.error("MySqlGameLogger thread termination failed");
+					List<Runnable> skippedTasks = scheduledExecutor.shutdownNow();
+					LOGGER.error("{} task(s) never commenced execution", skippedTasks.size());
 				}
 			} catch (final InterruptedException e) {
 				LOGGER.catching(e);

@@ -49,8 +49,7 @@ public final class BettysMagicEmporium extends AbstractShop {
 				npcsay(player, n, "Yes");
 				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);
-			}
-			if (opt == 1) {
+			} else if (opt == 1) {
 				npcsay(player, n, "Send anyone my way who is");
 			}
 		}

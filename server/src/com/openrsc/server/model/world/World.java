@@ -370,6 +370,12 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		}
 	}
 
+	public void unloadPlayers() {
+		for (final Player p : getPlayers()) {
+			unregisterPlayer(p);
+		}
+	}
+
 	public void unload() {
 		LOGGER.info("Saving clans for shutdown");
 		if (getServer().getConfig().WANT_CLANS) {
@@ -792,9 +798,12 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			LOGGER.info("Unregistered " + player.getUsername() + " from player list.");
 
 			if (getServer().getConfig().WANT_PCAP_LOGGING) {
-				PcapLogger pcap = player.getChannel().attr(attachment).get().pcapLogger.get();
-				pcap.exportPCAP(player);
-				LOGGER.info("Wrote out pcap for " + player.getUsername() + " at " + pcap.fname);
+				if (player.getChannel().attr(attachment).get() != null) {
+					PcapLogger pcap = player.getChannel().attr(attachment).get().pcapLogger.get();
+
+					getServer().getPcapLogger().addJob(pcap::exportPCAP);
+					LOGGER.info("Wrote out pcap for " + player.getUsername() + " at " + pcap.fname);
+				}
 			}
 
 			player.getChannel().attr(attachment).set(null);

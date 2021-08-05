@@ -32,7 +32,7 @@ public class Smelting implements UseLocTrigger {
 				if (player.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id())) {
 					int repeat = 1;
 					if (config().BATCH_PROGRESSION) {
-						repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+						repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 					}
 
 					startbatch(repeat);
@@ -87,7 +87,7 @@ public class Smelting implements UseLocTrigger {
 				return;
 			}
 		}
-		if (player.getCarriedItems().getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.STEEL_BAR.id(), Optional.of(false)) < 1) {
 			player.message("You have no steel bars left");
 			return;
 		}
@@ -161,7 +161,7 @@ public class Smelting implements UseLocTrigger {
 		CarriedItems ci = player.getCarriedItems();
 		if (item.getCatalogId() == Smelt.IRON_ORE.getID()
 				&& getCurrentLevel(player, Skill.SMITHING.id()) >= 30
-				&& ci.getInventory().countId(Smelt.COAL.getID()) >= 2) {
+				&& ci.getInventory().countId(Smelt.COAL.getID(), Optional.of(false)) >= 2) {
 			String coalChange = player.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
 		} else {
@@ -205,13 +205,13 @@ public class Smelting implements UseLocTrigger {
 			}
 			return;
 		}
-		if (ci.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount()
-				|| (ci.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
+		if (ci.getInventory().countId(smelt.getReqOreId(), Optional.of(false)) < smelt.getReqOreAmount()
+				|| (ci.getInventory().countId(smelt.getID(), Optional.of(false)) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
 			if (smelt.getID() == Smelt.TIN_ORE.getID() || item.getCatalogId() == Smelt.COPPER_ORE.getID()) {
 				player.playerServerMessage(MessageType.QUEST, "You also need some "
 					+ (item.getCatalogId() == Smelt.TIN_ORE.getID() ? "copper" : "tin") + " to make bronze");
 			}
-			else if (smelt.getID() == Smelt.COAL.getID() && (ci.getInventory().countId(Smelt.IRON_ORE.getID()) < 1 || ci.getInventory().countId(Smelt.COAL.getID()) <= 1)) {
+			else if (smelt.getID() == Smelt.COAL.getID() && (ci.getInventory().countId(Smelt.IRON_ORE.getID(), Optional.of(false)) < 1 || ci.getInventory().countId(Smelt.COAL.getID(), Optional.of(false)) <= 1)) {
 				player.playerServerMessage(MessageType.QUEST, "You need 1 iron-ore and 2 coal to make steel");
 			}
 			else {
@@ -272,10 +272,10 @@ public class Smelting implements UseLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "Practice your smithing using tin and copper to make bronze");
 			return;
 		}
-		if (ci.getInventory().countId(smelt.getReqOreId()) < smelt.getReqOreAmount()
-				|| (ci.getInventory().countId(smelt.getID()) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
-			if (smelt.getID() == Smelt.COAL.getID() && (ci.getInventory().countId(Smelt.IRON_ORE.getID()) < 1
-					|| ci.getInventory().countId(Smelt.COAL.getID()) <= 1)) {
+		if (ci.getInventory().countId(smelt.getReqOreId(), Optional.of(false)) < smelt.getReqOreAmount()
+				|| (ci.getInventory().countId(smelt.getID(), Optional.of(false)) < smelt.getOreAmount() && smelt.getReqOreAmount() != -1)) {
+			if (smelt.getID() == Smelt.COAL.getID() && (ci.getInventory().countId(Smelt.IRON_ORE.getID(), Optional.of(false)) < 1
+					|| ci.getInventory().countId(Smelt.COAL.getID(), Optional.of(false)) <= 1)) {
 				player.playerServerMessage(MessageType.QUEST, "You need 1 iron-ore and 2 coal to make steel");
 				return;
 			}
@@ -293,7 +293,7 @@ public class Smelting implements UseLocTrigger {
 			}
 		}
 		thinkbubble(item);
-		if (ci.getInventory().countId(item.getCatalogId()) > 0) {
+		if (ci.getInventory().countId(item.getCatalogId(), Optional.of(false)) > 0) {
 			boolean skillcape = false;
 			if ((smelt.getID() == ItemId.COAL.id()
 				|| smelt.getReqOreId() == ItemId.COAL.id())
@@ -368,7 +368,7 @@ public class Smelting implements UseLocTrigger {
 			if (!ifinterrupted() && !isbatchcomplete()) {
 				if (item.getCatalogId() == Smelt.IRON_ORE.getID()
 					&& getCurrentLevel(player, Skill.SMITHING.id()) >= 30
-					&& ci.getInventory().countId(Smelt.COAL.getID()) >= 2) {
+					&& ci.getInventory().countId(Smelt.COAL.getID(), Optional.of(false)) >= 2) {
 					String coalChange = player.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 					smelt = Smelt.valueOf(coalChange);
 				} else {

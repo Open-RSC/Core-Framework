@@ -10,6 +10,9 @@ import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.io.IoBuilder;
 
+import java.io.File;
+import java.nio.file.InvalidPathException;
+
 public class LogUtil {
     private LogUtil() {
         // Stop anyone from instantiating this class.
@@ -41,7 +44,17 @@ public class LogUtil {
             }
 
             // Enables asynchronous, garbage-free logging.
-            System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
+			String fileUse;
+            try {
+            	// test if regular semi colon can be used
+				new File("file:test.txt").toPath();
+				fileUse = "log4j2.xml";
+			} catch (InvalidPathException ipe) {
+            	// cannot be used, file with unicode semi colons
+            	fileUse = "log4j2b.xml";
+			}
+
+            System.setProperty("log4j.configurationFile", "conf/server/" + fileUse);
             System.setProperty(
                     "Log4jContextSelector",
                     "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"

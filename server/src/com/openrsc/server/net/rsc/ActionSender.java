@@ -1087,6 +1087,15 @@ public class ActionSender {
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPTIONS_MENU_OPEN, struct, player);
 	}
 
+	public static void sendSystemMessage(Player player, String message) {
+		String messageSend = "SYSTEM MESSAGE: " + message;
+
+		sendMessage(player, "@red@" + messageSend);
+		sendMessage(player, "@yel@" + messageSend);
+		sendMessage(player, "@gre@" + messageSend);
+		sendMessage(player, "@cya@" + messageSend);
+	}
+
 	public static void sendMessage(Player player, String message) {
 		sendMessage(player, null, MessageType.GAME, message, 0, null);
 	}
@@ -1814,9 +1823,9 @@ public class ActionSender {
 	}
 
 	/**
-	 * Sends a system update message
+	 * Instructs modern rsc clients to start system update timer
 	 */
-	public static void startShutdown(Player player, int seconds) {
+	public static void sendSystemUpdateTimer(Player player, int seconds) {
 		SystemUpdateStruct struct = new SystemUpdateStruct();
 		struct.seconds = seconds;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_SYSTEM_UPDATE, struct, player);
@@ -1925,9 +1934,15 @@ public class ActionSender {
 				if (player.getLastLogin() == 0L) {
 					sendAppearanceScreen(player);
 					if (!player.getConfig().USES_CLASSES) {
-						for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
-							Item i = new Item(itemId);
-							player.getCarriedItems().getInventory().add(i, false);
+						if (player.getConfig().WANT_OPENPK_POINTS) {
+							for (Item item : player.getWorld().getServer().getConstants().OPENPK_STARTER_ITEMS) {
+								player.getCarriedItems().getInventory().add(item, false);
+							}
+						} else {
+							for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
+								Item i = new Item(itemId);
+								player.getCarriedItems().getInventory().add(i, false);
+							}
 						}
 					}
 					//Block PK chat by default.
@@ -1947,9 +1962,9 @@ public class ActionSender {
 				}
 
 				player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
-				long timeTillShutdown = player.getWorld().getServer().getTimeUntilShutdown();
-				if (timeTillShutdown > -1)
-					startShutdown(player, (int)(timeTillShutdown / 1000));
+				// long timeTillShutdown = player.getWorld().getServer().getTimeUntilShutdown();
+				// if (timeTillShutdown > -1)
+				//	sendSystemUpdateTimer(player, (int)(timeTillShutdown / 1000));
 
 				int elixir = player.getElixir();
 				if (elixir > -1)

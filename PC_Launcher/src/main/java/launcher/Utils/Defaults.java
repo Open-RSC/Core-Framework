@@ -10,7 +10,7 @@ public class Defaults {
 
     // URLS
     public static final String _VERSION_UPDATE_URL = "https://raw.githubusercontent.com/Open-RSC/Core-Framework/develop/PC_Launcher/src/main/java/launcher/Utils/Defaults.java";
-    public final static String _GAME_FILES_SERVER = "http://game.openrsc.com/static/downloads/";
+    public final static String _GAME_FILES_SERVER = "http://game.openrsc.com/downloads/";
 
     // EXTRAS
 	public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/releases/download/Latest/rscplus-windows.zip";
@@ -26,7 +26,7 @@ public class Defaults {
     public final static String _MD5_TABLE_FILENAME = "MD5.SUM";
 
     // VERSIONS
-    public final static Double _CURRENT_VERSION = 20210602.185500;
+    public final static Double _CURRENT_VERSION = 20210725.19555700;
 
     // Only update versions below as-needed
 	public final static Double _RSCPLUS_VERSION = 20210214.175053;
