@@ -1,0 +1,33 @@
+DROP TABLE IF EXISTS `expired_auctions`;
+CREATE TABLE IF NOT EXISTS `expired_auctions`
+(
+    `playerID`    int(10)      NOT NULL,
+    `claim_id`    INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `item_id`     int(11)      NOT NULL,
+    `item_amount` int(11)      NOT NULL,
+    `time`        varchar(255) NOT NULL,
+    `claim_time`  varchar(255) NOT NULL DEFAULT '0',
+    `claimed`     tinyint(1)   NOT NULL DEFAULT 0,
+    `explanation` varchar(255) NOT NULL DEFAULT ' '
+);
+
+DROP TABLE IF EXISTS `auctions`;
+CREATE TABLE IF NOT EXISTS `auctions`
+(
+    `auctionID`       INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `itemID`          int(11)      NOT NULL,
+    `amount`          int(11)      NOT NULL,
+    `amount_left`     int(11)      NOT NULL,
+    `price`           int(11)      NOT NULL,
+    `seller`          int(10)      NOT NULL,
+    `seller_username` varchar(12)  NOT NULL,
+    `buyer_info`      text         NOT NULL,
+    `sold-out`        tinyint(4)   NOT NULL DEFAULT 0,
+    `time`            varchar(255) NOT NULL DEFAULT '0',
+    `was_cancel`      tinyint(1)   NOT NULL DEFAULT 0
+);
+
+create index `idx_auctions_itemid` on `auctions` (`itemID`);
+create index `idx_auctions_seller` on `auctions` (`seller_username`);
+create index `idx_auctions_time` on `auctions` (`time`);
+create index `idx_auctions_buyer_info` on `auctions` (`buyer_info`);

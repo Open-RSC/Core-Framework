@@ -75,11 +75,20 @@ public class PasswordChangeRequest extends LoginExecutorProcess {
 			String DBsalt = playerData.salt;
 			String newDBPass;
 			int playerID = getPlayer().getID();
-			if (!DataConversions.checkPassword(getOldPassword(), DBsalt, lastDBPass)) {
+			// not known between mud76 and mud92 when current password started to be required
+			// per newspost of 14 Nov 2001 of better security, very likely was since the corresponding mudclient (93)
+			if (player.getClientVersion() >= 93 && !DataConversions.checkPassword(getOldPassword(), DBsalt, lastDBPass)) {
 				LOGGER.info(getPlayer().getCurrentIP() + " - Pass change failed: The current password did not match players record.");
 				ActionSender.sendMessage(getPlayer(), "No changes made, your current password did not match");
 				return;
 			}
+
+			if (getNewPassword().length() < 4 || getNewPassword().length() > 20) {
+				LOGGER.info(getPlayer().getCurrentIP() + " - Pass change failed: New password is either too long or too short.");
+				ActionSender.sendMessage(getPlayer(), "No changes made, your new password must be 4-20 characters.");
+				return;
+			}
+
 			newDBPass = DataConversions.hashPassword(getNewPassword(), DBsalt);
 			getPlayer().getWorld().getServer().getDatabase().saveNewPassword(playerID, newDBPass);
 

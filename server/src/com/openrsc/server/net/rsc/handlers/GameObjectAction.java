@@ -5,20 +5,20 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToObjectAction;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.TargetObjectStruct;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class GameObjectAction implements PacketHandler {
+public class GameObjectAction implements PayloadProcessor<TargetObjectStruct, OpcodeIn> {
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public void handlePacket(Packet packet, Player player) {
-		int pID = packet.getID();
+	public void process(TargetObjectStruct payload, Player player) throws Exception {
+		OpcodeIn pID = payload.getOpcode();
 
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
@@ -29,18 +29,18 @@ public class GameObjectAction implements PacketHandler {
 			return;
 		}
 
-		if (pID == OpcodeIn.OBJECT_COMMAND1.getOpcode()) {
+		if (pID == OpcodeIn.OBJECT_COMMAND) {
 			player.click = 0;
 		}
-		else if (pID == OpcodeIn.OBJECT_COMMAND2.getOpcode()) {
+		else if (pID == OpcodeIn.OBJECT_COMMAND2) {
 			player.click = 1;
 		}
 		else return;
 
 		player.resetAll();
 
-		final short x = packet.readShort();
-		final short y = packet.readShort();
+		final int x = payload.coordObject.getX();
+		final int y = payload.coordObject.getY();
 		if (x < 0 || y < 0) {
 			player.setSuspiciousPlayer(true, "bad game object coordinates");
 			return;

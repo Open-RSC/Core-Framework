@@ -3,16 +3,16 @@ package com.openrsc.server.plugins.authentic.quests.members.legendsquest.obstacl
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.triggers.UseBoundTrigger;
-import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs.LegendsQuestUngadulu;
 import com.openrsc.server.plugins.authentic.quests.members.shilovillage.ShiloVillageUtils;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -100,7 +100,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 			}
 		}
 		else if (obj.getID() == RUINED_WALL) {
-			if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+			if (getCurrentLevel(player, Skill.AGILITY.id()) < 50) {
 				player.message("You need an agility level of 50 to jump this wall");
 				return;
 			}
@@ -139,7 +139,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 					if (DataConversions.random(0, 9) <= 3) {
 						mes("The heat is so intense that it burns you.");
 						delay(2);
-						player.damage((int) Math.ceil((double) player.getSkills().getLevel(Skills.HITS) / 10 + 1));
+						player.damage((int) Math.ceil((double) player.getSkills().getLevel(Skill.HITS.id()) / 10 + 1));
 						say(player, null, "Owwww!");
 					} else {
 						mes("The heat is intense and just before you burn yourself,");

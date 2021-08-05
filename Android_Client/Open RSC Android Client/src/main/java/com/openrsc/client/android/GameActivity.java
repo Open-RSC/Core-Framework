@@ -94,7 +94,10 @@ public class GameActivity extends Activity implements ClientPort {
 
     @Override
     public void showLoadingProgress(int percentage, String status) {
-        if (gameView != null) gameView.showLoadingProgress(percentage, status);
+        if (gameView != null) {
+        	gameView.showLoadingProgress(percentage, status);
+        	gameView.postInvalidate();
+        }
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -61,12 +61,12 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 				delay(2);
 				mes(second_nezikchened, "The spell seems to weaken the Demon.");
 				delay();
-				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
+				second_nezikchened.getSkills().setLevel(Skill.DEFENSE.id(), second_nezikchened.getSkills().getLevel(Skill.DEFENSE.id()) - 5);
 			}
 			second_nezikchened.startCombat(player);
 			if (useHolySpell) {
-				int newPray = (int) Math.ceil((double) player.getSkills().getLevel(Skills.PRAYER) / 2);
-				if (player.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
+				int newPray = (int) Math.ceil((double) player.getSkills().getLevel(Skill.PRAYER.id()) / 2);
+				if (player.getSkills().getLevel(Skill.PRAYER.id()) - newPray < 30) {
 					mes("A sense of fear comes over you ");
 					delay(2);
 					mes("You feel a sense of loss...");
@@ -77,7 +77,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 					mes("You feel a great sense of loss...");
 					delay(2);
 				}
-				player.getSkills().setLevel(Skills.PRAYER, newPray);
+				player.getSkills().setLevel(Skill.PRAYER.id(), newPray);
 
 				delay(11);
 				mes("The Demon takes out a dark dagger and throws it at you...");
@@ -95,7 +95,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 				delay(2);
 				mes("You feel a terrible sense of loss...");
 				delay(2);
-				player.getSkills().setLevel(Skills.PRAYER, 0);
+				player.getSkills().setLevel(Skill.PRAYER.id(), 0);
 			}
 		}
 	}
@@ -161,7 +161,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 								delay();
 								second_nezikchened.startCombat(player);
 								player.message("You feel a terrible sense of loss...");
-								player.getSkills().setLevel(Skills.PRAYER, 0);
+								player.getSkills().setLevel(Skill.PRAYER.id(), 0);
 							}
 						}
 						/**

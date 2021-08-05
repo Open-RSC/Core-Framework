@@ -5,9 +5,13 @@ import com.openrsc.server.Server;
 import com.openrsc.server.database.GameLogger;
 import com.openrsc.server.database.impl.mysql.queries.Query;
 import com.openrsc.server.database.impl.mysql.queries.ResultQuery;
+import com.openrsc.server.util.ServerAwareThreadFactory;
+import com.openrsc.server.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,7 +37,7 @@ public final class MySqlGameLogger extends GameLogger {
 		// TODO: Implement GameLogger into the database driver.
 		if (database == null) {
 			LOGGER.error("GameDatabase provided was null or not a MySqlGameDatabase.");
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 		this.database = database;
 	}
@@ -45,7 +49,12 @@ public final class MySqlGameLogger extends GameLogger {
 	public void start() {
 		synchronized (running) {
 			running.set(true);
-			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName() + " : DatabaseLogging").build());
+			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+					new ServerAwareThreadFactory(
+							server.getName() + " : DatabaseLogging",
+							server.getConfig()
+					)
+			);
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 		}
 	}
@@ -91,9 +100,14 @@ public final class MySqlGameLogger extends GameLogger {
 			if (query != null) {
 				if (query instanceof ResultQuery) {
 					final ResultQuery rq = (ResultQuery) query;
-					rq.onResult(rq.prepareStatement(getDatabase().getConnection().getConnection()).executeQuery());
+					try (final PreparedStatement statement = rq.prepareStatement(getDatabase().getConnection().getConnection());
+						 final ResultSet result = statement.executeQuery();) {
+						rq.onResult(result);
+					}
 				} else {
-					query.prepareStatement(getDatabase().getConnection().getConnection()).execute();
+					try (final PreparedStatement statement = query.prepareStatement(getDatabase().getConnection().getConnection());) {
+						statement.execute();
+					}
 				}
 			}
 		/*} catch (final GameDatabaseException ex) {

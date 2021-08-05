@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.itemactions;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
@@ -123,14 +123,6 @@ public class InvUseOnItem implements UseInvTrigger {
 			return;
 		}
 
-		else if (compareItemsIds(item1, item2, ItemId.COCONUT.id(), ItemId.MACHETTE.id())) {
-			if (player.getCarriedItems().remove(new Item(ItemId.COCONUT.id())) > -1) {
-				player.message("You slice open the coconut with the machette");
-				player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_COCONUT.id()));
-			}
-			return;
-		}
-
 
 		/*
 		 * Combine Dyes
@@ -192,7 +184,7 @@ public class InvUseOnItem implements UseInvTrigger {
 				player.message("You join the two halves of the key together");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CRYSTAL_KEY.id(), 1));
 				if (config().CRYSTAL_KEY_GIVES_XP) {
-					player.incExp(Skills.CRAFTING, 40, true);
+					player.incExp(Skill.CRAFTING.id(), 40, true);
 				}
 			}
 		}
@@ -237,7 +229,7 @@ public class InvUseOnItem implements UseInvTrigger {
 								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
-							player.incExp(Skills.CRAFTING, 10, true);
+							player.incExp(Skill.CRAFTING.id(), 10, true);
 							return;
 						}
 					}
@@ -251,7 +243,7 @@ public class InvUseOnItem implements UseInvTrigger {
 								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
-							player.incExp(Skills.CRAFTING, 10, true);
+							player.incExp(Skill.CRAFTING.id(), 10, true);
 							return;
 						}
 					}
@@ -302,8 +294,6 @@ public class InvUseOnItem implements UseInvTrigger {
 				|| compareItemsIds(item1, item2, ItemId.RAW_CHICKEN.id(), ItemId.BOWL_OF_WATER.id())
 				|| compareItemsIds(item1, item2, ItemId.RAW_RAT_MEAT.id(), ItemId.BOWL_OF_WATER.id())
 				|| compareItemsIds(item1, item2, ItemId.RAW_BEAR_MEAT.id(), ItemId.BOWL_OF_WATER.id()))
-			return true;
-		else if (compareItemsIds(item1, item2, ItemId.COCONUT.id(), ItemId.MACHETTE.id()))
 			return true;
 		/*
 		 * prince ali rescue dye wig and yellow die to blond wig

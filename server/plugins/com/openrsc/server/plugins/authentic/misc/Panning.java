@@ -2,15 +2,15 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -50,7 +50,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 		player.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY.id()));
 		player.getCarriedItems().getInventory().add(new Item(ItemId.PANNING_TRAY_FULL.id()));
-		player.incExp(Skills.MINING, 20, true);
+		player.incExp(Skill.MINING.id(), 20, true);
 		return false;
 	}
 

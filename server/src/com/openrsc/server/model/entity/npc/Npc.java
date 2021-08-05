@@ -1,9 +1,6 @@
 package com.openrsc.server.model.entity.npc;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
@@ -13,6 +10,7 @@ import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.EntityType;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -85,7 +83,7 @@ public class Npc extends Mob {
 	}
 
 	public Npc(final World world, final NPCLoc loc) {
-		super(world);
+		super(world, EntityType.NPC);
 
 		for (int i : Constants.UNDEAD_NPCS) {
 			if (loc.getId() == i) {
@@ -107,11 +105,11 @@ public class Npc extends Mob {
 		super.setID(loc.getId());
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
 
-		getSkills().setLevelTo(Skills.ATTACK, def.getAtt());
-		getSkills().setLevelTo(Skills.DEFENSE, def.getDef());
-		getSkills().setLevelTo(Skills.RANGED, def.getRanged());
-		getSkills().setLevelTo(Skills.STRENGTH, def.getStr());
-		getSkills().setLevelTo(Skills.HITS, def.getHits());
+		getSkills().setLevelTo(Skill.ATTACK.id(), def.getAtt());
+		getSkills().setLevelTo(Skill.DEFENSE.id(), def.getDef());
+		getSkills().setLevelTo(Skill.RANGED.id(), def.getRanged());
+		getSkills().setLevelTo(Skill.STRENGTH.id(), def.getStr());
+		getSkills().setLevelTo(Skill.HITS.id(), def.getHits());
 
 		/*
 		  Unique ID for event tracking.
@@ -124,7 +122,7 @@ public class Npc extends Mob {
 	/**
 	 * Adds combat damage done by a player
 	 *
-	 * @param mob mob dealing damage
+	 * @param mob    mob dealing damage
 	 * @param damage current attack's damage
 	 */
 	public void addCombatDamage(final Player mob, final int damage) {
@@ -138,7 +136,7 @@ public class Npc extends Mob {
 	/**
 	 * Adds mage damage done by a player
 	 *
-	 * @param mob mob dealing damage
+	 * @param mob    mob dealing damage
 	 * @param damage current attack's damage
 	 */
 	public void addMageDamage(final Mob mob, final int damage) {
@@ -152,7 +150,7 @@ public class Npc extends Mob {
 	/**
 	 * Adds range damage done by a player
 	 *
-	 * @param mob mob dealing damage
+	 * @param mob    mob dealing damage
 	 * @param damage current attack's damage
 	 */
 	public void addRangeDamage(final Mob mob, final int damage) {
@@ -268,15 +266,25 @@ public class Npc extends Mob {
 		return 0;
 	}
 
-	public boolean stateIsInvisible() { return false; }
-	public boolean stateIsInvulnerable() { return false; }
+	public boolean stateIsInvisible() {
+		return false;
+	}
+
+	public boolean stateIsInvulnerable() {
+		return false;
+	}
 
 	@Override
 	public void killedBy(Mob mob) {
+		if (mob == null) {
+			this.cure();
+			deathListeners.clear();
+			return;
+		}
 		if (this.killed) return;
 		//this.killed = true; remove() assures everything went fine, and set killed to true
 
-		Player owner = getWorld().getPlayerUUID(mob.getUUID());
+		Player owner = getWorld().getPlayerByUUID(mob.getUUID());
 		if (owner == null) {
 			Npc npcKiller = getWorld().getNpcByUUID(mob.getUUID());
 			if (npcKiller != null && npcKiller.relatedMob instanceof Player)
@@ -304,7 +312,7 @@ public class Npc extends Mob {
 		}
 
 		UUID ownerId = handleXpDistribution(mob);
-		owner = getWorld().getPlayerUUID(ownerId);
+		owner = getWorld().getPlayerByUUID(ownerId);
 
 		if (owner == null) {
 			deathListeners.clear();
@@ -338,7 +346,7 @@ public class Npc extends Mob {
 	private void logNpcKill(Player owner) {
 		if (owner.getCache().hasKey("show_npc_kc") && owner.getCache().getBoolean("show_npc_kc")
 			&& getConfig().NPC_KILL_MESSAGES) {
-			owner.addNpcKill(this,!getConfig().NPC_KILL_MESSAGES_FILTER
+			owner.addNpcKill(this, !getConfig().NPC_KILL_MESSAGES_FILTER
 				|| getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
 		} else
 			owner.addNpcKill(this, false);
@@ -428,25 +436,29 @@ public class Npc extends Mob {
 		int bones = ItemId.NOTHING.id();
 		// Big Bones
 		if (getWorld().npcDrops.isBigBoned(this.getID())) {
-			bones = ItemId.BIG_BONES.id();
+			bones = boneItem(ItemId.BIG_BONES.id());
 		}
 		// Bat
 		else if (getWorld().npcDrops.isBatBoned(this.getID())) {
-			bones = ItemId.BAT_BONES.id();
+			bones = boneItem(ItemId.BAT_BONES.id());
 		}
 		// Dragon
 		else if (getWorld().npcDrops.isDragon(this.getID())) {
-			bones = ItemId.DRAGON_BONES.id();
+			bones = boneItem(ItemId.DRAGON_BONES.id());
 		}
 		// Demon
 		else if (getWorld().npcDrops.isDemon(this.getID())) {
 			bones = ItemId.ASHES.id();
 		}
 		// Not boneless
-		else if(!getWorld().npcDrops.isBoneless(this.getID())) {
-			bones = ItemId.BONES.id();
+		else if (!getWorld().npcDrops.isBoneless(this.getID())) {
+			bones = boneItem(ItemId.BONES.id());
 		}
 		return bones;
+	}
+
+	private int boneItem(int boneId) {
+		return getConfig().ONLY_REGULAR_BONES ? ItemId.BONES.id() : boneId;
 	}
 
 	private void dropStackItem(final int dropID, int amount, Player owner) {
@@ -517,28 +529,29 @@ public class Npc extends Mob {
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
-			Player player = getWorld().getPlayerUUID(ID);
+			Player player = getWorld().getPlayerByUUID(ID);
 			if (player != null) {
-				int skillsDist[] = {0, 0, 0, 0};
+				int[] skillsDist = new int[Skill.maxId(Skill.ATTACK.name(), Skill.DEFENSE.name(),
+					Skill.STRENGTH.name(), Skill.HITS.name()) + 1];
 				// Give the player their share of the experience.
 				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 				switch (player.getCombatStyle()) {
 					case Skills.CONTROLLED_MODE: // CONTROLLED
-						for (int x = 0; x < 3; x++) {
-							skillsDist[x] = 1;
+						for (int skillId : new int[]{Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()}) {
+							skillsDist[skillId] = 1;
 						}
 						break;
 					case Skills.AGGRESSIVE_MODE: // AGGRESSIVE
-						skillsDist[Skills.STRENGTH] = 3;
+						skillsDist[Skill.STRENGTH.id()] = 3;
 						break;
 					case Skills.ACCURATE_MODE: // ACCURATE
-						skillsDist[Skills.ATTACK] = 3;
+						skillsDist[Skill.ATTACK.id()] = 3;
 						break;
 					case Skills.DEFENSIVE_MODE: // DEFENSIVE
-						skillsDist[Skills.DEFENSE] = 3;
+						skillsDist[Skill.DEFENSE.id()] = 3;
 						break;
 				}
-				skillsDist[Skills.HITS] = 1;
+				skillsDist[Skill.HITS.id()] = 1;
 				player.incExp(skillsDist, totalXP, true);
 			}
 		}
@@ -551,11 +564,11 @@ public class Npc extends Mob {
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
-			Player player = getWorld().getPlayerUUID(ID);
+			Player player = getWorld().getPlayerByUUID(ID);
 			if (player != null) {
 				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
-				player.incExp(Skills.RANGED, totalXP * 4, true);
-				ActionSender.sendStat(player, Skills.RANGED);
+				player.incExp(Skill.RANGED.id(), totalXP * 4, true);
+				ActionSender.sendStat(player, Skill.RANGED.id());
 			}
 		}
 
@@ -593,7 +606,7 @@ public class Npc extends Mob {
 			getWorld().removeNpcPosition(this);
 			Npc n = this;
 			setRespawning(true);
-			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
+			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long) (def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
 				public void run() {
 					n.killed = false;
 					n.setRemoved(false);
@@ -672,32 +685,8 @@ public class Npc extends Mob {
 		getNpcBehavior().setChasing(npc);
 	}
 
-	public Player getChasedPlayer() {
-		return getNpcBehavior().getChasedPlayer();
-	}
-
-	public Npc getChasedNpc() {
-		return getNpcBehavior().getChasedNpc();
-	}
-
 	public NpcBehavior getBehavior() {
 		return getNpcBehavior();
-	}
-
-	public void setBehavior(final NpcBehavior behavior) {
-		this.setNpcBehavior(behavior);
-	}
-
-	public void setNPCLoc(final NPCLoc loc2) {
-		this.loc = loc2;
-	}
-
-	public boolean isPlayer() {
-		return false;
-	}
-
-	public boolean isNpc() {
-		return true;
 	}
 
 	public boolean isRespawning() {

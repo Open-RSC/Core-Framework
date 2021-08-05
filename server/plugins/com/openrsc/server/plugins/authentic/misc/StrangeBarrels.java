@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -165,8 +165,12 @@ public class StrangeBarrels implements OpLocTrigger {
 						mes("You're heavily jarred from the vibrations of the blow.");
 						delay(2);
 						int reduceAttack = DataConversions.random(1, 3);
+						boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 						player.message("Your attack is reduced by " + reduceAttack + ".");
-						player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - reduceAttack);
+						player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - reduceAttack, sendUpdate);
+						if (!sendUpdate) {
+							player.getSkills().sendUpdateAll();
+						}
 					} else {
 						player.message("You were unable to smash this barrel open.");
 					}

@@ -316,8 +316,20 @@ public class GraphicsController {
 	}
 
 	public Sprite spriteSelect(AnimationDef animation, int offset) {
-		if (!Config.S_WANT_CUSTOM_SPRITES)
+		if (!Config.S_WANT_CUSTOM_SPRITES) {
+			if (animation == null) {
+				return Sprite.getUnknownSprite(18, 18);
+			}
+			int index = animation.getNumber() + offset;
+			if (index >= sprites.length) {
+				return Sprite.getUnknownSprite(18, 18);
+			}
+			Sprite sprite = sprites[index];
+			if (sprite == null) {
+				return Sprite.getUnknownSprite(18, 18);
+			}
 			return sprites[animation.getNumber() + offset];
+		}
 
 		return spriteTree.get(animation.category).get(animation.name).getFrames()[offset].getSprite();
 	}
@@ -2485,6 +2497,10 @@ public class GraphicsController {
 					colorMask = 0xFFFFFF;
 				}
 
+				if (e == null) {
+					e = Sprite.getUnknownSprite(width, height);
+				}
+
 				int spriteWidth = e.getWidth();
 				int spriteHeight = e.getHeight();
 				int srcStartX = 0;
@@ -3021,8 +3037,10 @@ public class GraphicsController {
 		try {
 			ZipEntry e = spriteArchive.getEntry(String.valueOf(id));
 			if (e == null) {
-				System.err.println("Missing sprite: " + id);
-				return false;
+				if (Config.DEBUG)
+					System.err.println("Missing sprite: " + id + " from package " + packageName);
+				sprites[id] = Sprite.getUnknownSprite(48, 32);
+				return true;
 			}
 			ByteBuffer data = DataConversions.streamToBuffer(new BufferedInputStream(spriteArchive.getInputStream(e)));
 			sprites[id] = Sprite.unpack(data);

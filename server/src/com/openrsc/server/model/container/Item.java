@@ -1,10 +1,8 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.database.GameDatabase;
-import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.world.World;
-import org.w3c.dom.CDATASection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -116,15 +114,15 @@ public class Item implements Comparable<Item> {
 		return itemStatus.getCatalogId();
 	}
 
-	// This should only be called if player.isUsingAuthenticClient() has already been checked
+	// This should only be called if player.isUsingCustomClient() has already been checked
 	public final int getCatalogIdAuthenticNoting() {
 		if (getNoted()) {
 			// Unfortunately, noted items will need to appear as some other stackable item.
 			// There's no way to show a stack of an unstackable item in the authentic protocol.
-			// At least when a placeholder is used, and thatitem is stackable,
+			// At least when a placeholder is used, and that item is stackable,
 			// most of the functions of the noted item are retained.
 
-			// The Shantay Desert Pass is chosen due to its low value, rarity in trades, & visual similarity to a note.
+			// The Shantay Desert Pass is chosen due to its low value, untradability, & visual similarity to a note.
 			return 1030; // Shantay Desert Pass
 		} else {
 			return getCatalogId();
@@ -161,6 +159,18 @@ public class Item implements Comparable<Item> {
 			return 0;
 		}
 		return world.getServer().getEntityHandler().getItemEdibleHeals(getCatalogId());
+	}
+
+	// Retro mechanic - old foods (cooked meat, bread and pies) healed 1 extra point each 15 cooking levels
+	// https://web.archive.org/web/20020402192857/http://www.ngrunescape.com/skills.html
+	public boolean canLevelDependentHeal(World world) {
+		if (!isEdible(world)) {
+			return false;
+		}
+		return world.getServer().getConfig().MEAT_HEAL_LEVEL_DEPENDENT
+			&& (getCatalogId() == ItemId.COOKEDMEAT.id()
+			|| getCatalogId() == ItemId.BREAD.id()
+			|| getDef(world).getName().toLowerCase().contains("pie"));
 	}
 
 	public ItemCookingDef getCookingDef(World world) {

@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,6 +11,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -43,6 +46,11 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.HEROS_QUEST.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -57,18 +65,11 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
 		player.getCache().remove("armband");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.HEROS_QUEST);
-		//keep order kosher
-		int[] skillIDs = {Skills.STRENGTH, Skills.DEFENSE, Skills.HITS,
-			Skills.ATTACK, Skills.RANGED, Skills.HERBLAW,
-			Skills.FISHING, Skills.COOKING, Skills.FIREMAKING,
-			Skills.WOODCUT, Skills.MINING, Skills.SMITHING};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.HEROS_QUEST.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
-		player.message("@gre@You haved gained 1 quest point!");
-
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	/**
@@ -295,7 +296,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 								player.getQuestStage(Quests.SHIELD_OF_ARRAV) == -2 ) &&
 							player.getQuestStage(Quests.MERLINS_CRYSTAL) == -1 &&
 							player.getQuestStage(Quests.DRAGON_SLAYER) == -1)
-							&& player.getQuestPoints() >= 55) {
+							&& (player.getConfig().INFLUENCE_INSTEAD_QP || player.getQuestPoints() >= 55)) {
 							npcsay(player, n, "Ok you may begin the tasks for joining the hero's guild",
 								"You need the feather of an Entrana firebird",
 								"A master thief armband",
@@ -394,7 +395,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 
 	private boolean canBuyCape(Player player) {
 		if (config().WANT_CUSTOM_SPRITES
-			&& getMaxLevel(player, Skills.STRENGTH) >= 99) { return true; }
+			&& getMaxLevel(player, Skill.STRENGTH.id()) >= 99) { return true; }
 		return false;
 	}
 
@@ -430,7 +431,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				player.message("Ouch that is too hot to take");
 				player.message("I need something cold to pick it up with");
-				int damage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.15D);
+				int damage = (int) Math.round((player.getSkills().getLevel(Skill.HITS.id())) * 0.15D);
 				player.damage(damage);
 			}
 		}

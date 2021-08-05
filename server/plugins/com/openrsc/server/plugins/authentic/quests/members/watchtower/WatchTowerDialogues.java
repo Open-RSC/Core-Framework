@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -31,6 +32,11 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 	@Override
 	public String getQuestName() {
 		return "Watchtower (members)";
+	}
+
+	@Override
+	public int getQuestPoints() {
+		return Quest.WATCHTOWER.reward().getQuestPoints();
 	}
 
 	@Override

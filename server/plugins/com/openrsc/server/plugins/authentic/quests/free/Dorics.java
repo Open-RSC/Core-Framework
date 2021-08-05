@@ -7,6 +7,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -24,6 +27,11 @@ public class Dorics implements QuestInterface, TalkNpcTrigger {
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.DORICS_QUEST.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -31,8 +39,11 @@ public class Dorics implements QuestInterface, TalkNpcTrigger {
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed Dorics quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DORICS_QUEST), true);
-		player.message("@gre@You haved gained 1 quest points!");
+		final QuestReward reward = Quest.DORICS_QUEST.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	private void doricDialogue(Player player, Npc n) {

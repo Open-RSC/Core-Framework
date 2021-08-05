@@ -7,6 +7,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -24,6 +27,11 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.GOBLIN_DIPLOMACY.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -31,8 +39,11 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the goblin diplomacy quest");
-		player.message("@gre@You haved gained 5 quest points!");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GOBLIN_DIPLOMACY), true);
+		final QuestReward reward = Quest.GOBLIN_DIPLOMACY.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
 		player.message("general wartface gives you a gold bar as thanks");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.GOLD_BAR.id(), 1));
 	}

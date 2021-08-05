@@ -3,7 +3,8 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,11 +13,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.authentic.misc.Cannon;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.triggers.OpBoundTrigger;
-import com.openrsc.server.plugins.authentic.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -44,14 +48,22 @@ public class DwarfCannon
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.DWARF_CANNON.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
 
 	@Override
 	public void handleReward(Player player) {
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DWARF_CANNON), true);
-		player.message("@gre@You haved gained 1 quest point!");
+		final QuestReward reward = Quest.DWARF_CANNON.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 		mes("well done");
 		delay(3);
 		mes("you have completed the dwarf cannon quest");
@@ -185,7 +197,7 @@ public class DwarfCannon
 							int cannonX = player.getCache().getInt("cannon_x");
 							int cannonY = player.getCache().getInt("cannon_y");
 
-							GameObject cannon = player.getWorld().getRegionManager().getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY, player);
+							GameObject cannon = player.getWorld().getRegionManager().getRegion(cannonX, cannonY).getGameObject(new Point(cannonX, cannonY), player);
 							// does not exist or the object there is not a cannon.
 							if (cannon == null || !DataConversions.inArray(Cannon.cannonObjectIDs, cannon.getID())) {
 								mes("the dwarf gives you a new cannon");
@@ -781,7 +793,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("pipe", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(Skill.CRAFTING.id(), 5, true);
 					}
 				} else if (cannonMenu == 1) {
 					if (player.getCache().hasKey("barrel")) {
@@ -800,7 +812,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("barrel", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(Skill.CRAFTING.id(), 5, true);
 					}
 				} else if (cannonMenu == 2) {
 					if (player.getCache().hasKey("axle")) {
@@ -819,7 +831,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("axle", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(Skill.CRAFTING.id(), 5, true);
 					}
 				} else if (cannonMenu == 3) {
 					if (player.getCache().hasKey("shaft")) {
@@ -838,7 +850,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("shaft", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(Skill.CRAFTING.id(), 5, true);
 					}
 				} else if (cannonMenu == 4) {
 					// nothing

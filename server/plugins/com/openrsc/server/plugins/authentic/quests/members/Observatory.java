@@ -1,20 +1,21 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -36,16 +37,22 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.OBSERVATORY_QUEST.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
 
 	@Override
 	public void handleReward(Player player) {
-		player.message("@gre@You haved gained 2 quest points!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
-		questData[Quests.MAPIDX_SKILL] = Skills.CRAFTING;
-		incQuestReward(player, questData, true);
+		final QuestReward reward = Quest.OBSERVATORY_QUEST.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : Arrays.stream(reward.getXpRewards()).filter(x -> !x.getSkill().equals(Skills.NONE)).toArray(XPReward[]::new)) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
 		player.getCache().remove("keep_key_gate");
 	}
 
@@ -613,17 +620,17 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 		}
 	}
 
+	private void giveOptionalReward(Player player, Npc n, Skill skill) {
+		final XPReward origXpReward = Arrays.stream(Quest.OBSERVATORY_QUEST.reward().getXpRewards()).filter(x -> x.getSkill().equals(Skills.NONE)).toArray(XPReward[]::new)[0];
+		XPReward xpReward = origXpReward.copyTo(skill);
+		incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+	}
+
 	private void constellationNameAndReward(Player player, Npc n) {
-		int baseReductor = 2;
-		int varReductor = 4;
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
-		questData[Quests.MAPIDX_BASE] /= baseReductor;
-		questData[Quests.MAPIDX_VAR] /= varReductor;
 		if (selectedNumber == 0) {
 			npcsay(player, n, "Virgo the virtuous",
 				"The strong and peaceful nature of virgo boosts your defence");
-			questData[Quests.MAPIDX_SKILL] = Skills.DEFENSE;
-			incQuestReward(player, questData, false);
+			giveOptionalReward(player, n, Skill.DEFENSE);
 		} else if (selectedNumber == 1) {
 			npcsay(player, n, "Libra the scales",
 				"The scales of justice award you with Law Runes");
@@ -651,8 +658,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 		} else if (selectedNumber == 7) {
 			npcsay(player, n, "Aries the ram",
 				"The ram's strength improves your attack abilites");
-			questData[Quests.MAPIDX_SKILL] = Skills.ATTACK;
-			incQuestReward(player, questData, false);
+			giveOptionalReward(player, n, Skill.ATTACK);
 		} else if (selectedNumber == 8) {
 			npcsay(player, n, "Sagittarius the Centaur",
 				"The Gods award you a maple longbow");
@@ -660,13 +666,11 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 		} else if (selectedNumber == 9) {
 			npcsay(player, n, "Leo the lion",
 				"The power of the lion has increased your hitpoints");
-			questData[Quests.MAPIDX_SKILL] = Skills.HITS;
-			incQuestReward(player, questData, false);
+			giveOptionalReward(player, n, Skill.HITS);
 		} else if (selectedNumber == 10) {
 			npcsay(player, n, "Capricorn the goat",
 				"you are granted an increase in strength");
-			questData[Quests.MAPIDX_SKILL] = Skills.STRENGTH;
-			incQuestReward(player, questData, false);
+			giveOptionalReward(player, n, Skill.STRENGTH);
 		} else if (selectedNumber == 11) {
 			npcsay(player, n, "Cancer the crab",
 				"The armoured crab gives you an amulet of protection");

@@ -2,25 +2,59 @@
 
 <Configuration status="WARN" target="SYSTEM_ERR">
 
+    <Properties>
+        <Property name="logPattern">${sys:logPattern}</Property>
+    </Properties>
+
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logPattern}"/>
         </Console>
 
-        <RollingFile name="RollingFile" filename="logs/gameserver.log"
-            filepattern="logs/%d{YYYYMMddHHmmss}-gameserver.log">
-            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
+        <RollingFile name="CatchAllAppender" filename="logs/default.log" append="true">
+            <filepattern>logs/default.%d{YYYYMMdd_HH:mm:ss}.log.gz</filepattern>
+            <PatternLayout pattern="${logPattern}"/>
             <Policies>
-                <SizeBasedTriggeringPolicy size="10 MB" />
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <DefaultRolloverStrategy max="10" />
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs" maxDepth="1">
+                    <IfFileName glob="*.log.gz"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
         </RollingFile>
+
+        <Routing name="RoutingAppender">
+            <Routes pattern="${ctx:world.name}">
+                <Route>
+                    <RollingFile name="Rolling-${ctx:world.name}_${ctx:world.number}"
+                                 filename="logs/${ctx:world.name}_${ctx:world.number}.log"
+                                 append="true">
+                        <filepattern>logs/${ctx:world.name}_${ctx:world.number}.%d{YYYYMMdd}.log.gz</filepattern>
+                        <PatternLayout pattern="${logPattern}"/>
+                        <Policies>
+                            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                        </Policies>
+                        <DefaultRolloverStrategy>
+                            <Delete basePath="logs" maxDepth="1">
+                                <IfFileName glob="*.log.gz"/>
+                                <IfLastModified age="7d"/>
+                            </Delete>
+                        </DefaultRolloverStrategy>
+                    </RollingFile>
+                </Route>
+                <Route ref="CatchAllAppender" key="${ctx:world.name}"/>
+            </Routes>
+            <IdlePurgePolicy timeToLive="15" timeUnit="minutes"/>
+        </Routing>
+
     </Appenders>
 
     <Loggers>
         <Root level="info">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="RoutingAppender"/>
         </Root>
     </Loggers>
 

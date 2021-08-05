@@ -5,6 +5,7 @@ import com.openrsc.server.model.entity.player.ScriptContext;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.plugins.PluginInterruptedException;
+import com.openrsc.server.util.LogUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,6 +66,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	public abstract int action();
 
 	public void run() {
+		LogUtil.populateThreadContext(scriptContext.getWorld().getServer().getConfig());
 		if(!isComplete()) {
 			// Submitting in run because we want to only run game code on tick bounds so we start the execution inside of a tick
 			if(getFuture() == null) {

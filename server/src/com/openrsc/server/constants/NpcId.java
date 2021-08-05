@@ -4,11 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum NpcId {
-	/**
-	 * 794 NPCs, but some need to be refactored and are commented at the moment.
-	 * Others are attackable monsters and don't have particular behavior
-	 */
-
 	NOBODY(-1),
 	UNICORN(0),
 	BOB(1),
@@ -21,7 +16,7 @@ public enum NpcId {
 	BEAR_LVL24(8),
 	PRIEST(9),
 	URHNEY(10),
-	MAN1(11),
+	MAN(11),
 	BARTENDER_VARROCK(12),
 	CAMEL(13),
 	GYPSY(14),
@@ -63,7 +58,7 @@ public enum NpcId {
 	SKELETON_RESTLESS(50),
 	SHOPKEEPER_VARROCK(51),
 	ZOMBIE_LVL19(52),
-	GHOST1(53),
+	GHOST(53),
 	AUBURY(54),
 	SHOPKEEPER_LUMBRIDGE(55),
 	SHOPKEEPER_VARROCK_SWORD(56),
@@ -73,24 +68,24 @@ public enum NpcId {
 	DARKWIZARD_LVL25(60),
 	GIANT(61),
 	GOBLIN_LVL7(62),
-	FARMER1(63),
-	THIEF_GENERIC(64),
-	GUARD1(65),
+	FARMER(63),
+	THIEF(64),
+	GUARD(65),
 	BLACK_KNIGHT(66),
 	HOBGOBLIN_LVL32(67),
 	ZOMBIE_LVL32(68),
 	ZAFF(69),
 	SCORPION(70),
 	SILK_TRADER(71),
-	MAN2(72),
-	GUIDE_UNRELEASED1(73),
+	MAN_ALKHARID(72),
+	GUIDE_ORIGINAL(73),
 	GIANT_SPIDER_LVL31(74),
 	PEKSA(75),
 	BARBARIAN(76),
 	FRED_THE_FARMER(77),
 	GUNTHOR_THE_BRAVE(78),
-	//WITCH(79),
-	GHOST2(80),
+	WITCH(79),
+	GHOST_DRAYNOR_MANOR(80),
 	WIZARD(81),
 	SHOP_ASSISTANT_VARROCK(82),
 	SHOP_ASSISTANT_LUMBRIDGE(83),
@@ -105,7 +100,7 @@ public enum NpcId {
 	ERNEST(92),
 	MONK(93),
 	DWARF(94),
-	BANKER_GEN1(95),
+	BANKER(95),
 	COUNT_DRAYNOR(96),
 	MORGAN(97),
 	DR_HARLOW(98),
@@ -157,7 +152,7 @@ public enum NpcId {
 	DORIC(144),
 	SHOPKEEPER_RIMMINGTON(145),
 	SHOP_ASSISTANT_RIMMINGTON(146),
-	GUIDE_UNRELEASED2(147),
+	GUIDE_ORIGINAL2(147),
 	HETTY(148),
 	BETTY(149),
 	BARTENDER_PORTSARIM(150),
@@ -278,7 +273,7 @@ public enum NpcId {
 	JAILER(265),
 	LORD_DARQUARIUS(266),
 	SETH(267),
-	BANKER_GEN2(268),
+	BANKER_ALKHARID(268),
 	HELEMOS(269),
 	CHAOS_DRUID(270),
 	POISON_SCORPION(271),
@@ -328,8 +323,8 @@ public enum NpcId {
 	CHRONOZON(315),
 	CAPTAIN_BARNABY(316),
 	CUSTOMS_OFFICIAL(317),
-	MAN3(318),
-	FARMER2(319),
+	MAN_ARDOUGNE(318),
+	FARMER_ARDOUGNE(319),
 	WARRIOR_ARDOUGNE(320),
 	GUARD_ARDOUGNE(321),
 	KNIGHT(322),
@@ -818,21 +813,40 @@ public enum NpcId {
 	BALROG(809),
 	SILICIUS(810),
 	ROBIN_BANKS(811),
-	MUM(812);
+	MUM(812),
+	ESTER(813),
+	BUNNY(814),
+	DUCK(815),
+	PKBOT(816);
 
 	private int npcId;
 
 	private static final Map<Integer, NpcId> byId = new HashMap<Integer, NpcId>();
+	private static final Map<String, NpcId> byName = new HashMap<String, NpcId>();
 	static {
 		for (NpcId npc : NpcId.values()) {
 			if (byId.put(npc.id(), npc) != null) {
 				throw new IllegalArgumentException("duplicate id: " + npc.id());
+			} else {
+			   if (byName.put(sanitizeName(npc.name()), npc) != null) {
+				   throw new IllegalArgumentException("duplicate sanitized name: " + npc.id());
+			   }
 			}
 		}
 	}
 
 	public static NpcId getById(Integer id) {
 		return byId.getOrDefault(id, NpcId.NOBODY);
+	}
+
+	public static NpcId getByName(String name) {
+		return byName.getOrDefault(sanitizeName(name), NOBODY);
+	}
+
+	private static String sanitizeName(String name) {
+		return name.replaceAll("[\\W]", "")
+			.replaceAll("_", "")
+			.toLowerCase();
 	}
 
 	/**

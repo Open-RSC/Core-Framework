@@ -1,19 +1,27 @@
 package com.openrsc.server.plugins.authentic.commands;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
+import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
-import com.openrsc.server.external.*;
+import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -34,11 +42,14 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
-
-import static com.openrsc.server.plugins.Functions.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.plugins.Functions.npcattack;
 
 public final class Admins implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -102,8 +113,14 @@ public final class Admins implements CommandTrigger {
 			serverShutdown(player, args);
 		} else if (command.equalsIgnoreCase("update")) {
 			serverUpdate(player, args);
+    	} else if (command.equalsIgnoreCase("clearipbans")) {
+			clearIpBans(player);
+		} else if (command.equalsIgnoreCase("fixloggedincount")) {
+			recalcLoggedInCounts(player);
 		} else if (command.equalsIgnoreCase("item")) {
-			spawnItemInventory(player, command, args);
+			spawnItemInventory(player, command, args, false);
+		} else if (command.equalsIgnoreCase("certeditem") || command.equals("noteditem")) {
+			spawnItemInventory(player, command, args, true);
 		} else if (command.equalsIgnoreCase("bankitem") || command.equalsIgnoreCase("bitem") || command.equalsIgnoreCase("addbank")) {
 			spawnItemBank(player, command, args);
 		} else if (command.equals("fillbank")) {
@@ -142,8 +159,6 @@ public final class Admins implements CommandTrigger {
 			spawnGroundItemWorldwide(player, command, args);
 		} else if (command.equalsIgnoreCase("massnpc")) {
 			spawnNpcWorldwide(player, command, args);
-		} else if (command.equalsIgnoreCase("npctalk")) {
-			npcTalk(player, command, args);
 		} else if (command.equalsIgnoreCase("playertalk")) {
 			playerTalk(player, command, args);
 		} else if ((command.equalsIgnoreCase("smitenpc") || command.equalsIgnoreCase("damagenpc") || command.equalsIgnoreCase("dmgnpc"))) {
@@ -190,6 +205,14 @@ public final class Admins implements CommandTrigger {
 			spawnNpc(player, command, args);
 		} else if (command.equalsIgnoreCase("winterholidayevent") || command.equalsIgnoreCase("toggleholiday")) {
 			winterHolidayEvent(player, command, args);
+		} else if (command.equalsIgnoreCase("resetevent")) {
+			startResetEvent(player, command, args, false);
+		} else if (command.equalsIgnoreCase("stopresetevent") || command.equalsIgnoreCase("cancelresetevent")) {
+			stopResetEvent(player);
+		} else if (command.equalsIgnoreCase("givemodtools")) {
+			giveModTools(player);
+		} else if (command.equalsIgnoreCase("givetools")) {
+			giveTools(player);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
@@ -550,6 +573,16 @@ public final class Admins implements CommandTrigger {
 		player.getWorld().getServer().restart(seconds);
 	}
 
+	  private void clearIpBans(Player player) {
+		int removedIpAddresses = player.getWorld().getServer().clearAllIpBans();
+		player.message(messagePrefix + "Cleared " + removedIpAddresses + " from the Banned IP Table.");
+	  }
+
+	  private void recalcLoggedInCounts(Player player) {
+		  int fixedIps = player.getWorld().getServer().recalculateLoggedInCounts();
+		  player.message(messagePrefix + "Fixed lingering loggedInCounts for " + fixedIps + " IP address" + (fixedIps != 1 ? "es." : "."));
+	  }
+
 	private void serverShutdown(Player player, String[] args) {
 		int seconds = 300;
 
@@ -594,9 +627,34 @@ public final class Admins implements CommandTrigger {
 		// StaffLog(player, 7));
 	}
 
-	private void spawnItemInventory(Player player, String command, String[] args) {
+	private void giveModTools(Player player) {
+		giveIfNotHave(player, ItemId.INFO_DOCUMENT);
+		giveIfNotHave(player, ItemId.RESETCRYSTAL);
+		giveIfNotHave(player, ItemId.SUPERCHISEL);
+		giveIfNotHave(player, ItemId.BALL_OF_WOOL); // can be used on superchisel or fluffs
+		giveIfNotHave(player, ItemId.GERTRUDES_CAT);
+		giveIfNotHave(player, ItemId.DIGSITE_INFO);
+	}
+
+	private void giveTools(Player player) {
+		giveIfNotHave(player, ItemId.RUNE_PICKAXE);
+		giveIfNotHave(player, ItemId.RUNE_AXE);
+		giveIfNotHave(player, ItemId.HARPOON);
+		giveIfNotHave(player, ItemId.SLEEPING_BAG);
+	}
+
+	private void giveIfNotHave(Player player, ItemId item) {
+		Inventory i = player.getCarriedItems().getInventory();
+		synchronized (i) {
+			if (!i.hasCatalogID(item.id())) {
+				i.add(new Item(item.id(), 1));
+			}
+		}
+	}
+
+	private void spawnItemInventory(Player player, String command, String[] args, Boolean noted) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (noted) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 			return;
 		}
 
@@ -604,8 +662,13 @@ public final class Admins implements CommandTrigger {
 		try {
 			id = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (noted) (player)");
-			return;
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				return;
+			} else {
+				id = item.id();
+			}
 		}
 
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
@@ -620,20 +683,9 @@ public final class Admins implements CommandTrigger {
 			amount = 1;
 		}
 
-		boolean noted;
-		if (args.length >= 3) {
-			try {
-				noted = Integer.parseInt(args[2]) == 1;
-			} catch (NumberFormatException nfe) {
-				noted = Boolean.parseBoolean(args[2]);
-			}
-		} else {
-			noted = false;
-		}
-
 		Player p;
-		if (args.length >= 4) {
-			p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[3]));
+		if (args.length >= 3) {
+			p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[2]));
 		} else {
 			p = player;
 		}
@@ -667,7 +719,7 @@ public final class Admins implements CommandTrigger {
 
 	private void spawnItemBank(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 			return;
 		}
 
@@ -675,8 +727,13 @@ public final class Admins implements CommandTrigger {
 		try {
 			id = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (player)");
-			return;
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				return;
+			} else {
+				id = item.id();
+			}
 		}
 
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
@@ -686,7 +743,12 @@ public final class Admins implements CommandTrigger {
 
 		int amount;
 		if (args.length >= 2) {
-			amount = Integer.parseInt(args[1]);
+			try {
+				amount = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				return;
+			}
 		} else {
 			amount = 1;
 		}
@@ -721,25 +783,65 @@ public final class Admins implements CommandTrigger {
 	private void removeItemBankAll(Player player, String targetPlayerName) {
 		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
 
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
+		// Note: Admins are not prohibited from wiping the banks of anyone, even other Admins.
+		// If this is a problem, please do not rank people you don't trust to become Admins.
+
+		boolean success = false;
+		if (targetPlayer != null) {
+			// player is currently online
+			synchronized (targetPlayer.getBank()) {
+				while (targetPlayer.getBank().size() > 0) {
+					Item item = targetPlayer.getBank().get(0);
+					targetPlayer.getBank().remove(item, false);
+				}
+			}
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your bank has been wiped by an admin");
+			}
+			success = true;
+		} else {
+			// player is offline
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
+			List<Item> bank;
+			try {
+				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+
+			// delete items
+			try {
+				for (Item bankItem : bank) {
+					player.getWorld().getServer().getDatabase().itemPurge(bankItem);
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
+
+			// verify success
+			try {
+				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName).size();
+				if (sizeAfter == 0) {
+					success = true;
+				} else {
+					player.message(messagePrefix + "Player still has " + sizeAfter + " items in their bank. Fail.");
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! (Could not verify bank wipe). Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
 		}
 
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not wipe the bank of a staff member of equal or greater rank.");
-			return;
+		if (success) {
+			player.message(messagePrefix + "Wiped bank of " + targetPlayerName);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the bank of "+ targetPlayerName));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the bank of "+ targetPlayerName));
 		}
-
-		while (targetPlayer.getBank().size() > 0) {
-			Item item = targetPlayer.getBank().get(0);
-			targetPlayer.getBank().remove(item, false);
-		}
-
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
-			targetPlayer.message(messagePrefix + "Your bank has been wiped by an admin");
-		}
-		player.message(messagePrefix + "Wiped bank of " + targetPlayer.getUsername());
 	}
 
 	private void openAuctionHouse(Player player, String[] args) {
@@ -756,6 +858,7 @@ public final class Admins implements CommandTrigger {
 			player.message("Need at least one free inventory space.");
 		} else {
 			List<Item> bisList;
+			boolean forRetroConfig = false;
 			if (config().WANT_CUSTOM_SPRITES) {
 				bisList = newArrayList(
 					new Item(ItemId.LARGE_DRAGON_HELMET.id()),
@@ -767,30 +870,66 @@ public final class Admins implements CommandTrigger {
 					new Item(ItemId.DRAGON_2_HANDED_SWORD.id())
 				);
 			} else {
-				bisList = newArrayList(
-					new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
-					player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_BODY.id()) : new Item(ItemId.RUNE_PLATE_MAIL_TOP.id()),
-					new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()),
-					new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
-					new Item(ItemId.CAPE_OF_LEGENDS.id()),
-					new Item(ItemId.DRAGON_AXE.id()),
-					new Item(ItemId.DRAGON_SQUARE_SHIELD.id())
-				);
+				if (!player.getConfig().INFLUENCE_INSTEAD_QP) {
+					bisList = newArrayList(
+						new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
+						player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_BODY.id()) : new Item(ItemId.RUNE_PLATE_MAIL_TOP.id()),
+						player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()) : new Item(ItemId.RUNE_SKIRT.id()),
+						new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
+						new Item(ItemId.CAPE_OF_LEGENDS.id()),
+						new Item(ItemId.DRAGON_AXE.id()),
+						new Item(ItemId.DRAGON_SQUARE_SHIELD.id())
+					);
+				} else {
+					forRetroConfig = true;
+					boolean supportsPlateTops = (player.getConfig().RESTRICT_ITEM_ID >= 313 || player.getConfig().RESTRICT_ITEM_ID == -1)
+						&& player.getClientLimitations().maxItemId >= 313;
+					////
+					// assumption clients will be able to support metal skirts
+					// probably safe because was the case since Feb 2001 clients
+					////
+					boolean supportsEnchantedAmulets = (player.getConfig().RESTRICT_ITEM_ID >= 317 || player.getConfig().RESTRICT_ITEM_ID == -1)
+						&& player.getClientLimitations().maxItemId >= 317;
+					bisList = newArrayList(
+						new Item(ItemId.LARGE_RUNE_HELMET.id()),
+						(player.isMale() || !supportsPlateTops) ? new Item(ItemId.ADAMANTITE_PLATE_MAIL_BODY.id()) : new Item(ItemId.ADAMANTITE_PLATE_MAIL_TOP.id()),
+						player.isMale() ? new Item(ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id()) : new Item(ItemId.ADAMANTITE_PLATED_SKIRT.id()),
+						supportsEnchantedAmulets ? new Item(ItemId.DIAMOND_AMULET_OF_POWER.id()) : new Item(ItemId.AMULET_OF_ACCURACY.id()),
+						new Item(ItemId.BLUE_CAPE.id()),
+						new Item(ItemId.RUNE_BATTLE_AXE.id()),
+						new Item(ItemId.ADAMANTITE_KITE_SHIELD.id())
+					);
+				}
 			}
-			List<Integer> questsToComplete = newArrayList(
-				Quests.LEGENDS_QUEST,
-				Quests.HEROS_QUEST,
-				Quests.DRAGON_SLAYER
-			);
-			List<Integer> skillsToLevel = newArrayList(
-				Skills.ATTACK,
-				Skills.STRENGTH,
-				Skills.DEFENSE,
-				Skills.HITS,
-				Skills.PRAYER,
-				Skills.RANGED,
-				Skills.MAGIC
-			);
+			List<Integer> questsToComplete = new ArrayList<>();
+			List<Integer> skillsToLevel = new ArrayList<>();
+			if (!forRetroConfig) {
+				questsToComplete.addAll(Arrays.asList(
+					Quests.LEGENDS_QUEST,
+					Quests.HEROS_QUEST,
+					Quests.DRAGON_SLAYER
+				));
+			}
+			skillsToLevel.addAll(Arrays.asList(
+				Skill.ATTACK.id(),
+				Skill.DEFENSE.id(),
+				Skill.STRENGTH.id(),
+				Skill.HITS.id(),
+				Skill.RANGED.id()
+			));
+			if (!player.getConfig().DIVIDED_GOOD_EVIL) {
+				skillsToLevel.addAll(Arrays.asList(
+					Skill.PRAYER.id(),
+					Skill.MAGIC.id()
+				));
+			} else {
+				skillsToLevel.addAll(Arrays.asList(
+					Skill.PRAYGOOD.id(),
+					Skill.PRAYEVIL.id(),
+					Skill.GOODMAGIC.id(),
+					Skill.EVILMAGIC.id()
+				));
+			}
 			for (Integer skill : skillsToLevel) {
 				if (player.getSkills().getMaxStat(skill) < player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
 					player.getSkills().setLevelTo(skill, player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
@@ -824,8 +963,8 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skills.HITS) - targetPlayer.getSkills().getMaxStat(Skills.HITS)));
-		targetPlayer.getSkills().normalize(Skills.HITS);
+		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.HITS.id()) - targetPlayer.getSkills().getMaxStat(Skill.HITS.id())));
+		targetPlayer.getSkills().normalize(Skill.HITS.id());
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "You have been healed by an admin");
 		}
@@ -842,7 +981,7 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		targetPlayer.getSkills().normalize(Skills.PRAYER);
+		targetPlayer.getSkills().normalize(Skill.PRAYER.id());
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "Your prayer has been recharged by an admin");
 		}
@@ -877,14 +1016,14 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		if (newHits > targetPlayer.getSkills().getMaxStat(Skills.HITS))
-			newHits = targetPlayer.getSkills().getMaxStat(Skills.HITS);
+		if (newHits > targetPlayer.getSkills().getMaxStat(Skill.HITS.id()))
+			newHits = targetPlayer.getSkills().getMaxStat(Skill.HITS.id());
 		if (newHits < 0)
 			newHits = 0;
 
-		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skills.HITS) - newHits));
-		targetPlayer.getSkills().setLevel(Skills.HITS, newHits);
-		if (targetPlayer.getSkills().getLevel(Skills.HITS) <= 0)
+		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.HITS.id()) - newHits));
+		targetPlayer.getSkills().setLevel(Skill.HITS.id(), newHits);
+		if (targetPlayer.getSkills().getLevel(Skill.HITS.id()) <= 0)
 			targetPlayer.killedBy(player);
 
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
@@ -921,12 +1060,12 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		if (newPrayer > targetPlayer.getSkills().getMaxStat(Skills.PRAYER))
-			newPrayer = targetPlayer.getSkills().getMaxStat(Skills.PRAYER);
+		if (newPrayer > targetPlayer.getSkills().getMaxStat(Skill.PRAYER.id()))
+			newPrayer = targetPlayer.getSkills().getMaxStat(Skill.PRAYER.id());
 		if (newPrayer < 0)
 			newPrayer = 0;
 
-		targetPlayer.getSkills().setLevel(Skills.PRAYER, newPrayer);
+		targetPlayer.getSkills().setLevel(Skill.PRAYER.id(), newPrayer);
 
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
@@ -952,8 +1091,8 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skills.HITS)));
-		targetPlayer.getSkills().setLevel(Skills.HITS, 0);
+		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.HITS.id())));
+		targetPlayer.getSkills().setLevel(Skill.HITS.id(), 0);
 		targetPlayer.killedBy(player);
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "You have been killed by an admin");
@@ -988,8 +1127,8 @@ public final class Admins implements CommandTrigger {
 		}
 
 		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, damage));
-		targetPlayer.getSkills().subtractLevel(Skills.HITS, damage);
-		if (targetPlayer.getSkills().getLevel(Skills.HITS) <= 0)
+		targetPlayer.getSkills().subtractLevel(Skill.HITS.id(), damage);
+		if (targetPlayer.getSkills().getLevel(Skill.HITS.id()) <= 0)
 			targetPlayer.killedBy(player);
 
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
@@ -999,46 +1138,90 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void removeItemInventoryAll(Player player, String command, String[] args) {
-
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player]");
 			return;
 		}
 
-		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		String targetPlayerName = args[0];
 
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
+		boolean success = false;
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
+		if (targetPlayer != null) {
+			// player is online
+			synchronized (targetPlayer.getCarriedItems().getInventory()) {
+				while (targetPlayer.getCarriedItems().getInventory().size() > 0) {
+					Item item = targetPlayer.getCarriedItems().getInventory().get(0);
+					targetPlayer.getCarriedItems().remove(item);
+				}
+			}
 
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not wipe the inventory of a staff member of equal or greater rank.");
-			return;
-		}
+			if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
+				int wearableId;
+				synchronized (targetPlayer.getCarriedItems().getEquipment()) {
+					for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+						Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
+						if (equipped == null)
+							continue;
+						targetPlayer.getCarriedItems().getEquipment().unequipItem(
+							new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
+						);
+						targetPlayer.getCarriedItems().remove(new Item(equipped.getCatalogId(), equipped.getAmount()));
+					}
+				}
+			}
 
-		while (player.getCarriedItems().getInventory().size() > 0) {
-			Item item = player.getCarriedItems().getInventory().get(0);
-			player.getCarriedItems().remove(item);
-		}
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your inventory has been wiped by an admin");
+			}
+			success = true;
+		} else {
+			// player is offline
+			List<Item> inventory;
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
+			try {
+				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
 
-		if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
-			int wearableId;
-			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
-				if (equipped == null)
-					continue;
-				targetPlayer.getCarriedItems().getEquipment().unequipItem(
-					new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
-				);
-				player.getCarriedItems().remove(new Item(equipped.getCatalogId(), equipped.getAmount()));
+			// delete items
+			try {
+				int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerName);
+				if (playerId == -1) {
+					throw new GameDatabaseException(Admins.class, "Could not find player.");
+				}
+				for (Item inventoryItem : inventory) {
+					player.getWorld().getServer().getDatabase().inventoryRemove(playerId, inventoryItem);
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
+
+			// verify success
+			try {
+				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName).size();
+				if (sizeAfter == 0) {
+					success = true;
+				} else {
+					player.message(messagePrefix + "Player still has " + sizeAfter + " items in their inventory. Fail.");
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! (Could not verify inventory wipe). Check the logs.");
+				LOGGER.error(e);
+				return;
 			}
 		}
 
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
-			targetPlayer.message(messagePrefix + "Your inventory has been wiped by an admin");
+		if (success) {
+			player.message(messagePrefix + "Wiped inventory of " + targetPlayerName);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the inventory of "+ targetPlayerName));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the inventory of "+ targetPlayerName));
 		}
-		player.message(messagePrefix + "Wiped inventory of " + targetPlayer.getUsername());
 	}
 
 	private void spawnGroundItemWorldwide(Player player, String command, String[] args) {
@@ -1238,38 +1421,6 @@ public final class Admins implements CommandTrigger {
 		}
 	}
 
-	private void npcTalk(Player player, String command, String[] args) {
-		if (args.length < 2) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [msg]");
-			return;
-		}
-
-		try {
-			int npc_id = Integer.parseInt(args[0]);
-
-			StringBuilder msg = new StringBuilder();
-			for (int i = 1; i < args.length; i++)
-				msg.append(args[i]).append(" ");
-			msg.toString().trim();
-
-			final Npc npc = player.getWorld().getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
-			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
-
-			if (npc != null) {
-				for (Player playerToChat : npc.getViewArea().getPlayersInView()) {
-					player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
-					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, playerToChat));
-					player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat);
-					npc.getUpdateFlags().setChatMessage(null);
-				}
-			} else {
-				player.message(messagePrefix + "NPC could not be found");
-			}
-		} catch (NumberFormatException e) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [msg]");
-		}
-	}
-
 	private void playerTalk(Player player, String command, String[] args) {
 		if (args.length < 2) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [msg]");
@@ -1345,8 +1496,8 @@ public final class Admins implements CommandTrigger {
 		player.getWorld().registerGameObject(sara);
 		player.getWorld().delayedRemoveObject(sara, 600);
 		n.getUpdateFlags().setDamage(new Damage(n, damage));
-		n.getSkills().subtractLevel(Skills.HITS, damage);
-		if (n.getSkills().getLevel(Skills.HITS) < 1) {
+		n.getSkills().subtractLevel(Skill.HITS.id(), damage);
+		if (n.getSkills().getLevel(Skill.HITS.id()) < 1) {
 			if (n.killed) {
 				// visible npc but killed flag is true
 				// if ever occurs, reset it for damageNpc to work
@@ -1731,7 +1882,10 @@ public final class Admins implements CommandTrigger {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id]");
 			return;
 		}
-		player.message(j.getSkills().getLevel(Skills.ATTACK) + " " + j.getSkills().getLevel(Skills.DEFENSE) + " " + j.getSkills().getLevel(Skills.STRENGTH) + " " + j.getSkills().getLevel(Skills.HITS) + " ");
+		player.message(j.getSkills().getLevel(Skill.ATTACK.id()) + " "
+			+ j.getSkills().getLevel(Skill.DEFENSE.id()) + " "
+			+ j.getSkills().getLevel(Skill.STRENGTH.id()) + " "
+			+ j.getSkills().getLevel(Skill.HITS.id()) + " ");
 		player.message(j.getCombatLevel() + " cb");
 	}
 
@@ -1756,7 +1910,10 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 		//j.setStrPotEventNpc(new StrPotEventNpc(j));
-		player.message(j.getSkills().getLevel(Skills.ATTACK) + " " + j.getSkills().getLevel(Skills.DEFENSE) + " " + j.getSkills().getLevel(Skills.STRENGTH) + " " + j.getSkills().getLevel(Skills.HITS) + " ");
+		player.message(j.getSkills().getLevel(Skill.ATTACK.id()) + " "
+			+ j.getSkills().getLevel(Skill.DEFENSE.id()) + " "
+			+ j.getSkills().getLevel(Skill.STRENGTH.id()) + " "
+			+ j.getSkills().getLevel(Skill.HITS.id()) + " ");
 		player.message(j.getCombatLevel() + " cb");
 	}
 
@@ -1814,11 +1971,14 @@ public final class Admins implements CommandTrigger {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc id] [att lvl] [def lvl] [str lvl] [hits lvl]");
 			return;
 		}
-		j.getSkills().setLevel(Skills.ATTACK, att);
-		j.getSkills().setLevel(Skills.DEFENSE, def);
-		j.getSkills().setLevel(Skills.STRENGTH, str);
-		j.getSkills().setLevel(Skills.HITS, hp);
-		player.message(j.getSkills().getLevel(Skills.ATTACK) + " " + j.getSkills().getLevel(Skills.DEFENSE) + " " + j.getSkills().getLevel(Skills.STRENGTH) + " " + j.getSkills().getLevel(Skills.HITS) + " ");
+		j.getSkills().setLevel(Skill.ATTACK.id(), att);
+		j.getSkills().setLevel(Skill.DEFENSE.id(), def);
+		j.getSkills().setLevel(Skill.STRENGTH.id(), str);
+		j.getSkills().setLevel(Skill.HITS.id(), hp);
+		player.message(j.getSkills().getLevel(Skill.ATTACK.id()) + " "
+			+ j.getSkills().getLevel(Skill.DEFENSE.id()) + " "
+			+ j.getSkills().getLevel(Skill.STRENGTH.id()) + " "
+			+ j.getSkills().getLevel(Skill.HITS.id()) + " ");
 	}
 
 	private void playerSkull(Player player, String command, String[] args) {
@@ -1938,7 +2098,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		int radius = -1;
-		if (args.length >= 3) {
+		if (args.length >= 2) {
 			try {
 				radius = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
@@ -1950,7 +2110,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		int time = -1;
-		if (args.length >= 4) {
+		if (args.length >= 3) {
 			try {
 				time = Integer.parseInt(args[2]);
 			} catch (NumberFormatException ex) {
@@ -2037,6 +2197,56 @@ public final class Admins implements CommandTrigger {
 			}
 
 			player.playerServerMessage(MessageType.QUEST, messagePrefix + "Christmas trees have been enabled.");
+		}
+	}
+
+	private void startResetEvent(Player player, String command, String[] args, boolean allowMultiple) {
+		if (args.length < 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute]");
+			return;
+		}
+
+		int executionCount;
+		try {
+			executionCount = Integer.parseInt(args[0]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute]");
+			return;
+		}
+
+		int minute;
+		try {
+			minute = Integer.parseInt(args[1]);
+
+			if (minute < 0 || minute > 60) {
+				player.message(messagePrefix + "The minute of the hour must be between 0 and 60");
+			}
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute]");
+			return;
+		}
+
+		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events.values()) {
+			if (!(event instanceof HourlyResetEvent)) continue;
+
+			player.message(messagePrefix + "There is already an hourly reset running!");
+			return;
+		}
+
+		player.getWorld().getServer().getGameEventHandler().add(new HourlyResetEvent(player.getWorld(), executionCount, minute));
+		player.message(messagePrefix + "Starting hourly reset!");
+		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Started reset event"));
+	}
+
+	private void stopResetEvent(Player player) {
+		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events.values()) {
+			if (!(event instanceof HourlyResetEvent)) continue;
+
+			event.stop();
+			player.message(messagePrefix + "Stopping hourly reset!");
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Stopped reset event"));
 		}
 	}
 }

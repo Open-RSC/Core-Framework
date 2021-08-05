@@ -2,17 +2,19 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.model.container.*;
+import com.openrsc.server.model.container.BankPreset;
+import com.openrsc.server.model.container.Equipment;
+import com.openrsc.server.model.container.Inventory;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.BankStruct;
 import com.openrsc.server.util.rsc.MessageType;
 
-public final class BankHandler implements PacketHandler {
+public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) {
+	public void process(BankStruct payload, Player player) throws Exception {
 
 		//Restrict access to Ultimate Ironmen
 		if (player.isIronMan(IronmanMode.Ultimate.id())) {
@@ -36,7 +38,7 @@ public final class BankHandler implements PacketHandler {
 		}
 
 		//Make sure the opcode is valid
-		final OpcodeIn opcode = OpcodeIn.get(packet.getID());
+		final OpcodeIn opcode = payload.getOpcode();
 		if (opcode == null)
 			return;
 
@@ -49,8 +51,8 @@ public final class BankHandler implements PacketHandler {
 				player.resetBank();
 				break;
 			case BANK_WITHDRAW:
-				catalogID = packet.readShort();
-				amount = packet.readInt();
+				catalogID = payload.catalogID;
+				amount = payload.amount;
 				// authentic client also sends magic constant 4 byte number that never changes & is not very useful.
 				// possibly a relic if WITHDRAW & DEPOSIT didn't have their own opcodes in the past.
 
@@ -58,9 +60,9 @@ public final class BankHandler implements PacketHandler {
 					return;
 				}
 
-				if (!player.isUsingAuthenticClient()) {
+				if (player.isUsingCustomClient()) {
 					if (player.getConfig().WANT_BANK_NOTES) {
-						wantsNotes = packet.readByte() == 1;
+						wantsNotes = payload.noted;
 						if (player.getQolOptOut()) {
 							if (wantsNotes) {
 								player.playerServerMessage(MessageType.QUEST, "Sorry, but you may not withdraw bank notes, as your account is opted out of QoL features.");
@@ -75,8 +77,8 @@ public final class BankHandler implements PacketHandler {
 				player.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
 				break;
 			case BANK_DEPOSIT:
-				catalogID = packet.readShort();
-				amount = packet.readInt();
+				catalogID = payload.catalogID;
+				amount = payload.amount;
 				// authentic client also sends magic constant 4 byte number that never changes & is not very useful.
 				// possibly a relic if WITHDRAW & DEPOSIT didn't have their own opcodes in the past.
 
@@ -106,7 +108,7 @@ public final class BankHandler implements PacketHandler {
 					player.message("You are acting too quickly, please wait 2 seconds between actions");
 					return;
 				}
-				presetSlot = packet.readShort();
+				presetSlot = payload.presetSlot;
 				if (presetSlot < 0 || presetSlot >= BankPreset.PRESET_COUNT) {
 					player.setSuspiciousPlayer(true, "packet seven bank preset slot < 0 or preset slot >= preset count");
 					return;
@@ -119,7 +121,7 @@ public final class BankHandler implements PacketHandler {
 					player.setSuspiciousPlayer(true, "bank save preset on authentic world");
 					return;
 				}
-				presetSlot = packet.readShort();
+				presetSlot = payload.presetSlot;
 				if (presetSlot < 0 || presetSlot >= BankPreset.PRESET_COUNT) {
 					player.setSuspiciousPlayer(true, "packet six bank preset slot < 0 or preset slot >= preset count");
 					return;

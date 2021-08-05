@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../sql_queries.xsd">
+    <query key="patches.markPatchExecuted">
+        insert into _PREFIX_db_patches values ({patchName}, {runDate})
+    </query>
+    <query key="patches.getExecutedPatches">
+        select patch_name from _PREFIX_db_patches
+    </query>
+</queries>

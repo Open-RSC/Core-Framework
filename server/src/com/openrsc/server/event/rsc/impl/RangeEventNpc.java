@@ -1,7 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
@@ -80,7 +80,9 @@ public class RangeEventNpc extends GameTickEvent {
 			int combDiff = Math.abs(getOwner().getCombatLevel() - target.getCombatLevel());
 			int targetWildLvl = target.getLocation().wildernessLevel();
 			int myWildLvl = getOwner().getLocation().wildernessLevel();
-			if ((target.isPlayer() && !((Player) target).loggedIn()) || target.getSkills().getLevel(Skills.HITS) <= 0 || !getOwner().withinRange(target)) {
+			if ((target.isPlayer() && !((Player) target).loggedIn())
+				|| target.getSkills().getLevel(Skill.HITS.id()) <= 0
+				|| !getOwner().withinRange(target)) {
 				getOwner().resetRange();
 				stop();
 				return;

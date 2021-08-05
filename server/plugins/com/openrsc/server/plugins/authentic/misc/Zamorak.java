@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -73,15 +73,19 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", player));
 		delay(4);
 		player.message("You feel slightly weakened");
-		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skills.HITS) + 20) * 0.05));
+		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skill.HITS.id()) + 20) * 0.05));
 		player.damage(dmg);
-		int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
+		int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
 			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));
 			/* New current level */
 			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
-			player.getSkills().setLevel(affectedStat, newStat);
+			player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+		}
+		if (!sendUpdate) {
+			player.getSkills().sendUpdateAll();
 		}
 		delay();
 		zam.setChasing(player);

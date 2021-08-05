@@ -1,9 +1,6 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.EquipRequest;
@@ -51,6 +48,12 @@ public class Equipment {
 		}
 	}
 
+	public Item getRingItem() {
+		synchronized (list) {
+			return list[EquipmentSlot.SLOT_RING.getIndex()];
+		}
+	}
+
 	/** Primary Method Definitions */
 
 	// Equipment::add(Item)
@@ -68,7 +71,7 @@ public class Equipment {
 
 			if (list[slotID] == null) {
 				Item toEquip = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
-				int itemID = player.getWorld().getServer().getDatabase().equipmentAddToPlayer(player, toEquip);
+				int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 				toEquip = new Item(toEquip.getCatalogId(), toEquip.getAmount(), toEquip.getNoted(), itemID);
 				list[slotID] = toEquip;
 				return slotID;
@@ -117,7 +120,6 @@ public class Equipment {
 						player.updateWornItems(wieldPosition,
 							appearanceId,
 							curEquipDef.getWearableId(), false);
-						player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 					}
 					if (updateClient) {
 						ActionSender.sendEquipmentStats(player);
@@ -140,13 +142,13 @@ public class Equipment {
 			return false;
 		}
 
-		//Make sure they have the item equipped
+		// Make sure they have the item equipped
 		if (!hasEquipped(request.item.getCatalogId())) {
 			player.setSuspiciousPlayer(true, "tried to unequip something they don't have equipped");
 			return false;
 		}
 
-		//Check legitimacy of packet
+		// Check legitimacy of packet
 		if ((request.requestType == UnequipRequest.RequestType.FROM_EQUIPMENT
 			|| request.requestType == UnequipRequest.RequestType.FROM_BANK)
 			&& !player.getConfig().WANT_EQUIPMENT_TAB) {
@@ -164,7 +166,7 @@ public class Equipment {
 			case FROM_EQUIPMENT:
 				synchronized (list) {
 					synchronized (player) {
-						//Can't unequip something if inventory is full
+						// Can't unequip something if inventory is full
 						if (player.getCarriedItems().getInventory().full()) {
 							player.message("You need more inventory space to unequip that.");
 							return false;
@@ -180,7 +182,7 @@ public class Equipment {
 			case FROM_BANK:
 				synchronized (list) {
 					synchronized (player.getBank().getItems()) {
-						//Can't unequip something if bank is full
+						// Can't unequip something if bank is full
 						if (player.getBank().full()) {
 							player.message("You need more inventory space to unequip that.");
 							return false;
@@ -204,6 +206,12 @@ public class Equipment {
 				return unequipItem(request);
 		}
 
+		// unequipped morphing ring
+		AppearanceId appearance = AppearanceId.getById(request.item.getDef(player.getWorld()).getAppearanceId());
+		if (appearance.getSuggestedWieldPosition() == AppearanceId.SLOT_MORPHING_RING) {
+			player.exitMorph();
+		}
+
 		if (request.sound) {
 			player.playSound("click");
 		}
@@ -222,15 +230,15 @@ public class Equipment {
 		return equipItem(request, true);
 	}
 	public boolean equipItem(EquipRequest request, boolean updateClient) {
-		//Make sure the item isn't a note
+		// Make sure the item isn't a note
 		if (request.item.getNoted())
 			return false;
 
-		//Check that they are eligible to equip the item
+		// Check that they are eligible to equip the item
 		if (!ableToEquip(request.item))
 			return false;
 
-		//Logic changes depending on where the item is being equipped from
+		// Logic changes depending on where the item is being equipped from
 		switch (request.requestType) {
 			case FROM_INVENTORY:
 				if (!equipItemFromInventory(request, updateClient))
@@ -249,12 +257,33 @@ public class Equipment {
 			player.playSound("click");
 
 		ItemDefinition itemDef = request.item.getDef(player.getWorld());
-		player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+		if (morphAllowsUpdate(itemDef)) {
+			player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+		}
+
 		if (updateClient) {
 			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
 			ActionSender.sendUpdatedPlayer(player);
 		}
 		return true;
+	}
+
+	private boolean morphAllowsUpdate(ItemDefinition newlyWieldedItem) {
+		if (newlyWieldedItem.getWieldPosition() == AppearanceId.SLOT_MORPHING_RING) {
+			return true;
+		} else {
+			if (player.getCarriedItems().getEquipment() == null) {
+				return true;
+			}
+			if (player.getCarriedItems().getEquipment().getRingItem() == null) {
+				return true;
+			}
+			final ItemDefinition wornRingDef = player.getCarriedItems().getEquipment().getRingItem().getDef(player.getWorld());
+			if (wornRingDef.getAppearanceId() == AppearanceId.NOTHING.id()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Equipment::equipItemFromInventory(EquipRequest)
@@ -472,7 +501,10 @@ public class Equipment {
 	// Equipment::ableToEquip(Item)
 	// Returns true if the item may be equipped to the player.
 	public boolean ableToEquip(Item item) {
-		int requiredLevel = item.getDef(player.getWorld()).getRequiredLevel();
+		// Retro RSC mechanic - did not use to require level to wield
+		boolean hasRequirement = !player.getConfig().NO_LEVEL_REQUIREMENT_WIELD;
+
+		int requiredLevel = hasRequirement ? item.getDef(player.getWorld()).getRequiredLevel() : 1;
 		int requiredSkillIndex = item.getDef(player.getWorld()).getRequiredSkillIndex();
 		String itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
 		Optional<Integer> optionalLevel = Optional.empty();
@@ -488,18 +520,22 @@ public class Equipment {
 		// Spears and throwing knives
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+			optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 		}
 		// Staff of iban (usable)
 		if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+			optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 		}
 
 		// Battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+			optionalSkillIndex = Optional.of(Skill.ATTACK.id());
+		}
+
+		if (optionalLevel.isPresent() && !hasRequirement) {
+			optionalLevel = Optional.of(1);
 		}
 
 		// Check if the skill is a high enough level
@@ -553,6 +589,10 @@ public class Equipment {
 			player.message("you need to complete the legend's guild quest");
 			return false;
 		}
+
+		// Note: It is authentic to NOT have a check for Cape of Legends!
+		// They only relied on its untradability as the check. Proof of this is in the
+		// behaviour seen in 2004, when transferring the cape from RS2 back to RS1.
 
 		// God capes and staves.
 		else if (item.getCatalogId() == ItemId.STAFF_OF_GUTHIX.id() && (hasEquipped(ItemId.ZAMORAK_CAPE.id()) || hasEquipped(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
@@ -749,9 +789,9 @@ public class Equipment {
 		SLOT_MEDIUM_HELMET(5),
 		SLOT_CHAIN_BODY(6),
 		SLOT_SKIRT(7),
-		SLOT_NECK(8),
+		SLOT_GLOVES(8),
 		SLOT_BOOTS(9),
-		SLOT_GLOVES(10),
+		SLOT_NECK(10),
 		SLOT_CAPE(11),
 		SLOT_AMMO(12),
 		SLOT_RING(13);

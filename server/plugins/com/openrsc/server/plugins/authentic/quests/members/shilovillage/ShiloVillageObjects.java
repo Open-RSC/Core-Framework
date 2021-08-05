@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.quests.members.shilovillage;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -120,7 +120,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				player.damage(0);
 				say(player, null, "Ooooff!");
 			}
-			player.incExp(Skills.AGILITY, 5, true);
+			player.incExp(Skill.AGILITY.id(), 5, true);
 		}
 		else if (obj.getID() == METALLIC_DUNGEON_GATE) {
 			if (command.equalsIgnoreCase("Open")) {
@@ -138,8 +138,8 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 						changeloc(obj, config().GAME_TICK * 3, 181);
 						player.teleport(348, 3616);
-						player.damage(getCurrentLevel(player, Skills.HITS) / 2 + 1);
-						if (getCurrentLevel(player, Skills.HITS) > 0) {
+						player.damage(getCurrentLevel(player, Skill.HITS.id()) / 2 + 1);
+						if (getCurrentLevel(player, Skill.HITS.id()) > 0) {
 							mes("@red@You feel invisible hands starting to choke you...");
 							delay(3);
 							player.teleport(348, 3614);
@@ -231,10 +231,10 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				delay(3);
 				player.teleport(380, 3692);
 				say(player, null, "Ahhhhh!");
-				player.damage(getCurrentLevel(player, Skills.HITS) / 10);
+				player.damage(getCurrentLevel(player, Skill.HITS.id()) / 10);
 				mes("And it knocks the wind out of you.");
 				delay(3);
-				player.damage(getCurrentLevel(player, Skills.HITS) / 10);
+				player.damage(getCurrentLevel(player, Skill.HITS.id()) / 10);
 				player.teleport(467, 3674);
 				say(player, null, "Oooff!");
 			}
@@ -317,14 +317,14 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 						if (!player.getCache().hasKey("obtained_shilo_info")) {
 							player.getCache().store("obtained_shilo_info", true);
 						}
-						player.incExp(Skills.AGILITY, 15, true);
+						player.incExp(Skill.AGILITY.id(), 15, true);
 					} else {
 						mes("You acidently knock some rocks and the ceiling starts to cave in.");
 						delay(3);
 						mes("Some rocks fall on you.");
 						delay(3);
-						player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.1D + 1));
-						player.incExp(Skills.AGILITY, 5, true);
+						player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) * 0.1D + 1));
+						player.incExp(Skill.AGILITY.id(), 5, true);
 					}
 				}
 			} else if (menu == 1) {
@@ -424,8 +424,8 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					mes("You are washed onto the waterfall river bank");
 					delay(3);
 					player.message("barely alive!");
-					player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D + 4));
-					player.incExp(Skills.AGILITY, 5, true);
+					player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) * 0.2D + 4));
+					player.incExp(Skill.AGILITY.id(), 5, true);
 				} else {
 					mes("You manage to work your way along the slippery wall");
 					delay(3);
@@ -435,7 +435,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					mes("You make it out of the cave");
 					delay(3);
 					player.message("and into the warmth of the jungle.");
-					player.incExp(Skills.AGILITY, 100, true);
+					player.incExp(Skill.AGILITY.id(), 100, true);
 				}
 			} else if (m == 1) {
 				mes("You decide to have another look around.");
@@ -551,7 +551,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				} else if (obj.getX() == 357 && obj.getY() == 3668) {
 					player.teleport(347, 3709);
 				}
-				player.incExp(Skills.AGILITY, 10, true);
+				player.incExp(Skill.AGILITY.id(), 10, true);
 			} else if (menu == 1) {
 				player.message("You decide to stay where you are");
 			}
@@ -645,7 +645,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				mes("@red@You feel invisible hands starting to choke you...");
 				delay(3);
-				player.damage(getCurrentLevel(player, Skills.HITS) / 2);
+				player.damage(getCurrentLevel(player, Skill.HITS.id()) / 2);
 			}
 			mes("You insert the key into the lock and it merges with the door.");
 			delay(3);
@@ -771,7 +771,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			mes("You place it carefully into your inventory.");
 			delay(3);
 			give(player, ItemId.STONE_PLAQUE.id(), 1);
-			player.incExp(Skills.CRAFTING, 10, true);
+			player.incExp(Skill.CRAFTING.id(), 10, true);
 		}
 	}
 

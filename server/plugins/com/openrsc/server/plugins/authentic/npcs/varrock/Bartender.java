@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.varrock;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -105,7 +105,7 @@ public class Bartender implements TalkNpcTrigger {
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH, Skills.SMITHING};
+		int[] skillIDs = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.SMITHING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

@@ -1,35 +1,35 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.database.impl.mysql.queries.logging.GameReport;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ReportStruct;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Iterator;
 
-public final class ReportHandler implements PacketHandler {
+public final class ReportHandler implements PayloadProcessor<ReportStruct, OpcodeIn> {
+	private static final Logger LOGGER = LogManager.getLogger();
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ReportStruct payload, Player player) throws Exception {
 
 		String playerName;
-		if (player.isUsingAuthenticClient()) {
-			playerName = packet.readZeroPaddedString();
-		} else {
-			playerName = packet.readString();
-		}
-		byte reason = packet.readByte();
-		byte suggestsOrMutes = packet.readByte();
+		playerName = payload.targetPlayerName;
+		byte reason = payload.reason;
+		byte suggestsOrMutes = payload.suggestsOrMutes;
 
 		if (playerName.equalsIgnoreCase(player.getUsername())) {
 			player.message("You can't report yourself!!");
 			return;
 		}
 
-		if (reason < 0 || reason > 14) {
-			player.setSuspiciousPlayer(true, "report reason < 0 or reason > 14");
-		}
-		if (reason != 4 && reason != 6) {
+
+		// botting or bug exploiting; "other" or impersonating jagex staff
+		if (reason != 4 && reason != 6 && reason != 8 + 64 && reason != 6 + 64) {
 			Iterator<Snapshot> i = player.getWorld().getSnapshots().iterator();
 			if (i.hasNext()) {
 				Snapshot s = i.next();
@@ -59,6 +59,7 @@ public final class ReportHandler implements PacketHandler {
 		}
 
 		player.message("Thank-you, your abuse report has been received.");
+		LOGGER.info(player.getUsername() + " reported " + playerName + " for \"" + Constants.reportReasons.getOrDefault((int)reason, "Unknown Reason") + "\"");
 		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, playerName, reason, suggestsOrMutes != 0, player.isMod()));
 		player.setLastReport();
 

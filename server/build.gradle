@@ -1,0 +1,74 @@
+plugins {
+    id "application"
+    id "java"
+}
+
+group "org.openrsc"
+version "1.0-SNAPSHOT"
+
+application {
+    mainClassName = "com.openrsc.server.Server"
+    applicationDefaultJvmArgs = ['-DcoloredLogging=true','-Dconf=default']
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://repo.spring.io/libs-release/")
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs "src"
+            srcDirs "plugins"
+        }
+    }
+}
+
+dependencies {
+    // Only available on jcenter which is due to be shutdown, reference locally
+    implementation files("lib/JDA-4.0.0_55-withDependencies.jar")
+
+    // Discord
+    implementation "com.vdurmont:emoji-java:4.0.0"
+    implementation "org.gitlab4j:gitlab4j-api:4.12.17"
+
+    // Others
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
+//    implementation "org.mariadb.jdbc:mariadb-java-client:2.1.2"
+    implementation "org.xerial:sqlite-jdbc:3.34.0"
+
+    implementation "com.thoughtworks.xstream:xstream:1.4.9"
+    implementation "com.lmax:disruptor:3.3.11"
+
+    implementation "org.apache.commons:commons-collections4:4.0"
+    implementation "org.apache.commons:commons-lang3:3.12.0"
+    implementation "org.apache.commons:commons-compress:1.18"
+    implementation "commons-lang:commons-lang:2.6"
+
+    implementation("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation("org.apache.logging.log4j:log4j-core:2.14.1")
+    implementation("org.apache.logging.log4j:log4j-iostreams:2.14.1")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.14.1")
+
+    implementation("org.json:json:20190722")
+    implementation("commons-codec:commons-codec:1.14")
+    implementation("xpp3:xpp3:1.1.4c")
+    implementation("com.google.guava:guava:30.1.1-jre")
+    implementation("io.netty:netty-all:4.1.33.Final")
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+ant.importBuild("build.xml")
+
+run {
+    dependsOn compile_plugins
+}
+
+test {
+    useJUnitPlatform()
+}

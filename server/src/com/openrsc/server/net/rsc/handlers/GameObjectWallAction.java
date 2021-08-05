@@ -5,13 +5,13 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToObjectAction;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.TargetObjectStruct;
 
-public class GameObjectWallAction implements PacketHandler {
+public class GameObjectWallAction implements PayloadProcessor<TargetObjectStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(TargetObjectStruct payload, Player player) throws Exception {
 
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
@@ -24,19 +24,19 @@ public class GameObjectWallAction implements PacketHandler {
 
 		player.resetAll();
 
-		final int pID = packet.getID();
+		final OpcodeIn pID = payload.getOpcode();
 
-		if (pID == OpcodeIn.INTERACT_WITH_BOUNDARY.getOpcode()) {
+		if (pID == OpcodeIn.INTERACT_WITH_BOUNDARY) {
 			player.click = 0;
 		}
-		else if (pID == OpcodeIn.INTERACT_WITH_BOUNDARY2.getOpcode()) {
+		else if (pID == OpcodeIn.INTERACT_WITH_BOUNDARY2) {
 			player.click = 1;
 		}
 		else return;
 
-		final short x = packet.readShort();
-		final short y = packet.readShort();
-		final byte dir = packet.readByte();
+		final int x = payload.coordObject.getX();
+		final int y = payload.coordObject.getY();
+		final int dir = payload.direction;
 		if (x < 0 || y < 0 || dir < 0) {
 			player.setSuspiciousPlayer(true, "bad game object wall coordinates");
 			return;

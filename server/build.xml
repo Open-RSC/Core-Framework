@@ -11,7 +11,7 @@
         <delete dir="buildplugins"/>
         <mkdir dir="buildplugins"/>
         <javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false" target="${javac.target}"
-               source="${javac.source}">
+               source="${javac.source}" encoding="UTF-8">
             <classpath>
                 <pathelement location="core.jar"/>
                 <pathelement path="${java.class.path}/"/>
@@ -31,18 +31,22 @@
         <delete dir="${build}"/>
         <mkdir dir="${build}"/>
         <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false" target="${javac.target}"
-               source="${javac.source}">
+               source="${javac.source}" encoding="UTF-8">
             <classpath>
+                <pathelement location="${lib}/commons-lang3-3.12.0.jar"/>
                 <pathelement location="${lib}/commons-codec-1.14.jar"/>
+				<pathelement location="${lib}/commons-compress-1.18.jar"/>
                 <pathelement location="${lib}/netty-all-4.1.33.Final.jar"/>
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
                 <pathelement location="${lib}/log4j-core-2.8.jar"/>
+                <pathelement location="${lib}/log4j-iostreams-2.14.1.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
-                <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
+                <pathelement location="${lib}/mysql-connector-java-8.0.19.jar"/>
+                <pathelement location="${lib}/sqlite-jdbc-3.34.0.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
-                <pathelement location="${lib}/guava-25.0-jre.jar"/>
+                <pathelement location="${lib}/guava-30.1.1-jre.jar"/>
                 <pathelement location="${lib}/JDA-4.0.0_55-withDependencies.jar"/>
                 <pathelement location="${lib}/emoji-java-5.1.1.jar"/>
                 <pathelement location="${lib}/json-20190722.jar"/>
@@ -53,7 +57,7 @@
             <compilerarg line="-Xlint:deprecation"/>
         </javac>
         <jar basedir="${build}" destfile="${jar}">
-            <zipgroupfileset dir="lib" includes="*.jar"/>
+            <zipgroupfileset dir="${lib}" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="com.openrsc.server.Server"/>
             </manifest>
@@ -61,23 +65,24 @@
         <delete dir="${build}"/>
     </target>
 
+    <property name="confFile" value="default" />
+    <property name="coloredLogging" value="false" />
     <target name="runserver">
         <java classname="com.openrsc.server.Server" fork="true">
-            <!-- Comment out the below default.conf reference to disable default loading and instead run multiple worlds on the same server process -->
-            <arg value="default.conf"/>
-            <!-- Uncomment the below section to run multiple worlds on the same server process (comment out default.conf above first)-->
-            <!--<arg value="openrsc.conf"/>
-            <arg value="rsccabbage.conf"/>-->
-            <jvmarg line="-Xdiag -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
+            <!-- usage: `ant runserver -DconfFile=openrsc` to run server with config file openrsc.conf -->
+            <!-- see also: Deployment_Scripts/run.sh -->
+            <arg value="${confFile}.conf"/>
+            <jvmarg line="-Xdiag -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m -DcoloredLogging=${coloredLogging}"/>
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.0.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
                 <pathelement location="${lib}/log4j-core-2.8.jar"/>
+                <pathelement location="${lib}/log4j-iostreams-2.14.1.jar"/>
                 <pathelement location="${lib}/xpp3_min-1.1.4c.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
-                <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
+                <pathelement location="${lib}/mysql-connector-java-8.0.19.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.5.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
                 <pathelement location="${lib}/*"/>

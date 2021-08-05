@@ -9,6 +9,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.authentic.npcs.varrock.ManPhoenix;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 
 import java.util.Optional;
@@ -48,6 +51,11 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.SHIELD_OF_ARRAV.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -55,8 +63,11 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done, you have completed the shield of Arrav quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHIELD_OF_ARRAV), true);
-		player.message("@gre@You haved gained 1 quest point!");
+		final QuestReward reward = Quest.SHIELD_OF_ARRAV.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 		give(player, ItemId.COINS.id(), 600);
 	}
 
@@ -515,14 +526,27 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 						ManPhoenix.indirectTalkToStraven(player, man);
 					}
 				} else {
-					player.message("The door is opened for you");
-					player.message("You go through the door");
-					if (player.getY() <= 3369) {
-						doDoor(obj, player);
-						player.teleport(player.getX(), player.getY() + 1, false);
+					if (!player.getConfig().OLD_QUEST_MECHANICS) {
+						player.message("The door is opened for you");
+						player.message("You go through the door");
+						if (player.getY() <= 3369) {
+							doDoor(obj, player);
+							player.teleport(player.getX(), player.getY() + 1, false);
+						} else {
+							doDoor(obj, player);
+							player.teleport(player.getX(), player.getY() - 1, false);
+						}
 					} else {
-						doDoor(obj, player);
-						player.teleport(player.getX(), player.getY() - 1, false);
+						if (player.getY() <= 3369) {
+							player.message("The door is locked");
+							if (player.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_KEY.id())) {
+								player.message("You need to use your key to open it");
+								return;
+							}
+						} else {
+							doDoor(obj, player);
+							player.teleport(player.getX(), player.getY() - 1, false);
+						}
 					}
 				}
 			} else if (isBlackArmGang(player)) {
@@ -537,12 +561,10 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				}
 			}
 		} else if (obj.getID() == 20 && obj.getY() == 532) {
-			if (player.getY() <= 531 || player.getY() >= 531) {
-				player.message("The door is locked");
-				if (player.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_WEAPON_KEY.id())) {
-					player.message("You need to use your key to open it");
-					return;
-				}
+			player.message("The door is locked");
+			if (player.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_WEAPON_KEY.id())) {
+				player.message("You need to use your key to open it");
+				return;
 			}
 		}
 	}
@@ -565,8 +587,10 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 
 	@Override
 	public boolean blockUseBound(Player player, GameObject obj, Item item) {
-		return item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
-				&& obj.getY() == 532;
+		return (item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
+				&& obj.getY() == 532)
+			|| (item.getCatalogId() == ItemId.PHOENIX_GANG_KEY.id() && obj.getID() == 19
+			&& obj.getY() == 3370);
 	}
 
 	@Override
@@ -576,11 +600,16 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 			thinkbubble(item);
 			mes("You unlock the door");
 			delay(3);
-			if (player.getY() <= 531) {
-				doDoor(obj, player);
-			} else {
-				doDoor(obj, player);
-			}
+			doDoor(obj, player);
+			mes("You go through the door");
+			delay(3);
+		} else if (item.getCatalogId() == ItemId.PHOENIX_GANG_KEY.id() && obj.getID() == 19
+			&& obj.getY() == 3370) {
+			// Retro RSC mechanic - had to use key on door to get in
+			thinkbubble(item);
+			mes("You unlock the door");
+			delay(3);
+			doDoor(obj, player);
 			mes("You go through the door");
 			delay(3);
 		}

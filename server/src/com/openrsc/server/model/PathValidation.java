@@ -1,5 +1,7 @@
 package com.openrsc.server.model;
 
+import com.google.common.collect.Multimap;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,6 +11,7 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -464,7 +467,7 @@ public class PathValidation {
 			myYBlocked = checkBlocking(mob, startX, startY, CollisionFlag.WALL_SOUTH, true);
 			// Or on north edge of square we are travelling toward.
 			newYBlocked = checkBlocking(mob, startX, startY + 1, CollisionFlag.WALL_NORTH, false);
-			coords[1] = startX + 1;
+			coords[1] = startY + 1;
 		}
 
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 0");
@@ -537,49 +540,67 @@ public class PathValidation {
 		/*boolean inFisherKingdom = (mob.getLocation().inBounds(415, 976, 423, 984)
 			|| mob.getLocation().inBounds(511, 976, 519, 984));*/
 		boolean blockedPath = PathValidation.isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
-		return blockedPath || isMobBlocking(mob, x, y);
+		blockedPath |= isMobBlocking(mob, x, y);
+		if (mob.isPlayer() && mob.getConfig().PLAYER_BLOCKING == 2) {
+			blockedPath |= isPlayerBlocking((Player)mob, x, y);
+		}
+		return blockedPath;
+	}
+
+	public static boolean isPlayerBlocking(Player localPlayer, int x, int y) {
+		switch(localPlayer.getConfig().PLAYER_BLOCKING) {
+			case 0: // Players can walk through players & directly on top of them
+				return false;
+			case 1: // Players can walk through other players, but only if they are not the last point on their path (authentic to 2018 RSC)
+			case 2: // Players act like solid objects. Possibly authentic to very early RSC, based on reports that players could stand in doors to block off buildings.
+				Region region = localPlayer.getWorld().getRegionManager().getRegion(Point.location(x, y));
+				Player player = region.getPlayer(x, y, localPlayer, false);
+				if (player != null) {
+					localPlayer.face(player); // TODO: this needs to be somewhere else for it to work when distance to player > 1. :-/
+					return true;
+				}
+			default:
+				return false;
+		}
 	}
 
 	public static boolean isMobBlocking(Mob mob, int x, int y) {
-		if (mob.getX() == x && mob.getY() == y)
+		if (mob.getX() == x && mob.getY() == y) {
 			return false;
+		}
 
 		// all npcs on loc, may include dead (not visible) ones
-		ArrayList<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().getOrDefault(x + "," + y,null);
+		Collection<Npc> npcsOnLoc = new ArrayList<>(mob.getWorld().getNpcPositions().get(new Point(x, y)));
 		// visible (&alive) npcs
-		List<Npc> visibleNpcsOnLoc = new ArrayList<>();
-		Npc npc = null;
-		if (npcsOnLoc != null) {
-			visibleNpcsOnLoc = npcsOnLoc.stream().filter(n -> !n.isRemoved() && !n.killed).collect(Collectors.toList());
-		}
-		npc = visibleNpcsOnLoc.size() > 0 ? visibleNpcsOnLoc.get(0) : null;
+		Npc npc = npcsOnLoc.stream()
+					.filter(n -> !n.isRemoved() && !n.killed)
+					.findFirst()
+					.orElse(null);
 
 		/*
 		 * NPC blocking config controlled
 		 */
 		if (npc != null) {
-			if (mob.getConfig().NPC_BLOCKING == 0) { // No NPC blocks
+			final int npcBlocking = mob.getConfig().NPC_BLOCKING;
+			if (npcBlocking == 0) { // No NPC blocks
 				return false;
-			} else if (mob.getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
-				if (mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) && npc.getDef().isAggressive()) {
-					return true;
-				}
-			} else if (mob.getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
-				if (npc.getDef().isAggressive()) {
-					return true;
-				}
-			} else if (mob.getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
-				if (npc.getDef().isAttackable()) {
-					return true;
-				}
-			} else if (mob.getConfig().NPC_BLOCKING == 4) { // All NPCs block
+			} else if (npcBlocking == 1) { // 2 * combat level + 1 blocks AND aggressive
+				final boolean combatLvlMoreThanDouble = mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1);
+
+				return combatLvlMoreThanDouble
+						&& npc.getDef().isAggressive();
+			} else if (npcBlocking == 2) { // Any aggressive NPC blocks
+				return npc.getDef().isAggressive();
+			} else if (npcBlocking == 3) { // Any attackable NPC blocks
+				return npc.getDef().isAttackable();
+			} else if (npcBlocking == 4) { // All NPCs block
 				return true;
 			}
 		}
 
 		if (mob.isNpc()) {
 			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
-			Player player = region.getPlayer(x, y, mob);
+			Player player = region.getPlayer(x, y, mob, false);
 			return player != null;
 		}
 		return false;

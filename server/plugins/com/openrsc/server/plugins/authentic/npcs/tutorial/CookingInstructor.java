@@ -1,14 +1,13 @@
 package com.openrsc.server.plugins.authentic.npcs.tutorial;
 
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public class CookingInstructor implements TalkNpcTrigger {
 	/**
@@ -57,7 +56,7 @@ public class CookingInstructor implements TalkNpcTrigger {
 				"If the number on the left is lower eat some food to be healed");
 			player.getCache().set("tutorial", 34);
 		} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") >= 34) {
-			if (player.getCarriedItems().hasCatalogID(ItemId.COOKEDMEAT.id()) && getCurrentLevel(player, Skills.HITS) < 10) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.COOKEDMEAT.id()) && getCurrentLevel(player, Skill.HITS.id()) < 10) {
 				npcsay(player, n, "to eat the food left click on it in your inventory");
 			} else {
 				npcsay(player, n, "There are many other sorts of food you can cook",

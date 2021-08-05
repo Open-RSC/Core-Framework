@@ -31,6 +31,9 @@ public class ScriptContext {
 	private volatile Point entityInteractingCoordinate;
 	private volatile Integer entityInteractingIndex;
 	private volatile Point interactingCoordinate;
+	private volatile Boolean executionFlag;
+	private volatile Boolean stopping;
+	private volatile Boolean shouldBlockDefault;
 
 	// Batching related
 	private volatile Boolean interrupted;
@@ -44,8 +47,10 @@ public class ScriptContext {
 		this.entityType = Action.idle.getDefaultEntityType();
 		this.entityInteractingIndex = null;
 		this.interactingCoordinate = null;
+		this.executionFlag = false;
 		this.interrupted = false;
 		this.batch = null;
+		this.stopping = false;
 	}
 
 	public Player getContextPlayer() {
@@ -74,7 +79,7 @@ public class ScriptContext {
 	}
 
 	public Npc getInteractingNpc() {
-		if(getContextPlayer() == null) {
+		if(getContextPlayer() == null && !stopping) {
 			return null;
 		}
 
@@ -208,7 +213,7 @@ public class ScriptContext {
 	}
 
 	public void setInteractingNpc(final Npc npc) {
-		if(getContextPlayer() == null) {
+		if(getContextPlayer() == null && !stopping) {
 			return;
 		}
 
@@ -311,7 +316,7 @@ public class ScriptContext {
 	}
 
 	public void setInteractingNothing() {
-		if(getContextPlayer() == null) {
+		if(getContextPlayer() == null && !stopping) {
 			return;
 		}
 
@@ -371,6 +376,7 @@ public class ScriptContext {
 	}
 
 	public void endScript() {
+		stopping = true;
 		setInteractingNothing();
 
 		if(getContextPlayer() != null) {
@@ -389,6 +395,7 @@ public class ScriptContext {
 			}
 			this.batch = null;
 		}
+		stopping = false;
 	}
 
 	public Action getCurrentAction() {
@@ -437,5 +444,21 @@ public class ScriptContext {
 
 	public synchronized void setInterrupted(final Boolean interrupted) {
 		this.interrupted = interrupted;
+	}
+
+	public Boolean getExecutionFlag() {
+		return executionFlag;
+	}
+
+	public void setExecutionFlag(final Boolean set) {
+		executionFlag = set;
+	}
+
+	public Boolean getShouldBlockDefault() {
+		return shouldBlockDefault;
+	}
+
+	public void setShouldBlockDefault(final Boolean shouldBlockDefault) {
+		this.shouldBlockDefault = shouldBlockDefault;
 	}
 }

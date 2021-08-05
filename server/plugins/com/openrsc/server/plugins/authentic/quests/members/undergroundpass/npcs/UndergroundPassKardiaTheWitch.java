@@ -1,15 +1,18 @@
 package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
-import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 
 import java.util.Optional;
 
@@ -52,7 +55,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 						delay(2);
 						player.message("the witch raises her hands above her");
 						displayTeleportBubble(player, player.getX(), player.getY(), true);
-						player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
+						player.damage(((int) getCurrentLevel(player, Skill.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
 						npcsay(player, witch, "haa haa.. die mortal");
 					} else {
 						// TODO: find if something happens here authentically

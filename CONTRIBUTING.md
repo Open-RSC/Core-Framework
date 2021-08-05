@@ -104,7 +104,7 @@ If you choose to install everything manually and not use the set up scripts, the
 
 ## <a name="pre"></a> Before You Start:
 
-1. Download RSC+ to use for replaying authentic content: https://github.com/OrN/rscplus
+1. Download RSC+ to use for replaying authentic content: https://github.com/RSCPlus/rscplus
 2. Clone the Game repo and set up as you wish: https://orsc.dev/open-rsc/Game
 3. Download any replays you need: https://orsc.dev/open-rsc/RSC-Plus-Replays
 

@@ -15,6 +15,9 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -47,6 +50,11 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.SHEEP_HERDER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -54,8 +62,11 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("well done, you have completed the Plaguesheep quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHEEP_HERDER), true);
-		player.message("@gre@You haved gained 4 quest points!");
+		final QuestReward reward = Quest.SHEEP_HERDER.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override

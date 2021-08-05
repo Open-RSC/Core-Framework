@@ -51,17 +51,19 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				delay(3);
 				return;
 			}
-			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
-				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
-			}
-			if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
-				player.message("the plague sample is too delicate...");
-				player.message("it disintegrates in the crossing");
-				while (player.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
-				}
-			}
+
 			if (menu != -1) {
+				if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
+					player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
+				}
+				if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
+					player.message("the plague sample is too delicate...");
+					player.message("it disintegrates in the crossing");
+					while (player.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+						player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+					}
+				}
+
 				if (menu == 0) { // Edgeville
 					player.teleport(226, 447, true);
 				} else if (menu == 1) { // Karamja
@@ -141,7 +143,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchAmuletCharge(player, item);
 		}
 	}

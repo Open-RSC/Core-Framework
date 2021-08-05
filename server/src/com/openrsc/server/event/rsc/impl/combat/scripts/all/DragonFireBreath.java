@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
+import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,7 +11,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
 
 public class DragonFireBreath implements OnCombatStartScript {
 
@@ -71,19 +72,23 @@ public class DragonFireBreath implements OnCombatStartScript {
 				} else {
 					percentage = 0;
 				}
-				fireDamage = (int) Math.floor(getCurrentLevel(player, Skills.HITS) * percentage / 100.0);
+				fireDamage = (int) Math.floor(getCurrentLevel(player, Skill.HITS.id()) * percentage / 100.0);
 			} else {
-				fireDamage = Math.min(getCurrentLevel(player, Skills.HITS), DataConversions.random(0, maxHit));
+				fireDamage = Math.min(getCurrentLevel(player, Skill.HITS.id()), DataConversions.random(0, maxHit));
 			}
-			if (fireDamage >= 25 || (fireDamage >= 20 && getMaxLevel(player, Skills.HITS) * 2/5 < 25)) {
+			if (fireDamage >= 25 || (fireDamage >= 20 && getMaxLevel(player, Skill.HITS.id()) * 2/5 < 25)) {
 				player.message("You are fried");
 			}
 			player.damage(fireDamage);
 
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			//reduce ranged level (case for KBD if engaging with melee or ranging)
 			if (dragon.getID() == NpcId.KING_BLACK_DRAGON.id() && (player.isRanging() || attacker.isPlayer())) {
-				int newLevel = getCurrentLevel(player, Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(player);
-				player.getSkills().setLevel(Skills.RANGED, newLevel);
+				int newLevel = getCurrentLevel(player, Skill.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(player);
+				player.getSkills().setLevel(Skill.RANGED.id(), newLevel, sendUpdate);
+				if (!sendUpdate) {
+					player.getSkills().sendUpdateAll();
+				}
 			}
 		}
 	}

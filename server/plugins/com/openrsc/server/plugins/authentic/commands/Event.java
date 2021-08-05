@@ -1,14 +1,17 @@
 package com.openrsc.server.plugins.authentic.commands;
 
-import com.openrsc.server.constants.Skills;
+import com.google.common.collect.ImmutableMap;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.LinkedPlayer;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -18,8 +21,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.config;
 
 public final class Event implements CommandTrigger {
 	public static final Logger LOGGER = LogManager.getLogger(Event.class);
@@ -27,17 +31,46 @@ public final class Event implements CommandTrigger {
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	private static final String[] towns = {"varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
-		"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
-		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom", "entrana", "waterfall"};
-
-	private static final Point[] townLocations = {Point.location(122, 509), Point.location(304, 542),
-		Point.location(214, 632), Point.location(269, 643), Point.location(370, 685), Point.location(89, 693),
-		Point.location(120, 648), Point.location(217, 449), Point.location(270, 352), Point.location(373, 498),
-		Point.location(653, 491), Point.location(501, 450), Point.location(233, 513), Point.location(325, 663),
-		Point.location(440, 501), Point.location(549, 589), Point.location(583, 747), Point.location(127, 3518),
-		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641),
-		Point.location(425,564), Point.location(659, 3302)};
+	private static final Map<String, Point> townLocations = new ImmutableMap.Builder<String, Point>()
+		.put("varrock", Point.location(122, 509))
+		.put("falador", Point.location(304, 542))
+		.put("draynor", Point.location(214, 632))
+		.put("portsarim", Point.location(269, 643))
+		.put("karamja", Point.location(370, 685))
+		.put("alkharid", Point.location(89, 693))
+		.put("lumbridge", Point.location(120, 648))
+		.put("edgeville", Point.location(217, 449))
+		.put("castle", Point.location(270, 352))
+		.put("taverly", Point.location(373, 498))
+		.put("clubhouse", Point.location(653, 491))
+		.put("seers", Point.location(501, 450))
+		.put("barbarian", Point.location(233, 513))
+		.put("rimmington", Point.location(325, 663))
+		.put("catherby", Point.location(440, 501))
+		.put("ardougne", Point.location(549, 589))
+		.put("yanille", Point.location(583, 747))
+		.put("lostcity", Point.location(127, 3518))
+		.put("gnome", Point.location(703, 527))
+		.put("shilovillage", Point.location(400, 850))
+		.put("tutorial", Point.location(217, 740))
+		.put("modroom", Point.location(75, 1641))
+		.put("entrana", Point.location(425,564))
+		.put("waterfall", Point.location(659, 3302))
+		.put("zanaris", Point.location(127,3518))
+		.put("gertrude", Point.location(160, 515))
+		.put("fishingguild", Point.location(587, 503))
+		.put("taibwowannai", Point.location(447, 749))
+		.put("brimhaven", Point.location(446, 694))
+		.put("shantay", Point.location(62, 729))
+		.put("trawler", Point.location(549, 702))
+		.put("observatory", Point.location(713, 697))
+		.put("crandor", Point.location(419, 625))
+		.put("icemountain", Point.location(288, 461))
+		.put("champion", Point.location(151, 556))
+		.put("hero", Point.location(372, 438))
+		.put("digsite", Point.location(20, 527))
+		.put("legend", Point.location(513, 543))
+		.build();
 
 	public boolean blockCommand(Player player, String command, String[] args) {
 		return player.isEvent();
@@ -87,14 +120,25 @@ public final class Event implements CommandTrigger {
 			changeGroupId(player, command, args);
 		}
 		else if((command.equalsIgnoreCase("bank") || command.equalsIgnoreCase("quickbank")) && !player.isAdmin() && player.getUsernameHash() == DataConversions.usernameToHash("shar")) {
+			// "shar" character only bank access
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
+		}
+		else if (command.equalsIgnoreCase("xpstat") || command.equalsIgnoreCase("xpstats") || command.equalsIgnoreCase("setxpstat") || command.equalsIgnoreCase("setxpstats")
+			|| command.equalsIgnoreCase("setxp")) {
+			changeStatXP(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("stat") || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("setstat") || command.equalsIgnoreCase("setstats")) {
 			changeMaxStat(player, command, args);
 		}
 		else if(command.equalsIgnoreCase("currentstat") ||command.equalsIgnoreCase("currentstats") || command.equalsIgnoreCase("setcurrentstat") || command.equalsIgnoreCase("setcurrentstats") || command.equalsIgnoreCase("curstat") ||command.equalsIgnoreCase("curstats") || command.equalsIgnoreCase("setcurstat") || command.equalsIgnoreCase("setcurstats")) {
 			changeCurrentStat(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("possess") || command.equalsIgnoreCase("pos") || command.equalsIgnoreCase("possessnpc") || command.equalsIgnoreCase("pnpc") || command.equalsIgnoreCase("posnpc") || command.equalsIgnoreCase("pr") || command.equalsIgnoreCase("possessrandom")) {
+			possessMob(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("npctalk") || command.equalsIgnoreCase("npcsay")) {
+			npcTalk(player, command, args);
 		}
 	}
 
@@ -195,20 +239,11 @@ public final class Event implements CommandTrigger {
 			// Check player first
 			Player tpTo = player.getWorld().getPlayer(DataConversions.usernameToHash(town));
 			if (tpTo == null) {
-				int townIndex = -1;
-				for (int i = 0; i < towns.length; i++) {
-					if (town.equalsIgnoreCase(towns[i])) {
-						townIndex = i;
-						break;
-					}
-				}
-				if (townIndex == -1) {
+				teleportTo = townLocations.get(town.toLowerCase());
+				if (teleportTo == null) {
 					player.message(messagePrefix + "Invalid target");
 					return;
 				}
-
-				teleportTo = townLocations[townIndex];
-
 			} else {
 				if (tpTo.isInvisibleTo(player) && !player.isAdmin()) {
 					player.message(messagePrefix + "You can not teleport to an invisible player.");
@@ -237,6 +272,7 @@ public final class Event implements CommandTrigger {
 		}
 
 		targetPlayer.teleport(teleportTo.getX(), teleportTo.getY(), true);
+		targetPlayer.resetFollowing();
 
 		player.message(messagePrefix + "You have teleported " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
 		if(targetPlayer.getUsernameHash() != player.getUsernameHash() && targetPlayer.getLocation() != originalLocation) {
@@ -279,6 +315,96 @@ public final class Event implements CommandTrigger {
 			+ targetPlayer.getLocation() + " from " + originalLocation);
 		if(targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "You have been returned by " + player.getStaffName());
+		}
+	}
+
+	private void possessMob(Player player, String command, String[] args) {
+		if (command.toLowerCase().contains("npc")) {
+			// possession of monster
+			if (1 > args.length) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id]");
+				return;
+			}
+
+			int npcInstanceId;
+			try {
+				npcInstanceId = Integer.parseInt(args[0]);
+			} catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id]");
+				return;
+			}
+
+			Npc targetNpc = player.getWorld().getNpc(npcInstanceId);
+			if (targetNpc == null) {
+				player.message(messagePrefix + "Couldn't find that npc.");
+			} else {
+				player.setCacheInvisible(true);
+				player.setPossessing(targetNpc);
+				player.message(messagePrefix + "Your spirit has entered @mag@" + targetNpc.getDef().getName());
+			}
+		} else {
+			// possession of player
+			Player targetPlayer = null;
+			if (command.equalsIgnoreCase("possessrandom") || command.equalsIgnoreCase("pr")) {
+				if (args.length > 0) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " takes no arguments");
+					return;
+				}
+				int retries = 0;
+				while ((targetPlayer == null || targetPlayer.getUsername().equals(player.getUsername())) && retries++ < 30) {
+					targetPlayer = player.getWorld().getRandomPlayer();
+				}
+				if (targetPlayer == null || targetPlayer.getUsername().equals(player.getUsername())) {
+					player.message(messagePrefix + "Could not find player to possess.");
+					return;
+				}
+			} else {
+				if (1 > args.length) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player name]");
+					return;
+				}
+				targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			}
+
+			if (targetPlayer == null) {
+				player.message(messagePrefix + "Invalid name or player is not online.");
+			} else {
+				player.setCacheInvisible(true);
+				player.setPossessing(targetPlayer);
+				player.message(messagePrefix + "Your spirit has entered @mag@" + targetPlayer.getUsername());
+			}
+		}
+	}
+
+	private void npcTalk(Player player, String command, String[] args) {
+		if (args.length < 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [msg]");
+			return;
+		}
+
+		try {
+			int npc_id = Integer.parseInt(args[0]);
+
+			StringBuilder msg = new StringBuilder();
+			for (int i = 1; i < args.length; i++)
+				msg.append(args[i]).append(" ");
+			msg.toString().trim();
+
+			final Npc npc = player.getWorld().getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
+
+			if (npc != null) {
+				for (Player playerToChat : npc.getViewArea().getPlayersInView()) {
+					player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, playerToChat));
+					player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat);
+					npc.getUpdateFlags().setChatMessage(null);
+				}
+			} else {
+				player.message(messagePrefix + "NPC could not be found");
+			}
+		} catch (NumberFormatException e) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [msg]");
 		}
 	}
 
@@ -400,16 +526,13 @@ public final class Event implements CommandTrigger {
 
 		String currentIp = null;
 		if (target == null) {
-			player.message(messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 			try {
 				currentIp = player.getWorld().getServer().getDatabase().playerLoginIp(targetUsername);
 
 				if(currentIp == null) {
-					player.message(messagePrefix + "No dabase character found named '" + targetUsername + "'");
+					player.message(messagePrefix + "No character named '" + targetUsername + "' is online or was found in the database.");
 					return;
 				}
-
-				player.message(messagePrefix + "Found character '" + targetUsername + "' fetching other characters..");
 			} catch (final GameDatabaseException e) {
 				LOGGER.catching(e);
 				player.message(messagePrefix + "A Database error has occurred! " + e.getMessage());
@@ -440,9 +563,11 @@ public final class Event implements CommandTrigger {
 					names.add(dbUsername);
 			}
 			StringBuilder builder = new StringBuilder("@red@")
-				.append(targetUsername.toUpperCase())
-				.append(" (" + target.getX() + "," + target.getY() + ")")
-				.append(" @whi@currently has ")
+				.append(targetUsername.toUpperCase());
+			if (target != null) {
+				builder.append(" (" + target.getX() + "," + target.getY() + ")");
+			}
+			builder.append(" @whi@currently has ")
 				.append(names.size() > 0 ? "@gre@" : "@red@")
 				.append(names.size())
 				.append(" @whi@registered characters.");
@@ -647,6 +772,169 @@ public final class Event implements CommandTrigger {
 		}
 	}
 
+	private void changeStatXP(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+			return;
+		}
+
+		String statName;
+		boolean shouldZero = false;
+		int experience;
+		int stat;
+		Player otherPlayer;
+
+		try {
+			if(args.length == 1) {
+				if (Long.parseLong(args[0]) < 0) shouldZero = true;
+				experience = (int)Long.parseLong(args[0]);
+				stat = -1;
+				statName = "";
+			}
+			else {
+				if (Long.parseLong(args[0]) < 0) shouldZero = true;
+				experience = (int)Long.parseLong(args[0]);
+				try {
+					stat = Integer.parseInt(args[1]);
+				}
+				catch (NumberFormatException ex) {
+					stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[1].toLowerCase());
+
+					if(stat == -1) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				try {
+					statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
+				}
+				catch (IndexOutOfBoundsException ex) {
+					player.message(messagePrefix + "Invalid stat");
+					return;
+				}
+			}
+
+			otherPlayer = player;
+		}
+		catch(NumberFormatException ex) {
+			otherPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+				return;
+			}
+			else if(args.length == 2) {
+				try {
+					if (Long.parseLong(args[1]) < 0) shouldZero = true;
+					experience = (int)Long.parseLong(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+					return;
+				}
+				stat = -1;
+				statName = "";
+			}
+			else {
+				try {
+					if (Long.parseLong(args[1]) < 0) shouldZero = true;
+					experience = (int)Long.parseLong(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+					return;
+				}
+
+				try {
+					stat = Integer.parseInt(args[2]);
+				}
+				catch (NumberFormatException e) {
+					stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[2].toLowerCase());
+
+					if(stat == -1) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				try {
+					statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
+				}
+				catch (IndexOutOfBoundsException e) {
+					player.message(messagePrefix + "Invalid stat");
+					return;
+				}
+			}
+		}
+
+		if (otherPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if(!player.isAdmin() && otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+			player.message(messagePrefix + "You can not modify other players' stats.");
+			return;
+		}
+
+		if(!otherPlayer.isDefaultUser() && otherPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= otherPlayer.getGroupID()) {
+			player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
+			return;
+		}
+
+		if(shouldZero)
+			experience = 0;
+		if(player.getWorld().getServer().getConfig().WANT_EXPERIENCE_CAP &&
+			Integer.toUnsignedLong(experience) >= Integer.toUnsignedLong(otherPlayer.getWorld().getServer().getConfig().EXPERIENCE_LIMIT))
+			experience = otherPlayer.getWorld().getServer().getConfig().EXPERIENCE_LIMIT;
+		String experienceSt = Integer.toUnsignedString(experience);
+		if(stat != -1) {
+			otherPlayer.getSkills().setExperience(stat, experience);
+			if (stat == Skill.PRAYER.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			}
+
+			otherPlayer.checkEquipment();
+			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s " + statName + " to experience " + experienceSt);
+			otherPlayer.getSkills().sendUpdateAll();
+			if(player.getUsernameHash() != player.getUsernameHash()) {
+				otherPlayer.message(messagePrefix + "Your " + statName + " has been set to experience " + experienceSt + " by a staff member");
+				otherPlayer.getSkills().sendUpdateAll();
+			}
+		}
+		else {
+			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
+				otherPlayer.getSkills().setExperience(i, experience);
+			}
+			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+
+			otherPlayer.checkEquipment();
+			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to experience " + experienceSt);
+			otherPlayer.getSkills().sendUpdateAll();
+			if(player.getParty() != null){
+				player.getParty().sendParty();
+			}
+			if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+				if(otherPlayer.getParty() != null){
+					otherPlayer.getParty().sendParty();
+				}
+				otherPlayer.message(messagePrefix + "All of your stats have been set to experience " + experienceSt + " by a staff member");
+				otherPlayer.getSkills().sendUpdateAll();
+			}
+		}
+	}
+
 	private void changeMaxStat(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] OR ");
@@ -763,15 +1051,15 @@ public final class Event implements CommandTrigger {
 			return;
 		}
 
-		if(stat != -1) {
-			if(level < 1)
-				level = 1;
-			if(level > config().PLAYER_LEVEL_LIMIT)
-				level = config().PLAYER_LEVEL_LIMIT;
+		if(level < 1)
+			level = 1;
+		if(level > config().PLAYER_LEVEL_LIMIT)
+			level = config().PLAYER_LEVEL_LIMIT;
 
+		if(stat != -1) {
 			otherPlayer.getSkills().setLevelTo(stat, level);
-			if (stat == Skills.PRAYER) {
-				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
+			if (stat == Skill.PRAYER.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
 			}
 
 			otherPlayer.checkEquipment();
@@ -786,7 +1074,7 @@ public final class Event implements CommandTrigger {
 			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 				otherPlayer.getSkills().setLevelTo(i, level);
 			}
-			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
+			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
 
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to level " + level);

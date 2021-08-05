@@ -4,12 +4,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ItemOnMobStruct;
 
-public class ItemUseOnPlayer implements PacketHandler {
+public class ItemUseOnPlayer implements PayloadProcessor<ItemOnMobStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ItemOnMobStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
@@ -19,8 +20,8 @@ public class ItemUseOnPlayer implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		final Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
-		final Item item = player.getCarriedItems().getInventory().get(packet.readShort());
+		final Player affectedPlayer = player.getWorld().getPlayer(payload.serverIndex);
+		final Item item = player.getCarriedItems().getInventory().get(payload.slotIndex);
 		if (affectedPlayer == null || item == null || item.getItemStatus().getNoted()) {
 			player.message("Nothing interesting happens");
 			return;

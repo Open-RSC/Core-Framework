@@ -9,12 +9,12 @@ public class Sector {
 	/**
 	 * An array containing all the tiles within this Sector
 	 */
-	private Tile[] tiles;
+	private final Tile[] tiles;
 
 	/**
 	 * Creates a new Sector full of blank tiles
 	 */
-	private Sector() {
+	public Sector() {
 		tiles = new Tile[Constants.REGION_SIZE * Constants.REGION_SIZE];
 		for (int i = 0; i < tiles.length; i++) {
 			tiles[i] = new Tile();
@@ -76,7 +76,7 @@ public class Sector {
 	/**
 	 * Sets the Tile at the given index
 	 */
-	private void setTile(int i, Tile t) {
+	public void setTile(int i, Tile t) {
 		tiles[i] = t;
 	}
 

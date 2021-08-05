@@ -7,16 +7,16 @@ import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.ShopStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-public final class InterfaceShopHandler implements PacketHandler {
+public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ShopStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			return;
 		}
@@ -25,7 +25,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
-		int packetID = packet.getID();
+		OpcodeIn packetID = payload.getOpcode();
 		final Shop shop = player.getShop();
 		if (shop == null) {
 			player.setSuspiciousPlayer(true, "shop is null");
@@ -33,18 +33,18 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
-		int closeShop = OpcodeIn.SHOP_CLOSE.getOpcode();
-		int buyItem = OpcodeIn.SHOP_BUY.getOpcode();
-		int sellItem = OpcodeIn.SHOP_SELL.getOpcode();
+		OpcodeIn closeShop = OpcodeIn.SHOP_CLOSE;
+		OpcodeIn buyItem = OpcodeIn.SHOP_BUY;
+		OpcodeIn sellItem = OpcodeIn.SHOP_SELL;
 
 		if (packetID == closeShop) { // Close shop
 			player.resetShop();
 			return;
 		}
-		int catalogID = packet.readShort();
+		int catalogID = payload.catalogID;
 		// TODO: there should probably be a sanity check here to make sure the client is in sync and selling/buying at the agreed-on price
-		int shopAmount = packet.readUnsignedShort();
-		int amount = packet.readUnsignedShort();
+		int shopAmount = payload.stockAmount;
+		int amount = payload.amount;
 
 		if (amount <= 0) return;
 
@@ -76,12 +76,13 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 		// Normalize amount to the minimum shop count if we are trying to purchase more.
 		int originalAmount = amount;
-		amount = Math.min(amount, shop.getItemCount(catalogID));
+		int shopStock = shop.getItemCount(catalogID);
+		amount = Math.min(amount, shopStock);
 
 		if (amount <= 0) {
-			if (originalAmount > amount) {
-				player.message("You can't hold the objects you are trying to buy!");
-			}
+			// if (originalAmount > amount) {
+				// TODO: need to find if there is a specific error message when trying to buy more than the shop has
+			// }
 			return;
 		}
 
@@ -139,6 +140,11 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
+		// attempted to buy more
+		if (originalAmount > totalBought && totalBought < shopStock) {
+			player.message("You can't hold the objects you are trying to buy!");
+		}
+
 		player.playSound("coins");
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new GenericLog(player.getWorld(),
@@ -181,10 +187,14 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
+		int originalAmount = amount;
 		int totalMoney = 0;
 		int totalSold = 0;
 
-		amount = Math.min(amount, player.getCarriedItems().getInventory().countId(catalogID, Optional.empty()));
+		amount = Math.min(
+			Math.min(originalAmount,
+			player.getCarriedItems().getInventory().countId(catalogID, Optional.empty())),
+			(Short.MAX_VALUE - Short.MIN_VALUE) - shop.currentStock(new Item(catalogID)));
 
 		if (amount <= 0) {
 			player.message("You don't have that many items");
@@ -240,6 +250,11 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 				shop.addShopItem(new Item(catalogID, 1));
 			}
+		}
+
+		// attempted to sell more
+		if (originalAmount > totalSold) {
+			player.message("You don't have that many items");
 		}
 
 		player.playSound("coins");

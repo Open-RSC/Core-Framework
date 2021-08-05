@@ -16,6 +16,12 @@ public class InputXPrompt {
 	public static String[] tradeOfferX = new String[] { "Enter number of items to offer and press enter" };
 	public static String[] tradeRemoveX = new String[] { "Enter number of items to remove and press enter" };
 	public static String[] dropX = new String[] { "Enter number of items to drop and press enter" };
+	public static String[] incPointsX = new String[] { "Enter number of points to add and press enter" };
+	public static String[] incLevelsX = new String[] { "Enter number of levels to add and press enter" };
+	public static String[] savePreset = new String[] { "Enter preset number to overwrite and press enter" };
+	public static String[] pointsToGp = new String[] { "Enter number of gp you want to trade your points for and press enter" };
+	public static String[] reducePointsX = new String[] { "Enter number of points to reduce and press enter" };
+	public static String[] reduceLevelsX = new String[] { "Enter number of levels to reduce and press enter" };
 	public static String[] teamDuelOfferX = new String[] { "Enter number of items to stake and press enter" };
 	public static String[] teamDuelRemoveX = new String[] { "Enter number of items to remove and press enter" };
 	public static String[] clanInvite = new String[] { "Enter the username of the player you want to invite to your clan" };

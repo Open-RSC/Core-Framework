@@ -7,15 +7,15 @@ import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 
-public class AttackHandler implements PacketHandler {
-	public void handlePacket(Packet packet, Player player) throws Exception {
-		int pID = packet.getID();
+public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn> {
+	public void process(TargetMobStruct payload, Player player) throws Exception {
+		OpcodeIn pID = payload.getOpcode();
 
 		if (player.inCombat()) {
 			player.message("You are already busy fighting");
@@ -31,9 +31,9 @@ public class AttackHandler implements PacketHandler {
 
 		player.resetAll();
 		Mob affectedMob = null;
-		int serverIndex = packet.readShort();
-		int packetOne = OpcodeIn.PLAYER_ATTACK.getOpcode();
-		int packetTwo = OpcodeIn.NPC_ATTACK1.getOpcode();
+		int serverIndex = payload.serverIndex;
+		OpcodeIn packetOne = OpcodeIn.PLAYER_ATTACK;
+		OpcodeIn packetTwo = OpcodeIn.NPC_ATTACK;
 
 		if (pID == packetOne) {
 			affectedMob = player.getWorld().getPlayer(serverIndex);
@@ -46,11 +46,6 @@ public class AttackHandler implements PacketHandler {
 		}
 
 		if (affectedMob.isPlayer()) {
-			if (affectedMob.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
-				player.message("Here kolodion protects all from your attack");
-				player.resetPath();
-				return;
-			}
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
 			if (System.currentTimeMillis() - pl.getCombatTimer() < player.getConfig().GAME_TICK * 5) {

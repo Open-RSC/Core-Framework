@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.dwarvenmine;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -52,7 +52,7 @@ public final class NurmofPickaxe extends AbstractShop {
 		options.add("No thankyou");
 		options.add("Are your pickaxes better than other pickaxes then?");
 		if (config().WANT_CUSTOM_QUESTS
-			&& getMaxLevel(player, Skills.MINING) >= 99)
+			&& getMaxLevel(player, Skill.MINING.id()) >= 99)
 			options.add("Mining Skillcape");
 
 		int option = multi(player, n, false, //do not send over
@@ -69,7 +69,7 @@ public final class NurmofPickaxe extends AbstractShop {
 				"My pickaxes are made of higher grade metal than your ordinary bronze pickaxes",
 				"Allowing you to have multiple swings at a rock until you get the ore from it");
 		} else if (option == 3) {
-			if (getMaxLevel(player, Skills.MINING) >= 99) {
+			if (getMaxLevel(player, Skill.MINING.id()) >= 99) {
 				npcsay(player, n, "it's clear you are a miner",
 					"i can offer you cape",
 					"made for those who excel in the skill",

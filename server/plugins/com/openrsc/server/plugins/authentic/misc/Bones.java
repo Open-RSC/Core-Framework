@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
@@ -51,7 +52,7 @@ public class Bones implements OpInvTrigger {
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			buryBones(player, item);
 		}
 	}
@@ -61,22 +62,38 @@ public class Bones implements OpInvTrigger {
 		// TODO: Config for custom sounds.
 		//owner.playSound("takeobject");
 
+		int[] prayerSkillIds;
+		if (player.getConfig().DIVIDED_GOOD_EVIL) {
+			// per Rab, historically gave same xp to praygood and prayevil
+			// This was also confirmed by Gugge when both skills leveled same time to 5
+			prayerSkillIds = new int[]{Skill.PRAYGOOD.id(), Skill.PRAYEVIL.id()};
+		} else {
+			prayerSkillIds = new int[]{Skill.PRAYER.id()};
+		}
+		int factor = player.getConfig().OLD_PRAY_XP ? 3 : 2; // factor to divide by modern is 2 / 2 or 1
+
+		int skillXP = 0;
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
+				skillXP = 2 * 15; // divided by factor below for 3.75
 				break;
 			case BAT_BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
+				skillXP = 2 * 18; // divided by factor below for 4.5
 				break;
 			case BIG_BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
+				skillXP = 2 * 50; // divided by factor below for 12.5
 				break;
 			case DRAGON_BONES:
-				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
+				skillXP = 2 * 240; // divided by factor below for 60
 				break;
 			default:
 				player.message("Nothing interesting happens");
 				break;
+		}
+		if (skillXP > 0) {
+			for (int praySkillId : prayerSkillIds) {
+				player.incExp(praySkillId, skillXP / factor, true);
+			}
 		}
 	}
 }

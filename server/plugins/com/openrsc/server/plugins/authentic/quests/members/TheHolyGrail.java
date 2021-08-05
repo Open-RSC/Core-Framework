@@ -3,13 +3,16 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -35,6 +38,11 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.THE_HOLY_GRAIL.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -42,17 +50,10 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the holy grail quest");
-		player.message("@gre@You haved gained 2 quest points!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HOLY_GRAIL);
-		//keep order kosher
-		int[] skillIDs = {Skills.PRAYER, Skills.DEFENSE};
-		//1000 for prayer, 1200 for defense
-		int[] amounts = {1000, 1200};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			questData[Quests.MAPIDX_BASE] = amounts[i];
-			questData[Quests.MAPIDX_VAR] = amounts[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.THE_HOLY_GRAIL.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
 	}
 
@@ -393,7 +394,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 					npc.remove();
 				} else {
 					npc.teleport(413, 11);
-					npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
+					npc.getSkills().setLevel(Skill.HITS.id(), npc.getDef().hits);
 					npcsay(player, otherTitan, "You can't defeat me little man",
 						"I'm invincible!");
 					npc.killed = false;

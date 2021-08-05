@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.quests.members.digsite;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.DropObjTrigger;
@@ -22,7 +22,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 		if (item.getCatalogId() == ItemId.UNIDENTIFIED_LIQUID.id()) {
 			player.message("bang!");
 			player.getCarriedItems().remove(new Item(ItemId.UNIDENTIFIED_LIQUID.id()));
-			player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.3D + 5));
+			player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) * 0.3D + 5));
 			say(player, null, "Ow!");
 			player.message("The liquid exploded!");
 			player.message("You were injured by the burning liquid");
@@ -30,7 +30,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 		else if (item.getCatalogId() == ItemId.MIXED_CHEMICALS_1.id() || item.getCatalogId() == ItemId.MIXED_CHEMICALS_2.id()) {
 			player.message("bang!");
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
-			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 2 + 6));
+			player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 2 + 6));
 			say(player, null, "Ow!");
 			player.message("The chemicals exploded!");
 			player.message("You were injured by the exploding liquid");
@@ -38,7 +38,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 		else if (item.getCatalogId() == ItemId.NITROGLYCERIN.id()) {
 			player.message("bang!");
 			player.getCarriedItems().remove(new Item(ItemId.NITROGLYCERIN.id()));
-			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 2 - 3));
+			player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) / 2 - 3));
 			say(player, null, "Ow!");
 			player.message("The nitroglycerin exploded!");
 			player.message("You were injured by the exploding liquid");

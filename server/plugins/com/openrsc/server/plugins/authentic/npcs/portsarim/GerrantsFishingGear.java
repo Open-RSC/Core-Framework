@@ -20,7 +20,7 @@ public final class GerrantsFishingGear extends AbstractShop {
 	private final Shop shop = new Shop(false, 12000, 100, 70, 3, new Item(ItemId.NET.id(),
 		5), new Item(ItemId.FISHING_ROD.id(), 5), new Item(ItemId.FLY_FISHING_ROD.id(), 5), new Item(ItemId.HARPOON.id(), 2),
 		new Item(ItemId.LOBSTER_POT.id(), 2), new Item(ItemId.FISHING_BAIT.id(), 200), new Item(ItemId.FEATHER.id(), 200),
-		new Item(ItemId.RAW_SHRIMP.id(), 30), new Item(ItemId.RAW_SARDINE.id(), 0), new Item(ItemId.RAW_HERRING.id(), 0),
+		new Item(ItemId.RAW_SHRIMP.id(), 0), new Item(ItemId.RAW_SARDINE.id(), 0), new Item(ItemId.RAW_HERRING.id(), 0),
 		new Item(ItemId.RAW_ANCHOVIES.id(), 0), new Item(ItemId.RAW_TROUT.id(), 0), new Item(ItemId.RAW_PIKE.id(), 0),
 		new Item(ItemId.RAW_SALMON.id(), 0), new Item(ItemId.RAW_TUNA.id(), 0), new Item(ItemId.RAW_LOBSTER.id(), 0),
 		new Item(ItemId.RAW_SWORDFISH.id(), 0));

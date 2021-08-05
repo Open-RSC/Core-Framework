@@ -2,7 +2,7 @@
     <property name="src" location="src"/>
     <property name="pc_client" location="../PC_Client/src"/>
     <property name="build" location="build"/>
-    <property name="lib" location="lib"/>
+    <property name="lib" location="../PC_Client/lib"/>
     <property name="jar" location="Open_RSC_Client.jar"/>
     <property name="javac.source" value="1.8"/>
     <property name="javac.target" value="1.8"/>
@@ -19,10 +19,12 @@
                includeantruntime="false">
             <classpath>
                 <pathelement path="${java.class.path}/"/>
+				<pathelement location="${lib}/discord-rpc.jar"/>
             </classpath>
             <compilerarg line="-Xlint:unchecked"/>
         </javac>
         <jar basedir="${build}" destfile="${jar}">
+            <zipgroupfileset dir="${lib}" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="orsc.OpenRSC"/>
             </manifest>
@@ -33,7 +35,7 @@
         <java classname="orsc.OpenRSC" fork="true">
             <jvmarg line="-Xms312m -Dsun.java2d.opengl=true"/>
             <classpath>
-                <pathelement path="${jar}/"/>
+                <pathelement path="${jar}:${lib}/discord-rpc.jar"/>
             </classpath>
         </java>
     </target>

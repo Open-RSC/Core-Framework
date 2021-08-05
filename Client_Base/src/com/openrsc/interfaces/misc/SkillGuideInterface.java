@@ -269,6 +269,7 @@ public final class SkillGuideInterface {
 		}
 		if (mc.getSkillGuideChosen().equals("Strength")) {
 			skillMenuEntries.add(new SkillMenuItem(90, "", "Strength raises your max hit with melee"));
+			skillMenuEntries.add(new SkillMenuItem(1288, "50", "Legend's Guild (with completion of Legend's Quest)"));
 			if (Config.S_WANT_CUSTOM_SPRITES) {
 				skillMenuEntries.add(new SkillMenuItem(1381, "99", "Strength Cape"));
 			}
@@ -371,6 +372,8 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(737, "", "Poison chalice - ???"));
 			} else if (curTab == 5) { // Other
 				if (runecraft) skillMenuEntries.add(new SkillMenuItem(1410, "", "Fish oil - 50% chance to heal 1"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1459, "", "Sweetened Slices - Heals 1 or 2"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1460, "", "Sweetened Chunks - Heals 1 or 2"));
 				skillMenuEntries.add(new SkillMenuItem(319, "", "Cheese - Heals 2"));
 				skillMenuEntries.add(new SkillMenuItem(179, "", "spinach roll - Heals 2"));
 				if (customSprites) skillMenuEntries.add(new SkillMenuItem(1417, "", "Pizza Bagel - Heals 2"));
@@ -388,6 +391,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1102, "", "Tasty Ugthanki Kebab - Heals 19"));
 				skillMenuEntries.add(new SkillMenuItem(210, "", "Kebab - ???"));
 				skillMenuEntries.add(new SkillMenuItem(923, "", "Ugthanki Kebab - ???"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1463, "", "Seaweed Soup - Heals 26"));
 				/*if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(2319, "99", "Cape"));
 				}*/
@@ -421,20 +425,24 @@ public final class SkillGuideInterface {
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Prayer")) {
-			skillMenuEntries.add(new SkillMenuItem(44, "1", "Thick skin - Increases your defense by 5%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "4", "Burst of strength - Increases your strength by 5%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "7", "Clarity of thought - Increases your attack by 5%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "10", "Rock skin - Increases your defense by 10%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "13", "Superhuman strength - Increases your strength by 10%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "16", "Improved reflexes + Increases your attack by 10%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "19", "Rapid restore - 2x restore rate for all stats except hits"));
-			skillMenuEntries.add(new SkillMenuItem(44, "22", "Rapid heal - 2x restore rate for hitpoints stat"));
-			skillMenuEntries.add(new SkillMenuItem(44, "25", "Protect items - Keep 1 extra item if you die"));
-			skillMenuEntries.add(new SkillMenuItem(44, "28", "Steel skin - Increases your defense by 15%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "31", "Ultimate strength - Increases your strength by 15%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "34", "Incredible reflexes - Increases your attack by 15%"));
-			skillMenuEntries.add(new SkillMenuItem(44, "37", "Paralyze monster - Stops monsters from fighting back"));
-			skillMenuEntries.add(new SkillMenuItem(44, "40", "Protect from missiles - 100% protection from ranged attacks"));
+			if (curTab == 0) {
+				skillMenuEntries.add(new SkillMenuItem(44, "1", "Thick skin - Increases your defense by 5%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "4", "Burst of strength - Increases your strength by 5%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "7", "Clarity of thought - Increases your attack by 5%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "10", "Rock skin - Increases your defense by 10%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "13", "Superhuman strength - Increases your strength by 10%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "16", "Improved reflexes + Increases your attack by 10%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "19", "Rapid restore - 2x restore rate for all stats except hits"));
+				skillMenuEntries.add(new SkillMenuItem(44, "22", "Rapid heal - 2x restore rate for hitpoints stat"));
+				skillMenuEntries.add(new SkillMenuItem(44, "25", "Protect items - Keep 1 extra item if you die"));
+				skillMenuEntries.add(new SkillMenuItem(44, "28", "Steel skin - Increases your defense by 15%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "31", "Ultimate strength - Increases your strength by 15%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "34", "Incredible reflexes - Increases your attack by 15%"));
+				skillMenuEntries.add(new SkillMenuItem(44, "37", "Paralyze monster - Stops monsters from fighting back"));
+				skillMenuEntries.add(new SkillMenuItem(44, "40", "Protect from missiles - 100% protection from ranged attacks"));
+			} else if (curTab == 1) {
+				skillMenuEntries.add(new SkillMenuItem(388, "31", "Monastery"));
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Magic")) {
 			if (curTab == 0) {
@@ -490,18 +498,21 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(184, "1", "Wizard hats and robes"));
 				skillMenuEntries.add(new SkillMenuItem(702, "1", "Robes of Zamorak"));
 				skillMenuEntries.add(new SkillMenuItem(1215, "60", "God capes"));
-				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Magic Cape"));
-				}
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(101, "1", "Basic staves"));
 				skillMenuEntries.add(new SkillMenuItem(617, "30", "Battlestaves"));
 				skillMenuEntries.add(new SkillMenuItem(684, "40", "Enchanted battlestaves"));
 				skillMenuEntries.add(new SkillMenuItem(1000, "50", "Staff of Iban"));
 				skillMenuEntries.add(new SkillMenuItem(1218, "60", "God staves"));
+			} else if (curTab == 3) {
+				skillMenuEntries.add(new SkillMenuItem(185, "66", "Wizards' Guild"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Magic Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Cooking")) {
+			boolean harvesting = Config.S_WANT_HARVESTING && Config.S_WANT_CUSTOM_SPRITES;
 			if (curTab == 0) {
 				skillMenuEntries.add(new SkillMenuItem(132, "1", "Cooked Meat"));
 				skillMenuEntries.add(new SkillMenuItem(350, "1", "Shrimp"));
@@ -534,6 +545,7 @@ public final class SkillGuideInterface {
 			} else if (curTab == 3) {
 				skillMenuEntries.add(new SkillMenuItem(346, "25", "Stew"));
 				skillMenuEntries.add(new SkillMenuItem(709, "60", "Curry"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1463, "80", "Seaweed Soup"));
 			} else if (curTab == 4) {
 				skillMenuEntries.add(new SkillMenuItem(138, "1", "Bread"));
 				skillMenuEntries.add(new SkillMenuItem(1105, "58", "Pitta Bread"));
@@ -556,9 +568,12 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(909, "30", "Worm Hole"));
 				skillMenuEntries.add(new SkillMenuItem(910, "30", "Tangled Toads Legs"));
 			} else if (curTab == 7) {
+				skillMenuEntries.add(new SkillMenuItem(192, "32", "Cooks' Guild"));
 				skillMenuEntries.add(new SkillMenuItem(142, "35", "Wine"));
 				skillMenuEntries.add(new SkillMenuItem(1269, "50", "Oomlie Meat Parcel"));
 				skillMenuEntries.add(new SkillMenuItem(1102, "58", "Tasty Ugthanki Kebab"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(501, "70", "Wine of Zamorak"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1467, "70", "Wine of Saradomin"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1373, "99", "Cooking Cape"));
 				}
@@ -574,6 +589,8 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(636, "75", "Magic trees"));
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(405, "1", "All axes"));
+			} else if (curTab == 2) {
+				skillMenuEntries.add(new SkillMenuItem(88, "", "Woodcutting Guild (Coming soon)"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Fletching")) {
@@ -638,6 +655,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1192, "79", "Sea Turtle - Fishing Trawler"));
 				skillMenuEntries.add(new SkillMenuItem(1190, "81", "Manta Ray - Fishing Trawler"));
 			} else if (curTab == 1) {
+				skillMenuEntries.add(new SkillMenuItem(379, "68", "Fishing Guild"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1380, "99", "Fishing Cape"));
 				}
@@ -658,9 +676,6 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(16, "1", "Leather Gloves"));
 				skillMenuEntries.add(new SkillMenuItem(17, "7", "Boots"));
 				skillMenuEntries.add(new SkillMenuItem(15, "14", "Leather Armour"));
-				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Crafting Cape"));
-				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(135, "1", "Pot"));
 				skillMenuEntries.add(new SkillMenuItem(251, "4", "Pie Dish"));
@@ -686,6 +701,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(285, "18", "Emerald Ring"));
 				skillMenuEntries.add(new SkillMenuItem(290, "24", "Emerald Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(298, "30", "Emerald Amulet"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1321, "30", "Opal Ring"));
 				skillMenuEntries.add(new SkillMenuItem(286, "30", "Ruby Ring"));
 				skillMenuEntries.add(new SkillMenuItem(291, "40", "Ruby Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(287, "42", "Diamond Ring"));
@@ -714,8 +730,10 @@ public final class SkillGuideInterface {
 					skillMenuEntries.add(new SkillMenuItem(1385, "1", "Uncharged talismans"));
 				}
 				skillMenuEntries.add(new SkillMenuItem(779, "34", "Oyster Pearls"));
+				skillMenuEntries.add(new SkillMenuItem(191, "40", "Crafting Guild"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1347, "90", "King Black Dragon Scale"));
+					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Crafting Cape"));
 				}
 			}
 		}
@@ -882,12 +900,14 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1261, "31", "Adamant Pickaxe"));
 				skillMenuEntries.add(new SkillMenuItem(1262, "41", "Rune Pickaxe"));
 			} else if (curTab == 2) {
+				skillMenuEntries.add(new SkillMenuItem(1259, "60", "Mining Guild"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1377, "99", "Mining Cape"));
 				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Herblaw")) {
+			boolean harvesting = Config.S_WANT_HARVESTING && Config.S_WANT_CUSTOM_SPRITES;
 			boolean runecraft = Config.S_WANT_RUNECRAFT && Config.S_WANT_CUSTOM_SPRITES;
 			if (curTab == 0) {
 				skillMenuEntries.add(new SkillMenuItem(444, "3", EntityHandler.getItemDef(444).name));
@@ -921,7 +941,11 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(572, "60", "Weapon poison potion - Kwuarm & ground blue dragon scale"));
 				skillMenuEntries.add(new SkillMenuItem(495, "66", "Super defense potion - Cadantine & white berries"));
 				skillMenuEntries.add(new SkillMenuItem(498, "72", "Ranging potion - Dwarf weed & wine of zamorak"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1468, "76", "Magic potion - Dwarf weed & wine of saradomin"));
 				skillMenuEntries.add(new SkillMenuItem(963, "78", "Potion of zamorak - Torstol & jangerberries"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1471, "81", "Potion of Saradomin - Torstol & sliced dragonfruit"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1474, "83", "Super ranging potion - Ranging potion & half coconut"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1477, "85", "Super magic potion - Magic potion & half coconut"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Agility")) {
@@ -1094,16 +1118,20 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1353, "20", "Corn"));
 				skillMenuEntries.add(new SkillMenuItem(1352, "30", "Red Cabbage"));
 				skillMenuEntries.add(new SkillMenuItem(1354, "47", "White Pumpkin"));
+				skillMenuEntries.add(new SkillMenuItem(1456, "50", "Sugar Cane"));
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(855, "15", "Lemon Tree"));
 				skillMenuEntries.add(new SkillMenuItem(863, "21", "Lime Tree"));
 				skillMenuEntries.add(new SkillMenuItem(1348, "27", "Apple Tree"));
 				skillMenuEntries.add(new SkillMenuItem(249, "33", "Banana Palm"));
+				skillMenuEntries.add(new SkillMenuItem(143, "36", "Grape Vine"));
 				skillMenuEntries.add(new SkillMenuItem(857, "39", "Orange Tree"));
 				skillMenuEntries.add(new SkillMenuItem(1349, "46", "Grapefruit Tree"));
 				skillMenuEntries.add(new SkillMenuItem(861, "51", "Pineapple Plant"));
 				skillMenuEntries.add(new SkillMenuItem(1350, "57", "Papaya Palm"));
 				skillMenuEntries.add(new SkillMenuItem(1351, "68", "Coconut Palm"));
+				skillMenuEntries.add(new SkillMenuItem(1457, "81", "Dragonfruit Tree"));
+				skillMenuEntries.add(new SkillMenuItem(1465, "85", "Bless/Curse Grapes"));
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(236, "10", "Redberry Bush"));
 				skillMenuEntries.add(new SkillMenuItem(55, "22", "Cadavaberry Bush"));

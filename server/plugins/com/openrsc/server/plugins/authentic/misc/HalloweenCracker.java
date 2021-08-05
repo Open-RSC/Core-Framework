@@ -1,16 +1,21 @@
 package com.openrsc.server.plugins.authentic.misc;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.plugins.authentic.npcs.Bankers;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HalloweenCracker implements UsePlayerTrigger {
+public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 
 	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 44, 44, 44, 30, 30};
 	private static final int[] holidayIds = {
@@ -138,21 +143,7 @@ public class HalloweenCracker implements UsePlayerTrigger {
 			delay();
 
 			int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
-			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
-
-			if (prizeId == ItemId.NOTHING_REROLL.id()) {
-				prizeId = Formulae.calculateGemDrop(player);
-			} else if (prizeId == ItemId.NOTHING_REROLL2.id()) {
-				prizeId = Formulae.weightedRandomChoice(runePrizeIds, runePrizeWeights);
-			} else if (prizeId == ItemId.NOTHING_REROLL3.id()) {
-				prizeId = Formulae.weightedRandomChoice(blackPrizeIds, blackPrizeWeights);
-			} else if (prizeId == ItemId.NOTHING_REROLL4.id()) {
-				prizeId = Formulae.weightedRandomChoice(trickIds, trickWeights);
-			}
-
-			if (prizeId == ItemId.NOTHING.id()) { // RDT missed Drag Shield
-				prizeId = ItemId.FEATHER.id();
-			}
+			int prizeId = getPrizeID(player);
 
 			Item mask = new Item(holidayId);
 			Item prize = new Item(prizeId);
@@ -173,8 +164,66 @@ public class HalloweenCracker implements UsePlayerTrigger {
 		}
 	}
 
+	private int getPrizeID(Player player) {
+		int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
+
+		if (prizeId == ItemId.NOTHING_REROLL.id()) {
+			prizeId = Formulae.calculateGemDrop(player);
+		} else if (prizeId == ItemId.NOTHING_REROLL2.id()) {
+			prizeId = Formulae.weightedRandomChoice(runePrizeIds, runePrizeWeights);
+		} else if (prizeId == ItemId.NOTHING_REROLL3.id()) {
+			prizeId = Formulae.weightedRandomChoice(blackPrizeIds, blackPrizeWeights);
+		} else if (prizeId == ItemId.NOTHING_REROLL4.id()) {
+			prizeId = Formulae.weightedRandomChoice(trickIds, trickWeights);
+		}
+
+		if (prizeId == ItemId.NOTHING.id()) { // RDT missed Drag Shield
+			prizeId = ItemId.FEATHER.id();
+		}
+		return prizeId;
+	}
+
 	@Override
 	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
 		return item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id();
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return inArray(npc.getID(), Bankers.BANKERS) && !item.getNoted() && item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id();
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id()) {
+			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+				|| player.isIronMan(IronmanMode.Hardcore.id())) {
+
+				String playerDialogue;
+				if (player.isMale()) {
+					playerDialogue = "I am an ironman, I stand alone.";
+				} else {
+					playerDialogue = "I am an ironwoman, I stand alone.";
+				}
+				say(player, npc, playerDialogue);
+				npcsay(player, npc, "very good, let me help you out with the cracker");
+				thinkbubble(item);
+				player.playerServerMessage(MessageType.QUEST, "The banker pulls the halloween cracker on you");
+
+				delay();
+
+				int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
+				int prizeId = getPrizeID(player);
+
+				Item mask = new Item(holidayId);
+				Item prize = new Item(prizeId);
+
+				player.message("You get the prize from the cracker");
+				player.getCarriedItems().getInventory().add(mask);
+				player.getCarriedItems().getInventory().add(prize);
+			} else {
+				player.message("Nothing interesting happens");
+			}
+		}
 	}
 }

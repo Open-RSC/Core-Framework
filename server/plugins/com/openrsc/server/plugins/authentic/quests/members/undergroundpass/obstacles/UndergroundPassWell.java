@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -31,7 +31,7 @@ public class UndergroundPassWell implements OpLocTrigger {
 				displayTeleportBubble(player, player.getX(), player.getY(), true);
 				player.message("..slowly dragging you futher down into the caverns");
 			} else {
-				player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
+				player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) * 0.2D));
 				displayTeleportBubble(player, obj.getX(), obj.getY(), false);
 				mes("from below an icy blast of air chills you to your bones");
 				delay(3);

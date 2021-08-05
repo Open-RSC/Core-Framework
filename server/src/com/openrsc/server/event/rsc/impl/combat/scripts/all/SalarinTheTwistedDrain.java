@@ -1,9 +1,9 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,7 +14,7 @@ public class SalarinTheTwistedDrain implements CombatAggroScript, OnCombatStartS
 	// Melee AI for Salarin The Twisted NPC.
 	// Magic AI for Salarin is added to the spellhandler class and plugins for weakening cast.
 	// Ranged AI - Just original like ranging any other npc - RSC Confirmed.
-	
+
 	//D99 -> 40 -> 10 -> 0
 
 	@Override
@@ -33,13 +33,17 @@ public class SalarinTheTwistedDrain implements CombatAggroScript, OnCombatStartS
 
 			player.message("You suddenly feel much weaker");
 
-			int[] stats = {Skills.ATTACK, Skills.STRENGTH};
+			int[] stats = {Skill.ATTACK.id(), Skill.STRENGTH.id()};
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.floor(((player.getSkills().getLevel(affectedStat) + 20) * 0.5));
 				/* New current level */
 				final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
-				player.getSkills().setLevel(affectedStat, newStat);
+				player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+			}
+			if (!sendUpdate) {
+				player.getSkills().sendUpdateAll();
 			}
 		}
 	}

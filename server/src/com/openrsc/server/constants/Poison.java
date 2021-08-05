@@ -3,11 +3,6 @@ package com.openrsc.server.constants;
 import java.util.HashMap;
 
 public class Poison {
-	public static final int POISON_SCORPION = 271;
-	public static final int POISON_SPIDER = 292;
-	public static final int DUNGEON_SPIDER = 656;
-	public static final int TRIBESMAN = 421;
-	public static final int JUNGLE_SAVAGE = 776;
 
 	public final HashMap<Integer, Integer> npcData;
 
@@ -16,11 +11,11 @@ public class Poison {
 	public Poison(Constants constants) {
 		this.constants = constants;
 		npcData = new HashMap<Integer, Integer>() {{
-			put(POISON_SCORPION, 38);
-			put(POISON_SPIDER, 68);
-			put(DUNGEON_SPIDER, 38);
-			put(TRIBESMAN, 68);
-			put(JUNGLE_SAVAGE, 68);
+			put(NpcId.POISON_SCORPION.id(), 38);
+			put(NpcId.POISON_SPIDER.id(), 68);
+			put(NpcId.DUNGEON_SPIDER.id(), 38);
+			put(NpcId.TRIBESMAN.id(), 68);
+			put(NpcId.JUNGLE_SAVAGE.id(), 68);
 		}};
 	}
 }

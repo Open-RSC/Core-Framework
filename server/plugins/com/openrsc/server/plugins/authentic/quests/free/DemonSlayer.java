@@ -1,15 +1,18 @@
 package com.openrsc.server.plugins.authentic.quests.free;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -33,6 +36,11 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.DEMON_SLAYER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -40,8 +48,11 @@ public class DemonSlayer implements QuestInterface,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the demonslayer quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DEMON_SLAYER), true);
-		player.message("@gre@You haved gained 3 quest points!");
+		final QuestReward reward = Quest.DEMON_SLAYER.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override
@@ -166,7 +177,7 @@ public class DemonSlayer implements QuestInterface,
 				choices.add("Yes I know but this important");
 
 			if (config().WANT_CUSTOM_QUESTS
-				&& getMaxLevel(player, Skills.ATTACK) >= 99)
+				&& getMaxLevel(player, Skill.ATTACK.id()) >= 99)
 				choices.add("Attack Skillcape");
 
 			int choice = multi(player, n, false, choices.toArray(new String[0])); // Do not send choice to client
@@ -178,7 +189,7 @@ public class DemonSlayer implements QuestInterface,
 				captainRovinDialogue(player, n, CaptainRovin.KING);
 			} else {
 				if (choice != -1 && choices.get(choice).equalsIgnoreCase("Attack Skillcape")) {
-					if (getMaxLevel(player, Skills.ATTACK) >= 99) {
+					if (getMaxLevel(player, Skill.ATTACK.id()) >= 99) {
 						npcsay(player, n, "I see you too are a master of attack",
 							"You are worthy to wield the Attack Skillcape",
 							"The cost is 99,000 coins");
@@ -1212,7 +1223,7 @@ public class DemonSlayer implements QuestInterface,
 						say(player, null, "Maybe I'd better wield silverlight first");
 					} else {
 						// silverlight effect shared in its own file
-						affectedmob.getSkills().setLevel(Skills.HITS, affectedmob.getDef().getHits());
+						affectedmob.getSkills().setLevel(Skill.HITS.id(), affectedmob.getDef().getHits());
 						player.resetMenuHandler();
 						player.setOption(-1);
 					}
@@ -1245,7 +1256,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	public void onKillNpc(Player player, Npc npc) {
-		npc.getSkills().setLevel(Skills.HITS, npc.getDef().getHits());
+		npc.getSkills().setLevel(Skill.HITS.id(), npc.getDef().getHits());
 
 		if (player.getMenuHandler() == null
 			&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())

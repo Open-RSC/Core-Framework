@@ -4,10 +4,6 @@
 
 The Open RuneScape Classic project team recommends developers download Open JDK. A MSI installer for Windows is the simplest option. Any Java version 8 or later will work.
 
-<a href="https://www.azul.com/downloads/zulu-community/?architecture=x86-64-bit&package=jdk">Download Zulu Builds of OpenJDK</a>
-
-- or
-
 <a href="https://adoptopenjdk.net/releases.html?variant=openjdk13&jvmVariant=hotspot">Download Adopt OpenJDK</a>
 
 ## Starting the game
@@ -26,12 +22,6 @@ At this point, you may wish to use different game features than the default RSC 
 
 
 Now navigate to "core -> server" and delete the existing file named "local.conf", then make a copy of "rsccabbage.conf", renaming the duplicate file "local.conf". Same applies for "openrsc.conf" and the other files in that directory. If "local.conf" exists, the game server will override the settings that are in "default.conf". Think of "openrsc.conf" and "rsccabbage.conf" as ready to go config presets.
-
-
-If you opt to use different named databases, edit the following line in your "local.conf" (or default.conf) to match the name of your database:
-```
-<entry key = "mysql_db">cabbage</entry>
-```
 
 Depending on server configuration, your server port may differ. If 43594 is instead now 43595 because "rsccabbage.conf" is being used, and you do not wish to edit it any, you will need to go into "core -> Client_Base -> Cache" and edit "port.txt" to reflect the new port being used by the game server.
 

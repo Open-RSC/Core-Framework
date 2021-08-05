@@ -10,6 +10,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 
 import java.util.Optional;
@@ -34,14 +37,22 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.CLOCK_TOWER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
 
 	@Override
 	public void handleReward(Player player) {
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.CLOCK_TOWER), true);
-		player.message("@gre@You haved gained 1 quest point!");
+		final QuestReward reward = Quest.CLOCK_TOWER.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 		player.getCache().remove("rats_dead");
 		player.getCache().remove("1st_cog");
 		player.getCache().remove("2nd_cog");

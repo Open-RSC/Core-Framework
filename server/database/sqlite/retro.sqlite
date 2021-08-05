@@ -1,0 +1,519 @@
+/*
+ * This is just a translation of the existing retro.sql in the mysql/ folder
+ */
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS `bank`;
+CREATE TABLE IF NOT EXISTS `bank`
+(
+    `playerID` INTEGER NOT NULL,
+    `itemID`   INTEGER NOT NULL,
+    `slot`     INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (`playerId`, `itemId`, `slot`)
+);
+
+DROP TABLE IF EXISTS `chat_logs`;
+CREATE TABLE IF NOT EXISTS `chat_logs`
+(
+    `id`      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `sender`  TEXT    NOT NULL,
+    `message` TEXT    NOT NULL,
+    `time`    INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX `time_index` ON `chat_logs` (`time`);
+CREATE INDEX `msg_index` ON `chat_logs` (`message`);
+CREATE INDEX `sender_index` ON `chat_logs` (`sender`);
+
+DROP TABLE IF EXISTS `curstats`;
+CREATE TABLE IF NOT EXISTS `curstats`
+(
+    `playerID`   int(10)    NOT NULL PRIMARY KEY,
+    `attack`     tinyint(4) NOT NULL DEFAULT 1,
+    `defense`    tinyint(4) NOT NULL DEFAULT 1,
+    `strength`   tinyint(4) NOT NULL DEFAULT 1,
+    `hits`       tinyint(4) NOT NULL DEFAULT 10,
+    `ranged`     tinyint(4) NOT NULL DEFAULT 1,
+    `thieving`    tinyint(4) NOT NULL DEFAULT 1,
+    `influence`   tinyint(4) NOT NULL DEFAULT 1,
+    `praygood`    tinyint(4) NOT NULL DEFAULT 1,
+    `prayevil`    tinyint(4) NOT NULL DEFAULT 1,
+    `goodmagic`   tinyint(4) NOT NULL DEFAULT 1,
+    `evilmagic`   tinyint(4) NOT NULL DEFAULT 1,
+    `cooking`     tinyint(4) NOT NULL DEFAULT 1,
+    `tailoring`   tinyint(4) NOT NULL DEFAULT 1,
+    `woodcutting` tinyint(4) NOT NULL DEFAULT 1,
+    `firemaking`  tinyint(4) NOT NULL DEFAULT 1,
+    `crafting`    tinyint(4) NOT NULL DEFAULT 1,
+    `smithing`    tinyint(4) NOT NULL DEFAULT 1,
+    `mining`      tinyint(4) NOT NULL DEFAULT 1,
+    `herblaw`     tinyint(4) NOT NULL DEFAULT 1
+);
+
+DROP TABLE IF EXISTS `droplogs`;
+CREATE TABLE IF NOT EXISTS `droplogs`
+(
+    `ID`         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `itemID`     int(10) DEFAULT NULL,
+    `playerID`   int(10) DEFAULT NULL,
+    `dropAmount` int(10) DEFAULT NULL,
+    `npcId`      int(10) DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `experience`;
+CREATE TABLE IF NOT EXISTS `experience`
+(
+    `playerID`   int(10) NOT NULL PRIMARY KEY,
+    `attack`     int(9)  NOT NULL DEFAULT 0,
+    `defense`    int(9)  NOT NULL DEFAULT 0,
+    `strength`   int(9)  NOT NULL DEFAULT 0,
+    `hits`       int(9)  NOT NULL DEFAULT 4616,
+    `ranged`     int(9)  NOT NULL DEFAULT 0,
+    `thieving`    int(9)  NOT NULL DEFAULT 0,
+    `influence`   int(9)  NOT NULL DEFAULT 0,
+    `praygood`    int(9)  NOT NULL DEFAULT 0,
+    `prayevil`    int(9)  NOT NULL DEFAULT 0,
+    `goodmagic`   int(9)  NOT NULL DEFAULT 0,
+    `evilmagic`   int(9)  NOT NULL DEFAULT 0,
+    `cooking`     int(9)  NOT NULL DEFAULT 0,
+    `tailoring`   int(9)  NOT NULL DEFAULT 0,
+    `woodcutting` int(9)  NOT NULL DEFAULT 0,
+    `firemaking`  int(9)  NOT NULL DEFAULT 0,
+    `crafting`    int(9)  NOT NULL DEFAULT 0,
+    `smithing`    int(9)  NOT NULL DEFAULT 0,
+    `mining`      int(9)  NOT NULL DEFAULT 0,
+    `herblaw`     int(9)  NOT NULL DEFAULT 0
+);
+
+DROP TABLE IF EXISTS `maxstats`;
+CREATE TABLE IF NOT EXISTS `maxstats`
+(
+    `playerID`   int(10)    NOT NULL PRIMARY KEY,
+    `attack`     tinyint(4) NOT NULL DEFAULT 1,
+    `defense`    tinyint(4) NOT NULL DEFAULT 1,
+    `strength`   tinyint(4) NOT NULL DEFAULT 1,
+    `hits`       tinyint(4) NOT NULL DEFAULT 10,
+    `ranged`     tinyint(4) NOT NULL DEFAULT 1,
+    `thieving`    tinyint(4) NOT NULL DEFAULT 1,
+    `influence`   tinyint(4) NOT NULL DEFAULT 1,
+    `praygood`    tinyint(4) NOT NULL DEFAULT 1,
+    `prayevil`    tinyint(4) NOT NULL DEFAULT 1,
+    `goodmagic`   tinyint(4) NOT NULL DEFAULT 1,
+    `evilmagic`   tinyint(4) NOT NULL DEFAULT 1,
+    `cooking`     tinyint(4) NOT NULL DEFAULT 1,
+    `tailoring`   tinyint(4) NOT NULL DEFAULT 1,
+    `woodcutting` tinyint(4) NOT NULL DEFAULT 1,
+    `firemaking`  tinyint(4) NOT NULL DEFAULT 1,
+    `crafting`    tinyint(4) NOT NULL DEFAULT 1,
+    `smithing`    tinyint(4) NOT NULL DEFAULT 1,
+    `mining`      tinyint(4) NOT NULL DEFAULT 1,
+    `herblaw`     tinyint(4) NOT NULL DEFAULT 1
+);
+
+DROP TABLE IF EXISTS `capped_experience`;
+CREATE TABLE IF NOT EXISTS `capped_experience`
+(
+    `playerID`   int(10) NOT NULL PRIMARY KEY,
+    `attack`     int(10),
+    `defense`    int(10),
+    `strength`   int(10),
+    `hits`       int(10),
+    `ranged`     int(10),
+    `thieving`    int(10),
+    `influence`   int(10),
+    `praygood`    int(10),
+    `prayevil`    int(10),
+    `goodmagic`   int(10),
+    `evilmagic`   int(10),
+    `cooking`     int(10),
+    `tailoring`   int(10),
+    `woodcutting` int(10),
+    `firemaking`  int(10),
+    `crafting`    int(10),
+    `smithing`    int(10),
+    `mining`      int(10),
+    `herblaw`     int(10)
+);
+
+DROP TABLE IF EXISTS `friends`;
+CREATE TABLE IF NOT EXISTS `friends`
+(
+    `dbid`       INTEGER     NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `playerID`   int(10)     NOT NULL,
+    `friend`     bigint(19)  NOT NULL,
+    `friendName` varchar(12) NOT NULL
+);
+
+CREATE INDEX `friend_idx` ON `friends` (`friend`);
+
+
+DROP TABLE IF EXISTS `game_reports`;
+CREATE TABLE IF NOT EXISTS `game_reports`
+(
+    `id`                 INTEGER     NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `reporter`           varchar(12) NOT NULL,
+    `reported`           varchar(12) NOT NULL,
+    `time`               int(10)     NOT NULL,
+    `reason`             int(5)      NOT NULL,
+    `chatlog`            text                 DEFAULT NULL,
+    `reporter_x`         int(5)               DEFAULT NULL,
+    `reporter_y`         int(5)               DEFAULT NULL,
+    `reported_x`         int(5)      NOT NULL DEFAULT 0,
+    `reported_y`         int(5)               DEFAULT 0,
+    `suggests_or_mutes`  tinyint(1)           DEFAULT NULL,
+    `tried_apply_action` tinyint(1)           DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `generic_logs`;
+CREATE TABLE IF NOT EXISTS `generic_logs`
+(
+    `id`      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `message` text    NOT NULL,
+    `time`    int(10) NOT NULL
+);
+
+CREATE INDEX `gl_message_idx` ON `generic_logs` (`message`);
+CREATE INDEX `gl_time_idx` ON `generic_logs` (`time`);
+
+DROP TABLE IF EXISTS `ignores`;
+CREATE TABLE IF NOT EXISTS `ignores`
+(
+    `playerID` int(10)    NOT NULL,
+    `ignore`   bigint(19) NOT NULL,
+    `dbid`     INTEGER    NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE INDEX `ignore` ON `ignores` (`ignore`);
+
+DROP TABLE IF EXISTS `invitems`;
+CREATE TABLE IF NOT EXISTS `invitems`
+(
+    `playerID` int(10) NOT NULL,
+    `itemID`   int(10) NOT NULL,
+    `slot`     int(5)  NOT NULL,
+    PRIMARY KEY (`playerId`, `slot`)
+);
+
+CREATE INDEX `playerId_idx` ON `invitems` (`playerId`);
+
+DROP TABLE IF EXISTS `live_feeds`;
+CREATE TABLE IF NOT EXISTS `live_feeds`
+(
+    `id`       INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `username` varchar(12)  NOT NULL,
+    `message`  varchar(165) NOT NULL,
+    `time`     int(10)      NOT NULL DEFAULT 0
+);
+
+DROP TABLE IF EXISTS `logins`;
+CREATE TABLE IF NOT EXISTS `logins`
+(
+    `dbid`          INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `playerID`      int(10)      NOT NULL,
+    `time`          int(5)       NOT NULL,
+    `ip`            varchar(255) NOT NULL DEFAULT '0.0.0.0',
+    `clientVersion` int(11)
+);
+
+CREATE INDEX `ip_idx` ON `logins` (`ip`);
+
+DROP TABLE IF EXISTS `npckills`;
+CREATE TABLE IF NOT EXISTS `npckills`
+(
+    `ID`        INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `npcID`     int(10) DEFAULT NULL,
+    `playerID`  int(10) DEFAULT NULL,
+    `killCount` int(10) DEFAULT 0
+);
+
+DROP TABLE IF EXISTS `players`;
+CREATE TABLE IF NOT EXISTS `players`
+(
+    `id`                INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT ,
+    `username`          varchar(12)  NOT NULL DEFAULT '',
+    `group_id`          int(10)               DEFAULT 10,
+    `email`             varchar(255)          DEFAULT NULL,
+    `pass`              varchar(512) NOT NULL,
+    `salt`              varchar(250) NOT NULL DEFAULT '',
+    `combat`            int(10)               DEFAULT 3,
+    `skill_total`       int(10)               DEFAULT 27,
+    `x`                 int(5)                DEFAULT 216,
+    `y`                 int(5)                DEFAULT 451,
+    `fatigue`           int(10)               DEFAULT 0,
+    `combatstyle`       tinyint(1)            DEFAULT 0,
+    `block_chat`        tinyint(1)            DEFAULT 0,
+    `block_private`     tinyint(1)            DEFAULT 0,
+    `block_trade`       tinyint(1)            DEFAULT 0,
+    `block_duel`        tinyint(1)            DEFAULT 0,
+    `cameraauto`        tinyint(1)            DEFAULT 1,
+    `onemouse`          tinyint(1)            DEFAULT 0,
+    `soundoff`          tinyint(1)            DEFAULT 0,
+    `haircolour`        int(5)                DEFAULT 2,
+    `topcolour`         int(5)                DEFAULT 8,
+    `trousercolour`     int(5)                DEFAULT 14,
+    `skincolour`        int(5)                DEFAULT 0,
+    `headsprite`        int(5)                DEFAULT 1,
+    `bodysprite`        int(5)                DEFAULT 2,
+    `male`              tinyint(1)            DEFAULT 1,
+    `creation_date`     int(10)      NOT NULL DEFAULT 0,
+    `creation_ip`       varchar(255) NOT NULL DEFAULT '0.0.0.0',
+    `login_date`        int(10)               DEFAULT 0,
+    `login_ip`          varchar(255)          DEFAULT '0.0.0.0',
+    `banned`            varchar(255) NOT NULL DEFAULT '0',
+    `offences`          int(11)      NOT NULL DEFAULT 0,
+    `muted`             varchar(255) NOT NULL DEFAULT '0',
+    `kills`             int(10)      NOT NULL DEFAULT 0,
+    `npc_kills`         INT(10)      NOT NULL DEFAULT 0,
+    `deaths`            int(10)               DEFAULT 0,
+    `online`            tinyint(1)            DEFAULT 0,
+    `quest_points`      int(5)                DEFAULT NULL,
+    `lastRecoveryTryId` int(10)               DEFAULT NULL
+);
+
+CREATE INDEX `skill_total_idx` ON `players` (`skill_total`);
+CREATE INDEX `group_id_idx` ON `players` (`group_id`);
+CREATE INDEX `banned_idx` ON `players` (`banned`);
+
+DROP TABLE IF EXISTS `player_cache`;
+CREATE TABLE IF NOT EXISTS `player_cache`
+(
+    `playerID` int(10)      NOT NULL,
+    `type`     tinyint(1)   NOT NULL,
+    `key`      varchar(32)  NOT NULL,
+    `value`    varchar(150) NOT NULL,
+    `dbid`     INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+DROP TABLE IF EXISTS `player_change_recovery`;
+CREATE TABLE IF NOT EXISTS `player_change_recovery`
+(
+    `playerID`  int(10)      NOT NULL PRIMARY KEY,
+    `username`  varchar(12)  NOT NULL DEFAULT '',
+    `question1` varchar(256) NOT NULL DEFAULT '',
+    `answer1`   varchar(512) NOT NULL DEFAULT '',
+    `question2` varchar(256) NOT NULL DEFAULT '',
+    `answer2`   varchar(512) NOT NULL DEFAULT '',
+    `question3` varchar(256) NOT NULL DEFAULT '',
+    `answer3`   varchar(512) NOT NULL DEFAULT '',
+    `question4` varchar(256) NOT NULL DEFAULT '',
+    `answer4`   varchar(512) NOT NULL DEFAULT '',
+    `question5` varchar(256) NOT NULL DEFAULT '',
+    `answer5`   varchar(512) NOT NULL DEFAULT '',
+    `date_set`  int(10)      NOT NULL DEFAULT 0,
+    `ip_set`    varchar(255)          DEFAULT '0.0.0.0'
+);
+
+DROP TABLE IF EXISTS `player_contact_details`;
+CREATE TABLE IF NOT EXISTS `player_contact_details`
+(
+    `playerID`      int(10)     NOT NULL PRIMARY KEY ,
+    `username`      varchar(12) NOT NULL DEFAULT '',
+    `fullname`      varchar(100)         DEFAULT '',
+    `zipCode`       varchar(10)          DEFAULT '',
+    `country`       varchar(100)         DEFAULT '',
+    `email`         varchar(255)         DEFAULT NULL,
+    `date_modified` int(10)     NOT NULL DEFAULT 0,
+    `ip`            varchar(255)         DEFAULT '0.0.0.0'
+);
+
+DROP TABLE IF EXISTS `player_recovery`;
+CREATE TABLE IF NOT EXISTS `player_recovery`
+(
+    `playerID`      int(10)      NOT NULL PRIMARY KEY,
+    `username`      varchar(12)  NOT NULL DEFAULT '',
+    `question1`     varchar(256) NOT NULL DEFAULT '',
+    `answer1`       varchar(512) NOT NULL DEFAULT '',
+    `question2`     varchar(256) NOT NULL DEFAULT '',
+    `answer2`       varchar(512) NOT NULL DEFAULT '',
+    `question3`     varchar(256) NOT NULL DEFAULT '',
+    `answer3`       varchar(512) NOT NULL DEFAULT '',
+    `question4`     varchar(256) NOT NULL DEFAULT '',
+    `answer4`       varchar(512) NOT NULL DEFAULT '',
+    `question5`     varchar(256) NOT NULL DEFAULT '',
+    `answer5`       varchar(512) NOT NULL DEFAULT '',
+    `date_set`      int(10)      NOT NULL DEFAULT 0,
+    `ip_set`        varchar(255)          DEFAULT '0.0.0.0',
+    `previous_pass` varchar(512)          DEFAULT NULL,
+    `earlier_pass`  varchar(512)          DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `player_security_changes`;
+CREATE TABLE IF NOT EXISTS `player_security_changes`
+(
+    `id`         INTEGER     NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `playerID`   int(10)     NOT NULL,
+    `eventAlias` varchar(20) NOT NULL,
+    `date`       int(10)     NOT NULL DEFAULT 0,
+    `ip`         varchar(255)         DEFAULT '0.0.0.0',
+    `message`    text                 DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `private_message_logs`;
+CREATE TABLE IF NOT EXISTS `private_message_logs`
+(
+    `id`       INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `sender`   varchar(12)  NOT NULL,
+    `message`  varchar(255) NOT NULL,
+    `reciever` varchar(12)  NOT NULL,
+    `time`     int(10)      NOT NULL DEFAULT 0
+);
+
+CREATE INDEX `pm_reciever_idx` ON `private_message_logs` (`reciever`);
+CREATE INDEX `pm_sender_idx` ON `private_message_logs` (`sender`);
+CREATE INDEX `pm_message_idx` ON `private_message_logs` (`message`);
+CREATE INDEX `pm_time_idx` ON `private_message_logs` (`time`);
+
+DROP TABLE IF EXISTS `quests`;
+CREATE TABLE IF NOT EXISTS `quests`
+(
+    `dbid`     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `playerID` int(10) NOT NULL,
+    `id`       int(10) DEFAULT NULL,
+    `stage`    int(10) DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `recovery_questions`;
+CREATE TABLE IF NOT EXISTS `recovery_questions`
+(
+    `questionID` INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `question`   varchar(256) NOT NULL DEFAULT ''
+);
+
+INSERT INTO `recovery_questions` (`questionID`, `question`)
+VALUES (1, 'Where were you born?'),
+       (2, 'What was your first teacher''s name?'),
+       (3, 'What is your father''s middle name?'),
+       (4, 'Who was your first best friend?'),
+       (5, 'What is your favourite vacation spot?'),
+       (6, 'What is your mother''s middle name?'),
+       (7, 'What was your first pet''s name?'),
+       (8, 'What was the name of your first school?'),
+       (9, 'What is your mother''s maiden name?'),
+       (10, 'Who was your first boyfriend/girlfriend?'),
+       (11, 'What was the first computer game you purchased?'),
+       (12, 'Who is your favourite actor/actress?'),
+       (13, 'Who is your favourite author?'),
+       (14, 'Who is your favourite musician?'),
+       (15, 'Who is your favourite cartoon character?'),
+       (16, 'What is your favourite book?'),
+       (17, 'What is your favourite food?'),
+       (18, 'What is your favourite movie?');
+
+DROP TABLE IF EXISTS `recovery_attempts`;
+CREATE TABLE IF NOT EXISTS `recovery_attempts`
+(
+    `playerID` int(10)      NOT NULL,
+    `username` varchar(12)  NOT NULL DEFAULT '',
+    `time`     int(5)       NOT NULL,
+    `ip`       varchar(255) NOT NULL DEFAULT '0.0.0.0',
+    `dbid`     INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+CREATE INDEX `ip` ON `recovery_attempts` (`ip`);
+
+
+DROP TABLE IF EXISTS `staff_logs`;
+CREATE TABLE IF NOT EXISTS `staff_logs`
+(
+    `id`              INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
+    `staff_username`  varchar(12)      DEFAULT NULL,
+    `action`          tinyint(2)       DEFAULT NULL,
+    `affected_player` varchar(12)      DEFAULT NULL,
+    `time`            int(10) NOT NULL,
+    `staff_x`         int(5)  NOT NULL DEFAULT 0,
+    `staff_y`         int(5)           DEFAULT 0,
+    `affected_x`      int(5)           DEFAULT 0,
+    `affected_y`      int(5)           DEFAULT 0,
+    `staff_ip`        varchar(15)      DEFAULT '0.0.0.0',
+    `affected_ip`     varchar(15)      DEFAULT '0.0.0.0',
+    `extra`           varchar(255)     DEFAULT NULL
+)
+;
+
+DROP TABLE IF EXISTS `trade_logs`;
+CREATE TABLE IF NOT EXISTS `trade_logs`
+(
+    `id`            INTEGER    NOT NULL PRIMARY KEY AUTOINCREMENT ,
+    `player1`       varchar(12)          DEFAULT NULL,
+    `player2`       varchar(12)          DEFAULT NULL,
+    `player1_items` varchar(255)         DEFAULT NULL,
+    `player2_items` varchar(255)         DEFAULT NULL,
+    `player1_ip`    varchar(39) NOT NULL DEFAULT '0.0.0.0',
+    `player2_ip`    varchar(39) NOT NULL DEFAULT '0.0.0.0',
+    `time`          int(10)              DEFAULT NULL
+);
+
+CREATE INDEX `tl_player1_idx` ON `trade_logs` (`player1`);
+CREATE INDEX `tl_player2_idx` ON `trade_logs` (`player2`);
+CREATE INDEX `tl_player1_ip_idx` ON `trade_logs` (`player1_ip`);
+CREATE INDEX `tl_player2_ip_idx` ON `trade_logs` (`player2_ip`);
+CREATE INDEX `tl_time_idx` ON `trade_logs` (`time`);
+
+COMMIT;
+
+
+/*
+ * New server (non-player) tables section
+ * The queries performed in the section will add new tables and drop any that already exist
+ */
+
+DROP TABLE IF EXISTS `objects`;
+CREATE TABLE IF NOT EXISTS `objects`
+(
+    `x`         int(10) NOT NULL,
+    `y`         int(10) NOT NULL,
+    `id`        int(10) NOT NULL,
+    `direction` int(10) NOT NULL,
+    `type`      int(10) NOT NULL,
+    `d_id`      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+DROP TABLE IF EXISTS `npclocs`;
+CREATE TABLE IF NOT EXISTS `npclocs`
+(
+    `id`     int(10) DEFAULT NULL,
+    `startX` int(10) DEFAULT NULL,
+    `minX`   int(10) DEFAULT NULL,
+    `maxX`   int(10) DEFAULT NULL,
+    `startY` int(10) DEFAULT NULL,
+    `minY`   int(10) DEFAULT NULL,
+    `maxY`   int(10) DEFAULT NULL,
+    `dbid`   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+DROP TABLE IF EXISTS `grounditems`;
+CREATE TABLE IF NOT EXISTS `grounditems`
+(
+    `id`      int(10) DEFAULT NULL,
+    `x`       int(10) DEFAULT NULL,
+    `y`       int(10) DEFAULT NULL,
+    `amount`  int(10) DEFAULT NULL,
+    `respawn` int(10) DEFAULT NULL,
+    `idx`     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+DROP TABLE IF EXISTS `itemstatuses`;
+CREATE TABLE IF NOT EXISTS `itemstatuses`
+(
+    `itemID`     INTEGER    NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `catalogID`  int(10)    NOT NULL,
+    `amount`     int(10)    NOT NULL DEFAULT 1,
+    `noted`      tinyint(1) NOT NULL DEFAULT 0,
+    `wielded`    tinyint(1) NOT NULL DEFAULT 0,
+    `durability` int(5)     NOT NULL DEFAULT 0
+);
+
+DROP TABLE IF EXISTS `ironman`;
+CREATE TABLE `ironman`
+(
+    `playerID`             INTEGER PRIMARY KEY,
+    `iron_man`             tinyint(2) NOT NULL DEFAULT 0,
+    `iron_man_restriction` tinyint(2) NOT NULL DEFAULT 1,
+    `hc_ironman_death`     tinyint(2) NOT NULL DEFAULT 0
+);
+
+DROP TABLE IF EXISTS `_PREFIX_db_patches`;
+CREATE TABLE IF NOT EXISTS `_PREFIX_db_patches`
+(
+    patch_name varchar(200),
+    run_date date
+);

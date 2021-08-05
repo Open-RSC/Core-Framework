@@ -1,5 +1,6 @@
 package com.openrsc.server.model.entity;
 
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -16,6 +17,7 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.CollisionFlag;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,6 +97,22 @@ public abstract class Mob extends Entity {
 	 */
 	private Mob following;
 	/**
+	 * Event to handle possessing
+	 */
+	private GameTickEvent possesionEvent;
+	/**
+	 * Who we are currently possessing (if anyone)
+	 */
+	private Mob possessing;
+	/**
+	 * Name of player we are possessing (if anyone)
+	 */
+	public String possessingUsername;
+	/**
+	 * If the moderator has been alerted that the person they were posessing logged out
+	 */
+	public boolean knowsPossesseeLoggedOut = false;
+	/**
 	 * The related mob (owner, in the case of pets)
 	 */
 	public Mob relatedMob;
@@ -123,8 +141,8 @@ public abstract class Mob extends Entity {
 	 */
 	private ViewArea viewArea = new ViewArea(this);
 
-	public Mob (final World world) {
-		super(world);
+	public Mob(final World world, final EntityType type) {
+		super(world, type);
 		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
 	}
 
@@ -132,12 +150,15 @@ public abstract class Mob extends Entity {
 	 * ABSTRACT
 	 */
 	public abstract int getWeaponAimPoints();
+
 	public abstract int getWeaponPowerPoints();
+
 	public abstract int getArmourPoints();
 
 	public abstract int getCombatStyle();
 
 	public abstract boolean stateIsInvisible();
+
 	public abstract boolean stateIsInvulnerable();
 
 	// TODO: To be made abstract later when different
@@ -236,6 +257,7 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
+	// canReach EVER, not canReach this tick
 	public final boolean canReach(Entity e) {
 		int[] currentCoords = {getX(), getY()};
 		while (currentCoords[0] != e.getX() || currentCoords[1] != e.getY()) {
@@ -323,7 +345,17 @@ public abstract class Mob extends Entity {
 
 	public boolean withinRange(final Entity e) {
 		if (e != null) {
-			return getLocation().withinRange(e.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE * 8);
+			return getLocation().withinRange(e.getLocation(), (getWorld().getServer().getConfig().VIEW_DISTANCE * 8) - 1);
+		}
+		return false;
+	}
+
+	public boolean withinAuthenticRange(final Player e) {
+		if (e != null) {
+			if (e.isUsingCustomClient() || getWorld().getServer().getConfig().VIEW_DISTANCE <= 2)
+				return true; // don't need additional restraint in these cases
+
+			return getLocation().withinRange(e.getLocation(), 15);
 		}
 		return false;
 	}
@@ -335,9 +367,9 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
-	public boolean within5GridRange(final Entity e) {
+	public boolean within4GridRange(final Entity e) {
 		if (e != null) {
-			return getLocation().withinGridRange(e.getLocation(), 5);
+			return getLocation().withinGridRange(e.getLocation(), 4);
 		}
 		return false;
 	}
@@ -373,7 +405,6 @@ public abstract class Mob extends Entity {
 		if (isFollowing()) {
 			resetFollowing();
 		}
-		final Mob me = this;
 		following = mob;
 		followEvent = new GameTickEvent(getWorld(), this, 0, "Mob Following Mob") {
 			public void run() {
@@ -413,6 +444,56 @@ public abstract class Mob extends Entity {
 		getWorld().getServer().getGameEventHandler().add(followEvent);
 	}
 
+	public void setPossessing(final Mob mob) {
+		possessing = mob;
+		if (mob instanceof Player) {
+			possessingUsername = ((Player)mob).getUsername();
+		} else {
+			possessingUsername = ((Npc) possessing).getDef().getName();
+		}
+		possesionEvent = new GameTickEvent(getWorld(), this, 0, "Moderator possessing Mob") {
+			public void run() {
+				setDelayTicks(1);
+				Player moderator = (Player)getOwner();
+				Mob possessee = moderator.getPossessing();
+
+				if (possessee == null || possessee.isRemoved()) {
+					if (possessee instanceof Player) {
+						if (!moderator.knowsPossesseeLoggedOut) {
+							moderator.message("The body you possessed has left this world, but your spirit still searches for them...");
+							moderator.knowsPossesseeLoggedOut = true;
+						}
+						Player targetPlayer = moderator.getWorld().getPlayer(DataConversions.usernameToHash(moderator.possessingUsername));
+						if (targetPlayer == null)
+							return;
+						moderator.message("Your spirit has found @mag@" + possessingUsername + "@whi@ once again.");
+						moderator.knowsPossesseeLoggedOut = false;
+						setPossessing(targetPlayer);
+					} else {
+						if (possessingUsername != null) {
+							moderator.message("Your spirit leaves the @mag@" + possessingUsername + "@whi@ as it dies...");
+							moderator.setCacheInvisible(false);
+							resetFollowing(false);
+						} else {
+							this.stop();
+						}
+						return;
+					}
+				}
+
+				int curY = moderator.getLocation().getY();
+				final Point nextPoint = possessee.getWalkingQueue().getNextMovement();
+				moderator.setLocation(nextPoint, false);
+				if (Math.abs(nextPoint.getY() - curY) >= 16) {
+					// set_floor is necessary if climbing ladder or teleporting
+					ActionSender.sendWorldInfo(moderator);
+				}
+			}
+		};
+		getWorld().getServer().getGameEventHandler().add(possesionEvent);
+
+	}
+
 	public void setFollowingAstar(final Mob mob, final int radius) {
 		setFollowingAstar(mob, radius, 20);
 	}
@@ -441,13 +522,34 @@ public abstract class Mob extends Entity {
 		getWorld().getServer().getGameEventHandler().add(followEvent);
 	}
 
-	public void resetFollowing() {
+	public void resetFollowing(boolean tellLeft) {
 		following = null;
 		if (followEvent != null) {
 			followEvent.stop();
 			followEvent = null;
 		}
+
+		if (possesionEvent != null) {
+			if (tellLeft) {
+				if (this instanceof Player) {
+					if (possessing instanceof Player) {
+						((Player) this).message("Your spirit has left @mag@" + possessingUsername + "@whi@ and returned to your body.");
+					} else {
+						((Player) this).message("Your spirit has left @mag@" + ((Npc) possessing).getDef().getName() + "@whi@ and returned to your body.");
+						((Player) this).setCacheInvisible(false);
+					}
+				}
+			}
+			possesionEvent.stop();
+			possesionEvent = null;
+			possessing = null;
+			possessingUsername = null;
+		}
 		resetPath();
+	}
+
+	public void resetFollowing() {
+		resetFollowing(true);
 	}
 
 	public void setLocation(final Point point, boolean teleported) {
@@ -466,7 +568,7 @@ public abstract class Mob extends Entity {
 		final long now = System.currentTimeMillis();
 		final boolean doWalk = !getWorld().getServer().getConfig().WANT_CUSTOM_WALK_SPEED || now >= lastMovementTime + getWalkingTick();
 
-		if(doWalk) {
+		if (doWalk) {
 			getWalkingQueue().processNextMovement();
 			lastMovementTime = now;
 		}
@@ -489,11 +591,11 @@ public abstract class Mob extends Entity {
 	public void walkToEntityAStar(final int x, final int y, final int depth) {
 		getWalkingQueue().reset();
 		final Point mobPos = new Point(this.getX(), this.getY());
-		final AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), depth);
+		final AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x, y), depth);
 		pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
 		Path newPath = pathFinder.findPath();
 		if (newPath == null)
-			walkToEntity(x,y);
+			walkToEntity(x, y);
 		else
 			getWalkingQueue().setPath(newPath);
 	}
@@ -535,7 +637,7 @@ public abstract class Mob extends Entity {
 
 			int victimSprite = 8;
 			int ourSprite = 9;
-			if(this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc()) {
+			if (this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc()) {
 				victimSprite = 9;
 				ourSprite = 8;
 			}
@@ -646,7 +748,7 @@ public abstract class Mob extends Entity {
 				return false;
 			}
 
-			final Player victim = (Player)mob;
+			final Player victim = (Player) mob;
 			if (victim.isInvulnerableTo(this) || victim.isInvisibleTo(this)) {
 				victim.message("You are not allowed to attack that person");
 				return false;
@@ -695,7 +797,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void damage(final int damage) {
-		final int newHp = skills.getLevel(com.openrsc.server.constants.Skills.HITS) - damage;
+		final int newHp = skills.getLevel(Skill.HITS.id()) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				killedBy(combatWith);
@@ -703,11 +805,11 @@ public abstract class Mob extends Entity {
 				killedBy(combatWith);
 			}
 		} else {
-			skills.setLevel(com.openrsc.server.constants.Skills.HITS, newHp);
+			skills.setLevel(Skill.HITS.id(), newHp);
 		}
 		if (this.isPlayer()) {
 			Player player = (Player) this;
-			ActionSender.sendStat(player, com.openrsc.server.constants.Skills.HITS);
+			ActionSender.sendStat(player, Skill.HITS.id());
 		}
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}
@@ -719,6 +821,26 @@ public abstract class Mob extends Entity {
 		final PoisonEvent poisonEvent = new PoisonEvent(getWorld(), this, getPoisonDamage());
 		setAttribute("poisonEvent", poisonEvent);
 		getWorld().getServer().getGameEventHandler().add(poisonEvent);
+	}
+
+	// part of NPC poison feature
+	public int getCurrentPoisonPower() {
+		final PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
+		if (poisonEvent == null) {
+			return 0;
+		} else {
+			return poisonEvent.getPoisonPower();
+		}
+	}
+
+	/**
+	 * Resets the update related flags
+	 */
+	public void resetAfterUpdate() {
+		setHasMoved(false);
+		resetSpriteChanged();
+		getUpdateFlags().reset();
+		setTeleporting(false);
 	}
 
 	/**
@@ -780,6 +902,10 @@ public abstract class Mob extends Entity {
 		return following;
 	}
 
+	public Mob getPossessing() {
+		return possessing;
+	}
+
 	public int getHitsMade() {
 		return hitsMade;
 	}
@@ -821,9 +947,13 @@ public abstract class Mob extends Entity {
 		return statRestorationEvent;
 	}
 
-	public void tryResyncStatEvent() { statRestorationEvent.tryResyncStat(); }
+	public void tryResyncStatEvent() {
+		statRestorationEvent.tryResyncStat();
+	}
 
-	public void tryResyncHitEvent() { statRestorationEvent.tryResyncHit(); }
+	public void tryResyncHitEvent() {
+		statRestorationEvent.tryResyncHit();
+	}
 
 	public UpdateFlags getUpdateFlags() {
 		return updateFlags;
@@ -916,11 +1046,11 @@ public abstract class Mob extends Entity {
 	}
 
 	public int getCombatLevel(final boolean isSpecial) {
-		return getSkills().getCombatLevel(isSpecial);
+		return getSkills().getCombatLevel(this, isSpecial);
 	}
 
 	public int getCombatLevel() {
-		return getSkills().getCombatLevel(false);
+		return getSkills().getCombatLevel(this, false);
 	}
 
 	public boolean isTeleporting() {
@@ -1003,8 +1133,16 @@ public abstract class Mob extends Entity {
 			return this.withinRange(mob, radius);
 		}
 
-		Player player = (Player)this;
+		Player player = (Player) this;
 		radius = player.getProjectileRadius(radius);
 		return player.withinRange(mob, radius);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Mob) {
+			return ((Mob)obj).getUUID().equals(uuid);
+		}
+		return false;
 	}
 }

@@ -4,15 +4,15 @@ import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
 
-public final class NpcCommand implements PacketHandler {
+public final class NpcCommand implements PayloadProcessor<TargetMobStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) {
-		int pID = packet.getID();
-		int serverIndex = packet.readShort();
+	public void process(TargetMobStruct payload, Player player) throws Exception {
+		OpcodeIn pID = payload.getOpcode();
+		int serverIndex = payload.serverIndex;
 		if (player == null) return;
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
@@ -22,7 +22,7 @@ public final class NpcCommand implements PacketHandler {
 			return;
 		}
 
-		final boolean click = pID == OpcodeIn.NPC_COMMAND1.getOpcode();
+		final boolean click = pID == OpcodeIn.NPC_COMMAND;
 		player.click = click ? 0 : 1;
 		final Npc affectedNpc = player.getWorld().getNpc(serverIndex);
 		if (affectedNpc == null) return;

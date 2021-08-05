@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obst
 
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -124,13 +124,13 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 	}
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessful(req, player.getSkills().getLevel(Skills.AGILITY), false, req + 70);
+		return Formulae.calcProductionSuccessfulLegacy(req, player.getSkills().getLevel(Skill.AGILITY.id()), false, req + 70);
 	}
 
 	private void failBlackAreaObstacle(Player player, GameObject obj) {
 		player.message("..but you slip and tumble into the darkness");
 		fallTeleportLocation(player, obj);
-		player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
+		player.damage(((int) getCurrentLevel(player, Skill.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
 		say(player, null, "ouch!");
 		if (player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {

@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.npcs.rimmington;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -20,7 +20,7 @@ public class MasterCrafter implements TalkNpcTrigger {
 				"Accomplished crafters from all over the land come here",
 				"All to use our top notch workshops");
 			if (config().WANT_CUSTOM_SPRITES
-				&& getMaxLevel(player, Skills.CRAFTING) >= 99) {
+				&& getMaxLevel(player, Skill.CRAFTING.id()) >= 99) {
 
 				if (multi(player, n, "That's a nice cape you've got on there",
 					"Thank you. Have a nice day") == 0) {

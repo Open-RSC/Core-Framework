@@ -1,0 +1,11 @@
+{
+	"grounditems": [{
+		"id": 1461,
+		"pos": {
+			"X": 562,
+			"Y": 486
+		},
+		"amount": 1,
+		"respawn": 30
+	}]
+}

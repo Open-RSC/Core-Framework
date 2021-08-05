@@ -29,16 +29,7 @@ public final class DataConversions {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final char[] special_characters = "~`!@#$%^&*()_-+={}[]|\'\";:?><,./".toCharArray();
-	public static StringEncryption encryption = new StringEncryption(StringEncryption.asByte(22, 22, 22, 22, 22, 22, 21,
-		22, 22, 20, 22, 22, 22, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 3, 8,
-		22, 16, 22, 16, 17, 7, 13, 13, 13, 16, 7, 10, 6, 16, 10, 11, 12, 12, 12, 12, 13, 13, 14, 14, 11, 14, 19, 15,
-		17, 8, 11, 9, 10, 10, 10, 10, 11, 10, 9, 7, 12, 11, 10, 10, 9, 10, 10, 12, 10, 9, 8, 12, 12, 9, 14, 8, 12,
-		17, 16, 17, 22, 13, 21, 4, 7, 6, 5, 3, 6, 6, 5, 4, 10, 7, 5, 6, 4, 4, 6, 10, 5, 4, 4, 5, 7, 6, 10, 6, 10,
-		22, 19, 22, 14, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 21, 22, 21, 22, 22, 22, 21, 22, 22));
+	public static StringEncryption encryption = new StringEncryption();
 	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i',
 		'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g',
 		'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4',
@@ -65,6 +56,12 @@ public final class DataConversions {
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
+	}
+
+	/** Returns a virtual like influence from given quest points */
+	public static int questPointsToInfluence(int numberPoints, int maxLevel) {
+		// based on May 10 2001 conversion, about max influence 22 where max QP became 30
+		return Math.min(Math.max(1, (int)Math.floor(numberPoints * 0.75)), maxLevel);
 	}
 
 	public static String getDateFromMsec(long diffMSec) {
@@ -293,6 +290,51 @@ public final class DataConversions {
 		return s.toString();
 	}
 
+	public static String speakTongues(String commonTongue) {
+		char[] vowels = {'a', 'e', 'i', 'o', 'u'};
+		char[] vowelsUpper = {'A', 'E', 'I', 'O', 'U'};
+		char[] babble = commonTongue.toCharArray();
+		for (int idx = 0; idx < babble.length; idx++) {
+
+			if (babble[idx] == '@') {
+				idx += 5;
+				if (idx >= babble.length) break;
+			}
+
+			if (random(0, random(7,13)) == 0) {
+				babble[idx] = '\'';
+			}
+
+			switch (babble[idx]) {
+				case 'A':
+				case 'E':
+				case 'I':
+				case 'O':
+				case 'U':
+					babble[idx] = vowelsUpper[random(0,4)];
+					break;
+				case 'a':
+				case 'e':
+				case 'i':
+				case 'o':
+				case 'u':
+					babble[idx] = vowels[random(0,4)];
+					break;
+				default:
+					if (babble[idx] > 'A' && babble[idx] <= 'Z') {
+						if (random(0,5) == 0) {
+							babble[idx] = (char)random((int)'A', (int)'Z');
+						}
+					} else if (babble[idx] > 'a' && babble[idx] <= 'z') {
+						if (random(0,5) == 0) {
+							babble[idx] = (char)random((int)'a', (int)'z');
+						}
+					}
+			}
+		}
+		return new String(babble);
+	}
+
 	/**
 	 * Calculates the average of all values in the array
 	 */
@@ -304,19 +346,17 @@ public final class DataConversions {
 		return (int) (total / values.length);
 	}
 
-	public static String getEncryptedString(Packet src, int limit) {
+	public static String getEncryptedString(Packet src) {
 		try {
-			int count = src.getSmart08_16();// correct.
-			if (count > limit) {
-				count = limit;
-			}
+			int count = src.getSmart08_16();
 
 			byte[] srct = src.readRemainingData();
 			byte[] dest = new byte[count];
 			encryption.decryptString(srct, dest, 0, 0, -1, count);
 
 			return getStringFromBytes(dest, 0, count);
-		} catch (Exception var6) {
+		} catch (Exception ex) {
+			ex.printStackTrace();
 			return "Cabbage";
 		}
 	}
@@ -407,6 +447,17 @@ public final class DataConversions {
 			}
 		}
 		return s.toString();
+	}
+
+	/**
+	 * removes invalid characters and replaces with spaces, then trims the username
+	 * @param username username input
+	 * @return sanitized username
+	 */
+	public static String sanitizeUsername(String username) {
+		return username
+				.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ")
+				.trim();
 	}
 
 	/**
@@ -645,5 +696,15 @@ public final class DataConversions {
 		final String suffixes[] = {"B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
 
 		return df.format(Math.pow(1024, base - Math.floor(base))) + suffixes[(int)Math.floor(base)];
+	}
+
+	public static String formatTimeString(final int minutes) {
+		if (minutes < 60) {
+			return minutes + " minutes";
+		} else if (minutes < 24 * 60) {
+			return (minutes / 60) + " hours";
+		} else {
+			return (minutes / (24 * 60)) + " days";
+		}
 	}
 }

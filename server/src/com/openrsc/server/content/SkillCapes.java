@@ -53,8 +53,6 @@ public class SkillCapes {
 			return -1;
 
 		switch (cape) {
-			case FISHING_CAPE:
-				return fishingCape();
 		}
 		return -1;
 	}
@@ -93,17 +91,6 @@ public class SkillCapes {
 			return true;
 		}
 		return false;
-	}
-
-	private static int fishingCape() {
-		double mantaHit = 3;
-		double turtleHit = 6;
-		if (rand1to100() <= mantaHit) {
-			return ItemId.RAW_MANTA_RAY.id();
-		} else if (rand1to100() <= turtleHit) {
-			return ItemId.RAW_SEA_TURTLE.id();
-		}
-		return -1;
 	}
 
 	private static boolean magicCape() {

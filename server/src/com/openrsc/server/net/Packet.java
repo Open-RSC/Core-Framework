@@ -182,6 +182,19 @@ public class Packet {
 	}
 
 	/**
+	 * Reads a RuneScape string.
+	 *
+	 * @return The string.
+	 */
+	public String readString(int len) {
+		StringBuilder bldr = new StringBuilder();
+		int length = len;
+		while (payload.readableBytes() > 0 && length-- > 0)
+			bldr.append((char) payload.readByte());
+		return bldr.toString();
+	}
+
+	/**
 	 * Reads a series of bytes.
 	 *
 	 * @param is     The tarread byte array.
@@ -204,8 +217,8 @@ public class Packet {
 	}
 
 	public int getSmart08_16() {
-		int var2 = 255 & (getBuffer().getByte(getBuffer().readerIndex()) & 0xFF);
-		return var2 < 128 ? getBuffer().readUnsignedByte() : getBuffer().readShort() - '\u8000';
+		int byte1 = getBuffer().getByte(getBuffer().readerIndex()) & 0xFF;
+		return byte1 < 128 ? getBuffer().readUnsignedByte() : getBuffer().readUnsignedShort() - 32768;
 	}
 
 	public long getPacketNumber() {

@@ -20,7 +20,7 @@ import static orsc.osConfig.C_MENU_SIZE;
 public final class CustomBankInterface extends BankInterface {
 	private static int fontSize = Config.isAndroid() ? C_MENU_SIZE : 1;
 	private static int fontSizeHeight;
-	private int[] equipmentViewOrder = new int[]{0, 1, 2, 5, 4, 3, 8, 9, 6, 7, 10};
+	private int[] equipmentViewOrder = new int[]{0, 1, 2, 7, 4, 3, 8, 9, 5, 6, 10};
 	private final int presetCount = 2;
 	public Preset[] presets = new Preset[presetCount];
 	public int selectedInventorySlot = -1;
@@ -334,13 +334,19 @@ public final class CustomBankInterface extends BankInterface {
 					if (draggingBankSlot != -1 && bank.getControlText(bankSearch).isEmpty()) {
 						ItemDef def = bankItems.get(draggingBankSlot).getItem().getItemDef();
 						if (bankItems.get(draggingBankSlot).getItem().getNoted()) {
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
-								mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-								EntityHandler.noteDef.getBlueMask(), false, 0, 1);
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-								mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
-								def.getPictureMask(), 0,
-								def.getBlueMask(),false, 0, 1);
+							if (S_WANT_CERT_AS_NOTES) {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
+									mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+									EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+									mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
+									def.getPictureMask(), 0,
+									def.getBlueMask(),false, 0, 1);
+							} else {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.certificateDef),
+									mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+									EntityHandler.certificateDef.getBlueMask(), false, 0, 1);
+							}
 						} else {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 								mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0,
@@ -356,11 +362,16 @@ public final class CustomBankInterface extends BankInterface {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
 								def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
 							if (bankItem.getItem().getNoted()) {
-								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX, drawY, 48, 32,
-									EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
-								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX + 7,
-									drawY + 8, 29, 19, def.getPictureMask(), 0,
-									def.getBlueMask(), false, 0, 1);
+								if (S_WANT_CERT_AS_NOTES) {
+									mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX, drawY, 48, 32,
+										EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
+									mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX + 7,
+										drawY + 8, 29, 19, def.getPictureMask(), 0,
+										def.getBlueMask(), false, 0, 1);
+								} else {
+									mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.certificateDef), drawX, drawY, 48, 32,
+										EntityHandler.certificateDef.getPictureMask(), 0, EntityHandler.certificateDef.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
+								}
 							} else {
 								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
 									def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1, (equipmentMode && !def.isWieldable()) ? 0x60FFFFFF : 0xFFFFFFFF);
@@ -483,7 +494,11 @@ public final class CustomBankInterface extends BankInterface {
 		mc.getSurface().drawBoxAlpha(x + 422, settingsY - 1, 75, 16, equipmentMode ? boxColourGreyed : (swapNoteMode ? 0x7E1F1C : 0x5A5A55), 192);
 		mc.getSurface().drawBoxBorder(x + 422, 75, settingsY - 1, 16, 0x2D2C24);
 		mc.getSurface().drawBoxBorder(x + 423, 73, settingsY, 14, 0x706452);
-		drawString("Note", x + 26 + 422, settingsY + 11, 1, 0xffffff);
+		if (S_WANT_CERT_AS_NOTES) {
+			drawString("Note", x + 26 + 422, settingsY + 11, 1, 0xffffff);
+		} else {
+			drawString("Certificate", x + 26 + 406, settingsY + 11, 1, 0xffffff);
+		}
 
 		// Inventory Items Loop
 		if (Config.S_WANT_EQUIPMENT_TAB && equipmentMode) {
@@ -588,16 +603,22 @@ public final class CustomBankInterface extends BankInterface {
 
 					if (draggingInventoryID != -1
 						&& (mc.getInventoryItemAmount(draggingInventoryID) != -1)) {
-						ItemDef def = mc.getInventoryItem(selectedInventorySlot).getItemDef();
-						if (mc.getInventoryItem(selectedInventorySlot).getNoted()) {
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
-								mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-								EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+						ItemDef def = mc.getInventoryItem(draggingInventoryID).getItemDef();
+						if (mc.getInventoryItem(draggingInventoryID).getNoted()) {
+							if (S_WANT_CERT_AS_NOTES) {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
+									mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+									EntityHandler.noteDef.getBlueMask(), false, 0, 1);
 
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-								mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
-								def.getPictureMask(), 0,
-								def.getBlueMask(),false, 0, 1);
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+									mc.getMouseX() + 7, mc.getMouseY() + 8, 29, 19,
+									def.getPictureMask(), 0,
+									def.getBlueMask(),false, 0, 1);
+							} else {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.certificateDef),
+									mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+									EntityHandler.certificateDef.getBlueMask(), false, 0, 1);
+							}
 						} else {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
 								mc.getMouseX(), mc.getMouseY(), 48, 32, def.getPictureMask(), 0,
@@ -611,14 +632,20 @@ public final class CustomBankInterface extends BankInterface {
 
 						if (mc.getInventoryItem(inventorySlot).getNoted()) { // Noted items
 							def = ItemDef.asNote(def);
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX, drawY, 48, 32,
-								EntityHandler.noteDef.getPictureMask(), 0,
-								EntityHandler.noteDef.getBlueMask(),false, 0, 1);
+							if (S_WANT_CERT_AS_NOTES) {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX, drawY, 48, 32,
+									EntityHandler.noteDef.getPictureMask(), 0,
+									EntityHandler.noteDef.getBlueMask(),false, 0, 1);
 
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-								drawX + 7, drawY + 8, 29, 19, def.getPictureMask(), 0,
-								def.getBlueMask(),false,
-								0, 1);
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+									drawX + 7, drawY + 8, 29, 19, def.getPictureMask(), 0,
+									def.getBlueMask(),false,
+									0, 1);
+							} else {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.certificateDef), drawX, drawY, 48, 32,
+									EntityHandler.certificateDef.getPictureMask(), 0,
+									EntityHandler.certificateDef.getBlueMask(),false, 0, 1);
+							}
 						} else {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48, 32,
 								def.getPictureMask(), 0,
@@ -672,7 +699,7 @@ public final class CustomBankInterface extends BankInterface {
 					// Draw item name on hover
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + 49 && mc.getMouseY() > drawY && mc.getMouseY() < drawY + 34) {
 						if (mc.getInventoryItemID(inventorySlot) != -1) {
-							drawString(EntityHandler.getItemDef(mc.getInventoryItemID(inventorySlot)).getName(), x + 7, y + 15, 0, 0xFFFFFF);
+							drawString(EntityHandler.getItemDef(mc.getInventoryItemID(inventorySlot), mc.getInventory()[inventorySlot].getNoted()).getName(), x + 7, y + 15, 0, 0xFFFFFF);
 						}
 
 					}
@@ -1312,15 +1339,23 @@ public final class CustomBankInterface extends BankInterface {
 			ItemDef def = item.getItemDef();
 			if (def != null) {
 				if (item.getNoted()) {
-					mc.getSurface().drawSpriteClipping(
-						mc.spriteSelect(EntityHandler.noteDef),
-						inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1,
-						48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-						EntityHandler.noteDef.getBlueMask(), false, 0, 1);
-					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-						inventoryXOffset + col * 49 + 7,inventoryYOffset + row * 34 + 7, 33, 23,
-						def.getPictureMask(), 0,
-						def.getBlueMask(), false, 0, 1);
+					if (S_WANT_CERT_AS_NOTES) {
+						mc.getSurface().drawSpriteClipping(
+							mc.spriteSelect(EntityHandler.noteDef),
+							inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1,
+							48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+							EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+							inventoryXOffset + col * 49 + 7,inventoryYOffset + row * 34 + 7, 33, 23,
+							def.getPictureMask(), 0,
+							def.getBlueMask(), false, 0, 1);
+					} else {
+						mc.getSurface().drawSpriteClipping(
+							mc.spriteSelect(EntityHandler.certificateDef),
+							inventoryXOffset + col * 49 + 1, inventoryYOffset + row * 34 + 1,
+							48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+							EntityHandler.certificateDef.getBlueMask(), false, 0, 1);
+					}
 				} else {
 					mc.getSurface().drawSpriteClipping(
 						mc.spriteSelect(def),

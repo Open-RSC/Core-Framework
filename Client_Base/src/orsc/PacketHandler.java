@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static orsc.Config.isAndroid;
+
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
@@ -102,9 +104,12 @@ public class PacketHandler {
 		put(34, "FREEZE_EXPERIENCE_TOGGLE");
 		put(113, "SEND_IRONMAN");
 		put(115, "SEND_ON_BLACK_HOLE");
+		put(129, "COMBAT_STYLE_CHANGED");
 		put(135, "BANK_PIN_INTERFACE");
 		put(136, "ONLINE_LIST");
+		put(144, "SHOW_POINTS_TO_GP");
 		put(147, "SEND_KILLS2");
+		put(148, "SET_OPENPK_POINTS");
 		put(150, "UPDATE_PRESET");
 		put(254, "UPDATE_EQUIPMENT");
 		put(255, "UPDATE_EQUIPMENT_SLOT");
@@ -392,7 +397,12 @@ public class PacketHandler {
 			else if (opcode == 117) showSleepScreen(length);
 
 				// Not Sleeping
-			else if (opcode == 84) mc.setIsSleeping(false);
+			else if (opcode == 84) {
+				mc.setIsSleeping(false);
+				if (isAndroid() && osConfig.F_SHOWING_KEYBOARD) {
+					mc.clientPort.closeKeyboard();
+				}
+			}
 
 				// Wrong Sleep Word
 			else if (opcode == 194) mc.setSleepingStatusText("Incorrect - Please wait...");
@@ -415,6 +425,9 @@ public class PacketHandler {
 				// Kills2
 			else if (opcode == 147)
 				mc.setStatKills2(packetsIncoming.getShort());
+
+			else if (opcode == 148) // Set OpenPK Points
+				mc.setPoints(packetsIncoming.getLong(0));
 
 			else if (opcode == 98)
 				mc.setExpShared(packetsIncoming.getShort());
@@ -443,6 +456,9 @@ public class PacketHandler {
 				// Shop Dialog
 			else if (opcode == 101) showShopDialog();
 
+			    // OpenPK gp exchange
+			else if (opcode == 144) showPointsToGp();
+
 				// Trade Dialog Update
 			else if (opcode == 97) updateTradeDialog();
 
@@ -466,6 +482,9 @@ public class PacketHandler {
 
 				//toggle experience freeze
 			else if (opcode == 34) mc.toggleExperienceFreeze(packetsIncoming.getByte());
+
+			    //sync combat style with server (needed to compensate for network errors)
+			else if (opcode == 129) gotCombatStylePacket();
 
 			else mc.closeConnection(true);
 
@@ -908,7 +927,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, customProtocol, wantExtendedCatsBehavior;
+		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio;
 
 		String logoSpriteID;
 
@@ -936,62 +955,65 @@ public class PacketHandler {
 			showRoofToggle = this.getClientStream().getUnsignedByte(); // 21
 			wantHideIp = this.getClientStream().getUnsignedByte(); // 22
 			wantRemember = this.getClientStream().getUnsignedByte(); // 23
-			showTutorialSkipOption = this.getClientStream().getUnsignedByte(); // 24
-			wantGlobalChat = this.getClientStream().getUnsignedByte(); // 25
-			wantSkillMenus = this.getClientStream().getUnsignedByte(); // 26
-			wantQuestMenus = this.getClientStream().getUnsignedByte(); // 27
-			wantExperienceElixirs = this.getClientStream().getUnsignedByte(); // 28
-			wantKeyboardShortcuts = this.getClientStream().getUnsignedByte(); // 29
-			wantCustomBanks = this.getClientStream().getUnsignedByte(); // 30
-			wantBankPins = this.getClientStream().getUnsignedByte(); // 31
-			wantBankNotes = this.getClientStream().getUnsignedByte(); // 32
-			wantCertDeposit = this.getClientStream().getUnsignedByte(); // 33
-			customFiremaking = this.getClientStream().getUnsignedByte(); // 34
-			wantDropX = this.getClientStream().getUnsignedByte(); // 35
-			wantExpInfo = this.getClientStream().getUnsignedByte(); // 36
-			wantWoodcuttingGuild = this.getClientStream().getUnsignedByte(); // 37
-			wantDecanting = this.getClientStream().getUnsignedByte(); // 38
-			wantCertsToBank = this.getClientStream().getUnsignedByte(); // 39
-			wantCustomRankDisplay = this.getClientStream().getUnsignedByte(); // 40
-			wantRightClickBank = this.getClientStream().getUnsignedByte(); // 41
-			wantFixedOverheadChat = this.getClientStream().getUnsignedByte(); // 42
-			welcomeText = this.getClientStream().readString(); // 43
-			wantMembers = this.getClientStream().getUnsignedByte(); // 44
-			displayLogoSprite = this.getClientStream().getUnsignedByte(); // 45
-			logoSpriteID = this.getClientStream().readString(); // 46
-			getFPS = this.getClientStream().getUnsignedByte(); // 47
-			wantEmail = this.getClientStream().getUnsignedByte(); // 48
-			wantRegistrationLimit = this.getClientStream().getUnsignedByte(); // 49
-			allowResize = this.getClientStream().getUnsignedByte(); // 50
-			lenientContactDetails = this.getClientStream().getUnsignedByte(); // 51
-			wantFatigue = this.getClientStream().getUnsignedByte(); // 52
-			wantCustomSprites = this.getClientStream().getUnsignedByte(); // 53
-			wantPlayerCommands = this.getClientStream().getUnsignedByte(); // 54
-			wantPets = this.getClientStream().getUnsignedByte(); // 55
-			maxWalkingSpeed = this.getClientStream().getUnsignedByte(); // 56
-			showUnidentifiedHerbNames = this.getClientStream().getUnsignedByte(); // 57
-			wantQuestStartedIndicator = this.getClientStream().getUnsignedByte(); // 58
-			fishingSpotsDepletable = this.getClientStream().getUnsignedByte(); //59
-			improvedItemObjectNames = this.getClientStream().getUnsignedByte(); //60
-			wantRunecraft = this.getClientStream().getUnsignedByte(); //61
-			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //62
-			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //63
-			wantBankPresets = this.getClientStream().getUnsignedByte(); //64
-			wantParties = this.getClientStream().getUnsignedByte(); // 65
-			miningRocksExtended = this.getClientStream().getUnsignedByte(); //66
-			movePerFrame = this.getClientStream().getByte(); //67
-			wantLeftclickWebs = this.getClientStream().getByte(); //68
-			npcKillMessages = this.getClientStream().getByte(); //69
-			wantCustomUI = this.getClientStream().getUnsignedByte(); //70
-			wantGlobalFriend = this.getClientStream().getUnsignedByte(); //71
-			characterCreationMode = this.getClientStream().getUnsignedByte(); //72
-			skillingExpRate = this.getClientStream().getUnsignedByte(); //73
-			wantHarvesting = this.getClientStream().getUnsignedByte(); //74
-			hideLoginBox = this.getClientStream().getUnsignedByte(); // 75
-			globalFriendChat = this.getClientStream().getUnsignedByte(); // 76
-			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 77
-			customProtocol = this.getClientStream().getUnsignedByte(); // 78
-			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 79
+			wantGlobalChat = this.getClientStream().getUnsignedByte(); // 24
+			wantSkillMenus = this.getClientStream().getUnsignedByte(); // 25
+			wantQuestMenus = this.getClientStream().getUnsignedByte(); // 26
+			wantExperienceElixirs = this.getClientStream().getUnsignedByte(); // 27
+			wantKeyboardShortcuts = this.getClientStream().getUnsignedByte(); // 28
+			wantCustomBanks = this.getClientStream().getUnsignedByte(); // 29
+			wantBankPins = this.getClientStream().getUnsignedByte(); // 30
+			wantBankNotes = this.getClientStream().getUnsignedByte(); // 31
+			wantCertDeposit = this.getClientStream().getUnsignedByte(); // 32
+			customFiremaking = this.getClientStream().getUnsignedByte(); // 33
+			wantDropX = this.getClientStream().getUnsignedByte(); // 34
+			wantExpInfo = this.getClientStream().getUnsignedByte(); // 35
+			wantWoodcuttingGuild = this.getClientStream().getUnsignedByte(); // 36
+			wantDecanting = this.getClientStream().getUnsignedByte(); // 37
+			wantCertsToBank = this.getClientStream().getUnsignedByte(); // 38
+			wantCustomRankDisplay = this.getClientStream().getUnsignedByte(); // 39
+			wantRightClickBank = this.getClientStream().getUnsignedByte(); // 40
+			wantFixedOverheadChat = this.getClientStream().getUnsignedByte(); // 41
+			welcomeText = this.getClientStream().readString(); // 42
+			wantMembers = this.getClientStream().getUnsignedByte(); // 43
+			displayLogoSprite = this.getClientStream().getUnsignedByte(); // 44
+			logoSpriteID = this.getClientStream().readString(); // 45
+			getFPS = this.getClientStream().getUnsignedByte(); // 46
+			wantEmail = this.getClientStream().getUnsignedByte(); // 47
+			wantRegistrationLimit = this.getClientStream().getUnsignedByte(); // 48
+			allowResize = this.getClientStream().getUnsignedByte(); // 49
+			lenientContactDetails = this.getClientStream().getUnsignedByte(); // 50
+			wantFatigue = this.getClientStream().getUnsignedByte(); // 51
+			wantCustomSprites = this.getClientStream().getUnsignedByte(); // 52
+			wantPlayerCommands = this.getClientStream().getUnsignedByte(); // 53
+			wantPets = this.getClientStream().getUnsignedByte(); // 54
+			maxWalkingSpeed = this.getClientStream().getUnsignedByte(); // 55
+			showUnidentifiedHerbNames = this.getClientStream().getUnsignedByte(); // 56
+			wantQuestStartedIndicator = this.getClientStream().getUnsignedByte(); // 57
+			fishingSpotsDepletable = this.getClientStream().getUnsignedByte(); //58
+			improvedItemObjectNames = this.getClientStream().getUnsignedByte(); //59
+			wantRunecraft = this.getClientStream().getUnsignedByte(); //60
+			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
+			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
+			wantBankPresets = this.getClientStream().getUnsignedByte(); //63
+			wantParties = this.getClientStream().getUnsignedByte(); // 64
+			miningRocksExtended = this.getClientStream().getUnsignedByte(); //65
+			movePerFrame = this.getClientStream().getByte(); //66
+			wantLeftclickWebs = this.getClientStream().getByte(); //67
+			npcKillMessages = this.getClientStream().getByte(); //68
+			wantCustomUI = this.getClientStream().getUnsignedByte(); //69
+			wantGlobalFriend = this.getClientStream().getUnsignedByte(); //70
+			characterCreationMode = this.getClientStream().getUnsignedByte(); //71
+			skillingExpRate = this.getClientStream().getUnsignedByte(); //72
+			wantHarvesting = this.getClientStream().getUnsignedByte(); //73
+			hideLoginBox = this.getClientStream().getUnsignedByte(); // 74
+			globalFriendChat = this.getClientStream().getUnsignedByte(); // 75
+			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
+			featuresSleep = this.getClientStream().getUnsignedByte(); // 77
+			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 78
+			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
+			wantOpenPkPoints = this.getClientStream().getUnsignedByte(); // 80
+			openPkPointsToGpRatio = this.getClientStream().getUnsignedByte(); // 81
+			showTutorialSkipOption = this.getClientStream().getUnsignedByte(); // 82
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1016,62 +1038,65 @@ public class PacketHandler {
 			showRoofToggle = packetsIncoming.getUnsignedByte(); // 21
 			wantHideIp = packetsIncoming.getUnsignedByte(); // 22
 			wantRemember = packetsIncoming.getUnsignedByte(); // 23
-			showTutorialSkipOption = packetsIncoming.getUnsignedByte(); // 24
-			wantGlobalChat = packetsIncoming.getUnsignedByte(); // 25
-			wantSkillMenus = packetsIncoming.getUnsignedByte(); // 26
-			wantQuestMenus = packetsIncoming.getUnsignedByte(); // 27
-			wantExperienceElixirs = packetsIncoming.getUnsignedByte(); // 28
-			wantKeyboardShortcuts = packetsIncoming.getUnsignedByte(); // 29
-			wantCustomBanks = packetsIncoming.getUnsignedByte(); // 30
-			wantBankPins = packetsIncoming.getUnsignedByte(); // 31
-			wantBankNotes = packetsIncoming.getUnsignedByte(); // 32
-			wantCertDeposit = packetsIncoming.getUnsignedByte(); // 33
-			customFiremaking = packetsIncoming.getUnsignedByte(); // 34
-			wantDropX = packetsIncoming.getUnsignedByte(); // 35
-			wantExpInfo = packetsIncoming.getUnsignedByte(); // 36
-			wantWoodcuttingGuild = packetsIncoming.getUnsignedByte(); // 37
-			wantDecanting = packetsIncoming.getUnsignedByte(); // 38
-			wantCertsToBank = packetsIncoming.getUnsignedByte(); // 39
-			wantCustomRankDisplay = packetsIncoming.getUnsignedByte(); // 40
-			wantRightClickBank = packetsIncoming.getUnsignedByte(); // 41
-			wantFixedOverheadChat = packetsIncoming.getUnsignedByte(); // 42
-			welcomeText = packetsIncoming.readString(); // 43
-			wantMembers = packetsIncoming.getUnsignedByte(); // 44
-			displayLogoSprite = packetsIncoming.getUnsignedByte(); // 45
-			logoSpriteID = packetsIncoming.readString(); // 46
-			getFPS = packetsIncoming.getUnsignedByte(); // 47
-			wantEmail = packetsIncoming.getUnsignedByte(); // 48
-			wantRegistrationLimit = packetsIncoming.getUnsignedByte(); // 49
-			allowResize = packetsIncoming.getUnsignedByte(); // 50
-			lenientContactDetails = packetsIncoming.getUnsignedByte(); // 51
-			wantFatigue = packetsIncoming.getUnsignedByte(); // 52
-			wantCustomSprites = packetsIncoming.getUnsignedByte(); // 53
-			wantPlayerCommands = packetsIncoming.getUnsignedByte(); // 54
-			wantPets = packetsIncoming.getUnsignedByte(); // 55
-			maxWalkingSpeed = packetsIncoming.getUnsignedByte(); // 56
-			showUnidentifiedHerbNames = packetsIncoming.getUnsignedByte(); // 57
-			wantQuestStartedIndicator = packetsIncoming.getUnsignedByte(); // 58
-			fishingSpotsDepletable = packetsIncoming.getUnsignedByte(); //59
-			improvedItemObjectNames = packetsIncoming.getUnsignedByte(); //60
-			wantRunecraft = packetsIncoming.getUnsignedByte(); //61
-			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //62
-			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //63
-			wantBankPresets = packetsIncoming.getUnsignedByte(); //64
-			wantParties = packetsIncoming.getUnsignedByte(); // 65
-			miningRocksExtended = packetsIncoming.getUnsignedByte(); //66
-			movePerFrame = packetsIncoming.getByte(); //67
-			wantLeftclickWebs = packetsIncoming.getByte(); //68
-			npcKillMessages = packetsIncoming.getByte(); //69
-			wantCustomUI = packetsIncoming.getUnsignedByte(); //70
-			wantGlobalFriend = packetsIncoming.getUnsignedByte(); //71
-			characterCreationMode = packetsIncoming.getUnsignedByte(); //72
-			skillingExpRate = packetsIncoming.getUnsignedByte(); //73
-			wantHarvesting = packetsIncoming.getUnsignedByte(); //74
-			hideLoginBox = packetsIncoming.getUnsignedByte(); // 75
-			globalFriendChat = packetsIncoming.getUnsignedByte(); // 76
-			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 77
-			customProtocol = packetsIncoming.getUnsignedByte(); // 78
-			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 79
+			wantGlobalChat = packetsIncoming.getUnsignedByte(); // 24
+			wantSkillMenus = packetsIncoming.getUnsignedByte(); // 25
+			wantQuestMenus = packetsIncoming.getUnsignedByte(); // 26
+			wantExperienceElixirs = packetsIncoming.getUnsignedByte(); // 27
+			wantKeyboardShortcuts = packetsIncoming.getUnsignedByte(); // 28
+			wantCustomBanks = packetsIncoming.getUnsignedByte(); // 29
+			wantBankPins = packetsIncoming.getUnsignedByte(); // 30
+			wantBankNotes = packetsIncoming.getUnsignedByte(); // 31
+			wantCertDeposit = packetsIncoming.getUnsignedByte(); // 32
+			customFiremaking = packetsIncoming.getUnsignedByte(); // 33
+			wantDropX = packetsIncoming.getUnsignedByte(); // 34
+			wantExpInfo = packetsIncoming.getUnsignedByte(); // 35
+			wantWoodcuttingGuild = packetsIncoming.getUnsignedByte(); // 36
+			wantDecanting = packetsIncoming.getUnsignedByte(); // 37
+			wantCertsToBank = packetsIncoming.getUnsignedByte(); // 38
+			wantCustomRankDisplay = packetsIncoming.getUnsignedByte(); // 39
+			wantRightClickBank = packetsIncoming.getUnsignedByte(); // 40
+			wantFixedOverheadChat = packetsIncoming.getUnsignedByte(); // 41
+			welcomeText = packetsIncoming.readString(); // 42
+			wantMembers = packetsIncoming.getUnsignedByte(); // 43
+			displayLogoSprite = packetsIncoming.getUnsignedByte(); // 44
+			logoSpriteID = packetsIncoming.readString(); // 45
+			getFPS = packetsIncoming.getUnsignedByte(); // 46
+			wantEmail = packetsIncoming.getUnsignedByte(); // 47
+			wantRegistrationLimit = packetsIncoming.getUnsignedByte(); // 48
+			allowResize = packetsIncoming.getUnsignedByte(); // 49
+			lenientContactDetails = packetsIncoming.getUnsignedByte(); // 50
+			wantFatigue = packetsIncoming.getUnsignedByte(); // 51
+			wantCustomSprites = packetsIncoming.getUnsignedByte(); // 52
+			wantPlayerCommands = packetsIncoming.getUnsignedByte(); // 53
+			wantPets = packetsIncoming.getUnsignedByte(); // 54
+			maxWalkingSpeed = packetsIncoming.getUnsignedByte(); // 55
+			showUnidentifiedHerbNames = packetsIncoming.getUnsignedByte(); // 56
+			wantQuestStartedIndicator = packetsIncoming.getUnsignedByte(); // 57
+			fishingSpotsDepletable = packetsIncoming.getUnsignedByte(); //58
+			improvedItemObjectNames = packetsIncoming.getUnsignedByte(); //59
+			wantRunecraft = packetsIncoming.getUnsignedByte(); //60
+			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
+			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
+			wantBankPresets = packetsIncoming.getUnsignedByte(); //63
+			wantParties = packetsIncoming.getUnsignedByte(); // 64
+			miningRocksExtended = packetsIncoming.getUnsignedByte(); //65
+			movePerFrame = packetsIncoming.getByte(); //66
+			wantLeftclickWebs = packetsIncoming.getByte(); //67
+			npcKillMessages = packetsIncoming.getByte(); //68
+			wantCustomUI = packetsIncoming.getUnsignedByte(); //69
+			wantGlobalFriend = packetsIncoming.getUnsignedByte(); //70
+			characterCreationMode = packetsIncoming.getUnsignedByte(); //71
+			skillingExpRate = packetsIncoming.getUnsignedByte(); //72
+			wantHarvesting = packetsIncoming.getUnsignedByte(); //73
+			hideLoginBox = packetsIncoming.getUnsignedByte(); // 74
+			globalFriendChat = packetsIncoming.getUnsignedByte(); // 75
+			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
+			featuresSleep = packetsIncoming.getUnsignedByte(); // 77
+			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 78
+			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
+			wantOpenPkPoints = packetsIncoming.getUnsignedByte(); // 80
+			openPkPointsToGpRatio = packetsIncoming.getUnsignedByte(); // 81
+			showTutorialSkipOption = packetsIncoming.getUnsignedByte(); // 82
 		}
 
 		if (Config.DEBUG) {
@@ -1099,62 +1124,65 @@ public class PacketHandler {
 					"\nS_SHOW_ROOF_TOGGLE " + showRoofToggle + // 21
 					"\nS_WANT_HIDE_IP " + wantHideIp + // 22
 					"\nS_WANT_REMEMBER " + wantRemember + // 23
-					"\nS_SHOW_TUTORIAL_SKIP_OPTION " + showTutorialSkipOption + // 24
-					"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat + // 25
-					"\nS_WANT_SKILL_MENUS " + wantSkillMenus + // 26
-					"\nS_WANT_QUEST_MENUS " + wantQuestMenus + // 27
-					"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs + // 28
-					"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts + // 29
-					"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks + // 30
-					"\nS_WANT_BANK_PINS " + wantBankPins + // 31
-					"\nS_WANT_BANK_NOTES " + wantBankNotes + // 32
-					"\nS_WANT_CERT_DEPOSIT " + wantCertDeposit + // 33
-					"\nS_CUSTOM_FIREMAKING " + customFiremaking + // 34
-					"\nS_WANT_DROP_X " + wantDropX + // 35
-					"\nS_WANT_EXP_INFO " + wantExpInfo + // 36
-					"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 37
-					"\nS_WANT_DECANTING " + wantDecanting + // 38
-					"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 39
-					"\nS_WANT_CUSTOM_RANK_DISPLAY " + wantCustomRankDisplay + // 40
-					"\nS_RIGHT_CLICK_BANK " + wantRightClickBank + // 41
-					"\nS_WANT_FIXED_OVERHEAD_CHAT " + wantFixedOverheadChat + // 42
-					"\nWELCOME_TEXT " + welcomeText + // 43
-					"\nMEMBERS_FEATURES " + wantMembers + // 44
-					"\nDISPLAY_LOGO_SPRITE " + displayLogoSprite + // 45
-					"\nC_LOGO_SPRITE_ID " + logoSpriteID + // 46
-					"\nC_FPS " + getFPS + // 47
-					"\nC_WANT_EMAIL " + wantEmail + // 48
-					"\nS_WANT_REGISTRATION_LIMIT " + wantRegistrationLimit + // 49
-					"\nS_ALLOW_RESIZE " + allowResize + // 50
-					"\nS_LENIENT_CONTACT_DETAILS " + lenientContactDetails + // 51
-					"\nS_WANT_FATIGUE " + wantFatigue + // 52
-					"\nS_WANT_CUSTOM_SPRITES " + wantCustomSprites + // 53
-					"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 54
-					"\nS_WANT_PETS " + wantPets + // 55
-					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //56
-					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 57
-					"\nS_WANT_QUEST_STARTED_INDICATOR " + wantQuestStartedIndicator + // 58
-					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 59
-					"\nS_IMPROVED_ITEM_OBJECT_NAMES " + improvedItemObjectNames + // 60
-					"\nS_WANT_RUNECRAFT " + wantRunecraft + // 61
-					"\nS_WANT_CUSTOM_LANDSCAPE " + wantCustomLandscape + // 62
-					"\nS_WANT_EQUIPMENT_TAB " + wantEquipmentTab + // 63
-					"\nS_WANT_BANK_PRESETS " + wantEquipmentTab + // 64
-					"\nS_WANT_PARTIES " + wantClans + // 65
-					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended + // 66
-					"\nC_MOVE_PER_FRAME " + movePerFrame + // 67
-					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs + // 68
-					"\nS_NPC_KILL_MESSAGES " + npcKillMessages + // 69
-					"\nS_WANT_CUSTOM_UI " + wantCustomUI + // 70
-					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 71
-					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 72
-					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //73
-					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
-					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
-					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
-					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
-					"\nS_CUSTOM_PROTOCOL " + customProtocol + // 78
-					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior // 79
+					"\nS_WANT_GLOBAL_CHAT " + wantGlobalChat + // 24
+					"\nS_WANT_SKILL_MENUS " + wantSkillMenus + // 25
+					"\nS_WANT_QUEST_MENUS " + wantQuestMenus + // 26
+					"\nS_WANT_EXPERIENCE_ELIXIRS " + wantExperienceElixirs + // 27
+					"\nS_WANT_KEYBOARD_SHORTCUTS " + wantKeyboardShortcuts + // 28
+					"\nS_WANT_CUSTOM_BANKS " + wantCustomBanks + // 29
+					"\nS_WANT_BANK_PINS " + wantBankPins + // 30
+					"\nS_WANT_BANK_NOTES " + wantBankNotes + // 31
+					"\nS_WANT_CERT_DEPOSIT " + wantCertDeposit + // 32
+					"\nS_CUSTOM_FIREMAKING " + customFiremaking + // 33
+					"\nS_WANT_DROP_X " + wantDropX + // 34
+					"\nS_WANT_EXP_INFO " + wantExpInfo + // 35
+					"\nS_WANT_WOODCUTTING_GUILD " + wantWoodcuttingGuild + // 36
+					"\nS_WANT_DECANTING " + wantDecanting + // 37
+					"\nS_WANT_CERTS_TO_BANK " + wantCertsToBank + // 38
+					"\nS_WANT_CUSTOM_RANK_DISPLAY " + wantCustomRankDisplay + // 39
+					"\nS_RIGHT_CLICK_BANK " + wantRightClickBank + // 40
+					"\nS_WANT_FIXED_OVERHEAD_CHAT " + wantFixedOverheadChat + // 41
+					"\nWELCOME_TEXT " + welcomeText + // 42
+					"\nMEMBERS_FEATURES " + wantMembers + // 43
+					"\nDISPLAY_LOGO_SPRITE " + displayLogoSprite + // 44
+					"\nC_LOGO_SPRITE_ID " + logoSpriteID + // 45
+					"\nC_FPS " + getFPS + // 46
+					"\nC_WANT_EMAIL " + wantEmail + // 47
+					"\nS_WANT_REGISTRATION_LIMIT " + wantRegistrationLimit + // 48
+					"\nS_ALLOW_RESIZE " + allowResize + // 49
+					"\nS_LENIENT_CONTACT_DETAILS " + lenientContactDetails + // 50
+					"\nS_WANT_FATIGUE " + wantFatigue + // 51
+					"\nS_WANT_CUSTOM_SPRITES " + wantCustomSprites + // 52
+					"\nS_WANT_PLAYER_COMMANDS " + wantPlayerCommands + // 53
+					"\nS_WANT_PETS " + wantPets + // 54
+					"\nS_MAX_RUNNING_SPEED " + maxWalkingSpeed + //55
+					"\nS_SHOW_UNIDENTIFIED_HERB_NAMES " + showUnidentifiedHerbNames + // 56
+					"\nS_WANT_QUEST_STARTED_INDICATOR " + wantQuestStartedIndicator + // 57
+					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
+					"\nS_IMPROVED_ITEM_OBJECT_NAMES " + improvedItemObjectNames + // 59
+					"\nS_WANT_RUNECRAFT " + wantRunecraft + // 60
+					"\nS_WANT_CUSTOM_LANDSCAPE " + wantCustomLandscape + // 61
+					"\nS_WANT_EQUIPMENT_TAB " + wantEquipmentTab + // 62
+					"\nS_WANT_BANK_PRESETS " + wantEquipmentTab + // 63
+					"\nS_WANT_PARTIES " + wantClans + // 64
+					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended + // 65
+					"\nC_MOVE_PER_FRAME " + movePerFrame + // 66
+					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs + // 67
+					"\nS_NPC_KILL_MESSAGES " + npcKillMessages + // 68
+					"\nS_WANT_CUSTOM_UI " + wantCustomUI + // 69
+					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
+					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
+					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
+					"\nS_WANT_HARVESTING " + wantHarvesting + // 73
+					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 74
+					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 75
+					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 76
+					"\nS_FEATURES_SLEEP " + featuresSleep + // 77
+					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 78
+					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
+					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
+					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio // 81
+					"\nS_SHOW_TUTORIAL_SKIP_OPTION " + showTutorialSkipOption + // 82
 			);
 		}
 
@@ -1185,62 +1213,65 @@ public class PacketHandler {
 		props.setProperty("S_SHOW_ROOF_TOGGLE", showRoofToggle == 1 ? "true" : "false"); // 21
 		props.setProperty("S_WANT_HIDE_IP", wantHideIp == 1 ? "true" : "false"); // 22
 		props.setProperty("S_WANT_REMEMBER", wantRemember == 1 ? "true" : "false"); // 23
-		props.setProperty("S_SHOW_TUTORIAL_SKIP_OPTION", showTutorialSkipOption == 1 ? "true" : "false"); // 24
-		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false"); // 25
-		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false"); // 26
-		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false"); // 27
-		props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false"); // 28
-		props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", Integer.toString(wantKeyboardShortcuts)); // 29
-		props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false"); // 30
-		props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false"); // 31
-		props.setProperty("S_WANT_BANK_NOTES", wantBankNotes == 1 ? "true" : "false"); // 32
-		props.setProperty("S_WANT_CERT_DEPOSIT", wantCertDeposit == 1 ? "true" : "false"); // 33
-		props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false"); // 34
-		props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false"); // 35
-		props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false"); // 36
-		props.setProperty("S_WANT_WOODCUTTING_GUILD", wantWoodcuttingGuild == 1 ? "true" : "false"); // 37
-		props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false"); // 38
-		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false"); // 39
-		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false"); // 40
-		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false"); // 41
-		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false"); // 42
-		props.setProperty("WELCOME_TEXT", welcomeText); // 43
-		props.setProperty("MEMBER_WORLD", wantMembers == 1 ? "true" : "false"); // 44
-		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false"); // 45
-		props.setProperty("C_LOGO_SPRITE_ID", logoSpriteID); // 46
-		props.setProperty("C_FPS", Integer.toString(getFPS)); // 47
-		props.setProperty("C_WANT_EMAIL", wantEmail == 1 ? "true" : "false"); // 48
-		props.setProperty("S_WANT_REGISTRATION_LIMIT", wantRegistrationLimit == 1 ? "true" : "false"); // 49
-		props.setProperty("S_ALLOW_RESIZE", allowResize == 1 ? "true" : "false"); // 50
-		props.setProperty("S_LENIENT_CONTACT_DETAILS", lenientContactDetails == 1 ? "true" : "false"); // 51
-		props.setProperty("S_WANT_FATIGUE", wantFatigue == 1 ? "true" : "false"); // 52
-		props.setProperty("S_WANT_CUSTOM_SPRITES", wantCustomSprites == 1 ? "true" : "false"); // 53
-		props.setProperty("S_WANT_PLAYER_COMMANDS", wantPlayerCommands == 1 ? "true" : "false"); // 54
-		props.setProperty("S_WANT_PETS", wantPets == 1 ? "true" : "false"); // 55
-		props.setProperty("S_MAX_WALKING_SPEED", Integer.toString(maxWalkingSpeed)); // 56
-		props.setProperty("S_SHOW_UNIDENTIFIED_HERB_NAMES", showUnidentifiedHerbNames == 1 ? "true" : "false"); // 57
-		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 58
-		props.setProperty("S_FISHING_SPOTS_DEPLETABLE", fishingSpotsDepletable == 1 ? "true" : "false"); //59
-		props.setProperty("S_IMPROVED_ITEM_OBJECT_NAMES", improvedItemObjectNames == 1 ? "true" : "false"); //60
-		props.setProperty("S_WANT_RUNECRAFT", wantRunecraft == 1 ? "true" : "false"); //61
-		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //62
-		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //63
-		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //64
-		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //65
-		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //66
-		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //67
-		props.setProperty("S_WANT_LEFTCLICK_WEBS", wantLeftclickWebs == 1 ? "true" : "false"); //68
-		props.setProperty("S_NPC_KILL_MESSAGES", npcKillMessages == 1 ? "true" : "false"); //69
-		props.setProperty("S_WANT_CUSTOM_UI", wantCustomUI == 1 ? "true" : "false"); //70
-		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //71
-		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //72
-		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //73
-		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
-		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
-		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
-		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
-		props.setProperty("S_CUSTOM_PROTOCOL", customProtocol == 1 ? "true" : "false"); // 78
-		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 79
+		props.setProperty("S_WANT_GLOBAL_CHAT", wantGlobalChat == 1 ? "true" : "false"); // 24
+		props.setProperty("S_WANT_SKILL_MENUS", wantSkillMenus == 1 ? "true" : "false"); // 25
+		props.setProperty("S_WANT_QUEST_MENUS", wantQuestMenus == 1 ? "true" : "false"); // 26
+		props.setProperty("S_WANT_EXPERIENCE_ELIXIRS", wantExperienceElixirs == 1 ? "true" : "false"); // 27
+		props.setProperty("S_WANT_KEYBOARD_SHORTCUTS", Integer.toString(wantKeyboardShortcuts)); // 28
+		props.setProperty("S_WANT_CUSTOM_BANKS", wantCustomBanks == 1 ? "true" : "false"); // 29
+		props.setProperty("S_WANT_BANK_PINS", wantBankPins == 1 ? "true" : "false"); // 30
+		props.setProperty("S_WANT_BANK_NOTES", wantBankNotes == 1 ? "true" : "false"); // 31
+		props.setProperty("S_WANT_CERT_DEPOSIT", wantCertDeposit == 1 ? "true" : "false"); // 32
+		props.setProperty("S_CUSTOM_FIREMAKING", customFiremaking == 1 ? "true" : "false"); // 33
+		props.setProperty("S_WANT_DROP_X", wantDropX == 1 ? "true" : "false"); // 34
+		props.setProperty("S_WANT_EXP_INFO", wantExpInfo == 1 ? "true" : "false"); // 35
+		props.setProperty("S_WANT_WOODCUTTING_GUILD", wantWoodcuttingGuild == 1 ? "true" : "false"); // 36
+		props.setProperty("S_WANT_DECANTING", wantDecanting == 1 ? "true" : "false"); // 37
+		props.setProperty("S_WANT_CERTS_TO_BANK", wantCertsToBank == 1 ? "true" : "false"); // 38
+		props.setProperty("S_WANT_CUSTOM_RANK_DISPLAY", wantCustomRankDisplay == 1 ? "true" : "false"); // 39
+		props.setProperty("S_RIGHT_CLICK_BANK", wantRightClickBank == 1 ? "true" : "false"); // 40
+		props.setProperty("S_WANT_FIXED_OVERHEAD_CHAT", wantFixedOverheadChat == 1 ? "true" : "false"); // 41
+		props.setProperty("WELCOME_TEXT", welcomeText); // 42
+		props.setProperty("MEMBER_WORLD", wantMembers == 1 ? "true" : "false"); // 43
+		props.setProperty("DISPLAY_LOGO_SPRITE", displayLogoSprite == 1 ? "true" : "false"); // 44
+		props.setProperty("C_LOGO_SPRITE_ID", logoSpriteID); // 45
+		props.setProperty("C_FPS", Integer.toString(getFPS)); // 46
+		props.setProperty("C_WANT_EMAIL", wantEmail == 1 ? "true" : "false"); // 47
+		props.setProperty("S_WANT_REGISTRATION_LIMIT", wantRegistrationLimit == 1 ? "true" : "false"); // 48
+		props.setProperty("S_ALLOW_RESIZE", allowResize == 1 ? "true" : "false"); // 49
+		props.setProperty("S_LENIENT_CONTACT_DETAILS", lenientContactDetails == 1 ? "true" : "false"); // 50
+		props.setProperty("S_WANT_FATIGUE", wantFatigue == 1 ? "true" : "false"); // 51
+		props.setProperty("S_WANT_CUSTOM_SPRITES", wantCustomSprites == 1 ? "true" : "false"); // 52
+		props.setProperty("S_WANT_PLAYER_COMMANDS", wantPlayerCommands == 1 ? "true" : "false"); // 53
+		props.setProperty("S_WANT_PETS", wantPets == 1 ? "true" : "false"); // 54
+		props.setProperty("S_MAX_WALKING_SPEED", Integer.toString(maxWalkingSpeed)); // 55
+		props.setProperty("S_SHOW_UNIDENTIFIED_HERB_NAMES", showUnidentifiedHerbNames == 1 ? "true" : "false"); // 56
+		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 57
+		props.setProperty("S_FISHING_SPOTS_DEPLETABLE", fishingSpotsDepletable == 1 ? "true" : "false"); //58
+		props.setProperty("S_IMPROVED_ITEM_OBJECT_NAMES", improvedItemObjectNames == 1 ? "true" : "false"); //59
+		props.setProperty("S_WANT_RUNECRAFT", wantRunecraft == 1 ? "true" : "false"); //60
+		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
+		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
+		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63
+		props.setProperty("S_WANT_PARTIES", wantParties == 1 ? "true" : "false"); //64
+		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
+		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
+		props.setProperty("S_WANT_LEFTCLICK_WEBS", wantLeftclickWebs == 1 ? "true" : "false"); //67
+		props.setProperty("S_NPC_KILL_MESSAGES", npcKillMessages == 1 ? "true" : "false"); //68
+		props.setProperty("S_WANT_CUSTOM_UI", wantCustomUI == 1 ? "true" : "false"); //69
+		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //70
+		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
+		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
+		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 73
+		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 74
+		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 75
+		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 76
+		props.setProperty("S_FEATURES_SLEEP", featuresSleep == 1 ? "true" : "false"); // 77
+		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 78
+		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 79
+		props.setProperty("S_WANT_OPENPK_POINTS", wantOpenPkPoints == 1 ? "true" : "false"); // 80
+		props.setProperty("S_OPENPK_POINTS_TO_GP_RATIO", String.valueOf(openPkPointsToGpRatio)); // 81
+		props.setProperty("S_SHOW_TUTORIAL_SKIP_OPTION", showTutorialSkipOption == 1 ? "true" : "false"); // 82
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1467,6 +1498,12 @@ public class PacketHandler {
 		}
 	}
 
+
+	private void gotCombatStylePacket() {
+		mc.timeOfLastCombatStylePacket = System.currentTimeMillis();
+		mc.proposedStyle = packetsIncoming.getByte();
+	}
+
 	private void updateInventoryItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		int itemID = packetsIncoming.getShort();
@@ -1499,10 +1536,10 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setInventoryItemID(i, itemID);
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
-			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
-				noted = packetsIncoming.getByte() == 1;
-			}
+
+			// must always check for this even if server config has notes off, in case they were enabled previously
+			boolean noted = packetsIncoming.getByte() == 1;
+
 			mc.getInventoryItem(i).setNoted(noted);
 			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, noted).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
@@ -1742,6 +1779,9 @@ public class PacketHandler {
 						mc.showMessage(false, null,
 							com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
 							MessageType.QUEST, 0, null, "@yel@");
+
+						// Discord update
+						Discord.setLastUpdate("Questing");
 					}
 				}
 
@@ -1827,7 +1867,7 @@ public class PacketHandler {
 
 	private void loadExperience() {
 		for (int skill = 0; skill < mudclient.skillCount; ++skill) {
-			mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+			mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 		}
 	}
 
@@ -1961,7 +2001,7 @@ public class PacketHandler {
 		mc.setCombatStyle(packetsIncoming.getUnsignedByte()); // ?
 		mc.setSettingsBlockGlobal(packetsIncoming.getUnsignedByte()); // 9
 		mc.setClanInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1); // 11
-		mc.setVolumeToRotate(packetsIncoming.getUnsignedByte() == 1); // 16
+		mc.setVolumeFunction(packetsIncoming.getUnsignedByte()); // 16
 		mc.setSwipeToRotate(packetsIncoming.getUnsignedByte() == 1); // 17
 		mc.setSwipeToScroll(packetsIncoming.getUnsignedByte() == 1); // 18
 		mc.setLongPressDelay(packetsIncoming.getUnsignedByte()); // 19
@@ -2022,6 +2062,9 @@ public class PacketHandler {
 
 			mc.setQuestStage(questID, stage);
 		}
+
+		// Discord status
+		Discord.setLastUpdate("Questing");
 	}
 
 	private void showBank() {
@@ -2032,11 +2075,14 @@ public class PacketHandler {
 		for (int slot = 0; slot < mc.getNewBankItemCount(); ++slot) {
 			mc.getBank().addBank(slot, packetsIncoming.getShort(), packetsIncoming.get32());
 		}
+
+		// Discord update
+		Discord.setLastUpdate("Banking");
 	}
 
 	private void updateIndividualExperience() {
 		int skill = packetsIncoming.getUnsignedByte();
-		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 	}
 
 	private void closeDuelDialog() {
@@ -2055,7 +2101,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeRecipientConfirmItem(var4).setNoted(noted);
@@ -2068,7 +2114,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeConfirmItem(var4).setNoted(noted);
@@ -2083,7 +2129,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelOpponentItem(var4).setNoted(noted);
@@ -2136,8 +2182,19 @@ public class PacketHandler {
 		int oldLvl = mc.getPlayerStatBase(skill);
 		mc.setPlayerStatCurrent(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerStatBase(skill, packetsIncoming.getUnsignedByte());
-		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 		updateExperienceTracker(skill, oldXP, oldLvl);
+
+		// Update the discord status
+		final String[] skillNames = {"Attack", "Defense", "Strength", "Hits",
+			"Ranged", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching",
+			"Fishing", "Firemaking", "Crafting", "Smithing", "Mining", "Herblaw",
+			"Agility", "Thieving", "Runecraft", "Harvesting"};
+		if (skill == 0 || skill == 1 || skill == 2 || skill == 3) {
+			Discord.setLastUpdate("Training Combat");
+		} else {
+			Discord.setLastUpdate("Training " + skillNames[skill]);
+		}
 	}
 
 	private void updateExperienceTracker(int skill, int oldXp, int oldLvl) {
@@ -2185,7 +2242,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelOpponentConfirmItem(var4).setNoted(noted);
@@ -2198,7 +2255,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelConfirmItem(var4).setNoted(noted);
@@ -2249,6 +2306,10 @@ public class PacketHandler {
 		mc.getSurface().createCaptchaSprite(sprite);
 
 		mc.setSleepingStatusText(null);
+
+		if (isAndroid() && !osConfig.F_SHOWING_KEYBOARD) {
+			mc.clientPort.drawKeyboard();
+		}
 	}
 
 	private void showServerMessageDialogTwo() {
@@ -2354,6 +2415,13 @@ public class PacketHandler {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
+
+		// Discord status
+		Discord.setLastUpdate("Shopping");
+	}
+
+	private void showPointsToGp() {
+		mc.setShowPointsToGp(true);
 	}
 
 	private void updateTradeDialog() {
@@ -2363,7 +2431,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeRecipientItem(var4).setNoted(noted);
@@ -2376,7 +2444,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeItem(var4).setNoted(noted);

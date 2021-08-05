@@ -12,7 +12,7 @@ public class Sleeping implements OpLocTrigger, OpInvTrigger {
 
 	@Override
 	public void onOpLoc(Player owner, final GameObject object, String command) {
-		if ((command.equalsIgnoreCase("rest") || command.equalsIgnoreCase("sleep")) && !owner.isSleeping() || command.equalsIgnoreCase("lie in")) {
+		if ((command.equalsIgnoreCase("rest") || command.equalsIgnoreCase("sleep")) || command.equalsIgnoreCase("lie in")) {
 			ActionSender.sendEnterSleep(owner);
 			if (object.getID() == 1035 || object.getID() == 1162) // Crude Bed is like Sleeping Bag.
 				owner.startSleepEvent(false);
@@ -28,15 +28,15 @@ public class Sleeping implements OpLocTrigger, OpInvTrigger {
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if (item.getCatalogId() == ItemId.SLEEPING_BAG.id() && !player.isSleeping()) {
+		// note that entering the sleeping bag doesn't require you to already not be sleeping nor does it interrupt walking
+		if (item.getCatalogId() == ItemId.SLEEPING_BAG.id()) {
 			ActionSender.sendEnterSleep(player);
 			player.startSleepEvent(false);
-			// player.resetPath(); - real rsc.
 		}
 	}
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return item.getCatalogId() == ItemId.SLEEPING_BAG.id() && !player.isSleeping();
+		return item.getCatalogId() == ItemId.SLEEPING_BAG.id();
 	}
 }

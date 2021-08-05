@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.legendsquest.obstacl
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -11,11 +11,11 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs.LegendsQuestNezikchened;
 import com.openrsc.server.plugins.authentic.skills.mining.Mining;
 import com.openrsc.server.plugins.authentic.skills.thieving.Thieving;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -294,7 +294,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					"Yes, I'm very strong, I'll force them open.",
 					"No, I'm having second thoughts.");
 				if (menu == 0) {
-					if (getCurrentLevel(player, Skills.STRENGTH) < 50) {
+					if (getCurrentLevel(player, Skill.STRENGTH.id()) < 50) {
 						player.message("You need a Strength of at least 50 to affect these gates.");
 						return;
 					}
@@ -310,7 +310,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					mes("You push and push,");
 					delay(2);
 					say(player, null, "Shhhhhhhshshehshsh");
-					if (Formulae.failCalculation(player, Skills.STRENGTH, 50)) {
+					if (Formulae.failCalculation(player, Skill.STRENGTH.id(), 50)) {
 						mes("You just manage to force the gates open slightly, ");
 						delay(2);
 						mes("just enough to force yourself through.");
@@ -325,7 +325,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						mes("but run out of steam before you're able to force the gates open.");
 						delay(2);
 						player.message("The effort of trying to force the gates reduces your strength temporarily");
-						player.getSkills().decrementLevel(Skills.STRENGTH);
+						player.getSkills().decrementLevel(Skill.STRENGTH.id());
 					}
 				} else if (menu == 1) {
 					player.message("You decide against forcing the gates.");
@@ -334,7 +334,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (inArray(obj.getID(), SMASH_BOULDERS)) {
 			if (player.getCarriedItems().hasCatalogID(Mining.getAxe(player), Optional.of(false))) {
-				if (getCurrentLevel(player, Skills.MINING) < 52) {
+				if (getCurrentLevel(player, Skill.MINING.id()) < 52) {
 					if (player.getY() < 3707) {
 						player.message("You need a mining ability of at least 52 to affect these boulders.");
 						return;
@@ -360,7 +360,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						}
 					}
 				}
-				if (Formulae.failCalculation(player, Skills.MINING, 50)) {
+				if (Formulae.failCalculation(player, Skill.MINING.id(), 50)) {
 					mes("You take a good swing at the rock with your pick...");
 					delay(2);
 					changeloc(obj, config().GAME_TICK * 3, 1143);
@@ -384,7 +384,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					player.message("You fail to make a mark on the rocks.");
 					player.message("You miss hit the rock and the vibration shakes your bones.");
 					player.message("Your mining ability suffers...");
-					player.getSkills().decrementLevel(Skills.MINING);
+					player.getSkills().decrementLevel(Skill.MINING.id());
 				}
 			} else {
 				mes("You'll need a pickaxe to smash your way through these boulders.");
@@ -417,7 +417,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					delay(2);
 					player.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
-					if (getCurrentLevel(player, Skills.THIEVING) < 50) {
+					if (getCurrentLevel(player, Skill.THIEVING.id()) < 50) {
 						player.message("You need a thieving level of at least 50 to attempt this.");
 						return;
 					}
@@ -440,7 +440,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 							delay(2);
 							mes("You tumble the lock mechanism and the door opens easily.");
 							delay(2);
-							player.incExp(Skills.THIEVING, 100, true);
+							player.incExp(Skill.THIEVING.id(), 100, true);
 							changeloc(obj, config().GAME_TICK * 3, 497);
 							player.teleport(441, 3703);
 						} else {
@@ -577,7 +577,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					"Yes, I'll crawl through, I'm very athletic.",
 					"No, I'm pretty scared of enclosed areas.");
 				if (menu == 0) {
-					if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+					if (getCurrentLevel(player, Skill.AGILITY.id()) < 50) {
 						player.message("You need an agility of 50 to even attempt this.");
 						return;
 					}
@@ -585,7 +585,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					delay(2);
 					mes("You contort your body to fit the crevice.");
 					delay(2);
-					if (Formulae.failCalculation(player, Skills.AGILITY, 50)) {
+					if (Formulae.failCalculation(player, Skill.AGILITY.id(), 50)) {
 						mes("You adroitely squeeze serpent like into the crevice.");
 						delay(2);
 						mes("You find a small narrow tunnel that goes for some distance.");
@@ -708,7 +708,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					player.getCache().store("crafted_totem_pole", true);
 				}
 				player.message("Carrying this totem pole saps your strength...");
-				player.getSkills().setLevel(Skills.STRENGTH, (int) (player.getSkills().getLevel(Skills.STRENGTH) * 0.9));
+				player.getSkills().setLevel(Skill.STRENGTH.id(), (int) (player.getSkills().getLevel(Skill.STRENGTH.id()) * 0.9));
 			} else {
 				player.message("This is not your totem pole to carry.");
 			}
@@ -870,12 +870,12 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				player.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(player, Skills.WOODCUT) < 50) {
+			if (getCurrentLevel(player, Skill.WOODCUTTING.id()) < 50) {
 				player.message("You need an woodcut level of 50 to");
 				player.message("fell the tree once it is grown.");
 				return;
 			}
-			if (getCurrentLevel(player, Skills.HERBLAW) < 45) {
+			if (getCurrentLevel(player, Skill.HERBLAW.id()) < 45) {
 				player.message("You need a herblaw skill of at least 45 to complete this task.");
 				return;
 			}
@@ -935,7 +935,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				case A_CHUNK_OF_CRYSTAL:
 				case A_LUMP_OF_CRYSTAL:
 				case A_HUNK_OF_CRYSTAL:
-					if (getCurrentLevel(player, Skills.CRAFTING) < 50) {
+					if (getCurrentLevel(player, Skill.CRAFTING.id()) < 50) {
 						//message possibly non kosher
 						player.message("You need a crafting ability of at least 50 to perform this task.");
 						return;

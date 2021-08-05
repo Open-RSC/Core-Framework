@@ -191,4 +191,21 @@ public class Sprite {
 	public void setUnknownByteArray(byte[] unknownByteArray) {
 		this.unknownByteArray = unknownByteArray;
 	}
+
+	// returns pink and black checkerboard pattern found in source games
+	public static Sprite getUnknownSprite(int width, int height) {
+		int[] pixelArray = new int[width * height];
+		int squareSize = width / 6;
+		int i = 0;
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				if ((y / squareSize) % 2 == 0) {
+					pixelArray[i++] = (x / squareSize) % 2 == 0 ? 1 : 0xFF00FF;
+				} else {
+					pixelArray[i++] = (x / squareSize) % 2 == 0 ? 0xFF00FF : 1;
+				}
+			}
+		}
+		return new Sprite(pixelArray, width, height);
+	}
 }

@@ -165,7 +165,13 @@ public final class Apothecary implements
 				ItemId.ONE_RUNECRAFT_POTION.id(),
 				ItemId.FULL_SUPER_RUNECRAFT_POTION.id(),
 				ItemId.TWO_SUPER_RUNECRAFT_POTION.id(),
-				ItemId.ONE_SUPER_RUNECRAFT_POTION.id()
+				ItemId.ONE_SUPER_RUNECRAFT_POTION.id(),
+				ItemId.FULL_MAGIC_POTION.id(),
+				ItemId.TWO_MAGIC_POTION.id(),
+				ItemId.ONE_MAGIC_POTION.id(),
+				ItemId.FULL_POTION_OF_SARADOMIN.id(),
+				ItemId.TWO_POTION_OF_SARADOMIN.id(),
+				ItemId.ONE_POTION_OF_SARADOMIN.id(),
 			};
 
 			npcsay(player, npc,
@@ -345,7 +351,7 @@ public final class Apothecary implements
 
 		// Repeat
 		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPotion(player);
 		}
 	}

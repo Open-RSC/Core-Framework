@@ -1,13 +1,12 @@
 package com.openrsc.server.plugins.authentic.npcs;
 
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.NpcId;
 
 public class MonkHealer implements TalkNpcTrigger {
 	@Override
@@ -22,11 +21,15 @@ public class MonkHealer implements TalkNpcTrigger {
 			delay(3);
 			mes("You feel a little better");
 			delay(3);
-			int newHp = getCurrentLevel(player, Skills.HITS) + 5;
-			if (newHp > getMaxLevel(player, Skills.HITS)) {
-				newHp = getMaxLevel(player, Skills.HITS);
+			int newHp = getCurrentLevel(player, Skill.HITS.id()) + 5;
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
+			if (newHp > getMaxLevel(player, Skill.HITS.id())) {
+				newHp = getMaxLevel(player, Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skills.HITS, newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp, sendUpdate);
+			if (!sendUpdate) {
+				player.getSkills().sendUpdateAll();
+			}
 		} else if (option == 1) {
 			say(player, n, "Isn't this place built a bit out the way?");
 			npcsay(player, n, "We like it that way",

@@ -18,6 +18,16 @@ public class ObjectFishDef {
 	 */
 	public int requiredLevel;
 
+	/**
+	 * Used for calculating the success rate of obtaining the fish at various levels
+	 */
+	public int lowRate;
+	public int highRate;
+
+	public SkillSuccessRate bounds;
+
+	public double[] rate; // Math.random() must be less than this to succeed
+
 	public int getExp() {
 		return exp;
 	}
@@ -30,4 +40,7 @@ public class ObjectFishDef {
 		return requiredLevel;
 	}
 
+	public double getRate(int level) {
+		return rate[level];
+	}
 }

@@ -1,7 +1,7 @@
 package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Mob;
@@ -11,6 +11,7 @@ import java.security.InvalidParameterException;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
+
 public final class Formulae {
 
 	public static final int[] arrowIDs = {ItemId.POISON_DRAGON_ARROWS.id(), ItemId.DRAGON_ARROWS.id(), ItemId.ICE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),
@@ -18,14 +19,12 @@ public final class Formulae {
 		ItemId.POISON_MITHRIL_ARROWS.id(), ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id(),
 		ItemId.STEEL_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id(), ItemId.IRON_ARROWS.id(),
 		ItemId.POISON_BRONZE_ARROWS.id(), ItemId.BRONZE_ARROWS.id()};
-	public static final int[] bodySprites = {2, 5};
 	public static final int[] boltIDs = {ItemId.OYSTER_PEARL_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(),
 		ItemId.CROSSBOW_BOLTS.id(), ItemId.DRAGON_BOLTS.id(), ItemId.POISON_DRAGON_BOLTS.id()};
 	public static final int[] bowIDs = {ItemId.LONGBOW.id(), ItemId.SHORTBOW.id(), ItemId.OAK_LONGBOW.id(),
 		ItemId.OAK_SHORTBOW.id(), ItemId.WILLOW_LONGBOW.id(), ItemId.WILLOW_SHORTBOW.id(),
 		ItemId.MAPLE_LONGBOW.id(), ItemId.MAPLE_SHORTBOW.id(), ItemId.YEW_LONGBOW.id(),
 		ItemId.YEW_SHORTBOW.id(), ItemId.MAGIC_LONGBOW.id(), ItemId.MAGIC_SHORTBOW.id(), ItemId.DRAGON_LONGBOW.id()};
-	public static final int[] headSprites = {1, 4, 6, 7, 8};
 	private static final int[] herbDropIDs = {ItemId.UNIDENTIFIED_GUAM_LEAF.id(), ItemId.UNIDENTIFIED_MARRENTILL.id(),
 		ItemId.UNIDENTIFIED_TARROMIN.id(), ItemId.UNIDENTIFIED_HARRALANDER.id(), ItemId.UNIDENTIFIED_RANARR_WEED.id(),
 		ItemId.UNIDENTIFIED_IRIT_LEAF.id(), ItemId.UNIDENTIFIED_AVANTOE.id(), ItemId.UNIDENTIFIED_KWUARM.id(),
@@ -55,6 +54,9 @@ public final class Formulae {
 		ItemId.POISONED_STEEL_SPEAR.id(), ItemId.POISONED_MITHRIL_SPEAR.id(), ItemId.POISONED_ADAMANTITE_SPEAR.id(),
 		ItemId.POISONED_RUNE_SPEAR.id()};
 
+	public static final int[] fishingToolIDs = {ItemId.OILY_FISHING_ROD.id(), ItemId.LOBSTER_POT.id(), ItemId.HARPOON.id(),
+		ItemId.FLY_FISHING_ROD.id(), ItemId.BIG_NET.id(), ItemId.FISHING_ROD.id(), ItemId.NET.id()};
+
 	/**
 	 * Cubic P2P boundaries. MinX, MinY - MaxX, MaxY
 	 */
@@ -70,7 +72,7 @@ public final class Formulae {
 		{new java.awt.Point(431, 0), new java.awt.Point(1007, 1007)},
 		{new java.awt.Point(335, 734), new java.awt.Point(437, 894)}};
 	// trawler: 297, 720
-	public static final int[] woodcuttingAxeIDs = {ItemId.RUNE_AXE.id(), ItemId.ADAMANTITE_AXE.id(), ItemId.MITHRIL_AXE.id(),
+	public static final int[] woodcuttingAxeIDs = {ItemId.DRAGON_WOODCUTTING_AXE.id(), ItemId.RUNE_AXE.id(), ItemId.ADAMANTITE_AXE.id(), ItemId.MITHRIL_AXE.id(),
 		ItemId.BLACK_AXE.id(), ItemId.STEEL_AXE.id(), ItemId.IRON_AXE.id(), ItemId.BRONZE_AXE.id()};
 	public static final int[] xbowIDs = {ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW.id(), ItemId.DRAGON_CROSSBOW.id()};
 	private final static int[] IRON = {ItemId.LARGE_IRON_HELMET.id(), ItemId.MEDIUM_IRON_HELMET.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(),
@@ -162,11 +164,11 @@ public final class Formulae {
 		//is usually 35 since player can cook item
 		int levelStopFail = player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId) != null ?
 			player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
-		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(levelReq, effectiveLevel, true, levelStopFail);
 	}
 
 	public static boolean goodWine(int cookingLevel) {
-		return Formulae.calcProductionSuccessful(35, cookingLevel, true, 70);
+		return Formulae.calcProductionSuccessfulLegacy(35, cookingLevel, true, 70);
 	}
 
 	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {
@@ -256,7 +258,7 @@ public final class Formulae {
 	 */
 	public static boolean crackPot(int requiredLvl, int craftingLvl) {
 		int levelStopFail = requiredLvl + 8;
-		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(requiredLvl, craftingLvl, true, levelStopFail);
 	}
 
 	/**
@@ -264,7 +266,7 @@ public final class Formulae {
 	 */
 	public static boolean breakGoldenItem(int requiredLvl, int smithingLvl) {
 		int levelStopFail = requiredLvl + 30;
-		return !Formulae.calcProductionSuccessful(requiredLvl, smithingLvl, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(requiredLvl, smithingLvl, true, levelStopFail);
 	}
 
 	/**
@@ -277,7 +279,7 @@ public final class Formulae {
 			return false;
 
 		int levelStopFail = requiredLvl + 89;
-		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(requiredLvl, craftingLvl, true, levelStopFail);
 	}
 
 	/**
@@ -305,11 +307,11 @@ public final class Formulae {
 	/**
 	 * Decide if a gathering skill operation was successful
 	 */
-	public static boolean calcGatheringSuccessful(int levelReq, int skillLevel) {
-		return calcGatheringSuccessful(levelReq, skillLevel, 0);
+	public static boolean calcGatheringSuccessfulLegacy(int levelReq, int skillLevel) {
+		return calcGatheringSuccessfulLegacy(levelReq, skillLevel, 0);
 	}
 
-	public static boolean calcGatheringSuccessful(int levelReq, int skillLevel, int equipmentBonus) {
+	public static boolean calcGatheringSuccessfulLegacy(int levelReq, int skillLevel, int equipmentBonus) {
 		int roll = DataConversions.random(1, 128);
 
 		if (skillLevel < levelReq)
@@ -322,11 +324,11 @@ public final class Formulae {
 		return roll <= threshold;
 	}
 
-	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail) {
-		return calcProductionSuccessful(levelReq, skillLevel, stopsFailing, levelStopFail, 1);
+	public static boolean calcProductionSuccessfulLegacy(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail) {
+		return calcProductionSuccessfulLegacy(levelReq, skillLevel, stopsFailing, levelStopFail, 1);
 	}
 
-	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail, int minFailChance) {
+	public static boolean calcProductionSuccessfulLegacy(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail, int minFailChance) {
 		int roll = DataConversions.random(1, 256);
 
 		if (skillLevel < levelReq)
@@ -340,10 +342,56 @@ public final class Formulae {
 	}
 
 	/**
+	 * Calculates the chance of succeeding at a skilling event
+	 * @param low
+	 * @param high
+	 * @param level
+	 * @return percent chance of success
+	 */
+	public static double interp(double low, double high, int level) {
+		// 99 & 98 numbers should *not* be adjusted for level cap > 99
+		int value = (int)(Math.floor(low*(99-level)/98) + Math.floor(high*(level-1)/98) + 1);
+		return Math.min(Math.max(value / 256D, 0), 1);
+	}
+
+	/**
+	 * Calculates the chance of outcomes for a skilling event with multiple outcomes (e.g., tuna, swordfish, or nothing)
+	 * @param bounds the low, high, and levelReq for each competing outcome result.
+	 *               Order matters; highest level events must come first.
+	 * @param level the player's level when attempting the skilling success event
+	 * @param index the index of the skilling event currently being checked
+	 * @return percent chance of success
+	 */
+	public static double cascadeInterp(SkillSuccessRate[] bounds, int level, int index) {
+		double rate = 1D;
+		for (int boundsIndex = 0; boundsIndex < bounds.length; boundsIndex++) {
+			if (boundsIndex == index) {
+				rate = rate * interp(bounds[boundsIndex].lowRate, bounds[boundsIndex].highRate, level);
+				return rate;
+			}
+			if (level >= bounds[boundsIndex].requiredLevel) {
+				rate = rate * (1 - interp(bounds[boundsIndex].lowRate, bounds[boundsIndex].highRate, level));
+			}
+		}
+		return 0;
+	}
+
+	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatlevel(int[] stats, boolean isSpecial) {
-		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], isSpecial);
+	public static int getCombatlevel(Mob mob, int[] stats, boolean isSpecial) {
+		if (mob.getConfig().DIVIDED_GOOD_EVIL) {
+			return getCombatLevel(stats[Skill.ATTACK.id()], stats[Skill.DEFENSE.id()],
+				stats[Skill.STRENGTH.id()],stats[Skill.HITS.id()],
+				stats[Skill.GOODMAGIC.id()] + stats[Skill.EVILMAGIC.id()],
+				stats[Skill.PRAYGOOD.id()] + stats[Skill.PRAYEVIL.id()],
+				stats[Skill.RANGED.id()], true, isSpecial);
+		} else {
+			return getCombatLevel(stats[Skill.ATTACK.id()], stats[Skill.DEFENSE.id()],
+				stats[Skill.STRENGTH.id()],stats[Skill.HITS.id()],
+				stats[Skill.MAGIC.id()], stats[Skill.PRAYER.id()],
+				stats[Skill.RANGED.id()], false, isSpecial);
+		}
 	}
 
 	/**
@@ -351,14 +399,15 @@ public final class Formulae {
 	 * isSpecial considers hits as half as important in cb level calc
 	 * compared to the other melee stats, used in npc xp given
 	 */
-	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isSpecial) {
+	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isCombined, boolean isSpecial) {
 		// OG RSC combat level to use with xp calc (for npc): (2 * (att + str + def) + hits) / 7
 		// OG RSC combat level to use with xp calc (for player) - seems to be regular well known combat level formula
 		int multiplier = isSpecial ? 2 : 1;
+		int divider = isCombined ? 2 : 1; // if on good/magic we have to divide by 2 see below
 		double attack = multiplier * (att + str);
 		double defense = multiplier * def + hits;
 		double mage = pray + magic;
-		mage /= 8D;
+		mage /= (8D * divider);
 		double ranged = multiplier * range;
 
 		double level;
@@ -524,20 +573,20 @@ public final class Formulae {
 	 * Should the fire light or fail?
 	 */
 	public static boolean lightLogs(int firemakingLvl) {
-		return Formulae.calcProductionSuccessful(1, firemakingLvl, true, 60);
+		return Formulae.calcProductionSuccessfulLegacy(1, firemakingLvl, true, 60);
 	}
 
 	public static boolean lightCustomLogs(FiremakingDef def, int firemakingLvl) {
 		int levelReq = def.getRequiredLevel();
 		//from normal logs, level stop failing is 60 since start
 		int levelStopFail = levelReq + 59;
-		return Formulae.calcProductionSuccessful(levelReq, firemakingLvl, true, levelStopFail);
+		return Formulae.calcProductionSuccessfulLegacy(levelReq, firemakingLvl, true, levelStopFail);
 	}
 
 	public static int getLevelsToReduceAttackKBD(Player player) {
 		int levels = 0;
-		int currLvl = getCurrentLevel(player, Skills.RANGED);
-		int maxLvl = getMaxLevel(player, Skills.RANGED);
+		int currLvl = getCurrentLevel(player, Skill.RANGED.id());
+		int maxLvl = getMaxLevel(player, Skill.RANGED.id());
 		int ratio = currLvl * 100 / maxLvl;
 		if (currLvl <= 3) {
 			return 0;

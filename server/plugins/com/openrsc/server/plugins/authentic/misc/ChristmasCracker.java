@@ -3,14 +3,18 @@ package com.openrsc.server.plugins.authentic.misc;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.authentic.npcs.Bankers;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class ChristmasCracker implements UsePlayerTrigger {
+public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 
 	private static final int[] phatWeights = {10, 15, 20, 23, 32, 28};
 	private static final int[] phatIds = {
@@ -83,5 +87,43 @@ public class ChristmasCracker implements UsePlayerTrigger {
 	@Override
 	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
 		return item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id();
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return inArray(npc.getID(), Bankers.BANKERS) && !item.getNoted() && item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id();
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id()) {
+			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+				|| player.isIronMan(IronmanMode.Hardcore.id())) {
+
+				String playerDialogue;
+				if (player.isMale()) {
+					playerDialogue = "I am an ironman, I stand alone.";
+				} else {
+					playerDialogue = "I am an ironwoman, I stand alone.";
+				}
+				say(player, npc, playerDialogue);
+				npcsay(player, npc, "very good, let me help you out with the cracker");
+				thinkbubble(item);
+				player.playerServerMessage(MessageType.QUEST, "The banker pulls the christmas cracker on you");
+
+				delay();
+
+				int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
+				int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
+				Item phat = new Item(phatId);
+				Item prize = new Item(prizeId);
+
+				player.message("You get the prize from the cracker");
+				player.getCarriedItems().getInventory().add(phat);
+				player.getCarriedItems().getInventory().add(prize);
+			} else {
+				player.message("Nothing interesting happens");
+			}
+		}
 	}
 }

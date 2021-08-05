@@ -1,11 +1,11 @@
 package com.openrsc.server.plugins.authentic.skills.agility;
 
+import com.openrsc.server.constants.Skill;
+import com.openrsc.server.model.entity.player.Player;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.openrsc.server.constants.Skills;
-import com.openrsc.server.model.entity.player.Player;
 
 public class AgilityUtils {
 
@@ -24,17 +24,17 @@ public class AgilityUtils {
 				player.setAttribute("obstaclesDone", obstaclesDone);
 			}
 			else if (id == lastObstacle && obstaclesDone.containsAll(obstacles)) {
-				player.incExp(Skills.AGILITY, bonus, true);
+				player.incExp(Skill.AGILITY.id(), bonus, true);
 				player.setAttribute("obstaclesDone", new HashSet<Integer>());
 			}
 		}
 	}
-	
+
 	public static boolean hasDoneObstacle(Player player, int id, Set<Integer> obstacles) {
 		return player.getAttribute("obstaclesDone") != null
 				&& player.getAttribute("obstaclesDone", new HashSet<Integer>()).contains(id);
 	}
-	
+
 	// old method - where order matters
 	public static void setNextObstacle(Player player, int id, int[] obstacleOrder, int bonus) {
 		if (player.getAttribute("nextObstacle", -1) == -1) {
@@ -50,7 +50,7 @@ public class AgilityUtils {
 				for (int i = 0; i < obstacleOrder.length; i++) {
 					if (obstacleOrder[i] == id) {
 						if (i == obstacleOrder.length - 1) {
-							player.incExp(Skills.AGILITY, bonus, true);
+							player.incExp(Skill.AGILITY.id(), bonus, true);
 							player.setAttribute("nextObstacle", obstacleOrder[0]);
 							break;
 						}

@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.yanille;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,7 +24,7 @@ public class WizardFrumscone implements TalkNpcTrigger {
 				"Feel free to kill them",
 				"Theres plenty more where these came from");
 			if (config().WANT_CUSTOM_SPRITES
-				&& getMaxLevel(player, Skills.MAGIC) >= 99) {
+				&& getMaxLevel(player, Skill.MAGIC.id()) >= 99) {
 				if (multi(player, n, "Does your cape have any magical properties?",
 					"I was going to kill them with or without your permission") == 0) {
 

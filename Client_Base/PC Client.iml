@@ -12,5 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Game Server" level="project" />
+    <orderEntry type="library" name="PC Client" level="project" />
   </component>
 </module>

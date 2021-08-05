@@ -16,19 +16,19 @@ public class GameObject extends Entity {
 	/**
 	 * Location definition of the object
 	 */
-	private GameObjectLoc loc = null;
+	private GameObjectLoc loc;
 	/**
 	 * The type of object
 	 * Type 0: Game Object
 	 * Type 1: Wall Object
 	 */
-	private int type;
+	private GameObjectType gameObjectType;
 
 	public GameObject(final World world, final GameObjectLoc loc) {
-		super(world);
+		super(world, EntityType.GAME_OBJECT);
 
 		direction = loc.getDirection();
-		type = loc.getType();
+		gameObjectType = GameObjectType.fromInt(loc.getType());
 		this.loc = loc;
 		super.setID(loc.getId());
 	}
@@ -47,7 +47,7 @@ public class GameObject extends Entity {
 		int minY = getY();
 		int maxX = minX;
 		int maxY = minY;
-		if (getType() == 0) {
+		if (isScenery()) {
 			int worldWidth;
 			int worldHeight;
 			if (dir != 0 && dir != 4) {
@@ -78,7 +78,7 @@ public class GameObject extends Entity {
 				maxX = worldWidth + getX() - 1;
 				maxY = worldHeight + getY() - 1;
 			}
-		} else if (getType() == 1) {
+		} else if (isBoundary()) {
 
 			if (dir == 0) {
 				minX = getX();
@@ -140,7 +140,7 @@ public class GameObject extends Entity {
 
 	public boolean isOn(final int x, final int y) {
 		int width, height;
-		if (type == 1) {
+		if (isBoundary()) {
 			width = height = 1;
 		} else if (direction == 0 || direction == 4) {
 			width = getGameObjectDef().getWidth();
@@ -149,14 +149,17 @@ public class GameObject extends Entity {
 			height = getGameObjectDef().getWidth();
 			width = getGameObjectDef().getHeight();
 		}
-		if (type == 0) { // Object
-			return x >= getX() && x <= (getX() + width) && y >= getY()
+		if (isBoundary()) {
+			return x >= getX()
+				&& x <= (getX() + width)
+				&& y >= getY()
 				&& y <= (getY() + height);
 		} else { // Door
 			return x == getX() && y == getY();
 		}
 	}
 
+	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof GameObject) {
 			GameObject go = (GameObject) o;
@@ -168,8 +171,9 @@ public class GameObject extends Entity {
 		return false;
 	}
 
+	@Override
 	public String toString() {
-		return (type == 0 ? "GameObject" : "WallObject") + ":id = " + getID()
+		return getType() + ":id = " + getID()
 			+ "; dir = " + direction + "; location = "
 			+ getLocation().toString() + ";";
 	}
@@ -198,12 +202,24 @@ public class GameObject extends Entity {
 		return loc;
 	}
 
-	public int getType() {
-		return type;
+	public GameObjectType getGameObjectType() {
+		return this.gameObjectType;
 	}
 
-	public void setType(final int type) {
-		this.type = type;
+	public int getType() {
+		return getGameObjectType().getId();
+	}
+
+	public boolean isBoundary() {
+		return getGameObjectType() == GameObjectType.BOUNDARY;
+	}
+
+	public boolean isScenery() {
+		return getGameObjectType() == GameObjectType.SCENERY;
+	}
+
+	public void setGameObjectType(GameObjectType gameObjectType) {
+		this.gameObjectType = gameObjectType;
 	}
 
 	public boolean isTelePoint() {

@@ -1,12 +1,14 @@
 package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.npcs;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -29,19 +31,21 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.UNDERGROUND_PASS.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
 
 	@Override
 	public void handleReward(Player player) {
-		player.message("@gre@You haved gained 5 quest points!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.UNDERGROUND_PASS);
-		//keep order kosher
-		int[] skillIDs = {Skills.AGILITY, Skills.ATTACK};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.UNDERGROUND_PASS.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
 		player.message("you have completed the underground pass quest");
 		player.getCache().set("Iban blast_casts", 25);

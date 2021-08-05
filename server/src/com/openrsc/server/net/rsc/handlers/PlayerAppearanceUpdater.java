@@ -1,49 +1,46 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.content.PlayerClass;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.incoming.PlayerAppearanceStruct;
 
-public class PlayerAppearanceUpdater implements PacketHandler {
+public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanceStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(PlayerAppearanceStruct payload, Player player) throws Exception {
 
 		if (!player.isChangingAppearance()) {
 			player.setSuspiciousPlayer(true, "player appearance packet without changing appearance");
 			return;
 		}
 		player.setChangingAppearance(false);
-		byte headRestrictions = packet.readByte();
-		byte headType = packet.readByte();
-		byte bodyType = packet.readByte();
+		byte headRestrictions = payload.headRestrictions;
+		byte headType = payload.headType;
+		byte bodyType = payload.bodyType;
 
 		// This value is always "2" and is not very useful.
 		// I looked in the  v40 client deob, and the 4th byte is also always 2 there.
 		// I looked in the v127 client deob, and the 4th byte is also always 2 there.
 		// I looked in the v204 client deob, and the 4th byte is also always 2 there.
 		// I looked in the v233 client deob, and the 4th byte is also always 2 there.
-		byte mustEqual2 = packet.readByte();
+		byte mustEqual2 = payload.mustEqual2;
 		if (mustEqual2 != 2) {
 			player.setSuspiciousPlayer(true, "4th byte of player appearance packet wasn't equal to 2");
 			return;
 		}
 
-		int hairColour = packet.readByte();
-		int topColour = packet.readByte();
-		int trouserColour = packet.readByte();
-		int skinColour = packet.readByte();
-		int playerMode1 = -1;
-		int playerMode2 = -1;
-
-		if (!player.isUsingAuthenticClient()) {
-			playerMode1 = packet.readByte();
-			playerMode2 = packet.readByte();
-		}
+		int hairColour = payload.hairColour;
+		int topColour = payload.topColour;
+		int trouserColour = payload.trouserColour;
+		int skinColour = payload.skinColour;
+		int ironmanMode = payload.ironmanMode; // custom protocol
+		int isOneXp = payload.isOneXp; // custom protocol
 
 		int headSprite = headType + 1;
 		int bodySprite = bodyType + 1;
@@ -91,10 +88,20 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 			}
 		}
 
-		if (player.getConfig().CHARACTER_CREATION_MODE == 1) {
-			if (player.getLastLogin() == 0L) {
-				player.setIronMan(playerMode1);
-				player.setOneXp(playerMode2 == 1);
+		if (player.getLastLogin() == 0L) {
+			if (player.getConfig().USES_CLASSES) {
+				new PlayerClass(player, payload.chosenClass).init();
+			}
+
+			if (player.getConfig().USES_PK_MODE) {
+				player.setPkMode(payload.pkMode);
+				player.setPkChanges(2);
+				ActionSender.sendGameSettings(player);
+			}
+
+			if (player.getConfig().CHARACTER_CREATION_MODE == 1) {
+				player.setIronMan(ironmanMode);
+				player.setOneXp(isOneXp == 1);
 			}
 		}
 	}

@@ -231,4 +231,33 @@ public class StringUtil {
     public static boolean isIPv6Address(final String input) {
   		return isIPv6StdAddress(input) || isIPv6HexCompressedAddress(input);
     }
+
+    public static String getChatString(final String input) throws RuntimeException {
+  		if (input.startsWith("::"))
+			throw new RuntimeException("Command string entered");
+  		return input;
+	}
+
+	public static String convertToTitleCase(String text) {
+		if (text == null || text.isEmpty()) {
+			return text;
+		}
+
+		StringBuilder converted = new StringBuilder();
+
+		boolean convertNext = true;
+		for (char ch : text.toCharArray()) {
+			if (Character.isSpaceChar(ch)) {
+				convertNext = true;
+			} else if (convertNext) {
+				ch = Character.toTitleCase(ch);
+				convertNext = false;
+			} else {
+				ch = Character.toLowerCase(ch);
+			}
+			converted.append(ch);
+		}
+
+		return converted.toString();
+	}
 }

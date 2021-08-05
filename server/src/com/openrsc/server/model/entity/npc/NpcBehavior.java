@@ -2,7 +2,7 @@ package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -215,7 +215,7 @@ public class NpcBehavior {
 			target = npc.getOpponent();
 
 			// Retreat if NPC hits remaining and > round 3
-			if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITS) > 0
+			if (shouldRetreat(npc) && npc.getSkills().getLevel(Skill.HITS.id()) > 0
 				&& npc.getOpponent().getHitsMade() >= 3) {
 				retreat();
 			}
@@ -270,7 +270,7 @@ public class NpcBehavior {
 			//successful avoiding tackles gives agility xp
 			player.playerServerMessage(MessageType.QUEST, "You manage to push him away");
 			npcYell(player, npc, "grrrrr");
-			player.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
+			player.incExp(Skill.AGILITY.id(), TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
 			if (!inArray(player.getAttribute("gnomeball_npc", -1), -1, 0) || player.getAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
@@ -280,7 +280,7 @@ public class NpcBehavior {
 			player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 			player.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			player.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-			player.damage((int) (Math.ceil(player.getSkills().getLevel(Skills.HITS) * 0.05)));
+			player.damage((int) (Math.ceil(player.getSkills().getLevel(Skill.HITS.id()) * 0.05)));
 			say(player, "ouch");
 			npcYell(player, npc, "yeah");
 		}
@@ -288,6 +288,10 @@ public class NpcBehavior {
 	}
 
 	public void retreat() {
+		retreat(-1);
+	}
+
+	public void retreat(int time) {
 		state = State.RETREAT;
 		Mob opponent = npc.getOpponent();
 		if (opponent == null) return;
@@ -306,8 +310,15 @@ public class NpcBehavior {
 
 		npc.resetCombatEvent();
 
-		Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
-			DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
+		Point walkTo;
+		if (time == -1) {
+			 walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
+				DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
+		} else {
+			final int newX = npc.getX() + (DataConversions.random(-1, 1) * time);
+			final int newY = npc.getY() + (DataConversions.random(-1, 1) * time);
+			walkTo = Point.location(newX, newY);
+		}
 		npc.walk(walkTo.getX(), walkTo.getY());
 	}
 
@@ -411,7 +422,7 @@ public class NpcBehavior {
 	private boolean shouldRetreat(final Npc npc) {
 		if (!npc.getConfig().NPC_DONT_RETREAT) {
 			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
-				return npc.getSkills().getLevel(Skills.HITS) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
+				return npc.getSkills().getLevel(Skill.HITS.id()) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
 			}
 		}
 

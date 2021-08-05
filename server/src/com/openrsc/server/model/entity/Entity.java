@@ -19,27 +19,35 @@ public abstract class Entity {
 
 	private int index;
 
-	private AtomicReference<Point> location = new AtomicReference<Point>();
+	private final AtomicReference<Point> location = new AtomicReference<Point>();
 
-	private AtomicReference<Region> region = new AtomicReference<Region>();
+	private final AtomicReference<Region> region = new AtomicReference<Region>();
 
 	private boolean removed = false;
 
-	public Entity(final World world) {
+	private final EntityType entityType;
+
+	public Entity(
+		final World world,
+		final EntityType entityType
+	) {
 		this.world = world;
+		this.entityType = entityType;
 	}
 
 	public void updateRegion() {
-		final Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
-		if (!newRegion.equals(getRegion())) {
-			if (getRegion() != null) {
-				region.get().removeEntity(this);
-			}
+		updateRegion(null);
+	}
 
-			if (!isRemoved()) {
-				region.set(newRegion);
-				region.get().addEntity(this);
-			}
+	public synchronized void updateRegion(Point oldLocation) {
+		if (getRegion() != null && oldLocation != null) {
+			region.get().removeEntity(oldLocation, this);
+		}
+
+		final Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
+		if (!isRemoved()) {
+			region.set(newRegion);
+			region.get().addEntity(this);
 		}
 	}
 
@@ -89,9 +97,13 @@ public abstract class Entity {
 		attributes.put(string, object);
 	}
 
-	public final World getWorld() { return world; }
+	public final World getWorld() {
+		return world;
+	}
 
-	public final ServerConfiguration getConfig() { return getWorld().getServer().getConfig(); }
+	public final ServerConfiguration getConfig() {
+		return getWorld().getServer().getConfig();
+	}
 
 	public final int getID() {
 		return id;
@@ -113,19 +125,9 @@ public abstract class Entity {
 		return location.get();
 	}
 
-	public void setLocation(final Point player) {
-		/*if (this.isPlayer() && location != null) {
-			Player pl = (Player) this;
-			if (pl != null && getX() > 0 && getY() > 0) {
-				if (!Point.inWilderness(getX(), getY()) && Point.inWilderness(p.getX(), p.getY())
-						|| (getLocation().wildernessLevel() <= 48)) {
-					pl.unwieldMembersItems();
-				}
-			}
-
-		}*/
-		location.set(player);
-		updateRegion();
+	public void setLocation(final Point point) {
+		Point oldLocation = location.getAndSet(point);
+		updateRegion(oldLocation);
 	}
 
 	public void setInitialLocation(Point player) {
@@ -143,6 +145,19 @@ public abstract class Entity {
 
 	public final int getY() {
 		return location.get().getY();
+	}
+
+	/**
+	 * Normalize the player's Y coordinate by returning the Y value they would be at
+	 * if they were on the ground floor (British convention)
+	 *
+	 * @param yPos The current Y coordinate of the player
+	 * @return The player's Y coordinate if they were on the ground floor (British convention)
+	 */
+	public final int normalizeFloor(final int yPos) {
+		// Each floor is 944 tiles apart, so we're subtracting the player's current position
+		// by the floor they're on.
+		return yPos - 944 * (yPos % 944);
 	}
 
 	public boolean isRemoved() {
@@ -167,11 +182,19 @@ public abstract class Entity {
 		return false;
 	}
 
+	public boolean canSee(final Entity observed) {
+		return observed == null || !observed.isInvisibleTo(this);
+	}
+
+	public EntityType getEntityType() {
+		return entityType;
+	}
+
 	public boolean isPlayer() {
-		return false;
+		return entityType == EntityType.PLAYER;
 	}
 
 	public boolean isNpc() {
-		return false;
+		return entityType == EntityType.NPC;
 	}
 }

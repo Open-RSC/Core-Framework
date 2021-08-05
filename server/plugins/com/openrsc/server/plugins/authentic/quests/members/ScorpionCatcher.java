@@ -8,6 +8,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -38,6 +41,11 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.SCORPION_CATCHER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -45,8 +53,11 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the scorpion catcher quest");
-		player.message("@gre@You haved gained 1 quest point!");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SCORPION_CATCHER), true);
+		final QuestReward reward = Quest.SCORPION_CATCHER.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
@@ -79,7 +79,8 @@ public class ThrowingEvent extends GameTickEvent {
 		int throwingID = getPlayerOwner().getThrowingEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
-			|| target.getSkills().getLevel(Skills.HITS) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| target.getSkills().getLevel(Skill.HITS.id()) <= 0
+			|| !getPlayerOwner().checkAttack(target, true)
 			|| !getPlayerOwner().withinRange(target)) {
 			getPlayerOwner().resetRange();
 			stop();
@@ -189,17 +190,17 @@ public class ThrowingEvent extends GameTickEvent {
 					}
 					getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 				}
-				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITS) * percentage / 100.0);
+				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skill.HITS.id()) * percentage / 100.0);
 				getPlayerOwner().damage(fireDamage);
 
 				//reduce ranged level (case for KBD)
 				if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-					int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
-					getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
+					int newLevel = getCurrentLevel(getPlayerOwner(), Skill.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
+					getPlayerOwner().getSkills().setLevel(Skill.RANGED.id(), newLevel);
 				}
 			}
 		} else if(target.isPlayer() && damage > 0) {
-			getPlayerOwner().incExp(Skills.RANGED, Formulae.rangedHitExperience(target, damage), true);
+			getPlayerOwner().incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
 		}
 
 		if (Formulae.looseArrow(damage)) {
@@ -219,6 +220,18 @@ public class ThrowingEvent extends GameTickEvent {
 				target.startPoisonEvent();
 			}
 		}
+
+		//Poison Throwables Ability to Poison NPCs
+		if(getPlayerOwner().getConfig().WANT_POISON_NPCS) {
+			if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isNpc()) {
+					if (target.getCurrentPoisonPower() < 10 && DataConversions.random(1, 50) == 1) {
+						target.setPoisonDamage(60);
+						target.startPoisonEvent();
+						getPlayerOwner().message("@gr3@You @gr2@have @gr1@poisioned @gr2@the " + ((Npc) target).getDef().name + "!");
+					}
+			}
+		}
+
 		getOwner().setKillType(2);
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		deliveredFirstProjectile = true;

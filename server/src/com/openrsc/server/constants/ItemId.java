@@ -914,7 +914,7 @@ public enum ItemId {
 	GNOMECRUNCHIE(900),
 	CHEESE_AND_TOMATO_BATTA(901),
 	TOAD_BATTA(902),
-	GNOME_BATTA(903),
+	GNOME_BATTA_UNUSED(903),
 	WORM_BATTA(904),
 	FRUIT_BATTA(905),
 	VEG_BATTA(906),
@@ -935,7 +935,7 @@ public enum ItemId {
 	GLOUGHS_JOURNAL(921),
 	INVOICE(922),
 	UGTHANKI_KEBAB(923),
-	SPECIAL_CURRY(924),
+	SPECIAL_CURRY_UNUSED(924),
 	GLOUGHS_KEY(925),
 	GLOUGHS_NOTES(926),
 	PEBBLE_1(927),
@@ -946,7 +946,7 @@ public enum ItemId {
 	SINISTER_KEY(932),
 	UNIDENTIFIED_TORSTOL(933),
 	TORSTOL(934),
-	UNFINISHED_TORSTROL_POTION(935),
+	UNFINISHED_TORSTOL_POTION(935),
 	JANGERBERRIES(936),
 	BLURBERRY_BARMAN_FRUIT_BLAST(937),
 	BLURBERRY_BARMAN_BLURBERRY_SPECIAL(938),
@@ -957,7 +957,7 @@ public enum ItemId {
 	BLURBERRY_BARMAN_DRUNK_DRAGON(943),
 	GNOME_WAITER_CHEESE_AND_TOMATO_BATTA(944),
 	GNOME_WAITER_TOAD_BATTA(945),
-	//	GNOME_BATTA(946), // Appears to be unused.
+	GNOME_BATTA_PREMADE_UNUSED(946),
 	GNOME_WAITER_WORM_BATTA(947),
 	GNOME_WAITER_FRUIT_BATTA(948),
 	GNOME_WAITER_VEG_BATTA(949),
@@ -1196,10 +1196,10 @@ public enum ItemId {
 	YOMMI_TREE_SEED(1182),
 	TOTEM_POLE(1183),
 	// These appear to be unused
-//	DWARF_CANNON_BASE(1184),
-//	DWARF_CANNON_STAND(1185),
-//	DWARF_CANNON_BARRELS(1186),
-//	DWARF_CANNON_FURNACE(1187),
+    DWARF_CANNON_BASE_UNUSED(1184),
+	DWARF_CANNON_STAND_UNUSED(1185),
+	DWARF_CANNON_BARRELS_UNUSED(1186),
+	DWARF_CANNON_FURNACE_UNUSED(1187),
 	GOLDEN_BOWL(1188),
 	GOLDEN_BOWL_WITH_PURE_WATER(1189),
 	RAW_MANTA_RAY(1190),
@@ -1379,11 +1379,11 @@ public enum ItemId {
 	RUDOLPHS_ANTLERS(1344),
 	BEVERAGE_GLASS(1345),
 
-	//New KBD Drops
+	// New KBD Drops
 	DRAGON_2_HANDED_SWORD(1346),
 	KING_BLACK_DRAGON_SCALE(1347),
 
-	//Harvesting
+	// Harvesting
 	RED_APPLE(1348),
 	GRAPEFRUIT(1349),
 	PAPAYA(1350),
@@ -1417,7 +1417,7 @@ public enum ItemId {
 	FLETCHING_CAPE(1376),
 	MINING_CAPE(1377),
 	PESTILENCE_MASK(1378),
-	RUBBER_CHICKEN_CAP(1379),
+	RUBBER_CHICKEN_CAP(1379), // Easter 2020
 	FISHING_CAPE(1380),
 	STRENGTH_CAPE(1381),
 	MAGIC_CAPE(1382),
@@ -1494,7 +1494,44 @@ public enum ItemId {
 	DRAGON_BOLTS(1451),
 	POISON_DRAGON_BOLTS(1452),
 	DRAGON_CROSSBOW(1453),
-	DRAGON_LONGBOW(1454);
+	DRAGON_LONGBOW(1454),
+
+	EMPTY_WATERING_CAN(1455),
+	SUGARCANE(1456),
+	DRAGONFRUIT(1457),
+	SLICED_DRAGONFRUIT(1458),
+	SWEETENED_SLICES(1459),
+	SWEETENED_CHUNKS(1460),
+	MIXING_BOWL(1461),
+	UNCOOKED_SEAWEED_SOUP(1462),
+	SEAWEED_SOUP(1463),
+	BURNT_SEAWEED_SOUP(1464),
+	GRAPES_OF_SARADOMIN(1465),
+	GRAPES_OF_ZAMORAK(1466),
+	WINE_OF_SARADOMIN(1467),
+	FULL_MAGIC_POTION(1468),
+	TWO_MAGIC_POTION(1469),
+	ONE_MAGIC_POTION(1470),
+	FULL_POTION_OF_SARADOMIN(1471),
+	TWO_POTION_OF_SARADOMIN(1472),
+	ONE_POTION_OF_SARADOMIN(1473),
+	FULL_SUPER_RANGING_POTION(1474),
+	TWO_SUPER_RANGING_POTION(1475),
+	ONE_SUPER_RANGING_POTION(1476),
+	FULL_SUPER_MAGIC_POTION(1477),
+	TWO_SUPER_MAGIC_POTION(1478),
+	ONE_SUPER_MAGIC_POTION(1479),
+	DRAGON_WOODCUTTING_AXE(1480),
+
+	// Easter 2021
+	RABBITS_FOOT_ONE(1481),
+	RABBITS_FOOT_TWO(1482),
+	RABBITS_FOOT_THREE(1483),
+	RABBITS_FOOT_FOUR(1484),
+	RABBITS_FOOT_FIVE(1485),
+	RING_OF_BUNNY(1486),
+	RING_OF_EGG(1487);
+
 
 	private int itemId;
 
@@ -1502,17 +1539,32 @@ public enum ItemId {
 	public static final int maxCustom = 1500;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
+	private static final Map<String, ItemId> byName = new HashMap<String, ItemId>();
 
 	static {
 		for (ItemId item : ItemId.values()) {
 			if (byId.put(item.id(), item) != null) {
 				throw new IllegalArgumentException("duplicate id: " + item.id());
+			} else {
+				if (byName.put(sanitizeName(item.name()), item) != null) {
+					throw new IllegalArgumentException("duplicate sanitized name: " + item.id());
+				}
 			}
 		}
 	}
 
 	public static ItemId getById(Integer id) {
-		return byId.getOrDefault(id, ItemId.NOTHING);
+		return byId.getOrDefault(id, NOTHING);
+	}
+
+	public static ItemId getByName(String name) {
+		return byName.getOrDefault(sanitizeName(name), NOTHING);
+	}
+
+	private static String sanitizeName(String name) {
+		return name.replaceAll("[\\W]", "")
+			.replaceAll("_", "")
+			.toLowerCase();
 	}
 
 	/**

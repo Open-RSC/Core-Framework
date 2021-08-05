@@ -7,7 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
  */
 public interface PlayerLogoutTrigger {
 	/**
-	 * Called when player logs out (by himself, or when he's logged out by a timeout, mod etc)
+	 * Called when player logs out (by themself, or when they're logged out by a timeout, mod etc)
 	 */
 	void onPlayerLogout(Player player);
 	boolean blockPlayerLogout(Player player);
