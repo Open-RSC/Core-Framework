@@ -5,8 +5,8 @@ import com.openrsc.server.model.world.World;
 
 public abstract class RestartableDelayedEvent extends DelayedEvent {
 
-	protected RestartableDelayedEvent(final World world, final Player owner, final int delay, final String descriptor) {
-		super(world, owner, delay, descriptor);
+	protected RestartableDelayedEvent(final World world, final Player owner, final int delayMs, final String descriptor) {
+		super(world, owner, delayMs, descriptor);
 	}
 
 	public abstract void reset();

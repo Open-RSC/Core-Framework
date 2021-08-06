@@ -1118,7 +1118,11 @@ public class ActionSender {
 		}
 
 		struct.infoContained = infoContained;
-		struct.message = message;
+		if (player.getClientVersion() <= 204 && type == MessageType.QUEST) {
+			struct.message = "@que@" + message;
+		} else {
+			struct.message = message;
+		}
 		struct.senderName = sender != null ? sender.getUsername() : "";
 		struct.colorString = colorString;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_SERVER_MESSAGE, struct, player);
