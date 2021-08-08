@@ -3,6 +3,7 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.event.rsc.impl.RangeEvent;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.model.action.ActionType;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -77,7 +78,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 			player.setFollowing(affectedMob, 0, false);
-			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1, false) {
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1, false, ActionType.ATTACK) {
 				public void executeInternal() {
 					getPlayer().resetPath();
 					getPlayer().resetFollowing();
@@ -111,7 +112,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			player.resetAll();
 			int radius = player.getProjectileRadius(5); // default radius of 5
 			player.setFollowing(affectedMob, 0, false);
-			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false) {
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false, ActionType.ATTACK) {
 				public void executeInternal() {
 					if(getPlayer().isBusy() || getPlayer().inCombat()) return;
 					getPlayer().resetFollowing();
