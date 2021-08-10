@@ -13,6 +13,7 @@ import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.action.ActionType;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Item;
@@ -1243,7 +1244,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 
 		player.setFollowing(affectedMob);
-		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false) {
+		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false, ActionType.ATTACK) {
 			public void executeInternal() {
 				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedMob.getLocation())) {
 					getPlayer().playerServerMessage(MessageType.QUEST, "I can't get a clear shot from here");

@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.authentic.minigames.mage_arena;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Minigames;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skill;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.external.ItemDefinition;
@@ -255,7 +252,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@Saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
 				getOwner().setAttribute("maged_kolodion", false);
 				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
-					godSpellObject(getOwner(), 33);
+					godSpellObject(getOwner(), Spells.CLAWS_OF_GUTHIX);
 					player.message(randomMessage[2]);
 					if (getCurrentLevel(getOwner(), Skill.HITS.id()) < 20) {
 						getOwner().damage(2);
@@ -263,7 +260,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.HITS.id()) * 0.08));
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(getOwner(), 1)) {
-					godSpellObject(getOwner(), 35);
+					godSpellObject(getOwner(), Spells.FLAMES_OF_ZAMORAK);
 					player.message(randomMessage[0]);
 					if (getCurrentLevel(getOwner(), Skill.HITS.id()) < 20) {
 						getOwner().damage(2);
@@ -271,7 +268,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.HITS.id()) * 0.08));
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(getOwner(), 1)) {
-					godSpellObject(getOwner(), 34);
+					godSpellObject(getOwner(), Spells.SARADOMIN_STRIKE);
 					player.message(randomMessage[1]);
 					if (getCurrentLevel(getOwner(), Skill.HITS.id()) < 20) {
 						getOwner().damage(2);
@@ -356,13 +353,13 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				int spell_type = random(0, 1 + (allElems ? 1 : 0));
 				switch (spell_type) {
 					case 0: //claws of guthix
-						godSpellObject(getOwner(), 33);
+						godSpellObject(getOwner(), Spells.CLAWS_OF_GUTHIX);
 						break;
 					case 1: //saradomin strike
-						godSpellObject(getOwner(), 34);
+						godSpellObject(getOwner(), Spells.SARADOMIN_STRIKE);
 						break;
 					case 2: //flames of zamorak
-						godSpellObject(getOwner(), 35);
+						godSpellObject(getOwner(), Spells.FLAMES_OF_ZAMORAK);
 						break;
 				}
 				// how many lvls needed for +1 dmg (min 16, max 25)
@@ -588,24 +585,24 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		return false;
 	}
 
-	public void godSpellObject(Mob affectedMob, int spell) {
-		switch (spell) {
-			case 33:
+	public void godSpellObject(Mob affectedMob, Spells spellEnum) {
+		switch (spellEnum) {
+			case CLAWS_OF_GUTHIX:
 				GameObject guthix = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1142, 0, 0);
 				affectedMob.getWorld().registerGameObject(guthix);
 				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), guthix, 2));
 				break;
-			case 34:
+			case SARADOMIN_STRIKE:
 				GameObject sara = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1031, 0, 0);
 				affectedMob.getWorld().registerGameObject(sara);
 				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), sara, 2));
 				break;
-			case 35:
+			case FLAMES_OF_ZAMORAK:
 				GameObject zammy = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1036, 0, 0);
 				affectedMob.getWorld().registerGameObject(zammy);
 				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), zammy, 2));
 				break;
-			case 47:
+			case CHARGE:
 				GameObject charge = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1147, 0, 0);
 				affectedMob.getWorld().registerGameObject(charge);
 				affectedMob.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(affectedMob.getWorld(), charge, 2));

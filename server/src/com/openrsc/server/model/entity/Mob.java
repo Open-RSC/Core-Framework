@@ -684,13 +684,7 @@ public abstract class Mob extends Entity {
 				}
 			}
 
-			if (this.isNpc()) {
-				getWorld().removeNpcPosition((Npc) this);
-			}
 			setLocation(victim.getLocation(), false);
-			if (this.isNpc()) {
-				getWorld().setNpcPosition((Npc) this);
-			}
 
 			setBusy(true);
 			setSprite(ourSprite);

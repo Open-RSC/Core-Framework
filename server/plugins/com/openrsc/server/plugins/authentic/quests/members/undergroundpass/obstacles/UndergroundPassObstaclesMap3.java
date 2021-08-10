@@ -36,6 +36,8 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 	public static final int [] PIT_COORDS = {802, 3469};
 	public static final Area boundArea = new Area(794, 800, 3467, 3471);
 
+	private final int BASE_TICK = 640;
+
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), CAGES) || obj.getID() == DEMONS_CHEST_CLOSED || obj.getID() == ZAMORAKIAN_TEMPLE_DOOR;
@@ -163,8 +165,8 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						delay(3);
 						long start = System.currentTimeMillis();
 						Area area = Areas.getArea("ibans_room");
-						int ticks = config().GAME_TICK > 600 ? 1 : 2;
-						player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, ticks, "Iban's chamber event", false) {
+						int delayMs = BASE_TICK;
+						player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, delayMs, "Iban's chamber event", false) {
 							@Override
 							public void run() {
 								/* Time-out fail, handle appropriately */

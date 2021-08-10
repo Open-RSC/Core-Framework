@@ -1121,7 +1121,7 @@ public final class GameStateUpdater {
 
 					} else {
 						objectLocs.add(new GameObjectLoc(60000, offsetX, offsetY, o.getDirection(), 1));
-                        changed = true;
+						changed = true;
 					}
 					it$.remove();
 				} else {
@@ -1143,6 +1143,7 @@ public final class GameStateUpdater {
 			final int offsetX = newObject.getX() - playerToUpdate.getX();
 			final int offsetY = newObject.getY() - playerToUpdate.getY();
 			objectLocs.add(new GameObjectLoc(newObject.getID(), offsetX, offsetY, newObject.getDirection(), 1));
+			playerToUpdate.getLocalWallObjects().add(newObject);
 			changed = true;
 		}
 		struct.objects = objectLocs;

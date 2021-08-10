@@ -5,6 +5,9 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.action.ActionType;
+import com.openrsc.server.model.action.WalkToAction;
+import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -104,7 +107,8 @@ public class NpcBehavior {
 					}
 
 					// Remove the opponent if the player has not been engaged in > 10 seconds
-					if (npc.getLastOpponent() == player && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 200)) {
+					int factor = (int)Math.ceil(640.0 / npc.getConfig().GAME_TICK);
+					if (npc.getLastOpponent() == player && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 15 * factor)) {
 						npc.setLastOpponent(null);
 						setRoaming();
 					}
@@ -187,7 +191,7 @@ public class NpcBehavior {
 
 		// If target is not waiting for "run away" timer, send them chasing
 		lastMovement = System.currentTimeMillis();
-		int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : 1;
+		int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : (int)Math.ceil(640.0 / target.getConfig().GAME_TICK);
 		if (checkCombatTimer(target.getCombatTimer(), numTicks)) {
 			if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
 				npc.walkToEntityAStar(target.getX(), target.getY());
@@ -340,28 +344,38 @@ public class NpcBehavior {
 	}
 
 	// We return false if the player cannot be aggro'd.
-	private boolean canAggro(final Mob player) {
-		boolean outOfBounds = !player.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
+	private boolean canAggro(final Mob target) {
+		boolean outOfBounds = !target.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
 			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
 
-		boolean playerInCombat = player.inCombat();
+		boolean targetInCombat = target.inCombat();
 
-		boolean lastLogin = player instanceof Player && checkCombatTimer(((Player)player).getLastLogin(), 5);
+		boolean isPlayer = target instanceof Player;
 
-		int numTicks = player.getCombatState() == CombatState.RUNNING ? 5 : player.getConfig().GAME_TICK < 640 ? 2 : 0;
-		boolean playerCombatTimeoutExceeded = checkCombatTimer(player.getCombatTimer(), numTicks);
+		boolean lastLogin = isPlayer && checkCombatTimer(((Player)target).getLastLogin(), 5);
 
-		boolean isAggressive = aggressiveCheck(player);
+		int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : (int)(Math.ceil(640.0 / target.getConfig().GAME_TICK) - 1);
+		WalkToAction action = null;
+		boolean hasWalkMobAction = isPlayer && ((action = ((Player)target).getWalkToAction()) != null)
+			&& action instanceof WalkToMobAction;
 
-		boolean impervious = player instanceof Player
-			&& (((Player) player).isInvulnerableTo(npc) || ((Player) player).isInvisibleTo(npc));
+		boolean playerIsAttacking = hasWalkMobAction && ((WalkToMobAction) action).getActionType() == ActionType.ATTACK
+			&& ((WalkToMobAction) action).getMob().getUUID().equals(npc.getUUID());
+
+		boolean targetCombatTimeoutExceeded = checkCombatTimer(target.getCombatTimer(), numTicks);
+
+		boolean isAggressive = aggressiveCheck(target);
+
+		boolean impervious = isPlayer
+			&& (((Player) target).isInvulnerableTo(npc) || ((Player) target).isInvisibleTo(npc));
 
 		return isAggressive
 			&& !impervious
 			&& !outOfBounds
-			&& !playerInCombat
+			&& !targetInCombat
+			&& !playerIsAttacking
 			&& lastLogin
-			&& playerCombatTimeoutExceeded;
+			&& targetCombatTimeoutExceeded;
 	}
 
 	private boolean grandTreeGnome(final Npc npc) {

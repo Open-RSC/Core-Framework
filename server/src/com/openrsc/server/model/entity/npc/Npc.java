@@ -603,7 +603,6 @@ public class Npc extends Mob {
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			super.remove();
 			startRespawning();
-			getWorld().removeNpcPosition(this);
 			Npc n = this;
 			setRespawning(true);
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long) (def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
@@ -625,9 +624,6 @@ public class Npc extends Mob {
 					mageDamagers.clear();
 					rangeDamagers.clear();
 					combatDamagers.clear();
-
-
-					getWorld().setNpcPosition(n);
 				}
 			});
 		} else if (!shouldRespawn) {
