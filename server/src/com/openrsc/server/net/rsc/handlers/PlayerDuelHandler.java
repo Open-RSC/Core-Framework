@@ -18,6 +18,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, OpcodeIn> {
 
 	private boolean busy(Player player) {
@@ -367,7 +369,7 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 						ActionSender.sendDuelSettingUpdate(affectedPlayer);
 						continue;
 					}
-					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId())) {
+					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId(), Optional.of(tItem.getNoted()))) {
 						if (!(player.getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(tItem.getCatalogId()))) {
 							player.setSuspiciousPlayer(true, "not want equipment and duel trade item amount 1 and isweilding item");
 							return;

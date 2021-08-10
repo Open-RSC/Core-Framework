@@ -91,6 +91,7 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
+		player.setAccessingShop(shop);
 		ActionSender.showShop(player, shop);
 	}
 

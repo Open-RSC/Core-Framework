@@ -531,7 +531,7 @@ public class Bank {
 			synchronized (items) {
 
 				// Ensure they have the item in their inventory.
-				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID));
+				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID, Optional.empty()));
 				if (requestedAmount <= 0) {
 					if (!player.isUsingCustomClient() && catalogID == 1030) { //shantay pass placeholder item
 						player.playerServerMessage(MessageType.QUEST, "Try using the note on the Banker instead.");

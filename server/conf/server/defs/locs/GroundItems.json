@@ -262,7 +262,7 @@
 			"Y": 259
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 25
 	}, {
 		"id": 412,
 		"pos": {
@@ -270,7 +270,7 @@
 			"Y": 261
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 413,
 		"pos": {
@@ -278,7 +278,7 @@
 			"Y": 263
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 25
 	}, {
 		"id": 413,
 		"pos": {
@@ -286,7 +286,7 @@
 			"Y": 268
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 25
 	}, {
 		"id": 413,
 		"pos": {
@@ -294,7 +294,7 @@
 			"Y": 278
 		},
 		"amount": 1,
-		"respawn": 60
+		"respawn": 25
 	}, {
 		"id": 413,
 		"pos": {
@@ -302,7 +302,7 @@
 			"Y": 279
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 25
 	}, {
 		"id": 83,
 		"pos": {
@@ -318,7 +318,7 @@
 			"Y": 280
 		},
 		"amount": 1,
-		"respawn": 45
+		"respawn": 6
 	}, {
 		"id": 152,
 		"pos": {
@@ -728,14 +728,6 @@
 		"amount": 1,
 		"respawn": 5
 	}, {
-		"id": 411,
-		"pos": {
-			"X": 312,
-			"Y": 298
-		},
-		"amount": 1,
-		"respawn": 5
-	}, {
 		"id": 410,
 		"pos": {
 			"X": 322,
@@ -751,14 +743,6 @@
 		},
 		"amount": 1,
 		"respawn": 15
-	}, {
-		"id": 410,
-		"pos": {
-			"X": 303,
-			"Y": 299
-		},
-		"amount": 1,
-		"respawn": 5
 	}, {
 		"id": 410,
 		"pos": {
@@ -4070,7 +4054,7 @@
 			"Y": 647
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 20,
 		"pos": {
@@ -4078,7 +4062,7 @@
 			"Y": 647
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4086,7 +4070,7 @@
 			"Y": 648
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 413,
 		"pos": {
@@ -4094,7 +4078,7 @@
 			"Y": 648
 		},
 		"amount": 1,
-		"respawn": 60
+		"respawn": 25
 	}, {
 		"id": 412,
 		"pos": {
@@ -4102,7 +4086,7 @@
 			"Y": 648
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 20,
 		"pos": {
@@ -4110,7 +4094,7 @@
 			"Y": 649
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 412,
 		"pos": {
@@ -4118,7 +4102,7 @@
 			"Y": 649
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 412,
 		"pos": {
@@ -4126,7 +4110,7 @@
 			"Y": 650
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 20,
 		"pos": {
@@ -4134,7 +4118,7 @@
 			"Y": 650
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4142,7 +4126,7 @@
 			"Y": 650
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4150,7 +4134,7 @@
 			"Y": 651
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4158,7 +4142,7 @@
 			"Y": 651
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 412,
 		"pos": {
@@ -4166,7 +4150,7 @@
 			"Y": 651
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 412,
 		"pos": {
@@ -4174,7 +4158,7 @@
 			"Y": 652
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 20,
 		"pos": {
@@ -4182,7 +4166,7 @@
 			"Y": 652
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4190,15 +4174,7 @@
 			"Y": 652
 		},
 		"amount": 1,
-		"respawn": 30
-	}, {
-		"id": 20,
-		"pos": {
-			"X": 691,
-			"Y": 652
-		},
-		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4206,7 +4182,7 @@
 			"Y": 652
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4214,7 +4190,7 @@
 			"Y": 652
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4222,7 +4198,7 @@
 			"Y": 652
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4230,7 +4206,7 @@
 			"Y": 653
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4238,7 +4214,7 @@
 			"Y": 654
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 412,
 		"pos": {
@@ -4246,7 +4222,7 @@
 			"Y": 654
 		},
 		"amount": 1,
-		"respawn": 15
+		"respawn": 6
 	}, {
 		"id": 702,
 		"pos": {
@@ -4262,7 +4238,7 @@
 			"Y": 655
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4270,7 +4246,7 @@
 			"Y": 655
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4278,7 +4254,7 @@
 			"Y": 656
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 20,
 		"pos": {
@@ -4286,7 +4262,7 @@
 			"Y": 657
 		},
 		"amount": 1,
-		"respawn": 30
+		"respawn": 25
 	}, {
 		"id": 132,
 		"pos": {
@@ -4514,14 +4490,6 @@
 	}, {
 		"id": 783,
 		"pos": {
-			"X": 153,
-			"Y": 683
-		},
-		"amount": 1,
-		"respawn": 30
-	}, {
-		"id": 783,
-		"pos": {
 			"X": 163,
 			"Y": 683
 		},
@@ -4532,14 +4500,6 @@
 		"pos": {
 			"X": 165,
 			"Y": 683
-		},
-		"amount": 6,
-		"respawn": 30
-	}, {
-		"id": 783,
-		"pos": {
-			"X": 169,
-			"Y": 684
 		},
 		"amount": 6,
 		"respawn": 30
@@ -4644,14 +4604,6 @@
 		"pos": {
 			"X": 160,
 			"Y": 690
-		},
-		"amount": 6,
-		"respawn": 30
-	}, {
-		"id": 783,
-		"pos": {
-			"X": 150,
-			"Y": 691
 		},
 		"amount": 6,
 		"respawn": 30

@@ -12,9 +12,12 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MathUtil;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -106,7 +109,7 @@ public class Smithing implements UseLocTrigger {
 			return false;
 		}
 
-		if (player.getCarriedItems().getInventory().countId(ItemId.HAMMER.id()) < 1) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.HAMMER.id(), Optional.of(false)) < 1) {
 			player.playerServerMessage(MessageType.QUEST, "You need a hammer to work the metal with.");
 			return false;
 		}
@@ -128,13 +131,19 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 
-		player.message("What would you like to make?");
-
 		// Gold
+		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
 		if (item.getCatalogId() == ItemId.GOLD_BAR.id()) {
-			handleGoldSmithing(player);
+			if (MathUtil.maxUnsigned(maxItemId, ItemId.GOLDEN_BOWL.id()) == maxItemId) {
+				player.message("What would you like to make?");
+				handleGoldSmithing(player);
+			} else {
+				player.message("Nothing interesting happens");
+			}
 			return;
 		}
+
+		player.message("What would you like to make?");
 
 		handleSmithing(item, player);
 
@@ -145,8 +154,8 @@ public class Smithing implements UseLocTrigger {
 			player.message("You need a smithing ability of at least 60 to complete this task.");
 		}
 		// non-kosher this message
-		else if (player.getCarriedItems().getInventory().countId(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1
-				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
+		else if (player.getCarriedItems().getInventory().countId(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), Optional.of(false)) < 1
+				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), Optional.of(false)) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
 			mes("You set to work trying to fix the ancient shield.");
@@ -166,13 +175,26 @@ public class Smithing implements UseLocTrigger {
 
 	private void handleGoldSmithing(Player player) {
 		int goldOption = multi(player, "Golden bowl.", "Cancel");
+
+		if (goldOption == 1) return;
+
+		if (!config().MEMBER_WORLD) {
+			player.message("This feature is members only");
+			return;
+		}
+
+		if (!canReceive(player, new Item(ItemId.GOLDEN_BOWL.id()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
+
 		/*if (player.isBusy()) {
 			return;
 		}*/
 		if (goldOption == 0) {
 			mes("You hammer the metal...");
 			delay(3);
-			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
+			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id(), Optional.of(false)) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
 				if (!Formulae.breakGoldenItem(50, player.getSkills().getLevel(Skill.SMITHING.id()))) {
@@ -230,12 +252,16 @@ public class Smithing implements UseLocTrigger {
 	}
 
 	private void batchSmithing(Player player, Item item, ItemSmithingDef def) {
+		if (!canReceive(player, new Item(def.getItemID()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.SMITHING.id()) < def.getRequiredLevel()) {
 			player.message("You need to be at least level "
 				+ def.getRequiredLevel() + " smithing to do that");
 			return;
 		}
-		if (player.getCarriedItems().getInventory().countId(item.getCatalogId()) < def.getRequiredBars()) {
+		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) < def.getRequiredBars()) {
 			player.message("You need " + def.getRequiredBars() + " bars of metal to make this item");
 			return;
 		}
@@ -276,34 +302,82 @@ public class Smithing implements UseLocTrigger {
 
 	private int firstMenu(Item item, Player player) {
 		int option;
+		ArrayList<String> options = new ArrayList<>();
+		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
 
 		// Steel Bar
 		if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
-			option = multi(player, "Make Weapon", "Make Armour",
-				"Make Missile Heads", "Make Nails", "Cancel");
+			options.addAll(Arrays.asList(
+				"Make Weapon",
+				"Make Armour"
+			));
+			if (player.getConfig().CAN_FEATURE_MEMBS) {
+				options.add("Make Missile Heads");
+			}
+			if (MathUtil.maxUnsigned(maxItemId, ItemId.NAILS.id()) == maxItemId) {
+				options.add("Make Nails");
+			}
+			options.add("Cancel");
+			String[] finalOptions = new String[options.size()];
+			option = multi(player, options.toArray(finalOptions));
 
 			// Cancel
-			if (option == 4) return -1;
+			if (option == finalOptions.length - 1) return -1;
+
+			// Missile Heads or Nails
+			if (option > 1) {
+				if (option == 2 && !options.contains("Make Missile Heads")) {
+					// set as nails
+					option = 3;
+				}
+			}
 
 			return option;
 		}
 
 		// Bronze Bar
 		if (item.getCatalogId() == ItemId.BRONZE_BAR.id()) {
-			option = multi(player, "Make Weapon", "Make Armour",
-				"Make Missile Heads", "Make Craft Item", "Cancel");
+			options.addAll(Arrays.asList(
+				"Make Weapon",
+				"Make Armour"
+			));
+			if (player.getConfig().CAN_FEATURE_MEMBS) {
+				options.add("Make Missile Heads");
+			}
+			if (MathUtil.maxUnsigned(maxItemId, ItemId.BRONZE_WIRE.id()) == maxItemId) {
+				options.add("Make Craft Item");
+			}
+			options.add("Cancel");
+			String[] finalOptions = new String[options.size()];
+			option = multi(player, options.toArray(finalOptions));
 
 			// Cancel
-			if (option == 4) return -1;
+			if (option == finalOptions.length - 1) return -1;
+
+			// Missile Heads or Craft Item
+			if (option > 1) {
+				if (option == 2 && !options.contains("Make Missile Heads")) {
+					// set as nails
+					option = 3;
+				}
+			}
 
 			return option;
 		}
 
 		// Any other bar.
-		option = multi(player, "Make Weapon", "Make Armour",
-			"Make Missile Heads", "Cancel");
+		options.addAll(Arrays.asList(
+			"Make Weapon",
+			"Make Armour"
+		));
+		if (player.getConfig().CAN_FEATURE_MEMBS) {
+			options.add("Make Missile Heads");
+		}
+		options.add("Cancel");
+		String[] finalOptions = new String[options.size()];
+		option = multi(player, options.toArray(finalOptions));
 
-		if (option == 3) return -1;
+		if (option == finalOptions.length - 1) return -1;
 
 		return option;
 	}
@@ -312,10 +386,27 @@ public class Smithing implements UseLocTrigger {
 
 		int offset = 0;
 
+		ArrayList<String> options = new ArrayList<>();
+
 		// Weapon
 		if (firstType == 0) {
 			player.message("Choose a type of weapon to make");
-			return multi(player, "Dagger", "Throwing Knife", "Sword", "Axe", "Mace");
+			options.add("Dagger");
+			if (player.getConfig().CAN_FEATURE_MEMBS) {
+				options.add("Throwing Knife");
+			}
+			options.addAll(Arrays.asList(
+				"Sword",
+				"Axe",
+				"Mace"
+			));
+			String[] finalOptions = new String[options.size()];
+			int option = multi(player, options.toArray(finalOptions));
+
+			if (option > 0 && !options.contains("Throwing Knife")) {
+				++option;
+			}
+			return option;
 		}
 
 		offset += 5;
@@ -380,11 +471,16 @@ public class Smithing implements UseLocTrigger {
 	}
 
 	private void makeNails(Item item, Player player) {
+		if (!canReceive(player, new Item(ItemId.NAILS.id()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
+
 		if (player.getSkills().getLevel(Skill.SMITHING.id()) < 34) {
 			player.message("You need to be at least level 34 smithing to do that");
 			return;
 		}
-		if (player.getCarriedItems().getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.STEEL_BAR.id(), Optional.of(false)) < 1) {
 			player.playerServerMessage(MessageType.QUEST, "You need 1 bar of metal to make this item");
 			return;
 		}
@@ -398,6 +494,19 @@ public class Smithing implements UseLocTrigger {
 	private void makeWire(Item item, Player player) {
 		player.message("What sort of craft item do you want to make?");
 		int bronzeWireOption = multi(player, "Bronze Wire(1 bar)", "Cancel");
+
+		if (bronzeWireOption == 1) return;
+
+		if (!config().MEMBER_WORLD) {
+			player.message("This feature is members only");
+			return;
+		}
+
+		if (!canReceive(player, new Item(ItemId.BRONZE_WIRE.id()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
+
 		/*if (player.isBusy()) {
 			return;
 		}*/
@@ -405,7 +514,7 @@ public class Smithing implements UseLocTrigger {
 			player.message("You need to be at least level 4 smithing to do that");
 			return;
 		}
-		if (player.getCarriedItems().getInventory().countId(ItemId.BRONZE_BAR.id()) < 1) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.BRONZE_BAR.id(), Optional.of(false)) < 1) {
 			player.playerServerMessage(MessageType.QUEST, "You need 1 bar of metal to make this item");
 			return;
 		}
@@ -544,7 +653,7 @@ public class Smithing implements UseLocTrigger {
 				return -1;
 			}
 
-			int maximumMakeCount = player.getCarriedItems().getInventory().countId(item.getCatalogId()) / def.getRequiredBars();
+			int maximumMakeCount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) / def.getRequiredBars();
 
 			return count != 3
 				? Integer.parseInt(options[count].replaceAll("Make ", ""))

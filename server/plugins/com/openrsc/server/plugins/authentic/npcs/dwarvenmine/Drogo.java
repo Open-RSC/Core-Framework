@@ -48,6 +48,7 @@ public class Drogo extends AbstractShop {
 		if (m == 0) {
 			say(player, n, "Do you want to trade?");
 			npcsay(player, n, "Yeah sure, I run a mining store.");
+			player.setAccessingShop(shop);
 			ActionSender.showShop(player, shop);
 		} else if (m == 1) {
 			say(player, n, "Hello Shorty.");

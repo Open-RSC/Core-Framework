@@ -88,9 +88,9 @@ public class Fletching implements UseInvTrigger {
 			return true;
 
 			// Use knife on logs.
-		} else if (item1ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
+		} else if (item1ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId()) && Skill.FLETCHING.id() != Skill.NONE.id()) {
 			return true;
-		} else if (item2ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {
+		} else if (item2ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId()) && Skill.FLETCHING.id() != Skill.NONE.id()) {
 			return true;
 
 			// Cut oyster pearls.
@@ -135,9 +135,9 @@ public class Fletching implements UseInvTrigger {
 			doArrowHeads(player, item2, item1);
 
 			// Use knife on logs.
-		} else if (item1ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
+		} else if (item1ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId()) && Skill.FLETCHING.id() != Skill.NONE.id()) {
 			doLogCut(player, item1, item2);
-		} else if (item2ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {
+		} else if (item2ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId()) && Skill.FLETCHING.id() != Skill.NONE.id()) {
 			doLogCut(player, item2, item1);
 
 			// Cut oyster pearls.
@@ -255,6 +255,11 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void batchArrowheads(Player player, Item headlessArrows, Item arrowHeads, ItemArrowHeadDef headDef) {
+		if (!canReceive(player, new Item(headDef.getArrowID()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
+
 		CarriedItems ci = player.getCarriedItems();
 		headlessArrows = ci.getInventory().get(
 			ci.getInventory().getLastIndexById(headlessArrows.getCatalogId(), Optional.of(false))
@@ -312,8 +317,8 @@ public class Fletching implements UseInvTrigger {
 		}
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			int bowtimes = player.getCarriedItems().getInventory().countId(bow.getCatalogId());
-			int stringtimes = player.getCarriedItems().getInventory().countId(bowString.getCatalogId());
+			int bowtimes = player.getCarriedItems().getInventory().countId(bow.getCatalogId(), Optional.of(false));
+			int stringtimes = player.getCarriedItems().getInventory().countId(bowString.getCatalogId(), Optional.of(false));
 			repeat = Math.min(bowtimes, stringtimes);
 		}
 
@@ -322,6 +327,10 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void batchStringing(Player player, Item bow, Item bowString, ItemBowStringDef stringDef) {
+		if (!canReceive(player, new Item(stringDef.getBowID()))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.FLETCHING.id()) < stringDef.getReqLevel()) {
 			player.message("You need a fletching skill of "
 				+ stringDef.getReqLevel() + " or above to do that");
@@ -407,7 +416,7 @@ public class Fletching implements UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = player.getCarriedItems().getInventory().countId(log.getCatalogId());
+			repeat = player.getCarriedItems().getInventory().countId(log.getCatalogId(), Optional.of(false));
 		}
 
 		startbatch(repeat);
@@ -415,6 +424,10 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void batchLogCutting(Player player, Item log, int id, int reqLvl, int exp, String cutMessage) {
+		if (!canReceive(player, new Item(id))) {
+			player.message("Your client does not support the desired object");
+			return;
+		}
 		if (player.getSkills().getLevel(Skill.FLETCHING.id()) < reqLvl) {
 			player.message("You need a fletching skill of " + reqLvl + " or above to do that");
 			return;
@@ -474,7 +487,7 @@ public class Fletching implements UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = player.getCarriedItems().getInventory().countId(pearlID);
+			repeat = player.getCarriedItems().getInventory().countId(pearlID, Optional.of(false));
 		}
 
 		startbatch(repeat);

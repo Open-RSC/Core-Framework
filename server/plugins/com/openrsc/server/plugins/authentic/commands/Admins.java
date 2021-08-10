@@ -612,7 +612,9 @@ public final class Admins implements CommandTrigger {
 					reason.append(args[i]).append(" ");
 				}
 			}
-			reason = new StringBuilder(reason.substring(0, reason.length() - 1));
+			if (args.length > 1) {
+				reason = new StringBuilder(reason.substring(0, reason.length() - 1));
+			}
 		}
 		int minutes = seconds / 60;
 		int remainder = seconds % 60;
@@ -620,7 +622,7 @@ public final class Admins implements CommandTrigger {
 		String message = "The server will be shutting down for updates in "
 			+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
 			+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
-			+ (reason.toString() == "" ? "" : ": % % " + reason);
+			+ (reason.toString().equals("") ? "" : ": % % " + reason);
 
 		player.getWorld().getServer().closeProcess(seconds, message);
 		// Services.lookup(DatabaseManager.class).addQuery(new

@@ -1,7 +1,5 @@
 package com.openrsc.server.net;
 
-import com.openrsc.server.model.entity.player.Player;
-
 import java.io.*;
 import java.util.LinkedList;
 import java.util.zip.GZIPOutputStream;
@@ -98,12 +96,12 @@ public class PcapLogger {
 			pcap.write(packet.data);
 	}
 
-	public void exportPCAP(Player player) {
+	public void exportPCAP() {
 		// Create pcap directory if it doesn't already exist
 		File pcapDir = new File("logs/pcaps/");
 		if (pcapDir.isFile()) pcapDir.delete();
 		if (!pcapDir.exists()) pcapDir.mkdir();
-		
+
 		// Required files
 		File pcapFile = new File( pcapDir.getAbsolutePath() + "/" + fname + ".pcap.gz");
 		try {

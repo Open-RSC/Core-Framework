@@ -37,6 +37,8 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 	private static final int GATE = 443;
 	private static final int CATTLE_FURNACE = 444;
 
+	private final int BASE_TICK = 640;
+
 	private static final HashMap<Npc, RestartableDelayedEvent> npcEventMap = new HashMap<Npc, RestartableDelayedEvent>();
 
 	@Override
@@ -280,7 +282,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					RestartableDelayedEvent npcEvent = npcEventMap.get(plagueSheep);
 					//nudging outside of pen resets the timer
 					if (npcEvent == null) {
-						npcEvent = new RestartableDelayedEvent(player.getWorld(), player, 1000, "Sheep Herder Nudge Sheep") {
+						npcEvent = new RestartableDelayedEvent(player.getWorld(), player, 2 * BASE_TICK, "Sheep Herder Nudge Sheep") {
 							int timesRan = 0;
 
 							@Override

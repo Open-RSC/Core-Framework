@@ -232,6 +232,7 @@ public class ServerConfiguration {
 	public boolean ESTERS_BUNNIES_EVENT = false;
 	public int BASED_MAP_DATA = 64;
 	public int BASED_CONFIG_DATA = 85;
+	public boolean CAN_FEATURE_MEMBS;
 
 	public boolean GATHER_TOOL_ON_SCENERY;
 	public boolean COIN_BANK;
@@ -477,6 +478,7 @@ public class ServerConfiguration {
 		WANT_PK_BOTS = tryReadBool("want_pk_bots").orElse(false);
 		RESPAWN_LOCATION_X = tryReadInt("respawn_location_x").orElse(120);
 		RESPAWN_LOCATION_Y = tryReadInt("respawn_location_y").orElse(648);
+		CAN_FEATURE_MEMBS = tryReadBool("can_feature_membs").orElse(true);
 
 		// Party settings
 		WANT_PARTIES = tryReadBool("want_parties").orElse(false);

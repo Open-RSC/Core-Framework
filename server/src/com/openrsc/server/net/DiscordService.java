@@ -1,6 +1,5 @@
 package com.openrsc.server.net;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.Server;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.database.GameDatabaseException;
@@ -535,6 +534,8 @@ public class DiscordService implements Runnable{
 				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
 				if (!terminationResult) {
 					LOGGER.error("DiscordService thread termination failed");
+					List<Runnable> skippedTasks = scheduledExecutor.shutdownNow();
+					LOGGER.error("{} task(s) never commenced execution", skippedTasks.size());
 				}
 			} catch (final InterruptedException e) {
 				LOGGER.catching(e);

@@ -905,13 +905,13 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Greater Demon", "big red and incredibly evil", "", 86, 87, 87, 88, true, sprites, 0, 0, 0, 0, 358, 341, 11, 11, 30, i++));
 		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
 		if (Config.S_WANT_OPENPK_POINTS) {
-			npcs.add(new NPCDef("Point to Gp Trader", "He will buy my points", "", 0, 0, 3, 0, false, sprites, 16777215, 8409120, 8409120, 13415270, 120, 220, 6, 6, 5, i++));
+			npcs.add(new NPCDef("Points Shopkeeper", "He will buy my points and sell me stuff", "", 0, 0, 3, 0, false, sprites, 16777215, 8409120, 8409120, 13415270, 120, 220, 6, 6, 5, i++));
 		} else {
 			npcs.add(new NPCDef("Shopkeeper", "I wonder what he's got for sale", shopOption, 0, 0, 3, 0, false, sprites, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
 		}
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
 		if (Config.S_WANT_OPENPK_POINTS) {
-			npcs.add(new NPCDef("Point to Gp Trader", "She will buy my points", "", 0, 0, 3, 0, false, sprites, 6307872, 8409120, 8409120, 13415270, 145, 220, 6, 6, 5, i++));
+			npcs.add(new NPCDef("Points Shopkeeper", "She will buy my points and sell me stuff", "", 0, 0, 3, 0, false, sprites, 6307872, 8409120, 8409120, 13415270, 145, 220, 6, 6, 5, i++));
 		} else {
 			npcs.add(new NPCDef("Shop Assistant", "Maybe he'd like to buy some of my junk", shopOption, 0, 0, 3, 0, false, sprites, 6307872, 8409120, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
 		}
@@ -962,7 +962,7 @@ public class EntityHandler {
 		sprites = new int[]{5, 28, 37, -1, 110, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Adventurer", "A Warrior", "", 55, 60, 52, 58, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, -1, 107, -1, -1, -1, 46, -1, 80, -1};
-		npcs.add(new NPCDef("Adventurer", "An archer", "", 39, 39, 39, 39, true, sprites, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Adventurer", "An archer", "", 39, 39, 39, 39, false, sprites, 16753488, 15645504, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Leprechaun", "A funny little man who lives in a tree", "", 20, 17, 16, 20, false, sprites, 5271616, 5286432, 5286432, 15523536, 103, 141, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1};

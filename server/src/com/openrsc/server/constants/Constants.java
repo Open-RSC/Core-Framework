@@ -1,6 +1,8 @@
 package com.openrsc.server.constants;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.Server;
+import com.openrsc.server.model.container.Item;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +46,7 @@ public final class Constants {
 	}
 
 	public final int[] STARTER_ITEMS = {ItemId.BRONZE_AXE.id(), ItemId.TINDERBOX.id(), ItemId.COOKEDMEAT.id()};
+	public final Item[] OPENPK_STARTER_ITEMS = {new Item(ItemId.IRON_2_HANDED_SWORD.id(), 1), new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 1), new Item(ItemId.LARGE_IRON_HELMET.id(), 1), new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.IRON_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.LOBSTER.id(), 100, true)}; //TODO: OpenPK needs more starter items.
 
 	/**
 	 * Strikes, Bolts & Blast Spells.

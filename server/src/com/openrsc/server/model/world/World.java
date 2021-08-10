@@ -89,7 +89,6 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final ClanManager clanManager;
 	private final Market market;
 	private final WorldLoader worldLoader;
-	private final Multimap<Point, Npc> npcPositions;
 	private final HashMap<Point, Integer> sceneryLocs;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 
@@ -106,7 +105,6 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		this.server = server;
 		this.npcs = new EntityList<>(4000);
 		this.players = new PlayerList(2000);
-		this.npcPositions = Multimaps.synchronizedMultimap(HashMultimap.create());
 		this.sceneryLocs = new HashMap<>();
 		this.npcDrops = new NpcDrops(this);
 		this.quests = new CopyOnWriteArrayList<>();
@@ -370,6 +368,12 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		}
 	}
 
+	public void unloadPlayers() {
+		for (final Player p : getPlayers()) {
+			unregisterPlayer(p);
+		}
+	}
+
 	public void unload() {
 		LOGGER.info("Saving clans for shutdown");
 		if (getServer().getConfig().WANT_CLANS) {
@@ -400,7 +404,6 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		getRegionManager().unload();
 		getNpcDrops().unload();
 		npcs.clear();
-		npcPositions.clear();
 		sceneryLocs.clear();
 		players.clear();
 		snapshots.clear();
@@ -577,14 +580,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		}
 
 		getNpcs().add(n);
-		setNpcPosition(n);
 		return n;
-	}
-
-	public void registerObjects(final GameObject... obs) {
-		for (final GameObject o : obs) {
-			o.setLocation(Point.location(o.getLoc().getX(), o.getLoc().getY()));
-		}
 	}
 
 	public boolean registerPlayer(final Player player) {
@@ -650,14 +646,6 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			}
 		}
 		getMiniGames().add(minigame);
-	}
-
-	public void registerShop(final Shop shop) {
-		getShops().add(shop);
-	}
-
-	public void registerShops(final Shop... shop) {
-		getShops().addAll(Arrays.asList(shop));
 	}
 
 	public void replaceGameObject(final GameObject old, final GameObject _new) {
@@ -792,9 +780,12 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			LOGGER.info("Unregistered " + player.getUsername() + " from player list.");
 
 			if (getServer().getConfig().WANT_PCAP_LOGGING) {
-				PcapLogger pcap = player.getChannel().attr(attachment).get().pcapLogger.get();
-				pcap.exportPCAP(player);
-				LOGGER.info("Wrote out pcap for " + player.getUsername() + " at " + pcap.fname);
+				if (player.getChannel().attr(attachment).get() != null) {
+					PcapLogger pcap = player.getChannel().attr(attachment).get().pcapLogger.get();
+
+					getServer().getPcapLogger().addJob(pcap::exportPCAP);
+					LOGGER.info("Wrote out pcap for " + player.getUsername() + " at " + pcap.fname);
+				}
 			}
 
 			player.getChannel().attr(attachment).set(null);
@@ -936,20 +927,6 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public Queue<GlobalMessage> getGlobalMessageQueue() {
 		return globalMessageQueue;
-	}
-
-	public Multimap<Point, Npc> getNpcPositions() {
-		return npcPositions;
-	}
-
-	public void setNpcPosition(final Npc npc) {
-		final Point key = npc.getLocation();
-		npcPositions.put(key, npc);
-	}
-
-	public void removeNpcPosition(final Npc npc) {
-		final Point key = npc.getLocation();
-		npcPositions.remove(key, npc);
 	}
 
 	public void addSceneryLoc(final Point point, final Integer id) {

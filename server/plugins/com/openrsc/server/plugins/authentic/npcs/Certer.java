@@ -202,7 +202,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 				player.message("As an Ultimate Iron Man, you cannot use certer bank exchange.");
 				return;
 			}
-			certAmount = player.getCarriedItems().getInventory().countId(certID);
+			certAmount = player.getCarriedItems().getInventory().countId(certID, Optional.of(false));
 			if (certAmount <= 0) {
 				player.message("You don't have any " + names[index]
 					+ " certificates");
@@ -227,7 +227,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		} else {
 			certAmount += 1;
 			int itemAmount = certAmount * 5;
-			if (player.getCarriedItems().getInventory().countId(certID) < certAmount) {
+			if (player.getCarriedItems().getInventory().countId(certID, Optional.of(false)) < certAmount) {
 				player.message("You don't have that many certificates");
 				return;
 			}
@@ -283,7 +283,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		} else {
 			certAmount += 1;
 			int itemAmount = certAmount * 5;
-			if (player.getCarriedItems().getInventory().countId(itemID) < itemAmount) {
+			if (player.getCarriedItems().getInventory().countId(itemID, Optional.of(false)) < itemAmount) {
 				player.message("You don't have that " + (ending.equals("") ? "much" : "many")
 						+ " " + certerDef.getType() + ending);
 				return;
