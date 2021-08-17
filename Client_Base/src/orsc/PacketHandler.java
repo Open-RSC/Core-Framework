@@ -1181,8 +1181,8 @@ public class PacketHandler {
 					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 78
 					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
 					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
-					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio // 81
-					"\nS_SHOW_TUTORIAL_SKIP_OPTION " + showTutorialSkipOption + // 82
+					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio + // 81
+					"\nS_SHOW_TUTORIAL_SKIP_OPTION " + showTutorialSkipOption // 82
 			);
 		}
 
