@@ -480,6 +480,14 @@
 		"amount": 1,
 		"respawn": 5
 	}, {
+		"id": 63,
+		"pos": {
+			"X": 181,
+			"Y": 315
+		},
+		"amount": 1,
+		"respawn": 622
+	}, {
 		"id": 410,
 		"pos": {
 			"X": 191,
@@ -496,18 +504,10 @@
 		"amount": 1,
 		"respawn": 15
 	}, {
-		"id": 63,
-		"pos": {
-			"X": 182,
-			"Y": 316
-		},
-		"amount": 1,
-		"respawn": 622
-	}, {
 		"id": 60,
 		"pos": {
 			"X": 183,
-			"Y": 317
+			"Y": 318
 		},
 		"amount": 1,
 		"respawn": 30
