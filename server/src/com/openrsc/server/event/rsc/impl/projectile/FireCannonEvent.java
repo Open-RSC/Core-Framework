@@ -1,8 +1,9 @@
-package com.openrsc.server.event.rsc.impl;
+package com.openrsc.server.event.rsc.impl.projectile;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;

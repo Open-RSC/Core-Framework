@@ -18,7 +18,7 @@ public class QueriesManager {
     private static final Map<String, String> QUERIES = new HashMap<>();
     private static final XStream X_STREAM = new XStream();
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final String PREFIX_MARKER = "_PREFIX_";
+    private static final String PREFIX_MARKER = "_PREFIX_";
 
     private final String namespace;
     private final String tablePrefix;

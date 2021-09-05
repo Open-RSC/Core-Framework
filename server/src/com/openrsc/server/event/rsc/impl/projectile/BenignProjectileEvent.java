@@ -1,4 +1,4 @@
-package com.openrsc.server.event.rsc.impl;
+package com.openrsc.server.event.rsc.impl.projectile;
 
 import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.model.entity.Mob;
@@ -8,7 +8,8 @@ import com.openrsc.server.model.world.World;
 
 public class BenignProjectileEvent extends SingleTickEvent {
 
-	private Mob caster, opponent;
+	private final Mob caster;
+	private final Mob opponent;
 	protected int damage;
 	protected int type;
 	boolean canceled;
@@ -36,14 +37,6 @@ public class BenignProjectileEvent extends SingleTickEvent {
 		if (caster.isPlayer() && opponent.isPlayer()) {
 			caster.removeAttribute("benignprojectile");
 			opponent.removeAttribute("benignprojectile");
-		}
-	}
-
-	private void projectileDamage() {
-		if (caster.isPlayer()) {
-			if (opponent.isRemoved() && type == 2) {
-				((Player) caster).resetRange();
-			}
 		}
 	}
 

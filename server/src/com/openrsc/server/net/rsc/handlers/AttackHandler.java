@@ -1,8 +1,8 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.projectile.RangeEvent;
+import com.openrsc.server.event.rsc.impl.projectile.ThrowingEvent;
 import com.openrsc.server.model.action.ActionType;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.Mob;
