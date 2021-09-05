@@ -192,25 +192,46 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}*/
 		if (goldOption == 0) {
-			mes("You hammer the metal...");
-			delay(3);
 			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id(), Optional.of(false)) < 2) {
 				player.message("You need two bars of gold to make this item.");
-			} else {
-				if (!Formulae.breakGoldenItem(50, player.getSkills().getLevel(Skill.SMITHING.id()))) {
-					for (int x = 0; x < 2; x++) {
-						player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
-					}
-					player.message("You forge a beautiful bowl made out of solid gold.");
-					player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL.id(), 1));
-					player.incExp(Skill.SMITHING.id(), 120, true);
-				} else {
-					player.message("You make a mistake forging the bowl..");
-					player.message("You pour molten gold all over the floor..");
-					player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
-					player.incExp(Skill.SMITHING.id(), 4, true);
-				}
+				return;
 			}
+
+			final int toMake = config().BATCH_PROGRESSION ?
+				(player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id(), Optional.of(false)) / 2) : 1;
+			startbatch(toMake);
+			batchGoldSmithing(player);
+		}
+	}
+
+	private void batchGoldSmithing(final Player player) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id(), Optional.of(false)) < 2) {
+			player.message("You need two bars of gold to make this item.");
+			return;
+		}
+
+		mes("You hammer the metal...");
+		delay(3);
+		if (!Formulae.breakGoldenItem(50, player.getSkills().getLevel(Skill.SMITHING.id()))) {
+			for (int x = 0; x < 2; x++) {
+				player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
+			}
+			player.message("You forge a beautiful bowl made out of solid gold.");
+			player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL.id(), 1));
+			player.incExp(Skill.SMITHING.id(), 120, true);
+		} else {
+			player.message("You make a mistake forging the bowl..");
+			delay(3);
+			player.message("You pour molten gold all over the floor..");
+			player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
+			player.incExp(Skill.SMITHING.id(), 4, true);
+		}
+
+		// Repeat
+		updatebatch();
+		if (!ifinterrupted() && !isbatchcomplete()) {
+			delay();
+			batchGoldSmithing(player);
 		}
 	}
 
