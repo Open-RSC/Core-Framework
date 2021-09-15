@@ -3,7 +3,7 @@ package com.openrsc.server.model.entity;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.party.PartyPlayer;
-import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.model.Point;
@@ -122,7 +122,7 @@ public class GroundItem extends Entity {
 		if (getWorld().getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id()
 			|| this.getID() < getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
 			if (!isRemoved() && loc != null && loc.getRespawnTime() > 0) {
-				getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, loc.getRespawnTime(), "Respawn Ground Item") {
+				getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, loc.getRespawnTime() * 1000, "Respawn Ground Item") {
 					public void run() {
 						getWorld().registerItem(new GroundItem(getWorld(), loc));
 						stop();

@@ -92,6 +92,11 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 				player.getBank().depositItemFromInventory(catalogID, amount, true);
 				break;
 			case BANK_DEPOSIT_ALL_FROM_INVENTORY:
+				if (!player.getConfig().WANT_CUSTOM_BANKS) {
+					player.setSuspiciousPlayer(true, "Trying to deposit all from inventory without custom bank enabled");
+					return;
+				}
+
 				player.getBank().depositAllFromInventory();
 				break;
 			case BANK_DEPOSIT_ALL_FROM_EQUIPMENT:
@@ -99,6 +104,11 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 					player.setSuspiciousPlayer(true, "bank deposit from equipment on authentic world");
 					return;
 				}
+				if (!player.getConfig().WANT_CUSTOM_BANKS) {
+					player.setSuspiciousPlayer(true, "Trying to deposit all from equipment without custom bank enabled");
+					return;
+				}
+				
 				player.getBank().depositAllFromEquipment();
 				break;
 			case BANK_LOAD_PRESET:
@@ -106,10 +116,17 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 					player.setSuspiciousPlayer(true, "bank load preset on authentic world");
 					return;
 				}
+
+				if (!(player.getConfig().WANT_BANK_PRESETS && player.getConfig().WANT_CUSTOM_BANKS)) {
+					player.setSuspiciousPlayer(true, "Player loading preset without feature enabled");
+					return;
+				}
+
 				if (System.currentTimeMillis() - player.getLastExchangeTime() < 2000) {
 					player.message("You are acting too quickly, please wait 2 seconds between actions");
 					return;
 				}
+
 				presetSlot = payload.presetSlot;
 				if (presetSlot < 0 || presetSlot >= BankPreset.PRESET_COUNT) {
 					player.setSuspiciousPlayer(true, "packet seven bank preset slot < 0 or preset slot >= preset count");
@@ -123,6 +140,12 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 					player.setSuspiciousPlayer(true, "bank save preset on authentic world");
 					return;
 				}
+
+				if (!(player.getConfig().WANT_BANK_PRESETS && player.getConfig().WANT_CUSTOM_BANKS)) {
+					player.setSuspiciousPlayer(true, "Player saving preset without feature enabled");
+					return;
+				}
+
 				presetSlot = payload.presetSlot;
 				if (presetSlot < 0 || presetSlot >= BankPreset.PRESET_COUNT) {
 					player.setSuspiciousPlayer(true, "packet six bank preset slot < 0 or preset slot >= preset count");

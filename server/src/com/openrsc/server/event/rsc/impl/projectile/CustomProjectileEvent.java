@@ -1,4 +1,4 @@
-package com.openrsc.server.event.rsc.impl;
+package com.openrsc.server.event.rsc.impl.projectile;
 
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -19,8 +19,9 @@ public abstract class CustomProjectileEvent extends ProjectileEvent {
 	public void action() {
 		if (!canceled) {
 			doSpell();
-			if (opponent.isNpc() && caster.isPlayer() && this.shouldChase)
+			if (opponent.isNpc() && caster.isPlayer() && this.shouldChase) {
 				((Npc) opponent).setChasing((Player) caster);
+			}
 		}
 	}
 

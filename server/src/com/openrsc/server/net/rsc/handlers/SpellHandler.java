@@ -4,9 +4,9 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.MiniEvent;
-import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
+import com.openrsc.server.event.rsc.impl.projectile.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
-import com.openrsc.server.event.rsc.impl.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.external.ItemSmeltingDef;
 import com.openrsc.server.external.ReqOreDef;
@@ -19,6 +19,7 @@ import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
+import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -1570,23 +1571,15 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						int damageR = CombatFormula.calculateMagicDamage(maxR + 1) - 1;
 
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damageR, 1, setChasing));
-						getPlayer().setKillType(1);
+						getPlayer().setKillType(KillType.MAGIC);
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 
 					default:
-						if (spell.getReqLevel() == 62 || spell.getReqLevel() == 65 || spell.getReqLevel() == 70
-							|| spell.getReqLevel() == 75) {
-						/*if (!player.getLocation().isMembersWild()) {
-							player.message("Members content can only be used in wild levels: " + World.membersWildStart
-									+ " - " + World.membersWildMax);
-							return;
-						}*/
-						}
 						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
-						/** SALARIN THE TWISTED - STRIKE SPELLS **/
+						// SALARIN THE TWISTED - STRIKE SPELLS
 						if (affectedMob.getID() == NpcId.SALARIN_THE_TWISTED.id() && (spellEnum == Spells.WIND_STRIKE
 							|| spellEnum == Spells.WATER_STRIKE || spellEnum == Spells.EARTH_STRIKE
 							|| spellEnum == Spells.FIRE_STRIKE)) {
@@ -1649,7 +1642,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						int damage = CombatFormula.calculateMagicDamage(max + 1) - 1;
 
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1, setChasing));
-						getPlayer().setKillType(1);
+						getPlayer().setKillType(KillType.MAGIC);
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 				}

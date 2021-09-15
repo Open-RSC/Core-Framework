@@ -4,8 +4,10 @@ import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Spells;
+import com.openrsc.server.event.rsc.impl.projectile.RangeUtils;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.util.PersistenceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -371,8 +373,8 @@ public final class EntityHandler {
 			};
 			for (int itemId : wieldableArrows) {
 				items.get(itemId).setWieldable(true);
-				items.get(itemId).setWearableId(1000);
-				items.get(itemId).setWieldPosition(12);
+				items.get(itemId).setWearableId(RangeUtils.WEARABLE_ARROWS_ID);
+				items.get(itemId).setWieldPosition(Equipment.EquipmentSlot.SLOT_AMMO.getIndex());
 				items.get(itemId).setRequiredLevel(1);
 				items.get(itemId).setRequiredSkillIndex(4);
 			}
@@ -383,8 +385,8 @@ public final class EntityHandler {
 			};
 			for (int itemId : wieldableBolts) {
 				items.get(itemId).setWieldable(true);
-				items.get(itemId).setWearableId(1001);
-				items.get(itemId).setWieldPosition(12);
+				items.get(itemId).setWearableId(RangeUtils.WEARABLE_BOLTS_ID);
+				items.get(itemId).setWieldPosition(Equipment.EquipmentSlot.SLOT_AMMO.getIndex());
 				items.get(itemId).setRequiredLevel(1);
 				items.get(itemId).setRequiredSkillIndex(4);
 			}

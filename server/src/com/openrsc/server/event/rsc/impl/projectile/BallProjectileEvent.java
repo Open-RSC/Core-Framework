@@ -1,4 +1,4 @@
-package com.openrsc.server.event.rsc.impl;
+package com.openrsc.server.event.rsc.impl.projectile;
 
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.world.World;

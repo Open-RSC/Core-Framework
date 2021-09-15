@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.event.rsc.impl.FireCannonEvent;
+import com.openrsc.server.event.rsc.impl.projectile.FireCannonEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;

@@ -3,6 +3,7 @@
 
 :# Path variables:
 SET antpath="apache-ant-1.10.5\bin\"
+SET "PATH=zulu8.50.0.51-ca-jdk8.0.275-win_x64\bin\;%PATH%"
 
 cls
 echo: Starting up the server and then launching the client. Close this window when you are finished playing.

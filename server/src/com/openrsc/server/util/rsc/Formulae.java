@@ -21,10 +21,6 @@ public final class Formulae {
 		ItemId.POISON_BRONZE_ARROWS.id(), ItemId.BRONZE_ARROWS.id()};
 	public static final int[] boltIDs = {ItemId.OYSTER_PEARL_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(),
 		ItemId.CROSSBOW_BOLTS.id(), ItemId.DRAGON_BOLTS.id(), ItemId.POISON_DRAGON_BOLTS.id()};
-	public static final int[] bowIDs = {ItemId.LONGBOW.id(), ItemId.SHORTBOW.id(), ItemId.OAK_LONGBOW.id(),
-		ItemId.OAK_SHORTBOW.id(), ItemId.WILLOW_LONGBOW.id(), ItemId.WILLOW_SHORTBOW.id(),
-		ItemId.MAPLE_LONGBOW.id(), ItemId.MAPLE_SHORTBOW.id(), ItemId.YEW_LONGBOW.id(),
-		ItemId.YEW_SHORTBOW.id(), ItemId.MAGIC_LONGBOW.id(), ItemId.MAGIC_SHORTBOW.id(), ItemId.DRAGON_LONGBOW.id()};
 	private static final int[] herbDropIDs = {ItemId.UNIDENTIFIED_GUAM_LEAF.id(), ItemId.UNIDENTIFIED_MARRENTILL.id(),
 		ItemId.UNIDENTIFIED_TARROMIN.id(), ItemId.UNIDENTIFIED_HARRALANDER.id(), ItemId.UNIDENTIFIED_RANARR_WEED.id(),
 		ItemId.UNIDENTIFIED_IRIT_LEAF.id(), ItemId.UNIDENTIFIED_AVANTOE.id(), ItemId.UNIDENTIFIED_KWUARM.id(),
@@ -74,7 +70,6 @@ public final class Formulae {
 	// trawler: 297, 720
 	public static final int[] woodcuttingAxeIDs = {ItemId.DRAGON_WOODCUTTING_AXE.id(), ItemId.RUNE_AXE.id(), ItemId.ADAMANTITE_AXE.id(), ItemId.MITHRIL_AXE.id(),
 		ItemId.BLACK_AXE.id(), ItemId.STEEL_AXE.id(), ItemId.IRON_AXE.id(), ItemId.BRONZE_AXE.id()};
-	public static final int[] xbowIDs = {ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW.id(), ItemId.DRAGON_CROSSBOW.id()};
 	private final static int[] IRON = {ItemId.LARGE_IRON_HELMET.id(), ItemId.MEDIUM_IRON_HELMET.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(),
 		ItemId.IRON_PLATE_MAIL_BODY.id(), ItemId.IRON_KITE_SHIELD.id(), ItemId.IRON_SQUARE_SHIELD.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(),
 		ItemId.IRON_DAGGER.id(), ItemId.IRON_THROWING_KNIFE.id(), ItemId.IRON_SHORT_SWORD.id(), ItemId.IRON_LONG_SWORD.id(),
@@ -614,7 +609,7 @@ public final class Formulae {
 	/**
 	 * Should the arrow be dropped or disappear
 	 */
-	public static boolean looseArrow(int damage) {
+	public static boolean loseArrow(int damage) {
 		return DataConversions.random(0, 6) != 0;
 	}
 

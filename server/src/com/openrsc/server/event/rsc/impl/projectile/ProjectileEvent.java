@@ -1,4 +1,4 @@
-package com.openrsc.server.event.rsc.impl;
+package com.openrsc.server.event.rsc.impl.projectile;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
@@ -31,13 +31,6 @@ public class ProjectileEvent extends SingleTickEvent {
 		this.damage = damage;
 		this.type = type;
 		this.shouldChase = setChasing;
-		if (caster.isPlayer() && opponent.isPlayer()) {
-			caster.setAttribute("projectile", this);
-			opponent.setAttribute("projectile", this);
-		}
-
-		// opponent.setCombatTimer();
-		opponent.setAttribute("last_shot", System.currentTimeMillis());
 
 		sendProjectile(caster, opponent);
 		if (caster.isPlayer() && opponent.isPlayer()) {
@@ -45,7 +38,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			Player casterPlayer = (Player) caster;
 			if (!casterPlayer.getDuel().isDuelActive())
 				casterPlayer.setSkulledOn(oppPlayer);
-			String casterName = caster.isPlayer() ? ((Player) caster).getUsername() : ((Npc) caster).getDef().getName();
+			String casterName = casterPlayer.getUsername();
 
 			oppPlayer.message("Warning! " + casterName + " is shooting at you!");
 		}
@@ -60,7 +53,7 @@ public class ProjectileEvent extends SingleTickEvent {
 	public void action() {
 		if (!canceled && caster.withinRange(opponent, 15)) {// maybe this will
 			// cancel the damage
-			// out on death.
+			// out on death
 			projectileDamage();
 			if (opponent.isPlayer()) {
 				if (((Player) opponent).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
@@ -70,10 +63,6 @@ public class ProjectileEvent extends SingleTickEvent {
 						return;
 				}
 			}
-		}
-		if (caster.isPlayer() && opponent.isPlayer()) {
-			caster.removeAttribute("projectile");
-			opponent.removeAttribute("projectile");
 		}
 	}
 
@@ -100,18 +89,15 @@ public class ProjectileEvent extends SingleTickEvent {
 		caster.getUpdateFlags().setDamage(new Damage(caster, reflectedDamage));
 
 		if (caster.getSkills().getLevel(Skill.HITS.id()) <= 0) {
-			if (opponent.isPlayer()) {
-				Player player = (Player) opponent;
-				if (type == 2 || type == 5) {
-					player.resetRange();
-				}
+			if (type == 2 || type == 5) {
+				opponent.resetRange();
 			}
 			if (caster.isNpc()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin((Player) opponent, "PlayerKilledNpc", new Object[]{(Player) opponent, (Npc) caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(opponent, "KillNpc", new Object[]{opponent, caster})) {
 					return;
 				}
 			} else if(caster.isPlayer()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin((Player) opponent, "PlayerKilledPlayer", new Object[]{(Player) opponent, (Player) caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(opponent, "PlayerKilledPlayer", new Object[]{opponent, caster})) {
 					return;
 				}
 			}
@@ -124,10 +110,11 @@ public class ProjectileEvent extends SingleTickEvent {
 	}
 
 	private void projectileDamage() {
-		if (caster.isPlayer()) {
-			if (opponent.isRemoved() && type == 2) {
-				((Player) caster).resetRange();
-			}
+		if (caster.isPlayer()
+				&& opponent.isRemoved()
+				&& type == 2
+		) {
+				caster.resetRange();
 		}
 
 		int lastHits = opponent.getLevel(Skill.HITS.id());
