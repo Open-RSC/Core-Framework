@@ -4,7 +4,7 @@ import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.Skill;
-import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
+import com.openrsc.server.event.rsc.impl.projectile.BallProjectileEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;

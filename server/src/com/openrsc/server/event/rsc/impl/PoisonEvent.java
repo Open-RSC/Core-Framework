@@ -12,7 +12,7 @@ public class PoisonEvent extends GameTickEvent {
 	private int poisonPower;
 
 	public PoisonEvent(World world, Mob owner, int poisonPower) {
-		super(world, (Player) (owner.isPlayer() ? owner : null), 32, "Poison Event");
+		super(world, owner, 32, "Poison Event");
 		this.mob = owner;
 		this.poisonPower = poisonPower;
 	}

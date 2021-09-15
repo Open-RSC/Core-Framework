@@ -15,24 +15,26 @@ echo:
 echo Choices:
 echo   %RED%1%NC% - Compile and start the game
 echo   %RED%2%NC% - Start the game (faster if already compiled)
-echo   %RED%3%NC% - Change a player's in-game role
-echo   %RED%4%NC% - Change a player's name
-echo   %RED%5%NC% - Backup database
-echo   %RED%6%NC% - Restore database
-echo   %RED%7%NC% - Perform a fresh install
-echo   %RED%8%NC% - Exit
+echo   %RED%3%NC% - Change the server type
+echo   %RED%4%NC% - Change a player's in-game role
+echo   %RED%5%NC% - Change a player's name
+echo   %RED%6%NC% - Backup database
+echo   %RED%7%NC% - Restore database
+echo   %RED%8%NC% - Perform a fresh install
+echo   %RED%9%NC% - Exit
 echo:
 SET /P action=Please enter a number choice from above:
 echo:
 
 if /i "%action%"=="1" goto compileandrun
 if /i "%action%"=="2" goto run
-if /i "%action%"=="3" goto role
-if /i "%action%"=="4" goto name
-if /i "%action%"=="5" goto backup
-if /i "%action%"=="6" goto import
-if /i "%action%"=="7" goto reset
-if /i "%action%"=="8" goto exit
+if /i "%action%"=="3" goto servertype
+if /i "%action%"=="4" goto role
+if /i "%action%"=="5" goto name
+if /i "%action%"=="6" goto backup
+if /i "%action%"=="7" goto import
+if /i "%action%"=="8" goto reset
+if /i "%action%"=="9" goto exit
 
 echo Error! %action% is not a valid option. Press enter to try again.
 echo:
@@ -72,6 +74,58 @@ echo:
 goto start
 :<------------End Run------------>
 
+:<-------Begin type change--------->
+:servertype
+cls
+echo:
+echo This will change your server configuration so you can play other variations of RSC.
+echo Please note that any changes you have made to local.conf will be overwritten.
+echo:
+echo Choices:
+echo   %RED%1%NC% - Preservation (Play the game as it was at the end of its life)
+echo   %RED%2%NC% - Cabbage (Modified XP rates, new game modes, and custom content - see wiki for more info)
+echo   %RED%3%NC% - 2001scape (RSC as it was in the beginning. Currently in alpha)
+echo   %RED%4%NC% - OpenPK (Stork PK recreation based on the OpenRSC framework. Currently in alpha)
+echo   %RED%5%NC% - Return
+echo:
+SET /P type=Please enter a number choice from above: 
+echo:
+
+if /i "%type%"=="1" (SET newtype=default
+SET newport=43594
+)
+if /i "%type%"=="2" (SET newtype=rsccabbage
+SET newport=43595
+)
+if /i "%type%"=="3" (SET newtype=2001scape
+SET newport=43593
+)
+if /i "%type%"=="4" (SET newtype=openpk
+SET newport=43597
+)
+if /i "%type%"=="5" goto start
+if %type% GTR 0 if %type% LEQ 4 goto changetype
+
+echo Error! %type% is not a valid option. Press enter to try again.
+echo:
+SET /P type=""
+goto start
+
+:changetype
+cls
+echo:
+echo Changing the server configuration to %newtype%.
+echo Please make sure you do not have local.conf or port.txt open.
+echo:
+pause
+del "server\local.conf"
+copy "server\%newtype%.conf" "server\local.conf"
+echo %newport%> "Client_Base\Cache\port.txt"
+echo The change is complete; you can now start the game!
+echo:
+pause
+goto start
+:<--------End type change---------->
 
 :<------------Begin Role------------>
 :role

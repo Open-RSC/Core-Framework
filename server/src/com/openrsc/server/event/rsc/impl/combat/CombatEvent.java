@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -84,7 +85,7 @@ public class CombatEvent extends GameTickEvent {
 
 		// If `killed` is an NPC, xp distribution is handled by Npc.handleXpDistribution()
 
-		killer.setKillType(0);
+		killer.setKillType(KillType.COMBAT);
 		killed.killedBy(killer);
 		if (killer.isPlayer()) {
 			updateParty((Player)killer);

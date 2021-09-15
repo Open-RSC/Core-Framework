@@ -42,11 +42,11 @@ public final class PluginHandler {
 
 	private URLClassLoader urlClassLoader;
 	private boolean reloading = true;
-	private ArrayList<Class<?>> loadedClassFiles;
+	private final ArrayList<Class<?>> loadedClassFiles;
 
 	private Object defaultHandler = null;
-	private List<Class<?>> knownInterfaces;
-	private Map<String, Set<Object>> plugins;
+	private final List<Class<?>> knownInterfaces;
+	private final Map<String, Set<Object>> plugins;
 
 	public PluginHandler (final Server server) {
 		this.server = server;
@@ -395,6 +395,8 @@ public final class PluginHandler {
 				System.err.println("Exception at plugin handling: ");
 				LOGGER.catching(e);
 			}
+		} else {
+			LOGGER.warn("Plugin was not invoked: {}", interfce);
 		}
 	}
 
@@ -410,7 +412,7 @@ public final class PluginHandler {
 		return server;
 	}
 
-	private final ThreadPoolExecutor getExecutor() {
+	private ThreadPoolExecutor getExecutor() {
 		return executor;
 	}
 }

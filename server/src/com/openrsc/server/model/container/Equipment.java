@@ -487,7 +487,7 @@ public class Equipment {
 	// Returns true if an item is equipped (marked wielded or in Equipment inventory).
 	public boolean hasEquipped(int id) {
 		if (player.getConfig().WANT_EQUIPMENT_TAB) {
-			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
+			return searchEquipmentForItem(id) != -1;
 		} else {
 			for (Item i : player.getCarriedItems().getInventory().getItems()) {
 				if (i.getCatalogId() == id && i.isWielded()) {

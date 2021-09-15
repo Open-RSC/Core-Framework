@@ -3,7 +3,7 @@ package com.openrsc.server.model.entity;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.RangeEventNpc;
+import com.openrsc.server.event.rsc.impl.projectile.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.*;
@@ -35,7 +35,7 @@ public abstract class Mob extends Entity {
 	private long lastMovementTime = 0;
 	private final Skills skills = new Skills(this.getWorld(), this);
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
-	private int killType = 0;
+	private KillType killType = KillType.COMBAT;
 	public boolean killed = false;
 	private int combatStyle = com.openrsc.server.constants.Skills.CONTROLLED_MODE;
 	private int poisonDamage = 0;
@@ -1063,12 +1063,12 @@ public abstract class Mob extends Entity {
 		this.unregistering = unregistering;
 	}
 
-	public int getKillType() {
+	public KillType getKillType() {
 		return killType;
 	}
 
-	public void setKillType(int i) {
-		this.killType = i;
+	public void setKillType(KillType killType) {
+		this.killType = killType;
 	}
 
 	public int getPoisonDamage() {

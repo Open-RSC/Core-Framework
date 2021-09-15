@@ -6,23 +6,36 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class NamedParameterQuery {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final String PARAM_PREFIX = "{";
-    private static final String PARAM_SUFFIX = "}";
+    protected static final String PARAM_PREFIX = "{";
+    protected static final String PARAM_SUFFIX = "}";
+    protected static final String BATCH_START = "_BATCH_START_";
+    protected static final String BATCH_END = "_BATCH_END_";
     private final String template;
-
-    static {
-    }
+//    private final Type queryType;
+//    private final Set<String> parameters;
 
     public NamedParameterQuery(String template) {
         this.template = template;
+//        this.queryType = resolveQueryType(template);
+//        this.parameters = new HashSet<>();
+//        Matcher matcher = Pattern.compile("\\" + PARAM_PREFIX + "([a-zA-Z]+)" + PARAM_SUFFIX).matcher(template);
+    }
+
+    private Type resolveQueryType(String template) {
+        return template.contains(BATCH_START) ? Type.BATCHED : Type.SINGLE;
     }
 
     public String fillParameter(String parameter, Object obj) {
@@ -84,5 +97,10 @@ public class NamedParameterQuery {
 
     public String get() {
         return template;
+    }
+
+    private enum Type {
+        BATCHED,
+        SINGLE
     }
 }

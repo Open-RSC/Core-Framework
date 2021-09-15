@@ -14,6 +14,11 @@ import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.impl.*;
+import com.openrsc.server.event.rsc.impl.projectile.FireCannonEvent;
+import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.projectile.RangeUtils;
+import com.openrsc.server.event.rsc.impl.projectile.RangeEvent;
+import com.openrsc.server.event.rsc.impl.projectile.ThrowingEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
@@ -696,7 +701,7 @@ public final class Player extends Mob {
 			}
 			if ((inCombat() && getDuel().isDuelActive()) && (victim.inCombat() && victim.getDuel().isDuelActive())) {
 				Player opponent = (Player) getOpponent();
-				if (opponent != null && victim.equals(opponent)) {
+				if (victim.equals(opponent)) {
 					return true;
 				}
 			}
@@ -1229,16 +1234,18 @@ public final class Player extends Mob {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = getCarriedItems().getEquipment().get(i);
-				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
-					|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
-					return item.getCatalogId();
+				if(item != null) {
+					int weaponId = item.getCatalogId();
+					if (RangeUtils.isCrossbow(weaponId) || RangeUtils.isBow(weaponId)) {
+						return item.getCatalogId();
+					}
 				}
 			}
 		} else {
 			synchronized (getCarriedItems().getInventory().getItems()) {
 				for (Item item : getCarriedItems().getInventory().getItems()) {
-					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
-						|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
+					int weaponId = item.getCatalogId();
+					if (item.isWielded() && (RangeUtils.isCrossbow(weaponId) || RangeUtils.isBow(weaponId))) {
 						return item.getCatalogId();
 					}
 				}
@@ -1980,13 +1987,13 @@ public final class Player extends Mob {
 			ActionSender.sendSound(player, "victory");
 			if (player.getLocation().inWilderness()) {
 				int id = -1;
-				if (player.getKillType() == 0) {
+				if (player.getKillType() == KillType.COMBAT) {
 					id = player.getEquippedWeaponID();
 					if (id == -1 || id == 59 || id == 60)
 						id = 16;
-				} else if (player.getKillType() == 1) {
+				} else if (player.getKillType() == KillType.MAGIC) {
 					id = -1;
-				} else if (player.getKillType() == 2) {
+				} else if (player.getKillType() == KillType.RANGED) {
 					id = -2;
 				}
 				getWorld().sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash(), id);
