@@ -10,7 +10,7 @@ public class TutorialHandler implements PayloadProcessor<NoPayloadStruct, Opcode
 
 	@Override
 	public void process(final NoPayloadStruct payload, final Player player) throws Exception {
-		if (player == null) {
+		if (player == null || !player.getWorld().getServer().getConfig().SHOW_TUTORIAL_SKIP_OPTION) {
 			return;
 		}
 		player.skipTutorial();
