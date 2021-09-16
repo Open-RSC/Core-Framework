@@ -808,7 +808,6 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().WANT_CERT_AS_NOTES ? 1 : 0)); // 79
 		configs.add((byte) (server.getConfig().WANT_OPENPK_POINTS ? 1 : 0)); // 80
 		configs.add((byte) (server.getConfig().OPENPK_POINTS_TO_GP_RATIO)); // 81
-		configs.add((byte) (server.getConfig().SHOW_TUTORIAL_SKIP_OPTION ? 1 : 0)); // 82
 
 		struct.configs = configs;
 		struct.setOpcode(OpcodeOut.SEND_SERVER_CONFIGS);

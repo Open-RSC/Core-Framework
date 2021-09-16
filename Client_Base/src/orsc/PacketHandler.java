@@ -918,7 +918,7 @@ public class PacketHandler {
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
 		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp, wantRemember;
-		int showTutorialSkipOption, wantGlobalChat, wantSkillMenus, wantQuestMenus, wantQuestStartedIndicator, maxWalkingSpeed;
+		int wantGlobalChat, wantSkillMenus, wantQuestMenus, wantQuestStartedIndicator, maxWalkingSpeed;
 		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
@@ -1013,7 +1013,6 @@ public class PacketHandler {
 			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
 			wantOpenPkPoints = this.getClientStream().getUnsignedByte(); // 80
 			openPkPointsToGpRatio = this.getClientStream().getUnsignedByte(); // 81
-			showTutorialSkipOption = this.getClientStream().getUnsignedByte(); // 82
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1096,7 +1095,6 @@ public class PacketHandler {
 			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
 			wantOpenPkPoints = packetsIncoming.getUnsignedByte(); // 80
 			openPkPointsToGpRatio = packetsIncoming.getUnsignedByte(); // 81
-			showTutorialSkipOption = packetsIncoming.getUnsignedByte(); // 82
 		}
 
 		if (Config.DEBUG) {
@@ -1181,8 +1179,7 @@ public class PacketHandler {
 					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 78
 					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
 					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
-					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio + // 81
-					"\nS_SHOW_TUTORIAL_SKIP_OPTION " + showTutorialSkipOption // 82
+					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio // 81
 			);
 		}
 
@@ -1271,7 +1268,6 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 79
 		props.setProperty("S_WANT_OPENPK_POINTS", wantOpenPkPoints == 1 ? "true" : "false"); // 80
 		props.setProperty("S_OPENPK_POINTS_TO_GP_RATIO", String.valueOf(openPkPointsToGpRatio)); // 81
-		props.setProperty("S_SHOW_TUTORIAL_SKIP_OPTION", showTutorialSkipOption == 1 ? "true" : "false"); // 82
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
