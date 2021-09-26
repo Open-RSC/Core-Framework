@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class NewMarketItemTask extends MarketTask {
 
@@ -50,7 +51,7 @@ public class NewMarketItemTask extends MarketTask {
 		}
 
 		// Ensure we have enough to satisfy the amount
-		if (owner.getCarriedItems().getInventory().countId(newItem.getCatalogID()) < newItem.getAmount()) {
+		if (owner.getCarriedItems().getInventory().countId(newItem.getCatalogID(), Optional.empty()) < newItem.getAmount()) {
 			return;
 		}
 

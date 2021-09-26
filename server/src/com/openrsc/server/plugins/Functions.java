@@ -425,9 +425,6 @@ public class Functions {
 		Npc closestNpc = null;
 		for (int next = 0; next < radius; next++) {
 			for (final Npc n : npcsInView) {
-				if (n.getID() == npcId) {
-
-				}
 				if (n.getID() == npcId && n.withinRange(player.getLocation(), next) && !n.isBusy()) {
 					closestNpc = n;
 				}

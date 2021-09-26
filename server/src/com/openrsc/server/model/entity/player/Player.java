@@ -13,12 +13,9 @@ import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.PluginTask;
-import com.openrsc.server.event.rsc.impl.*;
-import com.openrsc.server.event.rsc.impl.projectile.FireCannonEvent;
-import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
-import com.openrsc.server.event.rsc.impl.projectile.RangeUtils;
-import com.openrsc.server.event.rsc.impl.projectile.RangeEvent;
-import com.openrsc.server.event.rsc.impl.projectile.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.PoisonEvent;
+import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
+import com.openrsc.server.event.rsc.impl.projectile.*;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
@@ -715,8 +712,21 @@ public final class Player extends Mob {
 				if (getPkMode() == 0 || victim.getPkMode() == 0) {
 					message("You are not allowed to attack that person");
 					return false;
+				} else if (getLocation().isInLumbridgeStartingChunk()
+					|| victim.getLocation().isInLumbridgeStartingChunk()) {
+					message("You can't attack other players here. Move out of Lumbridge");
+					return false;
+				}  else if (checkVisNpc(this, NpcId.BANKER.id(), 5) != null) {
+					message("You cannot attack other players in the vicinity of a banker");
+					return false;
+				} else if (Math.abs(getCombatLevel() - victim.getCombatLevel()) > 5
+					|| Math.abs(getSkills().getMaxStat(Skill.ATTACK.id()) - victim.getSkills().getMaxStat(Skill.ATTACK.id())) > 10
+					|| Math.abs(getSkills().getMaxStat(Skill.DEFENSE.id()) - victim.getSkills().getMaxStat(Skill.DEFENSE.id())) > 10
+					|| Math.abs(getSkills().getMaxStat(Skill.STRENGTH.id()) - victim.getSkills().getMaxStat(Skill.STRENGTH.id())) > 10) {
+					// TODO: may need to check also hits?
+					message("You can only attack players with combat close to your own");
+					return false;
 				}
-				// TODO: make Lumbridge safe
 			} else {
 				int myWildLvl = getLocation().wildernessLevel();
 				int victimWildLvl = victim.getLocation().wildernessLevel();
@@ -3604,5 +3614,21 @@ public final class Player extends Mob {
 			return true;
 		}
 		return false;
+	}
+
+	public Npc checkVisNpc(Player player, final int npcId, final int radius) {
+		final Iterable<Npc> npcsInView = player.getViewArea().getNpcsInView();
+		Npc closestNpc = null;
+		for (int next = 0; next < radius; next++) {
+			for (final Npc n : npcsInView) {
+				if (n.getID() == npcId) {
+
+				}
+				if (n.getID() == npcId && n.withinRange(player.getLocation(), next) && !n.isBusy()) {
+					closestNpc = n;
+				}
+			}
+		}
+		return closestNpc;
 	}
 }
