@@ -13,10 +13,7 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
-import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
-import com.openrsc.server.plugins.triggers.KillNpcTrigger;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.*;
 
 import java.util.Optional;
 
@@ -25,7 +22,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
 	KillNpcTrigger,
-	AttackNpcTrigger {
+	AttackNpcTrigger{
 
 	private static final int COUNT_DRAYNOR_COFFIN_OPEN = 136;
 	private static final int COUNT_DRAYNOR_COFFIN_CLOSED = 135;
@@ -297,7 +294,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 					player.sendQuestComplete(Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				npc.getSkills().setLevel(Skill.HITS.id(), 25);
+				npc.getSkills().setLevel(Skill.HITS.id(), 20);
 				player.message("The vampire seems to regenerate");
 				npc.killed = false;
 			}
@@ -310,10 +307,16 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 			if (player.getCarriedItems().hasCatalogID(ItemId.GARLIC.id())) {
 				player.message("The vampire appears to weaken");
 				//if a better approx is found, replace
-				for (int i = 0; i < 3; i++) {
-					int maxStat = affectedmob.getSkills().getMaxStat(i);
-					int newStat = maxStat - (int) (maxStat * 0.1);
-					affectedmob.getSkills().setLevel(i, newStat);
+				int[] affectedStats = {Skill.ATTACK.id(), Skill.STRENGTH.id(), Skill.DEFENSE.id()};
+				double factor = 0.1;
+				for (int stat : affectedStats) {
+					int maxStat = affectedmob.getSkills().getMaxStat(stat);
+					if (stat == Skill.DEFENSE.id()) factor = 0.4;
+					int newStat = maxStat - (int) (maxStat * factor);
+					affectedmob.getSkills().setLevel(stat, newStat);
+				}
+				if (affectedmob.getSkills().getLevel(Skill.HITS.id()) >= 34) {
+					affectedmob.damage(10);
 				}
 			}
 		}
