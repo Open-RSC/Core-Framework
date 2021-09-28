@@ -3587,7 +3587,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean skipTutorial() {
-		if (getLocation().onTutorialIsland()) {
+		if (getLocation().onTutorialIsland() && this.getWorld().getServer().getConfig().SHOW_TUTORIAL_SKIP_OPTION) {
 			if (inCombat()) {
 				message("You cannot do that whilst fighting!");
 				return false;

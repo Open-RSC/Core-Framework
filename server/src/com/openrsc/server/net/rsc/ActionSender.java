@@ -159,7 +159,8 @@ public class ActionSender {
 
 	public static void sendPlayerOnTutorial(Player player) {
 		PlayerOnTutorialStruct struct = new PlayerOnTutorialStruct();
-		struct.onTutorial = player.getLocation().onTutorialIsland() ? 1 : 0;
+		struct.onTutorial = player.getLocation().onTutorialIsland() && 
+			player.getWorld().getServer().getConfig().SHOW_TUTORIAL_SKIP_OPTION ? 1 : 0;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_ON_TUTORIAL, struct, player);
 	}
 
