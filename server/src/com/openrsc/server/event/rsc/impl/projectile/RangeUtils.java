@@ -73,7 +73,7 @@ public class RangeUtils {
         allowedProjectilesMap.put(ItemId.MAPLE_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS));
         allowedProjectilesMap.put(ItemId.MAPLE_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS));
         allowedProjectilesMap.put(ItemId.YEW_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, ICE_ARROWS));
-        allowedProjectilesMap.put(ItemId.YEW_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, ICE_ARROWS));
+        allowedProjectilesMap.put(ItemId.YEW_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, ICE_ARROWS));
         allowedProjectilesMap.put(ItemId.MAGIC_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, ICE_ARROWS));
         allowedProjectilesMap.put(ItemId.MAGIC_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, ICE_ARROWS));
         allowedProjectilesMap.put(ItemId.DRAGON_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, DRAGON_ARROWS));
