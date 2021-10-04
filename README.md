@@ -16,18 +16,19 @@ The original RuneScape Classic was closed down and abandoned after 17 years on A
 
 
 ## How to Play<a name="play"></a>
-<b>Run your own server:</b>
-
-Download <a href="https://www.jetbrains.com/idea/download/#section=mac">IntelliJ IDEA Community</a> and <a href="https://downloads.mariadb.org/">MariaDB (MySQL) server</a>.
-
 The Open RuneScape Classic project team suggests that before hosting a public server, developers learn the ins and outs of everything by running the game locally first.
+
+<b>To run your own server locally, please see our guides:</b>
+- **Windows**: [Windows Getting Started Guide](https://github.com/Open-RSC/Core-Framework/blob/develop/Windows%20Getting%20Started%20Guide.md)
+- **Mac**: [Mac Getting Started Guide](https://github.com/Open-RSC/Core-Framework/blob/develop/MacOS%20Getting%20Started%20Guide.md)
+- **Linux**: [Linux Getting Started Guide](https://github.com/Open-RSC/Core-Framework/blob/develop/Linux%20Getting%20Started%20Guide.md)
 
 Feel free to join our Discord if you need help: <a href="https://discord.gg/KGvudZ9">https://discord.gg/KGvudZ9</a>
 
 
 ## Hosting Your Own Server<a name="hosting"></a>
 
-[Check out this wiki page.](https://runescapeclassic.dev/wiki/index.php?title=Running_your_own_server)
+[Check out this wiki page.](https://rsc.vet/wiki/index.php?title=Running_your_own_server)
 
 
 ## Minimum Requirements<a name="requirements"></a>
