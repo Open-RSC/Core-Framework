@@ -527,6 +527,12 @@ public class Point {
 		return inBounds(679, 634, 704, 659);
 	}
 
+	public boolean isInLumbridgeStartingChunk() {
+		return inBounds(96, 625, 142, 671) // Ground Floor
+			|| inBounds(96, 1569, 142, 1615) // 1st Floor
+			|| inBounds(96, 2513, 142, 2559); // 2nd Floor
+	}
+
 	public boolean inArea(Area area) {
 		return area.inBounds(this);
 	}

@@ -98,6 +98,7 @@ public class ServerConfiguration {
 	public boolean SHOW_ROOF_TOGGLE;
 	public boolean WANT_HIDE_IP;
 	public boolean WANT_REMEMBER;
+	public boolean SHOW_TUTORIAL_SKIP_OPTION;
 	public boolean WANT_GLOBAL_CHAT;
 	public boolean WANT_GLOBAL_FRIEND;
 	public int GLOBAL_MESSAGE_COOLDOWN;
@@ -196,6 +197,7 @@ public class ServerConfiguration {
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
 	public boolean FEATURES_SLEEP;
 	public int RESTRICT_ITEM_ID;
+	public int COMBAT_LEVEL_NON_MELEE_MASK;
 	public int PACKET_LIMIT;
 	//quest-minigame related
 	public boolean WANT_GIANNE_BADGE;
@@ -363,6 +365,7 @@ public class ServerConfiguration {
 		BASED_CONFIG_DATA = tryReadInt("based_config_data").orElse(85);
 		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
 		RESTRICT_ITEM_ID = tryReadInt("restrict_item_id").orElse(1289);
+		COMBAT_LEVEL_NON_MELEE_MASK = tryReadInt("combat_level_non_melee_mask").orElse(7);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -428,6 +431,7 @@ public class ServerConfiguration {
 		HIDE_LOGIN_BOX_TOGGLE = tryReadBool("hide_login_box_toggle").orElse(false);
 		BATCH_PROGRESSION = tryReadBool("batch_progression").orElse(false);
 		CUSTOM_IMPROVEMENTS = tryReadBool("custom_improvements").orElse(false);
+		SHOW_TUTORIAL_SKIP_OPTION = tryReadBool("show_tutorial_skip_option").orElse(true);
 		WANT_GLOBAL_CHAT = tryReadBool("want_global_chat").orElse(false);
 		WANT_GLOBAL_FRIEND = tryReadBool("want_global_friend").orElse(false);
 		WANT_EXPERIENCE_ELIXIRS = tryReadBool("want_experience_elixirs").orElse(false);

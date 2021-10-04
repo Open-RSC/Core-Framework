@@ -375,17 +375,21 @@ public final class Formulae {
 	 * Calculate a mobs combat level based on their stats
 	 */
 	public static int getCombatlevel(Mob mob, int[] stats, boolean isSpecial) {
+		int accountRanged = (mob.getConfig().COMBAT_LEVEL_NON_MELEE_MASK & 0x1);
+		int accountMagic = (mob.getConfig().COMBAT_LEVEL_NON_MELEE_MASK & 0x2) >> 1;
+		int accountPrayer = (mob.getConfig().COMBAT_LEVEL_NON_MELEE_MASK & 0x4) >> 2;
 		if (mob.getConfig().DIVIDED_GOOD_EVIL) {
 			return getCombatLevel(stats[Skill.ATTACK.id()], stats[Skill.DEFENSE.id()],
 				stats[Skill.STRENGTH.id()],stats[Skill.HITS.id()],
-				stats[Skill.GOODMAGIC.id()] + stats[Skill.EVILMAGIC.id()],
-				stats[Skill.PRAYGOOD.id()] + stats[Skill.PRAYEVIL.id()],
-				stats[Skill.RANGED.id()], true, isSpecial);
+				(stats[Skill.GOODMAGIC.id()] + stats[Skill.EVILMAGIC.id()]) * accountMagic,
+				(stats[Skill.PRAYGOOD.id()] + stats[Skill.PRAYEVIL.id()]) * accountPrayer,
+				(stats[Skill.RANGED.id()]) * accountRanged, true, isSpecial);
 		} else {
 			return getCombatLevel(stats[Skill.ATTACK.id()], stats[Skill.DEFENSE.id()],
 				stats[Skill.STRENGTH.id()],stats[Skill.HITS.id()],
-				stats[Skill.MAGIC.id()], stats[Skill.PRAYER.id()],
-				stats[Skill.RANGED.id()], false, isSpecial);
+				(stats[Skill.MAGIC.id()]) * accountMagic,
+				(stats[Skill.PRAYER.id()]) * accountPrayer,
+				(stats[Skill.RANGED.id()]) * accountRanged, false, isSpecial);
 		}
 	}
 
