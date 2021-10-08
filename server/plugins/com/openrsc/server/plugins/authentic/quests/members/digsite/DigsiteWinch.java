@@ -30,6 +30,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 				case -1:
 					player.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 					player.teleport(19, 3385);
+					break;
 				case 0:
 				case 1:
 				case 2:
