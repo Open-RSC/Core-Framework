@@ -15,12 +15,15 @@ public class LaunchButton extends JButton implements MouseListener {
 
 	public LaunchButton(String game) {
 		this.setIcon(Utils.getImage(game + "_logo.png"));
-		this.setRolloverIcon(Utils.getImage(game + "_logo_hover.png"));
+		try {
+			this.setRolloverIcon(Utils.getImage(game + "_logo_hover.png"));
+		} catch (Exception e) {}
 		this.setHorizontalTextPosition(0);
 		this.setFont(Utils.getFont("Helvetica.otf", 1, 18.0f));
 		this.setBorderPainted(false);
 		this.setContentAreaFilled(false);
 		this.setForeground(Color.WHITE);
+		this.setFocusable(false);
 		this.setActionCommand(game);
 		this.addActionListener(new ButtonListener());
 		this.addMouseListener(this);

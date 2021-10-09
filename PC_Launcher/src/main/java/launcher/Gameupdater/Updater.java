@@ -1,33 +1,37 @@
 package launcher.Gameupdater;
 
+import launcher.Utils.ClientLauncher;
+import launcher.Utils.Defaults;
+import launcher.Utils.Logger;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import launcher.Gameupdater.UpdaterGui.MainUpdaterGui;
-import launcher.Utils.ClientLauncher;
-import launcher.Utils.Defaults;
 
 import static launcher.Launcher.fetchLatestExtrasVersionNumber;
 
 public class Updater {
 	private static String _CACHE_DIR = null;
+	private static Downloader gameUpdater;
 
 	public Updater(String cacheDir, String gameVersion) {
 		_CACHE_DIR = cacheDir;
 	}
 
-	public void updateGame() {
+	public void updateOpenRSCClient() {
 		File gamePath = new File(_CACHE_DIR);
 		if (!gamePath.exists() || !gamePath.isDirectory())
 			gamePath.mkdir();
 
-		Downloader gameUpdater = new Downloader(_CACHE_DIR);
-		gameUpdater.initUpdate();
+		if (null == gameUpdater) {
+			gameUpdater = new Downloader(_CACHE_DIR, new ArrayList<>());
+		}
+		gameUpdater.initOpenRSCClientUpdate();
 	}
 
 	public static void updateRSCPlus() throws SecurityException, IOException {
@@ -92,6 +96,36 @@ public class Updater {
 		}
 	}
 
+	public static void updateWinRune() throws SecurityException, IOException {
+		try {
+			// Set variables
+			File _GAME_PATH = new File(_CACHE_DIR + "/extras/winrune/");
+			String _FILE_NAME = "winrune-master.zip";
+			String _URL = Defaults._WINRUNE_REPOSITORY_DL;
+			Double _EXTRA_VERSION = Defaults._WINRUNE_VERSION;
+
+			// Download new or update existing, execute elsewhere
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void updateFleaCircus() throws SecurityException, IOException {
+		try {
+			// Set variables
+			File _GAME_PATH = new File(_CACHE_DIR + "/extras/fleacircus/");
+			String _FILE_NAME = "fleacircus.zip";
+			String _URL = Defaults._FLEACIRCUS_REPOSITORY_DL;
+			Double _EXTRA_VERSION = Defaults._FLEACIRCUS_VERISION;
+
+			// Download new or update existing, execute elsewhere
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private static void downloadOrUpdate(File _GAME_PATH, String _FILE_NAME, String _URL, Double _EXTRA_VERSION) {
 		// If the folder does not exist, download, extract, and launch.
 		if (!_GAME_PATH.exists() || !_GAME_PATH.isDirectory()) {
@@ -99,7 +133,7 @@ public class Updater {
 				try {
 					Files.createDirectories(_GAME_PATH.toPath());
 				} catch (IOException e) {
-					System.out.println("Could not make required directories, trying with alternative method");
+					Logger.Warn("Could not make required directories, trying with alternative method");
 					_GAME_PATH.mkdirs();
 					e.printStackTrace();
 				}
@@ -116,7 +150,7 @@ public class Updater {
 					while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
 						totalRead += byteContent;
 						fileOS.write(data, 0, byteContent);
-						MainUpdaterGui.get().setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
+						ProgressBar.setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
 					}
 				} catch (Exception error) {
 					error.printStackTrace();
@@ -143,7 +177,7 @@ public class Updater {
 						while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
 							totalRead += byteContent;
 							fileOS.write(data, 0, byteContent);
-							MainUpdaterGui.get().setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
+							ProgressBar.setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
 						}
 					} catch (Exception error) {
 						error.printStackTrace();
@@ -165,7 +199,7 @@ public class Updater {
 			while (inZipEntry != null) {
 				String fileName = inZipEntry.getName();
 				File unZippedFile = new File(destinationPath + File.separator + fileName);
-				System.out.println("Unzipping: " + unZippedFile.getAbsoluteFile());
+				Logger.Info("Unzipping: " + unZippedFile.getAbsoluteFile());
 				if (inZipEntry.isDirectory()) {
 					unZippedFile.mkdirs();
 				} else {
@@ -182,7 +216,7 @@ public class Updater {
 			}
 			//inZipEntry.close();
 			inZip.close();
-			System.out.println("Finished Unzipping");
+			Logger.Info("Finished Unzipping");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -216,7 +250,7 @@ public class Updater {
 			props.store(out, null);
 			out.close();
 		} catch (IOException e) {
-			System.out.println("Could not save world config!");
+			Logger.Error("Could not save world config!");
 			e.printStackTrace();
 		}
 	}

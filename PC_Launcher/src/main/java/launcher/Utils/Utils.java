@@ -1,5 +1,7 @@
 package launcher.Utils;
 
+import launcher.popup.SavedIndicatorThread;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -7,12 +9,16 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class Utils {
     private static DateFormat df;
     private static long timeCorrection;
     private static long lastTimeUpdate;
+
+    public static volatile boolean outputCommandRunning = false;
+    public static String lastCommandOutput = null;
 
     // Simple valid path checker
     public static boolean isValidPath(String path) {
@@ -41,14 +47,8 @@ public class Utils {
     }
 
     public static void openWebpage(final String url) {
-        final Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(new URL(url).toURI());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+		Thread t = new Thread(new LinkOpener(url));
+		t.start();
     }
 
     public static Font getFont(final String fontName, final int type, final float size) {
@@ -74,8 +74,77 @@ public class Utils {
         return Utils.df.format(new Date());
     }
 
-    public static String stripHtml(final String text) {
+	public static void execCmd(String[] cmdArray, boolean needsOutput) {
+    	CmdRunner cmdRunner = new CmdRunner(cmdArray, true);
+    	if (needsOutput) {
+    		outputCommandRunning = true;
+			lastCommandOutput = null;
+		}
+		Thread t = new Thread(cmdRunner);
+		t.start();
+	}
+	public static void execCmd(String[] cmdArray, File workingDirectory) {
+		Thread t = new Thread(new CmdRunner(cmdArray, workingDirectory));
+		t.start();
+	}
+
+	public static boolean isMacOS() {
+		String os = System.getProperty("os.name").toLowerCase(Locale.ENGLISH);
+		return (os.contains("mac") || os.contains("darwin"));
+	}
+
+	public static boolean detectBinaryAvailable(String binaryName, String reason) {
+		if (System.getProperty("os.name").contains("Windows")) {
+			return false; // don't trust Windows to run the detection code
+		}
+
+		try {
+			// "whereis" is part of the util-linux package,
+			// It is included in pretty much all unix-like operating systems; i.e. safe to use.
+			execCmd(new String[] {"whereis", "-b", binaryName}, true);
+
+			while (outputCommandRunning) {}
+			final String whereis = lastCommandOutput
+				.replace("\n", "")
+				.replace(binaryName + ": ", "");
+			if (whereis.length() < ("/" + binaryName).length()) {
+				Logger.Error(
+					String.format(
+						"@|red !!! Please install %s for %s to work on Linux (or other systems with compatible binary) !!!|@",
+						binaryName, reason));
+				return false;
+			} else {
+				Logger.Info(binaryName + ": " + whereis);
+				return true;
+			}
+		} catch (Exception e) {
+			Logger.Error("Error while detecting " + binaryName + " binary: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static boolean notMacWindows() {
+		if (System.getProperty("os.name").contains("Windows")) {
+			return false;
+		}
+		return !isMacOS();
+	}
+
+
+	public static String stripHtml(final String text) {
         return text.replaceAll("\\<.*?\\>", "");
     }
 
+	public static String generateUserAgent() {
+    	StringBuilder sb = new StringBuilder("Mozilla/5.0 (");
+		sb.append(System.getProperty("os.name"));
+		sb.append("; ");
+		sb.append(System.getProperty("os.arch"));
+		sb.append("; ");
+		sb.append(System.getProperty("os.version"));
+		sb.append(") OpenRSCLauncher/");
+		sb.append(String.format("%8.6f", Defaults._CURRENT_VERSION));
+		return sb.toString();
+	}
 }
