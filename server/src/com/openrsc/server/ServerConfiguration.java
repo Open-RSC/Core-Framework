@@ -259,6 +259,8 @@ public class ServerConfiguration {
 	public boolean ONLY_REGULAR_BONES;
 	public boolean SHARED_GATHERING_RESOURCES;
 	public boolean HAS_PLAYER_OWNED_HOUSES;
+	public boolean OSRS_COMBAT_MELEE;
+	public boolean OSRS_COMBAT_RANGED;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -366,6 +368,8 @@ public class ServerConfiguration {
 		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
 		RESTRICT_ITEM_ID = tryReadInt("restrict_item_id").orElse(1289);
 		COMBAT_LEVEL_NON_MELEE_MASK = tryReadInt("combat_level_non_melee_mask").orElse(7);
+		OSRS_COMBAT_MELEE = tryReadBool("osrs_combat_melee").orElse(false);
+		OSRS_COMBAT_RANGED = tryReadBool("osrs_combat_ranged").orElse(false);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);

@@ -3,7 +3,6 @@ package com.openrsc.server.event.rsc.impl.projectile;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.KillType;
@@ -85,7 +84,8 @@ public class RangeEventNpc extends GameTickEvent {
                         return;
                     }
                 }
-                int damage = CombatFormula.doRangedDamage(getPlayerOwner(), ItemId.LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), victim);
+                int damage = RangeUtils.doRangedDamage(getPlayerOwner(), ItemId.LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), victim);
+
                 if (Formulae.loseArrow(damage)) {
                     GroundItem arrows = getArrows();
                     if (arrows == null) {

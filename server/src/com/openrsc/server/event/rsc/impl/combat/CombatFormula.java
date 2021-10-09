@@ -284,7 +284,7 @@ public class CombatFormula {
 	 * @param attacker             The attacking mob.
 	 * @return The amount of skill points to add for combat style
 	 */
-	private static int styleBonus(final Mob attacker, final int skill) {
+	protected static int styleBonus(final Mob attacker, final int skill) {
 		if (attacker.isNpc())
 			return 0;
 
@@ -302,7 +302,7 @@ public class CombatFormula {
 	 * @param source             The context mob.
 	 * @return A multiplier to modify the context mob's relevant stat to the prayers.
 	 */
-	private static double addPrayers(final Mob source, final int prayer1, final int prayer2, final int prayer3) {
+	protected static double addPrayers(final Mob source, final int prayer1, final int prayer2, final int prayer3) {
 		if (source.isPlayer()) {
 			final Player sourcePlayer = (Player) source;
 			if (sourcePlayer.getPrayers().isPrayerActivated(prayer3)) {
