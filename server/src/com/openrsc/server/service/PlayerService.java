@@ -101,6 +101,25 @@ public class PlayerService implements IPlayerService {
         }
     }
 
+	@Override
+	public void savePlayerMaxStats(final Player player) throws GameDatabaseException {
+		try {
+			if (!database.playerExists(player.getDatabaseID())) {
+				LOGGER.error("ERROR SAVING MAX SKILLS : PLAYER DOES NOT EXIST : {}", player.getUsername());
+				return;
+			}
+			database.atomically(() -> {
+				savePlayerMaxSkills(player);
+			});
+		} catch (final Exception ex) {
+			LOGGER.error(
+				MessageFormat.format("Unable to save players max skills to database: {}", player.getUsername()),
+				ex
+			);
+			return;
+		}
+	}
+
     private void loadPlayerCache(final Player player) throws GameDatabaseException {
         final PlayerCache[] playerCache = database.queryLoadPlayerCache(player);
         for (PlayerCache cache : playerCache) {
@@ -406,8 +425,12 @@ public class PlayerService implements IPlayerService {
         database.querySavePlayerExperience(player);
     }
 
+	private void savePlayerMaxSkills(final Player player) throws GameDatabaseException {
+		database.querySavePlayerMaxSkills(player);
+	}
+
     public void savePlayerMaxSkill(final int playerId, final int skillId, final int level) throws GameDatabaseException {
-        database.querySavePlayerMaxSkill(playerId, skillId, level);
+    	database.querySavePlayerMaxSkill(playerId, skillId, level);
     }
 
     public void savePlayerExpCapped(final int playerId, final int skillId, final long dateCapped) throws GameDatabaseException {
