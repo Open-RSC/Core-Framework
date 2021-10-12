@@ -1087,7 +1087,7 @@ public final class GameStateUpdater {
 				final int offsetX = o.getX() - playerToUpdate.getX();
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-					if (playerToUpdate.isUsing233CompatibleClient()) {
+					if (!playerToUpdate.isUsingCustomClient()) {
                         // The authentic server does not really send removals for boundaries.
                         // The client is able to handle having boundaries overwritten by new boundaries, but
                         // it doesn't correctly handle having boundaries outright removed.
@@ -1118,6 +1118,10 @@ public final class GameStateUpdater {
                         packet.writeByte(offsetX);
                         packet.writeByte(offsetY);
                         */
+
+						/* Addendum - code is identical for pre-233 mudclients
+						* removal code likely was not used either
+						* */
 
 					} else {
 						objectLocs.add(new GameObjectLoc(60000, offsetX, offsetY, o.getDirection(), 1));
