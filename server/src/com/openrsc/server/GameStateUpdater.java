@@ -150,7 +150,7 @@ public final class GameStateUpdater {
 				Npc localNpc = it$.next();
 
 				if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
-					if (localNpc.isRemoved() || localNpc.isTeleporting()) {
+					if (!localNpc.inCombat() || localNpc.getOpponent() != playerToUpdate) {
 						// TODO: check if more conditions need to be added from outer if
 						clearIdx.add(localNpc.getIndex());
 					}
@@ -268,10 +268,10 @@ public final class GameStateUpdater {
 
 					if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 						|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
-						|| otherPlayer.inCombat() || otherPlayer.hasMoved()
+						|| otherPlayer.inCombat() || otherPlayer.hasMoved() || otherPlayer.isUnregistering()
 						|| !otherPlayer.withinAuthenticRange(playerToUpdate)) {
-						if (!otherPlayer.loggedIn() || otherPlayer.isRemoved()
-							|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)) {
+						if ((!otherPlayer.hasMoved() || !playerToUpdate.withinRange(otherPlayer)
+							|| !otherPlayer.withinAuthenticRange(playerToUpdate)) && !otherPlayer.inCombat()) {
 							// TODO: check if more conditions need to be added from outer if
 							clearIdx.add(otherPlayer.getIndex());
 						}
@@ -300,7 +300,7 @@ public final class GameStateUpdater {
 
 				for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
 					if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
-						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
+						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn() || otherPlayer.isUnregistering()
 						|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
 						|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 						continue;
