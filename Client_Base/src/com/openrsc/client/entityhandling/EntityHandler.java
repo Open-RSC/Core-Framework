@@ -3916,10 +3916,14 @@ public class EntityHandler {
 		items.add(new ItemDef("Ring of Egg", "Imbued with egg-streme power", "", 0, -1, "items:eggring", false, true, 1200, 0, false, true, false, 1487));
 
 		// Halloween 2021
-		items.add(new ItemDef("Eak the Mouse", "Cute Mouse", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1488));
+		items.add(new ItemDef("Unused", "Do Not Use", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1488));
 		items.add(new ItemDef("Uncooked pumpkin pie", "I need to cook this first", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1489));
 		items.add(new ItemDef("Pumpkin pie", "A festive autumn pie. It's rare to have a pie this nice.", "eat", 30, 112, "items:112", false, false, 0, 11168819, false, false, true, 1490));
 		items.add(new ItemDef("Half a pumpkin pie", "A festive autumn pie. It's rare to have a pie this nice.", "eat", 10, 113, "items:113", false, false, 0, 11168819, false, false, true, 1491));
+		items.add(new ItemDef("Uncooked white pumpkin pie", "I need to cook this first", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1492));
+		items.add(new ItemDef("White pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 30, 112, "items:112", false, false, 0, 11168819, false, false, true, 1493));
+		items.add(new ItemDef("Half a white pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 10, 113, "items:113", false, false, 0, 11168819, false, false, true, 1494));
+		items.add(new ItemDef("Eak the Mouse", "Cute Mouse", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1495));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
