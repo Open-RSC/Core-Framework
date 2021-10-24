@@ -32,7 +32,8 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 		if (itemOne.getCatalogId() == ItemId.PIE_SHELL.id() || itemTwo.getCatalogId() == ItemId.PIE_SHELL.id()) {
 			if (itemOne.getCatalogId() == ItemId.EGG.id() || itemTwo.getCatalogId() == ItemId.EGG.id() ||
 				itemOne.getCatalogId() == ItemId.MILK.id() || itemTwo.getCatalogId() == ItemId.MILK.id() ||
-				itemOne.getCatalogId() == ItemId.PUMPKIN.id() || itemTwo.getCatalogId() == ItemId.PUMPKIN.id()) {
+				itemOne.getCatalogId() == ItemId.PUMPKIN.id() || itemTwo.getCatalogId() == ItemId.PUMPKIN.id() ||
+				itemOne.getCatalogId() == ItemId.WHITE_PUMPKIN.id() || itemTwo.getCatalogId() == ItemId.WHITE_PUMPKIN.id()) {
 				return true;
 			}
 		}
@@ -92,6 +93,11 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		// Pumpkin Pie
 		if (item1.getCatalogId() == ItemId.PIE_SHELL.id() || item2.getCatalogId() == ItemId.PIE_SHELL.id()) {
+			if (item1.getCatalogId() == ItemId.WHITE_PUMPKIN.id() || item2.getCatalogId() == ItemId.WHITE_PUMPKIN.id()) {
+				player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong color...");
+				// TODO: could add a "white pumpkin pie" that heals less
+				return;
+			}
 			if (item1.getCatalogId() == ItemId.EGG.id() || item2.getCatalogId() == ItemId.EGG.id() ||
 				item1.getCatalogId() == ItemId.MILK.id() || item2.getCatalogId() == ItemId.MILK.id() ||
 				item1.getCatalogId() == ItemId.PUMPKIN.id() || item2.getCatalogId() == ItemId.PUMPKIN.id()) {
@@ -115,8 +121,14 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 						player.playerServerMessage(MessageType.QUEST, "I also need an egg to make a pumpkin pie");
 					else if (!player.getCarriedItems().hasCatalogID(ItemId.MILK.id()))  // Milk
 						player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a pumpkin pie");
-					else if (!player.getCarriedItems().hasCatalogID(ItemId.PUMPKIN.id())) // Pumpkin
-						player.playerServerMessage(MessageType.QUEST, "I also need a pumpkin to make a pumpkin pie");
+					else if (!player.getCarriedItems().hasCatalogID(ItemId.PUMPKIN.id())) { // Pumpkin
+						if (player.getCarriedItems().hasCatalogID(ItemId.WHITE_PUMPKIN.id())) {
+							player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong color...");
+							// TODO: could add a "white pumpkin pie" that heals less
+						} else {
+							player.playerServerMessage(MessageType.QUEST, "I also need a pumpkin to make a pumpkin pie");
+						}
+					}
 				}
 			}
 			return;

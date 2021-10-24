@@ -310,6 +310,12 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 			} else if (command.equalsIgnoreCase("close")) {
 				closeGenericObject(obj, player, GHOST_COFFIN_CLOSED, "You close the coffin");
 			} else {
+				if (obj.getX() == 975 && player.getConfig().DEATH_ISLAND) {
+					player.message("There's a small pillow and a book inside");
+					delay(3);
+					player.message("The book's title is \"Basics of Caring for Livestock\"");
+					return;
+				}
 				if (player.getQuestStage(this) > 0) {
 					player.message("There's a skeleton without a skull in here");
 				} else if (player.getQuestStage(this) == -1) {

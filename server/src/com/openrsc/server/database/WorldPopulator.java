@@ -60,6 +60,7 @@ public final class WorldPopulator {
 			}
 			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticBoundaryFile, LocType.Boundary);
 			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticSceneryFile, LocType.Scenery);
+			loadCustomLocs(LocType.Boundary);
 			loadCustomLocs(LocType.Scenery);
 			// SceneryObject objects[] = getWorld().getServer().getDatabase().getObjects();
 			// for (SceneryObject object : objects) {
@@ -168,83 +169,98 @@ public final class WorldPopulator {
 	}
 
 	private void loadCustomLocs(LocType type) {
-		if (type == LocType.Scenery) {
-			if (getWorld().getServer().getConfig().LOCATION_DATA == 4) {
-				if (getWorld().getServer().getConfig().WANT_OPENPK_POINTS) {
-					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOpenPk.json", type);
+		switch (type) {
+			case Boundary: {
+				if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS || getWorld().getServer().getConfig().DEATH_ISLAND) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/BoundaryLocsCustomQuest.json", type);
+					}
 				}
+				return;
 			}
-			if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
-				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
-				loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsDiscontinued.json", type);
+			case Scenery: {
+				if (getWorld().getServer().getConfig().LOCATION_DATA == 4) {
+					if (getWorld().getServer().getConfig().WANT_OPENPK_POINTS) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOpenPk.json", type);
+					}
+				}
+				if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
+					&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
+					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsDiscontinued.json", type);
+				}
+				if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+					if (getWorld().getServer().getConfig().WANT_DECORATED_MOD_ROOM) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsModRoom.json", type);
+					}
+					if (getWorld().getServer().getConfig().WANT_RUNECRAFT) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsRunecraft.json", type);
+					}
+					if (getWorld().getServer().getConfig().WANT_HARVESTING) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsHarvesting.json", type);
+					}
+					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsCustomQuest.json", type);
+					}
+					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOther.json", type);
+				}
+				return;
 			}
-			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
-				if (getWorld().getServer().getConfig().WANT_DECORATED_MOD_ROOM) {
-					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsModRoom.json", type);
+			case NPC: {
+				if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
+					&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsDiscontinued.json");
 				}
-				if (getWorld().getServer().getConfig().WANT_RUNECRAFT) {
-					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsRunecraft.json", type);
+				if (getWorld().getServer().getConfig().LOCATION_DATA == 4) {
+					if (getWorld().getServer().getConfig().WANT_PK_BOTS) {
+						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsPkBots.json");
+					}
 				}
-				if (getWorld().getServer().getConfig().WANT_HARVESTING) {
-					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsHarvesting.json", type);
-				}
-				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
-					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsCustomQuest.json", type);
-				}
-				loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOther.json", type);
-			}
-		} else if (type == LocType.NPC) {
-			if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
-				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
-				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsDiscontinued.json");
-			}
-			if (getWorld().getServer().getConfig().LOCATION_DATA == 4) {
-				if (getWorld().getServer().getConfig().WANT_PK_BOTS) {
-					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsPkBots.json");
-				}
-			}
-			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
-				if (getWorld().getServer().getConfig().WANT_DECORATED_MOD_ROOM) {
-					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsModRoom.json");
-				}
-				if (getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
-					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsAuction.json");
-				}
-				if (getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
-					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsIronman.json");
-				}
-				if (getWorld().getServer().getConfig().WANT_RUNECRAFT) {
-					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsRunecraft.json");
-				}
-				if (getWorld().getServer().getConfig().WANT_HARVESTING) {
-					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsHarvesting.json");
-				}
-				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
-					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsCustomQuest.json");
-					// If the Ester's Bunnies event isn't active, move all the bunnies to the top floor of Ester's house.
-					if (!getWorld().getServer().getConfig().ESTERS_BUNNIES_EVENT) {
-						for (NPCLoc loc : npclocs) {
-							if (loc.id == NpcId.BUNNY.id()) {
-								loc.startX = 317;
-								loc.startY = 1607;
-								loc.maxX = 319;
-								loc.maxY = 1608;
-								loc.minX = 314;
-								loc.minY = 1603;
+				if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+					if (getWorld().getServer().getConfig().WANT_DECORATED_MOD_ROOM) {
+						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsModRoom.json");
+					}
+					if (getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
+						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsAuction.json");
+					}
+					if (getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
+						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsIronman.json");
+					}
+					if (getWorld().getServer().getConfig().WANT_RUNECRAFT) {
+						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsRunecraft.json");
+					}
+					if (getWorld().getServer().getConfig().WANT_HARVESTING) {
+						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsHarvesting.json");
+					}
+					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsCustomQuest.json");
+						// If the Ester's Bunnies event isn't active, move all the bunnies to the top floor of Ester's house.
+						if (!getWorld().getServer().getConfig().ESTERS_BUNNIES_EVENT) {
+							for (NPCLoc loc : npclocs) {
+								if (loc.id == NpcId.BUNNY.id()) {
+									loc.startX = 317;
+									loc.startY = 1607;
+									loc.maxX = 319;
+									loc.maxY = 1608;
+									loc.minX = 314;
+									loc.minY = 1603;
+								}
 							}
 						}
 					}
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
 				}
-				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
+				return;
 			}
-		} else if (type == LocType.GroundItem) {
-			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
-				if (getWorld().getServer().getConfig().WANT_HARVESTING) {
-					loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsHarvesting.json");
+			case GroundItem: {
+				if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+					if (getWorld().getServer().getConfig().WANT_HARVESTING) {
+						loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsHarvesting.json");
+					}
+					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+						loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsCustomQuest.json");
+					}
 				}
-				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
-					loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsCustomQuest.json");
-				}
+				return;
 			}
 		}
 	}

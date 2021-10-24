@@ -7,5 +7,30 @@
 		},
 		"amount": 1,
 		"respawn": 95
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 976,
+			"Y": 165
+		},
+		"amount": 1,
+		"respawn": 95
+	}, {
+		"id": 19,
+		"pos": {
+			"X": 972,
+			"Y": 171
+		},
+		"amount": 1,
+		"respawn": 95
+	}, {
+		"id": 19,
+		"pos": {
+			"X": 971,
+			"Y": 174
+		},
+		"amount": 1,
+		"respawn": 95
+
 	}]
 }

@@ -7,6 +7,7 @@ import com.openrsc.server.model.TimePoint;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -309,6 +310,38 @@ public final class Harvesting implements OpLocTrigger {
 		if (toolId != ItemId.NOTHING.id()) thinkbubble(new Item(toolId));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
 		delay(4);
+
+		// Player is on Death Island
+		if (player.getConfig().DEATH_ISLAND && player.getX() > 957 && player.getX() < 1000 && player.getY() > 153 && player.getY() < 190) {
+			ActionSender.sendRemoveProgressBar(player);
+			switch (object.getID()) {
+				case 1264: // Pumpkin
+					player.playerServerMessage(MessageType.QUEST, "@whi@Death: Hey, those are my pumpkins!");
+					break;
+				case 1266: // Onion
+					player.playerServerMessage(MessageType.QUEST, "@whi@Death: Hey, those are my onions!");
+					break;
+				case 1256: // Redberry bush
+					player.playerServerMessage(MessageType.QUEST, "@whi@Death: Hey, those are my redberries!");
+					break;
+				default:
+					player.playerServerMessage(MessageType.QUEST, "@whi@Death: Hey, that's my produce!");
+					break;
+			}
+			delay(6);
+			player.playerServerMessage(MessageType.QUEST, "@yel@" + player.getUsername() + ": Why are you growing White Pumpkins?");
+			delay(3);
+			player.playerServerMessage(MessageType.QUEST, "@yel@" + player.getUsername() + ": The pies won't be orange if you use those.");
+			delay(3);
+			player.playerServerMessage(MessageType.QUEST, "@whi@Death: I can't actually figure out how to grow the orange ones");
+			delay(3);
+			player.playerServerMessage(MessageType.QUEST, "@whi@Death: But I can get the right colour by dyeing it.");
+			delay(3);
+			player.playerServerMessage(MessageType.QUEST, "@yel@" + player.getUsername() + ": Please tell me you don't put onions and redberries in your pumpkin pies.");
+			delay(3);
+			player.playerServerMessage(MessageType.QUEST, "@whi@Death: Haven't got a complaint yet! You only need a little to dye it.");
+			return;
+		}
 
 		final Item produce = new Item(def.getProdId());
 		if (config().WANT_FATIGUE) {
