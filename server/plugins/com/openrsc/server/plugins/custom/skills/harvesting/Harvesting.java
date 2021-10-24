@@ -328,7 +328,9 @@ public final class Harvesting implements OpLocTrigger {
 					player.playerServerMessage(MessageType.QUEST, "@whi@Death: Hey, that's my produce!");
 					break;
 			}
-			delay(6);
+			delay(3);
+			player.playerServerMessage(MessageType.QUEST, "@whi@Death: Don't you know how rude it is to just harvest someone else's crops?");
+			delay(5);
 			player.playerServerMessage(MessageType.QUEST, "@yel@" + player.getUsername() + ": Why are you growing White Pumpkins?");
 			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "@yel@" + player.getUsername() + ": The pies won't be orange if you use those.");
