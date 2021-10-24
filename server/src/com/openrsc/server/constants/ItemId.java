@@ -1533,10 +1533,14 @@ public enum ItemId {
 	RING_OF_EGG(1487),
 
 	// Halloween 2021
-	EAK_THE_MOUSE(1488),
+	RACIST_DO_NOT_USE(1488), // Considered an unhappy number -- https://en.wikipedia.org/wiki/Fourteen_Words
 	UNCOOKED_PUMPKIN_PIE(1489),
 	PUMPKIN_PIE(1490),
-	HALF_A_PUMPKIN_PIE(1491);
+	HALF_A_PUMPKIN_PIE(1491),
+	UNCOOKED_WHITE_PUMPKIN_PIE(1482),
+	WHITE_PUMPKIN_PIE(1493),
+	HALF_A_WHITE_PUMPKIN_PIE(1494),
+	EAK_THE_MOUSE(1495);
 
 
 	private int itemId;
