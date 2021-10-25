@@ -2258,6 +2258,10 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Duck", "Definitely not the ugly one", "", 1, 1, 10, 1, false, sprites, 1, 2, 3, 4, 85, 95, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, 52, 8, 83, 87, -1, -1, -1, -1};
 		npcs.add(new NPCDef("PKBOT", "He looks scary.", "", 41, 99, 87, 1, true, sprites, 16761440, 8409120, 33415270, 15523536, 145, 220, 6, 6, 5, i++));
+		// head, shirt, pants, shield, weapon, hat, body, legs, gloves, boots, amulet, cape
+		sprites = new int[]{3, 1, 2, -1, 228, 483, 82, 88, 155, -1, -1, -1};
+		npcs.add(new NPCDef("Death", "He sure could do with gaining some weight", "", 15, 15, 12, 12, false, sprites, 1, 2, 3, 16777215, 145, 220, 6, 6, 5, i++));
+
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3923,7 +3927,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Uncooked white pumpkin pie", "I need to cook this first", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1492));
 		items.add(new ItemDef("White pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 30, 112, "items:112", false, false, 0, 11168819, false, false, true, 1493));
 		items.add(new ItemDef("Half a white pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 10, 113, "items:113", false, false, 0, 11168819, false, false, true, 1494));
-		items.add(new ItemDef("Eak the Mouse", "Cute Mouse", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1495));
+		items.add(new ItemDef("Eak the Mouse", "What a mice guy!", "Talk", 1, 112, "items:112", false, false, 0, 16633518, false, true, false, 1495));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4545,6 +4549,9 @@ public class EntityHandler {
 			animations.add(new AnimationDef("scimitar", "equipment", 10072780, 0, true, false, 0)); // 480 Mithril Scimitar
 			animations.add(new AnimationDef("scimitar", "equipment", 11717785, 0, true, false, 0)); // 481 Adamantite Scimitar
 			animations.add(new AnimationDef("scimitar", "equipment", 65535, 0, true, false, 0)); // 482 Rune Scimitar
+
+			// Halloween 2021
+			animations.add(new AnimationDef("deathmask", "equipment", 0, 0, true, false, 0)); // 483
 		}
 	}
 
