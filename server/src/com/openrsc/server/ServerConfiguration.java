@@ -231,6 +231,7 @@ public class ServerConfiguration {
 	// public List<String> adminIp;
 	public boolean WANT_RANGED_FACE_PLAYER = false;
 	public boolean ESTERS_BUNNIES_EVENT = false;
+	public boolean MICE_TO_MEET_YOU_EVENT = false;
 	public boolean DEATH_ISLAND = false;
 	public int BASED_MAP_DATA = 64;
 	public int BASED_CONFIG_DATA = 85;
@@ -556,6 +557,7 @@ public class ServerConfiguration {
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
 		ESTERS_BUNNIES_EVENT = tryReadBool("esters_bunnies").orElse(false);
+		MICE_TO_MEET_YOU_EVENT = tryReadBool("mice_to_meet_you").orElse(false);
 		DEATH_ISLAND = tryReadBool("death_island").orElse(false);
 
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
