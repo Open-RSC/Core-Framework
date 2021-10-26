@@ -305,6 +305,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(326, "", "Meat Pizza - Heals 14 (7 per slice)"));
 				skillMenuEntries.add(new SkillMenuItem(327, "", "Anchovie Pizza - Heals 16 (8 per slice)"));
 				skillMenuEntries.add(new SkillMenuItem(750, "", "Pineapple Pizza - Heals 20 (10 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(1490, "", "Pumkpin pie - Heals 24 (12 per slice)"));
 			} else if (curTab == 2) { // Produce
 				skillMenuEntries.add(new SkillMenuItem(18, "", "Cabbage - Heals 1"));
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1352, "", "Red Cabbage - Heals 1"));
