@@ -98,6 +98,9 @@ import java.util.stream.Collectors;
 
 
 public class Functions {
+
+	private static final int DEFAULT_TICK = 640;
+
 	/**
 	 * The asynchronous logger.
 	 */
@@ -106,8 +109,26 @@ public class Functions {
 	/**
 	 * Used for the ifstatrandom RuneScript function.
 	 */
-	public static float lerp(final float v0, final float v1, final float t) {
+	protected static float lerp(final float v0, final float v1, final float t) {
 		return v0 + t * (v1 - v0);
+	}
+
+	/**
+	 * Returns the amount of ticks that would need to be used to achieve a similar duration to a
+	 * server that is using the regular tick value for RSC (640 ms)
+	 * @param ticks The amount of ticks
+	 * @param tickDuration The duration of a tick on the current server
+	 * @return The amount of ticks that would need to be used to achieve a similar duration to a
+	 * server that is using the regular tick value for RSC
+	 */
+	protected static int normalizeTicks(final int ticks, final int tickDuration) {
+		if (tickDuration == DEFAULT_TICK) {
+			return ticks;
+		}
+
+		final double tickRatio = (double)DEFAULT_TICK / tickDuration;
+
+		return (int)Math.ceil(tickRatio * ticks);
 	}
 
 	/**
@@ -214,13 +235,13 @@ public class Functions {
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(calcDelay(message));
+			delay(normalizeTicks(calcDelay(message), player.getConfig().GAME_TICK));
 		}
 	}
 
 	public static void say(final Player player, final String message) {
 		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
-		delay(calcDelay(message));
+		delay(normalizeTicks(calcDelay(message), player.getConfig().GAME_TICK));
 	}
 
 	public static int multi(final Player player, final String... options) {
@@ -488,7 +509,7 @@ public class Functions {
 				}
 			}
 
-			delay(calcDelay(message));
+			delay(normalizeTicks(calcDelay(message), player.getConfig().GAME_TICK));
 		}
 	}
 
