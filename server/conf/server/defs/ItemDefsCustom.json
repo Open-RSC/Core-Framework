@@ -4718,7 +4718,7 @@
         {
             "id": 1495,
             "name": "Eak the Mouse",
-            "description": "What a mice guy!",
+            "description": "A cute mouse",
             "command": "Talk",
             "isFemaleOnly": 0,
             "isMembersOnly": 0,
