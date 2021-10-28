@@ -316,6 +316,12 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 					player.message("The book's title is \"Basics of Caring for Livestock\"");
 					return;
 				}
+				if (obj.getX() == 116 && config().MICE_TO_MEET_YOU_EVENT) {
+					player.message("There's a small pillow and a book inside");
+					delay(3);
+					player.message("The book's title is \"Basics of Saving and Investing\"");
+					return;
+				}
 				if (player.getQuestStage(this) > 0) {
 					player.message("There's a skeleton without a skull in here");
 				} else if (player.getQuestStage(this) == -1) {

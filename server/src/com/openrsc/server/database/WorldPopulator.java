@@ -118,6 +118,17 @@ public final class WorldPopulator {
 				// //	for(int i = 0; i < 1; i++)
 				// //		world.registerNpc(new Npc(n));
 				// // }
+
+				// Don't load rats if the Mice to Meet You Event is active
+				if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT
+					&& (n.getId() == NpcId.RAT_LVL8.id()
+					|| n.getId() == NpcId.RAT_WITCHES_POTION.id()
+					|| n.getId() == NpcId.RAT_LVL13.id()
+					|| n.getId() == NpcId.RAT_WMAZEKEY.id())) {
+					n = null;
+					continue;
+				}
+
 				getWorld().registerNpc(new Npc(getWorld(), n));
 			}
 			LOGGER.info("Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");
