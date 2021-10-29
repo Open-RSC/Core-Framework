@@ -3631,4 +3631,8 @@ public final class Player extends Mob {
 		}
 		return closestNpc;
 	}
+
+	public void tellCoordinates() {
+		playerServerMessage(MessageType.QUEST, "@whi@You are at @cya@" + getLocation() + "@whi@ or in Jagex notation: @cya@" + getLocation().pointToJagexPoint());
+	}
 }

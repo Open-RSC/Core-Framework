@@ -92,6 +92,9 @@ public final class Event implements CommandTrigger {
 		if (command.equalsIgnoreCase("teleport") || command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("tele") || command.equalsIgnoreCase("town") || command.equalsIgnoreCase("goto") || command.equalsIgnoreCase("tpto") || command.equalsIgnoreCase("teleportto") || command.equalsIgnoreCase("tpat")) {
 			teleportCommand(player, command, args);
 		}
+		else if (command.equalsIgnoreCase("rftele")) {
+			rfteleToTp(player, command, args);
+		}
 		else if (command.equalsIgnoreCase("return")) {
 			returnPlayer(player, command, args);
 		}
@@ -139,6 +142,80 @@ public final class Event implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("npctalk") || command.equalsIgnoreCase("npcsay")) {
 			npcTalk(player, command, args);
+		}
+	}
+
+	@SuppressWarnings("DefaultLocale")
+	private void rfteleToTp(Player player, String command, String[] args) {
+		boolean badFormat = false;
+		boolean secondArgIsPlayer = false;
+		if (args.length >= 2) {
+			if (args[1].length() != 4)
+				badFormat = true;
+			try {
+				Integer.parseInt(args[1]);
+			} catch (NumberFormatException ex) {
+				// can't rftele players with 4 length number names in shorthand notation, sorry!
+				secondArgIsPlayer = true;
+			}
+		}
+
+		badFormat |= args.length < 1 || args[0].length() != 5 || args.length > 3;
+		if (badFormat) {
+			tellBadRfTele(player, command);
+			return;
+		}
+
+		Point absoluteCoordinate;
+		if (args.length >= 2 && !secondArgIsPlayer) {
+			absoluteCoordinate = Point.jagexPointToPoint(args[0] + " " + args[1]);
+		} else {
+			absoluteCoordinate = Point.jagexPointToPoint(args[0]);
+		}
+
+		if (absoluteCoordinate.getX() == Point.UNABLE_TO_CONVERT) {
+			switch (absoluteCoordinate.getY()) {
+				case Point.BAD_COORDINATE_LENGTH:
+				case Point.NOT_A_NUMBER:
+				default:
+					tellBadRfTele(player, command);
+					return;
+				case Point.OFFSET_OUT_OF_BOUNDS:
+					player.message("Offset out of bounds, must be 47 or less");
+					return;
+			}
+		}
+
+		switch (args.length) {
+			case 1:
+				args = new String[] {
+					String.format("%d", absoluteCoordinate.getX()),
+					String.format("%d", absoluteCoordinate.getY()),
+				};
+				teleportCommand(player, command, args);
+				return;
+			case 2:
+				if (secondArgIsPlayer) {
+					args = new String[] {
+						String.format("%d", absoluteCoordinate.getX()),
+					    String.format("%d", absoluteCoordinate.getY()),
+						args[1]
+					};
+				} else {
+					args[0] = String.format("%d", absoluteCoordinate.getX());
+					args[1] = String.format("%d", absoluteCoordinate.getY());
+				}
+				teleportCommand(player, command, args);
+				return;
+			case 3:
+				args[0] = args[2];
+				args[1] = String.format("%d", absoluteCoordinate.getX());
+				args[2] = String.format("%d", absoluteCoordinate.getY());
+				teleportCommand(player, command, args);
+				return;
+			default:
+				tellBadRfTele(player, command);
+				return;
 		}
 	}
 
@@ -1236,5 +1313,12 @@ public final class Event implements CommandTrigger {
 				otherPlayer.getSkills().sendUpdateAll();
 			}
 		}
+	}
+
+	private void tellBadRfTele(Player player, String command) {
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] OR");
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [player]");
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [xxyy] OR");
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [xxyy] [player] OR ");
 	}
 }

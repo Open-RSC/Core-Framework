@@ -603,4 +603,64 @@ public class Point {
 		// Finally, no possible tile is walkable. We will agree to teleport directly at the player
 		return this;
 	}
+
+	@SuppressWarnings("DefaultLocale")
+	public String pointToJagexPoint() {
+		int height;
+		int sectorX;
+		int sectorY;
+		int offsetX;
+		int offsetY;
+
+		height = y / 944;
+		int yCalc = y - (height * 944);
+		sectorX = (x / 48) + 48;
+		sectorY = (yCalc / 48) + 37;
+		offsetX = x % 48;
+		offsetY = yCalc % 48;
+		if (offsetX == 0 && offsetY == 0) {
+			// not known if short form notation is at 0, 0 offset or not.
+			return String.format("%d%02d%02d", height, sectorX, sectorY);
+		}
+		return String.format("%d%02d%02d %02d%02d", height, sectorX, sectorY, offsetX, offsetY);
+	}
+
+	public static final int UNABLE_TO_CONVERT = -10000;
+	public static final int BAD_COORDINATE_LENGTH = 0;
+	public static final int NOT_A_NUMBER = 1;
+	public static final int OFFSET_OUT_OF_BOUNDS = 2;
+	public static Point jagexPointToPoint(String jagexPoint) {
+		int x = 0;
+		int y = 0;
+
+		int height = 0;
+		int sectorX = 0;
+		int sectorY = 0;
+		int offsetX = 0;
+		int offsetY = 0;
+		try {
+			switch (jagexPoint.length()) {
+				case 10:
+					offsetX = Integer.parseInt(jagexPoint.substring(6, 8));
+					offsetY = Integer.parseInt(jagexPoint.substring(8, 10));
+				case 5:
+					height = Integer.parseInt(jagexPoint.substring(0, 1));
+					sectorX = Integer.parseInt(jagexPoint.substring(1, 3));
+					sectorY = Integer.parseInt(jagexPoint.substring(3, 5));
+					break;
+				default:
+					return new Point(UNABLE_TO_CONVERT, BAD_COORDINATE_LENGTH);
+			}
+		} catch (NumberFormatException ex) {
+			return new Point(UNABLE_TO_CONVERT, NOT_A_NUMBER);
+		}
+
+		if (offsetX > 47 || offsetY > 47) {
+			return new Point(UNABLE_TO_CONVERT, OFFSET_OUT_OF_BOUNDS);
+		}
+
+		x = ((sectorX - 48) * 48) + offsetX;
+		y = (height * 944) + ((sectorY - 37) * 48) + offsetY;
+		return new Point(x, y);
+	}
 }

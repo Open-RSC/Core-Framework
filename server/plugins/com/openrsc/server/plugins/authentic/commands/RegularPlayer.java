@@ -138,6 +138,8 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("oldtrade")
 			|| command.equalsIgnoreCase("notradeconfirm")) {
 			setOldTrade(player);
+		} else if (command.equalsIgnoreCase("coords")) {
+			tellCoordinates(player);
 		}
 	}
 
@@ -858,5 +860,10 @@ public final class RegularPlayer implements CommandTrigger {
 		player.getCache().store("last_noconfirm", System.currentTimeMillis());
 		player.message("You have set trading to not require confirm");
 		player.message("This will last for 5 minutes");
+	}
+
+	private void tellCoordinates(Player player) {
+		if (player.isDev()) return;
+		player.tellCoordinates();
 	}
 }
