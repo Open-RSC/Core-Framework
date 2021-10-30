@@ -731,14 +731,14 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 926 && item.getCatalogId() == ItemId.KEEP_KEY.id()) {
+			player.message("The gate unlocks");
+			player.message("The keep key is broken - I'll discard it");
+			player.getCarriedItems().remove(new Item(ItemId.KEEP_KEY.id()));
+			if (!player.getCache().hasKey("keep_key_gate")) {
+				player.getCache().store("keep_key_gate", true);
+			}
 			Npc guard = ifnearvisnpc(player, NpcId.GOBLIN_GUARD.id(), 5);
 			if (guard != null) {
-				player.message("The gate unlocks");
-				player.message("The keep key is broken - I'll discard it");
-				player.getCarriedItems().remove(new Item(ItemId.KEEP_KEY.id()));
-				if (!player.getCache().hasKey("keep_key_gate")) {
-					player.getCache().store("keep_key_gate", true);
-				}
 				guard.setChasing(player);
 			}
 		}

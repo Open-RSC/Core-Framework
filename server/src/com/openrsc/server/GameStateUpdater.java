@@ -150,7 +150,7 @@ public final class GameStateUpdater {
 				Npc localNpc = it$.next();
 
 				if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
-					if (localNpc.isRemoved() || localNpc.isTeleporting()) {
+					if (!localNpc.inCombat() || localNpc.getOpponent() != playerToUpdate) {
 						// TODO: check if more conditions need to be added from outer if
 						clearIdx.add(localNpc.getIndex());
 					}
@@ -268,10 +268,10 @@ public final class GameStateUpdater {
 
 					if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 						|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
-						|| otherPlayer.inCombat() || otherPlayer.hasMoved()
+						|| otherPlayer.inCombat() || otherPlayer.hasMoved() || otherPlayer.isUnregistering()
 						|| !otherPlayer.withinAuthenticRange(playerToUpdate)) {
-						if (!otherPlayer.loggedIn() || otherPlayer.isRemoved()
-							|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)) {
+						if ((!otherPlayer.hasMoved() || !playerToUpdate.withinRange(otherPlayer)
+							|| !otherPlayer.withinAuthenticRange(playerToUpdate)) && !otherPlayer.inCombat()) {
 							// TODO: check if more conditions need to be added from outer if
 							clearIdx.add(otherPlayer.getIndex());
 						}
@@ -300,7 +300,7 @@ public final class GameStateUpdater {
 
 				for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
 					if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
-						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
+						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn() || otherPlayer.isUnregistering()
 						|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
 						|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 						continue;
@@ -1087,7 +1087,7 @@ public final class GameStateUpdater {
 				final int offsetX = o.getX() - playerToUpdate.getX();
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-					if (playerToUpdate.isUsing233CompatibleClient()) {
+					if (!playerToUpdate.isUsingCustomClient()) {
                         // The authentic server does not really send removals for boundaries.
                         // The client is able to handle having boundaries overwritten by new boundaries, but
                         // it doesn't correctly handle having boundaries outright removed.
@@ -1118,6 +1118,10 @@ public final class GameStateUpdater {
                         packet.writeByte(offsetX);
                         packet.writeByte(offsetY);
                         */
+
+						/* Addendum - code is identical for pre-233 mudclients
+						* removal code likely was not used either
+						* */
 
 					} else {
 						objectLocs.add(new GameObjectLoc(60000, offsetX, offsetY, o.getDirection(), 1));
