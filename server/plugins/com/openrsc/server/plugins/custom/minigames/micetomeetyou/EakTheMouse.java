@@ -6,21 +6,118 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.plugins.RuneScript.*;
 
 public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigger, UseInvTrigger, UseObjTrigger {
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		// TODO: this is probably a Talk option that you can use throughout the holiday quest
+		// We want this check, so we aren't checking the cache every time we want to talk
+		// to Eak after the event is over
+		if (config().MICE_TO_MEET_YOU_EVENT && player.getCache().hasKey("mice_to_meet_you")) {
+			// Eak learns to talk at stage 4
+			final int questStage = player.getCache().getInt("mice_to_meet_you");
+			if (questStage >= 4 || questStage == -1) {
+				switch (questStage) {
+					case 4:
+						mes("@yel@Eak the Mouse: We should go talk to Betty in Port Sarim");
+						delay(3);
+						mes("@yel@Eak the Mouse: Hopefully she can help me get into Death's house");
+						break;
+					case 5:
+						mes("@yel@Eak the Mouse: We need to find those items for Betty");
+						delay(3);
+						mes("@yel@Eak the Mouse: She needs 10 body runes, an eye of a newt");
+						delay(3);
+						mes("@yel@Eak the Mouse: And you need to be wearing a wizard hat");
+						break;
+					case 6:
+						mes("@yel@Eak the Mouse: It's very strange that Betty didn't even use the stuff you got her");
+						delay(3);
+						mes("@yel@Eak the Mouse: We still need her for the spell though");
+						break;
+					case 7:
+						mes("@yel@Eak the Mouse: Let's go back to Varrock");
+						delay(3);
+						mes("@yel@Eak the Mouse: I should be able to sneak into Death's house now");
+						delay(3);
+						mes("@yel@Eak the Mouse: Just take me to his front door, and I'll do the rest");
+						break;
+					case 8:
+					case 9:
+						int option = multi("What did you see in the house?",
+							"What was the shriek?",
+							"Nevermind");
+						if (option == 2 || option == -1) return;
+						if (option == 1) {
+							mes("Eak starts to giggle");
+							delay(3);
+							mes("@yel@Eak the Mouse: Believe it or not, that was Death!");
+							delay(3);
+							mes("Eak is laughing so hard, they almost roll out of your hand");
+							return;
+						}
+
+						mes("@yel@Eak the Mouse: I saw a couple of things in there");
+						delay(3);
+						mes("@yel@Eak the Mouse: First thing I noticed is that it wasn't very big");
+						delay(3);
+						mes("@yel@Eak the Mouse: I also saw there were a ton of pumpkins all over the floor");
+						delay(3);
+						mes("@yel@Eak the Mouse: Lastly, I saw a ton of bills");
+						delay(3);
+						mes("@yel@Eak the Mouse: If you ask me, it looks like Death is hurting for money");
+						delay(3);
+						mes("@yel@Eak the Mouse: That's why he's moved into the slums");
+						delay(3);
+						mes("@yel@Eak the Mouse: We should go talk to Aggie");
+						delay(3);
+						mes("@yel@Eak the Mouse: Maybe she'll have an idea on how to get rid of him");
+						delay(3);
+						mes("Eak looks sad");
+						delay(3);
+						mes("@yel@Eak the Mouse: I miss my rodent friends");
+						setvar("mice_to_meet_you", 9);
+						break;
+					case 10:
+					case 11:
+						if (ifheld(ItemId.PUMPKIN_PIE.id(), 1)) {
+							mes("@yel@Eak the Mouse: Let's get this pie over to Death!");
+						} else {
+							mes("@yel@Eak the Mouse: " + player.getUsername() + "... You didn't eat the pie, did you?");
+							delay(3);
+							mes("@yel@Eak the Mouse: Now we have to go back to Aggie to get another one");
+						}
+						break;
+					case 12:
+						mes("@yel@Eak the Mouse: Let's talk to Death and see if he's made up his mind");
+						break;
+					case 13:
+						mes("@yel@Eak the Mouse: Let's visit Death on his island");
+						delay(3);
+						mes("@yel@Eak the Mouse: We need to find out if he's stopped killing rodents");
+						break;
+					case -1:
+						mes("@yel@Eak the Mouse: That's great we were able to help Death");
+						delay(3);
+						mes("@yel@Eak the Mouse: I can't wait for all the other rodents to return");
+						break;
+				}
+			} else {
+				mes("@yel@Eak the Mouse: Squeak!");
+			}
+		} else {
+			// Here's where dialog for Eak after the event will go.
+		}
 	}
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return item.getCatalogId() == ItemId.EAK_THE_MOUSE.id();
+		return item.getCatalogId() == ItemId.EAK_THE_MOUSE.id() && command.equalsIgnoreCase("talk");
 	}
 
 	@Override
@@ -38,7 +135,7 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 		if (npc.getID() == NpcId.GERTRUDE.id()) {
 			player.face(npc);
 			npc.face(player);
-			npcsay(player, npc, "AAAAAAAAAAAAAAAAAAAAAA");
+			npcsay("AAAAAAAAAAAAAAAAAAAAAA");
 			delay(3);
 			mes("Both Gertrude and Eak are very startled");
 			// TODO:
@@ -222,7 +319,7 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 				delay(3);
 				mes("Eak the Mouse: A cheese? For me?");
 				delay(2);
-				int cheeseForEak = multi(player, "Yes Eak, cheese for you.",
+				int cheeseForEak = multi("Yes Eak, cheese for you.",
 					"My mistake, i need that cheese");
 				if (cheeseForEak == 0) { // give Eak cheese
 					mes("@yel@" + player.getUsername() + ": Yes Eak, cheese for you.");
@@ -269,10 +366,10 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 	public void onUseObj(Player player, GroundItem item, Item myItem) {
 		// Player has used Tinderbox on GroundItem Eak the Mouse...
 		mes("Are you sure you want to do that?");
-		int lastChanceToNotBeTerrible = multi(player, "Yes",
+		int lastChanceToNotBeTerrible = multi("Yes",
 			"omg no of course i don't jeez what was I thinking");
-		if (lastChanceToNotBeTerrible == 0) {
-			thinkbubble(new Item(ItemId.TINDERBOX.id()));
+		if (lastChanceToNotBeTerrible == 0) { // give Eak cheese
+			Functions.thinkbubble(new Item(ItemId.TINDERBOX.id()));
 			player.playerServerMessage(MessageType.QUEST, "You attempt to light Eak the Mouse on fire");
 			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "Eak is very upset, but manages to run away when they see what you're doing");
