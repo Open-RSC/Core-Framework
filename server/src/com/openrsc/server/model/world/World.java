@@ -74,6 +74,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public int membersWildMax = 56;
 	public int godSpellsStart = 1;
 	public int godSpellsMax = 5;
+	public int eventChestRadius = 4;
+	public GameObject eventChest = null;
 
 	private final Server server;
 	private final RegionManager regionManager;
