@@ -15,12 +15,18 @@ import java.util.Random;
 
 public class EventPartyChest implements UseLocTrigger {
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
-		if(obj.getID() != 18 && obj.getID() != 17) {
+		if (obj != player.getWorld().eventChest) {
 			return false;
 		}
-		if(item.getDef(player.getWorld()).isUntradable() && !player.isAdmin()) {
+
+		if (obj.getID() != 257 && obj.getID() != 247) {
 			return false;
 		}
+
+		if (item.getDef(player.getWorld()).isUntradable() && !player.isAdmin()) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -32,14 +38,14 @@ public class EventPartyChest implements UseLocTrigger {
 	}
 
 	public void onUseLoc(Player player, GameObject obj, Item item) {
-		if(player.getCarriedItems().remove(item) <= -1) {
+		if (player.getCarriedItems().remove(item) <= -1) {
 			return;
 		}
 
 		try {
 			ActionSender.sendMessage(player, null, MessageType.QUEST, "You place the item into the chest...", 0, null);
 			for (Player p : player.getWorld().getPlayers()) {
-				if(isWithinChestNotificationRange(player, obj, p.getLocation())) {
+				if (isWithinChestNotificationRange(player, obj, p.getLocation())) {
 					ActionSender.sendMessage(p, null, MessageType.QUEST, player.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef(player.getWorld()).getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0, null);
 				}
 			}
@@ -50,7 +56,7 @@ public class EventPartyChest implements UseLocTrigger {
 			public void action() {
 				final Random rand = DataConversions.getRandom();
 
-				while(true) {
+				while (true) {
 					final Point location = new Point(obj.getLocation().getX() + rand.nextInt(player.getWorld().eventChestRadius), obj.getLocation().getY() + rand.nextInt(player.getWorld().eventChestRadius));
 					if ((getOwner().getWorld().getTile(location).traversalMask & 64) != 0) {
 						continue;

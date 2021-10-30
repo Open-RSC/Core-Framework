@@ -18,6 +18,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -600,7 +601,7 @@ public final class Event implements CommandTrigger {
 
 	private void toggleEventChest(Player player, String command, String[] args) {
 		int time, radius, direction;
-		if(args.length >= 1) {
+		if (args.length >= 1) {
 			try {
 				time = Integer.parseInt(args[0]);
 			} catch (NumberFormatException ex) {
@@ -611,7 +612,7 @@ public final class Event implements CommandTrigger {
 			time = 60;
 		}
 
-		if(args.length >= 2) {
+		if (args.length >= 2) {
 			try {
 				radius = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
@@ -623,7 +624,7 @@ public final class Event implements CommandTrigger {
 		}
 		player.getWorld().eventChestRadius = radius;
 
-		if(args.length >= 3) {
+		if (args.length >= 3) {
 			try {
 				direction = Integer.parseInt(args[2]);
 
@@ -641,11 +642,6 @@ public final class Event implements CommandTrigger {
 			direction = 0;
 		}
 
-		if(!player.getLocation().isInSeersPartyHall()) {
-			player.message(messagePrefix + "This command can only be run within the vicinity of the seers party hall");
-			return;
-		}
-
 		final Point objectLoc = player.getLocation();
 		final GameObject existingObject = player.getViewArea().getGameObject(objectLoc);
 
@@ -653,7 +649,12 @@ public final class Event implements CommandTrigger {
 			if (existingObject != null && existingObject.getType() != 1 && (existingObject.getID() != 18 && existingObject.getID() != 17)) {
 				player.message(messagePrefix + "Could not enable event chest at " + player.getLocation() + " due to blocking " + existingObject.getGameObjectDef().getName() + ".");
 			} else {
-				GameObject newObject = new GameObject(player.getWorld(), objectLoc, 18, direction, 0);
+				int sceneryId = 247; // bugged out crystal chest (open)
+				if ((LocalDate.now().getMonthValue() == 10 && LocalDate.now().getDayOfMonth() == 31) ||
+					(LocalDate.now().getMonthValue() == 11 && LocalDate.now().getDayOfMonth() == 1)) {
+					sceneryId = 257; // thematic cauldron for Halloween
+				}
+				GameObject newObject = new GameObject(player.getWorld(), objectLoc, sceneryId, direction, 0);
 				player.getWorld().registerGameObject(newObject);
 				player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, time * 60000, "Unregister Event Chest") {
 					@Override
