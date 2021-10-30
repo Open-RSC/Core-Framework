@@ -110,7 +110,7 @@ public final class Event implements CommandTrigger {
 		else if(command.equalsIgnoreCase("seers") || command.equalsIgnoreCase("toggleseers") || command.equalsIgnoreCase("partyhall") || command.equalsIgnoreCase("togglepartyhall")) {
 			toggleSeersParty(player, command, args);
 		}
-		else if(command.equalsIgnoreCase('eventchest')) {
+		else if(command.equalsIgnoreCase("eventchest")) {
 			toggleEventChest(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("stoppvpevent")) {
@@ -597,7 +597,7 @@ public final class Event implements CommandTrigger {
 			player.message(messagePrefix + "A MySQL error has occured! " + ex.getMessage());
 		}
 	}
-	
+
 	private void toggleEventChest(Player player, String command, String[] args) {
 		int time, radius, direction;
 		if(args.length >= 1) {
@@ -610,7 +610,7 @@ public final class Event implements CommandTrigger {
 		} else {
 			time = 60;
 		}
-		
+
 		if(args.length >= 2) {
 			try {
 				radius = Integer.parseInt(args[1]);
@@ -622,17 +622,17 @@ public final class Event implements CommandTrigger {
 			radius = 4;
 		}
 		player.getWorld().eventChestRadius = radius;
-		
+
 		if(args.length >= 3) {
 			try {
 				direction = Integer.parseInt(args[2]);
-				
+
 				if (direction < 0 || direction > 7) {
 					player.message(badSyntaxPrefix + command.toUpperCase() + " Invalid direction. Try 0-7");
 					player.message(badSyntaxPrefix + command.toUpperCase() + " (time_in_minutes) (radius) (direction)");
 					return;
 				}
-				
+
 			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + command.toUpperCase() + " (time_in_minutes) (radius) (direction)");
 				return;
@@ -668,9 +668,9 @@ public final class Event implements CommandTrigger {
 				player.message(messagePrefix + "Event chest has been enabled at " + player.getLocation() + ".");
 			}
 		} else {
-			player.message(messagePrefix + "Event chest at " + newObject.getLocation() + " has been disabled.");
+			player.message(messagePrefix + "Event chest at " + player.getWorld().eventChest.getLocation() + " has been disabled.");
 			// TODO: Removing the chest should be a function on world.
-			player.getWorld().unregisterGameObject(newObject);
+			player.getWorld().unregisterGameObject(player.getWorld().eventChest);
 			player.getWorld().eventChest = null;
 			player.getWorld().eventChestRadius = 4;
 		}

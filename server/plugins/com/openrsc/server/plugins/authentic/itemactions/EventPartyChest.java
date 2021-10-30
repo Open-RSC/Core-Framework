@@ -13,7 +13,7 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Random;
 
-public class SeersPartyChest implements UseLocTrigger {
+public class EventPartyChest implements UseLocTrigger {
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		if(obj.getID() != 18 && obj.getID() != 17) {
 			return false;
@@ -23,8 +23,8 @@ public class SeersPartyChest implements UseLocTrigger {
 		}
 		return true;
 	}
-	
-	public boolean isWithinChestNotificationRange(GameObject chest, Point p) {
+
+	public boolean isWithinChestNotificationRange(Player player, GameObject chest, Point p) {
 		return chest.getLocation().getX() + player.getWorld().eventChestRadius * 2 >= p.getX() &&
 		chest.getLocation().getX() - player.getWorld().eventChestRadius * 2 <= p.getX() &&
 		chest.getLocation().getY() + player.getWorld().eventChestRadius * 2 >= p.getY() &&
@@ -35,11 +35,11 @@ public class SeersPartyChest implements UseLocTrigger {
 		if(player.getCarriedItems().remove(item) <= -1) {
 			return;
 		}
-		
+
 		try {
 			ActionSender.sendMessage(player, null, MessageType.QUEST, "You place the item into the chest...", 0, null);
 			for (Player p : player.getWorld().getPlayers()) {
-				if(isWithinChestNotificationRange(obj, p.getLocation()) {
+				if(isWithinChestNotificationRange(player, obj, p.getLocation())) {
 					ActionSender.sendMessage(p, null, MessageType.QUEST, player.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef(player.getWorld()).getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0, null);
 				}
 			}
