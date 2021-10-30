@@ -2261,6 +2261,8 @@ public class EntityHandler {
 		// head, shirt, pants, shield, weapon, hat, body, legs, gloves, boots, amulet, cape
 		sprites = new int[]{3, 1, 2, -1, 228, 483, 82, 88, 155, -1, -1, -1};
 		npcs.add(new NPCDef("Death", "He sure could do with gaining some weight", "", 15, 15, 12, 12, false, sprites, 1, 2, 3, 16777215, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Loan Officer", "He can lend me some money", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 7296823, 145, 220, 6, 6, 5, i++));
 
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
