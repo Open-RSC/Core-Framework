@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.RuneScript.*;
+import static com.openrsc.server.plugins.custom.minigames.micetomeetyou.MiceQuestStates.*;
 
 public final class Aggie implements TalkNpcTrigger {
 
@@ -30,11 +31,12 @@ public final class Aggie implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc npc) {
-		if (config().MICE_TO_MEET_YOU_EVENT && player.getCache().hasKey("mice_to_meet_you")
-			&& (ifvar("mice_to_meet_you", 9)
-			|| ifvar("mice_to_meet_you", 10))) {
-			miceToMeetYou(player, npc);
-			return;
+		if (config().MICE_TO_MEET_YOU_EVENT && player.getCache().hasKey("mice_to_meet_you")) {
+			int queststate = player.getCache().getInt("mice_to_meet_you");
+			if (queststate >= EAK_IS_IMMORTAL && queststate <= AGGIE_HAS_GIVEN_PIE)  {
+				miceToMeetYou(player, npc, queststate);
+				return;
+			}
 		}
 		aggieDialogue(player, npc, -1);
 	}
@@ -302,9 +304,9 @@ public final class Aggie implements TalkNpcTrigger {
 		}
 	}
 
-	private void miceToMeetYou(final Player player, final Npc npc) {
+	private void miceToMeetYou(final Player player, final Npc npc, final int queststate) {
 		if (!ifheld(ItemId.EAK_THE_MOUSE.id(), 1)) {
-			mes("Oh no! You seem to have lost Eak!");
+			mes("Oh no! You seem to have lost Eak!"); // TODO: hmm
 			delay(3);
 			mes("Maybe you should go back to Hetty");
 			delay(3);
@@ -312,61 +314,156 @@ public final class Aggie implements TalkNpcTrigger {
 			return;
 		}
 
-		if (ifvar("mice_to_meet_you", 9)) {
-			npcsay("Hello, my precious",
-				"How can I help you");
-			mes("Before you can open your mouth, Eak starts talking");
-			delay(3);
-			mes("@yel@Eak the Mouse: Betty said that we should come to you");
-			delay(3);
-			mes("@yel@Eak the Mouse: once we gathered some information on Death");
-			delay(3);
-			npcsay("Yes indeed, my cute little friend",
-				"Tell me what you found");
-			mes("Eak tells Aggie about the pumpkins and the bills");
-			delay(3);
-			npcsay("I see",
-				"Well, it sounds to me like Death has hit a rough spot in life",
-				"He used to live in a great mansion with his parents",
-				"But it seems like he's had to downsize",
-				"So he moved to the Varrock slums",
-				"And for whatever reason, started killing all the rodents");
-			mes("Aggie thinks hard for a few moments");
-			delay(3);
-			npcsay("There were a lot of pumpkins you say, Eak?");
-			mes("@yel@Eak the Mouse: Yes, those seemed to be some of his only possessions");
-			delay(3);
-			npcsay("I've got it! What if you convinced Death to start selling pumpkin pies",
-				"That way he can make enough money to move out of the slums",
-				"We should whip one up so that we can pitch the idea to him");
-			int option = multi("Here it comes", "Alright, I'll go get the ingredients");
-			if (option == -1) return;
-			else if (option == 0) {
-				npcsay("Here what comes?");
-				say("You're going to ask me to go and get the ingredients to make the pie");
+		switch (queststate) {
+			case EAK_IS_IMMORTAL: {
+				if (player.getCache().hasKey("aggie_met_eak_earlier")) {
+					npcsay("I don't know Death very well",
+						"So you had ought to go see if there's anything you can find",
+						"at their place to figure out why he's bumming around Varrock.");
+					mes("@yel@Eak the Mouse: Okej then, thanks");
+				} else {
+					npcsay("What can I help you with?");
+					mes("Before you can open your mouth, Eak starts talking");
+					delay(3);
+					mes("@yel@Eak the Mouse: Hello!");
+					delay(3);
+					mes("@yel@Eak the Mouse: Betty told us to come to you for ideas on how to get Death");
+					delay(3);
+					mes("@yel@Eak the Mouse: to stop killing all the rats");
+					delay(3);
+					player.getCache().store("aggie_met_eak_earlier", true);
+					npcsay("Oh, yes, I can see that you have indeed met Betty.");
+					npcsay("And Hetty too it smells like.");
+					npcsay("Well. I would love if you were able to help us get");
+					npcsay("a good supply of Rat tails again.");
+					npcsay("But I don't know Death very well.",
+						"So you had ought to go see if there's anything you can find",
+						"at their place to figure out why he's bumming around Varrock.");
+					mes("@yel@Eak the Mouse: Okej then, thanks");
+				}
+				return;
 			}
-			npcsay("Oh I don't need you to do that",
-				"As luck would have it, I just got done making one");
-			mes("Aggie hands you a pumpkin pie");
-			give(ItemId.PUMPKIN_PIE.id(), 1);
-			delay(3);
-			npcsay("Take that on over to Death",
-				"See if you can convince him to leave",
-				"And don't eat it!");
-
-			setvar("mice_to_meet_you", 10);
-		} else {
-			if (ifheld(ItemId.PUMPKIN_PIE.id(), 1)) {
-				npcsay("Take that on over to Death now, my dear",
-					"Don't doddle");
-			} else {
-				say("I accidentally lost the pie");
-				npcsay("Lost it?!",
-					"You mean ate it, I'm sure!",
-					"Here, take another one",
-					"But don't lose it!",
-					"Pumpkins don't grow on trees, you know");
+			case EAK_HAS_COMPLETED_RECON: {
+				mes("Surely, you're at least a little curious about what Eak has to say?");
+				return;
+			}
+			case EAK_HAS_TOLD_PLAYER_RECON_INFO: {
+				npcsay("Hello, my precious",
+					"How can I help you");
+				mes("Before you can open your mouth, Eak starts talking");
+				delay(3);
+				mes("@yel@Eak the Mouse: Betty said that we should come to you");
+				delay(3);
+				mes("@yel@Eak the Mouse: once we gathered some information on Death");
+				delay(3);
+				if (player.getCache().hasKey("aggie_met_eak_earlier")) {
+					npcsay("Yes indeed, my cute little friend",
+						"Tell me what you found");
+				} else {
+					npcsay("Oh, yes, I can see that you have indeed met Betty.");
+					npcsay("And Hetty too it smells like");
+					npcsay("Well. I would love if you were able to help us get");
+					npcsay("a good supply of Rat tails again.");
+					npcsay("So then, my cute little friend,",
+						"Tell me what you found");
+				}
+				mes("Eak tells Aggie about the pumpkins and the bills");
+				delay(3);
+				npcsay("I see",
+					"Well, it sounds to me like Death has hit a rough spot in life.",
+					"He used to live in a great mansion with his parents",
+					"But it seems like he's had to downsize",
+					"So he moved to the Varrock slums",
+					"And for whatever reason, started killing all the rodents");
+				mes("Aggie thinks hard for a few moments");
+				delay(3);
+				npcsay("There were a lot of pumpkins you say, Eak?");
+				mes("@yel@Eak the Mouse: Yes, those seemed to be some of his only possessions");
+				delay(3);
+				npcsay("I've got it! What if you convinced Death to start selling pumpkin pies",
+					"That way he can make enough money to move out of the slums",
+					"We should whip one up so that we can pitch the idea to him");
+				int option = multi("Here it comes", "Alright, I'll go get the ingredients");
+				if (option == -1) return;
+				else if (option == 0) {
+					npcsay("Here what comes?");
+					say("You're going to ask me to go and get the ingredients to make the pie");
+				}
+				npcsay("Oh I don't need you to do that",
+					"As luck would have it, I just got done making one");
+				mes("Aggie hands you a pumpkin pie");
 				give(ItemId.PUMPKIN_PIE.id(), 1);
+				delay(3);
+				npcsay("Take that on over to Death",
+					"See if you can convince him to leave",
+					"And don't eat it!");
+				setvar("mice_to_meet_you", AGGIE_HAS_GIVEN_PIE);
+				setvar("pumpkin_pies_given", 1);
+				return;
+			}
+			case AGGIE_HAS_GIVEN_PIE: {
+				if (ifheld(ItemId.PUMPKIN_PIE.id(), 1)) {
+					npcsay("Take that on over to Death now, my dear",
+						"Don't doddle");
+				} else {
+					int piesGiven = player.getCache().getInt("pumpkin_pies_given");
+					if (piesGiven < 3) {
+						say("I accidentally lost the pie");
+						npcsay("Lost it?!",
+							"You mean ate it, I'm sure!",
+							"Here, take another one",
+							"But don't lose it!",
+							"Pumpkins don't grow on trees, you know");
+						give(ItemId.PUMPKIN_PIE.id(), 1);
+						setvar("pumpkin_pies_given",  piesGiven + 1);
+					} else if (piesGiven == 3) {
+						say("I accidentally lost the pie");
+						npcsay("Lost it?!",
+							"Look, I'm not stupid.",
+							"I know what game you're playing.",
+							"The pies are great, but if you've lost this many of them",
+							"I really feel like you're just taking advantage of me"
+							);
+						say("No... I lost it...");
+						npcsay("Look, this is your last one.");
+						npcsay("DO NOT LOSE IT.");
+						give(ItemId.PUMPKIN_PIE.id(), 1);
+						setvar("pumpkin_pies_given",  piesGiven + 1);
+					} else {
+						say("I accidentally lost the pie");
+						npcsay("No more freebies.");
+						if (player.getCarriedItems().hasCatalogID(ItemId.EGG.id()) &&
+							player.getCarriedItems().hasCatalogID(ItemId.MILK.id()) &&
+							player.getCarriedItems().hasCatalogID(ItemId.PUMPKIN.id()) &&
+							player.getCarriedItems().hasCatalogID(ItemId.PIE_SHELL.id())) {
+							say("But I have the ingredients to make another...");
+							if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
+								&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
+								&& player.getCarriedItems().remove(new Item(ItemId.PUMPKIN.id())) > -1
+								&& player.getCarriedItems().remove(new Item(ItemId.PIE_SHELL.id())) > -1) {
+									mes("Aggie waves her hands about, and all the ingredients merge together");
+									delay(3);
+									give(ItemId.PUMPKIN_PIE.id(), 1);
+									npcsay("Get out of my sight.");
+									npcsay("You're lucky you're not a frog right now.");
+									setvar("pumpkin_pies_given",  piesGiven + 1);
+							}
+						} else if (player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false))) {
+							mes("Aggie waves her hands near you, and you seem to have lost some flour");
+							delay(3);
+							player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
+							npcsay("Thankyou for your kind present of flour",
+								"I am sure you never meant to insult me");
+						} else {
+							npcsay("I told you not to lose another one");
+							npcsay("And you did.");
+							mes("Aggie seems to think a moment");
+							delay(3);
+							npcsay("If you bring me a Pumpkin, a pieshell, an egg, and a bucket of Milk",
+								"I can maybe work something out.");
+						}
+					}
+				}
 			}
 		}
 	}

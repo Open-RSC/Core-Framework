@@ -12,98 +12,109 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.RuneScript.*;
+import static com.openrsc.server.plugins.custom.minigames.micetomeetyou.MiceQuestStates.*;
+import static com.openrsc.server.util.rsc.DataConversions.random;
 
 public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigger, UseInvTrigger, UseObjTrigger {
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		// We want this check, so we aren't checking the cache every time we want to talk
-		// to Eak after the event is over
 		if (config().MICE_TO_MEET_YOU_EVENT && player.getCache().hasKey("mice_to_meet_you")) {
-			// Eak learns to talk at stage 4
 			final int questStage = player.getCache().getInt("mice_to_meet_you");
-			if (questStage >= 4 || questStage == -1) {
+			if (eakCanTalk(player)) {
 				switch (questStage) {
-					case 4:
+					case EAK_CAN_TALK:
 						mes("@yel@Eak the Mouse: We should go talk to Betty in Port Sarim");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: Hopefully she can help me get into Death's house");
 						break;
-					case 5:
+					case AGREED_TO_BRING_BETTY_INGREDIENTS:
 						mes("@yel@Eak the Mouse: We need to find those items for Betty");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: She needs 10 body runes, an eye of a newt");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: And you need to be wearing a wizard hat");
 						break;
-					case 6:
+					case GIVEN_BETTY_IMMORTAL_MOUSE_INGREDIENTS:
 						mes("@yel@Eak the Mouse: It's very strange that Betty didn't even use the stuff you got her");
-						delay(3);
-						mes("@yel@Eak the Mouse: We still need her for the spell though");
+						delay(5);
+						mes("@yel@Eak the Mouse: We still need to learn the spell from her though");
 						break;
-					case 7:
+					case EAK_IS_IMMORTAL:
+						say("How do you feel Eak?");
+						mes("@yel@Eak the Mouse: I feel so strong and vibrant");
+						delay(5);
+						mes("@yel@Eak the Mouse: I am ... among the immortals now...");
+						delay(5);
+						mes("@yel@Eak the Mouse: I can't feel any pain that I don't allow myself to feel...");
+						delay(5);
+						say("wow");
 						mes("@yel@Eak the Mouse: Let's go back to Varrock");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: I should be able to sneak into Death's house now");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: Just take me to his front door, and I'll do the rest");
 						break;
-					case 8:
-					case 9:
+					case EAK_HAS_COMPLETED_RECON:
+					case EAK_HAS_TOLD_PLAYER_RECON_INFO:
 						int option = multi("What did you see in the house?",
-							"What was the shriek?",
+							"What was that shriek?",
 							"Nevermind");
-						if (option == 2 || option == -1) return;
+						if (option == -1) return;
 						if (option == 1) {
+							say("What was that shriek?");
 							mes("Eak starts to giggle");
-							delay(3);
+							delay(5);
 							mes("@yel@Eak the Mouse: Believe it or not, that was Death!");
-							delay(3);
+							delay(5);
 							mes("Eak is laughing so hard, they almost roll out of your hand");
 							return;
+						} else if (option == 2) {
+							say("Nevermind");
+							return;
 						}
-
+						say("what did you see in the house?");
 						mes("@yel@Eak the Mouse: I saw a couple of things in there");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: First thing I noticed is that it wasn't very big");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: I also saw there were a ton of pumpkins all over the floor");
-						delay(3);
-						mes("@yel@Eak the Mouse: Lastly, I saw a ton of bills");
-						delay(3);
+						delay(5);
+						mes("@yel@Eak the Mouse: Lastly, I saw a ton of bills past due");
+						delay(5);
 						mes("@yel@Eak the Mouse: If you ask me, it looks like Death is hurting for money");
-						delay(3);
+						delay(5);
 						mes("@yel@Eak the Mouse: That's why he's moved into the slums");
-						delay(3);
-						mes("@yel@Eak the Mouse: We should go talk to Aggie");
-						delay(3);
+						delay(5);
+						mes("@yel@Eak the Mouse: We should go talk to Aggie like Betty said");
+						delay(5);
 						mes("@yel@Eak the Mouse: Maybe she'll have an idea on how to get rid of him");
-						delay(3);
+						delay(5);
 						mes("Eak looks sad");
 						delay(3);
 						mes("@yel@Eak the Mouse: I miss my rodent friends");
-						setvar("mice_to_meet_you", 9);
+						setvar("mice_to_meet_you", EAK_HAS_TOLD_PLAYER_RECON_INFO);
 						break;
-					case 10:
-					case 11:
+					case AGGIE_HAS_GIVEN_PIE:
+					case SCARED_DEATH_WITH_EAK:
 						if (ifheld(ItemId.PUMPKIN_PIE.id(), 1)) {
 							mes("@yel@Eak the Mouse: Let's get this pie over to Death!");
 						} else {
 							mes("@yel@Eak the Mouse: " + player.getUsername() + "... You didn't eat the pie, did you?");
-							delay(3);
+							delay(4);
 							mes("@yel@Eak the Mouse: Now we have to go back to Aggie to get another one");
 						}
 						break;
-					case 12:
+					case DEATH_CONSIDERS_PUMPKIN_PIE_SIDEGIG:
 						mes("@yel@Eak the Mouse: Let's talk to Death and see if he's made up his mind");
 						break;
-					case 13:
+					case UNLOCKED_DEATH_ISLAND:
 						mes("@yel@Eak the Mouse: Let's visit Death on his island");
-						delay(3);
+						delay(4);
 						mes("@yel@Eak the Mouse: We need to find out if he's stopped killing rodents");
 						break;
-					case -1:
+					case COMPLETED:
 						mes("@yel@Eak the Mouse: That's great we were able to help Death");
-						delay(3);
+						delay(4);
 						mes("@yel@Eak the Mouse: I can't wait for all the other rodents to return");
 						break;
 				}
@@ -139,6 +150,47 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 			delay(3);
 			mes("Both Gertrude and Eak are very startled");
 			// TODO:
+		} else if (npc.getID() == NpcId.ESTER.id()) {
+			player.face(npc);
+			npc.face(player);
+			if (player.getCache().hasKey("restore_friends_sidequest")) {
+				int questState = player.getCache().getInt("restore_friends_sidequest");
+				switch (questState) {
+					case 0:
+					default:
+						npcsay("Have you talked to Death about your friends yet?");
+						mes("@yel@Eak the Mouse: not yet");
+						return;
+					// TODO: a quest
+				}
+			} else {
+				npcsay("what a cute mousey");
+				npcsay("do you have any wisdom, o mousey?");
+				if (eakCanTalk(player)) {
+					mes("@yel@Eak the Mouse: After all my rat and mouse friends were killed");
+					delay(4);
+					mes("@yel@Eak the Mouse: It took me quite a while to rebuild my sanity again");
+					delay(4);
+					mes("@yel@Eak the Mouse: You can be going along in life");
+					delay(4);
+					mes("@yel@Eak the Mouse: and then something can come along and just kind of destroy you");
+					delay(4);
+					mes("@yel@Eak the Mouse: shatter your very foundation.");
+					delay(4);
+					mes("@yel@Eak the Mouse: And it's through no fault of your own, but life has a habit of doing that.");
+					delay(4);
+					mes("@yel@Eak the Mouse: But the other thing I can share is that,");
+					delay(4);
+					mes("@yel@Eak the Mouse: you can recover from that. There is a tomorrow.");
+					delay(7);
+					npcsay("I bet if you talk to death, he could restore your friends");
+					mes("@yel@Eak the Mouse: I may try that, thankyou");
+					player.getCache().store("restore_friends_sidequest", 0);
+				} else {
+					mes("@yel@Eak the Mouse: squeak");
+				}
+				return;
+			}
 		}
 	}
 
@@ -155,6 +207,14 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 			mes("They're speaking in high pitched squeaks you can't understand");
 			return;
 		}
+
+		if (player.getCache().hasKey("mice_to_meet_you")) {
+			if (!eakCanTalk(player)) {
+				mes("Eak the Mouse: Squeek");
+				return;
+			}
+		}
+
 		Item theOtherItem;
 		if (item1.getCatalogId() == ItemId.EAK_THE_MOUSE.id()) {
 			theOtherItem = item2;
@@ -208,7 +268,7 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 				mes("@yel@" + player.getUsername() + ": It's actually not that rare");
 				delay(3);
 				mes("Eak the Mouse: Could I try a bite?");
-				int spinachRollForEak = multi(player, "Sure",
+				int spinachRollForEak = multi( "Sure",
 					"Ehmm... well, maybe it *is* kiiind of rare...");
 				if (spinachRollForEak == 0) { // give Eak spinach roll
 					mes("@yel@" + player.getUsername() + ": Sure");
@@ -368,7 +428,7 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 		mes("Are you sure you want to do that?");
 		int lastChanceToNotBeTerrible = multi("Yes",
 			"omg no of course i don't jeez what was I thinking");
-		if (lastChanceToNotBeTerrible == 0) { // give Eak cheese
+		if (lastChanceToNotBeTerrible == 0) {
 			Functions.thinkbubble(new Item(ItemId.TINDERBOX.id()));
 			player.playerServerMessage(MessageType.QUEST, "You attempt to light Eak the Mouse on fire");
 			delay(3);
@@ -378,14 +438,25 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 			player.playerServerMessage(MessageType.QUEST, "You are a terrible person.");
 			item.remove(); // Eak runs away safely
 		} else {
-			mes("Eak the Mouse: Hey!! I'm down here!! you accidentally dropped me!");
-			delay(3);
-			mes("Eak the Mouse: ... stop looking at me weird and pick me up!!");
+			if (eakCanTalk(player)) {
+				mes("Eak the Mouse: Hey!! I'm down here!! you accidentally dropped me!");
+				delay(3);
+				mes("Eak the Mouse: ... stop looking at me weird and pick me up!!");
+			} else {
+				mes("Eak looks up at you concerned");
+				delay(3);
+				mes("@yel@Eak the Mouse: squeak...!");
+			}
 		}
 	}
 
 	@Override
 	public boolean blockUseObj(Player player, GroundItem item, Item myItem) {
 		return item.getID() == ItemId.EAK_THE_MOUSE.id() && myItem.getCatalogId() == ItemId.TINDERBOX.id();
+	}
+
+	public boolean eakCanTalk(Player player) {
+		final int questStage = player.getCache().getInt("mice_to_meet_you");
+		return questStage >= EAK_CAN_TALK || questStage == COMPLETED;
 	}
 }

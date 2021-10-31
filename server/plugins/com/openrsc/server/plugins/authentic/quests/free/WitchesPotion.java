@@ -25,6 +25,7 @@ import static com.openrsc.server.plugins.RuneScript.multi;
 import static com.openrsc.server.plugins.RuneScript.npcsay;
 import static com.openrsc.server.plugins.RuneScript.say;
 import static com.openrsc.server.plugins.RuneScript.*;
+import static com.openrsc.server.plugins.custom.minigames.micetomeetyou.MiceQuestStates.*;
 
 public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
@@ -160,7 +161,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	private void miceToMeetYou(final Player player, final Npc npc) {
 		if (!player.getCache().hasKey("mice_to_meet_you")
 			|| (player.getCache().hasKey("mice_to_meet_you")
-			&& player.getCache().getInt("mice_to_meet_you") == 0)) {
+			&& player.getCache().getInt("mice_to_meet_you") == NOT_STARTED)) {
 			npcsay("Greetings Traveller",
 				"What could you want with an old woman like me?",
 				"I'm afraid that I don't have much to offer you at the moment");
@@ -246,7 +247,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 				"For whatever reason, Death has moved into the slums",
 				"You should start there");
 
-			setvar("mice_to_meet_you", 1);
+			setvar("mice_to_meet_you", TALKED_TO_HETTY);
 
 		} else {
 			final int miniquestStage = player.getCache().getInt("mice_to_meet_you");
@@ -317,7 +318,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 							"All I'll need is some ashes",
 							"If you could bring me some, we can ask this mouse what it knows",
 							"Just one small pile should do");
-						setvar("mice_to_meet_you", 3);
+						setvar("mice_to_meet_you", NEED_ASH_TO_ENCHANT);
 					}
 					break;
 				case 3:
@@ -341,6 +342,8 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 						"Hocus pocus!",
 						"Squiggly wiggly!");
 					mes("There is a tiny puff of smoke");
+					delay(3);
+					mes("or perhaps ash");
 					delay(3);
 					npcsay("That should do it");
 					mes("Hetty addresses the mouse");
@@ -382,7 +385,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 						"Maybe we can figure out why he's come and get rid of him",
 						"Or find a way to convince him to stop killing rats",
 						"Good luck");
-					setvar("mice_to_meet_you", 4);
+					setvar("mice_to_meet_you", EAK_CAN_TALK);
 					break;
 				case 4:
 				case 5:

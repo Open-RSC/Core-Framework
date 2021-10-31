@@ -279,8 +279,20 @@ public final class CustomBankInterface extends BankInterface {
 		for (BankItem item : bankItems) {
 			ItemDef def = item.getItem().getItemDef();
 			if (searchItem.length() > 0) {
-				if (def.getName().toLowerCase().contains(searchItem)) {
-					searchList.add(item);
+				try {
+					if (def.getName().toLowerCase().contains(searchItem)) {
+						searchList.add(item);
+					}
+				} catch (NullPointerException ex) {
+					try {
+						System.out.println("NPE while searching bank: def.id " + def.id + " might not have a name");
+					} catch (NullPointerException ex1) {
+						try {
+							System.out.println("NPE while searching bank: item.bankID: " + item.bankID);
+						} catch (NullPointerException ex2) {
+							System.out.println("NPE while searching bank: item is probably null");
+						}
+					}
 				}
 			} else {
 				searchList.add(item);

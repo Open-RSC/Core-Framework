@@ -94,7 +94,7 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 		// Pumpkin Pie
 		if (item1.getCatalogId() == ItemId.PIE_SHELL.id() || item2.getCatalogId() == ItemId.PIE_SHELL.id()) {
 			if (item1.getCatalogId() == ItemId.WHITE_PUMPKIN.id() || item2.getCatalogId() == ItemId.WHITE_PUMPKIN.id()) {
-				player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong color...");
+				player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong colour...");
 				// TODO: could add a "white pumpkin pie" that heals less
 				return;
 			}
@@ -123,7 +123,7 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 						player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a pumpkin pie");
 					else if (!player.getCarriedItems().hasCatalogID(ItemId.PUMPKIN.id())) { // Pumpkin
 						if (player.getCarriedItems().hasCatalogID(ItemId.WHITE_PUMPKIN.id())) {
-							player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong color...");
+							player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong colour...");
 							// TODO: could add a "white pumpkin pie" that heals less
 						} else {
 							player.playerServerMessage(MessageType.QUEST, "I also need a pumpkin to make a pumpkin pie");
