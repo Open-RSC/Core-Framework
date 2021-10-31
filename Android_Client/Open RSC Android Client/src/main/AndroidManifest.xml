@@ -41,6 +41,7 @@
             android:name="com.openrsc.android.updater.ApplicationUpdater"
             android:configChanges="orientation"
             android:label="OpenRSC"
+            android:exported="true"
             android:screenOrientation="landscape">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
