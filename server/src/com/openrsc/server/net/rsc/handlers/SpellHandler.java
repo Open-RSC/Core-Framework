@@ -1150,6 +1150,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().message("Telekinetic grab cannot be used in here");
 							return;
 						}
+						if (affectedItem.getLocation().inBounds(114, 532, 115, 535) && affectedItem.getID() == ItemId.PUMPKIN.id()) {
+							getPlayer().message("A strange power prevents you from telegrabbing the pumpkin.");
+							delay(3);
+							getPlayer().message("@yel@Death: Do NOT cast magic on my belongings!!");
+							return;
+						}
 
 						if (affectedItem.getLocation().inWilderness() && !affectedItem.belongsTo(getPlayer())
 							&& affectedItem.getAttribute("playerKill", false)
