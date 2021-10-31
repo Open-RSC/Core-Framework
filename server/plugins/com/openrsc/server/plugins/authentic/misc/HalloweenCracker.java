@@ -207,20 +207,24 @@ public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 				}
 				say(player, npc, playerDialogue);
 				npcsay(player, npc, "very good, let me help you out with the cracker");
-				thinkbubble(item);
-				player.playerServerMessage(MessageType.QUEST, "The banker pulls the halloween cracker on you");
+				if (player.getCarriedItems().remove(new Item(ItemId.HALLOWEEN_CRACKER.id())) > -1) {
+					thinkbubble(item);
+					player.playerServerMessage(MessageType.QUEST, "The banker pulls the halloween cracker on you");
 
-				delay();
+					delay();
 
-				int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
-				int prizeId = getPrizeID(player);
+					int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
+					int prizeId = getPrizeID(player);
 
-				Item mask = new Item(holidayId);
-				Item prize = new Item(prizeId);
+					Item mask = new Item(holidayId);
+					Item prize = new Item(prizeId);
 
-				player.message("You get the prize from the cracker");
-				player.getCarriedItems().getInventory().add(mask);
-				player.getCarriedItems().getInventory().add(prize);
+					player.message("You get the prize from the cracker");
+					player.getCarriedItems().getInventory().add(mask);
+					player.getCarriedItems().getInventory().add(prize);
+				} else {
+					npcsay(player, npc, "wait where'd it go...");
+				}
 			} else {
 				player.message("Nothing interesting happens");
 			}
