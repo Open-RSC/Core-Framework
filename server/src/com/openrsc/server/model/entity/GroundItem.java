@@ -95,7 +95,7 @@ public class GroundItem extends Entity {
 
 	public void trySetLocation(Point point) {
 		if (getWorld().getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id()
-			|| this.getID() < getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
+			|| this.getID() <= getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
 			setLocation(point);
 		}
 	}
@@ -120,7 +120,7 @@ public class GroundItem extends Entity {
 
 	public void remove() {
 		if (getWorld().getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id()
-			|| this.getID() < getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
+			|| this.getID() <= getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
 			if (!isRemoved() && loc != null && loc.getRespawnTime() > 0) {
 				getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, loc.getRespawnTime() * 1000, "Respawn Ground Item") {
 					public void run() {
