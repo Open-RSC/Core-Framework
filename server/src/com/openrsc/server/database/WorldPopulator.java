@@ -1,5 +1,6 @@
 package com.openrsc.server.database;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
@@ -257,6 +258,12 @@ public final class WorldPopulator {
 								}
 							}
 						}
+
+						// This should be removed once IdleRSC gets sorted.
+						// Death should stick around even after the event is over
+						if (!getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
+							npclocs.removeIf(npcLoc -> npcLoc.getId() == NpcId.DEATH.id());
+						}
 					}
 					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
 				}
@@ -271,6 +278,18 @@ public final class WorldPopulator {
 						loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsCustomQuest.json");
 					}
 				}
+
+				// Add a red key so you can do Dragon Slayer
+				if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
+					ItemLoc loc = new ItemLoc();
+					loc.id = ItemId.RED_KEY.id();
+					loc.x = 344;
+					loc.y = 631;
+					loc.amount = 1;
+					loc.respawnTime = 30;
+					itemlocs.add(loc);
+				}
+
 				return;
 			}
 		}
