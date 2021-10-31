@@ -45,32 +45,32 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 			switch (questStage) {
 				case TALKED_TO_HETTY:
 					mes("As you approach the door, you feel an odd power emanating from within");
-					delay(3);
+					delay(5);
 					mes("You are about to knock on the door when you notice movement");
-					delay(3);
+					delay(5);
 					mes("You look down, and see a cute little mouse");
-					delay(3);
+					delay(5);
 					mes("It looks like it wants you to pick it up");
-					delay(3);
+					delay(5);
 					mes("It seem to be very weak");
-					delay(3);
+					delay(5);
 					mes("You pick up the little mouse");
 					give(ItemId.EAK_THE_MOUSE.id(), 1);
 					setvar("mice_to_meet_you", RECEIVED_EAK);
-					delay(3);
+					delay(5);
 					player.playerServerMessage(MessageType.QUEST, "Maybe you should take the mouse back to Hetty");
-					delay(3);
+					delay(5);
 					player.playerServerMessage(MessageType.QUEST, "she could use its tail in her potions");
 					return;
 				case RECEIVED_EAK:
 				case NEED_ASH_TO_ENCHANT:
 					mes("You raise your hand to knock on the door");
-					delay(3);
+					delay(5);
 					mes("@yel@Little mouse: SQUEAK!!!");
-					delay(3);
+					delay(5);
 					mes("The mouse squirms around");
 					if (ifstatabove(Skill.HITS.id(), 1)) {
-						delay(3);
+						delay(5);
 						player.damage(1);
 						mes("And bites you!");
 						say("Ouch!");
@@ -80,16 +80,16 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 				case AGREED_TO_BRING_BETTY_INGREDIENTS:
 				case GIVEN_BETTY_IMMORTAL_MOUSE_INGREDIENTS:
 					mes("You raise your hand to knock on the door");
-					delay(3);
+					delay(5);
 					mes("@yel@Eak the Mouse: WE CAN'T GO IN THERE!!!");
-					delay(3);
+					delay(5);
 					mes("@yel@Eak the Mouse: We have to go talk to Betty in Port Sarim");
-					delay(3);
+					delay(5);
 					mes("@yel@Eak the Mouse: I'll die if we go in there now...");
 					return;
 				case EAK_IS_IMMORTAL:
 					mes("@yel@Eak the Mouse: Just slip me under the door");
-					delay(3);
+					delay(5);
 					mes("@yel@Eak the Mouse: It will only take me a minute to search the place");
 					return;
 				case EAK_HAS_COMPLETED_RECON:
@@ -97,9 +97,9 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 					return;
 				case EAK_HAS_TOLD_PLAYER_RECON_INFO:
 					mes("@yel@Eak the Mouse: You don't have to go in there...");
-					delay(3);
+					delay(5);
 					mes("@yel@Eak the Mouse: We should go tell Aggie what I saw");
-					delay(3);
+					delay(5);
 					say("Why Aggie?");
 					mes("@yel@Eak the Mouse: Betty said she's an idea of what to do");
 					return;
@@ -164,7 +164,7 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 
 				if (questStage == DEATH_CONSIDERS_PUMPKIN_PIE_SIDEGIG) {
 					mes("@yel@Eak the Mouse: Have you thought about it enough?");
-					delay(3);
+					delay(5);
 					npcsay("Yes I have",
 						"I think I'm going to do it",
 						"In fact, I will take out the loan right now");
@@ -208,15 +208,15 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 						"You are an insect to me",
 						"Now leave, before I smite you");
 					mes("@yel@Eak the Mouse: Well that's not very nice");
-					delay(3);
+					delay(5);
 					npcsay("What is that?!");
 					say("This is Eak the Mouse");
 					npcsay("How are they still alive in my presence!",
 						"Keep them away from me!");
 					mes("Despite having a skeletal face...");
-					delay(3);
+					delay(5);
 					mes("You can tell that Death is frightened of Eak");
-					delay(3);
+					delay(5);
 					npcsay("Keep them away from me",
 						"And I will answer your questions");
 					setvar("mice_to_meet_you", SCARED_DEATH_WITH_EAK);
@@ -337,7 +337,7 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 				} else if (option == 1) {
 					npcsay("Alright then");
 					mes("Death makes a swishing movement with his scythe");
-					delay(3);
+					delay(5);
 					setcoord(DEATH_ISLAND_COORDS);
 					teleport();
 				}
@@ -354,22 +354,23 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 				if (option == -1 || option == 2) return;
 				else if (option == 0) {
 					npcsay("Thank you",
-						"Don't think I could have done this without you and Eak",
+						"Don't know what I'd be doing without you and Eak",
+						"probably still slumming in Varrock",
 						"Who knew pumpkin pies would be so lucrative?");
 					return;
 				} else if (option == 1) {
 					npcsay("Even though you still might see me in Varrock from time to time",
 						"I'll just be grabbing my things that I still need to move over here",
 						"But yes, I've stopped killing all the rodents",
-						"They should come back in a couple weeks",
+						"They'll probably start showing up again pretty soon",
 						"By the way, I want you to take these pies for having helped me");
 					mes("Death hands you two freshly-baked Pumpkin pies");
 					give(ItemId.PUMPKIN_PIE.id(), 2);
-					delay(3);
+					delay(5);
 					mes("They smell great");
-					delay(3);
+					delay(5);
 					mes("You have completed the Mice to Meet You miniquest");
-					player.getCache().set("mice_to_meet_you", -1);
+					player.getCache().set("mice_to_meet_you", COMPLETED);
 					return;
 				}
 			}
@@ -377,6 +378,36 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 			// This should be for Death on death island after the quest
 			npcsay("Hello, welcome to my farm",
 				"What can I help you with?");
+			if (player.getCache().hasKey("restore_friends_sidequest")) {
+				switch (player.getCache().getInt("restore_friends_sidequest")) {
+					case 0:
+						mes("@yel@Eak the Mouse: Actually I wanted to talk more about my friends you killed?");
+						delay(5);
+						if (config().MICE_TO_MEET_YOU_EVENT) {
+							npcsay("I see. I'll return them to life soon. These things take time.");
+							npcsay("There's no special power I used to kill them");
+							npcsay("But un-killing them is a lot of paperwork");
+							player.getCache().store("restore_friends_sidequest", 1);
+							mes("@yel@Eak the Mouse: I'm sincerely looking forward to the return of my friends");
+						} else {
+							npcsay("Sure. I put in the paperwork to undo my ... extraneous rodent genocide...");
+							npcsay("and it's been some time since then, so it should have gone through by now.");
+							npcsay("You might have to just go looking for them");
+							player.getCache().store("restore_friends_sidequest", 2);
+						}
+						return;
+					case 1:
+						mes("@yel@Eak the Mouse: has there been any movement on the paper work?");
+						if (config().MICE_TO_MEET_YOU_EVENT) {
+							npcsay("No. not yet. Anything else I can help with?");
+						} else {
+							npcsay("Yes actually, it should have gone through by now.");
+							npcsay("You might have to just go looking for them");
+							player.getCache().store("restore_friends_sidequest", 2);
+						}
+				}
+			}
+
 			int option = multi("How has business been?",
 				"I'd like to buy a pumpkin pie please",
 				"Goodbye");
@@ -385,8 +416,16 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 				npcsay("It has been going very well",
 					"Thank you for asking",
 					"The pie business is, at least",
-					"My grim reaping is still not doing too well",
-					"You yourself have only died " + deaths + " times, after all");
+					"The grim reaping is still not doing too well");
+				if (deaths == 0) {
+					npcsay("You're not helping at all, having never died.");
+				} else if (deaths == 1) {
+					npcsay("You've only died once, after all");
+				} else if (deaths >= 10) {
+					npcsay("Thanks for your continued support. You've died " + deaths + " times.");
+				} else {
+					npcsay("You've only died " + deaths + " times, after all");
+				}
 			}
 			else if (option == 1) {
 				npcsay("Sure I'll sell you a pie for 20,000 coins");
@@ -411,7 +450,7 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 				}
 				else if (option == 0) {
 					npcsay("I have to pay off my loan somehow",
-						"I'm not going to just hand them out for free",
+						"I'm not going to just hand out any more of them for free",
 						"Besides, pumpkins are basically worthless",
 						"You can just make your own",
 						"Come back when you actually do want to buy a pie");

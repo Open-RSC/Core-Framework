@@ -149,7 +149,47 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 			npcsay("AAAAAAAAAAAAAAAAAAAAAA");
 			delay(3);
 			mes("Both Gertrude and Eak are very startled");
-			// TODO:
+			// TODO: could have more dialogue here
+		} else if (npc.getID() == NpcId.RAT_LVL8.id() ||
+			 npc.getID() == NpcId.RAT_WITCHES_POTION.id() ||
+			 npc.getID() == NpcId.RAT_LVL13.id() ||
+			 npc.getID() == NpcId.RAT_WMAZEKEY.id()) {
+			if (player.getCache().hasKey("restore_friends_sidequest")) {
+				int questState = player.getCache().getInt("restore_friends_sidequest");
+				switch (questState) {
+					case 0:
+					default:
+						player.getCache().store("found_friends_no_sidequest", true);
+						break;
+					case 1:
+					case 2:
+						// Eak found friends
+						mes("@yel@Eak the Mouse: squeak!!!");
+						delay(4);
+						mes("Eak jumps out to embrace their lost friend");
+						delay(4);
+						mes("the mice are nuzzling each other affectionately");
+						delay(6);
+						mes("after a while, Eak returns to you");
+						delay(4);
+						mes("@yel@Eak the Mouse: I'm so glad they're okay");
+						delay(4);
+						say("Me too, Eak");
+						player.getCache().store("restore_friends_sidequest", 3);
+						break;
+					case 3:
+						// Eak found friends previously
+						mes("Eak and their friend engage in an exchange of high pitched squeaks you can't understand.");
+						delay(4);
+						mes("They seem really excited to be talking to each other");
+						break;
+				}
+			} else {
+				mes("Eak and their friend engage in an exchange of high pitched squeaks you can't understand.");
+				delay(4);
+				mes("They seem really excited to be talking to each other");
+				player.getCache().store("found_friends_no_sidequest", true);
+			}
 		} else if (npc.getID() == NpcId.ESTER.id()) {
 			player.face(npc);
 			npc.face(player);
@@ -161,11 +201,39 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 						npcsay("Have you talked to Death about your friends yet?");
 						mes("@yel@Eak the Mouse: not yet");
 						return;
-					// TODO: a quest
+					case 1:
+						npcsay("Have you talked to Death about your friends yet?");
+						mes("@yel@Eak the Mouse: Yes!");
+						delay(5);
+						mes("@yel@Eak the Mouse: He says they should be back soon");
+						delay(5);
+						mes("@yel@Eak the Mouse: and it just takes time for paperwork to go through...");
+						delay(5);
+						if (!config().MICE_TO_MEET_YOU_EVENT) {
+							mes("@yel@Eak the Mouse: It's been a while since then. I wonder if there's been any movement on that paperwork...?");
+						}
+						return;
+					case 2:
+						npcsay("Have you talked to Death about your friends yet?");
+						mes("@yel@Eak the Mouse: Yes!");
+						delay(5);
+						mes("@yel@Eak the Mouse: He says they should be back and I had ought to go looking for them");
+						delay(5);
+						npcsay("Well I hope you find them soon then");
+						return;
+					case 3:
+						npcsay("Have you talked to Death about your friends yet?");
+						mes("@yel@Eak the Mouse: Yes!");
+						delay(5);
+						mes("@yel@Eak the Mouse: And there was paperwork involved and time and waiting");
+						delay(5);
+						mes("@yel@Eak the Mouse: But they're back and I'm so glad.");
+						return;
 				}
 			} else {
 				npcsay("what a cute mousey");
 				npcsay("do you have any wisdom, o mousey?");
+
 				if (eakCanTalk(player)) {
 					mes("@yel@Eak the Mouse: After all my rat and mouse friends were killed");
 					delay(4);
@@ -183,9 +251,20 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 					delay(4);
 					mes("@yel@Eak the Mouse: you can recover from that. There is a tomorrow.");
 					delay(7);
-					npcsay("I bet if you talk to death, he could restore your friends");
-					mes("@yel@Eak the Mouse: I may try that, thankyou");
-					player.getCache().store("restore_friends_sidequest", 0);
+					npcsay("That is a really heavy and deep wisdom.");
+					if (!player.getCache().hasKey("found_friends_no_sidequest")) {
+						if (player.getCache().getInt("mice_to_meet_you") == UNLOCKED_DEATH_ISLAND ||
+							player.getCache().getInt("mice_to_meet_you") == COMPLETED) {
+							npcsay("I bet if you talk to death, he could restore your friends");
+							mes("@yel@Eak the Mouse: I may try that, thankyou");
+							player.getCache().store("restore_friends_sidequest", 0);
+						}
+					} else {
+						npcsay("The healing process was undoubtedly aided by the return of your friends");
+						mes("@yel@Eak the Mouse: Undoubtedly.");
+						delay(4);
+						mes("@yel@Eak the Mouse: But they're back and I'm so glad.");
+					}
 				} else {
 					mes("@yel@Eak the Mouse: squeak");
 				}
