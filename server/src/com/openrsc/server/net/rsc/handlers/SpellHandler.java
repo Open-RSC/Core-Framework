@@ -1078,6 +1078,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				getPlayer().resetAllExceptDueling();
 				switch (spellEnum) {
 					case TELEKINETIC_GRAB:
+						if (affectedItem.isInvisibleTo(getPlayer()))
+						{
+							return;
+						}
 						// fluffs gets its own message
 						// same case with ana
 						int[] ungrabbableArr = {
