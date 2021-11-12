@@ -10,21 +10,17 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.openrsc.client.R;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -82,7 +78,7 @@ public class ApplicationUpdater extends Activity {
                         + " please install the newest version from the website.")
                 .setCancelable(false).setPositiveButton("Go to website", (dialog, id) -> {
 					try {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://runescapeclassic.dev/download"));
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://rsc.vet/download"));
                         startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
