@@ -19,9 +19,9 @@ import orsc.osConfig;
 
 public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListener {
 
-    private mudclient mudclient;
-    private GestureDetector gestureDetector;
-    private AudioManager audioManager;
+    private final mudclient mudclient;
+    private final GestureDetector gestureDetector;
+    private final AudioManager audioManager;
 
     public InputImpl(mudclient mudclient, View view) {
         this.mudclient = mudclient;
@@ -34,7 +34,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
     }
 
     private boolean isLongPress = false;
-    private View view;
+    private final View view;
     private long lastScrollOrRotate;
 
     @Override
@@ -253,7 +253,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                                 if (isLongPress) {
                                     mudclient.lastMouseButtonDown = mudclient.currentMouseButtonDown = 2;
                                 }
-                            }, osConfig.C_LONG_PRESS_TIMER * 50);
+                            }, osConfig.C_LONG_PRESS_TIMER * 50L);
                         }
                         break;
                     case MotionEvent.ACTION_MOVE:

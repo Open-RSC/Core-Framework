@@ -360,7 +360,7 @@ public class CacheUpdater extends Activity {
                 try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
                      FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                     int filesize = connection.getContentLength();
-                    byte dataBuffer[] = new byte[1024];
+                    byte[] dataBuffer = new byte[1024];
                     int bytesRead;
                     int totalRead = 0;
                     while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {

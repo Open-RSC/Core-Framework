@@ -10,7 +10,6 @@ import android.graphics.Paint.Align;
 import android.graphics.PorterDuff.Mode;
 import android.media.AudioFormat;
 import android.media.AudioTrack;
-import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -18,6 +17,8 @@ import android.view.SurfaceView;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+
+import androidx.annotation.NonNull;
 
 import com.openrsc.client.android.GameActivity;
 import com.openrsc.client.model.Sprite;
@@ -36,14 +37,13 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 	protected final Paint bitmapPaint = new Paint(Paint.FILTER_BITMAP_FLAG);
 	private final Bitmap currentFrame = Bitmap.createBitmap(512, 334 + 12, Bitmap.Config.RGB_565);
 
-	private SurfaceHolder holder;
-	private GameActivity gameActivity;
+	private final GameActivity gameActivity;
 	private boolean m_hb;
 
 	public RSCBitmapSurfaceView(Context c) {
 		super(c);
 		gameActivity = (GameActivity) c;
-		holder = getHolder();
+		SurfaceHolder holder = getHolder();
 		holder.addCallback(this);
 
 		setLongClickable(true);
@@ -97,11 +97,11 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 
 	@Override
 	public boolean drawLoading(int i) {
-		drawLoadingScreen("Loading...", 0, 123);
+		drawLoadingScreen("Loading...", 0);
 		return true;
 	}
 
-	private void drawLoadingScreen(String state, int percent, int var3) {
+	private void drawLoadingScreen(String state, int percent) {
 		try {
 
 			int x = (this.client_width - 281) / 2;
@@ -134,7 +134,7 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 			canvas.drawRect(x - 2, y - 2, x + 280, y + 23, paint);
 
 			paint.setStyle(Paint.Style.FILL);
-			canvas.drawRect(x, y, x + percent * 277 / 100, y + 20, paint);
+			canvas.drawRect(x, y, x + ((percent * 277) / 100), y + 20, paint);
 
 			paint.setStyle(Paint.Style.STROKE);
 
@@ -159,7 +159,7 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 
 	@Override
 	public void showLoadingProgress(int percentage, String status) {
-		drawLoadingScreen(status, percentage, 123);
+		drawLoadingScreen(status, percentage);
 		int x = (this.client_width - 281) / 2;
 		x += 2;
 		int y = (this.client_height - 148) / 2;
@@ -234,8 +234,8 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 		canvas.drawRect(x, y, x + 280, y + 50, paint);
 
 		paint.setTextAlign(Align.CENTER);
-		canvas.drawText(line1, client_width / 2, client_height / 2 - 10, paint);
-		canvas.drawText(line2, client_width / 2, 10 + client_height / 2, paint);
+		canvas.drawText(line1, client_width >> 1, (client_height >> 1) - 10, paint);
+		canvas.drawText(line2, client_width >> 1, 10 + (client_height >> 1), paint);
 		paint.setColor(Color.BLACK);
 	}
 
