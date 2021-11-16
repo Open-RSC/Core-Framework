@@ -23,13 +23,15 @@ ant -f server/build.xml compile_plugins
 ant -f Client_Base/build.xml compile
 ant -f PC_Launcher/build.xml compile
 
-# Export the Android SDK path 
-export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+# Export the Android SDK path
+sudo snap install androidsdk
+sudo snap install gradle --classic
+export ANDROID_SDK_ROOT=/home/wolf/AndroidSDK
 export PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
 
-ANDROID_COMPILE_SDK="29"
-ANDROID_BUILD_TOOLS="29.0.3"
-ANDROID_SDK_TOOLS="6200805"
+ANDROID_COMPILE_SDK="31"
+ANDROID_BUILD_TOOLS="31.0.0"
+ANDROID_SDK_TOOLS="31.0.3"
 
 echo y | sdkmanager --version &>/dev/null
 echo y | sdkmanager --update &>/dev/null
@@ -83,7 +85,7 @@ elif [ "$compiling" == "2" ]; then
     cd '../../../../Game' || exit
 elif [ "$compiling" == "3" ]; then
     # PC Client
-	sudo mv Client_Base/*.jar Client_Base/Open_RSC_Client_dev.jar
+        sudo mv Client_Base/*.jar Client_Base/Open_RSC_Client_dev.jar
     yes | sudo cp -f Client_Base/Open_RSC_Client_dev.jar ../Website/portal/public/downloads/
 
     # Android client
@@ -116,7 +118,7 @@ echo "What would you like to do?
 
 Choices:
   ${RED}1${NC} - Run game server
-  ${RED}2${NC} - Return to the main menu"
+  ${RED}Ctrl+C${NC} - Exit"
 echo ""
 echo "Type the choice number and press enter."
 echo ""
@@ -124,6 +126,6 @@ read -r finished
 
 if [ "$finished" == "1" ]; then
     make run-server
-elif [ "$finished" == "2" ]; then
-    make start-linux
+else
+    exit
 fi
