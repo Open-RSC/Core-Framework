@@ -24,21 +24,20 @@ ant -f Client_Base/build.xml compile
 ant -f PC_Launcher/build.xml compile
 
 # Export the Android SDK path
-sudo snap install androidsdk
-sudo snap install gradle --classic
+#sudo snap install androidsdk
+#sudo snap install gradle --classic
 export ANDROID_SDK_ROOT=/home/wolf/AndroidSDK
 export PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
 
 ANDROID_COMPILE_SDK="31"
 ANDROID_BUILD_TOOLS="31.0.0"
-ANDROID_SDK_TOOLS="31.0.3"
 
-echo y | sdkmanager --version &>/dev/null
-echo y | sdkmanager --update &>/dev/null
-yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses &>/dev/null
-echo y | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-$ANDROID_COMPILE_SDK" &>/dev/null
-echo y | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" &>/dev/null
-echo y | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "build-tools;$ANDROID_BUILD_TOOLS" &>/dev/null
+echo y | androidsdk --version &>/dev/null
+echo y | androidsdk --update &>/dev/null
+yes | androidsdk --sdk_root=$ANDROID_SDK_ROOT --licenses &>/dev/null
+echo y | androidsdk --sdk_root=$ANDROID_SDK_ROOT "platforms;android-$ANDROID_COMPILE_SDK" &>/dev/null
+echo y | androidsdk --sdk_root=$ANDROID_SDK_ROOT "platform-tools" &>/dev/null
+echo y | androidsdk --sdk_root=$ANDROID_SDK_ROOT "build-tools;$ANDROID_BUILD_TOOLS" &>/dev/null
 export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/
 
 # Gradle compile Android client
