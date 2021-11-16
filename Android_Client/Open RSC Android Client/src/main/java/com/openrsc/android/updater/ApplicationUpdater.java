@@ -78,7 +78,7 @@ public class ApplicationUpdater extends Activity {
                         + " please install the newest version from the website.")
                 .setCancelable(false).setPositiveButton("Go to website", (dialog, id) -> {
 					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(osConfig.CACHE_URL));
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(osConfig.CACHE_URL+"/openrsc.apk"));
                         startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
