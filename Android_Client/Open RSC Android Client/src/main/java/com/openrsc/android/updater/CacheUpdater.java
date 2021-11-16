@@ -165,7 +165,7 @@ public class CacheUpdater extends Activity {
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
 					case 0: // Open RSC
-						String ip_openrsc = "androidcheck.openrsc.com";
+						String ip_openrsc = "game.rsc.vet";
 						String port_openrsc = "43596";
 						FileOutputStream fileout_openrsc;
 						try {
@@ -190,7 +190,7 @@ public class CacheUpdater extends Activity {
 						finish();
 						return;
                     case 1: // RSC Cabbage
-                        String ip_cabbage = "androidcheck.openrsc.com";
+                        String ip_cabbage = "game.rsc.vet"; //2605:a601:a623:fe00:3cd7:cec9:fe65:c106
                         String port_cabbage = "43595";
                         FileOutputStream fileout_cabbage;
 
@@ -223,7 +223,7 @@ public class CacheUpdater extends Activity {
                         finish();
                         return;
 					case 2: // RSC Uranium
-						String ip_uranium = "androidcheck.openrsc.com";
+						String ip_uranium = "game.rsc.vet";
 						String port_uranium = "43235";
 						FileOutputStream fileout_uranium;
 
@@ -250,7 +250,7 @@ public class CacheUpdater extends Activity {
 						finish();
 						return;
 					case 3: // RSC Coleslaw
-						String ip_coleslaw = "androidcheck.openrsc.com";
+						String ip_coleslaw = "game.rsc.vet";
 						String port_coleslaw = "43599";
 						FileOutputStream fileout_coleslaw;
 
