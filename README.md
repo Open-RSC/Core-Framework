@@ -54,11 +54,11 @@ Feel free to submit bug reports in the repository issues section! If you would l
 
 - <a href="https://gitlab.com/open-runescape-classic/core/issues">GitLab Issue Submission</a>
 
-- <a href="https://discordapp.com/invite/94vVKND">Discord</a>
+- <a href="https://discord.com/invite/openrsc">Discord</a>
 
 - <a href="https://www.reddit.com/r/rsc">Reddit</a>
 
-- <a href="https://runescapeclassic.dev">Open RuneScape Classic Website</a>
+- <a href="https://rsc.vet">Open RuneScape Classic Website</a>
 
 
 ## In-Game Commands<a name="commands"></a>
