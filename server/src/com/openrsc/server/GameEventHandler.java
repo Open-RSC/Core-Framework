@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class GameEventHandler {
 
@@ -21,8 +22,7 @@ public class GameEventHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<>();
-
+	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
 	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<String, Integer>();
 	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<String, Long>();
 
@@ -60,12 +60,11 @@ public class GameEventHandler {
 
 	public void add(final GameTickEvent event) {
 		final String className = String.valueOf(event.getClass());
-		if (event.isUniqueEvent() || !event.hasOwner()) {
+		if (event.isNotUniqueEvent() || !event.hasOwner()) {
 			final UUID uuid = UUID.randomUUID();
 			events.putIfAbsent(className + uuid, event);
 		} else {
-			events.putIfAbsent(
-				className + event.getOwner().getUUID()
+			events.putIfAbsent(className + event.getOwner().getUUID()
 					+ (event.getOwner().isPlayer() ? "p" : "n"), event);
 		}
 	}
@@ -89,6 +88,98 @@ public class GameEventHandler {
 		}
 		return false;
 	}
+
+	public long processNonPlayerEvents() {
+		return getServer().bench(() -> {
+			final int maxThreads;
+			if (getServer().getConfig().WANT_THREADING__BREAK_PID_PRIORITY) {
+				// can be slightly faster if we don't care which order events are done in (you always should care!)
+				// TODO: currently also causes issues with scenery breaking from having two players accessing it
+				maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
+			} else {
+				// single thread events so that PID order is always respected.
+				maxThreads = 1;
+			}
+
+			executor.setMaximumPoolSize(maxThreads);
+			executor.setCorePoolSize(maxThreads / 2);
+
+			// get only events for this player
+			final List<GameTickEvent> filteredEvents = events.values().stream().filter(
+				gameTickEvent ->
+					!(gameTickEvent.getOwner() instanceof Player)).collect(Collectors.toList()
+			);
+
+			try {
+				executor.invokeAll(filteredEvents);
+			} catch (final Exception e) {
+				LOGGER.catching(e);
+			}
+
+			eventsCounts.clear();
+			eventsDurations.clear();
+
+			events.entrySet().removeIf((eventBox) -> {
+				final GameTickEvent event = eventBox.getValue();
+				eventsCounts.put(event.getDescriptor(),
+					eventsCounts.containsKey(event.getDescriptor()) ?
+						eventsCounts.get(event.getDescriptor()) + 1 :
+						1);
+				eventsDurations.put(event.getDescriptor(),
+					eventsDurations.containsKey(event.getDescriptor()) ?
+						eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
+						event.getLastEventDuration());
+
+				return event.shouldRemove();
+			});
+		});
+	}
+
+	public void processEvents(final Player player) {
+		final int maxThreads;
+		if (getServer().getConfig().WANT_THREADING__BREAK_PID_PRIORITY) {
+			// can be slightly faster if we don't care which order events are done in (you always should care!)
+			// TODO: currently also causes issues with scenery breaking from having two players accessing it
+			maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
+		} else {
+			// single thread events so that PID order is always respected.
+			maxThreads = 1;
+		}
+
+		executor.setMaximumPoolSize(maxThreads);
+		executor.setCorePoolSize(maxThreads / 2);
+
+		// get only events for this player
+		final List<GameTickEvent> filteredEvents = events.values().stream().filter(
+			gameTickEvent ->
+				gameTickEvent.getOwner() != null &&
+					gameTickEvent.getOwner().equals(player)
+		).collect(Collectors.toList());
+
+		try {
+			executor.invokeAll(filteredEvents);
+		} catch (final Exception e) {
+			LOGGER.catching(e);
+		}
+
+		eventsCounts.clear();
+		eventsDurations.clear();
+
+		events.entrySet().removeIf((eventBox) -> {
+			final GameTickEvent event = eventBox.getValue();
+			eventsCounts.put(event.getDescriptor(),
+				eventsCounts.containsKey(event.getDescriptor()) ?
+					eventsCounts.get(event.getDescriptor()) + 1 :
+					1);
+			eventsDurations.put(event.getDescriptor(),
+				eventsDurations.containsKey(event.getDescriptor()) ?
+					eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
+					event.getLastEventDuration());
+
+			return event.shouldRemove();
+		});
+	}
+
 
 	private void processEvents() {
 		final int maxThreads;
@@ -132,8 +223,10 @@ public class GameEventHandler {
 		});
 	}
 
-	public long runGameEvents() {
-		return getServer().bench(this::processEvents);
+	public long runGameEvents(final Player player) {
+		return getServer().bench(() -> {
+			processEvents(player);
+		});
 	}
 
 	public final String buildProfilingDebugInformation(final boolean forInGame) {
@@ -216,8 +309,8 @@ public class GameEventHandler {
 		final String usedMemory = DataConversions.formatBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 
 		final String returnString = (
-			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + (getServer().getLastTickDuration() / 1000000) + "ms " + (getServer().getLastIncomingPacketsDuration() / 1000000) + "ms " + (getServer().getLastEventsDuration() / 1000000) + "ms " + (getServer().getLastGameStateDuration() / 1000000) + "ms " + (getServer().getLastOutgoingPacketsDuration() / 1000000) + "ms" + newLine +
-				"Game Updater: " + (getServer().getGameUpdater().getLastWorldUpdateDuration() / 1000000) + "ms " + (getServer().getGameUpdater().getLastProcessPlayersDuration() / 1000000) + "ms " + (getServer().getGameUpdater().getLastProcessNpcsDuration() / 1000000) + "ms " + (getServer().getGameUpdater().getLastProcessMessageQueuesDuration() / 1000000) + "ms " + (getServer().getGameUpdater().getLastUpdateClientsDuration() / 1000000) + "ms " + (getServer().getGameUpdater().getLastDoCleanupDuration() / 1000000) + "ms " + (getServer().getGameUpdater().getLastExecuteWalkToActionsDuration() / 1000000) + "ms " + newLine +
+			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + (getServer().getLastTickDuration() / 1000000) + "ms " + (getServer().getLastIncomingPacketsDuration() / 1000000) + "ms " + (getServer().getLastEventsDuration() / 1000000) + "ms " + (getServer().getLastOutgoingPacketsDuration() / 1000000) + "ms" + newLine +
+				"Game Updater: " + (getServer().getLastWorldUpdateDuration() / 1000000) + "ms " + (getServer().getLastProcessPlayersDuration() / 1000000) + "ms " + (getServer().getLastProcessNpcsDuration() / 1000000) + "ms " + (getServer().getLastProcessMessageQueuesDuration() / 1000000) + "ms " + (getServer().getLastUpdateClientsDuration() / 1000000) + "ms " + (getServer().getLastDoCleanupDuration() / 1000000) + "ms " + (getServer().getLastExecuteWalkToActionsDuration() / 1000000) + "ms " + newLine +
 				"Events: " + countAllEvents + ", NPCs: " + getServer().getWorld().getNpcs().size() + ", Players: " + getServer().getWorld().getPlayers().size() + ", Shops: " + getServer().getWorld().getShops().size() + newLine +
 				"Threads: " + Thread.activeCount() + ", Total: " + totalMemory + ", Free: " +  freeMemory + ", Used: " + usedMemory + newLine +
 				/*"Player Atk Map: " + getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + getWorld().getNpcsUnderAttack().size() + ", Quests: " + getWorld().getQuests().size() + ", Mini Games: " + getWorld().getMiniGames().size() + newLine +*/

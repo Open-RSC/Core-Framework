@@ -90,10 +90,18 @@ public class Server implements Runnable {
 	private boolean shuttingDown = false;
 
 	private long serverStartedTime = 0;
+
 	private long lastIncomingPacketsDuration = 0;
-	private long lastGameStateDuration = 0;
 	private long lastEventsDuration = 0;
 	private long lastOutgoingPacketsDuration = 0;
+	private long lastWorldUpdateDuration = 0;
+	private long lastProcessPlayersDuration = 0;
+	private long lastProcessNpcsDuration = 0;
+	private long lastProcessMessageQueuesDuration = 0;
+	private long lastUpdateClientsDuration = 0;
+	private long lastDoCleanupDuration = 0;
+	private long lastExecuteWalkToActionsDuration = 0;
+
 	private long lastTickDuration = 0;
 	private long timeLate = 0;
 	private long lastTickTimestamp = 0;
@@ -462,7 +470,6 @@ public class Server implements Runnable {
 				maxItemId = 0;
 				serverStartedTime = 0;
 				lastIncomingPacketsDuration = 0;
-				lastGameStateDuration = 0;
 				lastEventsDuration = 0;
 				lastOutgoingPacketsDuration = 0;
 				lastTickDuration = 0;
@@ -507,14 +514,17 @@ public class Server implements Runnable {
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					this.lastTickDuration = bench(() -> {
 						try {
-							// TODO: these stages should be done on the player, not on the server
-							this.lastIncomingPacketsDuration = processIncomingPackets();
-							this.getGameUpdater().setLastExecuteWalkToActionsDuration(
-								getGameUpdater().executeWalkToActions()
-							);
-							this.lastEventsDuration = getGameEventHandler().runGameEvents();
-							this.lastGameStateDuration = getGameUpdater().doUpdates();
-							this.lastOutgoingPacketsDuration = processOutgoingPackets();
+							resetBenchmarkDurations();
+							incrementLastEventsDuration(getGameEventHandler().processNonPlayerEvents());
+							incrementLastWorldUpdateDuration(getGameUpdater().updateWorld());
+							for (final Player player : getWorld().getPlayers()) {
+								player.processTick();
+							}
+							incrementLastProcessNpcsDuration(getGameUpdater().processNpcs());
+							for (final Player player : getWorld().getPlayers()) {
+								player.sendUpdates();
+							}
+							incrementLastDoCleanupDuration(getGameUpdater().doCleanup());
 						} catch (final Throwable t) {
 							LOGGER.catching(t);
 						}
@@ -539,9 +549,12 @@ public class Server implements Runnable {
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						World world = getWorld();
-						world.getPlayers().forEach(Player::updatePosition);
+						for (final Player p : getWorld().getPlayers()) {
+							p.updatePosition();
+							getGameUpdater().executeWalkToActions(p);
+						}
+
 						world.getNpcs().forEach(Npc::updatePosition);
-						getGameUpdater().executeWalkToActions();
 					}
 				}
 			} catch (final Throwable t) {
@@ -587,22 +600,6 @@ public class Server implements Runnable {
 		}
 	}
 
-	private long processIncomingPackets() {
-		return bench(() -> {
-			for (final Player player : getWorld().getPlayers()) {
-				player.processIncomingPackets();
-			}
-		});
-	}
-
-	private long processOutgoingPackets() {
-		return bench(() -> {
-			for (final Player player : getWorld().getPlayers()) {
-				player.processOutgoingPackets();
-			}
-		});
-	}
-
 	private void monitorTickPerformance() {
 		// Store the current tick because we can modify it by calling skipTicks()
 		final long currentTick = getCurrentTick();
@@ -617,7 +614,6 @@ public class Server implements Runnable {
 				(getLastTickDuration() / 1000000) + "ms " +
 				(getLastIncomingPacketsDuration() / 1000000) + "ms " +
 				(getLastEventsDuration() / 1000000) + "ms " +
-				(getLastGameStateDuration() / 1000000) + "ms " +
 				(getLastOutgoingPacketsDuration() / 1000000) + "ms";
 
 			sendMonitoringWarning(message, true);
@@ -715,10 +711,6 @@ public class Server implements Runnable {
 		return Math.max(((FinitePeriodicEvent)shutdownEvent).getTimeLeftMillis(), 0);
 	}
 
-	public final long getLastGameStateDuration() {
-		return lastGameStateDuration;
-	}
-
 	public final long getLastEventsDuration() {
 		return lastEventsDuration;
 	}
@@ -761,6 +753,34 @@ public class Server implements Runnable {
 
 	public final long getLastOutgoingPacketsDuration() {
 		return lastOutgoingPacketsDuration;
+	}
+
+	public long getLastWorldUpdateDuration() {
+		return lastWorldUpdateDuration;
+	}
+
+	public long getLastProcessPlayersDuration() {
+		return lastProcessPlayersDuration;
+	}
+
+	public long getLastProcessNpcsDuration() {
+		return lastProcessNpcsDuration;
+	}
+
+	public long getLastProcessMessageQueuesDuration() {
+		return lastProcessMessageQueuesDuration;
+	}
+
+	public long getLastUpdateClientsDuration() {
+		return lastUpdateClientsDuration;
+	}
+
+	public long getLastDoCleanupDuration() {
+		return lastDoCleanupDuration;
+	}
+
+	public long getLastExecuteWalkToActionsDuration() {
+		return lastExecuteWalkToActionsDuration;
 	}
 
 	public final long getTimeLate() {
@@ -893,4 +913,56 @@ public class Server implements Runnable {
 		return ++privateMessagesSent;
 	}
 
+	public synchronized void incrementLastIncomingPacketsDuration(final long duration) {
+		this.lastIncomingPacketsDuration += duration;
+	}
+
+	public synchronized void incrementLastEventsDuration(final long duration) {
+		this.lastEventsDuration += duration;
+	}
+
+	public synchronized void incrementLastOutgoingPacketsDuration(final long duration) {
+		this.lastOutgoingPacketsDuration += duration;
+	}
+
+	public synchronized void incrementLastWorldUpdateDuration(final long duration) {
+		this.lastWorldUpdateDuration += duration;
+	}
+
+	public synchronized void incrementLastProcessPlayersDuration(final long duration) {
+		this.lastProcessPlayersDuration += duration;
+	}
+
+	public synchronized void incrementLastProcessNpcsDuration(final long duration) {
+		this.lastProcessNpcsDuration += duration;
+	}
+
+	public synchronized void incrementLastProcessMessageQueuesDuration(final long duration) {
+		this.lastProcessMessageQueuesDuration += duration;
+	}
+
+	public synchronized void incrementLastUpdateClientsDuration(final long duration) {
+		this.lastUpdateClientsDuration += duration;
+	}
+
+	public synchronized void incrementLastDoCleanupDuration(final long duration) {
+		this.lastDoCleanupDuration += duration;
+	}
+
+	public synchronized void incrementLastExecuteWalkToActionsDuration(final long duration) {
+		this.lastExecuteWalkToActionsDuration += duration;
+	}
+
+	public synchronized void resetBenchmarkDurations() {
+		this.lastIncomingPacketsDuration = 0;
+		this.lastEventsDuration = 0;
+		this.lastOutgoingPacketsDuration = 0;
+		this.lastWorldUpdateDuration = 0;
+		this.lastProcessPlayersDuration = 0;
+		this.lastProcessNpcsDuration = 0;
+		this.lastProcessMessageQueuesDuration = 0;
+		this.lastUpdateClientsDuration = 0;
+		this.lastDoCleanupDuration = 0;
+		this.lastExecuteWalkToActionsDuration = 0;
+	}
 }

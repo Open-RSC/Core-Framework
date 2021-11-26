@@ -302,6 +302,8 @@ public enum AppearanceId {
 		switch (clientVersion) {
 			case 38:
 				return SCORPION.id();
+			case 140:
+				return KHAZARD_CHAINMAIL.id();
 			case 177:
 			case 235:
 				return SCYTHE.id();

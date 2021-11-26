@@ -35,14 +35,6 @@ public final class GameStateUpdater {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private long lastWorldUpdateDuration = 0;
-	private long lastProcessPlayersDuration = 0;
-	private long lastProcessNpcsDuration = 0;
-	private long lastProcessMessageQueuesDuration = 0;
-	private long lastUpdateClientsDuration = 0;
-	private long lastDoCleanupDuration = 0;
-	private long lastExecuteWalkToActionsDuration = 0;
-
 	private final Server server;
 	public final Server getServer() {
 		return server;
@@ -53,17 +45,9 @@ public final class GameStateUpdater {
 	}
 
 	public void load() {
-
 	}
 
 	public void unload() {
-		lastWorldUpdateDuration = 0;
-		lastProcessPlayersDuration = 0;
-		lastProcessNpcsDuration = 0;
-		lastProcessMessageQueuesDuration = 0;
-		lastUpdateClientsDuration = 0;
-		lastDoCleanupDuration = 0;
-		setLastExecuteWalkToActionsDuration(0);
 	}
 
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
@@ -1176,32 +1160,18 @@ public final class GameStateUpdater {
 		}
 	}
 
-	public long doUpdates() {
-		return getServer().bench(() -> {
-			lastWorldUpdateDuration = updateWorld();
-			lastProcessPlayersDuration = processPlayers();
-			lastProcessNpcsDuration = processNpcs();
-			lastProcessMessageQueuesDuration = processMessageQueues();
-			lastUpdateClientsDuration = updateClients();
-			lastDoCleanupDuration = doCleanup();
-			// lastExecuteWalkToActionsDuration = executeWalkToActions();
-		});
-	}
-
-	protected final long updateWorld() {
+	public final long updateWorld() {
 		return getServer().bench(() -> getServer().getWorld().run());
 	}
 
-	protected final long updateClients() {
+	public final long updateClient(final Player player) {
 		return getServer().bench(() -> {
-			for (final Player player : getServer().getWorld().getPlayers()) {
-				sendUpdatePackets(player);
-				player.process();
-			}
+			sendUpdatePackets(player);
+			player.process();
 		});
 	}
 
-	protected final long doCleanup() {// it can do the teleport at this time.
+	public final long doCleanup() { // it can do the teleport at this time.
 		return getServer().bench(() -> {
 			World world = getServer().getWorld();
 			world.getPlayers().forEach(Player::resetAfterUpdate);
@@ -1209,21 +1179,17 @@ public final class GameStateUpdater {
 		});
 	}
 
-	protected final long executeWalkToActions() {
+	public final long executeWalkToActions(final Player player) {
 		return getServer().bench(() -> {
-			final EntityList<Player> players = getServer().getWorld().getPlayers();
-			for (final Player player : players) {
-				final WalkToAction walkToAction = player.getWalkToAction();
-				if (walkToAction != null) {
-					if (walkToAction.shouldExecute()) {
-						walkToAction.execute();
-					}
+			if (player.getWalkToAction() != null) {
+				if (player.getWalkToAction().shouldExecute()) {
+					player.getWalkToAction().execute();
 				}
 			}
 		});
 	}
 
-	protected final long processNpcs() {
+	public final long processNpcs() {
 		return getServer().bench(() -> {
 			final boolean shouldUpdatePosition = !getServer().getConfig().WANT_CUSTOM_WALK_SPEED;
 			final EntityList<Npc> npcs = getServer().getWorld().getNpcs();
@@ -1249,65 +1215,61 @@ public final class GameStateUpdater {
 	/**
 	 * Updates the messages queues for each player
 	 */
-	protected final long processMessageQueues() {
+	public final long processMessageQueue(final Player player) {
 		return getServer().bench(() -> {
-			for (final Player player : getServer().getWorld().getPlayers()) {
-				final PrivateMessage pm = player.getNextPrivateMessage();
-				if (pm != null) {
-					Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
-					if (affectedPlayer != null) {
-						boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
-							== PlayerSettings.BlockingMode.All.id();
-						boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
-							== PlayerSettings.BlockingMode.None.id();
-						if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
-							player.message("Unable to send message - player not on your friendlist.");
-						} else if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
-							&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
-							ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
-							ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
-						}
+			final PrivateMessage pm = player.getNextPrivateMessage();
+			if (pm != null) {
+				Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
+				if (affectedPlayer != null) {
+					boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
+						== PlayerSettings.BlockingMode.All.id();
+					boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
+						== PlayerSettings.BlockingMode.None.id();
+					if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
+						player.message("Unable to send message - player not on your friendlist.");
+					} else if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
+						&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
+						ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
+						ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
+					}
 
-						player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
-							DataConversions.hashToUsername(pm.getFriend())));
-					} else {
-						// player not online
-						if (pm.getFriend() >= 0L) {
-							try {
-								int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(pm.getFriend()));
+					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
+						DataConversions.hashToUsername(pm.getFriend())));
+				} else {
+					// player not online
+					if (pm.getFriend() >= 0L) {
+						try {
+							int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(pm.getFriend()));
 
-								if (player.getWorld().getServer().getDatabase().playerExists(friendId)) {
-									// player not online
-									player.message("Unable to send message - player unavailable.");
-								}
-							} catch (Exception e) { }
-						}
+							if (player.getWorld().getServer().getDatabase().playerExists(friendId)) {
+								// player not online
+								player.message("Unable to send message - player unavailable.");
+							}
+						} catch (Exception e) { }
 					}
 				}
 			}
+
 			GlobalMessage gm ;
 			while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
-				for (final Player player : getServer().getWorld().getPlayers()) {
-					if (player == gm.getPlayer()) {
-						player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
-							"Global$"));
-						ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
-					} else {
-						if (!player.getBlockGlobalFriend()) {
-							boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
-								== PlayerSettings.BlockingMode.None.id();
-							if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
-								ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
-							}
+				if (player == gm.getPlayer()) {
+					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
+						"Global$"));
+					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
+				} else {
+					if (!player.getBlockGlobalFriend()) {
+						boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
+							== PlayerSettings.BlockingMode.None.id();
+						if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+							ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
 						}
 					}
 				}
 			}
-			for (final Player player : getServer().getWorld().getPlayers()) {
-				if (player.requiresOfferUpdate()) {
-					ActionSender.sendTradeItems(player);
-					player.setRequiresOfferUpdate(false);
-				}
+
+			if (player.requiresOfferUpdate()) {
+				ActionSender.sendTradeItems(player);
+				player.setRequiresOfferUpdate(false);
 			}
 		});
 	}
@@ -1316,57 +1278,25 @@ public final class GameStateUpdater {
 	 * Update the position of players, and check if who (and what) they are
 	 * aware of needs updated
 	 */
-	protected final long processPlayers() {
-		final boolean shouldUpdatePosition = !getServer().getConfig().WANT_CUSTOM_WALK_SPEED;
+	public final long movePlayer(final Player player) {
 		return getServer().bench(() -> {
-			for (final Player player : getServer().getWorld().getPlayers()) {
-				// Checking login because we don't want to unregister more than once
-				if (player.isUnregistering() && player.isLoggedIn()) {
-					getServer().getWorld().unregisterPlayer(player);
-					continue;
-				}
 
-				// Only do the walking tick here if the Players' walking tick matches the game tick
-				if (shouldUpdatePosition) {
-					player.updatePosition();
-				}
+			// TODO: probably don't have this in move player
+			// Checking login because we don't want to unregister more than once
+			if (player.isUnregistering() && player.isLoggedIn()) {
+				getServer().getWorld().unregisterPlayer(player);
+				return;
+			}
 
-				if (player.getUpdateFlags().hasAppearanceChanged()) {
-					player.incAppearanceID();
-				}
+			// Only do the walking tick here if the Players' walking tick matches the game tick
+			if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
+				player.updatePosition();
+			}
+
+			// TODO: maybe not this here, but maybe it's fine
+			if (player.getUpdateFlags().hasAppearanceChanged()) {
+				player.incAppearanceID();
 			}
 		});
-	}
-
-	public long getLastWorldUpdateDuration() {
-		return lastWorldUpdateDuration;
-	}
-
-	public long getLastProcessPlayersDuration() {
-		return lastProcessPlayersDuration;
-	}
-
-	public long getLastProcessNpcsDuration() {
-		return lastProcessNpcsDuration;
-	}
-
-	public long getLastProcessMessageQueuesDuration() {
-		return lastProcessMessageQueuesDuration;
-	}
-
-	public long getLastUpdateClientsDuration() {
-		return lastUpdateClientsDuration;
-	}
-
-	public long getLastDoCleanupDuration() {
-		return lastDoCleanupDuration;
-	}
-
-	public long getLastExecuteWalkToActionsDuration() {
-		return lastExecuteWalkToActionsDuration;
-	}
-
-	public void setLastExecuteWalkToActionsDuration(long lastExecuteWalkToActionsDuration) {
-		this.lastExecuteWalkToActionsDuration = lastExecuteWalkToActionsDuration;
 	}
 }

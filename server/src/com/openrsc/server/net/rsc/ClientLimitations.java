@@ -85,6 +85,30 @@ public class ClientLimitations {
 			numberOfSounds = AUTHENTIC_SOUNDS_ONLY;
 		}
 
+		if (clientVersion == 140) {
+			maxAnimationId = 174;
+			maxItemId = 736;
+			maxNpcId = 371;
+			maxSceneryId = 381;
+			maxPrayerId = 13;
+			maxSpellId = 37;
+			maxSkillId = 16;
+			maxRoofId = 4;
+			maxTextureId = 34;
+			maxTileId = 16;
+			maxBoundaryId = 112;
+			maxTeleBubbleId = 1;
+			maxProjectileSprite = 6; // TODO?
+			maxSkinColor = 4;
+			maxHairColor = 9;
+			maxClothingColor = 14;
+			maxQuestId = 26;
+			mapHash = "39";
+			maxDialogueOptions = 5;
+			maxBankItems = 48 * 2;
+			numberOfSounds = AUTHENTIC_SOUNDS_ONLY;
+		}
+
 		if (clientVersion >= 72) {
 			supportsItemBank = true;
 		}
