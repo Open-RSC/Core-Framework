@@ -1256,23 +1256,6 @@ public final class GameStateUpdater {
 				}
 			}
 
-			GlobalMessage gm ;
-			while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
-				if (player == gm.getPlayer()) {
-					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
-						"Global$"));
-					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
-				} else {
-					if (!player.getBlockGlobalFriend()) {
-						boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
-							== PlayerSettings.BlockingMode.None.id();
-						if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
-							ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
-						}
-					}
-				}
-			}
-
 			if (player.requiresOfferUpdate()) {
 				ActionSender.sendTradeItems(player);
 				player.setRequiresOfferUpdate(false);
