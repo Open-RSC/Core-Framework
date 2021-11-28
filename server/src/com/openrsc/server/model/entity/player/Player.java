@@ -34,10 +34,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.PayloadProcessorManager;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
-import com.openrsc.server.net.rsc.parsers.impl.Payload177Parser;
-import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
-import com.openrsc.server.net.rsc.parsers.impl.Payload38Parser;
-import com.openrsc.server.net.rsc.parsers.impl.PayloadCustomParser;
+import com.openrsc.server.net.rsc.parsers.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
@@ -2197,6 +2194,8 @@ public final class Player extends Mob {
 								parser = new Payload235Parser();
 							} else if (isUsing177CompatibleClient()) {
 								parser = new Payload177Parser();
+							} else if (isUsing140CompatibleClient()) {
+								parser = new Payload140Parser();
 							} else {
 								parser = new PayloadCustomParser();
 							}

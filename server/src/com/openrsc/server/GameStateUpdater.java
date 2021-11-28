@@ -215,12 +215,13 @@ public final class GameStateUpdater {
 					continue; // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 away
 
 				final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
-				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getIndex(), 12));
+				boolean forClient140 = playerToUpdate.isUsing140CompatibleClient();
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getIndex(), forClient140 ? 11 : 12));
 				boolean forAuthentic = !playerToUpdate.isUsingCustomClient();
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getSprite(), 4));
-				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getID(), 10));
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getID(), forClient140 ? 9 : 10));
 
 				playerToUpdate.getLocalNpcs().add(newNPC);
 			}
@@ -320,8 +321,13 @@ public final class GameStateUpdater {
 		} else {
 			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
 
-			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getX(), 11));
-			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getY(), 13));
+			if (playerToUpdate.isUsing140CompatibleClient()) {
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getX(), 10));
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getY(), 12));
+			} else {
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getX(), 11));
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getY(), 13));
+			}
 			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getSprite(), 4));
 			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getLocalPlayers().size(), 8));
 			if (playerToUpdate.loggedIn()) {
@@ -619,7 +625,7 @@ public final class GameStateUpdater {
 				AppearanceUpdateStruct altStruct = new AppearanceUpdateStruct(); // for early mudclient, appearance update was sent appart;
 				boolean isRetroClient = player.isRetroClient();
 				boolean isCustomClient = player.isUsingCustomClient();
-				boolean is177Compat = player.isUsing177CompatibleClient();
+				boolean is177Compat = player.isUsing177CompatibleClient() || player.isUsing140CompatibleClient();
 
 				List<Object> updatesMain = new ArrayList<>();
 				List<Object> updatesAlt = new ArrayList<>();
