@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +28,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		options.add(optionBank);
 
 		String optionPin = "I'd like to talk about bank pin";
-		if (config().WANT_BANK_PINS)
+		if (config().WANT_BANK_PINS && !player.getBankPinOptOut())
 			options.add(optionPin);
 
 		String optionCollect = "I'd like to collect my items from auction";
@@ -52,7 +53,12 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 				ActionSender.showBank(player);
 			}
 		} else if (options.get(option).equalsIgnoreCase(optionPin)) {
-			int menu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+			int menu;
+			if (config().WANT_CUSTOM_SPRITES) {
+				menu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+			} else {
+				menu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin", "Can you please never mention bank pins to me again?");
+			}
 			if (menu == 0) {
 				if (!player.isUsingCustomClient()) {
 					npcsay(player, n, "ok but i have to warn you that this is going to be pretty annoying.");
@@ -62,6 +68,10 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 				changebankpin(player, n);
 			} else if (menu == 2) {
 				removebankpin(player, n);
+			} else if (menu == 3 && !config().WANT_CUSTOM_SPRITES) {
+				if (bankpinoptout(player, n, false)) {
+					player.playerServerMessage(MessageType.QUEST, "You have successfully opted out of even THE MENTION of a bank pin.");
+				}
 			}
 		} else if (options.get(option).equalsIgnoreCase(optionCollect)) {
 			if(validatebankpin(player, n)) {

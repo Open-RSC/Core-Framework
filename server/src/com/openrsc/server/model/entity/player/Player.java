@@ -3660,4 +3660,12 @@ public final class Player extends Mob {
 	public void tellCoordinates() {
 		playerServerMessage(MessageType.QUEST, "@whi@You are at @cya@" + getLocation() + "@whi@ or in Jagex notation: @cya@" + getLocation().pointToJagexPoint());
 	}
+
+	public boolean getBankPinOptOut() {
+		return getCache().hasKey("bankpin_optout");
+	}
+
+	public boolean isUsingAndroidClient() {
+		return getClientLimitations().isAndroidClient;
+	}
 }

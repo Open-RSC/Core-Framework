@@ -14426,6 +14426,7 @@ public final class mudclient implements Runnable {
 		bufferBits.putByte(optionsMenuText.length & 0xFF);
 		bufferBits.putInt(bank.maximumBankItemsSupported());
 		bufferBits.putString(this.world.mapHash);
+		bufferBits.putByte(isAndroid() ? 1 : 0);
 	}
 
 	private void lostConnection(int var1) {

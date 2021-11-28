@@ -22,6 +22,7 @@ public class ClientLimitations {
 	public boolean supportsSkillUpdate = false;
 	public boolean supportsSystemUpdateTimer = false;
 	public boolean supportsMessageBox = false;
+	public boolean isAndroidClient = false;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);

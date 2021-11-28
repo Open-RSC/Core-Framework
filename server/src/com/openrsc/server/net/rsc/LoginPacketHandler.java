@@ -416,6 +416,9 @@ public class LoginPacketHandler {
 						cl.maxBankItems = packet.readInt();
 						cl.mapHash = packet.readString();
 					}
+					if (packet.getReadableBytes() > 0) {
+						cl.isAndroidClient = (packet.readUnsignedByte() & 0xFF) != 0;
+					}
 
 					final LoginRequest request = new LoginRequest(server, channel, username, password, false, clientVersion, opcode == OpcodeIn.RELOGIN) {
 						@Override

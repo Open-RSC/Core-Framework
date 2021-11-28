@@ -816,6 +816,100 @@ public class Functions {
 		return player.getAttribute("bankpin", false);
 	}
 
+	public static boolean bankpinoptout(final Player player, final Npc n, final boolean concerned) {
+		say(player, n, "Can you please never mention bank pins to me again?");
+		if (!player.getCache().hasKey("bank_pin")) {
+			// Player does not have an existing bank pin
+			if (!concerned) {
+				npcsay(player, n, "Gladly.");
+				player.getCache().store("bankpin_optout", 792);
+				if (player.getBankPinOptOut()) {
+					npcsay(player, n, "I won't even mention that bank pins are a concept I know about.",
+						"If some of your items go missing,",
+						"please note that we do not insure your items against loss.",
+						"If you change your mind about bank pins in the future, use a key on me.");
+					say(player, n, "Any key in particular?");
+					npcsay(player, n, "No, just any key will work.",
+						"And I'll set you back up with the latest in inauthentic bank security.");
+				} else {
+					npcsay(player, n, "yo it failed try again...");
+				}
+				return player.getBankPinOptOut();
+			}
+			npcsay(player, n, "Err, are you sure?");
+			if (player.isUsingCustomClient()) {
+				npcsay(player, n, "With that inauthentic custom client you're using, they're not even that annoying!");
+				if (player.isUsingAndroidClient()) {
+					say(player, n, "yea, but I don't really have a choice to use a more authentic client right now on Android...");
+					npcsay(player, n, "Fair enough. Maybe in the future that'll change.");
+					// TODO: port mudclient177 to android
+				} else {
+					say(player, n, "this is just the client I like please don't make fun of me");
+					npcsay(player, n, "okay, it's just, have you seen the new launcher?");
+					npcsay(player, n, "there are so many better options now!");
+					npcsay(player, n, "WinRune, RSC+, web client...");
+					npcsay(player, n, "If a more authentic experience is what you're going for,");
+					npcsay(player, n, "you should really consider using one of those instead.");
+					delay(3);
+					say(player, n, "okay maybe. but, the bank pin?");
+					npcsay(player, n, "Right");
+				}
+				npcsay(player, n, "So you're sure you want me to stop even mentioning that enhanced security option?");
+			} else {
+				// player is using an authentic client
+				npcsay(player, n, "You want me to stop even mentioning that enhanced security option?");
+			}
+			int reallyOptOut = multi(player, n, "Yes, it's inauthentic.",
+				"Yes, I don't think there's really any risk of being hacked.",
+				"Yes, I already have a really secure password.",
+				"No, actually, I shouldn't disable it...");
+			switch (reallyOptOut) {
+				case 0:
+				case 1:
+				case 2:
+					npcsay(player, n, "Understandable.");
+					player.getCache().store("bankpin_optout", reallyOptOut);
+					if (player.getBankPinOptOut()) {
+						if (reallyOptOut == 1) {
+							npcsay(player, n, "but, it could happen you know");
+							npcsay(player, n, "Even in a tight-knit small community like this one.",
+								"Regardless,");
+						} else if (reallyOptOut == 2) {
+							npcsay(player, n, "I mean, maybe you do",
+								"but even with a long password,",
+								"you could still be keylogged or hacked some other way.",
+								"Regardless,");
+						}
+						npcsay(player, n, "I won't even mention that bank pins are a concept I know about then.",
+							"If some of your items go missing,",
+							"please note that we do not insure your items against loss.",
+							"If you change your mind about bank pins in the future, use a key on me.");
+						say(player, n, "Any key in particular?");
+						npcsay(player, n, "No, just any key will work.",
+							"And I'll set you back up with the latest in inauthentic bank security.");
+						return player.getBankPinOptOut();
+					} else {
+						// ????
+						npcsay(player, n, "Yep, really and totally completely understandable.",
+							"However, uhm, please try again ok?",
+							"I've err,... dropped my hearing aide or something...");
+					}
+					return player.getBankPinOptOut();
+				case 3:
+					npcsay(player, n, "I knew you had good common sense!");
+					npcsay(player, n, "We're very glad at the Bank of Runescape to offer this enhanced security feature to you.");
+					return player.getBankPinOptOut();
+				default:
+					return player.getBankPinOptOut();
+			}
+
+		} else {
+			// player has a bank pin
+			npcsay(player, n, "Err, maybe, but you'll need to remove your existing bank pin first.");
+			return player.getBankPinOptOut();
+		}
+	}
+
 	public static boolean ifinterrupted() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return true;

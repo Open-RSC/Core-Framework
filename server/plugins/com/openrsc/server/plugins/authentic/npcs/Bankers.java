@@ -49,7 +49,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				"What is this place?",
 				"I'd like to talk about bank pin",
 				"I'd like to collect my items from auction");
-		else if (config().WANT_BANK_PINS)
+		else if (config().WANT_BANK_PINS && !player.getBankPinOptOut())
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
@@ -104,8 +104,13 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 						"As if we didn't know what town we were in or something!");
 				}
 			}
-		} else if (menu == 2 && config().WANT_BANK_PINS) {
-			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+		} else if (menu == 2 && config().WANT_BANK_PINS && !player.getBankPinOptOut()) {
+			int bankPinMenu;
+			if (config().WANT_CUSTOM_SPRITES) {
+				bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+			} else {
+				bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin", "Can you please never mention bank pins to me again?");
+			}
 			if (bankPinMenu == 0) {
 				if (!player.isUsingCustomClient()) {
 					npcsay(player, npc, "ok but i have to warn you that this is going to be pretty annoying.");
@@ -115,6 +120,10 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				changebankpin(player, npc);
 			} else if (bankPinMenu == 2) {
 				removebankpin(player, npc);
+			} else if (bankPinMenu == 3 && !config().WANT_CUSTOM_SPRITES) {
+				if (bankpinoptout(player, npc, true)) {
+					player.playerServerMessage(MessageType.QUEST, "You have successfully opted out of even THE MENTION of a bank pin.");
+				}
 			}
 		} else if ((menu == 2 || menu == 3) && config().SPAWN_AUCTION_NPCS) {
 			if(validatebankpin(player, npc)) {
@@ -158,7 +167,8 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return (!player.isUsingCustomClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
 			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK
-			&& !item.getDef(player.getWorld()).getName().toLowerCase().endsWith("cracker"));
+				&& !item.getDef(player.getWorld()).getName().toLowerCase().endsWith("cracker"))
+			|| (item.getDef(player.getWorld()).getName().toLowerCase().contains("key"));
 	}
 
 	@Override
@@ -212,6 +222,21 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				Certer.exchangeMarketForBankCerts(player, npc, item);
 			}
 
+		} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("key") && player.getBankPinOptOut()) {
+			if (!npc.getDef().getName().toLowerCase().contains("gundai")) {
+				player.playerServerMessage(MessageType.QUEST, "There is a twinkle in the banker's eye");
+				delay(3);
+				npcsay(player, npc, "Ah, you want to re-enable bank pins!");
+				npcsay(player, npc, "I knew you had good common sense!");
+				npcsay(player, npc, "We're very glad at the Bank of Runescape to offer this enhanced security feature to you.");
+			}
+			player.getCache().remove("bankpin_optout");
+			if (!player.getBankPinOptOut()) {
+				player.playerServerMessage(MessageType.QUEST, "You can now talk to the banker about bank pins again!");
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "Something went wrong opting-in to bankpins.");
+				player.playerServerMessage(MessageType.QUEST, "Please try opting-in again.");
+			}
 		} else if (player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
 				quickFeature(npc, player, false);
