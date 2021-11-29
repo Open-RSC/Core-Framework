@@ -41,6 +41,7 @@ public class ServerConfiguration {
 	int SERVER_PORT;
 	int IDLE_TIMER;
 	int AUTO_SAVE;
+	public int MILLISECONDS_BETWEEN_CASTS;
 	public int AGGRO_RANGE;
 	public DatabaseType DB_TYPE;
 	public String DB_HOST;
@@ -314,6 +315,7 @@ public class ServerConfiguration {
 		LOGO_SPRITE_ID = tryReadString("logo_sprite_id").orElse("2010");
 		GAME_TICK = tryReadInt("game_tick").orElse(640);
 		WALKING_TICK = tryReadInt("walking_tick").orElse(640);
+		MILLISECONDS_BETWEEN_CASTS = tryReadInt("milliseconds_between_casts").orElse(GAME_TICK * 3 - 20);
 		WANT_CUSTOM_WALK_SPEED = tryReadBool("want_custom_walking_speed").orElse(false);
 		IDLE_TIMER = tryReadInt("idle_timer").orElse(300000); // 5 minutes
 		AUTO_SAVE = tryReadInt("auto_save").orElse(30000); // 30 seconds

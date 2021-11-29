@@ -85,6 +85,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 	private static boolean canCast(Player player) {
 		// Retro RSC mechanic, could rapid cast spells
 		if (!player.castTimer(player.getConfig().RAPID_CAST_SPELLS)) {
+			// spell timer audited, see #3199 or `flying sno/flying sno (originals only)/penuslarge1/07-11-2018 16.12.51 autocast magic on some guards for 2 hours`
 			player.message("You need to wait " + player.getSpellWait() + " seconds before you can cast another spell");
 			player.resetPath();
 			return false;

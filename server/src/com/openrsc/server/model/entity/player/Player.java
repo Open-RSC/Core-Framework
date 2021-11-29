@@ -664,7 +664,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean castTimer(boolean allowRapid) {
-		final int holdTimer = allowRapid ? 0 : 1250;
+		final int holdTimer = allowRapid ? 0 : getConfig().MILLISECONDS_BETWEEN_CASTS;
 		return System.currentTimeMillis() - lastSpellCast > holdTimer;
 	}
 
@@ -1390,7 +1390,7 @@ public final class Player extends Mob {
 	}
 
 	public int getSpellWait() {
-		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
+		return Math.max((int)(((getConfig().MILLISECONDS_BETWEEN_CASTS - (System.currentTimeMillis() - lastSpellCast)) / 1000D)), 1);
 	}
 
 	public boolean hasNoTradeConfirm() {
