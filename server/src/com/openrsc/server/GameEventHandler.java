@@ -8,12 +8,16 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class GameEventHandler {
 
@@ -22,7 +26,7 @@ public class GameEventHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
+	private final GameTickEventStore eventStore = new GameTickEventStore();
 	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<String, Integer>();
 	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<String, Long>();
 
@@ -53,20 +57,8 @@ public class GameEventHandler {
 			LOGGER.catching(e);
 		}
 
-		events.clear();
 		eventsCounts.clear();
 		eventsDurations.clear();
-	}
-
-	public void add(final GameTickEvent event) {
-		final String className = String.valueOf(event.getClass());
-		if (event.isNotUniqueEvent() || !event.hasOwner()) {
-			final UUID uuid = UUID.randomUUID();
-			events.putIfAbsent(className + uuid, event);
-		} else {
-			events.putIfAbsent(className + event.getOwner().getUUID()
-					+ (event.getOwner().isPlayer() ? "p" : "n"), event);
-		}
 	}
 
 	public void submit(final Runnable r, final String descriptor) {
@@ -82,11 +74,8 @@ public class GameEventHandler {
 		});
 	}
 
-	public boolean contains(final GameTickEvent event) {
-		if (event.getOwner() != null) {
-			return events.containsKey(String.valueOf(event.getOwner().getID()));
-		}
-		return false;
+	public boolean add(final GameTickEvent event) {
+		return eventStore.add(event);
 	}
 
 	public long processNonPlayerEvents() {
@@ -104,35 +93,23 @@ public class GameEventHandler {
 			executor.setMaximumPoolSize(maxThreads);
 			executor.setCorePoolSize(maxThreads / 2);
 
-			// get only events for this player
-			final List<GameTickEvent> filteredEvents = events.values().stream().filter(
-				gameTickEvent ->
-					!(gameTickEvent.getOwner() instanceof Player)).collect(Collectors.toList()
-			);
-
 			try {
-				executor.invokeAll(filteredEvents);
+				executor.invokeAll(eventStore.getNonPlayerEvents());
 			} catch (final Exception e) {
 				LOGGER.catching(e);
 			}
+		});
+	}
 
-			eventsCounts.clear();
-			eventsDurations.clear();
-
-			events.entrySet().removeIf((eventBox) -> {
-				final GameTickEvent event = eventBox.getValue();
-				eventsCounts.put(event.getDescriptor(),
-					eventsCounts.containsKey(event.getDescriptor()) ?
+	private void incrementCounts(GameTickEvent event) {
+		eventsCounts.put(event.getDescriptor(),
+				eventsCounts.containsKey(event.getDescriptor()) ?
 						eventsCounts.get(event.getDescriptor()) + 1 :
 						1);
-				eventsDurations.put(event.getDescriptor(),
-					eventsDurations.containsKey(event.getDescriptor()) ?
+		eventsDurations.put(event.getDescriptor(),
+				eventsDurations.containsKey(event.getDescriptor()) ?
 						eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
 						event.getLastEventDuration());
-
-				return event.shouldRemove();
-			});
-		});
 	}
 
 	public void processEvents(final Player player) {
@@ -149,84 +126,33 @@ public class GameEventHandler {
 		executor.setMaximumPoolSize(maxThreads);
 		executor.setCorePoolSize(maxThreads / 2);
 
-		// get only events for this player
-		final List<GameTickEvent> filteredEvents = events.values().stream().filter(
-			gameTickEvent ->
-				gameTickEvent.getOwner() != null &&
-					gameTickEvent.getOwner().equals(player)
-		).collect(Collectors.toList());
-
 		try {
-			executor.invokeAll(filteredEvents);
+			executor.invokeAll(eventStore.getPlayerEvents(player.getUsername()));
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
 
+	}
+
+	public void cleanupEvents() {
+		eventStore.getTrackedEvents().forEach(event -> {
+			incrementCounts(event);
+			if(event.shouldRemove()) {
+				eventStore.remove(event);
+			}
+		});
 		eventsCounts.clear();
 		eventsDurations.clear();
-
-		events.entrySet().removeIf((eventBox) -> {
-			final GameTickEvent event = eventBox.getValue();
-			eventsCounts.put(event.getDescriptor(),
-				eventsCounts.containsKey(event.getDescriptor()) ?
-					eventsCounts.get(event.getDescriptor()) + 1 :
-					1);
-			eventsDurations.put(event.getDescriptor(),
-				eventsDurations.containsKey(event.getDescriptor()) ?
-					eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
-					event.getLastEventDuration());
-
-			return event.shouldRemove();
-		});
 	}
 
 
 	private void processEvents() {
-		final int maxThreads;
-		if (getServer().getConfig().WANT_THREADING__BREAK_PID_PRIORITY) {
-			// can be slightly faster if we don't care which order events are done in (you always should care!)
-			// TODO: currently also causes issues with scenery breaking from having two players accessing it
-			maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
-		} else {
-			// single thread events so that PID order is always respected.
-			maxThreads = 1;
-		}
-
-		executor.setMaximumPoolSize(maxThreads);
-		executor.setCorePoolSize(maxThreads / 2);
-
-		// Sort events by PID in order to achieve PID priority.
-		final List<GameTickEvent> eventsByPID = new ArrayList<>(events.values());
-		Collections.sort(eventsByPID, Comparator.comparing(GameTickEvent::getPriority));
-
-		try {
-			executor.invokeAll(eventsByPID);
-		} catch (final Exception e) {
-			LOGGER.catching(e);
-		}
-
-		eventsCounts.clear();
-		eventsDurations.clear();
-
-		events.entrySet().removeIf((eventBox) -> {
-			final GameTickEvent event = eventBox.getValue();
-			eventsCounts.put(event.getDescriptor(),
-				eventsCounts.containsKey(event.getDescriptor()) ?
-					eventsCounts.get(event.getDescriptor()) + 1 :
-					1);
-			eventsDurations.put(event.getDescriptor(),
-				eventsDurations.containsKey(event.getDescriptor()) ?
-					eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
-					event.getLastEventDuration());
-
-			return event.shouldRemove();
-		});
+		processNonPlayerEvents();
+		getServer().getWorld().getPlayers().forEach(this::runPlayerEvents);
 	}
 
-	public long runGameEvents(final Player player) {
-		return getServer().bench(() -> {
-			processEvents(player);
-		});
+	public long runPlayerEvents(final Player player) {
+		return getServer().bench(() -> processEvents(player));
 	}
 
 	public final String buildProfilingDebugInformation(final boolean forInGame) {
@@ -324,26 +250,12 @@ public class GameEventHandler {
 		return returnString.substring(0, Math.min(returnString.length(), 1999)); // Limit to 2000 characters for Discord.
 	}
 
-	public HashMap<String, GameTickEvent> getEvents() {
-		return new LinkedHashMap<>(events);
+	public List<GameTickEvent> getEvents() {
+		return new ArrayList<>(eventStore.getTrackedEvents());
 	}
 
 	public void remove(final GameTickEvent event) {
-		events.remove(event);
-	}
-
-	public void removePlayersEvents(final Player player) {
-		try {
-			final Iterator<Map.Entry<String, GameTickEvent>> iterator = events.entrySet().iterator();
-			while (iterator.hasNext()) {
-				GameTickEvent event = iterator.next().getValue();
-				if (event.belongsTo(player)) {
-					iterator.remove();
-				}
-			}
-		} catch (final Exception e) {
-			LOGGER.catching(e);
-		}
+		eventStore.remove(event);
 	}
 
 	public HashMap<String, Integer> getEventsCounts() {

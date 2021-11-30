@@ -347,8 +347,8 @@ public final class PluginHandler {
 					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
 
 					boolean shouldFire = true;
-					HashMap<String, GameTickEvent> events = getServer().getGameEventHandler().getEvents();
-					for (GameTickEvent e : events.values()) {
+					List<GameTickEvent> events = getServer().getGameEventHandler().getEvents();
+					for (GameTickEvent e : events) {
 						if (e instanceof PluginTickEvent) {
 							PluginTickEvent pluginTickEvent = (PluginTickEvent)e;
 

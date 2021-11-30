@@ -2161,7 +2161,7 @@ public final class Player extends Mob {
 		getWorld().getServer().incrementLastExecuteWalkToActionsDuration(
 			getWorld().getServer().getGameUpdater().executeWalkToActions(this));
 		getWorld().getServer().incrementLastEventsDuration(
-			getWorld().getServer().getGameEventHandler().runGameEvents(this));
+			getWorld().getServer().getGameEventHandler().runPlayerEvents(this));
 		getWorld().getServer().incrementLastProcessPlayersDuration(
 			getWorld().getServer().getGameUpdater().movePlayer(this));
 		getWorld().getServer().incrementLastProcessMessageQueuesDuration(

@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -649,9 +650,9 @@ public final class RegularPlayer implements CommandTrigger {
 	private void checkHolidayDrop(Player player) {
 		boolean foundEvent = false;
 		StringBuilder eventDetails = new StringBuilder();
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 		eventDetails.append("% %");
-		for (GameTickEvent event : events.values()) {
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HolidayDropEvent)) continue;
 
 			foundEvent = true;

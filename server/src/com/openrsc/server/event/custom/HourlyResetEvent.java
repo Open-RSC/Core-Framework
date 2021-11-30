@@ -70,7 +70,7 @@ public class HourlyResetEvent extends HourlyEvent  {
 	}
 
 	public static boolean isOccurring(Player player) {
-		for (GameTickEvent event : player.getWorld().getServer().getGameEventHandler().getEvents().values()) {
+		for (GameTickEvent event : player.getWorld().getServer().getGameEventHandler().getEvents()) {
 			if (!(event instanceof HourlyResetEvent)) continue;
 			return true;
 		}

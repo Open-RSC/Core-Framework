@@ -234,8 +234,8 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HolidayDropEvent)) continue;
 
 			player.message(messagePrefix + "There is already a holiday drop running!");
@@ -324,9 +324,9 @@ public final class Admins implements CommandTrigger {
 			items.add(itemId);
 		}
 
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 		if (!allowMultiple) {
-			for (GameTickEvent event : events.values()) {
+			for (GameTickEvent event : events) {
 				if (!(event instanceof HolidayDropEvent)) continue;
 
 				player.message(messagePrefix + "There is already a holiday drop running!");
@@ -340,8 +340,8 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void stopHolidayDrop(Player player) {
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HolidayDropEvent)) continue;
 
 			event.stop();
@@ -1600,8 +1600,8 @@ public final class Admins implements CommandTrigger {
 			npcLifeTime = 10;
 		}
 
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 			player.message(messagePrefix + "Hourly NPC Loot Event is already running");
@@ -1613,8 +1613,8 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void stopNpcEvent(Player player) {
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 			event.stop();
@@ -1624,8 +1624,8 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void checkNpcEvent(Player player) {
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HourlyNpcLootEvent)) continue;
 
 			HourlyNpcLootEvent lootEvent = (HourlyNpcLootEvent) event;
@@ -2233,8 +2233,8 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HourlyResetEvent)) continue;
 
 			player.message(messagePrefix + "There is already an hourly reset running!");
@@ -2247,8 +2247,8 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void stopResetEvent(Player player) {
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
+		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events) {
 			if (!(event instanceof HourlyResetEvent)) continue;
 
 			event.stop();

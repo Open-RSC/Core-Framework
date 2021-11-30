@@ -69,7 +69,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 	}
 
 	public static boolean isOccurring(Player player) {
-		for (GameTickEvent event : player.getWorld().getServer().getGameEventHandler().getEvents().values()) {
+		for (GameTickEvent event : player.getWorld().getServer().getGameEventHandler().getEvents()) {
 			if (!(event instanceof HolidayDropEvent)) continue;
 			return true;
 		}

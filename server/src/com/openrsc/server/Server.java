@@ -526,6 +526,7 @@ public class Server implements Runnable {
 								player.sendUpdates();
 							}
 							incrementLastDoCleanupDuration(getGameUpdater().doCleanup());
+							getGameEventHandler().cleanupEvents();
 						} catch (final Throwable t) {
 							LOGGER.catching(t);
 						}
@@ -567,8 +568,8 @@ public class Server implements Runnable {
 	private void dailyShutdownEvent() {
 		try {
 			if (getConfig().WANT_AUTO_SERVER_SHUTDOWN) {
-				HashMap<String, GameTickEvent> events = getWorld().getServer().getGameEventHandler().getEvents();
-				for (GameTickEvent event : events.values()) {
+				List<GameTickEvent> events = getWorld().getServer().getGameEventHandler().getEvents();
+				for (GameTickEvent event : events) {
 					if (!(event instanceof DailyShutdownEvent)) continue;
 
 					// There is already a daily shutdown running!;
@@ -589,8 +590,8 @@ public class Server implements Runnable {
 
 	private void resetEvent() {
 		if (getConfig().WANT_RESET_EVENT) {
-			HashMap<String, GameTickEvent> events = getWorld().getServer().getGameEventHandler().getEvents();
-			for (GameTickEvent event : events.values()) {
+			List<GameTickEvent> events = getWorld().getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events) {
 				if (!(event instanceof HourlyResetEvent)) continue;
 
 				// There is already an hourly reset running!;
