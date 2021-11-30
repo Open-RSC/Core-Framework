@@ -13,7 +13,7 @@ public class Skills {
 	//public final int GLOBAL_LEVEL_LIMIT = 135;
 	// technically maximum should be 1b if capped equating to 142
 	//public final int MAXIMUM_EXP = -294967296; //= 4B // read from the config
-	public final int GLOBAL_LEVEL_LIMIT = 142;
+	public final int GLOBAL_LEVEL_LIMIT;
 
 	/*public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
@@ -35,10 +35,162 @@ public class Skills {
 
 	private final Constants constants;
 
+	// matches RSC up to lvl 99, RS3 up to lvl 120, and RSC+ up to lvl 143
+	public static final int[] originalCurveExperienceArray =
+		new int[] {
+			332,
+			696,
+			1104,
+			1552,
+			2048,
+			2600,
+			3204,
+			3876,
+			4616,
+			5432,
+			6336,
+			7332,
+			8428,
+			9644,
+			10984,
+			12460,
+			14092,
+			15892,
+			17880,
+			20072,
+			22496,
+			25164,
+			28112,
+			31368,
+			34960,
+			38920,
+			43296,
+			48124,
+			53452,
+			59332,
+			65824,
+			72988,
+			80896,
+			89624,
+			99260,
+			109892,
+			121632,
+			134592,
+			148896,
+			164684,
+			182116,
+			201356,
+			222596,
+			246048,
+			271932,
+			300508,
+			332056,
+			366884,
+			405332,
+			447780,
+			494640,
+			546376,
+			603488,
+			666544,
+			736160,
+			813016,
+			897864,
+			991544,
+			1094968,
+			1209152,
+			1335216,
+			1474396,
+			1628060,
+			1797712,
+			1985016,
+			2191812,
+			2420128,
+			2672204,
+			2950508,
+			3257780,
+			3597028,
+			3971580,
+			4385112,
+			4841684,
+			5345772,
+			5902324,
+			6516800,
+			7195232,
+			7944272,
+			8771272,
+			9684348,
+			10692456,
+			11805492,
+			13034376,
+			14391168,
+			15889176,
+			17543104,
+			19369180,
+			21385328,
+			23611324,
+			26069012,
+			28782516,
+			31778456,
+			35086232,
+			38738308,
+			42770516,
+			47222424,
+			52137724,
+			57564640,
+			63556436,
+			70171904,
+			77475968,
+			85540292,
+			94444024,
+			104274528,
+			115128276,
+			127111772,
+			140342616,
+			154950644,
+			171079204,
+			188886564,
+			208547476,
+			230254872,
+			254221772,
+			280683360,
+			309899312,
+			342156328,
+			377770948,
+			417092668,
+			460507296,
+			508441024,
+			561364096,
+			619795904,
+			684309760,
+			755538944,
+			834182272,
+			921011520,
+			1016878848,
+			1122724864,
+			1239588352,
+			1368616064,
+			1511074304,
+			1668360832,
+			1842019200,
+			2033753728,
+			(int)2245445632L, // -2049521664
+			(int)2479172352L, // -1815794944
+			(int)2737227520L, // -1557739776
+			(int)3022143744L, // -1272823552
+			(int)3336716800L, // -958250496
+			(int)3684033280L, // -610934016
+			(int)4067502080L // -227465216
+			// (int)4490886144L // 195918848
+		};
+
 	public Skills(Constants constants) {
 		this.constants = constants;
 
 		experienceCurves = new HashMap<>();
+
+		/*
+		Best to just pre-compute.
+		This is an accurate formula, but must also be rounded down to the nearest multiple of 4 to be actually accurate.
 
 		int i = 0;
 		int[] experienceArray = new int[GLOBAL_LEVEL_LIMIT];
@@ -48,7 +200,9 @@ public class Skills {
 			i += i1;
 			experienceArray[j] = i;
 		}
-		experienceCurves.put(SkillDef.EXP_CURVE.ORIGINAL, experienceArray);
+		*/
+		GLOBAL_LEVEL_LIMIT = originalCurveExperienceArray.length;
+		experienceCurves.put(SkillDef.EXP_CURVE.ORIGINAL, originalCurveExperienceArray);
 
 		skills = new ArrayList<SkillDef>();
 		int skillIndex = 0;
