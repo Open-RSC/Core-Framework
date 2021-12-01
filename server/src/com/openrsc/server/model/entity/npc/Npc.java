@@ -111,11 +111,6 @@ public class Npc extends Mob {
 		getSkills().setLevelTo(Skill.STRENGTH.id(), def.getStr());
 		getSkills().setLevelTo(Skill.HITS.id(), def.getHits());
 
-		/*
-		  Unique ID for event tracking.
-		 */
-		setUUID(UUID.randomUUID());
-
 		getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 	}
 

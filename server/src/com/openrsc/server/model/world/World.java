@@ -1,8 +1,5 @@
 package com.openrsc.server.model.world;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import com.openrsc.server.Server;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.avatargenerator.AvatarGenerator;
@@ -38,14 +35,26 @@ import com.openrsc.server.net.PcapLogger;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.util.*;
+import com.openrsc.server.util.EntityList;
+import com.openrsc.server.util.IPTracker;
+import com.openrsc.server.util.PathfindingDebug;
+import com.openrsc.server.util.PlayerList;
+import com.openrsc.server.util.SimpleSubscriber;
+import com.openrsc.server.util.ThreadSafeIPTracker;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
 import io.netty.util.AttributeKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -589,8 +598,6 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public boolean registerPlayer(final Player player) {
 		if (!getPlayers().contains(player)) {
-			player.setUUID(UUID.randomUUID());
-
 			player.setBusy(false);
 
 			getPlayers().add(player);

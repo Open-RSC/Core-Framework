@@ -5,17 +5,24 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Key;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.PluginTickEvent;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 class GameTickEventStore {
+    private static final Logger LOGGER = LogManager.getLogger(GameTickEventStore.class);
+
     private final Object LOCK = new Object();
 
     /**
@@ -44,6 +51,7 @@ class GameTickEventStore {
 
             if (events.containsKey(eventKey)) {
                 // We already have an instance of this event
+                LOGGER.warn("Tried to add duplicate event: {}", eventKey);
                 return false;
             }
 
@@ -64,6 +72,7 @@ class GameTickEventStore {
 
             if(!events.containsKey(eventKey)) {
                 // Event does not exist
+                LOGGER.warn("Failed to remove event: {}", eventKey);
                 return;
             }
 
@@ -108,22 +117,41 @@ class GameTickEventStore {
     }
 
     private boolean isPlayerOwner(GameTickEvent event) {
-        return event.getOwner() != null && event.getOwner() instanceof Player;
+        return event.hasOwner() && event.getOwner() instanceof Player;
     }
 
     private GameTickKey getKey(GameTickEvent event) {
+        if(event instanceof PluginTickEvent) {
+            return new GameTickKey((PluginTickEvent) event);
+        }
         return new GameTickKey(event);
     }
 
     class GameTickKey {
-        private final String className;
+        private final String name;
         private final Boolean isPlayerEvent;
         private final UUID uuid;
 
-        private GameTickKey(GameTickEvent event) {
-            this.className = String.valueOf(event.getClass());
+        private GameTickKey(PluginTickEvent event) {
+            this.name = event.getPluginName();
             this.isPlayerEvent = isPlayerOwner(event);
-            this.uuid = event.isNotUniqueEvent() ? UUID.randomUUID() : event.getOwner().getUUID();
+            this.uuid = resolveUUID(event);
+        }
+
+        private GameTickKey(GameTickEvent event) {
+            this.name = String.valueOf(event.getClass());
+            this.isPlayerEvent = isPlayerOwner(event);
+            this.uuid = resolveUUID(event);
+        }
+
+        private UUID resolveUUID(GameTickEvent event) {
+            if(event.isNotUniqueEvent()) {
+                return event.getUUID();
+            } else {
+                return Optional.ofNullable(event.getOwner())
+                        .map(Mob::getUUID)
+                        .orElse(event.getUUID());
+            }
         }
 
         @Override
@@ -132,7 +160,7 @@ class GameTickEventStore {
             if (o == null || getClass() != o.getClass()) return false;
             GameTickKey that = (GameTickKey) o;
             return new EqualsBuilder()
-                    .append(className, that.className)
+                    .append(name, that.name)
                     .append(isPlayerEvent, that.isPlayerEvent)
                     .append(uuid, that.uuid).isEquals();
         }
@@ -140,10 +168,19 @@ class GameTickEventStore {
         @Override
         public int hashCode() {
             return new HashCodeBuilder(17, 37)
-                    .append(className)
+                    .append(name)
                     .append(isPlayerEvent)
                     .append(uuid)
                     .toHashCode();
+        }
+
+        @Override
+        public String toString() {
+            return "GameTickKey{" +
+                    "name='" + name + '\'' +
+                    ", isPlayerEvent=" + isPlayerEvent +
+                    ", uuid=" + uuid +
+                    '}';
         }
     }
 }

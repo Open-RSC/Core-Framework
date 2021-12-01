@@ -7,6 +7,7 @@ import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 public abstract class GameTickEvent implements Callable<Integer> {
@@ -22,7 +23,12 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	private long ticksBeforeRun = -1;
 	private String descriptor;
 	private long lastEventDuration = 0;
-	private boolean notUniqueEvent = false;
+	private final boolean notUniqueEvent;
+	private final UUID uuid;
+
+	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor) {
+		this(world, owner, ticks, descriptor, true);
+	}
 
 	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, final boolean notUniqueEvent) {
 		this.world = world;
@@ -31,10 +37,7 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		this.setDescriptor(descriptor);
 		this.setDelayTicks(ticks);
 		this.resetCountdown();
-	}
-
-	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor) {
-		this(world, owner, ticks, descriptor, true);
+		this.uuid = UUID.randomUUID();
 	}
 
 	public abstract void run();
@@ -145,4 +148,8 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	}
 
 	public boolean isNotUniqueEvent() { return notUniqueEvent; }
+
+	public UUID getUUID() {
+		return uuid;
+	}
 }

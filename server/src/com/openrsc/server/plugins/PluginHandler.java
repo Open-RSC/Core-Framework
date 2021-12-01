@@ -2,7 +2,6 @@ package com.openrsc.server.plugins;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.ShopRestockEvent;
-import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.PluginTickEvent;
 import com.openrsc.server.model.Shop;
@@ -22,8 +21,20 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -345,23 +356,6 @@ public final class PluginHandler {
 
 					final Method m = cls.getClass().getMethod("on" + interfce, dataClasses);
 					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
-
-					boolean shouldFire = true;
-					// Ensure that a player cannot have more than one of each plugin event type
-					if(player != null) {
-						Collection<GameTickEvent> events = getServer().getGameEventHandler().getEvents(player.getUsername());
-						for (GameTickEvent e : events) {
-							if (e instanceof PluginTickEvent) {
-								PluginTickEvent pluginTickEvent = (PluginTickEvent) e;
-								if (pluginTickEvent.getPluginName().equals(pluginName)) {
-									shouldFire = false;
-									break;
-								}
-							}
-						}
-					}
-
-					if (!shouldFire) return;
 
 					final PluginTask task = new PluginTask(world, player, interfce, data) {
 						@Override

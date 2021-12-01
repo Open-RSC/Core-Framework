@@ -71,7 +71,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * Unique ID for event tracking.
 	 */
-	private UUID uuid;
+	private final UUID uuid;
 	/**
 	 * Timer used to track start and end of combat
 	 */
@@ -144,6 +144,7 @@ public abstract class Mob extends Entity {
 	public Mob(final World world, final EntityType type) {
 		super(world, type);
 		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
+		uuid = UUID.randomUUID();
 	}
 
 	/**
@@ -854,10 +855,6 @@ public abstract class Mob extends Entity {
 
 	public UUID getUUID() {
 		return uuid;
-	}
-
-	public void setUUID(final UUID u) {
-		this.uuid = u;
 	}
 
 	public CombatEvent getCombatEvent() {
