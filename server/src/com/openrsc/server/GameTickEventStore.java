@@ -123,7 +123,7 @@ class GameTickEventStore {
         private GameTickKey(GameTickEvent event) {
             this.className = String.valueOf(event.getClass());
             this.isPlayerEvent = isPlayerOwner(event);
-            this.uuid = event.isNotUniqueEvent() ? null : UUID.randomUUID();
+            this.uuid = event.isNotUniqueEvent() ? UUID.randomUUID() : event.getOwner().getUUID();
         }
 
         @Override
