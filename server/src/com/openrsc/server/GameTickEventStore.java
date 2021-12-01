@@ -100,7 +100,7 @@ class GameTickEventStore {
 
     public Collection<GameTickEvent> getEvents(Class<? extends GameTickEvent> type) {
         synchronized (LOCK) {
-            return byType.get(Key.get(type));
+            return new ArrayList<>(byType.get(Key.get(type)));
         }
     }
 
