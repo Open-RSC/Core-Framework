@@ -127,6 +127,8 @@ public final class Player extends Mob {
 	public boolean speakTongues = false;
 	private ClientLimitations clientLimitations;
 
+	private final UUID uuid;
+
 	public int knownPlayersCount = 0;
 	public int[] knownPlayerPids = new int[500];
 	public int[] knownPlayerAppearanceIds = new int[500];
@@ -393,6 +395,7 @@ public final class Player extends Mob {
 		playerSettings = new PlayerSettings(this);
 		social = new Social(this);
 		prayers = new Prayers(this);
+		this.uuid = new UUID(0, usernameHash);
 	}
 
 	public int getIronMan() {
@@ -3568,6 +3571,11 @@ public final class Player extends Mob {
 
 	public boolean getCertOptOut() {
 		return getCache().hasKey("cert_optout");
+	}
+
+	@Override
+	public UUID getUUID() {
+		return uuid;
 	}
 
 	private void enterMorph(int appearanceId) {

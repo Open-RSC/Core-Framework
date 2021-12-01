@@ -33,7 +33,7 @@ class GameTickEventStore {
     /**
      * Indexes events by username for fast-lookup during individual player tick processing
      */
-    private final Multimap<String, GameTickEvent> byUsername = ArrayListMultimap.create();
+    private final Multimap<Long, GameTickEvent> byUsernameHash = ArrayListMultimap.create();
 
     /**
      * Keep the non player events ready
@@ -58,7 +58,7 @@ class GameTickEventStore {
             events.put(eventKey, event);
             byType.put(Key.get(event.getClass()), event);
             if (isPlayerOwner(event)) {
-                byUsername.put(((Player) event.getOwner()).getUsername(), event);
+                byUsernameHash.put(((Player) event.getOwner()).getUsernameHash(), event);
             } else {
                 nonPlayerEvents.put(eventKey, event);
             }
@@ -79,16 +79,22 @@ class GameTickEventStore {
             events.remove(eventKey);
             byType.remove(Key.get(event.getClass()), event);
             if(isPlayerOwner(event)) {
-                byUsername.remove(((Player) event.getOwner()).getUsername(), event);
+                byUsernameHash.remove(((Player) event.getOwner()).getUsernameHash(), event);
             } else {
                 nonPlayerEvents.remove(eventKey);
             }
         }
     }
 
-    public Collection<GameTickEvent> getPlayerEvents(String username) {
+    public Collection<GameTickEvent> getPlayerEvents(Player player) {
         synchronized (LOCK) {
-            return new ArrayList<>(byUsername.get(username));
+            return new ArrayList<>(byUsernameHash.get(player.getUsernameHash()));
+        }
+    }
+
+    public Collection<GameTickEvent> getPlayerEvents(Long usernameHash) {
+        synchronized (LOCK) {
+            return new ArrayList<>(byUsernameHash.get(usernameHash));
         }
     }
 
@@ -130,18 +136,18 @@ class GameTickEventStore {
     class GameTickKey {
         private final String name;
         private final Boolean isPlayerEvent;
-        private final UUID uuid;
+        private final UUID ownerUUID;
 
         private GameTickKey(PluginTickEvent event) {
             this.name = event.getPluginName();
             this.isPlayerEvent = isPlayerOwner(event);
-            this.uuid = resolveUUID(event);
+            this.ownerUUID = resolveUUID(event);
         }
 
         private GameTickKey(GameTickEvent event) {
             this.name = String.valueOf(event.getClass());
             this.isPlayerEvent = isPlayerOwner(event);
-            this.uuid = resolveUUID(event);
+            this.ownerUUID = resolveUUID(event);
         }
 
         private UUID resolveUUID(GameTickEvent event) {
@@ -162,7 +168,7 @@ class GameTickEventStore {
             return new EqualsBuilder()
                     .append(name, that.name)
                     .append(isPlayerEvent, that.isPlayerEvent)
-                    .append(uuid, that.uuid).isEquals();
+                    .append(ownerUUID, that.ownerUUID).isEquals();
         }
 
         @Override
@@ -170,7 +176,7 @@ class GameTickEventStore {
             return new HashCodeBuilder(17, 37)
                     .append(name)
                     .append(isPlayerEvent)
-                    .append(uuid)
+                    .append(ownerUUID)
                     .toHashCode();
         }
 
@@ -179,7 +185,7 @@ class GameTickEventStore {
             return "GameTickKey{" +
                     "name='" + name + '\'' +
                     ", isPlayerEvent=" + isPlayerEvent +
-                    ", uuid=" + uuid +
+                    ", uuid=" + ownerUUID +
                     '}';
         }
     }

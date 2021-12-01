@@ -58,8 +58,7 @@ public class GameEventHandler {
 			LOGGER.catching(e);
 		}
 
-		eventsCounts.clear();
-		eventsDurations.clear();
+		cleanupEvents();
 	}
 
 	public void submit(final Runnable r, final String descriptor) {
@@ -128,7 +127,7 @@ public class GameEventHandler {
 		executor.setCorePoolSize(maxThreads / 2);
 
 		try {
-			executor.invokeAll(eventStore.getPlayerEvents(player.getUsername()));
+			executor.invokeAll(eventStore.getPlayerEvents(player.getUsernameHash()));
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
@@ -262,11 +261,7 @@ public class GameEventHandler {
 	public Collection<GameTickEvent> getEvents(Class<? extends GameTickEvent> type) {
 		return eventStore.getEvents(type);
 	}
-
-	public Collection<GameTickEvent> getEvents(String username) {
-		return eventStore.getPlayerEvents(username);
-	}
-
+	
 	public void remove(final GameTickEvent event) {
 		eventStore.remove(event);
 	}
