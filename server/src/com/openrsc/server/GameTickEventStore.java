@@ -1,7 +1,9 @@
 package com.openrsc.server;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.inject.Key;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -13,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class GameTickEventStore {
+class GameTickEventStore {
     private final Object LOCK = new Object();
 
     /**
@@ -31,6 +33,11 @@ public class GameTickEventStore {
      */
     private final Map<GameTickKey, GameTickEvent> nonPlayerEvents = new LinkedHashMap<>();
 
+    /**
+     * Index by event type to quickly know if a certain event type exists (i.e. instanceof)
+     */
+    private final Multimap<Key<? extends GameTickEvent>, GameTickEvent> byType = LinkedHashMultimap.create();
+
     public boolean add(GameTickEvent event) {
         synchronized (LOCK) {
             final GameTickKey eventKey = getKey(event);
@@ -41,6 +48,7 @@ public class GameTickEventStore {
             }
 
             events.put(eventKey, event);
+            byType.put(Key.get(event.getClass()), event);
             if (isPlayerOwner(event)) {
                 byUsername.put(((Player) event.getOwner()).getUsername(), event);
             } else {
@@ -60,6 +68,7 @@ public class GameTickEventStore {
             }
 
             events.remove(eventKey);
+            byType.remove(Key.get(event.getClass()), event);
             if(isPlayerOwner(event)) {
                 byUsername.remove(((Player) event.getOwner()).getUsername(), event);
             } else {
@@ -77,6 +86,18 @@ public class GameTickEventStore {
     public Collection<GameTickEvent> getNonPlayerEvents() {
         synchronized (LOCK) {
             return new ArrayList<>(nonPlayerEvents.values());
+        }
+    }
+
+    public Collection<GameTickEvent> getEvents(Class<? extends GameTickEvent> type) {
+        synchronized (LOCK) {
+            return byType.get(Key.get(type));
+        }
+    }
+
+    public boolean hasEvent(Class<? extends GameTickEvent> eventType) {
+        synchronized (LOCK) {
+            return byType.containsKey(Key.get(eventType));
         }
     }
 

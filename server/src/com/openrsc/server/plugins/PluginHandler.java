@@ -329,7 +329,7 @@ public final class PluginHandler {
 		}
 	}
 
-	private void invokePluginAction(final Player owner, final World world, final String interfce, final Object cls, final Object[] data, final WalkToAction walkToAction) {
+	private void invokePluginAction(final Player player, final World world, final String interfce, final Object cls, final Object[] data, final WalkToAction walkToAction) {
 		if (reloading) {
 			return;
 		}
@@ -347,12 +347,12 @@ public final class PluginHandler {
 					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
 
 					boolean shouldFire = true;
-					List<GameTickEvent> events = getServer().getGameEventHandler().getEvents();
+					// Ensure that a player cannot have more than one of each plugin event type
+					Collection<GameTickEvent> events = getServer().getGameEventHandler().getEvents(player.getUsername());
 					for (GameTickEvent e : events) {
 						if (e instanceof PluginTickEvent) {
 							PluginTickEvent pluginTickEvent = (PluginTickEvent)e;
-
-							if (pluginTickEvent.getPluginName().equals(pluginName) && pluginTickEvent.getOwner().equals(owner) ) {
+							if (pluginTickEvent.getPluginName().equals(pluginName)) {
 								shouldFire = false;
 								break;
 							}
@@ -361,7 +361,7 @@ public final class PluginHandler {
 
 					if (!shouldFire) return;
 
-					final PluginTask task = new PluginTask(world, owner, interfce, data) {
+					final PluginTask task = new PluginTask(world, player, interfce, data) {
 						@Override
 						public int action() {
 							try {
@@ -384,7 +384,7 @@ public final class PluginHandler {
 						}
 					};
 
-					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, task);
+					final PluginTickEvent e = new PluginTickEvent(world, player, pluginName, walkToAction, task);
 
 					getServer().getGameEventHandler().add(e);
 				} catch (final NoSuchMethodException ex) {

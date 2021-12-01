@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -27,8 +28,8 @@ public class GameEventHandler {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final GameTickEventStore eventStore = new GameTickEventStore();
-	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<String, Integer>();
-	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<String, Long>();
+	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<>();
 
 	private ThreadPoolExecutor executor;
 
@@ -252,6 +253,18 @@ public class GameEventHandler {
 
 	public List<GameTickEvent> getEvents() {
 		return new ArrayList<>(eventStore.getTrackedEvents());
+	}
+
+	public boolean hasEvent(Class<? extends GameTickEvent> type) {
+		return eventStore.hasEvent(type);
+	}
+
+	public Collection<GameTickEvent> getEvents(Class<? extends GameTickEvent> type) {
+		return eventStore.getEvents(type);
+	}
+
+	public Collection<GameTickEvent> getEvents(String username) {
+		return eventStore.getPlayerEvents(username);
 	}
 
 	public void remove(final GameTickEvent event) {

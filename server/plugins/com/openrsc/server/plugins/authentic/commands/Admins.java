@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.openrsc.server.GameEventHandler;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
@@ -206,7 +207,7 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("winterholidayevent") || command.equalsIgnoreCase("toggleholiday")) {
 			winterHolidayEvent(player, command, args);
 		} else if (command.equalsIgnoreCase("resetevent")) {
-			startResetEvent(player, command, args, false);
+			startResetEvent(player, command, args);
 		} else if (command.equalsIgnoreCase("stopresetevent") || command.equalsIgnoreCase("cancelresetevent")) {
 			stopResetEvent(player);
 		} else if (command.equalsIgnoreCase("givemodtools")) {
@@ -2207,7 +2208,7 @@ public final class Admins implements CommandTrigger {
 		}
 	}
 
-	private void startResetEvent(Player player, String command, String[] args, boolean allowMultiple) {
+	private void startResetEvent(Player player, String command, String[] args) {
 		if (args.length < 2) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute]");
 			return;
@@ -2233,27 +2234,31 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events) {
-			if (!(event instanceof HourlyResetEvent)) continue;
-
+		final GameEventHandler eventHandler = getGameEventHandler(player);
+		if(eventHandler.hasEvent(HourlyResetEvent.class)) {
 			player.message(messagePrefix + "There is already an hourly reset running!");
 			return;
 		}
 
-		player.getWorld().getServer().getGameEventHandler().add(new HourlyResetEvent(player.getWorld(), executionCount, minute));
+		eventHandler.add(new HourlyResetEvent(player.getWorld(), executionCount, minute));
 		player.message(messagePrefix + "Starting hourly reset!");
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Started reset event"));
 	}
 
 	private void stopResetEvent(Player player) {
-		List<GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events) {
-			if (!(event instanceof HourlyResetEvent)) continue;
+		getGameEventHandler(player)
+				.getEvents(HourlyResetEvent.class)
+				.forEach(event -> {
+					event.stop();
+					player.message(messagePrefix + "Stopping hourly reset!");
+					player.getWorld()
+							.getServer()
+							.getGameLogger()
+							.addQuery(new StaffLog(player, 21, messagePrefix + "Stopped reset event"));
+				});
+	}
 
-			event.stop();
-			player.message(messagePrefix + "Stopping hourly reset!");
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Stopped reset event"));
-		}
+	public GameEventHandler getGameEventHandler(Player player) {
+		return player.getWorld().getServer().getGameEventHandler();
 	}
 }
