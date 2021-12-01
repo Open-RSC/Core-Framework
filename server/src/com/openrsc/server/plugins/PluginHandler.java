@@ -348,13 +348,15 @@ public final class PluginHandler {
 
 					boolean shouldFire = true;
 					// Ensure that a player cannot have more than one of each plugin event type
-					Collection<GameTickEvent> events = getServer().getGameEventHandler().getEvents(player.getUsername());
-					for (GameTickEvent e : events) {
-						if (e instanceof PluginTickEvent) {
-							PluginTickEvent pluginTickEvent = (PluginTickEvent)e;
-							if (pluginTickEvent.getPluginName().equals(pluginName)) {
-								shouldFire = false;
-								break;
+					if(player != null) {
+						Collection<GameTickEvent> events = getServer().getGameEventHandler().getEvents(player.getUsername());
+						for (GameTickEvent e : events) {
+							if (e instanceof PluginTickEvent) {
+								PluginTickEvent pluginTickEvent = (PluginTickEvent) e;
+								if (pluginTickEvent.getPluginName().equals(pluginName)) {
+									shouldFire = false;
+									break;
+								}
 							}
 						}
 					}
