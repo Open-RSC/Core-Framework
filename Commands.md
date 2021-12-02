@@ -14,6 +14,13 @@ Admin Commands
 - saveall
   - Usage: `::saveall`
   - Saves all users currently logged in.
+- winterholidayevent
+  - Usage: `::winterholidayevent`
+  - Turns on the winter holiday event (spawns tree objects). Note: this is only functional on custom feature worlds, such as Cabbage and Coleslaw.	
+  - Alias: `::toggleholiday`
+- resetevent
+  - Usage: `resetevent [hours] [minute]`
+  - Performs an hourly scenery reset on the server for objects. Example: this resets stuck objects. Not recommended to be used in production servers as long respawn scenery like runite ore rocks would reset at the same time hourly.
 - cabbagehalloweendrop
   - Usage: `::cabbagehalloweendrop [total hours] [minute of hour to drop scythes] [drop delay in minutes after scythes to drop halloween crackers]`
   - Drops scythes and halloween crackers at the specified times. 
@@ -32,7 +39,7 @@ Admin Commands
   - Gets information about the currently running holiday drop.
 - restart
   - Usage: `::restart`
-  - Restarts the server.
+  - Restarts the server using a five minute timer. Note: this typically will not re-launch the server and it must be manually exited and restarted externally.
 - grounditem
   - Usage: `::grounditem [id] (respawn_time) (amount) (x) (y)`
   - Alias: `::gi` or `::gitem`
@@ -205,9 +212,6 @@ Admin Commands
 - setnpcstats
   - Usage: `::setnpcstats [npc_id] [att lvl] [def lvl] [str lvl] [hits lvl]`
   - Sets npc's combat stats.
-- winterholidayevent
-  - Usage: `::winterholidayevent`
-  - Turns on the winter holiday event (spawns tree objects).
 - givemodtools
   - Usage: `::givemodtools`
   - Gives you info document, resetcrystal, superchisel, ball of wool, fluffs, and digsite info, if you don't already have the item.
