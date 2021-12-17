@@ -15,8 +15,8 @@
             <classpath>
                 <pathelement location="core.jar"/>
                 <pathelement path="${java.class.path}/"/>
-                <pathelement location="${lib}/log4j-api-2.15.0.jar"/>
-                <pathelement location="${lib}/log4j-core-2.15.0.jar"/>
+                <pathelement location="${lib}/log4j-api-2.16.0.jar"/>
+                <pathelement location="${lib}/log4j-core-2.16.0.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.5.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
             </classpath>
@@ -38,9 +38,9 @@
 				<pathelement location="${lib}/commons-compress-1.18.jar"/>
                 <pathelement location="${lib}/netty-all-4.1.33.Final.jar"/>
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
-                <pathelement location="${lib}/log4j-api-2.15.0.jar"/>
-                <pathelement location="${lib}/log4j-core-2.15.0.jar"/>
-                <pathelement location="${lib}/log4j-iostreams-2.15.0.jar"/>
+                <pathelement location="${lib}/log4j-api-2.16.0.jar"/>
+                <pathelement location="${lib}/log4j-core-2.16.0.jar"/>
+                <pathelement location="${lib}/log4j-iostreams-2.16.0.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
                 <pathelement location="${lib}/mysql-connector-java-8.0.19.jar"/>
@@ -78,9 +78,9 @@
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.0.jar"/>
-                <pathelement location="${lib}/log4j-api-2.15.0.jar"/>
-                <pathelement location="${lib}/log4j-core-2.15.0.jar"/>
-                <pathelement location="${lib}/log4j-iostreams-2.15.0.jar"/>
+                <pathelement location="${lib}/log4j-api-2.16.0.jar"/>
+                <pathelement location="${lib}/log4j-core-2.16.0.jar"/>
+                <pathelement location="${lib}/log4j-iostreams-2.16.0.jar"/>
                 <pathelement location="${lib}/xpp3_min-1.1.4c.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
