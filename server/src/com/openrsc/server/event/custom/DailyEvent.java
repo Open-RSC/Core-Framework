@@ -1,6 +1,7 @@
 package com.openrsc.server.event.custom;
 
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,7 @@ public class DailyEvent extends DelayedEvent {
 	}
 
 	DailyEvent(final World world, final int lifeTime, final int hour, final String descriptor) {
-		super(world,null, 1000, descriptor, true);
+		super(world,null, 1000, descriptor, DuplicationStrategy.ALLOW_MULTIPLE);
 		final long now = (long)(System.currentTimeMillis() / 1000D);
 		if(hour < 0 || hour > 24) {
 			LOGGER.error("DailyEvent is trying to create an hour offset that does not lie within a day.");

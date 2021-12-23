@@ -17,7 +17,7 @@ public class PluginTickEvent extends GameTickEvent {
 	private final String pluginName;
 
 	public PluginTickEvent(final World world, final Mob owner, final String pluginName, final WalkToAction walkToAction, final PluginTask pluginTask) {
-		super(world, owner, 0, pluginName, false);
+		super(world, owner, 0, pluginName, DuplicationStrategy.ONE_PER_MOB);
 		this.walkToAction = walkToAction;
 		this.pluginTask = pluginTask;
 		this.getPluginTask().setPluginTickEvent(this);

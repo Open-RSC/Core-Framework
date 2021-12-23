@@ -5,6 +5,7 @@ import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NPCLoc;
@@ -16,6 +17,8 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
@@ -296,7 +299,7 @@ public class Npc extends Mob {
 			return;
 		}
 
-		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
+		owner.getWorld().getServer().getPluginHandler().handlePlugin(KillNpcTrigger.class, owner, new Object[]{owner, this});
 		for (int npcId : removeHandledInPlugin) {
 			if (this.getID() == npcId) {
 				if (this.getID() == NpcId.RAT_TUTORIAL.id()) {
@@ -585,7 +588,7 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, npc});
+				getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, player, new Object[]{player, npc});
 			}
 		});
 	}
@@ -600,7 +603,7 @@ public class Npc extends Mob {
 			startRespawning();
 			Npc n = this;
 			setRespawning(true);
-			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long) (def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
+			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long) (def.respawnTime() * respawnMult * 1000), "Respawn NPC", DuplicationStrategy.ONE_PER_MOB) {
 				public void run() {
 					n.killed = false;
 					n.setRemoved(false);

@@ -9,6 +9,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ItemOnObjectStruct;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 public class ItemUseOnObject implements PayloadProcessor<ItemOnObjectStruct, OpcodeIn> {
 
@@ -32,10 +34,11 @@ public class ItemUseOnObject implements PayloadProcessor<ItemOnObjectStruct, Opc
 					return;
 				}
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
-					getPlayer(),
-					"UseBound",
-					new Object[]{getPlayer(), object, item}, this))
+						UseBoundTrigger.class,
+						getPlayer(),
+						new Object[]{getPlayer(), object, item}, this)) {
 					return;
+				}
 			}
 		});
 	}
@@ -46,7 +49,7 @@ public class ItemUseOnObject implements PayloadProcessor<ItemOnObjectStruct, Opc
 			player.resetPath();
 			player.resetAll();
 			if (player.getWorld().getServer().getPluginHandler().handlePlugin(
-				player, "UseLoc", new Object[]{player, object, item}))
+					UseLocTrigger.class, player, new Object[]{player, object, item}))
 				return;
 		}
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
@@ -67,7 +70,7 @@ public class ItemUseOnObject implements PayloadProcessor<ItemOnObjectStruct, Opc
 				}
 
 				if (getPlayer().getWorld().getServer().getPluginHandler()
-					.handlePlugin(getPlayer(), "UseLoc",
+					.handlePlugin(UseLocTrigger.class, getPlayer(),
 						new Object[]{getPlayer(), (GameObject) object, item}, this))
 					return;
 			}

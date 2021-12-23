@@ -38,6 +38,8 @@ import com.openrsc.server.net.rsc.parsers.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
+import com.openrsc.server.plugins.triggers.CatGrowthTrigger;
+import com.openrsc.server.plugins.triggers.DropObjTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -923,7 +925,7 @@ public final class Player extends Mob {
 				//it might not have if they have a full inventory.
 				if (getCarriedItems().getEquipment().get(slot) != null) {
 					// TODO: Second argument to the plugin should NOT be null here as the Equipped Equipment for Cabbage server should still have an inventory index.
-					getWorld().getServer().getPluginHandler().handlePlugin(this, "DropObj", new Object[]{this, null, item, false});
+					getWorld().getServer().getPluginHandler().handlePlugin(DropObjTrigger.class, this, new Object[]{this, null, item, false});
 				}
 			}
 
@@ -1748,7 +1750,7 @@ public final class Player extends Mob {
 			activity += amount;
 			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
 				activity -= KITTEN_ACTIVITY_THRESHOLD;
-				getWorld().getServer().getPluginHandler().handlePlugin(this, "CatGrowth", new Object[]{this});
+				getWorld().getServer().getPluginHandler().handlePlugin(CatGrowthTrigger.class, this, new Object[]{this});
 			}
 		}
 	}

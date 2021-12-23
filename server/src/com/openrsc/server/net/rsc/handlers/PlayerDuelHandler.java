@@ -172,10 +172,6 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 				player.getDuel().setDuelConfirmAccepted(true);
 
 				if (affectedPlayer.getDuel().isDuelConfirmAccepted()) {
-					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Duel",
-						new Object[]{player, affectedPlayer})) {
-						return;
-					}
 					ActionSender.sendDuelWindowClose(player);
 					ActionSender.sendDuelWindowClose(affectedPlayer);
 					player.message("Commencing Duel!");

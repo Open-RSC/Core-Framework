@@ -6,7 +6,7 @@ import com.openrsc.server.model.world.World;
 public abstract class SingleTickEvent extends GameTickEvent {
 
 	public SingleTickEvent(final World world, final Mob owner, final int ticks, final String description) {
-		super(world, owner, ticks, description);
+		super(world, owner, ticks, description, DuplicationStrategy.ONE_PER_MOB);
 	}
 
 	public abstract void action();

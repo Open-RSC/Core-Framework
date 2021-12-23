@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,7 +28,7 @@ public class StatRestorationEvent extends GameTickEvent {
 	private long numberSkills;
 
 	public StatRestorationEvent(World world, Mob mob) {
-		super(world, mob, 1, "Stat Restoration Event");
+		super(world, mob, 1, "Stat Restoration Event", DuplicationStrategy.ALLOW_MULTIPLE);
 		numberSkills = mob.isPlayer() ? world.getServer().getConstants().getSkills().getSkillsCount() : 4;
 	}
 

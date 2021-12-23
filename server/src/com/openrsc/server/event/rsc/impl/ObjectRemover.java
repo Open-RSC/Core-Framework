@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.world.World;
@@ -10,7 +11,7 @@ public class ObjectRemover extends GameTickEvent {
 	private GameObject object;
 
 	public ObjectRemover(World world, GameObject object, int ticks) {
-		super(world,null, ticks, "Object Remover");
+		super(world,null, ticks, "Object Remover", DuplicationStrategy.ALLOW_MULTIPLE);
 		this.object = object;
 	}
 

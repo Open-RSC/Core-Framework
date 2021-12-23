@@ -8,6 +8,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.*;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.plugins.triggers.PlayerLoginTrigger;
 import com.openrsc.server.util.rsc.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -217,7 +218,7 @@ public class LoginPacketHandler {
 
 								initializePcapLogger(loadedPlayer, attachment);
 
-								server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
+								server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 								ActionSender.sendLogin(loadedPlayer);
 
 								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
@@ -302,7 +303,7 @@ public class LoginPacketHandler {
 
 									initializePcapLogger(loadedPlayer, attachment);
 
-									server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
+									server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 									ActionSender.sendLogin(loadedPlayer);
 									getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 								}
@@ -367,7 +368,7 @@ public class LoginPacketHandler {
 
 								initializePcapLogger(loadedPlayer, attachment);
 
-								server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
+								server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 								ActionSender.sendLogin(loadedPlayer);
 
 								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
@@ -449,7 +450,7 @@ public class LoginPacketHandler {
 
 							initializePcapLogger(loadedPlayer, attachment);
 
-							server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
+							server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 							ActionSender.sendLogin(loadedPlayer);
 
 							getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());

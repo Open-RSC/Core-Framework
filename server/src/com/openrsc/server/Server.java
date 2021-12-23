@@ -12,6 +12,7 @@ import com.openrsc.server.database.patches.PatchApplier;
 import com.openrsc.server.event.custom.DailyShutdownEvent;
 import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.rsc.FinitePeriodicEvent;
+import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
@@ -21,7 +22,8 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.*;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
-import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.plugins.handler.PluginHandler;
+import com.openrsc.server.plugins.triggers.StartupTrigger;
 import com.openrsc.server.service.IPlayerService;
 import com.openrsc.server.service.PcapLoggerService;
 import com.openrsc.server.service.PlayerService;
@@ -328,10 +330,6 @@ public class Server implements Runnable {
 				getGameEventHandler().load();
 				LOGGER.info("Game Event Handler Completed");
 
-				LOGGER.info("Loading Plugins...");
-				getPluginHandler().load();
-				LOGGER.info("Plugins Completed");
-
 				LOGGER.info("Loading Combat Scripts...");
 				getCombatScriptLoader().load();
 				LOGGER.info("Combat Scripts Completed");
@@ -339,6 +337,10 @@ public class Server implements Runnable {
 				LOGGER.info("Loading World...");
 				getWorld().load();
 				LOGGER.info("World Completed");
+
+				LOGGER.info("Loading Plugins...");
+				getPluginHandler().load();
+				LOGGER.info("Plugins Completed");
 
 				/*LOGGER.info("Loading Achievements...");
 				getAchievementSystem().load();
@@ -399,7 +401,7 @@ public class Server implements Runnable {
 				bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
 				bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
 				try {
-					getPluginHandler().handlePlugin(getWorld(), "Startup", new Object[]{});
+					getPluginHandler().handlePlugin(StartupTrigger.class);
 					serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
 					LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
                     LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());

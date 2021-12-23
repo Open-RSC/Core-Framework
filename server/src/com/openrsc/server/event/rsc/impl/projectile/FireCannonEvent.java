@@ -2,8 +2,8 @@ package com.openrsc.server.event.rsc.impl.projectile;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
@@ -20,7 +20,7 @@ public class FireCannonEvent extends GameTickEvent {
 	private Mob lastTarget;
 
 	public FireCannonEvent(World world, Player player) {
-		super(world, player, 1, "Fire Canon Event");
+		super(world, player, 1, "Fire Canon Event", DuplicationStrategy.ONE_PER_MOB);
 		this.count = 0;
 		this.lastTarget = null;
 	}

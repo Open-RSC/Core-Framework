@@ -40,7 +40,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private Future<Integer> future = null;
 
 	public PluginTask(final World world, final Player owner, final String pluginInterface, final Object[] data) {
-		super(world, owner, 0, null, true);
+		super(world, owner, 0, null, DuplicationStrategy.ONE_PER_MOB);
 		this.data = data;
 		this.action = Action.getActionFromPlugin(pluginInterface);
 		this.scriptContext = new ScriptContext(world, this, owner != null ? owner.getIndex() : null);
@@ -135,7 +135,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	}
 
 	public synchronized boolean isComplete() {
-		return getFuture() == null ? false : getFuture().isDone();
+		return getFuture() != null && getFuture().isDone();
 	}
 
 	public boolean isInitialized() {

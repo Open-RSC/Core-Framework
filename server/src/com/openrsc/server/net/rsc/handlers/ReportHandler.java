@@ -7,6 +7,7 @@ import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ReportStruct;
+import com.openrsc.server.plugins.triggers.CommandTrigger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,7 +78,10 @@ public final class ReportHandler implements PayloadProcessor<ReportStruct, Opcod
 			args = s.substring(firstSpace + 1).trim().split(" ");
 		}
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Command",
-			new Object[]{player, cmd.toLowerCase(), args});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(
+				CommandTrigger.class,
+				player,
+				new Object[]{player, cmd.toLowerCase(), args}
+		);
 	}
 }

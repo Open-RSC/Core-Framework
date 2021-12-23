@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ItemOnMobStruct;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 
@@ -68,10 +69,11 @@ public class ItemUseOnNpc implements PayloadProcessor<ItemOnMobStruct, OpcodeIn>
 					return;
 				}
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
-					getPlayer(),
-					"UseNpc",
-					new Object[]{getPlayer(), affectedNpc, item}, this))
+						UseNpcTrigger.class,
+						getPlayer(),
+						new Object[]{getPlayer(), affectedNpc, item}, this)) {
 					return;
+				}
 			}
 		});
 	}

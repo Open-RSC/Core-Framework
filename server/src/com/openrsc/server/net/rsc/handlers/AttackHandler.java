@@ -11,6 +11,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
+import com.openrsc.server.plugins.triggers.AttackNpcTrigger;
+import com.openrsc.server.plugins.triggers.AttackPlayerTrigger;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 
@@ -92,12 +94,12 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 						return;
 					}
 					if (mob.isNpc()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "AttackNpc", new Object[]{getPlayer(), (Npc) mob}, this)) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(AttackNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), (Npc) mob}, this)) {
 							return;
 						}
 					}
 					if (mob.isPlayer()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "AttackPlayer", new Object[]{getPlayer(), mob}, this)) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(AttackPlayerTrigger.class, getPlayer(), new Object[]{getPlayer(), mob}, this)) {
 							return;
 						}
 					}

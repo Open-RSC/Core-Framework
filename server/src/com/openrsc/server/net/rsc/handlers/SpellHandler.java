@@ -30,6 +30,10 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.SpellStruct;
+import com.openrsc.server.plugins.triggers.SpellInvTrigger;
+import com.openrsc.server.plugins.triggers.SpellLocTrigger;
+import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
+import com.openrsc.server.plugins.triggers.SpellPlayerTrigger;
 import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -317,7 +321,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						}
 
 						// Attempt to find a spell in a plugin, otherwise use this file.
-						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
+						if (player.getWorld().getServer().getPluginHandler().handlePlugin(SpellInvTrigger.class, player,
 							new Object[]{player, invIndex, item.getCatalogId(), payload.spell})) {
 							return;
 						}
@@ -353,7 +357,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						return;
 					}
 
-					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
+					if (player.getWorld().getServer().getPluginHandler().handlePlugin(SpellLocTrigger.class, player,
 						new Object[]{player, gameObject, spell})) {
 						return;
 					}
@@ -467,7 +471,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						}
 
 						// Attempt to find a spell in a plugin, otherwise use this file.
-						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
+						if (player.getWorld().getServer().getPluginHandler().handlePlugin(SpellInvTrigger.class, player,
 							new Object[]{player, invIndex, item.getCatalogId(), payload.spell})) {
 							return;
 						}
@@ -485,7 +489,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						return;
 					}
 
-					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
+					if (player.getWorld().getServer().getPluginHandler().handlePlugin(SpellLocTrigger.class, player,
 						new Object[]{player, gameObject, spell})) {
 						return;
 					}
@@ -530,7 +534,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 
 		return player.getWorld().getServer().getPluginHandler()
-				.handlePlugin(player, "SpellPlayer", new Object[]{player, affectedPlayer, spellEnum});
+				.handlePlugin(SpellPlayerTrigger.class, player, new Object[]{player, affectedPlayer, spellEnum});
 	}
 
 	private boolean checkCastOnNpc(Player player, Npc affectedNpc, SpellDef spell) {
@@ -574,7 +578,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 
 		return player.getWorld().getServer().getPluginHandler()
-				.handlePlugin(player, "SpellNpc", new Object[]{player, affectedNpc});
+				.handlePlugin(SpellNpcTrigger.class, player, new Object[]{player, affectedNpc});
 	}
 
 	private void finalizeSpellNoMessage(Player player, SpellDef spell) {

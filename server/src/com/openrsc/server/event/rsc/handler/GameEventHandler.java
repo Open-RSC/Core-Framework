@@ -1,5 +1,6 @@
-package com.openrsc.server;
+package com.openrsc.server.event.rsc.handler;
 
+import com.openrsc.server.Server;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.model.entity.player.Player;
@@ -8,13 +9,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -30,10 +25,8 @@ public class GameEventHandler {
 	private final GameTickEventStore eventStore = new GameTickEventStore();
 	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<>();
-
-	private ThreadPoolExecutor executor;
-
 	private final Server server;
+	private ThreadPoolExecutor executor;
 
 	public GameEventHandler(final Server server) {
 		this.server = server;
@@ -42,6 +35,10 @@ public class GameEventHandler {
 	public void load() {
 		executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler", getServer().getConfig()));
 		executor.prestartAllCoreThreads();
+	}
+
+	public final Server getServer() {
+		return server;
 	}
 
 	public void unload() {
@@ -61,21 +58,20 @@ public class GameEventHandler {
 		cleanupEvents();
 	}
 
-	public void submit(final Runnable r, final String descriptor) {
-		add(new ImmediateEvent(getServer().getWorld(), descriptor) {
-			@Override
-			public void action() {
-				try {
-					r.run();
-				} catch (final Throwable e) {
-					LOGGER.catching(e);
-				}
-			}
-		});
+	private void processEvents() {
+		processNonPlayerEvents();
+		getServer().getWorld().getPlayers().forEach(this::runPlayerEvents);
 	}
 
-	public boolean add(final GameTickEvent event) {
-		return eventStore.add(event);
+	public void cleanupEvents() {
+		eventStore.getTrackedEvents().forEach(event -> {
+			incrementCounts(event);
+			if (event.shouldRemove()) {
+				eventStore.remove(event);
+			}
+		});
+		eventsCounts.clear();
+		eventsDurations.clear();
 	}
 
 	public long processNonPlayerEvents() {
@@ -101,15 +97,19 @@ public class GameEventHandler {
 		});
 	}
 
+	public long runPlayerEvents(final Player player) {
+		return getServer().bench(() -> processEvents(player));
+	}
+
 	private void incrementCounts(GameTickEvent event) {
 		eventsCounts.put(event.getDescriptor(),
-				eventsCounts.containsKey(event.getDescriptor()) ?
-						eventsCounts.get(event.getDescriptor()) + 1 :
-						1);
+			eventsCounts.containsKey(event.getDescriptor()) ?
+				eventsCounts.get(event.getDescriptor()) + 1 :
+				1);
 		eventsDurations.put(event.getDescriptor(),
-				eventsDurations.containsKey(event.getDescriptor()) ?
-						eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
-						event.getLastEventDuration());
+			eventsDurations.containsKey(event.getDescriptor()) ?
+				eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
+				event.getLastEventDuration());
 	}
 
 	public void processEvents(final Player player) {
@@ -134,25 +134,21 @@ public class GameEventHandler {
 
 	}
 
-	public void cleanupEvents() {
-		eventStore.getTrackedEvents().forEach(event -> {
-			incrementCounts(event);
-			if(event.shouldRemove()) {
-				eventStore.remove(event);
+	public void submit(final Runnable r, final String descriptor) {
+		add(new ImmediateEvent(getServer().getWorld(), descriptor) {
+			@Override
+			public void action() {
+				try {
+					r.run();
+				} catch (final Throwable e) {
+					LOGGER.catching(e);
+				}
 			}
 		});
-		eventsCounts.clear();
-		eventsDurations.clear();
 	}
 
-
-	private void processEvents() {
-		processNonPlayerEvents();
-		getServer().getWorld().getPlayers().forEach(this::runPlayerEvents);
-	}
-
-	public long runPlayerEvents(final Player player) {
-		return getServer().bench(() -> processEvents(player));
+	public boolean add(final GameTickEvent event) {
+		return eventStore.add(event);
 	}
 
 	public final String buildProfilingDebugInformation(final boolean forInGame) {
@@ -170,7 +166,7 @@ public class GameEventHandler {
 		//	durationAllEvents += eventEntry.getValue();
 
 		// Sort the Events Hashmap
-		List<Map.Entry<String,Long>> mapEntries = new LinkedList<>(eventsDurations.entrySet());
+		List<Map.Entry<String, Long>> mapEntries = new LinkedList<>(eventsDurations.entrySet());
 		mapEntries.sort((prev, next) -> {
 			long prevDuration = eventsDurations.get(prev.getKey());
 			long nextDuration = eventsDurations.get(next.getKey());
@@ -208,9 +204,9 @@ public class GameEventHandler {
 			final long eventTime = entry.getValue();
 			final int eventCount = eventsCounts.get(entry.getKey());
 			s.append(eventName).append(" : ")
-			.append(eventTime / 1000000).append("ms").append(" : ")
-			.append(eventTime / 1000).append("us").append(" : ")
-			.append(eventCount).append(newLine);
+				.append(eventTime / 1000000).append("ms").append(" : ")
+				.append(eventTime / 1000).append("us").append(" : ")
+				.append(eventCount).append(newLine);
 		}
 
 		if (!forInGame) {
@@ -222,9 +218,9 @@ public class GameEventHandler {
 				final int incomingCount = entry.getValue();
 				final long incomingTime = getServer().getIncomingTimePerPacketOpcode().get(incomingPacketId);
 				s.append("Packet ID: ").append(incomingPacketId).append(" : ")
-				.append(incomingTime / 1000000).append("ms").append(" : ")
-				.append(incomingTime / 1000).append("us").append(" : ")
-				.append(incomingCount).append(newLine);
+					.append(incomingTime / 1000000).append("ms").append(" : ")
+					.append(incomingTime / 1000).append("us").append(" : ")
+					.append(incomingCount).append(newLine);
 			}
 		}
 
@@ -238,7 +234,7 @@ public class GameEventHandler {
 			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + (getServer().getLastTickDuration() / 1000000) + "ms " + (getServer().getLastIncomingPacketsDuration() / 1000000) + "ms " + (getServer().getLastEventsDuration() / 1000000) + "ms " + (getServer().getLastOutgoingPacketsDuration() / 1000000) + "ms" + newLine +
 				"Game Updater: " + (getServer().getLastWorldUpdateDuration() / 1000000) + "ms " + (getServer().getLastProcessPlayersDuration() / 1000000) + "ms " + (getServer().getLastProcessNpcsDuration() / 1000000) + "ms " + (getServer().getLastProcessMessageQueuesDuration() / 1000000) + "ms " + (getServer().getLastUpdateClientsDuration() / 1000000) + "ms " + (getServer().getLastDoCleanupDuration() / 1000000) + "ms " + (getServer().getLastExecuteWalkToActionsDuration() / 1000000) + "ms " + newLine +
 				"Events: " + countAllEvents + ", NPCs: " + getServer().getWorld().getNpcs().size() + ", Players: " + getServer().getWorld().getPlayers().size() + ", Shops: " + getServer().getWorld().getShops().size() + newLine +
-				"Threads: " + Thread.activeCount() + ", Total: " + totalMemory + ", Free: " +  freeMemory + ", Used: " + usedMemory + newLine +
+				"Threads: " + Thread.activeCount() + ", Total: " + totalMemory + ", Free: " + freeMemory + ", Used: " + usedMemory + newLine +
 				/*"Player Atk Map: " + getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + getWorld().getNpcsUnderAttack().size() + ", Quests: " + getWorld().getQuests().size() + ", Mini Games: " + getWorld().getMiniGames().size() + newLine +*/
 				s.toString()
 		);
@@ -248,6 +244,14 @@ public class GameEventHandler {
 		}
 
 		return returnString.substring(0, Math.min(returnString.length(), 1999)); // Limit to 2000 characters for Discord.
+	}
+
+	public HashMap<String, Integer> getEventsCounts() {
+		return new LinkedHashMap<>(eventsCounts);
+	}
+
+	public HashMap<String, Long> getEventsDurations() {
+		return new LinkedHashMap<>(eventsDurations);
 	}
 
 	public List<GameTickEvent> getEvents() {
@@ -261,20 +265,8 @@ public class GameEventHandler {
 	public Collection<GameTickEvent> getEvents(Class<? extends GameTickEvent> type) {
 		return eventStore.getEvents(type);
 	}
-	
+
 	public void remove(final GameTickEvent event) {
 		eventStore.remove(event);
-	}
-
-	public HashMap<String, Integer> getEventsCounts() {
-		return new LinkedHashMap<>(eventsCounts);
-	}
-
-	public HashMap<String, Long> getEventsDurations() {
-		return new LinkedHashMap<>(eventsDurations);
-	}
-
-	public final Server getServer() {
-		return server;
 	}
 }

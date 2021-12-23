@@ -7,6 +7,7 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.EquipStruct;
+import com.openrsc.server.plugins.triggers.RemoveObjTrigger;
 
 import static com.openrsc.server.net.rsc.handlers.ItemEquip.passCheck;
 
@@ -85,6 +86,6 @@ public class ItemUnequip implements PayloadProcessor<EquipStruct, OpcodeIn> {
 			return;
 		}
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "RemoveObj", new Object[]{player, request.inventorySlot, request});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(RemoveObjTrigger.class, player, new Object[]{player, request.inventorySlot, request});
 	}
 }

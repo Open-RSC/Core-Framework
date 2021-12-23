@@ -51,7 +51,7 @@ public class EventPartyChest implements UseLocTrigger {
 			}
 		} catch (Exception e) {}
 
-		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), player, DataConversions.random(1000,5000), "Event Chest Drop Delay", true) {
+		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), player, DataConversions.random(1000,5000), "Event Chest Drop Delay") {
 			@Override
 			public void action() {
 				final Random rand = DataConversions.getRandom();

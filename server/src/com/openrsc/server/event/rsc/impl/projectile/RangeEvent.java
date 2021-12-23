@@ -3,6 +3,7 @@ package com.openrsc.server.event.rsc.impl.projectile;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Equipment;
@@ -13,7 +14,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.plugins.handler.PluginHandler;
+import com.openrsc.server.plugins.triggers.PlayerRangeNpcTrigger;
+import com.openrsc.server.plugins.triggers.PlayerRangePlayerTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 public class RangeEvent extends GameTickEvent {
@@ -24,7 +27,7 @@ public class RangeEvent extends GameTickEvent {
 	private final PluginHandler pluginHandler;
 
 	public RangeEvent(World world, Player owner, Mob victim) {
-		super(world, owner, 1, "Range Event", false);
+		super(world, owner, 1, "Range Event", DuplicationStrategy.ONE_PER_MOB);
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 		this.config = world.getServer().getConfig();
@@ -91,11 +94,11 @@ public class RangeEvent extends GameTickEvent {
 			}
 
 			if (target.isNpc()) {
-				if (pluginHandler.handlePlugin(getPlayerOwner(), "PlayerRangeNpc", new Object[]{getOwner(), target})) {
+				if (pluginHandler.handlePlugin(PlayerRangeNpcTrigger.class, getPlayerOwner(), new Object[]{getOwner(), target})) {
 					throw new ProjectileException(ProjectileFailureReason.HANDLED_BY_PLUGIN);
 				}
 			} else if (target.isPlayer()) {
-				if (pluginHandler.handlePlugin(player, "PlayerRangePlayer", new Object[]{getOwner(), target})) {
+				if (pluginHandler.handlePlugin(PlayerRangePlayerTrigger.class, player, new Object[]{getOwner(), target})) {
 					throw new ProjectileException(ProjectileFailureReason.HANDLED_BY_PLUGIN);
 				}
 			}

@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ItemOnGroundItemStruct;
+import com.openrsc.server.plugins.triggers.UseObjTrigger;
 
 public class ItemUseOnGroundItem implements PayloadProcessor<ItemOnGroundItemStruct, OpcodeIn> {
 
@@ -72,7 +73,7 @@ public class ItemUseOnGroundItem implements PayloadProcessor<ItemOnGroundItemStr
 					return;
 				}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UseObj", new Object[]{getPlayer(), gItem, myItem}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(UseObjTrigger.class, getPlayer(), new Object[]{getPlayer(), gItem, myItem}, this);
 			}
 		});
 

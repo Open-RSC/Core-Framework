@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.TargetPositionStruct;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.util.rsc.CertUtil;
 
 public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, OpcodeIn> {
@@ -92,7 +93,7 @@ public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, Op
 
 				getPlayer().resetAll();
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TakeObj", new Object[]{getPlayer(), item}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(TakeObjTrigger.class, getPlayer(), new Object[]{getPlayer(), item}, this);
 			}
 		});
 	}

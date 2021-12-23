@@ -4,6 +4,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.io.PluginJarLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,13 +25,15 @@ public class CombatScriptLoader {
 	private final Map<String, CombatSideEffectScript> combatSideEffectScripts = new HashMap<String, CombatSideEffectScript>();
 
 	private final Server server;
+	private final PluginJarLoader loader;
 
 	public CombatScriptLoader (final Server server) {
 		this.server = server;
+		this.loader = new PluginJarLoader();
 	}
 
 	private void loadCombatScripts() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		for (final Class<?> c : getServer().getPluginHandler().loadClasses("com.openrsc.server.event.rsc.impl.combat.scripts.all")) {
+		for (final Class<?> c : loader.loadClasses("com.openrsc.server.event.rsc.impl.combat.scripts.all")) {
 			final Object classInstance = c.getConstructor().newInstance();
 			if (classInstance instanceof CombatScript) {
 				CombatScript script = (CombatScript) classInstance;

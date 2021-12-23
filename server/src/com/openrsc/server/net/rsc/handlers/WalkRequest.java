@@ -13,6 +13,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.WalkStruct;
+import com.openrsc.server.plugins.triggers.EscapeNpcTrigger;
 
 public class WalkRequest implements PayloadProcessor<WalkStruct, OpcodeIn> {
 
@@ -64,7 +65,7 @@ public class WalkRequest implements PayloadProcessor<WalkStruct, OpcodeIn> {
 					}
 
 					if (opponent.isNpc()) {
-						player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerNpcRun", new Object[]{player, ((Npc) opponent)});
+						player.getWorld().getServer().getPluginHandler().handlePlugin(EscapeNpcTrigger.class, player, new Object[]{player, ((Npc) opponent)});
 					}
 				} else {
 					player.message("You can't retreat during the first 3 rounds of combat");

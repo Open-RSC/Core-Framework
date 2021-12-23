@@ -6,6 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ItemOnItemStruct;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 public final class ItemUseOnItem implements PayloadProcessor<ItemOnItemStruct, OpcodeIn> {
 
@@ -53,6 +54,6 @@ public final class ItemUseOnItem implements PayloadProcessor<ItemOnItemStruct, O
 		// GenericLog(player.getUsername() + " used item " + item1 + " on item "
 		// + item2 + " at " + player.getLocation()));
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "UseInv", new Object[]{player, itemIndex1, item1, item2});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(UseInvTrigger.class, player, new Object[]{player, itemIndex1, item1, item2});
 	}
 }

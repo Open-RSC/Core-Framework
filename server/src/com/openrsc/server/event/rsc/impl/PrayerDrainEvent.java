@@ -1,6 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,7 +16,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 	private int pointDrainage = 0; //how many points per tick to drain, min is 1, max 120
 
 	public PrayerDrainEvent(World world, Player owner, int delay) {
-		super(world, owner, 1, "Prayer Drain Event");
+		super(world, owner, 1, "Prayer Drain Event", DuplicationStrategy.ALLOW_MULTIPLE);
 	}
 
 	@Override

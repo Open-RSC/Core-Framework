@@ -2,6 +2,7 @@ package com.openrsc.server.event.rsc.impl.projectile;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.entity.GroundItem;
@@ -18,7 +19,7 @@ public class RangeEventNpc extends GameTickEvent {
     private final Mob victim;
 
     public RangeEventNpc(World world, Npc owner, Mob victim) {
-        super(world, owner, 1, "Range Event NPC");
+        super(world, owner, 1, "Range Event NPC", DuplicationStrategy.ALLOW_MULTIPLE);
         this.victim = victim;
     }
 

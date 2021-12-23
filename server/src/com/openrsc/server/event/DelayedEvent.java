@@ -1,5 +1,6 @@
 package com.openrsc.server.event;
 
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -7,12 +8,12 @@ import com.openrsc.server.model.world.World;
 
 public abstract class DelayedEvent extends GameTickEvent {
 
-	public DelayedEvent(final World world, final Player owner, final long delayMs, final String descriptor) {
-		this(world, owner, delayMs, descriptor, true);
+	public DelayedEvent(World world, Player owner, long delayMs, String descriptor) {
+		this(world, owner, delayMs, descriptor, DuplicationStrategy.ALLOW_MULTIPLE);
 	}
 
-	public DelayedEvent(final World world, final Player owner, final long delayMs, final String descriptor, boolean uniqueEvent) {
-		super(world, owner, (int)Math.ceil((double)delayMs / (double)world.getServer().getConfig().GAME_TICK), descriptor, uniqueEvent);
+	public DelayedEvent(World world, Player owner, long delayMs, String descriptor, DuplicationStrategy duplicationStrategy) {
+		super(world, owner, (int)Math.ceil((double)delayMs / (double)world.getServer().getConfig().GAME_TICK), descriptor, duplicationStrategy);
 	}
 
 	public abstract void run();

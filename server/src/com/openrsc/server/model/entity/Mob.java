@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity;
 
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.projectile.RangeEventNpc;
@@ -16,6 +17,8 @@ import com.openrsc.server.model.entity.update.UpdateFlags;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.triggers.DropObjTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -407,7 +410,7 @@ public abstract class Mob extends Entity {
 			resetFollowing();
 		}
 		following = mob;
-		followEvent = new GameTickEvent(getWorld(), this, 0, "Mob Following Mob") {
+		followEvent = new GameTickEvent(getWorld(), this, 0, "Mob Following Mob", DuplicationStrategy.ONE_PER_MOB) {
 			public void run() {
 				setDelayTicks(1);
 				Mob mob = getOwner().getFollowing();
@@ -452,7 +455,7 @@ public abstract class Mob extends Entity {
 		} else {
 			possessingUsername = ((Npc) possessing).getDef().getName();
 		}
-		possesionEvent = new GameTickEvent(getWorld(), this, 0, "Moderator possessing Mob") {
+		possesionEvent = new GameTickEvent(getWorld(), this, 0, "Moderator possessing Mob", DuplicationStrategy.ALLOW_MULTIPLE) {
 			public void run() {
 				setDelayTicks(1);
 				Player moderator = (Player)getOwner();
@@ -505,7 +508,7 @@ public abstract class Mob extends Entity {
 		}
 		final Mob me = this;
 		following = mob;
-		followEvent = new GameTickEvent(getWorld(), null, 1, "Player Following Mob") {
+		followEvent = new GameTickEvent(getWorld(), null, 1, "Player Following Mob", DuplicationStrategy.ONE_PER_MOB) {
 			public void run() {
 				if (!me.withinRange(mob) || mob.isRemoved()
 					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
@@ -1099,7 +1102,7 @@ public abstract class Mob extends Entity {
 		final int index = dropItemIndex;
 		this.setDropItemEvent(-1, null);
 		if (item == null) return;
-		getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, index, item, fromInventory});
+		getWorld().getServer().getPluginHandler().handlePlugin(DropObjTrigger.class, player, new Object[]{player, index, item, fromInventory});
 	}
 
 	protected Player talkToNpcEvent = null;
@@ -1115,7 +1118,7 @@ public abstract class Mob extends Entity {
 	public void runTalkToNpcEvent() {
 		Player player = getTalkToNpcEvent();
 		setTalkToNpcEvent(null);
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, this});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, player, new Object[]{player, this});
 	}
 
 	public boolean canProjectileReach(Mob mob) {

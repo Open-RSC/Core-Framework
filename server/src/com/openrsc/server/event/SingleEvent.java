@@ -1,5 +1,6 @@
 package com.openrsc.server.event;
 
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
@@ -12,8 +13,8 @@ public abstract class SingleEvent extends DelayedEvent {
 		super(world, owner, delay, descriptor);
 	}
 
-	public SingleEvent(final World world, final Player owner, final int delay, final String descriptor, final boolean uniqueEvent) {
-		super(world, owner, delay, descriptor, uniqueEvent);
+	public SingleEvent(final World world, final Player owner, final int delay, final String descriptor, DuplicationStrategy duplicationStrategy) {
+		super(world, owner, delay, descriptor, duplicationStrategy);
 	}
 
 	public abstract void action();

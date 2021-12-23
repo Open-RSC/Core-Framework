@@ -1,5 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,7 +13,7 @@ public class PoisonEvent extends GameTickEvent {
 	private int poisonPower;
 
 	public PoisonEvent(World world, Mob owner, int poisonPower) {
-		super(world, owner, 32, "Poison Event");
+		super(world, owner, 32, "Poison Event", DuplicationStrategy.ALLOW_MULTIPLE);
 		this.mob = owner;
 		this.poisonPower = poisonPower;
 	}

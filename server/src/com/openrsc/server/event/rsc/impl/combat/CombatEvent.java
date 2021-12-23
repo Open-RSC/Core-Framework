@@ -4,6 +4,7 @@ import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.KillType;
@@ -25,7 +26,7 @@ public class CombatEvent extends GameTickEvent {
 	private int[] poisonedWeapons = {ItemId.POISONED_BRONZE_DAGGER.id(), ItemId.POISONED_IRON_DAGGER.id(), ItemId.POISONED_STEEL_DAGGER.id(), ItemId.POISONED_BLACK_DAGGER.id(), ItemId.POISONED_MITHRIL_DAGGER.id(), ItemId.POISONED_ADAMANTITE_DAGGER.id(), ItemId.POISONED_RUNE_DAGGER.id(), ItemId.POISONED_DRAGON_DAGGER.id()};
 
 	public CombatEvent(World world, Mob attacker, Mob defender) {
-		super(world, null, 0, "Combat Event", false);
+		super(world, null, 0, "Combat Event", DuplicationStrategy.ONE_PER_MOB);
 		this.attackerMob = attacker;
 		this.defenderMob = defender;
 		attacker.getWorld().getServer().getCombatScriptLoader().checkAndExecuteOnStartCombatScript(attacker, defender);

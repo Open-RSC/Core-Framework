@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ItemCommandStruct;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,6 +89,6 @@ public class ItemActionHandler implements PayloadProcessor<ItemCommandStruct, Op
 
 		final String command = item.getDef(player.getWorld()).getCommand()[commandIndex];
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "OpInv", new Object[]{player, idx, item, command});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(OpInvTrigger.class, player, new Object[]{player, idx, item, command});
 	}
 }

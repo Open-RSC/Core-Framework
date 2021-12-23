@@ -9,6 +9,7 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, OpcodeIn> {
 
@@ -65,7 +66,7 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 					}
 				}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n});
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), n});
 				if (!getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD
 					&& getPlayer().getWorld().getServer().getEntityHandler().getNpcDef(n.getID()).isMembers()) {
 					getPlayer().message("you must be on a members' world to do that");

@@ -4,6 +4,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.CommandStruct;
+import com.openrsc.server.plugins.triggers.CommandTrigger;
 
 public final class CommandHandler implements PayloadProcessor<CommandStruct, OpcodeIn> {
 	public void process(CommandStruct payload, Player player) throws Exception {
@@ -23,7 +24,10 @@ public final class CommandHandler implements PayloadProcessor<CommandStruct, Opc
 			args = s.substring(firstSpace + 1).trim().split(" ");
 		}
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Command",
-			new Object[]{player, cmd.toLowerCase(), args});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(
+				CommandTrigger.class,
+				player,
+				new Object[]{player, cmd.toLowerCase(), args}
+		);
 	}
 }

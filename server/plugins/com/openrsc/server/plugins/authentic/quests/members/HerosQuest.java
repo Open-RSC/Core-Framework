@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -561,7 +562,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					player.getWorld().getServer().getGameEventHandler().add(
 						new SingleEvent(player.getWorld(), null,
 							config().GAME_TICK * 2,
-							"Heroes Quest Grip through door", true) {
+							"Heroes Quest Grip through door", DuplicationStrategy.ALLOW_MULTIPLE) {
 							@Override
 							public void action() {
 							grip.teleport(463, 676);
@@ -642,7 +643,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 								// delayed event to prevent grip being trapped if player had invoked him
 								gripReturnEvent.set(new SingleEvent(player.getWorld(), null,
 									config().GAME_TICK * 1000,
-									"Heroes Quest Delayed Return Grip", true) {
+									"Heroes Quest Delayed Return Grip", DuplicationStrategy.ALLOW_MULTIPLE) {
 									@Override
 									public void action() {
 										if (grip != null && grip.getY() <= 675)

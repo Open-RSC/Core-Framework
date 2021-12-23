@@ -1,6 +1,7 @@
 package com.openrsc.server.event.custom;
 
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,7 @@ public class HourlyEvent extends DelayedEvent {
 	}
 
 	HourlyEvent(final World world, final int lifeTime, final int minute, final String descriptor) {
-		super(world,null, 1000, descriptor, true);
+		super(world,null, 1000, descriptor, DuplicationStrategy.ALLOW_MULTIPLE);
 		final long now = (long)(System.currentTimeMillis() / 1000D);
 		if(minute < 0 || minute > 60) {
 			LOGGER.error("HourlyEvent is trying to create a minute offset that does not lie within an hour.");

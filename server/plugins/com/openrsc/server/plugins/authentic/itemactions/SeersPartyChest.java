@@ -40,7 +40,7 @@ public class SeersPartyChest implements UseLocTrigger {
 			}
 		}
 
-		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), player, DataConversions.random(1000,5000), "Seers Party Hall Drop Delay", true) {
+		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), player, DataConversions.random(1000,5000), "Seers Party Hall Drop Delay") {
 			@Override
 			public void action() {
 				final Random rand = DataConversions.getRandom();

@@ -25,7 +25,7 @@ public abstract class GameStateEvent extends GameTickEvent {
 	private GameNotifyEvent child = null;
 
 	public GameStateEvent(final World world, final Mob owner, final int initTickDelay, final String descriptor) {
-		super(world, owner, initTickDelay, descriptor);
+		super(world, owner, initTickDelay, descriptor, DuplicationStrategy.ALLOW_MULTIPLE);
 		this.init();
 	}
 

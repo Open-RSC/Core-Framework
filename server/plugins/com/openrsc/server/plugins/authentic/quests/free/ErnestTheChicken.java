@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.Cache;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -421,7 +422,7 @@ public class ErnestTheChicken implements QuestInterface,
 			player.getWorld().getServer().getGameEventHandler().add(
 				new SingleEvent(player.getWorld(), null,
 					config().GAME_TICK * 98,
-					"Ernest Chicken Delayed Change Ernest", true) {
+					"Ernest Chicken Delayed Change Ernest", DuplicationStrategy.ALLOW_MULTIPLE) {
 					@Override
 					public void action() {
 						changenpc(n, NpcId.ERNEST_CHICKEN.id(), true);

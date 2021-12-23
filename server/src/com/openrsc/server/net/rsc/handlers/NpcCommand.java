@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 
 public final class NpcCommand implements PayloadProcessor<TargetMobStruct, OpcodeIn> {
 
@@ -43,7 +44,7 @@ public final class NpcCommand implements PayloadProcessor<TargetMobStruct, Opcod
 				getPlayer().resetAll();
 				NPCDef def = affectedNpc.getDef();
 				String command = (click ? def.getCommand1() : def.getCommand2()).toLowerCase();
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "OpNpc", new Object[]{getPlayer(), affectedNpc, command}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(OpNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), affectedNpc, command}, this);
 			}
 		});
 	}

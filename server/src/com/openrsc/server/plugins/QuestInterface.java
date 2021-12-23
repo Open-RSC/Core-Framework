@@ -8,33 +8,33 @@ public interface QuestInterface {
 	 *
 	 * @return
 	 */
-	public int getQuestId();
+	int getQuestId();
 
 	/**
 	 * Returns the name of this quest
 	 *
 	 * @return
 	 */
-	public String getQuestName();
+	String getQuestName();
 
 	/**
 	 * Returns the quest points of this quest
 	 *
 	 * @return
 	 */
-	public int getQuestPoints();
+	int getQuestPoints();
 
 	/**
 	 * Returns true if this quest is a members-only quest.
 	 *
 	 * @return
 	 */
-	public boolean isMembers();
+	boolean isMembers();
 
 	/**
 	 * Handles rewards upon completion
 	 *
 	 * @param player
 	 */
-	public void handleReward(Player player);
+	void handleReward(Player player);
 }

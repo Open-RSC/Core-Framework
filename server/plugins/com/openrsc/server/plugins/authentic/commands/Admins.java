@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
-import com.openrsc.server.GameEventHandler;
+import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.constants.*;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;

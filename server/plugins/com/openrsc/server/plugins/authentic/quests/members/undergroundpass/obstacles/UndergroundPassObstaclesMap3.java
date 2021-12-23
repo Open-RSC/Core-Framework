@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -166,7 +167,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						long start = System.currentTimeMillis();
 						Area area = Areas.getArea("ibans_room");
 						int delayMs = BASE_TICK;
-						player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, delayMs, "Iban's chamber event", false) {
+						player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, delayMs, "Iban's chamber event", DuplicationStrategy.ONE_PER_MOB) {
 							@Override
 							public void run() {
 								/* Time-out fail, handle appropriately */

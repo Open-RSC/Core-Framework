@@ -5,12 +5,12 @@ import com.openrsc.server.model.world.World;
 
 public abstract class FinitePeriodicEvent extends GameTickEvent {
 
-	private int numIterations;
+	private final int numIterations;
 	private int iterationsElapsed = 0;
 	private final long started;
 	private final long ended;
 	public FinitePeriodicEvent(final World world, final Mob owner, final int numIterations, final int waitTicksIteration, final String description) {
-		super(world, owner, waitTicksIteration, description);
+		super(world, owner, waitTicksIteration, description, DuplicationStrategy.ONE_PER_SERVER);
 		this.numIterations = numIterations;
 		final long now = System.currentTimeMillis();
 		started = now;

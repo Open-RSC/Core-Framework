@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -336,7 +337,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			player.getWorld().getServer().getGameEventHandler().add(
 				new SingleEvent(player.getWorld(), null,
 					config().GAME_TICK * 116,
-					"Lady Lakes Bread Delayed Remove", true) {
+					"Lady Lakes Bread Delayed Remove", DuplicationStrategy.ALLOW_MULTIPLE) {
 					@Override
 					public void action() {
 						n.remove();

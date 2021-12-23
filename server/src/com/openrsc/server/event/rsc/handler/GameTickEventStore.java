@@ -1,9 +1,10 @@
-package com.openrsc.server;
+package com.openrsc.server.event.rsc.handler;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Key;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.PluginTickEvent;
 import com.openrsc.server.model.entity.Mob;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -51,7 +53,7 @@ class GameTickEventStore {
 
             if (events.containsKey(eventKey)) {
                 // We already have an instance of this event
-                LOGGER.warn("Tried to add duplicate event: {}", eventKey);
+                // LOGGER.warn("Tried to add duplicate event: {}", eventKey);
                 return false;
             }
 
@@ -138,26 +140,35 @@ class GameTickEventStore {
         private final Boolean isPlayerEvent;
         private final UUID ownerUUID;
 
-        private GameTickKey(PluginTickEvent event) {
-            this.name = event.getPluginName();
+        private GameTickKey(GameTickEvent event) {
+            this.name = resolveName(event);
             this.isPlayerEvent = isPlayerOwner(event);
             this.ownerUUID = resolveUUID(event);
         }
 
-        private GameTickKey(GameTickEvent event) {
-            this.name = String.valueOf(event.getClass());
-            this.isPlayerEvent = isPlayerOwner(event);
-            this.ownerUUID = resolveUUID(event);
+        private String resolveName(GameTickEvent event) {
+            if(event instanceof PluginTickEvent) {
+                return ((PluginTickEvent) event).getPluginName();
+            }
+
+            return String.valueOf(event.getClass());
         }
 
         private UUID resolveUUID(GameTickEvent event) {
-            if(event.isNotUniqueEvent()) {
+            DuplicationStrategy strategy = event.getDuplicationStrategy();
+            if(strategy == DuplicationStrategy.ALLOW_MULTIPLE) {
                 return event.getUUID();
-            } else {
+            } else if(strategy == DuplicationStrategy.ONE_PER_SERVER) {
+                return UUID.fromString(resolveName(event));
+            } else if(strategy == DuplicationStrategy.ONE_PER_MOB) {
                 return Optional.ofNullable(event.getOwner())
                         .map(Mob::getUUID)
                         .orElse(event.getUUID());
             }
+
+            throw new IllegalArgumentException(
+                    MessageFormat.format("Unknown duplication strategy {0}", strategy)
+            );
         }
 
         @Override
@@ -178,15 +189,6 @@ class GameTickEventStore {
                     .append(isPlayerEvent)
                     .append(ownerUUID)
                     .toHashCode();
-        }
-
-        @Override
-        public String toString() {
-            return "GameTickKey{" +
-                    "name='" + name + '\'' +
-                    ", isPlayerEvent=" + isPlayerEvent +
-                    ", uuid=" + ownerUUID +
-                    '}';
         }
     }
 }

@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ItemOnMobStruct;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 
 public class ItemUseOnPlayer implements PayloadProcessor<ItemOnMobStruct, OpcodeIn> {
 
@@ -53,7 +54,7 @@ public class ItemUseOnPlayer implements PayloadProcessor<ItemOnMobStruct, Opcode
 					return;
 				}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UsePlayer", new Object[]{getPlayer(), affectedPlayer, item}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(UsePlayerTrigger.class, getPlayer(), new Object[]{getPlayer(), affectedPlayer, item}, this);
 			}
 		});
 	}

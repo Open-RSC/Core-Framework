@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.TargetObjectStruct;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 
 public class GameObjectWallAction implements PayloadProcessor<TargetObjectStruct, OpcodeIn> {
 
@@ -61,9 +62,9 @@ public class GameObjectWallAction implements PayloadProcessor<TargetObjectStruct
 				}
 
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
-					getPlayer(),
-					"OpBound",
-					new Object[]{getPlayer(), object, getPlayer().click}, this)) {
+						OpBoundTrigger.class,
+						getPlayer(),
+						new Object[]{getPlayer(), object, getPlayer().click}, this)) {
 					return;
 				}
 

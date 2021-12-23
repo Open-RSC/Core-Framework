@@ -53,8 +53,7 @@
                 <pathelement location="${lib}/gitlab4j-api-4.12.17.jar"/>
                 <pathelement location="${lib}/slf4j-nop-2.0.0-alpha5.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.11.jar"/>
-                <pathelement location="${lib}/guice-5.0.1.jar"/>
-                <pathelement location="${lib}/javax.inject-1.jar"/>
+                <pathelement location="${lib}/guice-5.0.2-jar-with-dependencies.jar"/>
             </classpath>
             <compilerarg line="-Xlint:deprecation"/>
         </javac>

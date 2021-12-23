@@ -11,6 +11,8 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.PlayerKilledPlayerTrigger;
 
 public class ProjectileEvent extends SingleTickEvent {
 
@@ -93,11 +95,11 @@ public class ProjectileEvent extends SingleTickEvent {
 				opponent.resetRange();
 			}
 			if (caster.isNpc()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(opponent, "KillNpc", new Object[]{opponent, caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(KillNpcTrigger.class, opponent, new Object[]{opponent, caster})) {
 					return;
 				}
 			} else if(caster.isPlayer()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(opponent, "PlayerKilledPlayer", new Object[]{opponent, caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(PlayerKilledPlayerTrigger.class, opponent, new Object[]{opponent, caster})) {
 					return;
 				}
 			}
@@ -158,14 +160,14 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				final Player playerCaster = (Player) caster;
 				final Npc npcOpponent = (Npc) opponent;
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(playerCaster, "PlayerKilledNpc", new Object[]{playerCaster, npcOpponent})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(KillNpcTrigger.class, playerCaster, new Object[]{playerCaster, npcOpponent})) {
 					return;
 				}
 				npcOpponent.killedBy(playerCaster);
 			} else if(opponent.isPlayer() && caster.isPlayer()) {
 				final Player playerCaster = (Player) caster;
 				final Player playerOpponent = (Player) opponent;
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(playerCaster, "PlayerKilledPlayer", new Object[]{playerCaster, playerOpponent})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(PlayerKilledPlayerTrigger.class, playerCaster, new Object[]{playerCaster, playerOpponent})) {
 					return;
 				}
 				playerOpponent.killedBy(playerCaster);

@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -3432,7 +3433,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			player.getWorld().getServer().getGameEventHandler().add(
 				new SingleEvent(player.getWorld(), null,
 					config().GAME_TICK * 50,
-					"Tourist Trap Delayed Return Slave", true) {
+					"Tourist Trap Delayed Return Slave", DuplicationStrategy.ALLOW_MULTIPLE) {
 					@Override
 					public void action() {
 					changenpc(n, NpcId.MINING_SLAVE.id(), true);
