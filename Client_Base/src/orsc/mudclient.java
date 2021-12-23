@@ -2600,7 +2600,11 @@ public final class mudclient implements Runnable {
 	}
 
 	public Sprite spriteSelect(ItemDef item) {
-		return getSurface().spriteSelect(item);
+		try {
+			return getSurface().spriteSelect(item);
+		} catch (NullPointerException ex) {
+			return Sprite.getUnknownSprite(48, 32);
+		}
 	}
 
 	public Sprite spriteSelect(AnimationDef animation, int offset) {

@@ -1540,13 +1540,15 @@ public enum ItemId {
 	UNCOOKED_WHITE_PUMPKIN_PIE(1492),
 	WHITE_PUMPKIN_PIE(1493),
 	HALF_A_WHITE_PUMPKIN_PIE(1494),
-	EAK_THE_MOUSE(1495);
+	EAK_THE_MOUSE(1495),
 
+	// Christmas 2021
+	YOYO(1496);
 
 	private int itemId;
 
 	public static final int maxAuthentic = 1289;
-	public static final int maxCustom = 1495;
+	public static final int maxCustom = 1496;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
 	private static final Map<String, ItemId> byName = new HashMap<String, ItemId>();

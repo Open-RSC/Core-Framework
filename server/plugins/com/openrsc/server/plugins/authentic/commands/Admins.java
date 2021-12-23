@@ -1,10 +1,7 @@
 package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.GameEventHandler;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skill;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
@@ -206,6 +203,8 @@ public final class Admins implements CommandTrigger {
 			spawnNpc(player, command, args);
 		} else if (command.equalsIgnoreCase("winterholidayevent") || command.equalsIgnoreCase("toggleholiday")) {
 			winterHolidayEvent(player, command, args);
+		} else if (command.equalsIgnoreCase("santaclausiscomingtotown")) {
+			spawnSanta(player, command, args);
 		} else if (command.equalsIgnoreCase("resetevent")) {
 			startResetEvent(player, command, args);
 		} else if (command.equalsIgnoreCase("stopresetevent") || command.equalsIgnoreCase("cancelresetevent")) {
@@ -2206,6 +2205,19 @@ public final class Admins implements CommandTrigger {
 
 			player.playerServerMessage(MessageType.QUEST, messagePrefix + "Christmas trees have been enabled.");
 		}
+	}
+
+	private void spawnSanta(Player player, String command, String[] args) {
+		final Npc lumbridgeSanta = new Npc(player.getWorld(), NpcId.SANTA.id(), 124, 658, 0);
+		lumbridgeSanta.setShouldRespawn(false);
+		player.getWorld().registerNpc(lumbridgeSanta);
+		final Npc varrockSanta = new Npc(player.getWorld(), NpcId.SANTA.id(), 131, 510, 0);
+		lumbridgeSanta.setShouldRespawn(false);
+		player.getWorld().registerNpc(varrockSanta);
+		final Npc faladorSanta = new Npc(player.getWorld(), NpcId.SANTA.id(), 314, 541, 0);
+		lumbridgeSanta.setShouldRespawn(false);
+		player.getWorld().registerNpc(faladorSanta);
+		player.message("Santa Claus has come to town(s)!");
 	}
 
 	private void startResetEvent(Player player, String command, String[] args) {

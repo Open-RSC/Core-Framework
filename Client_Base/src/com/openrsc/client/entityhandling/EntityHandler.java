@@ -2263,7 +2263,9 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Death", "He sure could do with gaining some weight", "", 15, 15, 12, 12, false, sprites, 1, 2, 3, 16777215, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Loan Officer", "He can lend me some money", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 7296823, 145, 220, 6, 6, 5, i++));
-
+		// head, shirt, pants, shield, weapon, hat, body, legs, gloves, boots, amulet, cape
+		sprites = new int[]{6, 1, 2, -1, -1, 208, 395, 396, 46, -1, -1, -1};
+		npcs.add(new NPCDef("Santa", "He sure could do with gaining some weight", "", 123, 123, 123, 123, false, sprites, 16777215, 0xFF0000, 0xFF0000, 15523536, 160, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3742,9 +3744,9 @@ public class EntityHandler {
 		items.add(new ItemDef("Tree cookie", "A tasty holiday cookie", "eat", 2, -1, "items:522", false, false, 0, 0, false, false, true, 1338));
 		items.add(new ItemDef("Santa's Gloves", "These keep Santa's hands warm", "", 6, -1, "items:523", false, true, 256, 0, false, false, true, 1339));
 		items.add(new ItemDef("Santa's Mittens", "Santa's favorite mittens", "", 6, -1, "items:524", false, true, 256, 0, false, false, true, 1340));
-		items.add(new ItemDef("Santa's suit", "A suit full of joy", "", 8, -1, "items:466", false, true, 64, 1052688, false, false, true, 1341));
-		items.add(new ItemDef("Santa's suit", "A suit full of joy", "", 8, -1, "items:465", false, true, 128, 1052688, false, false, true, 1342));
-		items.add(new ItemDef("Santa's hat", "It's a santa claus' hat", "", 160, -1, "items:467", false, true, 32, 0, false, false, true, 1343));
+		items.add(new ItemDef("Santa's suit", "A suit full of joy", "", 8, -1, "items:466", false, true, 64, 1052688, false, false, true, 1341)); // this is the top
+		items.add(new ItemDef("Santa's suit", "A suit full of joy", "", 8, -1, "items:465", false, true, 128, 1052688, false, false, true, 1342)); // these are the legs
+		items.add(new ItemDef("Santa's hat", "It's a santa claus' hat", "", 160, -1, "items:467", false, true, 32, 0, false, false, true, 1343)); // green version
 		items.add(new ItemDef("Antlers with red-nose", "Im Rudolph the reindeer!!!", "", 3, -1, "items:468", false, true, 32, 0, false, false, true, 1344));
 		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, true, 1345));
 
@@ -3930,6 +3932,9 @@ public class EntityHandler {
 		items.add(new ItemDef("White pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 30, 112, "items:112", false, false, 0, 11168819, false, false, true, 1493));
 		items.add(new ItemDef("Half a white pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 10, 113, "items:113", false, false, 0, 11168819, false, false, true, 1494));
 		items.add(new ItemDef("Eak the Mouse", "A cute mouse", "Talk", 1, 112, "items:eakthemouse", false, false, 0, 16633518, false, true, false, 1495));
+
+		// Christmas 2021
+		items.add(new ItemDef("Yoyo", "This technology shouldn't be possible!", "Play", 100, -1, "items:yoyo", false, true, 16, 0xFFFFFF,false, true, false, 1496));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4553,7 +4558,26 @@ public class EntityHandler {
 			animations.add(new AnimationDef("scimitar", "equipment", 65535, 0, true, false, 0)); // 482 Rune Scimitar
 
 			// Halloween 2021
-			animations.add(new AnimationDef("deathmask", "equipment", 0, 0, true, false, 0)); // 483
+			animations.add(new AnimationDef("deathmask", "equipment", 0, 0, true, false, 0)); // 483 death mask
+
+			// Christmas 2021
+			animations.add(new AnimationDef("yoyo", "equipment", 0, 0, true, false, 0)); // 484 yoyo in hand
+			animations.add(new AnimationDef("yoyo_anim_1", "equipment", 0, 0, true, false, 0)); // 485 yoyo up-down 1
+			animations.add(new AnimationDef("yoyo_anim_2", "equipment", 0, 0, true, false, 0)); // 486 yoyo up-down 2
+			animations.add(new AnimationDef("yoyo_anim_3", "equipment", 0, 0, true, false, 0)); // 487 yoyo up-down 3
+			animations.add(new AnimationDef("yoyo_anim_4", "equipment", 0, 0, true, false, 0)); // 488 yoyo up-down 4
+			animations.add(new AnimationDef("yoyo_anim_crazy_1", "equipment", 0, 0, true, false, 0)); // 489 yoyo crazy 1'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_2", "equipment", 0, 0, true, false, 0)); // 490 yoyo crazy 2'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_3", "equipment", 0, 0, true, false, 0)); // 491 yoyo crazy 3'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_4", "equipment", 0, 0, true, false, 0)); // 492 yoyo crazy 4'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_5", "equipment", 0, 0, true, false, 0)); // 493 yoyo crazy 5'oclock
+			// for 6'oclock, just use yoyo_anim_4
+			animations.add(new AnimationDef("yoyo_anim_crazy_7", "equipment", 0, 0, true, false, 0)); // 494 yoyo crazy 7'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_8", "equipment", 0, 0, true, false, 0)); // 495 yoyo crazy 8'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_9", "equipment", 0, 0, true, false, 0)); // 496 yoyo crazy 9'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_10", "equipment", 0, 0, true, false, 0)); // 497 yoyo crazy 10'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_11", "equipment", 0, 0, true, false, 0)); // 498 yoyo crazy 11'oclock
+			animations.add(new AnimationDef("yoyo_anim_crazy_12", "equipment", 0, 0, true, false, 0)); // 499 yoyo crazy 12'oclock
 		}
 	}
 

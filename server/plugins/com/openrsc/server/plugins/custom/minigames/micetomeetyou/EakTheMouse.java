@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Date;
+
 import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.RuneScript.*;
 import static com.openrsc.server.plugins.custom.minigames.micetomeetyou.MiceQuestStates.*;
@@ -122,7 +124,57 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 				mes("@yel@Eak the Mouse: Squeak!");
 			}
 		} else {
-			// Here's where dialog for Eak after the event will go.
+			// dialog for Eak after the event
+			if (player.getCache().hasKey("mice_to_meet_you")) {
+				final int questStage = player.getCache().getInt("mice_to_meet_you");
+				if (eakCanTalk(player)) {
+					long currentTime = new Date().getTime() / 1000;
+					if (currentTime < 1641600000) { // Jan 8th 2022
+						say("Merry Christmas Eak!");
+						mes("@yel@Eak the Mouse: Merry Christmas " + player.getUsername() + "!");
+						delay(3);
+						int menu = multi("Are you excited that your mouse friends are back?",
+							"Are you excited that Santa is here?");
+						if (menu == 0) {
+							say("Are you excited that your mouse friends are back?");
+							mes("@yel@Eak the Mouse: I'm so relieved to have my friends back, honestly I am");
+							delay(5);
+							mes("@yel@Eak the Mouse: All that paperwork Death had to put through");
+							delay(5);
+							mes("@yel@Eak the Mouse: took a REALLY long time to be processed...!");
+							delay(3);
+						} else if (menu == 1) {
+							say("Are you excited that Santa is here?");
+							mes("@yel@Eak the Mouse: Yes!!");
+							delay(5);
+							if (!player.getCache().hasKey("eak_met_santa")) {
+								mes("@yel@Eak the Mouse: I would love to meet Santa");
+								delay(5);
+							} else {
+								mes("@yel@Eak the Mouse: He said I'm a good mouse");
+								delay(5);
+								mes("Eak beams");
+								delay(5);
+								mes("@yel@Eak the Mouse: And that cheese was my favourite");
+								delay(5);
+								mes("@yel@Eak the Mouse: Christmas is MUCH better than Halloween");
+								delay(5);
+							}
+						}
+					} else {
+						// After Jan 8 2022
+						mes("@yelEak the Mouse: I could really go for a Pumpkin pie right now");
+						delay(5);
+						mes("@yelEak the Mouse: Maybe with some cheese on the side...?");
+						delay(5);
+						say("I'll see about that, Eak");
+					}
+				} else {
+					mes("@yel@Eak the Mouse: Squeak!");
+				}
+			} else {
+				mes("@yel@Eak the Mouse: Squeak!");
+			}
 		}
 	}
 
@@ -491,6 +543,14 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 				delay(3);
 				mes("Eak the Mouse: I certainly don't want to live in it.");
 				break;
+			case PUMPKIN_PIE:
+			case HALF_A_PUMPKIN_PIE:
+				mes("Eak jumps into the pie");
+				delay(3);
+				mes("and eats a little bit");
+				delay(3);
+				mes("Eak the Mouse: This is actually really good stuff!");
+				break;
 			default:
 				mes("Eak the Mouse: wow thanks, but i have no idea what to do with this.");
 		}
@@ -534,7 +594,7 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 		return item.getID() == ItemId.EAK_THE_MOUSE.id() && myItem.getCatalogId() == ItemId.TINDERBOX.id();
 	}
 
-	public boolean eakCanTalk(Player player) {
+	public static boolean eakCanTalk(Player player) {
 		final int questStage = player.getCache().getInt("mice_to_meet_you");
 		return questStage >= EAK_CAN_TALK || questStage == COMPLETED;
 	}

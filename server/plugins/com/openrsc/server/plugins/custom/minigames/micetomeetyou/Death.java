@@ -503,4 +503,25 @@ public class Death implements OpBoundTrigger, TalkNpcTrigger, TakeObjTrigger, Us
 			&& gameObject.getY() == DOOR_LOCATION.getY()
 			&& item.getCatalogId() == ItemId.EAK_THE_MOUSE.id();
 	}
+
+	public static boolean bedTeleport(Player player) {
+		int questStage = 0;
+		if (player.getCache().hasKey("mice_to_meet_you")) {
+			questStage = player.getCache().getInt("mice_to_meet_you");
+		}
+		if (questStage == COMPLETED || questStage == UNLOCKED_DEATH_ISLAND) {
+			mes("There seems to be a portal under the bed.");
+			delay(3);
+			mes("Would you like to teleport to Death Island?");
+			delay(3);
+			int option = multi("Yes", "No");
+			if (option == 0) {
+				setcoord(DEATH_ISLAND_COORDS);
+				teleport();
+				mes("Welcome to Death's Farm");
+				return true;
+			}
+		}
+		return false;
+	}
 }

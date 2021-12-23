@@ -213,6 +213,9 @@ public final class WorldPopulator {
 					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsCustomQuest.json", type);
 					}
+					if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsMiceToMeetYou.json", type);
+					}
 					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOther.json", type);
 				}
 				return;
@@ -259,10 +262,9 @@ public final class WorldPopulator {
 							}
 						}
 
-						// This should be removed once IdleRSC gets sorted.
-						// Death should stick around even after the event is over
+						// Remove the Death in Varrock, keep the one on Death Island
 						if (!getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
-							npclocs.removeIf(npcLoc -> npcLoc.getId() == NpcId.DEATH.id());
+							npclocs.removeIf(npcLoc -> npcLoc.getId() == NpcId.DEATH.id() && npcLoc.startX < 600);
 						}
 					}
 					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
@@ -279,15 +281,9 @@ public final class WorldPopulator {
 					}
 				}
 
-				// Add a red key so you can do Dragon Slayer
+				// Adds Pumpkins to Varrock & a red key so you can do Dragon Slayer
 				if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
-					ItemLoc loc = new ItemLoc();
-					loc.id = ItemId.RED_KEY.id();
-					loc.x = 344;
-					loc.y = 631;
-					loc.amount = 1;
-					loc.respawnTime = 30;
-					itemlocs.add(loc);
+					loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsMiceToMeetYou.json");
 				}
 
 				return;

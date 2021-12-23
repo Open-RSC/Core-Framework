@@ -151,7 +151,7 @@ public final class EntityHandler {
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
 		customNpcConditions();
-		LOGGER.info("Loaded " + npcs.size() + " npc definitions");
+		LOGGER.info("Loaded " + npcs.size() + " total npc definitions");
 
 		items = new ArrayList<>();
 		itemsPatch = new ArrayList<>();
@@ -246,6 +246,7 @@ public final class EntityHandler {
 				def.roundMode = npc.getInt("roundMode");
 				npcs.add(def);
 			}
+			LOGGER.info("Loaded " + npcDefs.length() + " npcs from " + filename);
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -594,6 +595,8 @@ public final class EntityHandler {
 			items.get(ItemId.MITHRIL_SCIMITAR.id()).setAppearanceId(481);
 			items.get(ItemId.ADAMANTITE_SCIMITAR.id()).setAppearanceId(482);
 			items.get(ItemId.RUNE_SCIMITAR.id()).setAppearanceId(483);
+
+			items.get(ItemId.YOYO.id()).setAppearanceId(485);
 		}
 	}
 

@@ -4737,6 +4737,29 @@
             "prayerBonus": -1000,
             "basePrice": 0,
             "isNoteable": 0
+        },
+        {
+            "id": 1496,
+            "name": "Yoyo",
+            "description": "This technology shouldn't be possible!",
+            "command": "Play",
+            "isFemaleOnly": 0,
+            "isMembersOnly": 0,
+            "isStackable": 0,
+            "isUntradable": 1,
+            "isWearable": 1,
+            "appearanceID": 485,
+            "wearableID": 16,
+            "wearSlot": 4,
+            "requiredLevel": 1,
+            "requiredSkillID": 0,
+            "armourBonus": 0,
+            "weaponAimBonus": 8,
+            "weaponPowerBonus": 6,
+            "magicBonus": 0,
+            "prayerBonus": 0,
+            "basePrice": 100,
+            "isNoteable": 0
         }
     ]
 }

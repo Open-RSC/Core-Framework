@@ -819,7 +819,8 @@ public enum NpcId {
 	DUCK(815),
 	PKBOT(816),
 	DEATH(817),
-	LOAN_OFFICER(818);
+	LOAN_OFFICER(818),
+	SANTA(819);
 
 	private int npcId;
 
