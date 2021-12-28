@@ -83,7 +83,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	@Override
-	public void handleReward(Player player) {
+	public void handleReward(final Player player) {
 		player.message("");
 		delay();
 		player.message("@yel@                          !!!  Well Done !!!   ");
@@ -101,51 +101,51 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player player, Npc n) {
-		return inArray(n.getID(), NpcId.IRENA.id(), NpcId.MERCENARY.id(), NpcId.MERCENARY_CAPTAIN.id(), NpcId.MERCENARY_ESCAPEGATES.id(),
+	public boolean blockTalkNpc(final Player player, final Npc npc) {
+		return inArray(npc.getID(), NpcId.IRENA.id(), NpcId.MERCENARY.id(), NpcId.MERCENARY_CAPTAIN.id(), NpcId.MERCENARY_ESCAPEGATES.id(),
 				NpcId.CAPTAIN_SIAD.id(), NpcId.MINING_SLAVE.id(), NpcId.ESCAPING_MINING_SLAVE.id(), NpcId.BEDABIN_NOMAD.id(), NpcId.BEDABIN_NOMAD_GUARD.id(),
 				NpcId.AL_SHABIM.id(), NpcId.MERCENARY_LIFTPLATFORM.id(), NpcId.MERCENARY_JAILDOOR.id(), NpcId.ANA.id());
 	}
 
-	private void irenaDialogue(Player player, Npc n, int cID) {
-		if (n.getID() == NpcId.IRENA.id()) {
+	private void irenaDialogue(final Player player, final Npc npc, final int cID) {
+		if (npc.getID() == NpcId.IRENA.id()) {
 			if (cID == -1) {
 				switch (player.getQuestStage(this)) {
 					case 0:
 						mes("Irena seems to be very upset and cries as you start to approach her.");
 						delay(3);
-						npcsay(player, n, "Boo hoo, oh dear, my only daughter....");
-						int menu = multi(player, n,
+						npcsay(player, npc, "Boo hoo, oh dear, my only daughter....");
+						int menu = multi(player, npc,
 							"What's the matter?",
 							"Cheer up, it might never happen.");
 						if (menu == 0) {
-							npcsay(player, n, "Oh dear...my daughter, Ana, has gone missing in the desert.",
+							npcsay(player, npc, "Oh dear...my daughter, Ana, has gone missing in the desert.",
 								"I fear that she is lost, or perhaps...*sob* even worse.");
-							int matterMenu = multi(player, n,
+							int matterMenu = multi(player, npc,
 								"When did she go into the desert?",
 								"What did she go into the desert for?",
 								"Is there a reward if I get her back?");
 							if (matterMenu == 0) {
-								irenaDialogue(player, n, Irene.WHENDIDSHEGO);
+								irenaDialogue(player, npc, Irene.WHENDIDSHEGO);
 							} else if (matterMenu == 1) {
-								irenaDialogue(player, n, Irene.WHATDIDSHEGO);
+								irenaDialogue(player, npc, Irene.WHATDIDSHEGO);
 							} else if (matterMenu == 2) {
-								irenaDialogue(player, n, Irene.REWARD);
+								irenaDialogue(player, npc, Irene.REWARD);
 							}
 
 						} else if (menu == 1) {
-							npcsay(player, n, "It may already have happened you thoughtless oaf!",
+							npcsay(player, npc, "It may already have happened you thoughtless oaf!",
 								"My daughter, Ana, could be dead or dying in the desert!!!");
-							int newMenu = multi(player, n,
+							int newMenu = multi(player, npc,
 								"When did she go into the desert?",
 								"What did she go into the desert for?",
 								"Is there a reward if I get her back?");
 							if (newMenu == 0) {
-								irenaDialogue(player, n, Irene.WHENDIDSHEGO);
+								irenaDialogue(player, npc, Irene.WHENDIDSHEGO);
 							} else if (newMenu == 1) {
-								irenaDialogue(player, n, Irene.WHATDIDSHEGO);
+								irenaDialogue(player, npc, Irene.WHATDIDSHEGO);
 							} else if (newMenu == 2) {
-								irenaDialogue(player, n, Irene.REWARD);
+								irenaDialogue(player, npc, Irene.REWARD);
 							}
 
 						}
@@ -158,7 +158,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case 6:
 					case 7:
 					case 8:
-						npcsay(player, n, "Please bring my daughter back to me.",
+						npcsay(player, npc, "Please bring my daughter back to me.",
 							"She is most likely lost in the Desert somewhere.",
 							"I miss her so much....",
 							"Wahhhhh!",
@@ -166,13 +166,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						break;
 					case 9:
 						if (!player.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
-							npcsay(player, n, "Please bring my daughter back to me.",
+							npcsay(player, npc, "Please bring my daughter back to me.",
 								"She is most likely lost in the Desert somewhere.",
 								"I miss her so much....",
 								"Wahhhhh!",
 								"*Sob*");
 						} else {
-							npcsay(player, n, "Hey, great you've found Ana!");
+							npcsay(player, npc, "Hey, great you've found Ana!");
 							mes("You show Irena the barrel with Ana in it.");
 							delay(3);
 							player.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
@@ -195,21 +195,21 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 									"Sorry, I have to go now!");
 								Ana.remove();
 							}
-							npcsay(player, n, "Hi Ana!");
-							rewardMenu(player, n, true);
+							npcsay(player, npc, "Hi Ana!");
+							rewardMenu(player, npc, true);
 							player.getCache().remove("tried_ana_barrel");
 						}
 						break;
 					case 10:
 						if (player.getCache().hasKey("advanced1")) {
-							lastRewardMenu(player, n, true);
+							lastRewardMenu(player, npc, true);
 						} else {
-							rewardMenu(player, n, true);
+							rewardMenu(player, npc, true);
 						}
 						break;
 					case -1:
 						player.message("Irena seems happy now that her daugher has returned home.");
-						npcsay(player, n, "Thanks so much for returning my daughter to me.",
+						npcsay(player, npc, "Thanks so much for returning my daughter to me.",
 							"I expect that she will go on another trip soon though.",
 							"She is the adventurous type...a bit like yourself really!",
 							"Ok, see you around then!");
@@ -219,71 +219,71 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			switch (cID) {
 				case Irene.WHENDIDSHEGO:
-					npcsay(player, n, "*Sob*",
+					npcsay(player, npc, "*Sob*",
 						"She went in there just a few days ago, ",
 						"She said she would be back yesterday.",
 						"And she's not...");
-					int menu = multi(player, n,
+					int menu = multi(player, npc,
 						"What did she go into the desert for?",
 						"Is there a reward if I get her back?",
 						"I'll look for your daughter.");
 					if (menu == 0) {
-						irenaDialogue(player, n, Irene.WHATDIDSHEGO);
+						irenaDialogue(player, npc, Irene.WHATDIDSHEGO);
 					} else if (menu == 1) {
-						irenaDialogue(player, n, Irene.REWARD);
+						irenaDialogue(player, npc, Irene.REWARD);
 					} else if (menu == 2) {
-						irenaDialogue(player, n, Irene.LOOKFORDAUGHTER);
+						irenaDialogue(player, npc, Irene.LOOKFORDAUGHTER);
 					}
 					break;
 				case Irene.WHATDIDSHEGO:
-					npcsay(player, n, "She was just travelling, a tourist you might say.",
+					npcsay(player, npc, "She was just travelling, a tourist you might say.",
 						"*Sob* She said she would be safe and now she could be..");
 					player.message("Irena's bottom lip trembles a little.");
-					npcsay(player, n, "*Whhhhhaaaaa*");
+					npcsay(player, npc, "*Whhhhhaaaaa*");
 					player.message("Irena cries her heart out in front of you.");
-					int menuWhat = multi(player, n,
+					int menuWhat = multi(player, npc,
 						"When did she go into the desert?",
 						"Is there a reward if I get her back?",
 						"I'll look for your daughter.");
 					if (menuWhat == 0) {
-						irenaDialogue(player, n, Irene.WHENDIDSHEGO);
+						irenaDialogue(player, npc, Irene.WHENDIDSHEGO);
 					} else if (menuWhat == 1) {
-						irenaDialogue(player, n, Irene.REWARD);
+						irenaDialogue(player, npc, Irene.REWARD);
 					} else if (menuWhat == 2) {
-						irenaDialogue(player, n, Irene.LOOKFORDAUGHTER);
+						irenaDialogue(player, npc, Irene.LOOKFORDAUGHTER);
 					}
 					break;
 				case Irene.REWARD:
-					npcsay(player, n, "Well, yes, you'll have my gratitude young " +
+					npcsay(player, npc, "Well, yes, you'll have my gratitude young " +
 							(player.isMale() ? "man." : "lady."),
 						"And I'm sure that Ana will also be very pleased!",
 						"And I may see if I can get a small reward together...",
 						"But I cannot promise anything.",
 						"So does that mean that you'll look for her then?");
-					int rewardMenu = multi(player, n,
+					int rewardMenu = multi(player, npc,
 						"Oh, Ok, I'll get your daughter back for you.",
 						"No, sorry, I'm just too busy!");
 					if (rewardMenu == 0) {
-						irenaDialogue(player, n, Irene.GETBACKDAUGHTER);
+						irenaDialogue(player, npc, Irene.GETBACKDAUGHTER);
 					} else if (rewardMenu == 1) {
-						npcsay(player, n, "Oh really, can't I persuade you in anyway?");
+						npcsay(player, npc, "Oh really, can't I persuade you in anyway?");
 					}
 					break;
 				case Irene.LOOKFORDAUGHTER:
-					npcsay(player, n, "That would be very good of you.",
+					npcsay(player, npc, "That would be very good of you.",
 						"You would have the gratitude of a very loving mother.",
 						"Are you sure you want to take on that responsibility?");
-					int lookMenu = multi(player, n,
+					int lookMenu = multi(player, npc,
 						"Oh, Ok, I'll get your daughter back for you.",
 						"No, sorry, I'm just too busy!");
 					if (lookMenu == 0) {
-						irenaDialogue(player, n, Irene.GETBACKDAUGHTER);
+						irenaDialogue(player, npc, Irene.GETBACKDAUGHTER);
 					} else if (lookMenu == 1) {
-						npcsay(player, n, "Oh really, can't I persuade you in anyway?");
+						npcsay(player, npc, "Oh really, can't I persuade you in anyway?");
 					}
 					break;
 				case Irene.GETBACKDAUGHTER:
-					npcsay(player, n, "That would be great!",
+					npcsay(player, npc, "That would be great!",
 						"That's really very nice of you!",
 						"She was wearing a red silk scarf when she left.");
 					player.updateQuestStage(this, 1);
@@ -292,53 +292,53 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		}
 	}
 
-	private void lastRewardMenu(Player player, Npc n, boolean showIrenaDialogue) {
+	private void lastRewardMenu(final Player player, final Npc npc, final boolean showIrenaDialogue) {
 		if (showIrenaDialogue) {
-			npcsay(player, n, "Thank you very much for returning my daughter to me.",
+			npcsay(player, npc, "Thank you very much for returning my daughter to me.",
 				"I'm really very grateful...",
 				"I would like to reward you for your bravery and daring.",
 				"I can offer you increased knowledge in one of the following areas.");
 		}
 		final XPReward origXpReward = Quest.TOURIST_TRAP.reward().getXpRewards()[0];
 		XPReward xpReward;
-		int lastRewardMenu = multi(player, n, false, //do not send over
+		int lastRewardMenu = multi(player, npc, false, //do not send over
 			"Fletching.",
 			"Agility.",
 			"Smithing.",
 			"Thieving");
 		if (lastRewardMenu == 0) {
-			skillReward(player, n, Skill.FLETCHING, false);
+			skillReward(player, npc, Skill.FLETCHING, false);
 		} else if (lastRewardMenu == 1) {
-			skillReward(player, n, Skill.AGILITY, false);
+			skillReward(player, npc, Skill.AGILITY, false);
 		} else if (lastRewardMenu == 2) {
-			skillReward(player, n, Skill.SMITHING, false);
+			skillReward(player, npc, Skill.SMITHING, false);
 		} else if (lastRewardMenu == 3) {
-			skillReward(player, n, Skill.THIEVING, false);
+			skillReward(player, npc, Skill.THIEVING, false);
 		}
 	}
 
-	private void rewardMenu(Player player, Npc n, boolean showIrenaDialogue) {
-		npcsay(player, n, "Thank you very much for returning my daughter to me.",
+	private void rewardMenu(final Player player, final Npc npc, final boolean showIrenaDialogue) {
+		npcsay(player, npc, "Thank you very much for returning my daughter to me.",
 			"I'm really very grateful...",
 			"I would like to reward you for your bravery and daring.",
 			"I can offer you increased knowledge in two of the following areas.");
-		int rewardMenu = multi(player, n, false, //do not send over
+		int rewardMenu = multi(player, npc, false, //do not send over
 			"Fletching.",
 			"Agility.",
 			"Smithing.",
 			"Thieving");
 		if (rewardMenu == 0) {
-			skillReward(player, n, Skill.FLETCHING, true);
+			skillReward(player, npc, Skill.FLETCHING, true);
 		} else if (rewardMenu == 1) {
-			skillReward(player, n, Skill.AGILITY, true);
+			skillReward(player, npc, Skill.AGILITY, true);
 		} else if (rewardMenu == 2) {
-			skillReward(player, n, Skill.SMITHING, true);
+			skillReward(player, npc, Skill.SMITHING, true);
 		} else if (rewardMenu == 3) {
-			skillReward(player, n, Skill.THIEVING, true);
+			skillReward(player, npc, Skill.THIEVING, true);
 		}
 	}
 
-	private void skillReward(Player player, Npc n, Skill skill, boolean isFirst) {
+	private void skillReward(final Player player, final Npc npc, final Skill skill, final boolean isFirst) {
 		final XPReward origXpReward = Quest.TOURIST_TRAP.reward().getXpRewards()[0];
 		XPReward xpReward = origXpReward.copyTo(skill);
 		incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
@@ -355,27 +355,27 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (!player.getCache().hasKey("advanced1")) {
 				player.getCache().store("advanced1", true);
 			}
-			lastRewardMenu(player, n, false);
+			lastRewardMenu(player, npc, false);
 		}
 	}
 
-	private void mercenaryDialogue(Player player, Npc n, int cID) {
-		if (n.getID() == NpcId.MERCENARY.id()) {
+	private void mercenaryDialogue(final Player player, final Npc npc, final int cID) {
+		if (npc.getID() == NpcId.MERCENARY.id()) {
 			if (cID == -1) {
 				switch (player.getQuestStage(this)) {
 					case 0:
 						if (player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
-							npcsay(player, n, "Move along now..we've had enough of your sort!");
+							npcsay(player, npc, "Move along now..we've had enough of your sort!");
 							return;
 						}
-						npcsay(player, n, "Yeah, what do you want?");
-						int menu = multi(player, n,
+						npcsay(player, npc, "Yeah, what do you want?");
+						int menu = multi(player, npc,
 							"What is this place?",
 							"What are you guarding?");
 						if (menu == 0) {
-							mercenaryDialogue(player, n, Mercenary.PLACE_START);
+							mercenaryDialogue(player, npc, Mercenary.PLACE_START);
 						} else if (menu == 1) {
-							mercenaryDialogue(player, n, Mercenary.GUARDING_FIRST);
+							mercenaryDialogue(player, npc, Mercenary.GUARDING_FIRST);
 						}
 						break;
 					case 1:
@@ -384,7 +384,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case 4:
 					case 5:
 						if (player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) || player.getLocation().inTouristTrapCave()) {
-							npcsay(player, n, "Move along now..we've had enough of your sort!");
+							npcsay(player, npc, "Move along now..we've had enough of your sort!");
 							return;
 						}
 						if (player.getQuestStage(this) == 1 && player.getCache().hasKey("first_kill_captn") && player.getCache().getBoolean("first_kill_captn")) {
@@ -392,81 +392,81 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							//talking after captain is killed -> special dialogue bet and sets false flag
 							boolean completed = false;
 							if (!player.getCache().hasKey("mercenary_bet")) {
-								npcsay(player, n, "Well, you've killed our Captain.",
+								npcsay(player, npc, "Well, you've killed our Captain.",
 									"I guess you've proved yourself in combat.",
 									"However, you've left a horrible mess now.",
 									"And it's gonna cost you for us to clean it up.",
 									"Let's say 20 gold and we won't have to get rough with you?");
-								int opts = multi(player, n, false, //do not send over
+								int opts = multi(player, npc, false, //do not send over
 									"Yeah, ok, I'll give you 20 gold.",
 									"I'll give you 15, that's all you're gettin'",
 									"You can whistle for you money, I'll take you all on.");
 								if (opts == 0) {
-									say(player, n, "Yeah, ok, I'll give you 20 gold.");
+									say(player, npc, "Yeah, ok, I'll give you 20 gold.");
 									if (ifheld(player, ItemId.COINS.id(), 20)) {
 										player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
-										npcsay(player, n, "Good! Seeya, we have some cleaning to do.");
+										npcsay(player, npc, "Good! Seeya, we have some cleaning to do.");
 										completed = true;
 									} else {
-										npcsay(player, n, "You don't have the gold and now we're gonna teach you a lesson.");
+										npcsay(player, npc, "You don't have the gold and now we're gonna teach you a lesson.");
 										mes("The Guards search you!");
 										delay(3);
-										mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
+										mercenaryDialogue(player, npc, Mercenary.LEAVE_DESERT);
 										completed = true;
 									}
 								} else if (opts == 1) {
-									say(player, n, "I'll give you 15, that's all you're gettin'");
+									say(player, npc, "I'll give you 15, that's all you're gettin'");
 									if (ifheld(player, ItemId.COINS.id(), 15)) {
 										player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15));
-										npcsay(player, n, "Ok, we'll take fifteen, you push a hard bargain!");
+										npcsay(player, npc, "Ok, we'll take fifteen, you push a hard bargain!");
 										completed = true;
 									} else {
-										npcsay(player, n, "You don't have the gold and now we're gonna teach you a lesson.");
+										npcsay(player, npc, "You don't have the gold and now we're gonna teach you a lesson.");
 										mes("The Guards search you!");
 										delay(3);
-										mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
+										mercenaryDialogue(player, npc, Mercenary.LEAVE_DESERT);
 										completed = true;
 									}
 								} else if (opts == 2) {
-									say(player, n, "You can whistle for your money, I'll take you all on.");
-									npcsay(player, n, "Ok, that's it, we're gonna teach you a lesson.");
+									say(player, npc, "You can whistle for your money, I'll take you all on.");
+									npcsay(player, npc, "Ok, that's it, we're gonna teach you a lesson.");
 									mes("The Guards search you!");
 									delay(3);
-									mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
+									mercenaryDialogue(player, npc, Mercenary.LEAVE_DESERT);
 									completed = true;
 								}
 							} else {
-								say(player, n, "Hey, I've come to collect my bet!");
-								npcsay(player, n, "Well, I guess congratulations are in order.");
-								say(player, n, "Thanks!");
-								npcsay(player, n, "And we'll only charge the paltry sum of..erm...");
+								say(player, npc, "Hey, I've come to collect my bet!");
+								npcsay(player, npc, "Well, I guess congratulations are in order.");
+								say(player, npc, "Thanks!");
+								npcsay(player, npc, "And we'll only charge the paltry sum of..erm...");
 								mes("The guards starts to do some mental calculations...");
 								delay(3);
 								mes("You can see his brow furrow and he starts to sweat profusely");
 								delay(3);
 								switch (player.getCache().getInt("mercenary_bet")) {
 									case 5:
-										npcsay(player, n, "Five gold for cleaning up the mess.",
+										npcsay(player, npc, "Five gold for cleaning up the mess.",
 											"You have won 1 Gold piece!");
 										give(player, ItemId.COINS.id(), 1);
 										break;
 									case 10:
-										npcsay(player, n, "10 gold for cleaning up the mess.",
+										npcsay(player, npc, "10 gold for cleaning up the mess.",
 											"You have won 2 Gold pieces!");
 										give(player, ItemId.COINS.id(), 2);
 										break;
 									case 15:
-										npcsay(player, n, "15 gold for cleaning up the mess.",
+										npcsay(player, npc, "15 gold for cleaning up the mess.",
 											"You have won 4 Gold pieces!");
 										give(player, ItemId.COINS.id(), 4);
 										break;
 									case 20:
-										npcsay(player, n, "20 gold for cleaning up the mess.",
+										npcsay(player, npc, "20 gold for cleaning up the mess.",
 											"You have won 10 Gold pieces!");
 										give(player, ItemId.COINS.id(), 10);
 										break;
 								}
-								npcsay(player, n, "Well done..!", "Ha, ha, ha ha!");
+								npcsay(player, npc, "Well done..!", "Ha, ha, ha ha!");
 								player.message("The guards walk off chuckling to themselves.");
 								completed = true;
 							}
@@ -476,17 +476,17 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							return;
 						}
 
-						npcsay(player, n, "Yeah, what do you want?");
-						int option = multi(player, n,
+						npcsay(player, npc, "Yeah, what do you want?");
+						int option = multi(player, npc,
 							"What is this place?",
 							"What are you guarding?",
 							"I'm looking for a woman called Ana, have you seen her?");
 						if (option == 0) {
-							mercenaryDialogue(player, n, Mercenary.PLACE_START);
+							mercenaryDialogue(player, npc, Mercenary.PLACE_START);
 						} else if (option == 1) {
-							mercenaryDialogue(player, n, Mercenary.GUARDING_FIRST);
+							mercenaryDialogue(player, npc, Mercenary.GUARDING_FIRST);
 						} else if (option == 2) {
-							mercenaryDialogue(player, n, Mercenary.ANA_FIRST);
+							mercenaryDialogue(player, npc, Mercenary.ANA_FIRST);
 						}
 						break;
 					case 6:
@@ -494,18 +494,18 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case 8:
 					case 9:
 					case 10:
-						npcsay(player, n, "Move along now..we've had enough of your sort!");
+						npcsay(player, npc, "Move along now..we've had enough of your sort!");
 						break;
 					case -1:
-						npcsay(player, n, "What're you looking at?");
+						npcsay(player, npc, "What're you looking at?");
 						break;
 				}
 			}
 			switch (cID) {
 				case Mercenary.THROW_PLAYER:
-					npcsay(player, n, "Don't try to fool me, you don't have five gold coins!",
+					npcsay(player, npc, "Don't try to fool me, you don't have five gold coins!",
 						"Before you try to bribe someone, make sure you have the money effendi!");
-					mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
+					mercenaryDialogue(player, npc, Mercenary.LEAVE_DESERT);
 					break;
 				case Mercenary.THROW_PRISON:
 					mes("The Guards search you!");
@@ -523,26 +523,26 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					delay(3);
 					mes("You are roughed up a bit by the guards as you're manhandlded to a cell.");
 					delay(3);
-					if (n != null) {
-						npcsay(player, n, "Into the cell you go! I hope this teaches you a lesson.");
+					if (npc != null) {
+						npcsay(player, npc, "Into the cell you go! I hope this teaches you a lesson.");
 					}
 					player.teleport(89, 801);
 					break;
 				case Mercenary.LEAVE_DESERT:
-					npcsay(player, n, "Guards, guards!");
-					if (!n.inCombat()) {
-						n.setChasing(player);
+					npcsay(player, npc, "Guards, guards!");
+					if (!npc.inCombat()) {
+						npc.setChasing(player);
 					}
 					mes("Nearby guards quickly grab you and rough you up a bit.");
 					delay(3);
-					npcsay(player, n, "Let's see how good you are with desert survival techniques!");
+					npcsay(player, npc, "Let's see how good you are with desert survival techniques!");
 					mes("You're bundled into the back of a cart and blindfolded...");
 					delay(3);
 					mes("Sometime later you wake up in the desert.");
 					delay(3);
 					// TODO: can also take waterskins and replace them with single empty waterskin.
 					if (player.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
-						npcsay(player, n, "You won't be needing that water any more!");
+						npcsay(player, npc, "You won't be needing that water any more!");
 						mes("The guards throw your water away...");
 						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
@@ -551,142 +551,142 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					player.teleport(desertLoc.getX(), desertLoc.getY());
 					break;
 				case Mercenary.PLACE_START:
-					npcsay(player, n, "It's none of your business now get lost.");
-					int menu = multi(player, n,
+					npcsay(player, npc, "It's none of your business now get lost.");
+					int menu = multi(player, npc,
 						"Perhaps five gold coins will make it my business?",
 						"Ok, thanks.");
 					if (menu == 0) {
-						npcsay(player, n, "It certainly will!");
+						npcsay(player, npc, "It certainly will!");
 						if (ifheld(player, ItemId.COINS.id(), 5)) {
 							player.message("The guard takes the five gold coins.");
 							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-							npcsay(player, n, "Now then, what did you want to know?");
-							int secondMenu = multi(player, n,
+							npcsay(player, npc, "Now then, what did you want to know?");
+							int secondMenu = multi(player, npc,
 								"What is this place?",
 								"What are you guarding?");
 							if (secondMenu == 0) {
-								mercenaryDialogue(player, n, Mercenary.PLACE_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.PLACE_SECOND);
 							} else if (secondMenu == 1) {
-								mercenaryDialogue(player, n, Mercenary.GUARDING_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.GUARDING_SECOND);
 							}
 						} else {
-							mercenaryDialogue(player, n, Mercenary.THROW_PLAYER);
+							mercenaryDialogue(player, npc, Mercenary.THROW_PLAYER);
 						}
 					} else if (menu == 1) {
-						npcsay(player, n, "Yeah, whatever!");
+						npcsay(player, npc, "Yeah, whatever!");
 					}
 					break;
 				case Mercenary.PLACE_SECOND:
-					npcsay(player, n, "It's just a mining camp. Prisoners are sent here from Al Kharid.",
+					npcsay(player, npc, "It's just a mining camp. Prisoners are sent here from Al Kharid.",
 						"They serve out their sentence by mining.",
 						"Most prisoners will end their days here, surrounded by desert.");
-					say(player, n, "So you could almost say that they got their... 'just desserts'");
-					npcsay(player, n, "You could say that...");
+					say(player, npc, "So you could almost say that they got their... 'just desserts'");
+					npcsay(player, npc, "You could say that...");
 					mes("There is an awkward pause");
 					delay(3);
-					npcsay(player, n, "But it wouldn't be very funny.");
+					npcsay(player, npc, "But it wouldn't be very funny.");
 					mes("There is another awkward pause.");
 					delay(3);
-					say(player, n, "When they talk about the silence of the desert,",
+					say(player, npc, "When they talk about the silence of the desert,",
 						"this must be what they mean.");
 					player.message("The guard starts losing interest in the conversation.");
-					int options = multi(player, n,
+					int options = multi(player, npc,
 						"Can I take a look around the place?",
 						"Ok thanks.");
 					if (options == 0) {
-						npcsay(player, n, "Not really. The Captain won't let you in the compound.",
+						npcsay(player, npc, "Not really. The Captain won't let you in the compound.",
 							"He's the only one who has the key to the gate.",
 							"And if you talk to him, he'll probably just order us to kill you.",
 							"Unless...");
-						int newMenu = multi(player, n,
+						int newMenu = multi(player, npc,
 							"Does the Captain order you to kill a lot of people?",
 							"Unless what?");
 						if (newMenu == 0) {
-							mercenaryDialogue(player, n, Mercenary.ORDER_KILL_PEOPLE);
+							mercenaryDialogue(player, npc, Mercenary.ORDER_KILL_PEOPLE);
 						} else if (newMenu == 1) {
-							npcsay(player, n, "Unless he has a use for you.",
+							npcsay(player, npc, "Unless he has a use for you.",
 								"He's been trying to track down a someone called 'Al Zaba Bhasim'.",
 								"You could offer to catch him and that might put you in his good books?");
-							int tenthMenu = multi(player, n,
+							int tenthMenu = multi(player, npc,
 								"Where would I find this Al Zaba Bhasim?",
 								"Ok thanks.");
 							if (tenthMenu == 0) {
-								npcsay(player, n, "Well, he could be anywhere, he's a nomadic desert dweller.",
+								npcsay(player, npc, "Well, he could be anywhere, he's a nomadic desert dweller.",
 									"However, he is frequently to be found to the west in the ",
 									"hospitality of the tenti's.");
-								int eleventhMenu = multi(player, n, false, //do not send over
+								int eleventhMenu = multi(player, npc, false, //do not send over
 									"The Tenti's, who are they?",
 									"Ok thanks.");
 								if (eleventhMenu == 0) {
-									say(player, n, "The Tenti's, who are they?");
-									npcsay(player, n, "Well, we're not really sure what they're proper name is.",
+									say(player, npc, "The Tenti's, who are they?");
+									npcsay(player, npc, "Well, we're not really sure what they're proper name is.",
 										"But they live in tents so we call them the 'Tenti's'.");
-									int twelftMenu = multi(player, n, false, //do not send over
+									int twelftMenu = multi(player, npc, false, //do not send over
 										"Ok thanks.",
 										"Is Al Zaba Bhasim very tough?");
 									if (twelftMenu == 0) {
-										say(player, n, "Ok, thanks.");
-										npcsay(player, n, "Yeah, whatever!");
+										say(player, npc, "Ok, thanks.");
+										npcsay(player, npc, "Yeah, whatever!");
 									} else if (twelftMenu == 1) {
-										say(player, n, "Is Al Zaba Bhasim very tough?");
-										npcsay(player, n, "Well, I'm not sure, but by all accounts, he is a slippery fellow.",
+										say(player, npc, "Is Al Zaba Bhasim very tough?");
+										npcsay(player, npc, "Well, I'm not sure, but by all accounts, he is a slippery fellow.",
 											"The Captain has been trying to capture him for years.",
 											"A bit of a waste of time if you ask me.",
 											"Anyway, I have to get going, I do have work to do.");
 										player.message("The guard walks off.");
 									}
 								} else if (eleventhMenu == 1) {
-									say(player, n, "Ok, thanks.");
-									npcsay(player, n, "Yeah, whatever!");
+									say(player, npc, "Ok, thanks.");
+									npcsay(player, npc, "Yeah, whatever!");
 								}
 							} else if (tenthMenu == 1) {
-								npcsay(player, n, "Yeah, whatever!");
+								npcsay(player, npc, "Yeah, whatever!");
 							}
 						}
 					} else if (options == 1) {
-						npcsay(player, n, "Yeah, whatever!");
+						npcsay(player, npc, "Yeah, whatever!");
 					}
 					break;
 				case Mercenary.ORDER_KILL_PEOPLE:
 					player.message("The guard snorts.");
-					npcsay(player, n, "*Snort*",
+					npcsay(player, npc, "*Snort*",
 						"Just about anyone who talks to him.",
 						"Unless he has a use for you, he'll probably just order us to kill you.",
 						"And it's such a horrible job cleaning up the mess afterwards.");
-					int sixthMenu = multi(player, n,
+					int sixthMenu = multi(player, npc,
 						"Not to mention the senseless waste of human life.",
 						"Ok thanks.");
 					if (sixthMenu == 0) {
-						npcsay(player, n, "Heh?");
+						npcsay(player, npc, "Heh?");
 						mes("The guard looks at you with a confused stare...");
 						delay(3);
-						int seventhMenu = multi(player, n, false, //do not send over
+						int seventhMenu = multi(player, npc, false, //do not send over
 							"It doesn't sound as if you respect your Captain much.",
 							"Ok thanks.");
 						if (seventhMenu == 0) {
-							say(player, n, "It doesn't sound is if you respect your Captain much.");
-							npcsay(player, n, "Well, to be honest.");
+							say(player, npc, "It doesn't sound is if you respect your Captain much.");
+							npcsay(player, npc, "Well, to be honest.");
 							mes("The guard looks around conspiratorially.");
 							delay(3);
-							npcsay(player, n, "We think he's not exactly as brave as he makes out.",
+							npcsay(player, npc, "We think he's not exactly as brave as he makes out.",
 								"But we have to follow his orders.",
 								"If someone called him a coward, ",
 								"or managed to trick him into a one-on-one duel.",
 								"Many of us bet that he'll be slaughtered in double quick time.",
 								"And all the men agreed that they wouldn't intervene.");
-							int eightMenu = multi(player, n, false, //do not send over
+							int eightMenu = multi(player, npc, false, //do not send over
 								"Can I have a bet on that?",
 								"Ok Thanks.");
 							if (eightMenu == 0) {
-								say(player, n, "Can I have a bet on that?");
+								say(player, npc, "Can I have a bet on that?");
 								if (player.getCache().hasKey("mercenary_bet")) {
-									npcsay(player, n, "Sorry, we've already taken your bet, wouldn't want any cheating now.",
+									npcsay(player, npc, "Sorry, we've already taken your bet, wouldn't want any cheating now.",
 										"Anyway, I have to get back to work. See ya around...");
 									return;
 								}
-								npcsay(player, n, "Well, if you think you stand a chance, sure.",
+								npcsay(player, npc, "Well, if you think you stand a chance, sure.",
 									"But remember, if he gives us an order, we have to obey.");
-								int ninthMenu = multi(player, n,
+								int ninthMenu = multi(player, npc,
 									"I'll bet 5 gold that I win.",
 									"I'll bet 10 gold that I win.",
 									"I'll bet 15 gold that I win.",
@@ -708,128 +708,128 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 										recvAmount = 30;
 									}
 									if (ifheld(player, ItemId.COINS.id(), betAmount)) {
-										npcsay(player, n, "Great, I'll take that bet.");
+										npcsay(player, npc, "Great, I'll take that bet.");
 										player.message("You hand over " + betAmount + " gold coins.");
 										player.getCarriedItems().remove(new Item(ItemId.COINS.id(), betAmount));
-										npcsay(player, n, "Ok, if you win, you'll get " + recvAmount + "gold back.");
+										npcsay(player, npc, "Ok, if you win, you'll get " + recvAmount + "gold back.");
 										player.getCache().set("mercenary_bet", betAmount);
 									}
-									npcsay(player, n, "Anyway, I have to get going, I do have work to do.");
+									npcsay(player, npc, "Anyway, I have to get going, I do have work to do.");
 									player.message("The guard walks off.");
 								} else if (ninthMenu == 4) {
-									npcsay(player, n, "Yeah, whatever!");
+									npcsay(player, npc, "Yeah, whatever!");
 								}
 							} else if (eightMenu == 1) {
-								say(player, n, "Ok, thanks.");
-								npcsay(player, n, "Yeah, whatever!");
+								say(player, npc, "Ok, thanks.");
+								npcsay(player, npc, "Yeah, whatever!");
 							}
 						} else if (seventhMenu == 1) {
-							say(player, n, "Ok, thanks.");
-							npcsay(player, n, "Yeah, whatever!");
+							say(player, npc, "Ok, thanks.");
+							npcsay(player, npc, "Yeah, whatever!");
 						}
 					} else if (sixthMenu == 1) {
-						npcsay(player, n, "Yeah, whatever!");
+						npcsay(player, npc, "Yeah, whatever!");
 					}
 					break;
 				case Mercenary.GUARDING_FIRST:
-					npcsay(player, n, "Get lost before I chop off your head!");
-					int chopMenu = multi(player, n, false, //do not send over
+					npcsay(player, npc, "Get lost before I chop off your head!");
+					int chopMenu = multi(player, npc, false, //do not send over
 						"Ok thanks.",
 						"Perhaps these five gold coins will sweeten your mood?");
 					if (chopMenu == 0) {
-						say(player, n, "Ok, thanks.");
-						npcsay(player, n, "Yeah, whatever!");
+						say(player, npc, "Ok, thanks.");
+						npcsay(player, npc, "Yeah, whatever!");
 					} else if (chopMenu == 1) {
-						say(player, n, "Perhaps these five gold coins will sweeten your mood?");
+						say(player, npc, "Perhaps these five gold coins will sweeten your mood?");
 						if (ifheld(player, ItemId.COINS.id(), 5)) {
-							npcsay(player, n, "Well, it certainly will help...");
+							npcsay(player, npc, "Well, it certainly will help...");
 							player.message("The guard takes the five gold coins.");
 							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-							npcsay(player, n, "Now then, what did you want to know?");
-							int knowMenu = multi(player, n,
+							npcsay(player, npc, "Now then, what did you want to know?");
+							int knowMenu = multi(player, npc,
 								"What is this place?",
 								"What are you guarding?",
 								"I'm looking for a woman called Ana, have you seen her?");
 							if (knowMenu == 0) {
-								mercenaryDialogue(player, n, Mercenary.PLACE_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.PLACE_SECOND);
 							} else if (knowMenu == 1) {
-								mercenaryDialogue(player, n, Mercenary.GUARDING_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.GUARDING_SECOND);
 							} else if (knowMenu == 2) {
-								mercenaryDialogue(player, n, Mercenary.ANA_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.ANA_SECOND);
 							}
 						} else {
-							mercenaryDialogue(player, n, Mercenary.THROW_PLAYER);
+							mercenaryDialogue(player, npc, Mercenary.THROW_PLAYER);
 						}
 					}
 					break;
 				case Mercenary.GUARDING_SECOND:
-					npcsay(player, n, "Well, if you have to know, we're making sure that no prisoners get out.");
+					npcsay(player, npc, "Well, if you have to know, we're making sure that no prisoners get out.");
 					mes("The guard gives you a disaproving look.");
 					delay(3);
-					npcsay(player, n, "And to make sure that unauthorised people don't get in.");
+					npcsay(player, npc, "And to make sure that unauthorised people don't get in.");
 					mes("The guard looks around nervously.");
 					delay(3);
-					npcsay(player, n, "You'd better go now before the Captain orders us to kill you.");
-					int gmenu = multi(player, n, false, //do not send over
+					npcsay(player, npc, "You'd better go now before the Captain orders us to kill you.");
+					int gmenu = multi(player, npc, false, //do not send over
 						"Does the Captain order you to kill a lot of people?",
 						"Ok Thanks.");
 					if (gmenu == 0) {
-						say(player, n, "Does the Captain order you to kill a lot of people?");
-						mercenaryDialogue(player, n, Mercenary.ORDER_KILL_PEOPLE);
+						say(player, npc, "Does the Captain order you to kill a lot of people?");
+						mercenaryDialogue(player, npc, Mercenary.ORDER_KILL_PEOPLE);
 					} else if (gmenu == 2) {
-						say(player, n, "Ok, thanks.");
-						npcsay(player, n, "Yeah, whatever!");
+						say(player, npc, "Ok, thanks.");
+						npcsay(player, npc, "Yeah, whatever!");
 					}
 					break;
 				case Mercenary.ANA_FIRST:
-					npcsay(player, n, "No, now get lost!");
-					int altMenu = multi(player, n,
+					npcsay(player, npc, "No, now get lost!");
+					int altMenu = multi(player, npc,
 						"Perhaps five gold coins will help you remember?",
 						"Ok, thanks.");
 					if (altMenu == 0) {
-						npcsay(player, n, "Hmm, it might help!");
+						npcsay(player, npc, "Hmm, it might help!");
 						if (ifheld(player, ItemId.COINS.id(), 5)) {
 							player.message("The guards takes the five gold coins.");
 							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-							npcsay(player, n, "Now then, what did you want to know?");
-							int anaMenu = multi(player, n,
+							npcsay(player, npc, "Now then, what did you want to know?");
+							int anaMenu = multi(player, npc,
 								"I'm looking for a woman called Ana, have you seen her?",
 								"What is this place?",
 								"What are you guarding?");
 							if (anaMenu == 0) {
-								mercenaryDialogue(player, n, Mercenary.ANA_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.ANA_SECOND);
 							} else if (anaMenu == 1) {
-								mercenaryDialogue(player, n, Mercenary.PLACE_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.PLACE_SECOND);
 							} else if (anaMenu == 2) {
-								mercenaryDialogue(player, n, Mercenary.GUARDING_SECOND);
+								mercenaryDialogue(player, npc, Mercenary.GUARDING_SECOND);
 							}
 						} else {
-							mercenaryDialogue(player, n, Mercenary.THROW_PLAYER);
+							mercenaryDialogue(player, npc, Mercenary.THROW_PLAYER);
 						}
 					} else if (altMenu == 1) {
-						npcsay(player, n, "Yeah, whatever!");
+						npcsay(player, npc, "Yeah, whatever!");
 					}
 					break;
 				case Mercenary.ANA_SECOND:
-					npcsay(player, n, "Hmm, well, we get a lot of people in here.",
+					npcsay(player, npc, "Hmm, well, we get a lot of people in here.",
 						"But not many women though...",
 						"Saw one come in last week....",
 						"But I don't know if it's the woman you're looking for?");
-					int lastMenu = multi(player, n,
+					int lastMenu = multi(player, npc,
 						"What is this place?",
 						"What are you guarding?");
 					if (lastMenu == 0) {
-						mercenaryDialogue(player, n, Mercenary.PLACE_SECOND);
+						mercenaryDialogue(player, npc, Mercenary.PLACE_SECOND);
 					} else if (lastMenu == 1) {
-						mercenaryDialogue(player, n, Mercenary.GUARDING_SECOND);
+						mercenaryDialogue(player, npc, Mercenary.GUARDING_SECOND);
 					}
 					break;
 			}
 		}
 	}
 
-	private void mercenaryCaptainDialogue(Player player, Npc n, int cID) {
-		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
+	private void mercenaryCaptainDialogue(final Player player, final Npc npc, final int cID) {
+		if (npc.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
 			if (cID == -1) {
 				switch (player.getQuestStage(this)) {
 					case 0:
@@ -845,96 +845,96 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case 10:
 					case -1:
 						if (player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
-							npcsay(player, n, "Move along now...we've had enough of your sort!");
+							npcsay(player, npc, "Move along now...we've had enough of your sort!");
 							return;
 						}
 						player.message("You approach the Mercenary Captain.");
-						int menu = multi(player, n,
+						int menu = multi(player, npc,
 							"Hello.",
 							"You there!",
 							"Hey ugly!");
 						if (menu == 0) {
-							npcsay(player, n, "Be off Effendi, you are not wanted around here.");
-							int be = multi(player, n,
+							npcsay(player, npc, "Be off Effendi, you are not wanted around here.");
+							int be = multi(player, npc,
 								"That's rude, I ought to teach you some manners.",
 								"I 'll offer you something in return for your time.");
 							if (be == 0) {
-								npcsay(player, n, "Oh yes! How might you do that?",
+								npcsay(player, npc, "Oh yes! How might you do that?",
 									"You seem little more than a gutter dweller.",
 									"How could you teach me manners?");
-								int manners = multi(player, n, false, //do not send over
+								int manners = multi(player, npc, false, //do not send over
 									"With my right fist and a good deal of force.",
 									"Err, sorry, I thought I was talking to someone else.");
 								if (manners == 0) {
-									say(player, n, "With my good right arm and a good deal of force.");
-									npcsay(player, n, "Oh yes, ready your weapon then!",
+									say(player, npc, "With my good right arm and a good deal of force.");
+									npcsay(player, npc, "Oh yes, ready your weapon then!",
 										"I'm sure you won't mind if my men join in?",
 										"Har, har, har!",
 										"Guards, kill this gutter dwelling slime.");
-									captainWantToThrowPlayer(player, n);
+									captainWantToThrowPlayer(player, npc);
 								} else if (manners == 1) {
-									say(player, n, "Err, sorry, I thought I was talking to someone else.");
-									npcsay(player, n, "Well, Effendi, you do need to be carefull of what you say to people.",
+									say(player, npc, "Err, sorry, I thought I was talking to someone else.");
+									npcsay(player, npc, "Well, Effendi, you do need to be carefull of what you say to people.",
 										"Or they may take it the wrong way.",
 										"Thankfully, I'm very understanding.",
 										"I'll just let me guards deal with you.",
 										"Guards, teach this desert weed some manners.");
-									captainWantToThrowPlayer(player, n);
+									captainWantToThrowPlayer(player, npc);
 								}
 
 							} else if (be == 1) {
-								npcsay(player, n, "Hmmm, oh yes, what might that be?");
-								int menus = multi(player, n,
+								npcsay(player, npc, "Hmmm, oh yes, what might that be?");
+								int menus = multi(player, npc,
 									"I have some gold.",
 									"There must be something that I can do for you?");
 								if (menus == 0) {
-									npcsay(player, n, "Ha, ha, ha! You come to a mining camp and offer us gold!",
+									npcsay(player, npc, "Ha, ha, ha! You come to a mining camp and offer us gold!",
 										"Thanks effendi, but we have all the gold that we'll ever need.",
 										"Now be off with you,",
 										"before we reduce you to a bloody mess on the sand.");
-									int option = multi(player, n,
+									int option = multi(player, npc,
 										"There must be something that I can do for you?",
 										"You don't scare me!");
 									if (option == 0) {
-										mercenaryCaptainDialogue(player, n, MercenaryCaptain.MUSTBESOMETHINGICANDO);
+										mercenaryCaptainDialogue(player, npc, MercenaryCaptain.MUSTBESOMETHINGICANDO);
 									} else if (option == 1) {
-										mercenaryCaptainDialogue(player, n, MercenaryCaptain.DONTSCAREME);
+										mercenaryCaptainDialogue(player, npc, MercenaryCaptain.DONTSCAREME);
 									}
 								} else if (menus == 1) {
-									mercenaryCaptainDialogue(player, n, MercenaryCaptain.MUSTBESOMETHINGICANDO);
+									mercenaryCaptainDialogue(player, npc, MercenaryCaptain.MUSTBESOMETHINGICANDO);
 								}
 							}
 						} else if (menu == 1) {
-							npcsay(player, n, "How dare you talk to me like that!",
+							npcsay(player, npc, "How dare you talk to me like that!",
 								"Explain your business quickly...",
 								"or my guards will slay you where you stand.");
 							player.message("Some guards close in around you.");
-							int thirdMenu = multi(player, n,
+							int thirdMenu = multi(player, npc,
 								"I'm lost, can you help me?",
 								"What are you guarding?");
 							if (thirdMenu == 0) {
 								mes("The captain smiles broadly and with a sickening voice says.");
 								delay(3);
-								npcsay(player, n, "We are not a charity effendi,",
+								npcsay(player, npc, "We are not a charity effendi,",
 									"Be off with you before I have your head removed from your body.");
-								int lostMenu = multi(player, n,
+								int lostMenu = multi(player, npc,
 									"What are you guarding?",
 									"You don't scare me!");
 								if (lostMenu == 0) {
-									mercenaryCaptainDialogue(player, n, MercenaryCaptain.GUARDING);
+									mercenaryCaptainDialogue(player, npc, MercenaryCaptain.GUARDING);
 								} else if (lostMenu == 1) {
-									mercenaryCaptainDialogue(player, n, MercenaryCaptain.DONTSCAREME);
+									mercenaryCaptainDialogue(player, npc, MercenaryCaptain.DONTSCAREME);
 								}
 
 							} else if (thirdMenu == 1) {
-								mercenaryCaptainDialogue(player, n, MercenaryCaptain.GUARDING);
+								mercenaryCaptainDialogue(player, npc, MercenaryCaptain.GUARDING);
 							}
 						} else if (menu == 2) {
-							npcsay(player, n, "I will not tolerate such insults..",
+							npcsay(player, npc, "I will not tolerate such insults..",
 								"Guards, kill " + (player.isMale() ? "him." : "her."));
 							mes("The captain marches away in disgust leaving his guards to tackle you.");
 							delay(3);
-							captainWantToThrowPlayer(player, n);
+							captainWantToThrowPlayer(player, npc);
 						}
 						break;
 
@@ -943,30 +943,30 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			switch (cID) {
 				case MercenaryCaptain.GUARDING:
-					npcsay(player, n, "Effendi...",
+					npcsay(player, npc, "Effendi...",
 						"For just one second, imagine that it's none of your business!",
 						"Also imagine having your limbs pulled from your body one at a time.",
 						"Now, what was the question again?");
-					int fourthMenu = multi(player, n,
+					int fourthMenu = multi(player, npc,
 						"Do you have sand in your ears, I said, 'What are you guarding?'",
 						"You don't scare me!");
 					if (fourthMenu == 0) {
-						npcsay(player, n, "Why....you ignorant, rude and eternally damned infidel,");
+						npcsay(player, npc, "Why....you ignorant, rude and eternally damned infidel,");
 						player.message("The captain seems very agitated with what you just said.");
-						npcsay(player, n, "Guards, kill this infidel!");
-						captainWantToThrowPlayer(player, n);
+						npcsay(player, npc, "Guards, kill this infidel!");
+						captainWantToThrowPlayer(player, npc);
 					} else if (fourthMenu == 1) {
-						mercenaryCaptainDialogue(player, n, MercenaryCaptain.DONTSCAREME);
+						mercenaryCaptainDialogue(player, npc, MercenaryCaptain.DONTSCAREME);
 					}
 					break;
 				case MercenaryCaptain.DONTSCAREME:
-					npcsay(player, n, "Well, perhaps I can try a little harder.",
+					npcsay(player, npc, "Well, perhaps I can try a little harder.",
 						"Guards, kill this infidel.");
-					captainWantToThrowPlayer(player, n);
+					captainWantToThrowPlayer(player, npc);
 					break;
 				case MercenaryCaptain.MUSTBESOMETHINGICANDO:
 					player.message("The Captain ponders a moment and then looks at you critically.");
-					npcsay(player, n, "You could bring me the head of Al Zaba Bhasim.",
+					npcsay(player, npc, "You could bring me the head of Al Zaba Bhasim.",
 						"He is the leader of the notorius desert bandits, they plague us daily.",
 						"You should find them west of here.",
 						"You should have no problem in finishing them all off.",
@@ -974,29 +974,29 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					if (!player.getCache().hasKey("find_al_bhasim")) {
 						player.getCache().store("find_al_bhasim", true);
 					}
-					int doThis = multi(player, n,
+					int doThis = multi(player, npc,
 						"Consider it done.",
 						"I don't think I can do that.");
 					if (doThis == 0) {
-						npcsay(player, n, "Good...run along then.",
+						npcsay(player, npc, "Good...run along then.",
 							"You stand around flapping your tongue chatting like an insane camel.");
 					} else if (doThis == 1) {
-						npcsay(player, n, "Hmm, well yes, I did consider that you might not be right for the job.",
+						npcsay(player, npc, "Hmm, well yes, I did consider that you might not be right for the job.",
 							"Be off with you then before I turn my men loose on you.");
-						int no = multi(player, n, false, //do not send over
+						int no = multi(player, npc, false, //do not send over
 							"I guess you can't fight your own battles then?",
 							"Ok, I'll move on.");
 						if (no == 0) {
-							say(player, n, "I guess you can't fight your own battles then?");
+							say(player, npc, "I guess you can't fight your own battles then?");
 							player.message("The men around you fall silent and the Captain silently fumes.");
 							delay(3);
 							player.message("All eyes turn to the Captain...");
-							npcsay(player, n, "Very well, if you're challenging me, let's get on with it!");
+							npcsay(player, npc, "Very well, if you're challenging me, let's get on with it!");
 							player.message("The guards gather around to watch the fight.");
-							n.setChasing(player);
+							npc.setChasing(player);
 						} else if (no == 1) {
-							say(player, n, "Ok, I'll be moving along then.");
-							npcsay(player, n, "Effendi, I think you'll find that is the ",
+							say(player, npc, "Ok, I'll be moving along then.");
+							npcsay(player, npc, "Effendi, I think you'll find that is the ",
 								"wisest decision you have made today.");
 						}
 					}
@@ -1005,31 +1005,31 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		}
 	}
 
-	private void slaveDialogue(Player player, Npc n, int cID) {
-		if (n.getID() == NpcId.MINING_SLAVE.id()) {
+	private void slaveDialogue(final Player player, final Npc npc, final int cID) {
+		if (npc.getID() == NpcId.MINING_SLAVE.id()) {
 			if (cID == -1) {
 				switch (player.getQuestStage(this)) {
 					case 0:
 					case 1:
-						npcsay(player, n, "You look like a new 'recruit'.",
+						npcsay(player, npc, "You look like a new 'recruit'.",
 							"How long have you been here?");
-						int menu = multi(player, n,
+						int menu = multi(player, npc,
 							"I've just arrived.",
 							"Oh, I've been here ages.");
 						if (menu == 0) {
-							npcsay(player, n, "Yeah, it looks like it as well.");
-							slaveDialogue(player, n, Slave.NEWRECRUIT);
+							npcsay(player, npc, "Yeah, it looks like it as well.");
+							slaveDialogue(player, npc, Slave.NEWRECRUIT);
 						} else if (menu == 1) {
-							npcsay(player, n, "That's funny, I haven't seen you around here before.",
+							npcsay(player, npc, "That's funny, I haven't seen you around here before.",
 								"You're clothes look too clean for you to have been here ages.");
-							int secondMenu = multi(player, n,
+							int secondMenu = multi(player, npc,
 								"Ok, you caught me out.",
 								"The guards allow me to clean my clothes.");
 							if (secondMenu == 0) {
-								npcsay(player, n, "Ah ha! I knew it! A new recruit then?");
-								slaveDialogue(player, n, Slave.NEWRECRUIT);
+								npcsay(player, npc, "Ah ha! I knew it! A new recruit then?");
+								slaveDialogue(player, npc, Slave.NEWRECRUIT);
 							} else if (secondMenu == 1) {
-								npcsay(player, n, "Oh, a special relationship with the guards heh?",
+								npcsay(player, npc, "Oh, a special relationship with the guards heh?",
 									"How very nice of them.",
 									"Maybe you could persuade them to let me out of here?");
 								mes("The slave swaggers of with a sarcastic smirk on his face.");
@@ -1038,19 +1038,19 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						}
 						break;
 					case 2:
-						npcsay(player, n, "Hello again, are you ready to unlock my chains?");
-						int opt = multi(player, n,
+						npcsay(player, npc, "Hello again, are you ready to unlock my chains?");
+						int opt = multi(player, npc,
 							"Yeah, Ok, let's give it a go.",
 							"I need to do some other things first.");
 						if (opt == 0) {
-							slaveDialogue(player, n, Slave.GIVEITAGO);
+							slaveDialogue(player, npc, Slave.GIVEITAGO);
 						} else if (opt == 1) {
-							npcsay(player, n, "Ok, fair enough, let me know when you want to give it another go.");
+							npcsay(player, npc, "Ok, fair enough, let me know when you want to give it another go.");
 						}
 						break;
 					case 3:
-						npcsay(player, n, "Do you have the Desert Clothes yet?");
-						necessaryStuffSlave(player, n);
+						npcsay(player, npc, "Do you have the Desert Clothes yet?");
+						necessaryStuffSlave(player, npc);
 						break;
 					case 4:
 					case 5:
@@ -1061,7 +1061,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case 10:
 					case -1:
 						if (player.getLocation().inTouristTrapCave()) {
-							npcsay(player, n, "Can't you see I'm busy?");
+							npcsay(player, npc, "Can't you see I'm busy?");
 							if ((!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
 								|| !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) && player.getQuestStage(this) != -1) {
 								player.message("A guard notices you and starts running after you.");
@@ -1091,19 +1091,19 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							}
 						} else if (player.getCarriedItems().hasCatalogID(ItemId.SLAVES_ROBE_BOTTOM.id(), Optional.of(false))
 							&& player.getCarriedItems().hasCatalogID(ItemId.SLAVES_ROBE_TOP.id(), Optional.of(false))) {
-							npcsay(player, n, "Not much to do here but mine all day long.");
+							npcsay(player, npc, "Not much to do here but mine all day long.");
 						} else {
-							npcsay(player, n, "Oh bother, I was caught by the guards again...",
+							npcsay(player, npc, "Oh bother, I was caught by the guards again...",
 								"Listen, if you can get me some Desert Clothes,",
 								" I'll trade you for my slaves clothes again..",
 								"Do you want to trade?");
-							int trade = multi(player, n,
+							int trade = multi(player, npc,
 								"Yes, I'll trade.",
 								"No thanks...");
 							if (trade == 0) {
-								necessaryStuffSlave(player, n);
+								necessaryStuffSlave(player, npc);
 							} else if (trade == 1) {
-								npcsay(player, n, "Ok, fair enough, let me know if you change your mind though.");
+								npcsay(player, npc, "Ok, fair enough, let me know if you change your mind though.");
 							}
 						}
 						break;
@@ -1111,15 +1111,15 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			switch (cID) {
 				case Slave.NEWRECRUIT:
-					npcsay(player, n, "It's a shame that I won't be around long enough to get to know you.",
+					npcsay(player, npc, "It's a shame that I won't be around long enough to get to know you.",
 						"I'm making a break for it today.",
 						"I have a plan to get out of here!",
 						"It's amazing in it's sophistication.");
-					int thirdMenu = multi(player, n,
+					int thirdMenu = multi(player, npc,
 						"What are those big wooden doors in the corner of the compound?",
 						"Oh yes, that sounds interesting.");
 					if (thirdMenu == 0) {
-						npcsay(player, n, "They lead to an underground mine,",
+						npcsay(player, npc, "They lead to an underground mine,",
 							"but you really don't want to go down there.",
 							"I've only seen slaves and guards go down there,",
 							"I never see the slaves come back up.",
@@ -1127,88 +1127,88 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("The slave smiles at you happily and then goes back to his work.");
 						delay(3);
 					} else if (thirdMenu == 1) {
-						npcsay(player, n, "Yes, it is actually.",
+						npcsay(player, npc, "Yes, it is actually.",
 							"I have all the details figured out except for one.");
-						int four = multi(player, n, false, //do not send over
+						int four = multi(player, npc, false, //do not send over
 							"What's that then?",
 							"Oh, that's a shame.");
 						if (four == 0) {
-							say(player, n, "What's that then?");
+							say(player, npc, "What's that then?");
 							mes("The slave shakes his arms and the chains rattle loudly.");
 							delay(3);
-							npcsay(player, n, "These bracelets, I can't seem to get them off.",
+							npcsay(player, npc, "These bracelets, I can't seem to get them off.",
 								"If I could get them off, I'd be able to climb my way",
 								"out of here.");
-							int five = multi(player, n,
+							int five = multi(player, npc,
 								"I can try to undo them for you.",
 								"That's ridiculous, you're talking rubbish.");
 							if (five == 0) {
-								slaveDialogue(player, n, Slave.UNDOTHEM);
+								slaveDialogue(player, npc, Slave.UNDOTHEM);
 							} else if (five == 1) {
-								npcsay(player, n, "No, it's true, I can make a break for it",
+								npcsay(player, npc, "No, it's true, I can make a break for it",
 									"If I can just get these bracelets off.");
-								int six = multi(player, n,
+								int six = multi(player, npc,
 									"Good luck!",
 									"I can try to undo them for you.");
 								if (six == 0) {
-									npcsay(player, n, "Thanks...same to you.");
+									npcsay(player, npc, "Thanks...same to you.");
 								} else if (six == 1) {
-									slaveDialogue(player, n, Slave.UNDOTHEM);
+									slaveDialogue(player, npc, Slave.UNDOTHEM);
 								}
 							}
 						} else if (four == 1) {
-							say(player, n, "Oh, that's a shame...",
+							say(player, npc, "Oh, that's a shame...",
 								"Still, 'worse things happen at sea right?'");
-							npcsay(player, n, "You've obviously never worked as a slave",
+							npcsay(player, npc, "You've obviously never worked as a slave",
 								"...in a mining camp...",
 								"...in the middle of the desert");
-							say(player, n, "Well I suppose I'd better be getting on my way now...");
+							say(player, npc, "Well I suppose I'd better be getting on my way now...");
 							player.message("The slave nods in agreement and goes back to work.");
 						}
 					}
 					break;
 				case Slave.UNDOTHEM:
-					npcsay(player, n, "Really, that would be great...");
+					npcsay(player, npc, "Really, that would be great...");
 					mes("The slave looks at you strangely.");
 					delay(3);
-					npcsay(player, n, "Hang on a minute...I suppose you want something for doing this?",
+					npcsay(player, npc, "Hang on a minute...I suppose you want something for doing this?",
 						"The last time I did a trade in this place,",
 						"I nearly lost the shirt from my back!");
-					int trade = multi(player, n, false, //do not send over
+					int trade = multi(player, npc, false, //do not send over
 						"It's funny you should say that...",
 						"That sounds awful.");
 					if (trade == 0) {
-						say(player, n, "It's funny you should say that actually.");
+						say(player, npc, "It's funny you should say that actually.");
 						mes("The slave looks at you blankly.");
 						delay(3);
-						npcsay(player, n, "Yeah, go on!");
-						say(player, n, "If I can get the chains off, you have to give me something, ok?");
-						npcsay(player, n, "Sure, what do you want?");
-						say(player, n, "I want your clothes!",
+						npcsay(player, npc, "Yeah, go on!");
+						say(player, npc, "If I can get the chains off, you have to give me something, ok?");
+						npcsay(player, npc, "Sure, what do you want?");
+						say(player, npc, "I want your clothes!",
 							"I can dress like a slave and gain access to the mine area to scout it out.");
-						npcsay(player, n, "Blimey! You're either incredibly brave or incredibly stupid.",
+						npcsay(player, npc, "Blimey! You're either incredibly brave or incredibly stupid.",
 							"But what would I wear if you take my clothes?",
 							"Get me some nice desert clothes and I'll think about it?",
 							"Do you still want to try and undo the locks for me?");
 						player.updateQuestStage(this, 2);
 						player.getCache().remove("first_kill_captn");
 						player.getCache().remove("mercenary_bet");
-						int go = multi(player, n,
+						int go = multi(player, npc,
 							"Yeah, Ok, let's give it a go.",
 							"I need to do some other things first.");
 						if (go == 0) {
-							slaveDialogue(player, n, Slave.GIVEITAGO);
+							slaveDialogue(player, npc, Slave.GIVEITAGO);
 						} else if (go == 1) {
-							npcsay(player, n, "Ok, fair enough, let me know when you want to give it another go.");
+							npcsay(player, npc, "Ok, fair enough, let me know when you want to give it another go.");
 						}
 					} else if (trade == 1) {
-						say(player, n, "That sounds awful.");
-						npcsay(player, n, "Yeah, bunch of no hopers, tried to rob me blind.",
+						say(player, npc, "That sounds awful.");
+						npcsay(player, npc, "Yeah, bunch of no hopers, tried to rob me blind.",
 							"But I guess that's what you get when you deal with convicts.");
 					}
 					break;
 				case Slave.GIVEITAGO:
-					npcsay(player, n, "Great!");
+					npcsay(player, npc, "Great!");
 					mes("You use some nearby bits of wood and wire to try and pick the lock.");
 					delay(3);
 					int attempt1 = DataConversions.random(0, 1);
@@ -1231,7 +1231,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								if (mercenary != null) {
 									mes("A nearby guard spots you!");
 									delay(3);
-									npcsay(player, n, "Oh oh!");
+									npcsay(player, npc, "Oh oh!");
 									npcsay(player, mercenary, "Oi, what are you two doing?");
 									mercenary.setChasing(player);
 									mes("The Guards search you!");
@@ -1244,17 +1244,17 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 									player.teleport(89, 801);
 								}
 							} else {
-								succeedFreeSlave(player, n);
+								succeedFreeSlave(player, npc);
 							}
 						} else if (anotherGo == 1) {
 							mes("You decide to try something else.");
 							delay(3);
-							npcsay(player, n, "Are you givin in already?");
-							say(player, n, "I just want to try something else.");
-							npcsay(player, n, "Ok, if you want to try again, let me know.");
+							npcsay(player, npc, "Are you givin in already?");
+							say(player, npc, "I just want to try something else.");
+							npcsay(player, npc, "Ok, if you want to try again, let me know.");
 						}
 					} else {
-						succeedFreeSlave(player, n);
+						succeedFreeSlave(player, npc);
 					}
 
 					break;
@@ -1262,22 +1262,22 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		}
 	}
 
-	private void succeedFreeSlave(Player player, Npc n) {
+	private void succeedFreeSlave(final Player player, final Npc npc) {
 		mes("You hear a satisfying 'click' as you tumble the lock mechanism.");
 		delay(3);
-		npcsay(player, n, "Great! You did it!");
+		npcsay(player, npc, "Great! You did it!");
 
-		necessaryStuffSlave(player, n);
+		necessaryStuffSlave(player, npc);
 	}
 
-	private void necessaryStuffSlave(Player player, Npc n) {
+	private void necessaryStuffSlave(final Player player, final Npc npc) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "Great! You have the Desert Clothes!");
+			npcsay(player, npc, "Great! You have the Desert Clothes!");
 			mes("The slave starts getting undressed right in front of you.");
 			delay(3);
-			npcsay(player, n, "Ok, here's the clothes, I won't need them anymore.");
+			npcsay(player, npc, "Ok, here's the clothes, I won't need them anymore.");
 			mes("The slave gives you his dirty, flea infested robe.");
 			delay(3);
 			mes("The slave gives you his muddy, sweat soaked shirt.");
@@ -1287,7 +1287,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			player.getCarriedItems().remove(new Item(ItemId.DESERT_SHIRT.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.SLAVES_ROBE_TOP.id()));
 			player.getCarriedItems().remove(new Item(ItemId.DESERT_BOOTS.id()));
-			Npc newSlave = changenpc(n, NpcId.ESCAPING_MINING_SLAVE.id(), true);
+			Npc newSlave = changenpc(npc, NpcId.ESCAPING_MINING_SLAVE.id(), true);
 			delay(2);
 			delayedReturnSlave(player, newSlave);
 			npcsay(player, newSlave, "Right, I'm off! Good luck!");
@@ -1300,31 +1300,31 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		if (!player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "I need a desert shirt, robe and boots if you want these clothes off me.");
+			npcsay(player, npc, "I need a desert shirt, robe and boots if you want these clothes off me.");
 		} else if (!player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "I need desert robe and shirt if you want these clothes off me.");
+			npcsay(player, npc, "I need desert robe and shirt if you want these clothes off me.");
 		} else if (!player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "I need a desert shirt and boots if you want these clothes off me.");
+			npcsay(player, npc, "I need a desert shirt and boots if you want these clothes off me.");
 		} else if (player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "I need desert robe and boots if you want these clothes off me.");
+			npcsay(player, npc, "I need desert robe and boots if you want these clothes off me.");
 		} else if (!player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "I need a desert shirt if you want these clothes off me.");
+			npcsay(player, npc, "I need a desert shirt if you want these clothes off me.");
 		} else if (player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "I need desert robe if you want these clothes off me.");
+			npcsay(player, npc, "I need desert robe if you want these clothes off me.");
 		} else if (player.getCarriedItems().hasCatalogID(ItemId.DESERT_SHIRT.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& !player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
-			npcsay(player, n, "I need desert boots if you want these clothes off me.");
+			npcsay(player, npc, "I need desert boots if you want these clothes off me.");
 		}
 
 		if (player.getQuestStage(this) == 2)
@@ -1337,82 +1337,82 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			"See ya!");
 	}
 
-	private void mercenaryInsideDialogue(Player player, Npc n, int cID) {
-		if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+	private void mercenaryInsideDialogue(final Player player, final Npc npc, final int cID) {
+		if (npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			if (cID == -1) {
 				if (player.getLocation().inTouristTrapCave()) {
 					if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
 						|| !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
 						player.message("This guard looks as if he's been down here a while.");
-						npcsay(player, n, "Hey, you're no slave!",
+						npcsay(player, npc, "Hey, you're no slave!",
 							"What are you doing down here?");
-						n.setChasing(player);
+						npc.setChasing(player);
 						if (player.getQuestStage(this) != -1) {
 							mes("More guards rush to catch you.");
 							delay(3);
 							mes("You are roughed up a bit by the guards as you're manhandlded to a cell.");
 							delay(3);
-							npcsay(player, n, "Into the cell you go! I hope this teaches you a lesson.");
+							npcsay(player, npc, "Into the cell you go! I hope this teaches you a lesson.");
 							player.teleport(89, 801);
 						}
 						return;
 					}
 					if (player.getQuestStage(this) >= 9 || player.getQuestStage(this) == -1) {
 						player.message("This guard looks as if he's been down here a while.");
-						npcsay(player, n, "That pineapple was just delicious, many thanks.",
+						npcsay(player, npc, "That pineapple was just delicious, many thanks.",
 							"I don't suppose you could get me another?");
 						player.message("The guard looks at you pleadingly.");
 						return;
 					}
 					player.message("This guard looks as if he's been down here a while.");
-					npcsay(player, n, "Yeah, what do you want?");
-					int mama = multi(player, n,
+					npcsay(player, npc, "Yeah, what do you want?");
+					int mama = multi(player, npc,
 						"Er nothing really.",
 						"I'd like to mine in a different area.");
 					if (mama == 0) {
-						npcsay(player, n, "Ok...so move along and get on with your work.");
+						npcsay(player, npc, "Ok...so move along and get on with your work.");
 					} else if (mama == 1) {
-						npcsay(player, n, "Oh, so you want to work in another area of the mine heh?");
+						npcsay(player, npc, "Oh, so you want to work in another area of the mine heh?");
 						mes("The guard seems quite pleased with his rhetorical question.");
 						delay(3);
-						npcsay(player, n, "Well, I can understand that, a change is as good as a rest they say.");
-						int menu = multi(player, n,
+						npcsay(player, npc, "Well, I can understand that, a change is as good as a rest they say.");
+						int menu = multi(player, npc,
 							"Huh, fat chance of a rest for me.",
 							"Yes sir, you're quite right sir.");
 						if (menu == 0) {
-							npcsay(player, n, "You miserable whelp!",
+							npcsay(player, npc, "You miserable whelp!",
 								"Get back to work!");
 							player.damage(2);
 							player.message("The guard cuffs you around head.");
 						} else if (menu == 1) {
-							npcsay(player, n, "Of course I'm right...",
+							npcsay(player, npc, "Of course I'm right...",
 								"And what goes around comes around as they say.",
 								"And it's been absolutely ages since I've had anything different to eat.",
 								"What I wouldn't give for some ripe and juicy pineapple for a change.",
 								"And those Tenti's have the best pineapple in this entire area.");
 							player.message("The guard winks at you.");
-							npcsay(player, n, "I'm sure you get my meaning...");
-							int pus = multi(player, n,
+							npcsay(player, npc, "I'm sure you get my meaning...");
+							int pus = multi(player, npc,
 								"How am I going to get some pineapples around here?",
 								"Yes sir, we understand each other perfectly.",
 								"What are the 'Tenti's'?");
 							if (pus == 0) {
-								mercenaryInsideDialogue(player, n, MercenaryInside.PINEAPPLES);
+								mercenaryInsideDialogue(player, npc, MercenaryInside.PINEAPPLES);
 							} else if (pus == 1) {
-								mercenaryInsideDialogue(player, n, MercenaryInside.UNDERSTAND);
+								mercenaryInsideDialogue(player, npc, MercenaryInside.UNDERSTAND);
 							} else if (pus == 2) {
-								npcsay(player, n, "Well, you really don't come from around here do you?",
+								npcsay(player, npc, "Well, you really don't come from around here do you?",
 									"The tenti's are what we call the nomadic people west of here.",
 									"They live in tents, so we call them the tenti's",
 									"They have great pineapples!",
 									"I'm sure you get my meaning...");
-								int pus2 = multi(player, n,
+								int pus2 = multi(player, npc,
 									"How am I going to get some pineapples around here?",
 									"Yes sir, we understand each other perfectly.");
 								if (pus2 == 0) {
-									mercenaryInsideDialogue(player, n, MercenaryInside.PINEAPPLES);
+									mercenaryInsideDialogue(player, npc, MercenaryInside.PINEAPPLES);
 								} else if (pus2 == 1) {
-									mercenaryInsideDialogue(player, n, MercenaryInside.UNDERSTAND);
+									mercenaryInsideDialogue(player, npc, MercenaryInside.UNDERSTAND);
 								}
 							}
 						}
@@ -1420,14 +1420,14 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					return;
 				}
 				player.message("This guard looks as if he's been in the sun for a while.");
-				npcsay(player, n, "Move along now...");
+				npcsay(player, npc, "Move along now...");
 			}
 			switch (cID) {
 				case MercenaryInside.PINEAPPLES:
 					if (player.getQuestStage(this) == 4) {
 						player.updateQuestStage(this, 5);
 					}
-					npcsay(player, n, "Well, that's not my problem is it?",
+					npcsay(player, npc, "Well, that's not my problem is it?",
 						"Also, I know that you slaves trade your items down here.",
 						"I'm sure that if you're resourceful enough, you'll come up with the goods.",
 						"Now, get along and do some work, before we're both in for it.");
@@ -1436,7 +1436,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					if (player.getQuestStage(this) == 4) {
 						player.updateQuestStage(this, 5);
 					}
-					npcsay(player, n, "Ok, good then.");
+					npcsay(player, npc, "Ok, good then.");
 					player.message("The guard moves back to his post and winks at you knowingly.");
 					break;
 
@@ -1444,32 +1444,32 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		}
 	}
 
-	private void bedabinNomadDialogue(Player player, Npc n, int cID) {
-		if (n.getID() == NpcId.BEDABIN_NOMAD.id()) {
+	private void bedabinNomadDialogue(final Player player, final Npc npc, final int cID) {
+		if (npc.getID() == NpcId.BEDABIN_NOMAD.id()) {
 			if (cID == -1) {
-				npcsay(player, n, "Hello Effendi!",
+				npcsay(player, npc, "Hello Effendi!",
 					"How can I help you?");
-				int menu = multi(player, n, false, //do not send over
+				int menu = multi(player, npc, false, //do not send over
 					"What is this place?",
 					"Where is the Shantay Pass?",
 					"Buy a jug of water - 5 Gold Pieces.",
 					"Buy a full waterskin - 20 Gold Pieces.",
 					"Buy a bucket of water - 20 Gold Pieces.");
 				if (menu == 0) {
-					say(player, n, "What is this place?");
-					bedabinNomadDialogue(player, n, BedabinNomad.PLACE);
+					say(player, npc, "What is this place?");
+					bedabinNomadDialogue(player, npc, BedabinNomad.PLACE);
 				} else if (menu == 1) {
-					say(player, n, "Where is the Shantay Pass.");
-					bedabinNomadDialogue(player, n, BedabinNomad.SHANTAYPASS);
+					say(player, npc, "Where is the Shantay Pass.");
+					bedabinNomadDialogue(player, npc, BedabinNomad.SHANTAYPASS);
 				} else if (menu == 2) {
-					say(player, n, "Buy a jug of water - 5 Gold Pieces.");
-					bedabinNomadDialogue(player, n, BedabinNomad.JUGOFWATER);
+					say(player, npc, "Buy a jug of water - 5 Gold Pieces.");
+					bedabinNomadDialogue(player, npc, BedabinNomad.JUGOFWATER);
 				} else if (menu == 3) {
-					say(player, n, "Buy a full waterskin - 25 Gold Pieces.");
-					bedabinNomadDialogue(player, n, BedabinNomad.FULLWATERSKIN);
+					say(player, npc, "Buy a full waterskin - 25 Gold Pieces.");
+					bedabinNomadDialogue(player, npc, BedabinNomad.FULLWATERSKIN);
 				} else if (menu == 4) {
-					say(player, n, "Buy a bucket of water - 20 Gold Pieces.");
-					bedabinNomadDialogue(player, n, BedabinNomad.BUCKETOFWATER);
+					say(player, npc, "Buy a bucket of water - 20 Gold Pieces.");
+					bedabinNomadDialogue(player, npc, BedabinNomad.BUCKETOFWATER);
 				}
 			}
 			switch (cID) {
@@ -1478,7 +1478,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("You hand over 20 gold pieces.");
 						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
-						npcsay(player, n, "Very well Effendi!");
+						npcsay(player, npc, "Very well Effendi!");
 						mes("You recieve a bucket of water.");
 						delay(3);
 						give(player, ItemId.BUCKET_OF_WATER.id(), 1);
@@ -1486,23 +1486,23 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("Sorry Effendi, you don't seem to have the money.");
 						delay(3);
 					}
-					npcsay(player, n, "How can I help you?");
-					int newMenu = multi(player, n,
+					npcsay(player, npc, "How can I help you?");
+					int newMenu = multi(player, npc,
 						"What is this place?",
 						"Where is the Shantay Pass.",
 						"Buy a jug of water - 5 Gold Pieces.",
 						"Buy a full waterskin - 25 Gold Pieces.",
 						"Buy a bucket of water - 20 Gold Pieces.");
 					if (newMenu == 0) {
-						bedabinNomadDialogue(player, n, BedabinNomad.PLACE);
+						bedabinNomadDialogue(player, npc, BedabinNomad.PLACE);
 					} else if (newMenu == 1) {
-						bedabinNomadDialogue(player, n, BedabinNomad.SHANTAYPASS);
+						bedabinNomadDialogue(player, npc, BedabinNomad.SHANTAYPASS);
 					} else if (newMenu == 2) {
-						bedabinNomadDialogue(player, n, BedabinNomad.JUGOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.JUGOFWATER);
 					} else if (newMenu == 3) {
-						bedabinNomadDialogue(player, n, BedabinNomad.FULLWATERSKIN);
+						bedabinNomadDialogue(player, npc, BedabinNomad.FULLWATERSKIN);
 					} else if (newMenu == 4) {
-						bedabinNomadDialogue(player, n, BedabinNomad.BUCKETOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.BUCKETOFWATER);
 					}
 
 					break;
@@ -1511,7 +1511,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("You hand over 25 gold pieces.");
 						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 25));
-						npcsay(player, n, "Very well Effendi!");
+						npcsay(player, npc, "Very well Effendi!");
 						mes("You recieve a full waterskin.");
 						delay(3);
 						give(player, ItemId.FULL_WATER_SKIN.id(), 1);
@@ -1519,23 +1519,23 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("Sorry Effendi, you don't seem to have the money.");
 						delay(3);
 					}
-					npcsay(player, n, "How can I help you?");
-					int option = multi(player, n,
+					npcsay(player, npc, "How can I help you?");
+					int option = multi(player, npc,
 						"What is this place?",
 						"Where is the Shantay Pass.",
 						"Buy a jug of water - 5 Gold Pieces.",
 						"Buy a full waterskin - 25 Gold Pieces.",
 						"Buy a bucket of water - 20 Gold Pieces.");
 					if (option == 0) {
-						bedabinNomadDialogue(player, n, BedabinNomad.PLACE);
+						bedabinNomadDialogue(player, npc, BedabinNomad.PLACE);
 					} else if (option == 1) {
-						bedabinNomadDialogue(player, n, BedabinNomad.SHANTAYPASS);
+						bedabinNomadDialogue(player, npc, BedabinNomad.SHANTAYPASS);
 					} else if (option == 2) {
-						bedabinNomadDialogue(player, n, BedabinNomad.JUGOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.JUGOFWATER);
 					} else if (option == 3) {
-						bedabinNomadDialogue(player, n, BedabinNomad.FULLWATERSKIN);
+						bedabinNomadDialogue(player, npc, BedabinNomad.FULLWATERSKIN);
 					} else if (option == 4) {
-						bedabinNomadDialogue(player, n, BedabinNomad.BUCKETOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.BUCKETOFWATER);
 					}
 					break;
 				case BedabinNomad.JUGOFWATER:
@@ -1543,7 +1543,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("You hand over 5 gold pieces.");
 						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-						npcsay(player, n, "Very well Effendi!");
+						npcsay(player, npc, "Very well Effendi!");
 						mes("You recieve a jug full or water.");
 						delay(3);
 						give(player, ItemId.JUG_OF_WATER.id(), 1);
@@ -1551,218 +1551,218 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("Sorry Effendi, you don't seem to have the money.");
 						delay(3);
 					}
-					npcsay(player, n, "How can I help you?");
-					int optiony = multi(player, n,
+					npcsay(player, npc, "How can I help you?");
+					int optiony = multi(player, npc,
 						"What is this place?",
 						"Where is the Shantay Pass.",
 						"Buy a jug of water - 5 Gold Pieces.",
 						"Buy a full waterskin - 25 Gold Pieces.",
 						"Buy a bucket of water - 20 Gold Pieces.");
 					if (optiony == 0) {
-						bedabinNomadDialogue(player, n, BedabinNomad.PLACE);
+						bedabinNomadDialogue(player, npc, BedabinNomad.PLACE);
 					} else if (optiony == 1) {
-						bedabinNomadDialogue(player, n, BedabinNomad.SHANTAYPASS);
+						bedabinNomadDialogue(player, npc, BedabinNomad.SHANTAYPASS);
 					} else if (optiony == 2) {
-						bedabinNomadDialogue(player, n, BedabinNomad.JUGOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.JUGOFWATER);
 					} else if (optiony == 3) {
-						bedabinNomadDialogue(player, n, BedabinNomad.FULLWATERSKIN);
+						bedabinNomadDialogue(player, npc, BedabinNomad.FULLWATERSKIN);
 					} else if (optiony == 4) {
-						bedabinNomadDialogue(player, n, BedabinNomad.BUCKETOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.BUCKETOFWATER);
 					}
 					break;
 				case BedabinNomad.PLACE:
-					npcsay(player, n, "This is the camp of the Bedabin.",
+					npcsay(player, npc, "This is the camp of the Bedabin.",
 						"Talk to our leader, Al Shabim, he'll be happy to chat.");
 					player.message("We can sell you very reasonably priced water...");
-					npcsay(player, n, "How can I help you?");
-					int opt = multi(player, n,
+					npcsay(player, npc, "How can I help you?");
+					int opt = multi(player, npc,
 						"Where is the Shantay Pass.",
 						"Buy a jug of water - 5 Gold Pieces.",
 						"Buy a full waterskin - 25 Gold Pieces.",
 						"Buy a bucket of water - 20 Gold Pieces.");
 					if (opt == 0) {
-						bedabinNomadDialogue(player, n, BedabinNomad.SHANTAYPASS);
+						bedabinNomadDialogue(player, npc, BedabinNomad.SHANTAYPASS);
 					} else if (opt == 1) {
-						bedabinNomadDialogue(player, n, BedabinNomad.JUGOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.JUGOFWATER);
 					} else if (opt == 2) {
-						bedabinNomadDialogue(player, n, BedabinNomad.FULLWATERSKIN);
+						bedabinNomadDialogue(player, npc, BedabinNomad.FULLWATERSKIN);
 					} else if (opt == 3) {
-						bedabinNomadDialogue(player, n, BedabinNomad.BUCKETOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.BUCKETOFWATER);
 					}
 
 					break;
 				case BedabinNomad.SHANTAYPASS:
-					npcsay(player, n, "It is North East of here effendi, across the trackless desert.",
+					npcsay(player, npc, "It is North East of here effendi, across the trackless desert.",
 						"It will be a thirsty trip, can I interest you in a drink?",
 						"How can I help you?");
-					int options = multi(player, n,
+					int options = multi(player, npc,
 						"Buy a jug of water - 5 Gold Pieces.",
 						"What is this place?",
 						"Buy a full waterskin - 25 Gold Pieces.",
 						"Buy a bucket of water - 20 Gold Pieces.");
 					if (options == 0) {
-						bedabinNomadDialogue(player, n, BedabinNomad.JUGOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.JUGOFWATER);
 					} else if (options == 1) {
-						bedabinNomadDialogue(player, n, BedabinNomad.PLACE);
+						bedabinNomadDialogue(player, npc, BedabinNomad.PLACE);
 					} else if (options == 2) {
-						bedabinNomadDialogue(player, n, BedabinNomad.FULLWATERSKIN);
+						bedabinNomadDialogue(player, npc, BedabinNomad.FULLWATERSKIN);
 					} else if (options == 3) {
-						bedabinNomadDialogue(player, n, BedabinNomad.BUCKETOFWATER);
+						bedabinNomadDialogue(player, npc, BedabinNomad.BUCKETOFWATER);
 					}
 					break;
 			}
 		}
 	}
 
-	private static void alShabimDialogue(Player player, Npc n, int cID) {
-		if (n.getID() == NpcId.AL_SHABIM.id()) {
+	private static void alShabimDialogue(final Player player, final Npc npc, final int cID) {
+		if (npc.getID() == NpcId.AL_SHABIM.id()) {
 			if (cID == -1) {
 				switch (player.getQuestStage(Quests.TOURIST_TRAP)) {
 					case 0:
-						npcsay(player, n, "Hello Effendi!",
+						npcsay(player, npc, "Hello Effendi!",
 							"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
-						int menu = multi(player, n,
+						int menu = multi(player, npc,
 							"What is this place?",
 							"Goodbye!");
 						if (menu == 0) {
-							alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+							alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 						} else if (menu == 1) {
-							npcsay(player, n, "Very well, good day Effendi!");
+							npcsay(player, npc, "Very well, good day Effendi!");
 						}
 						break;
 					case 1:
 					case 2:
 					case 3:
 					case 4:
-						npcsay(player, n, "Hello Effendi!",
+						npcsay(player, npc, "Hello Effendi!",
 							"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
 						int menuO;
 						if (player.getCache().hasKey("find_al_bhasim") &&
 							!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
-							menuO = multi(player, n,
+							menuO = multi(player, npc,
 								"I am looking for Al Zaba Bhasim.",
 								"What is this place?");
 							if (menuO == 0) {
-								npcsay(player, n, "Huh! You have been talking to the guards at the mining camp.",
+								npcsay(player, npc, "Huh! You have been talking to the guards at the mining camp.",
 									"Or worse, that cowardly mercenary captain.",
 									"Al Zaba Bhasim does not exist, he is a figment of their imagination!",
 									"Go back and tell this captain that if he wants to find this man",
 									"he should search for him personally.",
 									"See how much of his own time he would like to waste.");
 							} else if (menuO == 1) {
-								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+								alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 							}
 						} else {
-							menuO = multi(player, n,
+							menuO = multi(player, npc,
 								"What is this place?",
 								"Goodbye!");
 							if (menuO == 0) {
-								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+								alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 							} else if (menuO == 1) {
-								npcsay(player, n, "Very well, good day Effendi!");
+								npcsay(player, npc, "Very well, good day Effendi!");
 							}
 						}
 						break;
 					case 5:
-						npcsay(player, n, "Hello Effendi!",
+						npcsay(player, npc, "Hello Effendi!",
 							"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
-						int option = multi(player, n,
+						int option = multi(player, npc,
 							"I am looking for a pineapple.",
 							"What is this place?");
 						if (option == 0) {
-							npcsay(player, n, "Oh yes, well that is interesting.",
+							npcsay(player, npc, "Oh yes, well that is interesting.",
 								"Our sweet pineapples are renowned throughout the whole of Kharid !",
 								"And I'll give you one if you do me a favour?");
-							say(player, n, "Yes ?");
-							npcsay(player, n, "Captain Siad at the mining camp is holding some secret information.",
+							say(player, npc, "Yes ?");
+							npcsay(player, npc, "Captain Siad at the mining camp is holding some secret information.",
 								"It is very important to us and we would like you to get it for us.",
 								"It gives details of an interesting, yet ancient weapon.",
 								"We would gladly share this information with you.",
 								"All you have to do is gain access to his private room upstairs.",
 								"We have a key for the chest that contains this information.",
 								"Are you interested in our deal?");
-							int opt = multi(player, n,
+							int opt = multi(player, npc,
 								"Yes, I'm interested.",
 								"Not at the moment.");
 							if (opt == 0) {
-								npcsay(player, n, "That's great Effendi!",
+								npcsay(player, npc, "That's great Effendi!",
 									"Here is a copy of the key that should give you access to the chest.",
 									"Bring us back the plans inside the chest, they should be sealed.",
 									"All haste to you Effendi!");
 								give(player, ItemId.BEDOBIN_COPY_KEY.id(), 1);
 								player.updateQuestStage(Quests.TOURIST_TRAP, 6);
 							} else if (opt == 1) {
-								npcsay(player, n, "Very well Effendi!");
+								npcsay(player, npc, "Very well Effendi!");
 							}
 						} else if (option == 1) {
-							alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+							alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 						}
 						break;
 					case 6:
 					case 7:
-						npcsay(player, n, "Hello Effendi!");
+						npcsay(player, npc, "Hello Effendi!");
 						if (player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
-							alShabimDialogue(player, n, AlShabim.MADE_WEAPON);
+							alShabimDialogue(player, npc, AlShabim.MADE_WEAPON);
 						} else if (player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))
 							&& !player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
-							alShabimDialogue(player, n, AlShabim.HAVE_PLANS);
+							alShabimDialogue(player, npc, AlShabim.HAVE_PLANS);
 						} else if (player.getCarriedItems().hasCatalogID(ItemId.BEDOBIN_COPY_KEY.id(), Optional.of(false))
 							&& !player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
-							npcsay(player, n, "How are things going Effendi?");
-							int dede = multi(player, n,
+							npcsay(player, npc, "How are things going Effendi?");
+							int dede = multi(player, npc,
 								"Very well thanks!",
 								"Not so good actually!",
 								"What is this place?",
 								"Goodbye!");
 							if (dede == 0) {
 								if (!player.getCache().hasKey("tech_plans")) {
-									npcsay(player, n, "Well, hurry along and get those plans for me.");
+									npcsay(player, npc, "Well, hurry along and get those plans for me.");
 								} else {
-									npcsay(player, n, "I really need those plans!");
+									npcsay(player, npc, "I really need those plans!");
 								}
 							} else if (dede == 1) {
 								if (!player.getCache().hasKey("tech_plans")) {
-									npcsay(player, n, "Well, first you need to get those plans from Captain Siad.");
+									npcsay(player, npc, "Well, first you need to get those plans from Captain Siad.");
 								} else {
-									npcsay(player, n, "Bring me the plans from Captain Siad's office...they're in a chest.");
+									npcsay(player, npc, "Bring me the plans from Captain Siad's office...they're in a chest.");
 								}
 							} else if (dede == 2) {
-								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+								alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 							} else if (dede == 3) {
-								npcsay(player, n, "Very well, good day Effendi!");
+								npcsay(player, npc, "Very well, good day Effendi!");
 							}
 						} else if (player.getCache().hasKey("tech_plans")) {
-							int keke = multi(player, n,
+							int keke = multi(player, npc,
 								"I've lost the key and the plans!",
 								"What is this place?",
 								"Goodbye!");
 							if (keke == 0) {
-								npcsay(player, n, "How very careless of you!");
+								npcsay(player, npc, "How very careless of you!");
 								player.message("Al Shabim thinks for a moment.");
-								npcsay(player, n, "The Captain may have some new plans drawn up.",
+								npcsay(player, npc, "The Captain may have some new plans drawn up.",
 									"Go back and see if you can collect them.",
 									"Here is the key you'll need for the chest!");
 								player.message("Al Shabim gives you another key.");
 								give(player, ItemId.BEDOBIN_COPY_KEY.id(), 1);
 							} else if (keke == 1) {
-								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+								alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 							} else if (keke == 2) {
-								npcsay(player, n, "Very well, good day Effendi!");
+								npcsay(player, npc, "Very well, good day Effendi!");
 							}
 						} else {
-							int kaka = multi(player, n,
+							int kaka = multi(player, npc,
 								"I've lost the key!",
 								"What is this place?",
 								"Goodbye!");
 							if (kaka == 0) {
-								npcsay(player, n, "How very careless of you!",
+								npcsay(player, npc, "How very careless of you!",
 									"Here is another key, don't lose it this time !");
 								player.message("Al Shabim gives you another key.");
 								give(player, ItemId.BEDOBIN_COPY_KEY.id(), 1);
 							} else if (kaka == 1) {
-								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+								alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 							} else if (kaka == 2) {
-								npcsay(player, n, "Very well, good day Effendi!");
+								npcsay(player, npc, "Very well, good day Effendi!");
 							}
 						}
 						break;
@@ -1771,7 +1771,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case 10:
 					case -1:
 						if (player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_THROWING_DART.id(), Optional.of(false))) {
-							npcsay(player, n, "Hello Effendi!",
+							npcsay(player, npc, "Hello Effendi!",
 								"Wonderful, I see you have made the new weapon!",
 								"Where did you get this from Effendi!",
 								"I'll have to confiscate this for your own safety!");
@@ -1779,45 +1779,45 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							return;
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
-							npcsay(player, n, "Hello Effendi!");
-							alShabimDialogue(player, n, AlShabim.HAVE_PLANS);
+							npcsay(player, npc, "Hello Effendi!");
+							alShabimDialogue(player, npc, AlShabim.HAVE_PLANS);
 							return;
 						}
 						if (player.getQuestStage(Quests.TOURIST_TRAP) == 8) {
-							npcsay(player, n, "Hello Effendi!",
+							npcsay(player, npc, "Hello Effendi!",
 								"Many thanks with your help previously Effendi!");
 							if (player.getCarriedItems().hasCatalogID(ItemId.TENTI_PINEAPPLE.id(), Optional.of(false))) {
-								int mopt = multi(player, n,
+								int mopt = multi(player, npc,
 									"What is this place?",
 									"Goodbye!");
 								if (mopt == 0) {
-									alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+									alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 								} else if (mopt == 1) {
-									npcsay(player, n, "Very well, good day Effendi!");
+									npcsay(player, npc, "Very well, good day Effendi!");
 								}
 							} else {
-								int mopt = multi(player, n,
+								int mopt = multi(player, npc,
 									"I am looking for a pineapple.",
 									"What is this place?");
 								if (mopt == 0) {
-									npcsay(player, n, "Here is another pineapple, try not to lose this one.");
+									npcsay(player, npc, "Here is another pineapple, try not to lose this one.");
 									player.message("Al Shabim gives you another pineapple.");
 									give(player, ItemId.TENTI_PINEAPPLE.id(), 1);
 								} else if (mopt == 1) {
-									alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+									alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 								}
 							}
 						} else {
-							npcsay(player, n, "Hello Effendi!",
+							npcsay(player, npc, "Hello Effendi!",
 								"Many thanks with your help previously Effendi!",
 								"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
-							int mopt = multi(player, n,
+							int mopt = multi(player, npc,
 								"What is this place?",
 								"Goodbye!");
 							if (mopt == 0) {
-								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+								alShabimDialogue(player, npc, AlShabim.WHATISTHISPLACE);
 							} else if (mopt == 1) {
-								npcsay(player, n, "Very well, good day Effendi!");
+								npcsay(player, npc, "Very well, good day Effendi!");
 							}
 						}
 						break;
@@ -1825,45 +1825,45 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			switch (cID) {
 				case AlShabim.WHATISTHISPLACE:
-					npcsay(player, n, "This is the home of the Bedabin, ",
+					npcsay(player, npc, "This is the home of the Bedabin, ",
 						"We're a peaceful tribe of desert dwellers.",
 						"Some idiots call us 'Tenti's', a childish name borne of ignorance.",
 						"We're renowned for surviving in the harshest desert climate.",
 						"We also grow the 'Bedabin ambrosia.'...",
 						"A pineapple of such delicious sumptiousness that it defies description.",
 						"Take a look around our camp if you like!");
-					int menu = multi(player, n,
+					int menu = multi(player, npc,
 						"Ok Thanks!",
 						"What is there to do around here?");
 					if (menu == 0) {
-						npcsay(player, n, "Good day Effendi!");
+						npcsay(player, npc, "Good day Effendi!");
 					} else if (menu == 1) {
-						npcsay(player, n, "Well, we are all very busy most of the time tending to the pineapples.",
+						npcsay(player, npc, "Well, we are all very busy most of the time tending to the pineapples.",
 							"They are grown in a secret location.",
 							"To stop thieves from raiding our most precious prize.");
 					}
 					break;
 				case AlShabim.HAVE_PLANS:
-					npcsay(player, n, "Aha! I see you have the plans.",
+					npcsay(player, npc, "Aha! I see you have the plans.",
 						"This is great!",
 						"However, these plans do indeed look very technical",
 						"My people have further need of your skills.",
 						"If you can help us to manufacture this item,",
 						"we will share it's secret with you.",
 						"Does this deal interest you effendi?");
-					int tati = multi(player, n,
+					int tati = multi(player, npc,
 						"Yes, I'm very interested.",
 						"No, sorry.");
 					if (tati == 0) {
 						if (player.getCarriedItems().hasCatalogID(ItemId.BRONZE_BAR.id(), Optional.of(false))
 							&& ifheld(player, ItemId.FEATHER.id(), 10)) {
-							npcsay(player, n, "Aha! I see you have the items we need!",
+							npcsay(player, npc, "Aha! I see you have the items we need!",
 								"Are you still willing to help make the weapon?");
-							int make = multi(player, n,
+							int make = multi(player, npc,
 								"Yes, I'm kind of curious.",
 								"No,sorry.");
 							if (make == 0) {
-								npcsay(player, n, "Ok Effendi, you need to follow the plans.",
+								npcsay(player, npc, "Ok Effendi, you need to follow the plans.",
 									"You will need some special tools for this...",
 									"There is a forge in the other tent.",
 									"You have my permision to use it, but show the plans to the guard.",
@@ -1874,45 +1874,45 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 									player.updateQuestStage(Quests.TOURIST_TRAP, 7);
 								}
 							} else if (make == 1) {
-								npcsay(player, n, "As you wish effendi!",
+								npcsay(player, npc, "As you wish effendi!",
 									"Come back if you change your mind!");
 							}
 						} else {
-							npcsay(player, n, "Great, we need the following items.",
+							npcsay(player, npc, "Great, we need the following items.",
 								"A bar of pure bronze and 10 feathers.",
 								"Bring them to me and we'll continue to make the item.");
 						}
 
 					} else if (tati == 1) {
-						npcsay(player, n, "As you wish effendi!",
+						npcsay(player, npc, "As you wish effendi!",
 							"Come back if you change your mind!");
 					}
 					break;
 				case AlShabim.MADE_WEAPON:
-					npcsay(player, n, "Wonderful, I see you have made the new weapon!");
+					npcsay(player, npc, "Wonderful, I see you have made the new weapon!");
 					mes("You show Al Shabim the prototype dart.");
 					delay(3);
 					player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
-					npcsay(player, n, "This is truly fantastic Effendi!");
+					npcsay(player, npc, "This is truly fantastic Effendi!");
 					if (player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
-						npcsay(player, n, "We will take the technical plans for the weapon as well.");
+						npcsay(player, npc, "We will take the technical plans for the weapon as well.");
 						player.getCarriedItems().remove(new Item(ItemId.TECHNICAL_PLANS.id()));
 						mes("You hand over the technical plans for the weapon.");
 						delay(3);
 					}
-					npcsay(player, n, "We are forever grateful for this gift.",
+					npcsay(player, npc, "We are forever grateful for this gift.",
 						"My advisors have discovered some secrets which we will share with you.");
 					mes("Al Shabim's advisors show you some advanced techniques for making the new weapon.");
 					delay(3);
-					npcsay(player, n, "Oh, and here is your pineapple!");
+					npcsay(player, npc, "Oh, and here is your pineapple!");
 					give(player, ItemId.TENTI_PINEAPPLE.id(), 1);
-					npcsay(player, n, "Please accept this selection of six bronze throwing darts",
+					npcsay(player, npc, "Please accept this selection of six bronze throwing darts",
 						"as a token of our appreciation.");
 					give(player, ItemId.BRONZE_THROWING_DART.id(), 6);
 					if (player.getCarriedItems().hasCatalogID(ItemId.BEDOBIN_COPY_KEY.id(), Optional.of(false))) {
-						npcsay(player, n, "I'll take that key off your hands as well effendi!");
+						npcsay(player, npc, "I'll take that key off your hands as well effendi!");
 						player.getCarriedItems().remove(new Item(ItemId.BEDOBIN_COPY_KEY.id()));
-						npcsay(player, n, "Many thanks!");
+						npcsay(player, npc, "Many thanks!");
 					}
 					player.message("");
 					player.message("********************************************************************");
@@ -1924,9 +1924,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		}
 	}
 
-	private void captainSiadDialogue(Player player, Npc n, int cID, GameObject obj) {
+	private void captainSiadDialogue(final Player player, final Npc npc, final int cID, final GameObject obj) {
 		// USED FOR CHEST AND TALK-TO
-		if (n.getID() == NpcId.CAPTAIN_SIAD.id()) {
+		if (npc.getID() == NpcId.CAPTAIN_SIAD.id()) {
 			if (cID == -1) {
 				switch (player.getQuestStage(this)) {
 					case 0:
@@ -1949,63 +1949,63 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							delay(3);
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false)) || player.getQuestStage(this) >= 8 || player.getQuestStage(this) == -1) {
-							npcsay(player, n, "I don't have time to talk to you.",
+							npcsay(player, npc, "I don't have time to talk to you.",
 								"Move along please!");
 							return;
 						}
-						npcsay(player, n, "What are you doing in here?");
-						int menu = multi(player, n,
+						npcsay(player, npc, "What are you doing in here?");
+						int menu = multi(player, npc,
 							"I wanted to have a chat?",
 							"What's it got to do with you?",
 							"Prepare to die!",
 							"All the slaves have broken free!",
 							"Fire!Fire!");
 						if (menu == 0) {
-							npcsay(player, n, "You don't belong in here, get out!");
-							int m = multi(player, n,
+							npcsay(player, npc, "You don't belong in here, get out!");
+							int m = multi(player, npc,
 								"But I just need two minutes of your time?",
 								"Prepare to die!",
 								"All the slaves have broken free!",
 								"Fire!Fire!",
 								"You seem to have a lot of books!");
 							if (m == 0) {
-								captainSiadDialogue(player, n, Siad.TWOMINUTES, null);
+								captainSiadDialogue(player, npc, Siad.TWOMINUTES, null);
 							} else if (m == 1) {
-								captainSiadDialogue(player, n, Siad.PREPARETODIE, null);
+								captainSiadDialogue(player, npc, Siad.PREPARETODIE, null);
 							} else if (m == 2) {
-								captainSiadDialogue(player, n, Siad.SLAVESBROKENFREE, null);
+								captainSiadDialogue(player, npc, Siad.SLAVESBROKENFREE, null);
 							} else if (m == 3) {
-								captainSiadDialogue(player, n, Siad.FIREFIRE, null);
+								captainSiadDialogue(player, npc, Siad.FIREFIRE, null);
 							} else if (m == 4) {
-								captainSiadDialogue(player, n, Siad.BOOKS, null);
+								captainSiadDialogue(player, npc, Siad.BOOKS, null);
 							}
 						} else if (menu == 1) {
-							npcsay(player, n, "This happens to be my office.",
+							npcsay(player, npc, "This happens to be my office.",
 								"Now explain yourself before I run you through!");
-							int keke = multi(player, n,
+							int keke = multi(player, npc,
 								"The guard downstairs said you were lonely.",
 								"I need to service your chest.");
 							if (keke == 0) {
-								captainSiadDialogue(player, n, Siad.LONELY, null);
+								captainSiadDialogue(player, npc, Siad.LONELY, null);
 							} else if (keke == 1) {
-								captainSiadDialogue(player, n, Siad.SERVICE, null);
+								captainSiadDialogue(player, npc, Siad.SERVICE, null);
 							}
 
 						} else if (menu == 2) {
-							captainSiadDialogue(player, n, Siad.PREPARETODIE, null);
+							captainSiadDialogue(player, npc, Siad.PREPARETODIE, null);
 						} else if (menu == 3) {
-							captainSiadDialogue(player, n, Siad.SLAVESBROKENFREE, null);
+							captainSiadDialogue(player, npc, Siad.SLAVESBROKENFREE, null);
 						} else if (menu == 4) {
-							captainSiadDialogue(player, n, Siad.FIREFIRE, null);
+							captainSiadDialogue(player, npc, Siad.FIREFIRE, null);
 						}
 						break;
 				}
 			}
 			switch (cID) {
 				case Siad.PREPARETODIE:
-					npcsay(player, n, "I'll teach you a lesson!",
+					npcsay(player, npc, "I'll teach you a lesson!",
 						"Guards! Guards!");
-					captainSiadDialogue(player, n, Siad.PUNISHED, null);
+					captainSiadDialogue(player, npc, Siad.PUNISHED, null);
 					break;
 				case Siad.PUNISHED:
 					mes("The Guards search you!");
@@ -2029,28 +2029,28 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					player.teleport(89, 801);
 					break;
 				case Siad.TWOMINUTES:
-					npcsay(player, n, "Well, ok, but very quickly.",
+					npcsay(player, npc, "Well, ok, but very quickly.",
 						"I am a very busy person you know!");
-					int menu = multi(player, n,
+					int menu = multi(player, npc,
 						"Well, er...erm, I err....",
 						"Oh my, a dragon just flew straight past your window!");
 					if (menu == 0) {
-						captainSiadDialogue(player, n, Siad.ERM, null);
+						captainSiadDialogue(player, npc, Siad.ERM, null);
 					} else if (menu == 1) {
-						captainSiadDialogue(player, n, Siad.DRAGON, null);
+						captainSiadDialogue(player, npc, Siad.DRAGON, null);
 					}
 					break;
 				case Siad.SLAVESBROKENFREE:
 					if (!succeedRate(player)) {
-						npcsay(player, n, "Don't talk rubbish, the warning siren isn't sounding.",
+						npcsay(player, npc, "Don't talk rubbish, the warning siren isn't sounding.",
 							"Now state your business before I have you thrown out.");
-						int gay = multi(player, n,
+						int gay = multi(player, npc,
 							"The guard downstairs said you were lonely.",
 							"I need to service your chest.");
 						if (gay == 0) {
-							captainSiadDialogue(player, n, Siad.LONELY, null);
+							captainSiadDialogue(player, npc, Siad.LONELY, null);
 						} else if (gay == 1) {
-							captainSiadDialogue(player, n, Siad.SERVICE, null);
+							captainSiadDialogue(player, npc, Siad.SERVICE, null);
 						}
 					} else {
 						mes("The captain seems distracted with what you just said.");
@@ -2063,54 +2063,54 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					}
 					break;
 				case Siad.ERM:
-					npcsay(player, n, "Come on, spit it out!",
+					npcsay(player, npc, "Come on, spit it out!",
 						"Right that's it!",
 						"Guards!");
-					captainSiadDialogue(player, n, Siad.PUNISHED, null);
+					captainSiadDialogue(player, npc, Siad.PUNISHED, null);
 					break;
 				case Siad.SERVICE:
-					npcsay(player, n, "You need to what?");
-					say(player, n, "I need to service your chest?");
-					npcsay(player, n, "There's nothing wrong with the chest, it's fine, now get out!");
-					int fire = multi(player, n,
+					npcsay(player, npc, "You need to what?");
+					say(player, npc, "I need to service your chest?");
+					npcsay(player, npc, "There's nothing wrong with the chest, it's fine, now get out!");
+					int fire = multi(player, npc,
 						"I'm here to take your plans, hand them over now or I'll kill you!",
 						"Fire!Fire!");
 					if (fire == 0) {
-						captainSiadDialogue(player, n, Siad.PLANS, null);
+						captainSiadDialogue(player, npc, Siad.PLANS, null);
 					} else if (fire == 1) {
-						captainSiadDialogue(player, n, Siad.FIREFIRE, null);
+						captainSiadDialogue(player, npc, Siad.FIREFIRE, null);
 					}
 					break;
 				case Siad.DRAGON:
 					if (!succeedRate(player)) {
-						npcsay(player, n, "Really! Where?",
+						npcsay(player, npc, "Really! Where?",
 							"I don't see any dragons young man?",
 							"Now, please get out of my office, I have work to do.");
 						player.message("The Captain goes back to his work.");
 					} else {
-						captainSiadDialogue(player, n, Siad.SUCCEED, null);
+						captainSiadDialogue(player, npc, Siad.SUCCEED, null);
 					}
 					break;
 				case Siad.LONELY:
 					mes("The captain gives you a puzzled look.");
 					delay(3);
-					npcsay(player, n, "Well, I most certainly am not lonely!",
+					npcsay(player, npc, "Well, I most certainly am not lonely!",
 						"I'm an incredibly busy man you know!",
 						"Now, get to the point, what do you want?");
-					int opt = multi(player, n,
+					int opt = multi(player, npc,
 						"Well, er...erm, I err....",
 						"I need to service your chest.");
 					if (opt == 0) {
-						captainSiadDialogue(player, n, Siad.ERM, null);
+						captainSiadDialogue(player, npc, Siad.ERM, null);
 					} else if (opt == 1) {
-						captainSiadDialogue(player, n, Siad.SERVICE, null);
+						captainSiadDialogue(player, npc, Siad.SERVICE, null);
 					}
 					break;
 				case Siad.PLANS:
-					npcsay(player, n, "Don't be silly!",
+					npcsay(player, npc, "Don't be silly!",
 						"I'm going to teach you a lesson!",
 						"Guards! Guards!");
-					captainSiadDialogue(player, n, Siad.PUNISHED, null);
+					captainSiadDialogue(player, npc, Siad.PUNISHED, null);
 					break;
 				case Siad.SUCCEED:
 					mes("The captain seems distracted with what you just said.");
@@ -2123,56 +2123,56 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					break;
 				case Siad.FIREFIRE:
 					if (!succeedRate(player)) {
-						npcsay(player, n, "Where's the fire?",
+						npcsay(player, npc, "Where's the fire?",
 							"I don't see any fire?");
-						int fireMenu = multi(player, n,
+						int fireMenu = multi(player, npc,
 							"It's down in the lower mines, sound the alarm!",
 							"Oh yes,  you're right, they must have put it out!");
 						if (fireMenu == 0) {
-							npcsay(player, n, "You go and sound the alarm, I can't see anything wrong with the mine.",
+							npcsay(player, npc, "You go and sound the alarm, I can't see anything wrong with the mine.",
 								"Have you seen the fire yourself?");
-							int variableF = multi(player, n,
+							int variableF = multi(player, npc,
 								"Yes actually!",
 								"Er, no, one of the slaves told me.");
 							if (variableF == 0) {
-								npcsay(player, n, "Well, why didn't you raise the alarm?");
-								int variableG = multi(player, n,
+								npcsay(player, npc, "Well, why didn't you raise the alarm?");
+								int variableG = multi(player, npc,
 									"I don't know where the alarm is.",
 									"I was so concerned for your safety that I rushed to save you.");
 								if (variableG == 0) {
-									npcsay(player, n, "That's the most ridiculous thing I've heard.",
+									npcsay(player, npc, "That's the most ridiculous thing I've heard.",
 										"Who are you? Where do you come from?",
 										"It doesn't matter...");
 									mes("The Captain shouts the guards...");
 									delay(3);
-									npcsay(player, n, "Guards!",
+									npcsay(player, npc, "Guards!",
 										"Show this person out!");
-									captainSiadDialogue(player, n, Siad.PUNISHED, null);
+									captainSiadDialogue(player, npc, Siad.PUNISHED, null);
 								} else if (variableG == 1) {
-									npcsay(player, n, "Well, that's very good of you.",
+									npcsay(player, npc, "Well, that's very good of you.",
 										"But as you can see, I am very fine and well thanks!",
 										"Now, please leave so that I can get back to my work.");
 									player.message("The Captain goes back to his desk.");
 								}
 							} else if (variableF == 1) {
-								npcsay(player, n, "Well...you can't believe them, they're all a bunch of convicts.",
+								npcsay(player, npc, "Well...you can't believe them, they're all a bunch of convicts.",
 									"Anyway, it doesn't look as if there is a fire down there.",
 									"So I'm going to get on with my work.",
 									"Please remove yourself from my office.");
 								player.message("The Captain goes back to his desk and starts studying.");
 							}
 						} else if (fireMenu == 1) {
-							npcsay(player, n, "Good, now perhaps you can leave me in peace?",
+							npcsay(player, npc, "Good, now perhaps you can leave me in peace?",
 								"After all I do have some work to do.");
-							int er = multi(player, n,
+							int er = multi(player, npc,
 								"Er, yes Ok then.",
 								"Well, er...erm, I err....");
 							if (er == 0) {
-								npcsay(player, n, "Good!",
+								npcsay(player, npc, "Good!",
 									"Please remove yourself from my office.");
 								player.message("The Captain goes back to his desk and starts studying.");
 							} else if (er == 1) {
-								captainSiadDialogue(player, n, Siad.ERM, null);
+								captainSiadDialogue(player, npc, Siad.ERM, null);
 							}
 						}
 					} else {
@@ -2186,39 +2186,39 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					}
 					break;
 				case Siad.BOOKS:
-					npcsay(player, n, "Yes, I do. Now please get to the point?");
+					npcsay(player, npc, "Yes, I do. Now please get to the point?");
 					int books = 0;
 					if (player.getCache().hasKey("sailing")) {
-						books = multi(player, n,
+						books = multi(player, npc,
 							"How long have you been interested in books?",
 							"I could get you some books!",
 							"So, you're interested in sailing?");
 					} else {
-						books = multi(player, n,
+						books = multi(player, npc,
 							"How long have you been interested in books?",
 							"I could get you some books!");
 					}
 					if (books == 0) {
-						npcsay(player, n, "Long enough to know when someone is stalling!",
+						npcsay(player, npc, "Long enough to know when someone is stalling!",
 							"Ok, that's it, get out!",
 							"Guards!");
-						captainSiadDialogue(player, n, Siad.PUNISHED, null);
+						captainSiadDialogue(player, npc, Siad.PUNISHED, null);
 					} else if (books == 1) {
-						npcsay(player, n, "Oh, really!",
+						npcsay(player, npc, "Oh, really!",
 							"Sorry, not interested!",
 							"GUARDS!");
-						captainSiadDialogue(player, n, Siad.PUNISHED, null);
+						captainSiadDialogue(player, npc, Siad.PUNISHED, null);
 					} else if (books == 2) {
 						player.message("The captain's interest seems to perk up.");
-						npcsay(player, n, "Well, yes actually...",
+						npcsay(player, npc, "Well, yes actually...",
 							"It's been a passion of mine for some years...");
-						int sail = multi(player, n,
+						int sail = multi(player, npc,
 							"I could tell by the cut of your jib.",
 							"Not much sailing to be done around here though?");
 						if (sail == 0) {
-							npcsay(player, n, "Oh yes? Really?");
+							npcsay(player, npc, "Oh yes? Really?");
 							player.message("The Captain looks flattered.");
-							npcsay(player, n, "Well, you know, I was quite the catch in my day you know!");
+							npcsay(player, npc, "Well, you know, I was quite the catch in my day you know!");
 							mes("The captain starts rambling on about his days as a salty sea dog.");
 							delay(3);
 							mes("He looks quite distracted...");
@@ -2228,15 +2228,15 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							}
 						} else if (sail == 1) {
 							player.message("The captain frowns slightly...");
-							npcsay(player, n, "Well of course there isn't, we're surrounded by desert.",
+							npcsay(player, npc, "Well of course there isn't, we're surrounded by desert.",
 								"Now, why are you here exactly?");
-							int again = multi(player, n,
+							int again = multi(player, npc,
 								"Oh my, a dragon just flew straight past your window!",
 								"Well, er...erm, I err....");
 							if (again == 0) {
-								captainSiadDialogue(player, n, Siad.DRAGON, null);
+								captainSiadDialogue(player, npc, Siad.DRAGON, null);
 							} else if (again == 1) {
-								captainSiadDialogue(player, n, Siad.ERM, null);
+								captainSiadDialogue(player, npc, Siad.ERM, null);
 							}
 						}
 					}
@@ -2245,7 +2245,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		}
 	}
 
-	private void anaDialogue(Player player, Npc n, int cID) {
+	private void anaDialogue(final Player player, final Npc npc, final int cID) {
 		if (cID == -1) {
 			if (player.getQuestStage(this) == -1) {
 				player.message("This slave does not appear interested in talking to you.");
@@ -2276,69 +2276,69 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				player.teleport(75, 3625);
 				return;
 			}
-			say(player, n, "Hello!");
-			npcsay(player, n, "Hello there, I don't think I've seen you before.");
-			int menu = multi(player, n,
+			say(player, npc, "Hello!");
+			npcsay(player, npc, "Hello there, I don't think I've seen you before.");
+			int menu = multi(player, npc,
 				"No, I'm new here!",
 				"What's your name.");
 			if (menu == 0) {
-				npcsay(player, n, "I thought so you know!",
+				npcsay(player, npc, "I thought so you know!",
 					"How do you like the hospitality down here?",
 					"Not exactly Al Kharid Inn style is it?",
 					"Well, I guess I'd better get back to work.",
 					"Don't want to get into trouble with the guards again.");
-				int ooo = multi(player, n,
+				int ooo = multi(player, npc,
 					"Do you get into trouble with guards often?",
 					"I want to try and get you out of here.");
 				if (ooo == 0) {
-					npcsay(player, n, "No, not really, because I'm usually working very hard.",
+					npcsay(player, npc, "No, not really, because I'm usually working very hard.",
 						"Come to think of it, I'd better get back to work.");
-					int often = multi(player, n,
+					int often = multi(player, npc,
 						"Do you enjoy it down here?",
 						"Ok, see ya!");
 					if (often == 0) {
-						npcsay(player, n, "Of course not!",
+						npcsay(player, npc, "Of course not!",
 							"I just don't have much choice about it a the moment.");
-						int enjoy = multi(player, n,
+						int enjoy = multi(player, npc,
 							"I want to try and get you out of here.",
 							"Do you have any ideas about how we can get out of here?");
 						if (enjoy == 0) {
-							anaDialogue(player, n, Ana.TRYGETYOUOUTOFHERE);
+							anaDialogue(player, npc, Ana.TRYGETYOUOUTOFHERE);
 						} else if (enjoy == 1) {
-							npcsay(player, n, "Hmmm, not really, I would have tried them already if I did.",
+							npcsay(player, npc, "Hmmm, not really, I would have tried them already if I did.",
 								"The guards seem to live in the compound.",
 								"How did you get in there anyway?");
-							int mmm = multi(player, n,
+							int mmm = multi(player, npc,
 								"I managed to sneak past the guards.",
 								"Huh, these guards are rubbish, it was easy to sneak past them!");
 							if (mmm == 0) {
-								anaDialogue(player, n, Ana.SNEAKEDPAST);
+								anaDialogue(player, npc, Ana.SNEAKEDPAST);
 							} else if (mmm == 1) {
-								anaDialogue(player, n, Ana.GUARDSRUBBISH);
+								anaDialogue(player, npc, Ana.GUARDSRUBBISH);
 							}
 						}
 					} else if (often == 1) {
-						npcsay(player, n, "Goodbye and good luck!");
+						npcsay(player, npc, "Goodbye and good luck!");
 					}
 				} else if (ooo == 1) {
-					anaDialogue(player, n, Ana.TRYGETYOUOUTOFHERE);
+					anaDialogue(player, npc, Ana.TRYGETYOUOUTOFHERE);
 				}
 			} else if (menu == 1) {
-				npcsay(player, n, "My name? Oh, how sweet, my name is Ana,",
+				npcsay(player, npc, "My name? Oh, how sweet, my name is Ana,",
 					"I come from Al Kharid, thought the desert might be interesting.",
 					"What a surprise I got!");
-				int opt = multi(player, n, false, //do not send over
+				int opt = multi(player, npc, false, //do not send over
 					"What kind of suprise did you get?",
 					"Do you want to go back to Al Kharid?");
 				if (opt == 0) {
-					say(player, n, "What kind of surpise did you get?");
-					npcsay(player, n, "Well, I was just touring the desert looking for the nomad tribe to west.",
+					say(player, npc, "What kind of surpise did you get?");
+					npcsay(player, npc, "Well, I was just touring the desert looking for the nomad tribe to west.",
 						"And I was set upon by these armoured men.",
 						"I think that the guards think I am an escaped prisoner.",
 						"They didn't understand that I was exploring the desert as an adventurer.");
 				} else if (opt == 1) {
-					say(player, n, "Do you want to go back to Al Kharid?");
-					npcsay(player, n, "Sure, I miss my Mum, her name is Irena and she is probably waiting for me.",
+					say(player, npc, "Do you want to go back to Al Kharid?");
+					npcsay(player, npc, "Sure, I miss my Mum, her name is Irena and she is probably waiting for me.",
 						"how do you propose we get out of here though?",
 						"I'm sure you've noticed the many square jawed guards around here.",
 						"You look like you can handle yourself, ",
@@ -2348,94 +2348,94 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		}
 		switch (cID) {
 			case Ana.TRYGETYOUOUTOFHERE:
-				npcsay(player, n, "Wow! You're brave. How do you propose we do that?",
+				npcsay(player, npc, "Wow! You're brave. How do you propose we do that?",
 					"In case you hadn't noticed, this place is quite well guarded.");
-				int menu = multi(player, n,
+				int menu = multi(player, npc,
 					"We could try to sneak out.",
 					"Have you got any suggestions?");
 				if (menu == 0) {
-					npcsay(player, n, "That doesn't sound very likely. How did you get in here anway?",
+					npcsay(player, npc, "That doesn't sound very likely. How did you get in here anway?",
 						"Did you deliberately hand yourself over to the guards?",
 						"Ha, ha ha ha! Sorry, just kidding.");
-					int last = multi(player, n,
+					int last = multi(player, npc,
 						"I managed to sneak past the guards.",
 						"Huh, these guards are rubbish, it was easy to sneak past them!");
 					if (last == 0) {
-						anaDialogue(player, n, Ana.SNEAKEDPAST);
+						anaDialogue(player, npc, Ana.SNEAKEDPAST);
 					} else if (last == 1) {
-						anaDialogue(player, n, Ana.GUARDSRUBBISH);
+						anaDialogue(player, npc, Ana.GUARDSRUBBISH);
 					}
 				} else if (menu == 1) {
-					npcsay(player, n, "Hmmm, let me think...",
+					npcsay(player, npc, "Hmmm, let me think...",
 						"Hmmm.",
 						"No, sorry...",
 						"The only thing that gets out of here is the rock that we mine.",
 						"Not even the dead get a decent funeral.",
 						"Bodies are just thrown down dissused mine holes.",
 						"It's very disrespectful...");
-					int gah = multi(player, n,
+					int gah = multi(player, npc,
 						"Ok, I'll check around for another way to try and get out.",
 						"How does the rock get out?");
 					if (gah == 0) {
-						npcsay(player, n, "Good luck!");
+						npcsay(player, npc, "Good luck!");
 					} else if (gah == 1) {
-						npcsay(player, n, "Well, in this section we mine it, ",
+						npcsay(player, npc, "Well, in this section we mine it, ",
 							"Then someone else scoops it into a barrel. ",
 							"The barrels are loaded onto a mine cart.",
 							"Then they're desposited near the surface lift.",
 							"I have no idea where they go from there.",
 							"But that's not going to help us, is it?");
-						int kaka = multi(player, n,
+						int kaka = multi(player, npc,
 							"Maybe? I'll come back to you when I have a plan.",
 							"Where would I get one of those barrels from?");
 						if (kaka == 0) {
-							npcsay(player, n, "Ok, well, I'm not going anywhere!");
+							npcsay(player, npc, "Ok, well, I'm not going anywhere!");
 							player.message("Ana nods at a nearby guard!");
-							npcsay(player, n, "Unless he feels generous enough to let me go!");
+							npcsay(player, npc, "Unless he feels generous enough to let me go!");
 							player.message("The guard ignores the comment.");
-							npcsay(player, n, "Oh well, I'd better get back to work, you take care!");
+							npcsay(player, npc, "Oh well, I'd better get back to work, you take care!");
 						} else if (kaka == 1) {
-							npcsay(player, n, "Well, you would get one from around by the lift area.",
+							npcsay(player, npc, "Well, you would get one from around by the lift area.",
 								"But why would you want one of those?");
-							int tjatja = multi(player, n,
+							int tjatja = multi(player, npc,
 								"Er no reason! Just wondering.",
 								"You could hide in one of those barrels and I could try to sneak you out!");
 							if (tjatja == 0) {
-								npcsay(player, n, "Hmmm, just don't get any funny ideas...",
+								npcsay(player, npc, "Hmmm, just don't get any funny ideas...",
 									"I am not going to get into one of those barrels!",
 									"Ok, have you got that?");
-								anaDialogue(player, n, Ana.GOTTHAT);
+								anaDialogue(player, npc, Ana.GOTTHAT);
 							} else if (tjatja == 1) {
-								npcsay(player, n, "There is no way that you are getting me into a barrel.",
+								npcsay(player, npc, "There is no way that you are getting me into a barrel.",
 									"No WAY! DO you understand?");
-								anaDialogue(player, n, Ana.GOTTHAT);
+								anaDialogue(player, npc, Ana.GOTTHAT);
 							}
 						}
 					}
 				}
 				break;
 			case Ana.GOTTHAT:
-				int gotit = multi(player, n,
+				int gotit = multi(player, npc,
 					"Ok, yep, I've got that.",
 					"Well, we'll see, it might be the only way.");
 				if (gotit == 0) {
-					npcsay(player, n, "Good, just make sure you keep it in mind.",
+					npcsay(player, npc, "Good, just make sure you keep it in mind.",
 						"Anyway, I have to get back to work.",
 						"The guards will come along soon and give us some trouble else.");
 				} else if (gotit == 1) {
-					npcsay(player, n, "No, there has to be a better way!",
+					npcsay(player, npc, "No, there has to be a better way!",
 						"Anyway, I have to get back to work.",
 						"The guards will come along soon and give us some trouble else.");
 				}
 				break;
 			case Ana.SNEAKEDPAST:
-				npcsay(player, n, "Hmm, impressive, but can you so easily sneak out again?",
+				npcsay(player, npc, "Hmm, impressive, but can you so easily sneak out again?",
 					"How did you manage to get through the gate?");
-				int gosh = multi(player, n, false, //do not send over
+				int gosh = multi(player, npc, false, //do not send over
 					"I have a key",
 					"It's a trade secret!");
 				if (gosh == 0) {
-					say(player, n, "I used a key.");
+					say(player, npc, "I used a key.");
 					Npc guard = addnpc(player.getWorld(), NpcId.MERCENARY.id(), player.getX(), player.getY(), 60000);
 					if (guard != null) {
 						npcsay(player, guard, "I heard that! So you used a key did you?! ");
@@ -2445,7 +2445,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						}
 						npcsay(player, guard, "Guards! Guards!");
 						guard.startCombat(player);
-						npcsay(player, n, "Oopps! See ya!");
+						npcsay(player, npc, "Oopps! See ya!");
 						mes("Some guards rush to help their comrade.");
 						delay(3);
 						mes("You are roughed up a bit by the guards as you're manhandlded into a cell.");
@@ -2454,8 +2454,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.teleport(75, 3625);
 					}
 				} else if (gosh == 1) {
-					say(player, n, "It's a trade secret!");
-					npcsay(player, n, "Oh, right, well, I guess you know what you're doing.",
+					say(player, npc, "It's a trade secret!");
+					npcsay(player, npc, "Oh, right, well, I guess you know what you're doing.",
 						"Anyway, I have to get back to work.",
 						"The guards will come along soon and give us some trouble else.");
 				}
@@ -2466,7 +2466,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					npcsay(player, guard, "I heard that! So you managed to sneak in did you!",
 						"Guards! Guards!");
 					guard.startCombat(player);
-					npcsay(player, n, "Oopps! See ya!");
+					npcsay(player, npc, "Oopps! See ya!");
 					mes("The Guards search you!");
 					delay(3);
 					mes("Some guards rush to help their comrade.");
@@ -2482,121 +2482,121 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	@Override
-	public void onTalkNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.IRENA.id()) {
-			irenaDialogue(player, n, -1);
-		} else if (n.getID() == NpcId.MERCENARY.id()) {
-			mercenaryDialogue(player, n, -1);
-		} else if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
-			mercenaryCaptainDialogue(player, n, -1);
-		} else if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
-			mercenaryInsideDialogue(player, n, -1);
-		} else if (n.getID() == NpcId.MINING_SLAVE.id()) {
-			slaveDialogue(player, n, -1);
-		} else if (n.getID() == NpcId.ESCAPING_MINING_SLAVE.id()) {
-			escapingSlaveDialogue(player, n);
-		} else if (n.getID() == NpcId.BEDABIN_NOMAD.id()) {
-			bedabinNomadDialogue(player, n, -1);
-		} else if (n.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
+	public void onTalkNpc(final Player player, final Npc npc) {
+		if (npc.getID() == NpcId.IRENA.id()) {
+			irenaDialogue(player, npc, -1);
+		} else if (npc.getID() == NpcId.MERCENARY.id()) {
+			mercenaryDialogue(player, npc, -1);
+		} else if (npc.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
+			mercenaryCaptainDialogue(player, npc, -1);
+		} else if (npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+			mercenaryInsideDialogue(player, npc, -1);
+		} else if (npc.getID() == NpcId.MINING_SLAVE.id()) {
+			slaveDialogue(player, npc, -1);
+		} else if (npc.getID() == NpcId.ESCAPING_MINING_SLAVE.id()) {
+			escapingSlaveDialogue(player, npc);
+		} else if (npc.getID() == NpcId.BEDABIN_NOMAD.id()) {
+			bedabinNomadDialogue(player, npc, -1);
+		} else if (npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
 			switch (player.getQuestStage(this)) {
 				case 8:
 				case 9:
 				case 10:
 				case -1:
-					npcsay(player, n, "Sorry, but you can't use the tent without permission.",
+					npcsay(player, npc, "Sorry, but you can't use the tent without permission.",
 						"But thanks for your help to the Bedabin people.");
 					if (player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
-						npcsay(player, n, "And we'll take those plans off your hands as well!");
+						npcsay(player, npc, "And we'll take those plans off your hands as well!");
 						player.getCarriedItems().remove(new Item(ItemId.TECHNICAL_PLANS.id()));
 					}
 					break;
 				default:
-					npcsay(player, n, "Sorry, this is a private tent, no one is allowed in.",
+					npcsay(player, npc, "Sorry, this is a private tent, no one is allowed in.",
 						"Orders of Al Shabim...");
 					break;
 			}
-		} else if (n.getID() == NpcId.AL_SHABIM.id()) {
-			alShabimDialogue(player, n, -1);
-		} else if (n.getID() == NpcId.CAPTAIN_SIAD.id()) {
-			captainSiadDialogue(player, n, -1, null);
-		} else if (n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id()) {
+		} else if (npc.getID() == NpcId.AL_SHABIM.id()) {
+			alShabimDialogue(player, npc, -1);
+		} else if (npc.getID() == NpcId.CAPTAIN_SIAD.id()) {
+			captainSiadDialogue(player, npc, -1, null);
+		} else if (npc.getID() == NpcId.MERCENARY_LIFTPLATFORM.id()) {
 			if (player.getQuestStage(this) == -1) {
-				npcsay(player, n, "Move along please, don't want any trouble today!");
+				npcsay(player, npc, "Move along please, don't want any trouble today!");
 				return;
 			}
-			npcsay(player, n, "Yes, what do you want?");
-			int menu = multi(player, n,
+			npcsay(player, npc, "Yes, what do you want?");
+			int menu = multi(player, npc,
 				"Nothing thanks - sorry for disturbing you.",
 				"Your head on a stick.");
 			if (menu == 0) {
-				npcsay(player, n, "Well...I guess that's Ok, get on your way though.");
+				npcsay(player, npc, "Well...I guess that's Ok, get on your way though.");
 			} else if (menu == 1) {
-				npcsay(player, n, "Why you ungrateful whelp...I'll teach you some manners.");
+				npcsay(player, npc, "Why you ungrateful whelp...I'll teach you some manners.");
 				if (player.getQuestStage(this) == -1) {
-					n.startCombat(player);
+					npc.startCombat(player);
 				} else {
 					mes("The guard shouts for help.");
 					delay(3);
-					n.startCombat(player);
+					npc.startCombat(player);
 					mes("Other guards start arriving.");
 					delay(3);
-					npcsay(player, n, "Get " + (player.isMale() ? "him" : "her") + " men!");
+					npcsay(player, npc, "Get " + (player.isMale() ? "him" : "her") + " men!");
 					player.message("The guards rough you up a bit and then drag you to a cell.");
 					player.teleport(76, 3625);
 				}
 			}
-		} else if (n.getID() == NpcId.MERCENARY_JAILDOOR.id()) {
-			npcsay(player, n, "Yeah, what do you want?");
-			int menu = multi(player, n,
+		} else if (npc.getID() == NpcId.MERCENARY_JAILDOOR.id()) {
+			npcsay(player, npc, "Yeah, what do you want?");
+			int menu = multi(player, npc,
 				"What are you guarding?",
 				"Oh, nothing sorry for disturbing you.",
 				"Your head on a stick.");
 			if (menu == 0) {
-				npcsay(player, n, "I'm guarding troublesome prisoners.",
+				npcsay(player, npc, "I'm guarding troublesome prisoners.",
 					"They think they can get away with attacking the guards.",
 					"Well, we taught them a thing or two.");
 			} else if (menu == 1) {
-				npcsay(player, n, "I should think so to, now get back to work.");
+				npcsay(player, npc, "I should think so to, now get back to work.");
 			} else if (menu == 2) {
-				npcsay(player, n, "Why you ungrateful whelp...I'll teach you some manners.");
+				npcsay(player, npc, "Why you ungrateful whelp...I'll teach you some manners.");
 				if (player.getQuestStage(this) == -1) {
-					n.startCombat(player);
+					npc.startCombat(player);
 				} else {
 					mes("The guard shouts for help.");
 					delay(3);
-					n.startCombat(player);
+					npc.startCombat(player);
 					mes("Other guards start arriving.");
 					delay(3);
-					npcsay(player, n, "Get " + (player.isMale() ? "him" : "her") + " men!");
+					npcsay(player, npc, "Get " + (player.isMale() ? "him" : "her") + " men!");
 					player.message("The guards rough you up a bit and then drag you to a cell.");
 					player.teleport(76, 3625);
 				}
 			}
-		} else if (n.getID() == NpcId.ANA.id()) {
-			anaDialogue(player, n, -1);
+		} else if (npc.getID() == NpcId.ANA.id()) {
+			anaDialogue(player, npc, -1);
 		}
 	}
 
-	public static void indirectTalktoAlShabim(Player player, final Npc n) {
-		if (n.getID() == NpcId.AL_SHABIM.id()) {
+	public static void indirectTalktoAlShabim(final Player player, final Npc npc) {
+		if (npc.getID() == NpcId.AL_SHABIM.id()) {
 			if (player.getQuestStage(Quests.TOURIST_TRAP) == 6 || player.getQuestStage(Quests.TOURIST_TRAP) == 7) {
-				alShabimDialogue(player, n, AlShabim.HAVE_PLANS);
+				alShabimDialogue(player, npc, AlShabim.HAVE_PLANS);
 			} else if (player.getQuestStage(Quests.TOURIST_TRAP) > 7 || player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				mes("Al Shabim takes the technical plans off you.");
 				delay(3);
-				npcsay(player, n, "Thanks for the technical plans Effendi!",
+				npcsay(player, npc, "Thanks for the technical plans Effendi!",
 					"We've been lost without them!");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockOpLoc(Player player, GameObject obj, String command) {
+	public boolean blockOpLoc(final Player player, final GameObject obj, final String command) {
 		return inArray(obj.getID(), IRON_GATE, ROCK_1, WOODEN_DOORS, DESK, BOOKCASE, CAPTAINS_CHEST) || (obj.getID() == STONE_GATE && player.getY() >= 735);
 	}
 
 	@Override
-	public void onOpLoc(Player player, GameObject obj, String command) {
+	public void onOpLoc(final Player player, final GameObject obj, final String command) {
 		if (obj.getID() == STONE_GATE && player.getY() >= 735) {
 			if (command.equals("go through")) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
@@ -2900,13 +2900,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	@Override
-	public boolean blockOpNpc(Player player, Npc n, String command) {
-		return n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch");
+	public boolean blockOpNpc(final Player player, final Npc npc, final String command) {
+		return npc.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch");
 	}
 
 	@Override
-	public void onOpNpc(Player player, Npc n, String command) {
-		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch")) {
+	public void onOpNpc(final Player player, final Npc npc, final String command) {
+		if (npc.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch")) {
 			mes("You watch the Mercenary Captain for some time.");
 			delay(3);
 			mes("He has a large metal key attached to his belt.");
@@ -2917,13 +2917,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	@Override
-	public boolean blockKillNpc(Player player, Npc n) {
-		return n.getID() == NpcId.MERCENARY_CAPTAIN.id();
+	public boolean blockKillNpc(final Player player, final Npc npc) {
+		return npc.getID() == NpcId.MERCENARY_CAPTAIN.id();
 	}
 
 	@Override
-	public void onKillNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
+	public void onKillNpc(final Player player, final Npc npc) {
+		if (npc.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
 			player.message("You kill the captain!");
 			if (player.getQuestStage(this) == 1 && !player.getCache().hasKey("first_kill_captn")) {
 				player.getCache().store("first_kill_captn", true);
@@ -2939,37 +2939,55 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	@Override
-	public boolean blockAttackNpc(Player player, Npc n) {
+	public boolean blockAttackNpc(final Player player, final Npc npc) {
 		return player.getQuestStage(this) >= 0 &&
-			(n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
-				|| n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || n.getID() == NpcId.MERCENARY_JAILDOOR.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
+			(npc.getID() == NpcId.CAPTAIN_SIAD.id() || npc.getID() == NpcId.MERCENARY.id() || npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+				|| npc.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || npc.getID() == NpcId.MERCENARY_JAILDOOR.id()
+				|| (npc.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
 	}
 
 	@Override
-	public void onAttackNpc(Player player, Npc affectedmob) {
+	public void onAttackNpc(final Player player, final Npc affectedmob) {
 		tryToAttackMercenarys(player, affectedmob);
 	}
 
 	@Override
-	public boolean blockPlayerRangeNpc(Player player, Npc n) {
+	public boolean blockPlayerRangeNpc(final Player player, final Npc npc) {
 		return player.getQuestStage(this) >= 0 &&
-			(n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
-				|| n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || n.getID() == NpcId.MERCENARY_JAILDOOR.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
+			(npc.getID() == NpcId.CAPTAIN_SIAD.id() || npc.getID() == NpcId.MERCENARY.id() || npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+				|| npc.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || npc.getID() == NpcId.MERCENARY_JAILDOOR.id()
+				|| (npc.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
 	}
 
 	@Override
-	public void onPlayerRangeNpc(Player player, Npc n) {
-		tryToAttackMercenarys(player, n);
+	public void onPlayerRangeNpc(final Player player, final Npc npc) {
+		tryToAttackMercenarys(player, npc);
 	}
 
 	@Override
-	public boolean blockSpellNpc(Player player, Npc n) {
-		return player.getQuestStage(this) >= 0 &&
-			(n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
-				|| n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || n.getID() == NpcId.MERCENARY_JAILDOOR.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
+	public boolean blockSpellNpc(final Player player, final Npc npc) {
+		final boolean questStage = player.getQuestStage(this) >= 0;
+		final boolean isMerc = npc.getID() == NpcId.CAPTAIN_SIAD.id() || npc.getID() == NpcId.MERCENARY.id() || npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+			|| npc.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || npc.getID() == NpcId.MERCENARY_JAILDOOR.id();
+		final boolean isMercCaptain = npc.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1;
+
+		// Check if we're already in combat. If we are, then we can mage.
+		if (player.inCombat()) {
+			// Make sure that we're casting on the same NPC we're fighting
+			Npc victim = null;
+			if (player.getCombatEvent().getAttacker().isNpc()) {
+				victim = (Npc)player.getCombatEvent().getAttacker();
+			} else if (player.getCombatEvent().getVictim().isNpc()) {
+				victim = (Npc)player.getCombatEvent().getVictim();
+			}
+
+			if (victim != null && victim.getUUID() == npc.getUUID()) {
+				// Cast on them
+				return false;
+			}
+		}
+
+		return questStage && (isMerc || isMercCaptain);
 	}
 
 	@Override
@@ -2978,6 +2996,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	private void tryToAttackMercenarys(Player player, Npc affectedmob) {
+		// We should probably return if the player is already in combat.
+		// This should only happen if the player is trying to mage another guard while in combat.
+		// We don't need them fighting two enemies at once, and we don't want them to be able
+		// to get teleported if they accidentally cast on another enemy.
+		if (player.inCombat()) return;
+
 		if (affectedmob.getID() == NpcId.CAPTAIN_SIAD.id()) {
 			player.message("Captain Siad looks pretty aggressive.");
 			player.message("Are you sure you want to attack him?");
