@@ -969,7 +969,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 						if (!player.getBlockGlobalFriend()) {
 							boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
 								== PlayerSettings.BlockingMode.None.id();
-							if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+							boolean blockNonFriend = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
+								== PlayerSettings.BlockingMode.NonFriends.id();
+							if ((blockNone || blockNonFriend) && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
 								ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
 							}
 						}
