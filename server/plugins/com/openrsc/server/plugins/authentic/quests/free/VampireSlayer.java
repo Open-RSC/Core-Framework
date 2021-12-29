@@ -50,7 +50,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void handleReward(Player player) {
+	public void handleReward(final Player player) {
 		player.message("Well done you have completed the vampire slayer quest");
 		final QuestReward reward = Quest.VAMPIRE_SLAYER.reward();
 		for (XPReward xpReward : reward.getXpRewards()) {
@@ -59,24 +59,24 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
-	private void morganDialogue(Player player, Npc n) {
+	private void morganDialogue(final Player player, final Npc npc) {
 		switch (player.getQuestStage(this)) {
 			case 0:
-				npcsay(player, n, "Please please help us, bold hero");
-				say(player, n, "What's the problem?");
+				npcsay(player, npc, "Please please help us, bold hero");
+				say(player, npc, "What's the problem?");
 				npcsay(player,
-					n,
+					npc,
 					"Our little village has been dreadfully ravaged by an evil vampire",
 					"There's hardly any of us left",
 					"We need someone to get rid of him once and for good");
-				int choice = multi(player, n,
+				int choice = multi(player, npc,
 					"No. vampires are scary", "Ok I'm up for an adventure",
 					"I tried fighting him. He wouldn't die");
 				if (choice == 0) {
-					npcsay(player, n, "I don't blame you");
+					npcsay(player, npc, "I don't blame you");
 				} else if (choice == 1) {
 					npcsay(player,
-						n,
+						npc,
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
 						"Called Dr Harlow",
@@ -85,11 +85,11 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 						"He's a bit of an old soak",
 						"Mention his old friend Morgan",
 						"I'm sure he wouldn't want me to be killed by a vampire");
-					say(player, n, "I'll look him up then");
+					say(player, npc, "I'll look him up then");
 					player.updateQuestStage(getQuestId(), 1);
 				} else if (choice == 2) {
 					npcsay(player,
-						n,
+						npc,
 						"Maybe you're not going about it right",
 						"I think first you should seek help",
 						"I have a friend who is a retired vampire hunter",
@@ -99,34 +99,34 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 						"He's a bit of an old soak",
 						"Mention his old friend Morgan",
 						"I'm sure he wouldn't want me to be killed by a vampire");
-					say(player, n, "I'll look him up then");
+					say(player, npc, "I'll look him up then");
 					player.updateQuestStage(getQuestId(), 1);
 				}
 				break;
 			case 1:
 			case 2:
-				npcsay(player, n, "How are you doing with your quest?");
-				say(player, n, "I'm working on it still");
-				npcsay(player, n, "Please hurry", "Every day we live in fear of lives",
+				npcsay(player, npc, "How are you doing with your quest?");
+				say(player, npc, "I'm working on it still");
+				npcsay(player, npc, "Please hurry", "Every day we live in fear of lives",
 					"That we will be the vampires next victim");
 				break;
 			case -1:
-				npcsay(player, n, "How are you doing with your quest?");
-				say(player, n, "I have slain the foul creature");
-				npcsay(player, n, "Thank you, thank you",
+				npcsay(player, npc, "How are you doing with your quest?");
+				say(player, npc, "I have slain the foul creature");
+				npcsay(player, npc, "Thank you, thank you",
 					"You will always be a hero in our village");
 				break;
 		}
 	}
 
-	private void harlowDialogue(Player player, Npc n) {
+	private void harlowDialogue(final Player player, final Npc npc) {
 		switch (player.getQuestStage(this)) {
 			case -1:
 			case 0:
 			case 1:
 			case 2:
 				String[] options;
-				npcsay(player, n, "Buy me a drrink pleassh");
+				npcsay(player, npc, "Buy me a drrink pleassh");
 				if (!player.getCarriedItems().hasCatalogID(ItemId.STAKE.id(), Optional.empty())
 					&& player.getQuestStage(Quests.VAMPIRE_SLAYER) != -1) {
 					options = new String[]{"No you've had enough", "Ok mate",
@@ -134,36 +134,36 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 				} else {
 					options = new String[]{"No you've had enough", "Ok mate"};
 				}
-				int choice = multi(player, n, options);
+				int choice = multi(player, npc, options);
 				if (choice == 0) {
 				} else if (choice == 1) {
 					if (player.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 						player.message("You give a beer to Dr Harlow");
 						player.getCarriedItems().remove(new Item(ItemId.BEER.id()));
-						npcsay(player, n, "Cheersh matey");
+						npcsay(player, npc, "Cheersh matey");
 					} else {
-						say(player, n, "I'll just go and buy one");
+						say(player, npc, "I'll just go and buy one");
 					}
 				} else if (choice == 2) {
-					npcsay(player, n, "Morgan you shhay?");
-					say(player, n,
+					npcsay(player, npc, "Morgan you shhay?");
+					say(player, npc,
 						"His village is being terrorised by a vampire",
 						"He wanted me to ask you how i should go about stopping it");
-					npcsay(player, n,
+					npcsay(player, npc,
 						"Buy me a beer then i'll teash you what you need to know");
-					int choice2 = multi(player, n, "Ok mate",
+					int choice2 = multi(player, npc, "Ok mate",
 						"But this is your friend Morgan we're talking about");
 					if (choice2 == 0) {
 						if (player.getCarriedItems().hasCatalogID(ItemId.BEER.id())) {
 							player.message("You give a beer to Dr Harlow");
-							npcsay(player, n, "Cheersh matey");
+							npcsay(player, npc, "Cheersh matey");
 							player.getCarriedItems().remove(new Item(ItemId.BEER.id()));
-							say(player, n, "So tell me how to kill vampires then");
-							npcsay(player, n,
+							say(player, npc, "So tell me how to kill vampires then");
+							npcsay(player, npc,
 								"Yesh yesh vampires I was very good at killing em once");
 							player.message("Dr Harlow appears to sober up slightly");
 							npcsay(player,
-								n,
+								npc,
 								"Well you're gonna to kill it with a stake",
 								"Otherwishe he'll just regenerate",
 								"Yes your killing blow must be done with a stake",
@@ -171,20 +171,20 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 							player.message("Dr Harlow hands you a stake");
 							player.getCarriedItems().getInventory().add(new Item(ItemId.STAKE.id()));
 							npcsay(player,
-								n,
+								npc,
 								"You'll need a hammer to hand to drive it in properly as well",
 								"One last thing",
 								"It's wise to carry garlic with you",
 								"Vampires are weakened somewhat if they can smell garlic",
 								"Dunno where you'd find that though",
 								"Remember even then a vampire is a dangeroush foe");
-							say(player, n, "Thank you very much");
+							say(player, npc, "Thank you very much");
 							player.updateQuestStage(getQuestId(), 2);
 						} else {
-							say(player, n, "I'll just go and buy one");
+							say(player, npc, "I'll just go and buy one");
 						}
 					} else if (choice2 == 1) {
-						npcsay(player, n, "Buy ush a drink anyway");
+						npcsay(player, npc, "Buy ush a drink anyway");
 					}
 				}
 				break;
@@ -192,16 +192,16 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onTalkNpc(Player player, final Npc n) {
-		if (n.getID() == NpcId.MORGAN.id()) {
-			morganDialogue(player, n);
-		} else if (n.getID() == NpcId.DR_HARLOW.id()) {
-			harlowDialogue(player, n);
+	public void onTalkNpc(final Player player, final Npc npc) {
+		if (npc.getID() == NpcId.MORGAN.id()) {
+			morganDialogue(player, npc);
+		} else if (npc.getID() == NpcId.DR_HARLOW.id()) {
+			harlowDialogue(player, npc);
 		}
 	}
 
 	@Override
-	public void onOpLoc(Player player, GameObject obj, String command) {
+	public void onOpLoc(final Player player, final GameObject obj, final String command) {
 		if ((obj.getID() == COUNT_DRAYNOR_COFFIN_OPEN || obj.getID() == COUNT_DRAYNOR_COFFIN_CLOSED) && obj.getY() == 3380) {
 			if (command.equalsIgnoreCase("open")) {
 				openGenericObject(obj, player, COUNT_DRAYNOR_COFFIN_OPEN, "You open the coffin");
@@ -237,7 +237,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 		}
 	}
 
-	private void spawnVampire(Player player) {
+	private void spawnVampire(final Player player) {
 		Npc spawnedVampire = ifnearvisnpc(player, NpcId.COUNT_DRAYNOR.id(), 15);
 
 		if (spawnedVampire != null) {
@@ -253,23 +253,23 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.MORGAN.id() || n.getID() == NpcId.DR_HARLOW.id();
+	public boolean blockTalkNpc(final Player player, final Npc npc) {
+		return npc.getID() == NpcId.MORGAN.id() || npc.getID() == NpcId.DR_HARLOW.id();
 	}
 
 	@Override
-	public boolean blockOpLoc(Player player, GameObject obj, String command) {
+	public boolean blockOpLoc(final Player player, final GameObject obj, final String command) {
 		return (obj.getID() == COUNT_DRAYNOR_COFFIN_OPEN || obj.getID() == COUNT_DRAYNOR_COFFIN_CLOSED) && obj.getY() == 3380
 				|| (obj.getID() == GARLIC_CUPBOARD_OPEN || obj.getID() == GARLIC_CUPBOARD_CLOSED) && obj.getY() == 1562;
 	}
 
 	@Override
-	public boolean blockKillNpc(Player player, Npc n) {
-		return n.getID() == NpcId.COUNT_DRAYNOR.id();
+	public boolean blockKillNpc(final Player player, final Npc npc) {
+		return npc.getID() == NpcId.COUNT_DRAYNOR.id();
 	}
 
 	@Override
-	public void onKillNpc(Player player, Npc npc) {
+	public void onKillNpc(final Player player, final Npc npc) {
 		if (npc.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.STAKE.id()) && player.getCarriedItems().hasCatalogID(ItemId.HAMMER.id())) {
 				Item item = player.getCarriedItems().getInventory().get(
@@ -302,28 +302,33 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onAttackNpc(Player player, Npc affectedmob) {
-		if (affectedmob.getID() == NpcId.COUNT_DRAYNOR.id()) {
+	public void onAttackNpc(final Player player, final Npc affectedMob) {
+		if (affectedMob.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.GARLIC.id())) {
 				player.message("The vampire appears to weaken");
 				//if a better approx is found, replace
 				int[] affectedStats = {Skill.ATTACK.id(), Skill.STRENGTH.id(), Skill.DEFENSE.id()};
 				double factor = 0.1;
 				for (int stat : affectedStats) {
-					int maxStat = affectedmob.getSkills().getMaxStat(stat);
-					if (stat == Skill.DEFENSE.id()) factor = 0.4;
-					int newStat = maxStat - (int) (maxStat * factor);
-					affectedmob.getSkills().setLevel(stat, newStat);
+					int maxStat = affectedMob.getSkills().getMaxStat(stat);
+					// We don't want to keep draining the vampire if he's already been drained.
+					if (affectedMob.getSkills().getLevel(stat) == maxStat) {
+						if (stat == Skill.DEFENSE.id()) factor = 0.4;
+						int newStat = maxStat - (int) (maxStat * factor);
+						affectedMob.getSkills().setLevel(stat, newStat);
+					}
 				}
-				if (affectedmob.getSkills().getLevel(Skill.HITS.id()) >= 34) {
-					affectedmob.damage(10);
+				if (affectedMob.getSkills().getLevel(Skill.HITS.id()) >= 34) {
+					affectedMob.damage(10);
 				}
 			}
+
+			player.startCombat(affectedMob);
 		}
 	}
 
 	@Override
-	public boolean blockAttackNpc(Player player, Npc npc) {
-		return false;
+	public boolean blockAttackNpc(final Player player, final Npc npc) {
+		return npc.getID() == NpcId.COUNT_DRAYNOR.id();
 	}
 }
