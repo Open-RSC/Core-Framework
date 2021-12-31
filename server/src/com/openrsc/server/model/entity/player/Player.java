@@ -685,6 +685,10 @@ public final class Player extends Mob {
 		try {
 			for (final PluginTask ownedPlugin : ownedPlugins) {
 				ownedPlugin.getScriptContext().setInterrupted(true);
+				final Npc npc = ownedPlugin.getScriptContext().getInteractingNpc();
+				if (npc != null) {
+					npc.setBusy(false);
+				}
 			}
 		} catch (ConcurrentModificationException e) {
 			LOGGER.error(e);
