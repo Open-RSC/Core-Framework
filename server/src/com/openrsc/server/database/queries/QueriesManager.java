@@ -5,6 +5,7 @@ import com.openrsc.server.database.queries.xmldto.QueriesListDTO;
 import com.openrsc.server.database.queries.xmldto.QueryDTO;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
+import com.thoughtworks.xstream.security.AnyTypePermission;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +27,7 @@ public class QueriesManager {
     public static final String DATABASE_DIRECTORY = "database/";
 
     static {
+		X_STREAM.addPermission(AnyTypePermission.ANY);
         X_STREAM.setMode(XStream.ID_REFERENCES);
         X_STREAM.alias("query", QueryDTO.class);
         X_STREAM.alias("queries", QueriesListDTO.class);

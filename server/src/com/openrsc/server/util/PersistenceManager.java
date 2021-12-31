@@ -2,6 +2,7 @@ package com.openrsc.server.util;
 
 import com.openrsc.server.Server;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.security.AnyTypePermission;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +25,7 @@ public final class PersistenceManager {
 
 	public PersistenceManager(Server server) {
 		this.server = server;
-
+		xstream.addPermission(AnyTypePermission.ANY);
 		setupAliases();
 	}
 
