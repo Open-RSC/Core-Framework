@@ -247,21 +247,7 @@ public class RuneScript {
 			player.face(npc);
 		}
 		for (final String message : messages) {
-			if (!message.equalsIgnoreCase("null")) {
-				if (npc != null) {
-					if (npc.isRemoved()) {
-						player.setBusy(false);
-						return;
-					}
-				}
-				if (npc != null) {
-					npc.resetPath();
-				}
-				if (!player.inCombat()) {
-					player.resetPath();
-				}
-				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
-			}
+			if (Functions.deliverMessage(player, npc, message)) return;
 			delay(Functions.normalizeTicks(Functions.calcDelay(message), player.getConfig().GAME_TICK));
 		}
 	}

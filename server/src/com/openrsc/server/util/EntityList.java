@@ -20,23 +20,27 @@ import java.util.stream.IntStream;
 public class EntityList<T extends Entity> extends AbstractCollection<T> {
 
     private static final int DEFAULT_CAPACITY = 2000;
-    private final Queue<Integer> priorityIdPool;
-    private final ConcurrentHashMap<Integer, Object> occupiedIndices;
+    private Queue<Integer> priorityIdPool;
+    private ConcurrentHashMap<Integer, Object> occupiedIndices;
     private final int capacity;
-    private final Object[] entities;
+    private Object[] entities;
 
     public EntityList() {
         this(DEFAULT_CAPACITY);
     }
 
     public EntityList(final int capacity) {
-        this.priorityIdPool = IntStream.range(0, capacity)
-                .boxed()
-                .collect(Collectors.toCollection(() -> new PriorityQueue<>(capacity)));
-        this.occupiedIndices = new ConcurrentHashMap<>();
-        this.entities = new Object[capacity];
-        this.capacity = capacity;
+		this.capacity = capacity;
+		initialize();
     }
+
+	private void initialize() {
+		this.priorityIdPool = IntStream.range(0, capacity)
+			.boxed()
+			.collect(Collectors.toCollection(() -> new PriorityQueue<>(capacity)));
+		this.occupiedIndices = new ConcurrentHashMap<>();
+		this.entities = new Object[capacity];
+	}
 
     public synchronized boolean add(final T entity) {
         if (size() >= capacity) {
@@ -103,15 +107,7 @@ public class EntityList<T extends Entity> extends AbstractCollection<T> {
     }
 
 	public void clear() {
-		Iterator<T> it = Arrays.stream(entities)
-			.filter(Objects::nonNull)
-			.map(entity -> (T) entity)
-			.collect(Collectors.toList())
-			.iterator();
-		while (it.hasNext()) {
-			it.next();
-			it.remove();
-		}
+		initialize();
 	}
 
     @SuppressWarnings("unchecked")

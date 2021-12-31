@@ -220,23 +220,28 @@ public class Functions {
 			player.face(npc);
 		}
 		for (final String message : messages) {
-			if (!message.equalsIgnoreCase("null")) {
-				if (npc != null) {
-					if (npc.isRemoved()) {
-						player.setBusy(false);
-						return;
-					}
-				}
-				if (npc != null) {
-					npc.resetPath();
-				}
-				if (!player.inCombat()) {
-					player.resetPath();
-				}
-				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
-			}
+			if (deliverMessage(player, npc, message)) return;
 			delay(normalizeTicks(calcDelay(message), player.getConfig().GAME_TICK));
 		}
+	}
+
+	static boolean deliverMessage(Player player, Npc npc, String message) {
+		if (!message.equalsIgnoreCase("null")) {
+			if (npc != null) {
+				if (npc.isRemoved()) {
+					player.setBusy(false);
+					return true;
+				}
+			}
+			if (npc != null) {
+				npc.resetPath();
+			}
+			if (!player.inCombat()) {
+				player.resetPath();
+			}
+			player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
+		}
+		return false;
 	}
 
 	public static void say(final Player player, final String message) {

@@ -159,7 +159,7 @@ class GameTickEventStore {
             if(strategy == DuplicationStrategy.ALLOW_MULTIPLE) {
                 return event.getUUID();
             } else if(strategy == DuplicationStrategy.ONE_PER_SERVER) {
-                return UUID.fromString(resolveName(event));
+                return UUID.nameUUIDFromBytes(resolveName(event).getBytes());
             } else if(strategy == DuplicationStrategy.ONE_PER_MOB) {
                 return Optional.ofNullable(event.getOwner())
                         .map(Mob::getUUID)

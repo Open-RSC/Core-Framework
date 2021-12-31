@@ -32,11 +32,11 @@ public final class WorldPopulator {
 
 	private final World world;
 
-	private ArrayList<GameObjectLoc> gameobjlocs = new ArrayList<>();
+	private final ArrayList<GameObjectLoc> gameobjlocs = new ArrayList<>();
 
-	private ArrayList<NPCLoc> npclocs = new ArrayList<>();
+	private final ArrayList<NPCLoc> npclocs = new ArrayList<>();
 
-	private ArrayList<ItemLoc> itemlocs = new ArrayList<>();
+	private final ArrayList<ItemLoc> itemlocs = new ArrayList<>();
 
 	public WorldPopulator(final World world) {
 		this.world = world;
@@ -44,6 +44,9 @@ public final class WorldPopulator {
 
 	@SuppressWarnings("unchecked")
 	public void populateWorld() {
+		gameobjlocs.clear();
+		npclocs.clear();
+		itemlocs.clear();
 		try {
 			// LOAD OBJECTS //
 			int countOBJ = 0;
