@@ -438,7 +438,11 @@ public class Drinkables implements OpInvTrigger {
 					- DataConversions.roundUp((player.getSkills().getMaxStat(affectedStats[i]) / 100D) * -1 * percentageIncrease[i])
 					- (-1 * modifier[i]);
 				if (newStat < player.getSkills().getLevel(affectedStats[i])) {
-					player.getSkills().setLevel(affectedStats[i], newStat, sendUpdate);
+					if (affectedStats[i] == Skill.HITS.id()) {
+						player.damage(baseStat - newStat);
+					} else {
+						player.getSkills().setLevel(affectedStats[i], newStat, sendUpdate);
+					}
 				}
 			}
 		}
