@@ -590,8 +590,8 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				break;
 			case BODY_RUNE:
 				retVal = (int)Math.floor(getCurrentLevel(player, Skill.RUNECRAFT.id())/46.0)+1;
-				if (retVal > 2)
-					retVal = 2;
+				if (retVal > 3)
+					retVal = 3;
 				break;
 			case COSMIC_RUNE:
 				retVal = getCurrentLevel(player,Skill.RUNECRAFT.id()) >= 59 ? 2 : 1;

@@ -18,25 +18,41 @@ public class InvCooking implements UseInvTrigger {
 
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
+
+		// Cake
 		if (item1.getCatalogId() == ItemId.CAKE_TIN.id() || item2.getCatalogId() == ItemId.CAKE_TIN.id()) {
-			if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
-				&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
-				&& player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
-				&& player.getCarriedItems().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
-				player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
-				player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_CAKE.id()));
-				player.playerServerMessage(MessageType.QUEST, "You mix some milk, flour, and egg together into a cake mixture");
-				return;
-			} else {
-				if (!player.getCarriedItems().hasCatalogID(ItemId.EGG.id()))  // Egg
-					player.playerServerMessage(MessageType.QUEST, "I also need an egg to make a cake");
-				else if (!player.getCarriedItems().hasCatalogID(ItemId.MILK.id()))  // Milk
-					player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a cake");
-				else if (!player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id())) // Flour
-					player.playerServerMessage(MessageType.QUEST, "I also need some flour to make a cake");
-				return;
+			if (item1.getCatalogId() == ItemId.EGG.id() || item2.getCatalogId() == ItemId.EGG.id() ||
+				item1.getCatalogId() == ItemId.MILK.id() || item2.getCatalogId() == ItemId.MILK.id() ||
+				item1.getCatalogId() == ItemId.POT_OF_FLOUR.id() || item2.getCatalogId() == ItemId.POT_OF_FLOUR.id()) {
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 40) {
+					player.message("You need level 40 cooking to do this");
+					return;
+				}
+				if (player.getCarriedItems().hasCatalogID(ItemId.EGG.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.MILK.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.CAKE_TIN.id())) {
+					if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.CAKE_TIN.id())) > -1) {
+						player.getCarriedItems().getInventory().add(new Item(ItemId.POT.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_CAKE.id()));
+						player.playerServerMessage(MessageType.QUEST, "You mix some milk, flour, and egg together into a cake mixture");
+					}
+				} else {
+					if (!player.getCarriedItems().hasCatalogID(ItemId.EGG.id()))  // Egg
+						player.playerServerMessage(MessageType.QUEST, "I also need an egg to make a cake");
+					else if (!player.getCarriedItems().hasCatalogID(ItemId.MILK.id()))  // Milk
+						player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a cake");
+					else if (!player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id())) // Flour
+						player.playerServerMessage(MessageType.QUEST, "I also need some flour to make a cake");
+				}
 			}
+			return;
 		}
+
+		// Wine
 		if (item1.getCatalogId() == ItemId.GRAPES.id() && item2.getCatalogId() == ItemId.JUG_OF_WATER.id()
 			|| item1.getCatalogId() == ItemId.JUG_OF_WATER.id() && item2.getCatalogId() == ItemId.GRAPES.id()) {
 			if (player.getSkills().getLevel(Skill.COOKING.id()) < 35) {
@@ -62,6 +78,8 @@ public class InvCooking implements UseInvTrigger {
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
 				}
 			}
+
+		// Dough
 		} else if (isWaterItem(item1) && item2.getCatalogId() == ItemId.POT_OF_FLOUR.id()
 				|| item1.getCatalogId() == ItemId.POT_OF_FLOUR.id() && isWaterItem(item2)) {
 			int waterContainer = isWaterItem(item1) ? item1.getCatalogId() : item2.getCatalogId();

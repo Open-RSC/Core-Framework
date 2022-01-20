@@ -59,6 +59,10 @@ public class SecuritySettingsHandler implements PayloadProcessor<SecuritySetting
 
 			break;
 		case CHANGE_RECOVERY_REQUEST: //send recovery questions screen
+			// Should help with ISAAC desync
+			if (System.currentTimeMillis() - player.getCurrentLogin() <= 2000) {
+				return;
+			}
 			PlayerRecoveryQuestions recoveryQuestions = player.getWorld().getServer().getDatabase().getPlayerChangeRecoveryData(player.getID());
 			if (recoveryQuestions == null || DataConversions.getDaysSinceTime(recoveryQuestions.dateSet) >= 14) {
 				//no pending recovery questions change or wait time past, allow

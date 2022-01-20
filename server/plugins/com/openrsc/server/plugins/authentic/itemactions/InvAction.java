@@ -710,7 +710,7 @@ public class InvAction implements OpInvTrigger {
 		player.message("You eat the nightshade...");
 		player.getCarriedItems().remove(new Item(ItemId.NIGHTSHADE.id()));
 		say(player, null, "Ahhhh! what have I done !");
-		player.damage((int) ((getCurrentLevel(player, Skill.HITS.id()) * 0.2D) + 10));
+		player.damage((int) ((getCurrentLevel(player, Skill.HITS.id()) * 0.166666666D) + 14));
 		player.message("The nightshade was highly poisonous");
 	}
 

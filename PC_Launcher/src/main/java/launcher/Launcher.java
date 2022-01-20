@@ -3,6 +3,7 @@ package launcher;
 import launcher.Fancy.MainWindow;
 import launcher.Gameupdater.Updater;
 import launcher.Utils.Defaults;
+import launcher.Utils.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,30 +12,23 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class Launcher extends Component {
-
     public static ImageIcon icon = null;
-    public static ImageIcon icon_warn = null;
-
     private JProgressBar m_progressBar;
+    public static Updater updater;
 
-    public void initializeLauncher() {
+	public void initializeLauncher() {
         Settings.loadSettings();
 
         // Add progress bar
         m_progressBar = new JProgressBar();
 
-        if (!Settings.autoUpdate) {
+        if (Settings.firstRun) {
             int response =
                     JOptionPane.showConfirmDialog(
                             this,
-                            "Open RuneScape Classic has an automatic update feature.\n"
+                            "The Open RSC Launcher has an automatic update feature.\n"
                                     + "\n"
-                                    + "When enabled, this will prompt for and install updates when launching the client.\n"
-                                    + "The updates are obtained from our 'Latest' release on GitHub.\n"
-                                    + "\n"
-                                    + "Would you like to enable this feature?\n"
-                                    + "\n"
-                                    + "NOTE: This option can be toggled in the Settings interface under the General tab.",
+                                    + "Would you like to enable this feature?\n",
                             "Open RuneScape Classic",
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.INFORMATION_MESSAGE,
@@ -43,7 +37,7 @@ public class Launcher extends Component {
                 Settings.autoUpdate = true;
                 JOptionPane.showMessageDialog(
                         this,
-                        "Open RuneScape Classic is set to check for updates on GitHub at every launch!",
+                        "The Open RSC Launcher is set to check for updates at every launch!",
                         "Open RuneScape Classic",
                         JOptionPane.INFORMATION_MESSAGE,
                         icon);
@@ -51,12 +45,12 @@ public class Launcher extends Component {
                 Settings.autoUpdate = false;
                 JOptionPane.showMessageDialog(
                         this,
-                        "Open RuneScape Classic will not check for updates automatically.\n"
+                        "The Open RSC launcher will not check for updates automatically.\n"
                                 + "\n"
-                                + "You will not get notified when new releases are available. To update your client, you\n"
-                                + "will need to do it manually by replacing 'OpenRSC.jar' in your directory.\n"
+                                + "You will not get notified when new releases are available. To update the launcher, you\n"
+                                + "will need to do it manually by replacing 'OpenRSC.jar'.\n"
                                 + "\n"
-                                + "You can enable GitHub updates again in the localSettings.conf file.",
+                                + "You can enable automatic updates again in the localSettings.conf file.",
                         "Open RuneScape Classic",
                         JOptionPane.INFORMATION_MESSAGE,
                         icon);
@@ -116,13 +110,13 @@ public class Launcher extends Component {
             }
         }
 
-        // Fetch client file and cache updates
-        Updater updater = new Updater(Defaults._DEFAULT_CONFIG_DIR, Defaults._CURRENT_VERSION.toString());
-        updater.updateGame();
+		// Initialize UI
+		final MainWindow frame = new MainWindow();
+		frame.build();
 
-        // Initialize UI
-        final MainWindow frame = new MainWindow();
-        frame.build();
+        // Fetch OpenRSC client jar and cache updates; also init progress bar
+        updater = new Updater(Defaults._DEFAULT_CONFIG_DIR, Defaults._CURRENT_VERSION.toString());
+        updater.updateOpenRSCClient();
     }
 
     public static Double fetchLatestVersionNumber() {
@@ -139,7 +133,7 @@ public class Launcher extends Component {
             while ((line = in.readLine()) != null) {
                 if (line.contains("_CURRENT_VERSION")) {
                     currentVersion = Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
-                    System.out.println("Current Version: " + currentVersion);
+                    Logger.Info("Current Version: " + currentVersion);
                     break;
                 }
             }
@@ -148,7 +142,7 @@ public class Launcher extends Component {
             in.close();
             return currentVersion;
         } catch (Exception e) {
-            System.out.println("Error checking latest version");
+            Logger.Error("Error checking latest version");
             return Defaults._CURRENT_VERSION;
         }
     }
@@ -167,7 +161,7 @@ public class Launcher extends Component {
 			while ((line = in.readLine()) != null) {
 				if (line.contains("_EXTRA_VERSION")) {
 					extraVersion = Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
-					System.out.println("Extra Version: " + extraVersion);
+					Logger.Info("Extra Version: " + extraVersion);
 					break;
 				}
 			}
@@ -176,7 +170,7 @@ public class Launcher extends Component {
 			in.close();
 			return extraVersion;
 		} catch (Exception e) {
-			System.out.println("Error checking latest extra version");
+			Logger.Error("Error checking latest extra version");
 			return _EXTRA_VERSION;
 		}
 	}

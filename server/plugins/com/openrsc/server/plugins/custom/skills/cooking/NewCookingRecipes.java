@@ -1,10 +1,12 @@
 package com.openrsc.server.plugins.custom.skills.cooking;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 
+	@SuppressWarnings("DefaultLocale")
 	protected String[] recipeStrings = {
 
 		// Seaweed Soup Mixture
@@ -26,6 +29,14 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 	};
 
 	private boolean canMix(Item itemOne, Item itemTwo) {
+		if (itemOne.getCatalogId() == ItemId.PIE_SHELL.id() || itemTwo.getCatalogId() == ItemId.PIE_SHELL.id()) {
+			if (itemOne.getCatalogId() == ItemId.EGG.id() || itemTwo.getCatalogId() == ItemId.EGG.id() ||
+				itemOne.getCatalogId() == ItemId.MILK.id() || itemTwo.getCatalogId() == ItemId.MILK.id() ||
+				itemOne.getCatalogId() == ItemId.PUMPKIN.id() || itemTwo.getCatalogId() == ItemId.PUMPKIN.id() ||
+				itemOne.getCatalogId() == ItemId.WHITE_PUMPKIN.id() || itemTwo.getCatalogId() == ItemId.WHITE_PUMPKIN.id()) {
+				return true;
+			}
+		}
 		for (HarvestingMix hm : HarvestingMix.values()) {
 			if (hm.isValid(itemOne.getCatalogId(), itemTwo.getCatalogId())) {
 				return true;
@@ -80,6 +91,49 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
+		// Pumpkin Pie
+		if (item1.getCatalogId() == ItemId.PIE_SHELL.id() || item2.getCatalogId() == ItemId.PIE_SHELL.id()) {
+			if (item1.getCatalogId() == ItemId.WHITE_PUMPKIN.id() || item2.getCatalogId() == ItemId.WHITE_PUMPKIN.id()) {
+				player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong colour...");
+				// TODO: could add a "white pumpkin pie" that heals less
+				return;
+			}
+			if (item1.getCatalogId() == ItemId.EGG.id() || item2.getCatalogId() == ItemId.EGG.id() ||
+				item1.getCatalogId() == ItemId.MILK.id() || item2.getCatalogId() == ItemId.MILK.id() ||
+				item1.getCatalogId() == ItemId.PUMPKIN.id() || item2.getCatalogId() == ItemId.PUMPKIN.id()) {
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 50) {
+					player.message("You need level 50 cooking to do this");
+					return;
+				}
+				if (player.getCarriedItems().hasCatalogID(ItemId.EGG.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.MILK.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.PUMPKIN.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.PIE_SHELL.id())) {
+					if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.PUMPKIN.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.PIE_SHELL.id())) > -1) {
+						player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_PUMPKIN_PIE.id()));
+						player.playerServerMessage(MessageType.QUEST, "You mix the milk, egg, and pumpkin together into your pie shell");
+					}
+				} else {
+					if (!player.getCarriedItems().hasCatalogID(ItemId.EGG.id()))  // Egg
+						player.playerServerMessage(MessageType.QUEST, "I also need an egg to make a pumpkin pie");
+					else if (!player.getCarriedItems().hasCatalogID(ItemId.MILK.id()))  // Milk
+						player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a pumpkin pie");
+					else if (!player.getCarriedItems().hasCatalogID(ItemId.PUMPKIN.id())) { // Pumpkin
+						if (player.getCarriedItems().hasCatalogID(ItemId.WHITE_PUMPKIN.id())) {
+							player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong colour...");
+							// TODO: could add a "white pumpkin pie" that heals less
+						} else {
+							player.playerServerMessage(MessageType.QUEST, "I also need a pumpkin to make a pumpkin pie");
+						}
+					}
+				}
+			}
+			return;
+		}
+
 		HarvestingMix hm = null;
 		for (HarvestingMix mix : HarvestingMix.values()) {
 			if (mix.isValid(item1.getCatalogId(), item2.getCatalogId())) {
@@ -87,6 +141,7 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 			}
 		}
 
+		assert hm != null;
 		if (player.getCarriedItems().hasCatalogID(hm.itemIDOther, Optional.of(false))) {
 			if (addHarvestingRecipeCache(player, hm.itemIDOther)) {
 				// element added
@@ -122,18 +177,16 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 
 			Map<String, Integer> chkRecipeMap = new HashMap<>();
 			Map<String, Integer> currRecipeMap = new HashMap<>();
-			String toks[] = recipe.split("-");
+			String[] toks = recipe.split("-");
 			// counts of ingredients for recipe
-			for (int i = 0; i < toks.length; i++)
-			{
-				chkRecipeMap.put(toks[i], chkRecipeMap.getOrDefault(toks[i], 0) + 1);
+			for (String s : toks) {
+				chkRecipeMap.put(s, chkRecipeMap.getOrDefault(s, 0) + 1);
 			}
 
 			toks = recipeString.split("-");
 			// counts of current ingredients for recipe
-			for (int i = 0; i < toks.length; i++)
-			{
-				currRecipeMap.put(toks[i], currRecipeMap.getOrDefault(toks[i], 0) + 1);
+			for (String tok : toks) {
+				currRecipeMap.put(tok, currRecipeMap.getOrDefault(tok, 0) + 1);
 			}
 
 			// Completed Mixture
@@ -166,9 +219,9 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 		SPICE_ON_BOWL(ItemId.MIXING_BOWL.id(), ItemId.SPICE.id(),
 			"you spice the mixture");
 
-		private int itemID;
-		private int itemIDOther;
-		private String[] messages;
+		private final int itemID;
+		private final int itemIDOther;
+		private final String[] messages;
 
 		HarvestingMix(int itemOne, int itemTwo, String... messages) {
 			this.itemID = itemOne;

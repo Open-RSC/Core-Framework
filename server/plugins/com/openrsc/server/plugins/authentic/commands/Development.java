@@ -427,11 +427,15 @@ public final class Development implements CommandTrigger {
 	}
 
 	private void currentCoordinates(Player player, String[] args) {
-		Player targetPlayer = args.length > 0 ?
-			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
-			player;
+		Player targetPlayer;
+		if (args.length > 0) {
+			targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		} else {
+			player.tellCoordinates();
+			return;
+		}
 
-		if(targetPlayer != null)
+		if (targetPlayer != null)
 			player.message(messagePrefix + targetPlayer.getStaffName() + " is at: " + targetPlayer.getLocation());
 		else
 			player.message(messagePrefix + "Invalid name or player is not online");

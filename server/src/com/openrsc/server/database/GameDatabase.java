@@ -1008,6 +1008,19 @@ public abstract class GameDatabase {
 		querySavePlayerExperience(player.getDatabaseID(), skills);
 	}
 
+	public void querySavePlayerMaxSkills(Player player) throws GameDatabaseException {
+		final int skillsSize = getServer().getConstants().getSkills().getSkillsCount();
+		final PlayerSkills[] skills = new PlayerSkills[skillsSize];
+
+		for (int i = 0; i < skillsSize; i++) {
+			skills[i] = new PlayerSkills();
+			skills[i].skillId = i;
+			skills[i].skillLevel = player.getSkills().getMaxStat(i);
+		}
+
+		querySavePlayerMaxSkills(player.getDatabaseID(), skills);
+	}
+
 	public int getMaxItemID() {
 		try {
 			return queryMaxItemID();

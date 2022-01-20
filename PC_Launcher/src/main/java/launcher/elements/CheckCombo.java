@@ -118,7 +118,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 				String line;
 				while ((line = br.readLine()) != null) {
 					String[] packageName = line.split(":");
-					//Check to make sure the user hasn't deleted the pack
+					// Check to make sure the user hasn't deleted the pack
 					if (packsAvailable.contains(packageName[0])) {
 						packsSettings.put(packageName[0], Integer.parseInt(packageName[1]) == 1);
 					}
@@ -140,7 +140,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 				}
 				writer.close();
 				write.close();
-				//Prepare the packs to load into the combo box
+				// Prepare the packs to load into the combo box
 				if (packsSettings.size() > 0) {
 					stores = new store[packsSettings.size()];
 					Iterator it = packsSettings.entrySet().iterator();
@@ -156,7 +156,7 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 			a.printStackTrace();
 		}
 
-		//Load the packs into the combo box
+		// Load the packs into the combo box
 		if (stores != null)
 			setContents(stores);
 

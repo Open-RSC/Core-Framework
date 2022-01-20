@@ -550,9 +550,11 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 					goThrough = true;
 				}
 				break;
-			case 94: // Nature rune chest + 50 gp chest door id (94)
-				if (obj.getX() == 586 && obj.getY() == 581 || obj.getX() == 539 && obj.getY() == 599
-					|| obj.getX() == 581 && obj.getY() == 580) {
+			case 94: // Nature rune chest + 50 gp chest door id and Yanille anvil hut (94)
+				if ((obj.getX() == 586 && obj.getY() == 581)
+					|| (obj.getX() == 539 && obj.getY() == 599)
+					|| (obj.getX() == 581 && obj.getY() == 580)
+					|| (obj.getX() == 581 && obj.getY() == 761)) {
 					req = 16;
 					exp = 60;
 					if (player.getX() == 539 && player.getY() >= 599) {
@@ -560,6 +562,9 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 					} else if (player.getX() <= 585 && player.getY() == 581) {
 						goThrough = true;
 					} else if (player.getX() >= 581 && player.getY() == 580) {
+						goThrough = true;
+					} else if (player.getX() == 582 && player.getY() >= 761
+						|| player.getX() == 581 && player.getY() >= 762) {
 						goThrough = true;
 					}
 				}

@@ -204,7 +204,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 								} else if (leave == 1) {
 									Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
 									if (ungadulu == null) {
-										addnpc(player.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
+										addnpc(player.getWorld(), NpcId.UNGADULU.id(), 453, 3707, 60000 * 5);
 									}
 									LegendsQuestUngadulu.ungaduluWallDialogue(player, ungadulu, -1);
 								}
@@ -213,7 +213,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 								delay(2);
 								Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
 								if (ungadulu == null) {
-									addnpc(player.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
+									addnpc(player.getWorld(), NpcId.UNGADULU.id(), 453, 3707, 60000 * 5);
 								}
 								LegendsQuestUngadulu.ungaduluWallDialogue(player, ungadulu, -1);
 							}

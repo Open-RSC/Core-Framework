@@ -117,7 +117,13 @@ public class CombatEvent extends GameTickEvent {
 			}
 
 			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
-			int damage = CombatFormula.doMeleeDamage(hitter, target);
+			int damage;
+			if (getWorld().getServer().getConfig().OSRS_COMBAT_MELEE) {
+				damage = OSRSCombatFormula.Melee.doMeleeDamage(hitter, target);
+			} else {
+				damage = CombatFormula.doMeleeDamage(hitter, target);
+			}
+
 			inflictDamage(hitter, target, damage);
 			if (target.isPlayer()) {
 				if (((Player)target).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {

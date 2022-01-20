@@ -1078,6 +1078,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				getPlayer().resetAllExceptDueling();
 				switch (spellEnum) {
 					case TELEKINETIC_GRAB:
+						if (affectedItem.isInvisibleTo(getPlayer()))
+						{
+							return;
+						}
 						// fluffs gets its own message
 						// same case with ana
 						int[] ungrabbableArr = {
@@ -1148,6 +1152,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						}
 						if (affectedItem.getLocation().inBounds(97, 1428, 106, 1440)) {
 							getPlayer().message("Telekinetic grab cannot be used in here");
+							return;
+						}
+						if (affectedItem.getLocation().inBounds(114, 532, 115, 535) && affectedItem.getID() == ItemId.PUMPKIN.id()) {
+							getPlayer().message("A strange power prevents you from telegrabbing the pumpkin.");
+							delay(3);
+							getPlayer().message("@yel@Death: Do NOT cast magic on my belongings!!");
 							return;
 						}
 

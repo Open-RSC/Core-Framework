@@ -6,6 +6,8 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.DropTable;
+import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
+import com.openrsc.server.event.rsc.impl.combat.OSRSCombatFormula;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -233,6 +235,14 @@ public class RangeUtils {
         return ALLOWED_PROJECTILES.containsKey(weaponId)
                 && ALLOWED_PROJECTILES.get(weaponId).contains(arrowId);
     }
+
+    public static int doRangedDamage(final Mob attacker, final int bowId, final int arrowId, final Mob defender) {
+		if (attacker.getWorld().getServer().getConfig().OSRS_COMBAT_RANGED) {
+			return OSRSCombatFormula.Ranged.doRangedDamage(attacker, bowId, arrowId, defender);
+		} else {
+			return CombatFormula.doRangedDamage(attacker, bowId, arrowId, defender);
+		}
+	}
 
     public static boolean isCrossbow(int weaponId) {
         return CROSSBOWS.contains(weaponId);

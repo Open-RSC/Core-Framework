@@ -3,7 +3,6 @@ package com.openrsc.server.event.rsc.impl.projectile;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -140,7 +139,7 @@ public class ThrowingEvent extends GameTickEvent {
 			return;
 		}*/
 
-		int damage = CombatFormula.doRangedDamage(player, throwingID, throwingID, target);
+		int damage = RangeUtils.doRangedDamage(player, throwingID, throwingID, target);
 
 		RangeUtils.applyDragonFireBreath(player, target, deliveredFirstProjectile);
 		if(target.isPlayer() && damage > 0) {

@@ -11,8 +11,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class CheckboxButton extends JCheckBox implements MouseListener {
+
 	public CheckboxButton(final String text, final Rectangle bounds) {
-		super(text);
+		super();
 		this.setContentAreaFilled(false);
 		this.setBorderPainted(false);
 		this.setForeground(Color.WHITE);
@@ -22,14 +23,12 @@ public class CheckboxButton extends JCheckBox implements MouseListener {
 		this.addMouseListener(this);
 		this.setFocusable(false);
 		this.setBounds(bounds);
+		this.setActionCommand(text);
 		this.addActionListener(new ButtonListener());
 	}
 
 	@Override
 	public void mouseClicked(final MouseEvent arg0) {
-		// TODO: when more checkboxes are added, will need to check which one is pressed
-		Settings.showBotButtons = !Settings.showBotButtons;
-		MainWindow.get().toggleBotServers();
 	}
 
 	@Override

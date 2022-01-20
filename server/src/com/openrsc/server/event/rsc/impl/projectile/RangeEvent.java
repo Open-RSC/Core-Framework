@@ -4,7 +4,6 @@ import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
-import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -110,7 +109,8 @@ public class RangeEvent extends GameTickEvent {
 			}
 			RangeUtils.checkOutOfAmmo(player, ammoId);
 
-			int damage = CombatFormula.doRangedDamage(player, bowId, ammoId, target);
+			int damage = RangeUtils.doRangedDamage(player, bowId, ammoId, target);
+
 			if (target.isPlayer() && damage > 0) {
 				player.incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
 			}

@@ -11,18 +11,22 @@ import java.awt.event.MouseListener;
 public class LinkButton extends JButton implements MouseListener {
 	private static final long serialVersionUID = 3503904237989217533L;
 
-	public LinkButton(final String text, final Rectangle bounds) {
-		super(text.toUpperCase());
-		this.setIcon(Utils.getImage("button.png"));
-		this.setRolloverIcon(Utils.getImage("button_hover.png"));
-		this.setHorizontalTextPosition(0);
-		this.setFont(Utils.getFont("Helvetica.otf", 1, 11.0f));
+
+	public LinkButton(final String imageFileName, final Rectangle bounds) {
+		super();
+		this.setIcon(Utils.getImage(imageFileName + ".png"));
+		try {
+			this.setRolloverIcon(Utils.getImage(imageFileName + "_hover.png"));
+		} catch (Exception e) {};
+		this.setHorizontalTextPosition(SwingConstants.CENTER);
+		this.setVerticalTextPosition(SwingConstants.TOP);
 		this.setBorderPainted(false);
 		this.setContentAreaFilled(false);
 		this.setForeground(Color.WHITE);
-		this.setFocusable(false);
-		this.addActionListener(new ButtonListener());
 		this.setBounds(bounds);
+		this.setFocusable(false);
+		this.setActionCommand(imageFileName);
+		this.addActionListener(new ButtonListener());
 		this.addMouseListener(this);
 	}
 

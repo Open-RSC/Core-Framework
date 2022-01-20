@@ -13,6 +13,8 @@ public interface IPlayerService {
 
     boolean savePlayer(final Player player);
 
+    void savePlayerMaxStats(final Player player);
+
     void savePlayerMaxSkill(
             final int playerId,
             final int skillId,

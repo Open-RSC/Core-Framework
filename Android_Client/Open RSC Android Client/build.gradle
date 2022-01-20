@@ -10,11 +10,11 @@ allprojects {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '29.0.3'
     defaultConfig {
         applicationId "com.openrsc.client"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 31
+        multiDexEnabled false
     }
     buildTypes {
         release {
@@ -41,6 +41,11 @@ android {
     }
     sourceSets {
         main.java.srcDirs += ['src/main/java', 'src/main/../../../../Client_Base/src']
+    }
+    buildToolsVersion '29.0.3'
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
     }
     applicationVariants.all { variant ->
         variant.outputs.all {

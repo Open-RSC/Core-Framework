@@ -385,6 +385,8 @@ public class Eating implements OpInvTrigger {
 			ItemId.HALF_A_REDBERRY_PIE.id(),
 			ItemId.MEAT_PIE.id(),
 			ItemId.HALF_A_MEAT_PIE.id(),
+			ItemId.PUMPKIN_PIE.id(),
+			ItemId.HALF_A_PUMPKIN_PIE.id(),
 
 			// Pizzas
 			ItemId.MEAT_PIZZA.id(),
@@ -436,6 +438,12 @@ public class Eating implements OpInvTrigger {
 			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_MEAT_PIE.id()));
 
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
+
+		else if (id == ItemId.PUMPKIN_PIE.id())
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_PUMPKIN_PIE.id()));
+
+		else if (id == ItemId.HALF_A_PUMPKIN_PIE.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
 		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY_UNUSED.id()

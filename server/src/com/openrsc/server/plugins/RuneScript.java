@@ -262,7 +262,7 @@ public class RuneScript {
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(Functions.calcDelay(message));
+			delay(Functions.normalizeTicks(Functions.calcDelay(message), player.getConfig().GAME_TICK));
 		}
 	}
 
@@ -1330,7 +1330,7 @@ public class RuneScript {
 				}
 			}
 
-			delay(Functions.calcDelay(message));
+			delay(Functions.normalizeTicks(Functions.calcDelay(message), player.getConfig().GAME_TICK));
 		}
 	}
 

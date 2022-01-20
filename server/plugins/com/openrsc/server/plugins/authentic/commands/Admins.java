@@ -697,10 +697,11 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
+		boolean successAddingItem = false;
 		if (p.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
-			p.getCarriedItems().getInventory().add(new Item(id, amount));
+			successAddingItem = p.getCarriedItems().getInventory().add(new Item(id, amount));
 		} else if (noted && p.getWorld().getServer().getEntityHandler().getItemDef(id).isNoteable()) {
-			p.getCarriedItems().getInventory().add(new Item(id, amount, true));
+			successAddingItem = p.getCarriedItems().getInventory().add(new Item(id, amount, true));
 		} else {
 			for (int i = 0; i < amount; i++) {
 				if (!p.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
@@ -709,13 +710,17 @@ public final class Admins implements CommandTrigger {
 						return;
 					}
 				}
-				p.getCarriedItems().getInventory().add(new Item(id, 1));
+				successAddingItem = p.getCarriedItems().getInventory().add(new Item(id, 1));
 			}
 		}
 
-		player.message(messagePrefix + "You have spawned " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
-		if (player.getUsernameHash() != p.getUsernameHash()) {
-			p.message(messagePrefix + "A staff member has given you " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
+		if (successAddingItem) {
+			player.message(messagePrefix + "You have spawned " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
+			if (player.getUsernameHash() != p.getUsernameHash()) {
+				p.message(messagePrefix + "A staff member has given you " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
+			}
+		} else {
+			player.message(messagePrefix + "Something went wrong spawning " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
 		}
 	}
 

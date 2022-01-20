@@ -119,4 +119,10 @@
 			<requiredLvl>50</requiredLvl>
 		</ItemPerfectCookingDef>
 	</entry>
+    <entry>
+        <int>1489</int>
+        <ItemPerfectCookingDef>
+            <requiredLvl>50</requiredLvl>
+        </ItemPerfectCookingDef>
+    </entry>
 </map>

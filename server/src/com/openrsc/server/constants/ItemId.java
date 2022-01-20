@@ -1530,13 +1530,23 @@ public enum ItemId {
 	RABBITS_FOOT_FOUR(1484),
 	RABBITS_FOOT_FIVE(1485),
 	RING_OF_BUNNY(1486),
-	RING_OF_EGG(1487);
+	RING_OF_EGG(1487),
+
+	// Halloween 2021
+	RACIST_DO_NOT_USE(1488), // Considered an unhappy number -- https://en.wikipedia.org/wiki/Fourteen_Words
+	UNCOOKED_PUMPKIN_PIE(1489),
+	PUMPKIN_PIE(1490),
+	HALF_A_PUMPKIN_PIE(1491),
+	UNCOOKED_WHITE_PUMPKIN_PIE(1492),
+	WHITE_PUMPKIN_PIE(1493),
+	HALF_A_WHITE_PUMPKIN_PIE(1494),
+	EAK_THE_MOUSE(1495);
 
 
 	private int itemId;
 
 	public static final int maxAuthentic = 1289;
-	public static final int maxCustom = 1500;
+	public static final int maxCustom = 1495;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
 	private static final Map<String, ItemId> byName = new HashMap<String, ItemId>();

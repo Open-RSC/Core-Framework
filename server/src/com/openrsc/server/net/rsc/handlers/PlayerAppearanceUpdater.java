@@ -91,6 +91,7 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 		if (player.getLastLogin() == 0L) {
 			if (player.getConfig().USES_CLASSES) {
 				new PlayerClass(player, payload.chosenClass).init();
+				player.getWorld().getServer().getPlayerService().savePlayerMaxStats(player);
 			}
 
 			if (player.getConfig().USES_PK_MODE) {

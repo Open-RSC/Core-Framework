@@ -18,6 +18,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +93,9 @@ public final class Event implements CommandTrigger {
 		if (command.equalsIgnoreCase("teleport") || command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("tele") || command.equalsIgnoreCase("town") || command.equalsIgnoreCase("goto") || command.equalsIgnoreCase("tpto") || command.equalsIgnoreCase("teleportto") || command.equalsIgnoreCase("tpat")) {
 			teleportCommand(player, command, args);
 		}
+		else if (command.equalsIgnoreCase("rftele")) {
+			rfteleToTp(player, command, args);
+		}
 		else if (command.equalsIgnoreCase("return")) {
 			returnPlayer(player, command, args);
 		}
@@ -109,6 +113,9 @@ public final class Event implements CommandTrigger {
 		}
 		else if(command.equalsIgnoreCase("seers") || command.equalsIgnoreCase("toggleseers") || command.equalsIgnoreCase("partyhall") || command.equalsIgnoreCase("togglepartyhall")) {
 			toggleSeersParty(player, command, args);
+		}
+		else if(command.equalsIgnoreCase("eventchest")) {
+			toggleEventChest(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("stoppvpevent")) {
 			disablePvpEvent(player, command);
@@ -139,6 +146,80 @@ public final class Event implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("npctalk") || command.equalsIgnoreCase("npcsay")) {
 			npcTalk(player, command, args);
+		}
+	}
+
+	@SuppressWarnings("DefaultLocale")
+	private void rfteleToTp(Player player, String command, String[] args) {
+		boolean badFormat = false;
+		boolean secondArgIsPlayer = false;
+		if (args.length >= 2) {
+			if (args[1].length() != 4)
+				badFormat = true;
+			try {
+				Integer.parseInt(args[1]);
+			} catch (NumberFormatException ex) {
+				// can't rftele players with 4 length number names in shorthand notation, sorry!
+				secondArgIsPlayer = true;
+			}
+		}
+
+		badFormat |= args.length < 1 || args[0].length() != 5 || args.length > 3;
+		if (badFormat) {
+			tellBadRfTele(player, command);
+			return;
+		}
+
+		Point absoluteCoordinate;
+		if (args.length >= 2 && !secondArgIsPlayer) {
+			absoluteCoordinate = Point.jagexPointToPoint(args[0] + " " + args[1]);
+		} else {
+			absoluteCoordinate = Point.jagexPointToPoint(args[0]);
+		}
+
+		if (absoluteCoordinate.getX() == Point.UNABLE_TO_CONVERT) {
+			switch (absoluteCoordinate.getY()) {
+				case Point.BAD_COORDINATE_LENGTH:
+				case Point.NOT_A_NUMBER:
+				default:
+					tellBadRfTele(player, command);
+					return;
+				case Point.OFFSET_OUT_OF_BOUNDS:
+					player.message("Offset out of bounds, must be 47 or less");
+					return;
+			}
+		}
+
+		switch (args.length) {
+			case 1:
+				args = new String[] {
+					String.format("%d", absoluteCoordinate.getX()),
+					String.format("%d", absoluteCoordinate.getY()),
+				};
+				teleportCommand(player, command, args);
+				return;
+			case 2:
+				if (secondArgIsPlayer) {
+					args = new String[] {
+						String.format("%d", absoluteCoordinate.getX()),
+					    String.format("%d", absoluteCoordinate.getY()),
+						args[1]
+					};
+				} else {
+					args[0] = String.format("%d", absoluteCoordinate.getX());
+					args[1] = String.format("%d", absoluteCoordinate.getY());
+				}
+				teleportCommand(player, command, args);
+				return;
+			case 3:
+				args[0] = args[2];
+				args[1] = String.format("%d", absoluteCoordinate.getX());
+				args[2] = String.format("%d", absoluteCoordinate.getY());
+				teleportCommand(player, command, args);
+				return;
+			default:
+				tellBadRfTele(player, command);
+				return;
 		}
 	}
 
@@ -592,6 +673,84 @@ public final class Event implements CommandTrigger {
 			ActionSender.sendBox(player, builder.toString(), names.size() > 10);
 		} catch (final GameDatabaseException ex) {
 			player.message(messagePrefix + "A MySQL error has occured! " + ex.getMessage());
+		}
+	}
+
+	private void toggleEventChest(Player player, String command, String[] args) {
+		int time, radius, direction;
+		if (args.length >= 1) {
+			try {
+				time = Integer.parseInt(args[0]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (time_in_minutes) (radius) (direction)");
+				return;
+			}
+		} else {
+			time = 60;
+		}
+
+		if (args.length >= 2) {
+			try {
+				radius = Integer.parseInt(args[1]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (time_in_minutes) (radius) (direction)");
+				return;
+			}
+		} else {
+			radius = 4;
+		}
+		player.getWorld().eventChestRadius = radius;
+
+		if (args.length >= 3) {
+			try {
+				direction = Integer.parseInt(args[2]);
+
+				if (direction < 0 || direction > 7) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " Invalid direction. Try 0-7");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " (time_in_minutes) (radius) (direction)");
+					return;
+				}
+
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (time_in_minutes) (radius) (direction)");
+				return;
+			}
+		} else {
+			direction = 0;
+		}
+
+		final Point objectLoc = player.getLocation();
+		final GameObject existingObject = player.getViewArea().getGameObject(objectLoc);
+
+		if (player.getWorld().eventChest == null) {
+			if (existingObject != null && existingObject.getType() != 1 && (existingObject.getID() != 18 && existingObject.getID() != 17)) {
+				player.message(messagePrefix + "Could not enable event chest at " + player.getLocation() + " due to blocking " + existingObject.getGameObjectDef().getName() + ".");
+			} else {
+				int sceneryId = 247; // bugged out crystal chest (open)
+				if ((LocalDate.now().getMonthValue() == 10 && LocalDate.now().getDayOfMonth() == 31) ||
+					(LocalDate.now().getMonthValue() == 11 && LocalDate.now().getDayOfMonth() == 1)) {
+					sceneryId = 257; // thematic cauldron for Halloween
+				}
+				GameObject newObject = new GameObject(player.getWorld(), objectLoc, sceneryId, direction, 0);
+				player.getWorld().registerGameObject(newObject);
+				player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, time * 60000, "Unregister Event Chest") {
+					@Override
+					public void action() {
+						// TODO: Removing the chest should be a function on world.
+						player.getWorld().unregisterGameObject(newObject);
+						player.getWorld().eventChest = null;
+						player.getWorld().eventChestRadius = 4;
+					}
+				});
+				player.getWorld().eventChest = newObject;
+				player.message(messagePrefix + "Event chest has been enabled at " + player.getLocation() + ".");
+			}
+		} else {
+			player.message(messagePrefix + "Event chest at " + player.getWorld().eventChest.getLocation() + " has been disabled.");
+			// TODO: Removing the chest should be a function on world.
+			player.getWorld().unregisterGameObject(player.getWorld().eventChest);
+			player.getWorld().eventChest = null;
+			player.getWorld().eventChestRadius = 4;
 		}
 	}
 
@@ -1236,5 +1395,12 @@ public final class Event implements CommandTrigger {
 				otherPlayer.getSkills().sendUpdateAll();
 			}
 		}
+	}
+
+	private void tellBadRfTele(Player player, String command) {
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] OR");
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [player]");
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [xxyy] OR");
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [xxyy] [player] OR ");
 	}
 }

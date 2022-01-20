@@ -19,10 +19,7 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.enums.OpcodeOut;
 import com.openrsc.server.net.rsc.generators.PayloadGenerator;
-import com.openrsc.server.net.rsc.generators.impl.Payload177Generator;
-import com.openrsc.server.net.rsc.generators.impl.Payload235Generator;
-import com.openrsc.server.net.rsc.generators.impl.Payload38Generator;
-import com.openrsc.server.net.rsc.generators.impl.PayloadCustomGenerator;
+import com.openrsc.server.net.rsc.generators.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.plugins.QuestInterface;
@@ -61,6 +58,8 @@ public class ActionSender {
 			generator = new Payload235Generator();
 		} else if (player.isUsing177CompatibleClient()) {
 			generator = new Payload177Generator();
+		} else if (player.isUsing140CompatibleClient()) {
+			generator = new Payload140Generator();
 		} else {
 			generator = new PayloadCustomGenerator();
 		}

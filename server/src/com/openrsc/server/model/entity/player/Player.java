@@ -34,10 +34,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.PayloadProcessorManager;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
-import com.openrsc.server.net.rsc.parsers.impl.Payload177Parser;
-import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
-import com.openrsc.server.net.rsc.parsers.impl.Payload38Parser;
-import com.openrsc.server.net.rsc.parsers.impl.PayloadCustomParser;
+import com.openrsc.server.net.rsc.parsers.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
@@ -2159,79 +2156,103 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void processIncomingPackets() {
-		if (!channel.isOpen() && !channel.isWritable()) {
-			return;
-		}
-		synchronized (incomingPackets) {
-			Packet packet = incomingPackets.poll();
-			while (packet != null) {
-				// Final copied variable needed to pass into lambda
-				final Packet curPacket = packet;
-				final long packetTime = getWorld().getServer().bench(
-					() -> {
-						activePackets.remove(activePackets.indexOf(curPacket.getID()));
-						PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
-						if (isRetroClient()) {
-							parser = new Payload38Parser();
-						} else if (isUsing233CompatibleClient()) {
-							parser = new Payload235Parser();
-						} else if (isUsing177CompatibleClient()) {
-							parser = new Payload177Parser();
-						} else {
-							parser = new PayloadCustomParser();
-						}
-						AbstractStruct<com.openrsc.server.net.rsc.enums.OpcodeIn> res = parser.parse(curPacket, this);
-						if (res != null) {
-							boolean couldProcess;
-							try {
-								couldProcess = PayloadProcessorManager.processed(res, this);
-							} catch (final Exception e) {
-								LOGGER.catching(e);
-								couldProcess = false;
-							}
-							if (!couldProcess) {
-								unregister(false, "Malformed packet!");
-							}
-						}
-					}
-				);
-				getWorld().getServer().addIncomingPacketDuration(curPacket.getID(), packetTime);
-				getWorld().getServer().incrementIncomingPacketCount(curPacket.getID());
-
-				packet = incomingPackets.poll();
-			}
-
-			incomingPackets.clear();
-		}
+	public void processTick() {
+		getWorld().getServer().incrementLastIncomingPacketsDuration(processIncomingPackets());
+		getWorld().getServer().incrementLastExecuteWalkToActionsDuration(
+			getWorld().getServer().getGameUpdater().executeWalkToActions(this));
+		getWorld().getServer().incrementLastEventsDuration(
+			getWorld().getServer().getGameEventHandler().runGameEvents(this));
+		getWorld().getServer().incrementLastProcessPlayersDuration(
+			getWorld().getServer().getGameUpdater().movePlayer(this));
+		getWorld().getServer().incrementLastProcessMessageQueuesDuration(
+			getWorld().getServer().getGameUpdater().processMessageQueue(this));
 	}
 
-	public void processOutgoingPackets() {
+	public void sendUpdates() {
+		getWorld().getServer().incrementLastUpdateClientsDuration(
+			getWorld().getServer().getGameUpdater().updateClient(this));
+		getWorld().getServer().incrementLastOutgoingPacketsDuration(processOutgoingPackets());
+	}
+
+	public long processIncomingPackets() {
+		return getWorld().getServer().bench(() -> {
+			if (!channel.isOpen() && !channel.isWritable()) {
+				return;
+			}
+			synchronized (incomingPackets) {
+				Packet packet = incomingPackets.poll();
+				while (packet != null) {
+					// Final copied variable needed to pass into lambda
+					final Packet curPacket = packet;
+					final long packetTime = getWorld().getServer().bench(
+						() -> {
+							activePackets.remove(activePackets.indexOf(curPacket.getID()));
+							PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
+							if (isRetroClient()) {
+								parser = new Payload38Parser();
+							} else if (isUsing233CompatibleClient()) {
+								parser = new Payload235Parser();
+							} else if (isUsing177CompatibleClient()) {
+								parser = new Payload177Parser();
+							} else if (isUsing140CompatibleClient()) {
+								parser = new Payload140Parser();
+							} else {
+								parser = new PayloadCustomParser();
+							}
+							AbstractStruct<com.openrsc.server.net.rsc.enums.OpcodeIn> res = parser.parse(curPacket, this);
+							if (res != null) {
+								boolean couldProcess;
+								try {
+									couldProcess = PayloadProcessorManager.processed(res, this);
+								} catch (final Exception e) {
+									LOGGER.catching(e);
+									couldProcess = false;
+								}
+								if (!couldProcess) {
+									unregister(false, "Malformed packet!");
+								}
+							}
+						}
+					);
+					getWorld().getServer().addIncomingPacketDuration(curPacket.getID(), packetTime);
+					getWorld().getServer().incrementIncomingPacketCount(curPacket.getID());
+
+					packet = incomingPackets.poll();
+				}
+
+				incomingPackets.clear();
+			}
+		});
+	}
+
+	public long processOutgoingPackets() {
 		// Unsure if we want to clear right now. Probably OK not to since the player should be cleaned up when the channel is no longer open.
 		/*if(!channel.isOpen() || !isLoggedIn()) {
 			outgoingPackets.clear();
 		}*/
 
-		if (!channel.isOpen() || !isLoggedIn() || !channel.isActive() || !channel.isWritable()) {
-			return;
-		}
-		synchronized (outgoingPackets) {
-			try {
-				for (final Packet outgoing : outgoingPackets) {
-					final long packetTime = getWorld().getServer().bench(
-						() -> {
-							channel.writeAndFlush(outgoing);
-						}
-					);
-					getWorld().getServer().addOutgoingPacketDuration(outgoing.getID(), packetTime);
-					getWorld().getServer().incrementOutgoingPacketCount(outgoing.getID());
-				}
-			} catch (final Exception e) {
-				LOGGER.catching(e);
+		return getWorld().getServer().bench(() -> {
+			if (!channel.isOpen() || !isLoggedIn() || !channel.isActive() || !channel.isWritable()) {
+				return;
 			}
-			//channel.flush();
-			outgoingPackets.clear();
-		}
+			synchronized (outgoingPackets) {
+				try {
+					for (final Packet outgoing : outgoingPackets) {
+						final long packetTime = getWorld().getServer().bench(
+							() -> {
+								channel.writeAndFlush(outgoing);
+							}
+						);
+						getWorld().getServer().addOutgoingPacketDuration(outgoing.getID(), packetTime);
+						getWorld().getServer().incrementOutgoingPacketCount(outgoing.getID());
+					}
+				} catch (final Exception e) {
+					LOGGER.catching(e);
+				}
+				//channel.flush();
+				outgoingPackets.clear();
+			}
+		});
 	}
 
 	public void removeSkull() {
@@ -3505,6 +3526,10 @@ public final class Player extends Mob {
 		return this.clientVersion == 177;
 	}
 
+	public boolean isUsing140CompatibleClient() {
+		return this.clientVersion == 140;
+	}
+
 	public boolean isUsing233CompatibleClient() {
 		return this.clientVersion >= 233 && this.clientVersion <= 235;
 	}
@@ -3630,5 +3655,9 @@ public final class Player extends Mob {
 			}
 		}
 		return closestNpc;
+	}
+
+	public void tellCoordinates() {
+		playerServerMessage(MessageType.QUEST, "@whi@You are at @cya@" + getLocation() + "@whi@ or in Jagex notation: @cya@" + getLocation().pointToJagexPoint());
 	}
 }

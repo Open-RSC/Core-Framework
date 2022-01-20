@@ -1,92 +1,176 @@
 package launcher.listeners;
 
+import launcher.Fancy.MainWindow;
+import launcher.Gameupdater.Updater;
+import launcher.Launcher;
+import launcher.Settings;
 import launcher.Utils.ClientLauncher;
 import launcher.Utils.Defaults;
-import launcher.Fancy.MainWindow;
+import launcher.Utils.Logger;
 import launcher.Utils.Utils;
-import launcher.Gameupdater.Updater;
+import launcher.popup.PopupFrame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 public class ButtonListener implements ActionListener {
+	public static PopupFrame settingsFrame;
+	public static PopupFrame launcherFrame;
 	@Override
 	public void actionPerformed(final ActionEvent event) {
 		final String action = event.getActionCommand().toLowerCase();
 		switch (action) {
-			case "rsc wiki": {
-				Utils.openWebpage("https://classic.runescape.wiki");
+			case "openrsc_sword_logo": {
+				Utils.openWebpage("https://openrsc.com");
 				return;
 			}
-			case "our wiki": {
-				Utils.openWebpage("https://runescapeclassic.dev/wiki");
+
+			case "bots": {
+				Settings.showBotButtons = !Settings.showBotButtons;
+				MainWindow.get().toggleBotServers();
+				MainWindow.get().buttons.robotCheckbox.setSelected(Settings.showBotButtons);
 				return;
 			}
-			case "bug reports": {
-				Utils.openWebpage("https://orsc.dev/open-rsc/Game/issues");
+
+			case "uranium_wiki": {
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=RSC_Uranium");
+				return;
+			}
+			case "preservation_wiki": {
+				// Utils.openWebpage("https://classic.runescape.wiki");
+				// Goes to a warning nag screen on how to edit the RSC wiki, to not put PS info in it.
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=RSC_Preservation");
+				return;
+			}
+			case "coleslaw_wiki": {
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=RSC_Coleslaw");
+				return;
+			}
+			case "cabbage_wiki": {
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=RSC_Cabbage");
+				return;
+			}
+			case "2001scape_wiki": {
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=2001scape");
+				return;
+			}
+			case "kale_wiki": {
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=RSC_Kale");
+				return;
+			}
+			case "openpk_wiki": {
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=Open_PK");
+				return;
+			}
+
+			case "openrsc-forums": {
+				Utils.openWebpage("https://rsc.vet/board");
+				return;
+			}
+
+			case "reddit": {
+				Utils.openWebpage("https://old.reddit.com/r/rsc");
+				return;
+			}
+
+			case "bugs":
+			case "cockroach": { // bug report
+				Utils.openWebpage("https://gitlab.com/open-runescape-classic/core/-/issues");
+				return;
+			}
+			case "chat":
+			case "libera": {
+				// could have used ircs://, but it's more likely helpful to show users the web client
+				// and let experienced IRC users just connect using their own client manually
+				// Utils.openWebpage("ircs://irc.libera.chat:6697/#openrsc");
+				Utils.openWebpage("https://web.libera.chat/#openrsc");
 				return;
 			}
 			case "discord": {
-				Utils.openWebpage("https://discord.gg/94vVKND");
+				Utils.openWebpage("https://discord.gg/ABdFCqn");
 				return;
 			}
 
-			case "preservation": {
-				String ip = "game.openrsc.com";
-				String port = "43596";
-				set(ip, port);
-				launch();
-				return;
-			}
-			case "cabbage": {
-				String ip = "game.openrsc.com";
-				String port = "43595";
-				set(ip, port);
-				launch();
+			case "preservation_hiscores": {
+				Utils.openWebpage("https://rsc.vet/hiscores/preservation");
 				return;
 			}
 
-			case "uranium": {
-				String ip = "game.openrsc.com";
-				String port = "43235";
-				set(ip, port);
-				launch();
+			case "cabbage_hiscores": {
+				Utils.openWebpage("https://rsc.vet/hiscores/cabbage");
 				return;
 			}
 
-			case "coleslaw": {
-				String ip = "game.openrsc.com";
-				String port = "43599";
-				set(ip, port);
-				launch();
+			case "uranium_hiscores": {
+				Utils.openWebpage("https://rsc.vet/hiscores/uranium");
 				return;
 			}
 
-			case "rscplus": {
+			case "coleslaw_hiscores": {
+				Utils.openWebpage("https://rsc.vet/hiscores/coleslaw");
+				return;
+			}
+
+			case "2001scape_hiscores": {
+				Utils.openWebpage("https://rsc.vet/hiscores/2001scape");
+				return;
+			}
+
+			case "openpk_hiscores": {
+				Utils.openWebpage("https://rsc.vet/hiscores/openpk");
+				return;
+			}
+
+			case "kale_hiscores": {
+				Utils.openWebpage("https://rsc.vet/hiscores/kale");
+				return;
+			}
+
+			case "preservation":
+			case "cabbage":
+			case "uranium":
+			case "coleslaw":
+			case "2001scape":
+			case "openpk":
+			case "kale": {
+				ClientLauncher.launchClientForServer(action);
+				return;
+			}
+
+			case "fleacircus": {
 				try {
-					Updater.updateRSCPlus();
-				} catch (IOException e) {
+					try {
+						Updater.updateFleaCircus();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					ClientLauncher.launchFleaCircus();
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				return;
 			}
 
-			case "apos": {
-				try {
-					Updater.updateAPOS();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			case "robot_checkbox": {
+				Settings.showBotButtons = !Settings.showBotButtons;
+				MainWindow.get().toggleBotServers();
 				return;
 			}
 
-			case "idlersc": {
-				try {
-					Updater.updateIdleRSC();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			case "undecorated_checkbox": {
+				Settings.undecoratedWindowSave = !Settings.undecoratedWindowSave;
+				return;
+			}
+
+			case "autoupdate_checkbox": {
+				Settings.autoUpdate = !Settings.autoUpdate;
+				return;
+			}
+
+			case "show_prerelease_checkbox": {
+				Settings.showPrerelease = !Settings.showPrerelease;
 				return;
 			}
 
@@ -94,7 +178,6 @@ public class ButtonListener implements ActionListener {
 				MainWindow.get().setState(1);
 				return;
 			}
-
 			case "close": {
 				System.exit(0);
 				return;
@@ -136,43 +219,94 @@ public class ButtonListener implements ActionListener {
 					}
 				}
 
-				System.exit(0);
+				//  re-download openrsc client
+				Launcher.updater.updateOpenRSCClient();
+				return;
+			}
+
+			case "gear":
+			case "client_settings_button": {
+				if (null != settingsFrame)
+					settingsFrame.setVisible(false);
+				if (null != launcherFrame)
+					launcherFrame.setVisible(false);
+				settingsFrame = new PopupFrame(PopupFrame.CLIENT_SETTINGS);
+				settingsFrame.showFrame();
+				return;
+			}
+			
+			case "advanced_settings_button": {
+				if (null != settingsFrame)
+					settingsFrame.setVisible(false);
+				if (null != launcherFrame)
+					launcherFrame.setVisible(false);
+				launcherFrame = new PopupFrame(PopupFrame.LAUNCHER_SETTINGS);
+				launcherFrame.showFrame();
+				return;
+			}
+
+			case "question_mark":
+			case "about_our_servers_button": {
+				Utils.openWebpage("https://rsc.vet/wiki/index.php?title=Open_RuneScape_Classic_Wiki");
+				return;
+			}
+
+			case "floppy_disk":
+			case "apply_and_save_button": {
+				PopupFrame.get().saveClientSelectionsToSettings();
+				return;
+			}
+
+			case "closepopup":
+			case "exit_gear":
+			case "exit_settings_button": {
+				PopupFrame.get().hideFrame();
+				return;
+			}
+
+			case "rune-large": {
+				Utils.openWebpage("https://github.com/RSCPlus/WinRune");
+				return;
+			}
+
+			case "rscplus-large": {
+				Utils.openWebpage("https://github.com/RSCPlus/rscplus");
+				return;
+			}
+
+			case "rsctimes-large": {
+				Utils.openWebpage("https://github.com/RSCPlus/rsctimes");
+				return;
+			}
+
+			case "openrsc-large": {
+				Utils.openWebpage("https://gitlab.com/open-runescape-classic/core/-/tree/develop/Client_Base");
+				return;
+			}
+
+			case "aposbot-large": {
+				Utils.openWebpage("https://gitlab.com/open-runescape-classic/APOS");
+				return;
+			}
+
+			case "mudclient38-large": {
+				Utils.openWebpage("https://github.com/RSCPlus/mudclient38-recreated");
+				return;
+			}
+
+			case "idlersc-large": {
+				Utils.openWebpage("https://gitlab.com/idlersc/idlersc");
+				return;
+			}
+
+			case "webbrowser-large": {
+				Utils.openWebpage("https://github.com/2003scape/mudclient177-deob-teavm");
+				return;
 			}
 
 			default:
 				break;
 		}
-		System.out.println(action);
-	}
-
-	private void set(String ip, String port) {
-		// Sets the IP and port
-		FileOutputStream fileout;
-		try {
-			fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write(ip);
-			outputWriter.close();
-		} catch (Exception ignored) {
-		}
-		try {
-			fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write(port);
-			outputWriter.close();
-		} catch (Exception ignored) {
-		}
-	}
-
-	private void launch() {
-		// Deletes the client.properties file that may persist unwanted settings between different games
-		File f = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "client.properties");
-		f.delete();
-
-		//update the sprite pack config file
-		File configFile = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "config.txt");
-		configFile.delete();
-
-		ClientLauncher.launchClient();
+		Logger.Error("unhandled button: " + action);
 	}
 }

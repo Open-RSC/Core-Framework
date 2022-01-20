@@ -1,7 +1,5 @@
 package com.openrsc.android.updater;
 
-import orsc.osConfig;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
@@ -9,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+import orsc.osConfig;
 
 public class md5 {
 	List<Entry> entries = new ArrayList<>();
@@ -36,6 +36,7 @@ public class md5 {
 	private void loadFromDirectory(File directory) {
 		File[] files = directory.listFiles();
 
+		assert files != null;
 		for (File file : files) {
 			if (file.isDirectory()) {
 				loadFromDirectory(file);
@@ -54,9 +55,9 @@ public class md5 {
 		return null;
 	}
 
-	public class Entry {
-		private String sum;
-		private File ref;
+	public static class Entry {
+		private final String sum;
+		private final File ref;
 
 		public Entry(String mixedline) {
 			sum = mixedline.substring(0, 32);
@@ -87,12 +88,11 @@ public class md5 {
 
 			StringBuffer hexString = new StringBuffer();
 
-			for (int i = 0; i < hashData.length; i++) {
-				if ((0xff & hashData[i]) < 0x10) {
-					hexString.append("0"
-						+ Integer.toHexString((0xFF & hashData[i])));
+			for (byte hashDatum : hashData) {
+				if ((0xff & hashDatum) < 0x10) {
+					hexString.append("0").append(Integer.toHexString((0xFF & hashDatum)));
 				} else {
-					hexString.append(Integer.toHexString(0xFF & hashData[i]));
+					hexString.append(Integer.toHexString(0xFF & hashDatum));
 				}
 			}
 

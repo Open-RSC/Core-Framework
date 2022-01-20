@@ -52,6 +52,9 @@ public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, Op
 		}
 		player.setWalkToAction(new WalkToPointAction(player, item.getLocation(), distance) {
 			public void executeInternal() {
+				if (item.isInvisibleTo(getPlayer()))
+					return;
+
 				if (getPlayer().isBusy() || getPlayer().isRanging() || item == null || item.isRemoved()
 					|| getPlayer().getRegion().getItem(itemId, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
 					|| item.getAmount() < 1) {

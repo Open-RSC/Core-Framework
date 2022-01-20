@@ -16,18 +16,18 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	protected boolean running = true;
-	private Mob owner;
+	private final Mob owner;
 	private final World world;
 	private long delayTicks;
 	private long ticksBeforeRun = -1;
 	private String descriptor;
 	private long lastEventDuration = 0;
-	private boolean uniqueEvent = false;
+	private boolean notUniqueEvent = false;
 
-	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, final boolean uniqueEvent) {
+	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, final boolean notUniqueEvent) {
 		this.world = world;
 		this.owner = owner;
-		this.uniqueEvent = uniqueEvent;
+		this.notUniqueEvent = notUniqueEvent;
 		this.setDescriptor(descriptor);
 		this.setDelayTicks(ticks);
 		this.resetCountdown();
@@ -144,5 +144,5 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		return world;
 	}
 
-	public boolean isUniqueEvent() { return uniqueEvent; }
+	public boolean isNotUniqueEvent() { return notUniqueEvent; }
 }

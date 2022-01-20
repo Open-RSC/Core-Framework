@@ -15,6 +15,7 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.database.impl.mysql.queries.logging.LoginLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.database.impl.mysql.queries.player.login.PlayerOnlineFlagQuery;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
@@ -28,6 +29,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
@@ -74,6 +76,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public int membersWildMax = 56;
 	public int godSpellsStart = 1;
 	public int godSpellsMax = 5;
+	public int eventChestRadius = 4;
+	public GameObject eventChest = null;
 
 	private final Server server;
 	private final RegionManager regionManager;
@@ -943,5 +947,28 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public int getMaxBankSize() {
 		return maxBankSize;
+	}
+
+	public long processGlobalMessageQueue() {
+		return getServer().bench(() -> {
+			GlobalMessage gm;
+			while ((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
+				for (final Player player : getPlayers()) {
+					if (player == gm.getPlayer()) {
+						player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
+							"Global$"));
+						ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
+					} else {
+						if (!player.getBlockGlobalFriend()) {
+							boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
+								== PlayerSettings.BlockingMode.None.id();
+							if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+								ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
+							}
+						}
+					}
+				}
+			}
+		});
 	}
 }

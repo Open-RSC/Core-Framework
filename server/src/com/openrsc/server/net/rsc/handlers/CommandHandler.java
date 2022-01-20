@@ -11,16 +11,19 @@ public final class CommandHandler implements PayloadProcessor<CommandStruct, Opc
 			player.message(player.getConfig().MESSAGE_PREFIX + "There's a second delay between using commands");
 		} else {
 			String s = payload.command;
-			int firstSpace = s.indexOf(" ");
-			String cmd = s;
-			String[] args = new String[0];
-			if (firstSpace != -1) {
-				cmd = s.substring(0, firstSpace).trim();
-				args = s.substring(firstSpace + 1).trim().split(" ");
-			}
-
-			player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Command",
-				new Object[]{player, cmd.toLowerCase(), args});
+			handleCommandString(player, s);
 		}
+	}
+	public static void handleCommandString(Player player, String s) {
+		int firstSpace = s.indexOf(" ");
+		String cmd = s;
+		String[] args = new String[0];
+		if (firstSpace != -1) {
+			cmd = s.substring(0, firstSpace).trim();
+			args = s.substring(firstSpace + 1).trim().split(" ");
+		}
+
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Command",
+			new Object[]{player, cmd.toLowerCase(), args});
 	}
 }

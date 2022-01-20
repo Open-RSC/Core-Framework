@@ -354,6 +354,7 @@ public final class PluginHandler {
 
 							if (pluginTickEvent.getPluginName().equals(pluginName) && pluginTickEvent.getOwner().equals(owner) ) {
 								shouldFire = false;
+								break;
 							}
 						}
 					}
@@ -370,7 +371,7 @@ public final class PluginHandler {
 							} catch (final InvocationTargetException ex) {
 								if (ex.getCause() instanceof PluginInterruptedException) {
 									// PluginTask.call() will do stop() after this which will correctly shut down the Plugin.
-									//LOGGER.info("Plugin Interrupted: " + ex.getMessage());
+									// LOGGER.info("Plugin Interrupted: " + ex.getMessage());
 									return 1;
 								} else {
 									LOGGER.catching(ex);
@@ -382,6 +383,7 @@ public final class PluginHandler {
 							}
 						}
 					};
+
 					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, task);
 
 					getServer().getGameEventHandler().add(e);

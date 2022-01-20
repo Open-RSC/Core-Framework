@@ -231,6 +231,8 @@ public class ServerConfiguration {
 	// public List<String> adminIp;
 	public boolean WANT_RANGED_FACE_PLAYER = false;
 	public boolean ESTERS_BUNNIES_EVENT = false;
+	public boolean MICE_TO_MEET_YOU_EVENT = false;
+	public boolean DEATH_ISLAND = false;
 	public int BASED_MAP_DATA = 64;
 	public int BASED_CONFIG_DATA = 85;
 	public boolean CAN_FEATURE_MEMBS;
@@ -259,6 +261,8 @@ public class ServerConfiguration {
 	public boolean ONLY_REGULAR_BONES;
 	public boolean SHARED_GATHERING_RESOURCES;
 	public boolean HAS_PLAYER_OWNED_HOUSES;
+	public boolean OSRS_COMBAT_MELEE;
+	public boolean OSRS_COMBAT_RANGED;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -366,6 +370,8 @@ public class ServerConfiguration {
 		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
 		RESTRICT_ITEM_ID = tryReadInt("restrict_item_id").orElse(1289);
 		COMBAT_LEVEL_NON_MELEE_MASK = tryReadInt("combat_level_non_melee_mask").orElse(7);
+		OSRS_COMBAT_MELEE = tryReadBool("osrs_combat_melee").orElse(false);
+		OSRS_COMBAT_RANGED = tryReadBool("osrs_combat_ranged").orElse(false);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -551,6 +557,9 @@ public class ServerConfiguration {
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
 		ESTERS_BUNNIES_EVENT = tryReadBool("esters_bunnies").orElse(false);
+		MICE_TO_MEET_YOU_EVENT = tryReadBool("mice_to_meet_you").orElse(false);
+		DEATH_ISLAND = tryReadBool("death_island").orElse(false);
+
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
 	}
 

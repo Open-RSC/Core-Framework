@@ -94,11 +94,18 @@ public class Inventory {
 
 			// Confirm the ItemDef exists.
 			ItemDefinition itemDef = itemToAdd.getDef(player.getWorld());
-			if (itemDef == null)
+			if (itemDef == null) {
+				if (player.isEvent()) {
+					player.message("Item def doesn't exist for item " + itemToAdd.getItemId());
+				}
 				return false;
+			}
 
 			// Confirm world allows giving item
 			if (player.getConfig().RESTRICT_ITEM_ID >= 0 && player.getConfig().RESTRICT_ITEM_ID < itemToAdd.getCatalogId()) {
+				if (player.isEvent()) {
+					player.message("World doesn't allow itemid " + itemToAdd.getCatalogId() + "; only allows up to " + player.getConfig().RESTRICT_ITEM_ID);
+				}
 				return false;
 			}
 

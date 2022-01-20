@@ -443,7 +443,6 @@ public class Fletching implements UseInvTrigger {
 			player.message(cutMessage);
 			give(player, id, id == ItemId.ARROW_SHAFTS.id() ? getNumberOfShafts(player, log.getCatalogId()) : 1);
 			player.incExp(Skill.FLETCHING.id(), exp, true);
-			delay();
 		}
 
 		// Repeat
