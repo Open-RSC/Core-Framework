@@ -324,7 +324,7 @@ public class ServerConfiguration {
 		SERVER_PORT = tryReadInt("server_port").orElse(43594);
 		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(20);
 		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
-		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(50);
+		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(100);
 		MAX_LOGINS_PER_SECOND = tryReadInt("max_logins_per_second").orElse(1);
 		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = tryReadInt("max_password_guesses_per_five_minutes").orElse(10);
 		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(5);
