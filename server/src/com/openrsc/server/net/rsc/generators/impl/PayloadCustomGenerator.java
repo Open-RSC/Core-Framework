@@ -359,7 +359,8 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 				case SEND_FATIGUE:
 				case SEND_SLEEP_FATIGUE:
 					FatigueStruct fs = (FatigueStruct) payload;
-					builder.writeShort(fs.serverFatigue / (player.MAX_FATIGUE / 100));
+					builder.writeShort(fs.serverFatigue / (player.MAX_FATIGUE / 100)); // backwards compatible with old custom clients
+					builder.writeShort(fs.serverFatigue / (player.MAX_FATIGUE / 750)); // authentic higher precision, if client wants to read it
 					break;
 
 				case SEND_PLAY_SOUND:

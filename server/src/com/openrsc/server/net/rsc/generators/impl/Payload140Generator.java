@@ -8,6 +8,7 @@ import com.openrsc.server.model.RSCString;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
+import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.GameNetworkException;
 import com.openrsc.server.net.rsc.PayloadValidator;
 import com.openrsc.server.net.rsc.enums.OpcodeOut;
@@ -428,6 +429,10 @@ public class Payload140Generator implements PayloadGenerator<OpcodeOut> {
 					int inventorySize = is.inventorySize;
 					builder.writeByte((byte) inventorySize);
 					for (int i = 0; i < inventorySize; i++) {
+						if (is.catalogIDs[i] > player.getClientLimitations().maxItemId) {
+							is.catalogIDs[i] = 0;
+						}
+
 						// First bit is if it is wielded or not
 						builder.writeShort((is.wielded[i] << 15) | is.catalogIDs[i]);
 						// amount[i] will only be > 0 if the item is stackable or noted.

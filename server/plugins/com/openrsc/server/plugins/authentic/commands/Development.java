@@ -38,6 +38,8 @@ public final class Development implements CommandTrigger {
 		return player.isDev();
 	}
 
+	public static boolean abortFlag = false;
+
 	/**
 	 * Template for ::dev commands
 	 * Development usable commands in general
@@ -102,6 +104,12 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("sound")) {
 			playSound(player, args);
+		}
+		else if (command.equalsIgnoreCase("cyclescenery")) {
+			cycleScenery(player, args);
+		}
+		else if (command.equalsIgnoreCase("abort")) {
+			setAbortFlag();
 		}
 	}
 
@@ -293,6 +301,38 @@ public final class Development implements CommandTrigger {
 		player.message(messagePrefix + "Removed scenery: " + object.getGameObjectDef().getName() + " with ID " + object.getID());
 		player.getWorld().unregisterGameObject(object);
 	}
+
+	private void cycleScenery(Player player, String[] args) {
+		// render player invisible
+		for (int i = 0; i < 12; i++) {
+			player.updateWornItems(i, 0);
+		}
+		player.toggleDenyAllLogoutRequests();
+
+		player.message("Now displaying all scenery in RuneScape Classic in 5 second intervals.");
+
+		for (int id = 0; id <= 1188; id++) {
+			GameObject object = player.getViewArea().getGameObject(player.getLocation());
+			if (object != null) {
+				player.getWorld().unregisterGameObject(object);
+			}
+			GameObject newObject = new GameObject(player.getWorld(), player.getLocation(), id, 0, 0);
+			player.getWorld().registerGameObject(newObject);
+			player.message("scenery id: " + id);
+			delay(8);
+			if (abortFlag) {
+				player.message("Aborting cycle!");
+				abortFlag = false;
+				return;
+			}
+		}
+		player.message("That is all of the scenery in RuneScape Classic!");
+		player.message("If you'd like to see it lit from a different angle, I'd suggest editing map tile " + player.getLocation().pointToJagexPoint());
+		player.message("Then play this same replay again.");
+		delay(8);
+		player.toggleDenyAllLogoutRequests();
+	}
+	private void setAbortFlag() { abortFlag = true; }
 
 	private void rotateObject(Player player, String command, String[] args) {
 		if(args.length == 1) {

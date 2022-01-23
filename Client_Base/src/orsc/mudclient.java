@@ -382,6 +382,7 @@ public final class mudclient implements Runnable {
 	private boolean errorLoadingMemory = false;
 	private int[] experienceArray = new int[S_PLAYER_LEVEL_LIMIT];
 	private int fatigueSleeping = 0;
+	private int fatigueSleepingAuthentic = 0;
 	private int gameHeight = 334;
 	private int gameObjectInstanceCount = 0;
 	private final int[] gameObjectInstanceZ = new int[5000];
@@ -563,6 +564,7 @@ public final class mudclient implements Runnable {
 	private int sleepWordDelayTimer = 0;
 	private int spriteCount = 0;
 	private int statFatigue = 0;
+	private int statFatigueAuthentic = 0;
 	private int statKills2 = 0;
 	private int expShared = 0;
 	private int petFatigue = 0;
@@ -16018,6 +16020,10 @@ public final class mudclient implements Runnable {
 		this.fatigueSleeping = fatigue;
 	}
 
+	public void setFatigueSleepingAuthentic(int fatigue) {
+		this.fatigueSleepingAuthentic = fatigue;
+	}
+
 	public int getStatFatigue() {
 		return this.statFatigue;
 	}
@@ -16026,6 +16032,10 @@ public final class mudclient implements Runnable {
 		if (DEBUG)
 			System.out.println("Fatigue: " + fatigue);
 		this.statFatigue = fatigue;
+	}
+
+	public void setStatFatigueAuthentic(int fatigue) {
+		this.statFatigueAuthentic = fatigue;
 	}
 
 	public int getStatKills2() {

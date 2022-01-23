@@ -105,6 +105,9 @@ public final class Event implements CommandTrigger {
 		else if (command.equalsIgnoreCase("invisible") || command.equalsIgnoreCase("invis")) {
 			enableInvisibility(player, command, args);
 		}
+		else if (command.equalsIgnoreCase("norender") || command.equalsIgnoreCase("renderself")) {
+			setNoRender(player);
+		}
 		else if (command.equalsIgnoreCase("invulnerable") || command.equalsIgnoreCase("invul")) {
 			enableInvulnerability(player, command, args);
 		}
@@ -545,6 +548,13 @@ public final class Event implements CommandTrigger {
 		}
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + targetPlayer.getUsername() + " " + invisibleText));
 
+	}
+
+	private void setNoRender(Player player) {
+		for (int i = 0; i < 12; i++) {
+			player.updateWornItems(i, 0);
+		}
+		player.message("you're truly invisible now!");
 	}
 
 	private void enableInvulnerability(Player player, String command, String[] args) {

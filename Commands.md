@@ -39,7 +39,7 @@ Admin Commands
   - Gets information about the currently running holiday drop.
 - restart
   - Usage: `::restart`
-  - Restarts the server using a five minute timer. Note: this typically will not re-launch the server and it must be manually exited and restarted externally.
+  - Restarts the server using a five minute timer.
 - grounditem
   - Usage: `::grounditem [id] (respawn_time) (amount) (x) (y)`
   - Alias: `::gi` or `::gitem`
@@ -53,7 +53,7 @@ Admin Commands
   - Removes from the database a ground item spawn entry.
   - If no coordinates are supplied, then the current player's coordinates are used.
 - shutdown
-  - Usage: `::shutdown 
+  - Usage: `::shutdown`
   - Shuts down the server immediately.
 - update
   - Usage: `::update (reason)`
@@ -266,6 +266,12 @@ Developer Commands
 - error
   - Usage: `::error (output to stdout)`
   - Causes an ArrayOutOfBounds exception to occur if not passed an argument. Otherwise prints the first argument to stdout.
+- cyclescenery
+  - Usage: `::cyclescenery`
+  - Shows all scenery in game in order.
+- abort
+  - Usage: `::abort`
+  - Aborts `cyclescenery` before it finishes.
 ------------------------
 Super/Senior Moderator Commands
 ------------------------
@@ -402,6 +408,12 @@ Event Commands
   - Turn the specified player invisinble.
   - If no player is specified, then the current player is turned invisible.
   - If no boolean is supplied, then this command works as a toggle.
+- norender
+  - Usage `::norender`
+  - Alias: `::renderself`
+  - Makes the player completely un-rendered, but still transmits position of player to those around, so don't use as a substitute for `::invis`.
+  - Useful for taking pictures or for talking to players while "invisible".
+  - Return to normal with `::resetappearance`
 - invulnerable
   - Usage: `::invulnerable (player) (boolean)`
   - Alias: `::invul`

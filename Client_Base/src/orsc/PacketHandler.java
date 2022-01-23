@@ -415,12 +415,16 @@ public class PacketHandler {
 				mc.setElixirTimer(packetsIncoming.getShort() * 32);
 
 				// Sleeping Menu Fatigue
-			else if (opcode == 244)
+			else if (opcode == 244) {
 				mc.setFatigueSleeping(packetsIncoming.getShort());
+				mc.setFatigueSleepingAuthentic(packetsIncoming.getShort());
+			}
 
 				// Total Fatigue
-			else if (opcode == 114)
+			else if (opcode == 114) {
 				mc.setStatFatigue(packetsIncoming.getShort());
+				mc.setStatFatigueAuthentic(packetsIncoming.getShort());
+			}
 
 				// Kills2
 			else if (opcode == 147)
