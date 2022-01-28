@@ -700,21 +700,26 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "You drink the wine");
 		player.playerServerMessage(MessageType.QUEST, "It makes you feel a bit dizzy");
 		player.getCarriedItems().remove(item);
+		// wine used to be two dose likely before the cooking update of 11 June 2001
+		boolean twoDoseWine = player.getConfig().RESTRICT_ITEM_ID >= 0 && player.getConfig().RESTRICT_ITEM_ID < ItemId.CHEESE.id();
 		//half-wine set to 1/25k chance
 		int rand = DataConversions.random(0, 25000);
-		if (item.getCatalogId() == ItemId.WINE.id() && rand == 0) {
+		boolean isFullWine = item.getCatalogId() == ItemId.WINE.id();
+		if (isFullWine && (twoDoseWine || rand == 0)) {
 			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_FULL_WINE_JUG.id()));
 		} else {
 			player.getCarriedItems().getInventory().add(new Item(ItemId.JUG.id()));
 		}
+		int healAmount = !isFullWine || twoDoseWine ? 5 : 11;
+		int lowerAmount = !isFullWine || twoDoseWine ? 1 : 3;
 		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
-			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 11;
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + healAmount;
 			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
 				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
 			player.getSkills().setLevel(Skill.HITS.id(), newStat, sendUpdate);
 		}
-		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 3, sendUpdate);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - lowerAmount, sendUpdate);
 	}
 
 	private void handleChocolatyMilk(Player player, Item item, final boolean sendUpdate) {
@@ -829,6 +834,13 @@ public class Drinkables implements OpInvTrigger {
 				player.getSkills().setLevel(magicId, player.getSkills().getLevel(magicId) + change, sendUpdate);
 			}
 		}
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 1;
+			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
+			}
+			player.getSkills().setLevel(Skill.HITS.id(), newStat, sendUpdate);
+		}
 	}
 
 	private void handleDwarvenStout(Player player, Item item, final boolean sendUpdate) {
@@ -848,6 +860,13 @@ public class Drinkables implements OpInvTrigger {
 		}
 		if (player.getSkills().getLevel(Skill.MINING.id()) <= player.getSkills().getMaxStat(Skill.MINING.id())) {
 			player.getSkills().setLevel(Skill.MINING.id(), player.getSkills().getLevel(Skill.MINING.id()) + 1, sendUpdate);
+		}
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 1;
+			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
+			}
+			player.getSkills().setLevel(Skill.HITS.id(), newStat, sendUpdate);
 		}
 	}
 

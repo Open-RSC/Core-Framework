@@ -21,6 +21,7 @@ public class AppearanceRetroConverter {
 		put(46, 40); // leatherarmour
 		put(47, 41); // leathergloves
 		put(12, 12); // boots
+		put(80, 60); // necklace
 		put(81, 60); // necklace
 		put(107, 80); // crossbow
 		put(48, 42); // bronzesword

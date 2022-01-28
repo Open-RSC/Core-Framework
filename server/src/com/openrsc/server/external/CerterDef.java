@@ -25,6 +25,22 @@ public class CerterDef {
 		return names;
 	}
 
+	public String[] getFromCertOpts() {
+		String[] opts = new String[certs.length];
+		for (int i = 0; i < certs.length; i++) {
+			opts[i] = certs[i].getFromCertOpt();
+		}
+		return opts;
+	}
+
+	public String[] getToCertOpts() {
+		String[] opts = new String[certs.length];
+		for (int i = 0; i < certs.length; i++) {
+			opts[i] = certs[i].getToCertOpt();
+		}
+		return opts;
+	}
+
 	public int getItemID(int index) {
 		if (index < 0 || index >= certs.length) {
 			return -1;

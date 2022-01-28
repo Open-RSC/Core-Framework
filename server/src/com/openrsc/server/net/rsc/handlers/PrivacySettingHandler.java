@@ -9,12 +9,13 @@ public class PrivacySettingHandler implements PayloadProcessor<PrivacySettingsSt
 
 	public void process(PrivacySettingsStruct payload, Player player) throws Exception {
 
-		byte[] newSettings = new byte[5]; //todo: need to use setting of hide online later
+		byte[] newSettings = new byte[5];
 		newSettings[0] = (byte) payload.blockChat;
 		newSettings[1] = (byte) payload.blockPrivate;
 		newSettings[2] = (byte) payload.blockTrade;
 		newSettings[3] = (byte) payload.blockDuel;
-		for (int i = 0; i < 4; i++) {
+		newSettings[4] = (byte) payload.hideStatus;
+		for (int i = 0; i < 5; i++) {
 			player.getSettings().setPrivacySetting(i, newSettings[i]);
 		}
 	}

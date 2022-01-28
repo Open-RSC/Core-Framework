@@ -13,6 +13,14 @@ public class CertDef {
 	 * The name of the item this cert is for
 	 */
 	public String name;
+	/**
+	 * The option's item name to display from Cert -> item
+	 */
+	public String fromCertOpt;
+	/**
+	 * The option's item name to display from item -> Cert
+	 */
+	public String toCertOpt;
 
 	public int getCertID() {
 		return certID;
@@ -24,5 +32,13 @@ public class CertDef {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getFromCertOpt() {
+		return fromCertOpt;
+	}
+
+	public String getToCertOpt() {
+		return toCertOpt;
 	}
 }

@@ -60,6 +60,7 @@ public class PlayerService implements IPlayerService {
                 loadPlayerLastSpellCast(loaded);
                 loadPlayerNpcKills(loaded);
             });
+			loaded.getSettings().setPrivacySetting(PlayerSettings.PRIVACY_HIDE_ONLINE_STATUS, (byte)loaded.getHideOnline());
 
             return loaded;
         } catch (final Exception ex) {

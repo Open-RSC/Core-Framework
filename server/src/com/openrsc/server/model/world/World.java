@@ -22,6 +22,7 @@ import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -831,6 +832,11 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public TileValue getTile(final Point point) {
 		return getRegionManager().getTile(point);
+	}
+
+	public boolean canYield(final Item item) {
+		boolean notYieldable = this.server.getConfig().RESTRICT_ITEM_ID >= 0 && this.server.getConfig().RESTRICT_ITEM_ID < item.getCatalogId();
+		return !notYieldable;
 	}
 
 	public FishingTrawler getFishingTrawler(final TrawlerBoat boat) {

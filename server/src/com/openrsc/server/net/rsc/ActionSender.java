@@ -158,7 +158,7 @@ public class ActionSender {
 
 	public static void sendPlayerOnTutorial(Player player) {
 		PlayerOnTutorialStruct struct = new PlayerOnTutorialStruct();
-		struct.onTutorial = player.getLocation().onTutorialIsland() && 
+		struct.onTutorial = player.getLocation().onTutorialIsland() &&
 			player.getWorld().getServer().getConfig().SHOW_TUTORIAL_SKIP_OPTION ? 1 : 0;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_ON_TUTORIAL, struct, player);
 	}
@@ -1147,6 +1147,7 @@ public class ActionSender {
 		struct.blockPrivate = getPrivacySettingValue(player, PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, fromAuthentic);
 		struct.blockTrade = getPrivacySettingValue(player, PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, fromAuthentic);
 		struct.blockDuel = getPrivacySettingValue(player, PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, fromAuthentic);
+		struct.hideStatus = getPrivacySettingValue(player, PlayerSettings.PRIVACY_HIDE_ONLINE_STATUS, fromAuthentic);
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_PRIVACY_SETTINGS, struct, player);
 	}
 

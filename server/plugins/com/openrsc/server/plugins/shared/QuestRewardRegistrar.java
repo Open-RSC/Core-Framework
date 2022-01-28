@@ -28,8 +28,10 @@ public final class QuestRewardRegistrar extends AbstractRegistrar {
 
 		// 0 - BLACK_KNIGHTS_FORTRESS
 		rewardsList = new ArrayList<>();
-		if (awardInfluence)
+		if (awardInfluence) {
+			rewardsList.add(new XPReward(Skill.THIEVING, 400, 300));
 			rewardsList.add(new XPReward(Skill.INFLUENCE, 300, 200));
+		}
 		skillRewardsAdd = new XPReward[rewardsList.size()];
 		mapQuests.put(Quests.BLACK_KNIGHTS_FORTRESS,
 			new AbstractMap.SimpleImmutableEntry<>(++questNum, new QuestReward(3, rewardsList.toArray(skillRewardsAdd))));

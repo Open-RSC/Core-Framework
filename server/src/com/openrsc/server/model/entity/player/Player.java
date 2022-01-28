@@ -490,6 +490,14 @@ public final class Player extends Mob {
 		return getCache().hasKey("pk_changes_left") ? getCache().getInt("pk_changes_left") : 0;
 	}
 
+	public void setHideOnline(byte hideOnline) {
+		getCache().set("setting_hide_online", hideOnline);
+	}
+
+	public int getHideOnline() {
+		return getCache().hasKey("setting_hide_online") ? getCache().getInt("setting_hide_online") : 0;
+	}
+
 	public void resetCannonEvent() {
 		if (cannonEvent != null) {
 			cannonEvent.stop();

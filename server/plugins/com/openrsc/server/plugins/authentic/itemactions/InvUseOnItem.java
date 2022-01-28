@@ -6,7 +6,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.commons.lang.ArrayUtils;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -267,11 +269,11 @@ public class InvUseOnItem implements UseInvTrigger {
 	@Override
 	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.YELLOWDYE.id()))
-			return true;
+			return player.getWorld().canYield(new Item(ItemId.ORANGEDYE.id()));
 		else if (compareItemsIds(item1, item2, ItemId.REDDYE.id(), ItemId.BLUEDYE.id()))
-			return true;
+			return player.getWorld().canYield(new Item(ItemId.PURPLEDYE.id()));
 		else if (compareItemsIds(item1, item2, ItemId.YELLOWDYE.id(), ItemId.BLUEDYE.id()))
-			return true;
+			return player.getWorld().canYield(new Item(ItemId.GREENDYE.id()));
 		else if (compareItemsIds(item1, item2, ItemId.GOBLIN_ARMOUR.id(), ItemId.ORANGEDYE.id()))
 			return true;
 		else if (compareItemsIds(item1, item2, ItemId.GOBLIN_ARMOUR.id(), ItemId.BLUEDYE.id()))
@@ -317,10 +319,12 @@ public class InvUseOnItem implements UseInvTrigger {
 		else if (compareItemsIds(item1, item2, ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()))
 			return true;
 
-		for (int il : capes) {
-			if (il == item1.getCatalogId()) {
-				return true;
-			}
+		if ((Arrays.stream(capes).anyMatch(c -> item1.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item2.getCatalogId() == d)) ||
+			(Arrays.stream(capes).anyMatch(c -> item2.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d))) {
+			boolean isDyeFirst = Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d);
+			int dyeId = isDyeFirst ? item1.getCatalogId() : item2.getCatalogId();
+			int dyeIndex = ArrayUtils.indexOf(dye, dyeId);
+			return player.getWorld().canYield(new Item(newCapes[dyeIndex]));
 		}
 		return false;
 	}

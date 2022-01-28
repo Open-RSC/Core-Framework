@@ -13,7 +13,8 @@ public class PlayerSettings {
 	public static final int PRIVACY_BLOCK_CHAT_MESSAGES = 0,
 		PRIVACY_BLOCK_PRIVATE_MESSAGES = 1,
 		PRIVACY_BLOCK_TRADE_REQUESTS = 2,
-		PRIVACY_BLOCK_DUEL_REQUESTS = 3;
+		PRIVACY_BLOCK_DUEL_REQUESTS = 3,
+		PRIVACY_HIDE_ONLINE_STATUS = 4;
 
 	public static final int GAME_SETTING_AUTO_CAMERA = 0,
 		GAME_SETTING_MOUSE_BUTTONS = 1,
@@ -23,13 +24,14 @@ public class PlayerSettings {
 		"setting_block_all_chat",
 		"setting_block_all_private",
 		"setting_block_all_trade",
-		"setting_block_all_duel"
+		"setting_block_all_duel",
+		"setting_hide_all_status"
 	};
 
 	private HashMap<Long, Long> attackedBy = new HashMap<Long, Long>();
 	private HashMap<Integer, Long> attackedBy2 = new HashMap<Integer, Long>();
 
-	private byte[] privacySettings = new byte[4];
+	private byte[] privacySettings = new byte[5];
 	private boolean[] gameSettings = new boolean[3];
 
 	private PlayerAppearance appearance;
@@ -55,9 +57,12 @@ public class PlayerSettings {
 			for (Player pl : player.getWorld().getPlayers()) {
 				if (pl.getSocial().isFriendsWith(player.getUsernameHash())
 					&& pl.getIndex() != player.getIndex()) {
-					ActionSender.sendFriendUpdate(pl, player.getUsernameHash()
-					);
+					ActionSender.sendFriendUpdate(pl, player.getUsernameHash());
 				}
+			}
+		} else if (i == 4) {
+			if (!blockAll) {
+				player.setHideOnline(b);
 			}
 		}
 	}

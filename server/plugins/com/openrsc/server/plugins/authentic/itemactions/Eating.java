@@ -45,6 +45,7 @@ public class Eating implements OpInvTrigger {
 			boolean isKebabVariant = false;
 			boolean gaveMessage = false;
 			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
+			boolean gaveBoost = false;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id() || id == ItemId.RED_CABBAGE.id()) {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
@@ -76,6 +77,13 @@ public class Eating implements OpInvTrigger {
 			} else if (id == ItemId.SPINACH_ROLL.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You eat the spinach roll");
 				player.playerServerMessage(MessageType.QUEST, "It tastes a bit weird, but fills you up");
+				if (player.getConfig().SPINACH_ROLL_BOOSTS) {
+					int pottedMax = getMaxBoost(player, Skill.STRENGTH.id(), 10, 2);
+					if (player.getSkills().getLevel(Skill.STRENGTH.id()) < pottedMax + 5) {
+						player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 5, sendUpdate);
+						gaveBoost = true;
+					}
+				}
 			} else if (id == ItemId.CHOCOLATE_BOMB.id() || id == ItemId.GNOME_WAITER_CHOCOLATE_BOMB.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You eat the choc bomb");
 				player.message("it tastes great");
@@ -219,9 +227,9 @@ public class Eating implements OpInvTrigger {
 					newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 				}
 				player.getSkills().setLevel(Skill.HITS.id(), newHp, sendUpdate);
-				if (!sendUpdate) {
-					player.getSkills().sendUpdateAll();
-				}
+			}
+			if ((heals || gaveBoost) && !sendUpdate) {
+				player.getSkills().sendUpdateAll();
 			}
 			if (heals && !isKebabVariant && !gaveMessage) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
@@ -283,6 +291,14 @@ public class Eating implements OpInvTrigger {
 			// Remove
 			player.getCarriedItems().remove(new Item(id, 1));
 		}
+	}
+
+	private int getMaxBoost(Player player, final int affectedStat, final int percentageIncrease, final int modifier) {
+		int maxStat = player.getSkills().getMaxStat(affectedStat);
+		int maxBoostStat = maxStat
+			+ DataConversions.roundUp((player.getSkills().getMaxStat(affectedStat) / 100D) * percentageIncrease)
+			+ modifier;
+		return maxBoostStat;
 	}
 
 	private void handleKebab(Player player, Item item) {

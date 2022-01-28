@@ -5,8 +5,10 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
-import com.openrsc.server.model.*;
-import com.openrsc.server.model.action.WalkToAction;
+import com.openrsc.server.model.PlayerAppearance;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.PrivateMessage;
+import com.openrsc.server.model.RSCString;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -21,6 +23,7 @@ import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -434,8 +437,8 @@ public final class GameStateUpdater {
 				}
 			}
 			if (updateFlags.hasBubbleNpc()) {
-					BubbleNpc bubble = updateFlags.getActionBubbleNpc().get();
-					npcBubblesNeedingDisplayed.add(bubble);
+				BubbleNpc bubble = updateFlags.getActionBubbleNpc().get();
+				npcBubblesNeedingDisplayed.add(bubble);
 			}
 		}
 		int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size();
@@ -543,15 +546,15 @@ public final class GameStateUpdater {
 			if (!chatMessage.getMuted() || player.hasElevatedPriveledges()) {
 				// 177 client locally echos player's own chat messages instead of having the server confirm what the player sent
 				if (
-						!(
-							// is a client that echos their own local chat messages
-							player.isUsing177CompatibleClient() &&
+					!(
+						// is a client that echos their own local chat messages
+						player.isUsing177CompatibleClient() &&
 							// is public chat & not quest/private message
 							(chatMessage.getRecipient() == null || chatMessage.getRecipient().isPlayer()) &&
 							// chat sender is chat receiver
 							((Player)chatMessage.getSender()).getUsernameHash() == player.getUsernameHash()
-						)
 					)
+				)
 				{
 					chatMessagesNeedingDisplayed.add(chatMessage);
 				}
@@ -801,73 +804,94 @@ public final class GameStateUpdater {
 							updatesMain.add((byte) 0); // Equipment count
 						}
 					} else if (!isCustomClient &&
-                        (playerNeedingAppearanceUpdate.stateIsInvisible() ||
-                            playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
+						(playerNeedingAppearanceUpdate.stateIsInvisible() ||
+							playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
 						// Handle Invisibility & Invulnerability in the authentic client
 
-                        int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
+						int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
 
-                        int bootColour = AppearanceId.SHADOW_WARRIOR_BOOTS.id(); // default
-                        if (wornItems[AppearanceId.SLOT_BOOTS] != 0) {
-                            // if player is already wearing boots, we can let them choose their colour. :-)
-                            bootColour = wornItems[AppearanceId.SLOT_BOOTS];
-                        }
+						int bootColour = wornItems[AppearanceId.SLOT_BOOTS]; // if player is already wearing boots, we can let them choose their colour. :-)
+						if (wornItems[AppearanceId.SLOT_BOOTS] == 0) {
+							if (isRetroClient) {
+								bootColour = AppearanceId.LEATHER_BOOTS.id();
+							} else {
+								bootColour = AppearanceId.SHADOW_WARRIOR_BOOTS.id(); // default
+							}
+						}
 
-                        int shieldSprite = 0; // default to invisible
-                        if (playerNeedingAppearanceUpdate.stateIsInvulnerable()) {
-                            if (wornItems[AppearanceId.SLOT_SHIELD] == AppearanceId.DRAGON_SQUARE_SHIELD.id()) {
-                                shieldSprite = AppearanceId.RUNE_SQUARE_SHIELD.id();
-                            } else {
-                                shieldSprite = AppearanceId.DRAGON_SQUARE_SHIELD.id();
-                            }
-                        }
+						int shieldSprite = 0; // default to invisible
+						if (playerNeedingAppearanceUpdate.stateIsInvulnerable()) {
+							if (isRetroClient) {
+								if (wornItems[AppearanceId.SLOT_SHIELD] == AppearanceId.ADAMANTITE_SQUARE_SHIELD.id()) {
+									shieldSprite = AppearanceId.WOODEN_SHIELD.id();
+								} else {
+									shieldSprite = AppearanceId.ADAMANTITE_SQUARE_SHIELD.id();
+								}
+							} else {
+								if (wornItems[AppearanceId.SLOT_SHIELD] == AppearanceId.DRAGON_SQUARE_SHIELD.id()) {
+									shieldSprite = AppearanceId.RUNE_SQUARE_SHIELD.id();
+								} else {
+									shieldSprite = AppearanceId.DRAGON_SQUARE_SHIELD.id();
+								}
+							}
+						}
 
-                        int gloveColour = wornItems[AppearanceId.SLOT_GLOVES]; // let player keep their gloves, even if they have none
+						int gloveColour = wornItems[AppearanceId.SLOT_GLOVES]; // let player keep their gloves, even if they have none
 						if (wornItems[AppearanceId.SLOT_GLOVES] == 0 && wornItems[AppearanceId.SLOT_WEAPON] != 0) {
 							// give player gloves if they are wielding a weapon
 							gloveColour = AppearanceId.LEATHER_GLOVES.id();
 						}
 
-                        // if player is just invulnerable & not invisible, give them a dark-robed appearance
-                        int headSprite = 0; // default to invisible
-                        int hatSprite = 0;
-                        int bodySprite = 0;
-                        int legSprite = 0;
-                        int pantsSprite = 0;
-                        int shirtSprite = 0;
-                        int amuletSprite = wornItems[AppearanceId.SLOT_AMULET];
-                        if (!playerNeedingAppearanceUpdate.stateIsInvisible()) {
-                            headSprite = wornItems[AppearanceId.SLOT_HEAD];
-                            if (wornItems[AppearanceId.SLOT_HAT] == 0) {
-                                hatSprite = AppearanceId.LARGE_BLACK_HELMET.id();
-                                headSprite = AppearanceId.NOTHING.id();
-                            } else {
-                                hatSprite = wornItems[AppearanceId.SLOT_HAT];
-                            }
+						// if player is just invulnerable & not invisible, give them a dark-robed appearance
+						int headSprite = 0; // default to invisible
+						int hatSprite = 0;
+						int bodySprite = 0;
+						int legSprite = 0;
+						int pantsSprite = 0;
+						int shirtSprite = 0;
+						int amuletSprite = wornItems[AppearanceId.SLOT_AMULET];
+						if (!playerNeedingAppearanceUpdate.stateIsInvisible()) {
+							headSprite = wornItems[AppearanceId.SLOT_HEAD];
+							if (wornItems[AppearanceId.SLOT_HAT] == 0) {
+								hatSprite = AppearanceId.LARGE_BLACK_HELMET.id();
+								headSprite = AppearanceId.NOTHING.id();
+							} else {
+								hatSprite = wornItems[AppearanceId.SLOT_HAT];
+							}
 
-                            // dark robes
-                            bodySprite = AppearanceId.SHADOW_WARRIOR_ROBE.id();
-                            legSprite = AppearanceId.SHADOW_WARRIOR_SKIRT.id();
-                            pantsSprite = AppearanceId.COLOURED_PANTS.id();
-                            shirtSprite = AppearanceId.FEMALE_BODY.id();
-                            gloveColour = AppearanceId.ICE_GLOVES.id();
-                            amuletSprite = AppearanceId.PENDANT_OF_LUCIEN.id();
-                        }
+							// dark robes
+							if (isRetroClient) {
+								bodySprite = AppearanceId.DARKWIZARDS_ROBE.id();
+								legSprite = AppearanceId.BLACK_SKIRT.id();
+							} else {
+								bodySprite = AppearanceId.SHADOW_WARRIOR_ROBE.id();
+								legSprite = AppearanceId.SHADOW_WARRIOR_SKIRT.id();
+							}
+							pantsSprite = AppearanceId.COLOURED_PANTS.id();
+							shirtSprite = AppearanceId.FEMALE_BODY.id();
+							if (isRetroClient) {
+								gloveColour = AppearanceId.LEATHER_GLOVES.id();
+								amuletSprite = AppearanceId.SILVER_NECKLACE.id();
+							} else {
+								gloveColour = AppearanceId.ICE_GLOVES.id();
+								amuletSprite = AppearanceId.PENDANT_OF_LUCIEN.id();
+							}
+						}
 
-                        // as char to indicate to the generator to use appearancebyte
+						// as char to indicate to the generator to use appearancebyte
 						if (isRetroClient) {
 							updatesAlt.add((byte) 11); // Equipment count
-							updatesAlt.add((char) headSprite);
-							updatesAlt.add((char) shirtSprite);
-							updatesAlt.add((char) pantsSprite);
-							updatesAlt.add((char) shieldSprite);
-							updatesAlt.add((char) wornItems[AppearanceId.SLOT_WEAPON]);
-							updatesAlt.add((char) hatSprite);
-							updatesAlt.add((char) bodySprite);
-							updatesAlt.add((char) legSprite);
-							updatesAlt.add((char) gloveColour);
-							updatesAlt.add((char) bootColour);
-							updatesAlt.add((char) amuletSprite);
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(headSprite) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(shirtSprite) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(pantsSprite) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(shieldSprite) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(wornItems[AppearanceId.SLOT_WEAPON]) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(hatSprite) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(bodySprite) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(legSprite) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(gloveColour) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(bootColour) & 0xFF));
+							updatesAlt.add((char) (AppearanceRetroConverter.convert(amuletSprite) & 0xFF));
 						} else {
 							updatesMain.add((byte) 11); // Equipment count
 							updatesMain.add((char) headSprite);
@@ -882,24 +906,24 @@ public final class GameStateUpdater {
 							updatesMain.add((char) bootColour);
 							updatesMain.add((char) amuletSprite);
 						}
-                        // No Cape
-                    } else {
+						// No Cape
+					} else {
 						// normal appearance update (not invisible)
 						if (isRetroClient) {
 							updatesAlt.add((byte) playerNeedingAppearanceUpdate.getWornItems().length);
 						} else {
 							updatesMain.add((byte) playerNeedingAppearanceUpdate.getWornItems().length);
 						}
-                        for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
-                            if (isRetroClient) {
+						for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
+							if (isRetroClient) {
 								updatesAlt.add((char) (AppearanceRetroConverter.convert(i) & 0xFF));
 							} else if (player.isUsing233CompatibleClient() || is177Compat) {
 								updatesMain.add((char) (i & 0xFF));
 							} else {
 								updatesMain.add((short) i);
 							}
-                        }
-                    }
+						}
+					}
 
 					if (isRetroClient) {
 						updatesAlt.add((char) appearance.getHairColour());
@@ -1078,30 +1102,30 @@ public final class GameStateUpdater {
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					if (!playerToUpdate.isUsingCustomClient()) {
-                        // The authentic server does not really send removals for boundaries.
-                        // The client is able to handle having boundaries overwritten by new boundaries, but
-                        // it doesn't correctly handle having boundaries outright removed.
-                        //
-                        // The RSC server may have sent proper removals at one time, the structure is there in the client,
-                        // but in 2018, the server does something which confuses me, and it should be considered a bug in the server.
-                        //
-                        // Sometimes when adding a boundary, it will send a removal for some unrelated coordinate first.
-                        // The coordinate it specifies for boundary removal *does not* have a boundary at that location.
-                        // If it did have a boundary, it would cause erroneous extraneous removals of nearby boundaries.
-                        // I haven't spent a lot of time looking at it to discern any further pattern, if there is one. Sorry.
-                        //
-                        // TODO: determine the pattern that the server uses to send its buggy "random" boundary removal instructions
-                        // Until this is implemented, the server will not be 100% authentic to 2018 RSC.
-                        // (Also, removals & additions are intertwined, not in a removal block & addition block, as structured here)
-                        //
-                        // I went through the effort of writing code in the RSCMinus scraper to check if the boundary removal command
-                        // *ever* successfully removed a boundary.
-                        // ...
-                        // **It never does.**
-                        // ...
-                        // Because X & Y coordinates never match with the coordinate of a boundary that has been added,
-                        // all instances where 0xFF removal are invoked are effectively NO-OPs.
-                        // Therefore, no buggy behaviour from omitting the ability to remove boundaries should arise.
+						// The authentic server does not really send removals for boundaries.
+						// The client is able to handle having boundaries overwritten by new boundaries, but
+						// it doesn't correctly handle having boundaries outright removed.
+						//
+						// The RSC server may have sent proper removals at one time, the structure is there in the client,
+						// but in 2018, the server does something which confuses me, and it should be considered a bug in the server.
+						//
+						// Sometimes when adding a boundary, it will send a removal for some unrelated coordinate first.
+						// The coordinate it specifies for boundary removal *does not* have a boundary at that location.
+						// If it did have a boundary, it would cause erroneous extraneous removals of nearby boundaries.
+						// I haven't spent a lot of time looking at it to discern any further pattern, if there is one. Sorry.
+						//
+						// TODO: determine the pattern that the server uses to send its buggy "random" boundary removal instructions
+						// Until this is implemented, the server will not be 100% authentic to 2018 RSC.
+						// (Also, removals & additions are intertwined, not in a removal block & addition block, as structured here)
+						//
+						// I went through the effort of writing code in the RSCMinus scraper to check if the boundary removal command
+						// *ever* successfully removed a boundary.
+						// ...
+						// **It never does.**
+						// ...
+						// Because X & Y coordinates never match with the coordinate of a boundary that has been added,
+						// all instances where 0xFF removal are invoked are effectively NO-OPs.
+						// Therefore, no buggy behaviour from omitting the ability to remove boundaries should arise.
 
                         /* RSC235 Compatible removal code, shouldn't be used
                         packet.writeByte(0xFF);
@@ -1110,8 +1134,8 @@ public final class GameStateUpdater {
                         */
 
 						/* Addendum - code is identical for pre-233 mudclients
-						* removal code likely was not used either
-						* */
+						 * removal code likely was not used either
+						 * */
 
 					} else {
 						objectLocs.add(new GameObjectLoc(60000, offsetX, offsetY, o.getDirection(), 1));
@@ -1237,6 +1261,8 @@ public final class GameStateUpdater {
 						&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
 						ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
 						ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
+					} else if (player.getClientVersion() <= 204) {
+						player.playerServerMessage(MessageType.PRIVATE_SEND,"@cya@" + DataConversions.hashToUsername(pm.getFriend()) + " is offline or has privacy mode enabled");
 					}
 
 					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
@@ -1249,7 +1275,11 @@ public final class GameStateUpdater {
 
 							if (player.getWorld().getServer().getDatabase().playerExists(friendId)) {
 								// player not online
-								player.message("Unable to send message - player unavailable.");
+								if (player.getClientVersion() <= 204) {
+									player.playerServerMessage(MessageType.PRIVATE_SEND,"@cya@" + DataConversions.hashToUsername(pm.getFriend()) + " is offline or has privacy mode enabled");
+								} else {
+									player.message("Unable to send message - player unavailable.");
+								}
 							}
 						} catch (Exception e) { }
 					}

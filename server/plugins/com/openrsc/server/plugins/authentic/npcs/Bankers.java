@@ -89,15 +89,30 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				npcsay(player, npc, "well it's the tree gnome bank off course", "a lot of custom passes through here",
 					"so a bank is essential in encouraging visitors");
 			} else {
-				npcsay(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
+				boolean isBankOfVarrock = config().COIN_BANK || player.getClientVersion() < 119;
+				if (isBankOfVarrock) {
+					npcsay(player, npc, "This is the bank of Varrock");
+				} else {
+					npcsay(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
+				}
+				ArrayList<String> options = new ArrayList<>();
+				options.add("And what do you do?");
+				if (!isBankOfVarrock) {
+					options.add("Didn't you used to be called the bank of Varrock");
+				}
+				String[] finalOptions = new String[options.size()];
 				int branchMenu = multi(player, npc, false, //do not send over
-					"And what do you do?",
-					"Didn't you used to be called the bank of Varrock");
+					options.toArray(finalOptions));
 				if (branchMenu == 0) {
 					say(player, npc, "And what do you do?");
-					npcsay(player, npc, "We will look after your items and money for you",
-						"So leave your valuables with us if you want to keep them safe");
-				} else if (branchMenu == 1) {
+					if (!config().COIN_BANK && player.getClientLimitations().supportsItemBank) {
+						npcsay(player, npc, "We will look after your items and money for you",
+							"So leave your valuables with us if you want to keep them safe");
+					} else {
+						npcsay(player, npc, "We will look after your money for you",
+							"So leave your valuable with us if you want to keep it safe");
+					}
+				} else if (branchMenu == 1 && !isBankOfVarrock) {
 					say(player, npc, "Didn't you used to be called the bank of Varrock?");
 					npcsay(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
 						"And telling us our signs were wrong",

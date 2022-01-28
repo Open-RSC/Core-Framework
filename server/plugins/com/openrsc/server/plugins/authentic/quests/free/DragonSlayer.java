@@ -392,7 +392,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 
 	@Override
 	public void onKillNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.WORMBRAIN.id() && player.getQuestStage(this) >= 2) {
+		if (n.getID() == NpcId.WORMBRAIN.id()) {
 			player.getWorld().registerItem(
 				new GroundItem(player.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, player));
 		}

@@ -8,26 +8,36 @@
 					<name>Iron</name>
 					<certID>517</certID>
 					<itemID>151</itemID>
+					<fromCertOpt>iron</fromCertOpt>
+					<toCertOpt>iron</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Coal</name>
 					<certID>518</certID>
 					<itemID>155</itemID>
+					<fromCertOpt>Coal</fromCertOpt>
+					<toCertOpt>Coal</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Mithril</name>
 					<certID>519</certID>
 					<itemID>153</itemID>
+					<fromCertOpt>mithril</fromCertOpt>
+					<toCertOpt>mithril</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Gold</name>
 					<certID>521</certID>
 					<itemID>152</itemID>
+					<fromCertOpt>Gold</fromCertOpt>
+					<toCertOpt>Gold</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Silver</name>
 					<certID>520</certID>
 					<itemID>383</itemID>
+					<fromCertOpt>silver</fromCertOpt>
+					<toCertOpt>silver</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -41,26 +51,36 @@
 					<name>Iron</name>
 					<certID>528</certID>
 					<itemID>170</itemID>
+					<fromCertOpt>iron bar</fromCertOpt>
+					<toCertOpt>iron bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Steel</name>
 					<certID>529</certID>
 					<itemID>171</itemID>
+					<fromCertOpt>Steel bar</fromCertOpt>
+					<toCertOpt>steel bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Mithril</name>
 					<certID>530</certID>
 					<itemID>173</itemID>
+					<fromCertOpt>mithril bar</fromCertOpt>
+					<toCertOpt>mithril bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Gold</name>
 					<certID>532</certID>
 					<itemID>172</itemID>
+					<fromCertOpt>Gold bar</fromCertOpt>
+					<toCertOpt>Gold bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Silver</name>
 					<certID>531</certID>
 					<itemID>384</itemID>
+					<fromCertOpt>silver bar</fromCertOpt>
+					<toCertOpt>silver bar</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -70,26 +90,33 @@
 		<CerterDef>
 			<type>fish</type>
 			<certs>
-				
 				<CertDef>
 					<name>Lobster</name>
 					<certID>533</certID>
 					<itemID>373</itemID>
+					<fromCertOpt>Lobster</fromCertOpt>
+					<toCertOpt>Lobster</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Lobster</name>
 					<certID>534</certID>
 					<itemID>372</itemID>
+					<fromCertOpt>Raw lobster</fromCertOpt>
+					<toCertOpt>Raw Lobster</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Swordfish</name>
 					<certID>535</certID>
 					<itemID>370</itemID>
+					<fromCertOpt>Swordfish</fromCertOpt>
+					<toCertOpt>swordfish</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Swordfish</name>
 					<certID>536</certID>
 					<itemID>369</itemID>
+					<fromCertOpt>Raw swordfish</fromCertOpt>
+					<toCertOpt>Raw swordfish</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -103,26 +130,36 @@
 					<name>Iron</name>
 					<certID>517</certID>
 					<itemID>151</itemID>
+					<fromCertOpt>iron</fromCertOpt>
+					<toCertOpt>iron</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Coal</name>
 					<certID>518</certID>
 					<itemID>155</itemID>
+					<fromCertOpt>Coal</fromCertOpt>
+					<toCertOpt>Coal</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Mithril</name>
 					<certID>519</certID>
 					<itemID>153</itemID>
+					<fromCertOpt>mithril</fromCertOpt>
+					<toCertOpt>mithril</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Gold</name>
 					<certID>521</certID>
 					<itemID>152</itemID>
+					<fromCertOpt>Gold</fromCertOpt>
+					<toCertOpt>Gold</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Silver</name>
 					<certID>520</certID>
 					<itemID>383</itemID>
+					<fromCertOpt>silver</fromCertOpt>
+					<toCertOpt>silver</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -136,26 +173,36 @@
 					<name>Iron</name>
 					<certID>528</certID>
 					<itemID>170</itemID>
+					<fromCertOpt>iron bar</fromCertOpt>
+					<toCertOpt>iron bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Steel</name>
 					<certID>529</certID>
 					<itemID>171</itemID>
+					<fromCertOpt>Steel bar</fromCertOpt>
+					<toCertOpt>steel bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Mithril</name>
 					<certID>530</certID>
 					<itemID>173</itemID>
+					<fromCertOpt>mithril bar</fromCertOpt>
+					<toCertOpt>mithril bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Gold</name>
 					<certID>532</certID>
 					<itemID>172</itemID>
+					<fromCertOpt>Gold bar</fromCertOpt>
+					<toCertOpt>Gold bar</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Silver</name>
 					<certID>531</certID>
 					<itemID>384</itemID>
+					<fromCertOpt>silver bar</fromCertOpt>
+					<toCertOpt>silver bar</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -169,21 +216,29 @@
 					<name>Shark</name>
 					<certID>630</certID>
 					<itemID>546</itemID>
+					<fromCertOpt>shark</fromCertOpt>
+					<toCertOpt>shark</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Shark</name>
 					<certID>631</certID>
 					<itemID>545</itemID>
+					<fromCertOpt>Raw shark</fromCertOpt>
+					<toCertOpt>Raw shark</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Bass</name>
 					<certID>628</certID>
 					<itemID>555</itemID>
+					<fromCertOpt>bass</fromCertOpt>
+					<toCertOpt>bass</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Bass</name>
 					<certID>629</certID>
 					<itemID>554</itemID>
+					<fromCertOpt>Raw bass</fromCertOpt>
+					<toCertOpt>Raw bass</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -197,21 +252,29 @@
 					<name>Super Attack Potion</name>
 					<certID>1273</certID>
 					<itemID>486</itemID>
+					<fromCertOpt>Super Attack Potion Certificates</fromCertOpt>
+					<toCertOpt>Super Attack Potion</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Super Defense Potion</name>
 					<certID>1274</certID>
 					<itemID>495</itemID>
+					<fromCertOpt>Super Defense Potion Certificates</fromCertOpt>
+					<toCertOpt>Super Defense Potion</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Super Strength Potion</name>
 					<certID>1275</certID>
 					<itemID>492</itemID>
+					<fromCertOpt>Super Strength Potion Certificates</fromCertOpt>
+					<toCertOpt>Super Strength Potion</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Prayer Potion</name>
 					<certID>1272</certID>
 					<itemID>483</itemID>
+					<fromCertOpt>Restore Prayer Potion Certificates</fromCertOpt>
+					<toCertOpt>Prayer Restore Potion</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -225,6 +288,8 @@
 					<name>Dragon Bones</name>
 					<certID>1270</certID>
 					<itemID>814</itemID>
+					<fromCertOpt>Dragon Bones Certificates</fromCertOpt>
+					<toCertOpt>Dragon Bones</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -238,16 +303,22 @@
 					<name>Yew Logs</name>
 					<certID>711</certID>
 					<itemID>635</itemID>
+					<fromCertOpt>yew logs</fromCertOpt>
+					<toCertOpt>yew logs</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Maple Logs</name>
 					<certID>712</certID>
 					<itemID>634</itemID>
+					<fromCertOpt>maple logs</fromCertOpt>
+					<toCertOpt>maple logs</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Willow Logs</name>
 					<certID>713</certID>
 					<itemID>633</itemID>
+					<fromCertOpt>willow logs</fromCertOpt>
+					<toCertOpt>willow logs</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -261,16 +332,22 @@
 					<name>Yew Logs</name>
 					<certID>711</certID>
 					<itemID>635</itemID>
+					<fromCertOpt>yew logs</fromCertOpt>
+					<toCertOpt>yew logs</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Maple Logs</name>
 					<certID>712</certID>
 					<itemID>634</itemID>
+					<fromCertOpt>maple logs</fromCertOpt>
+					<toCertOpt>maple logs</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Willow Logs</name>
 					<certID>713</certID>
 					<itemID>633</itemID>
+					<fromCertOpt>willow logs</fromCertOpt>
+					<toCertOpt>willow logs</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -284,21 +361,29 @@
 					<name>Lobster</name>
 					<certID>533</certID>
 					<itemID>373</itemID>
+					<fromCertOpt>Lobster</fromCertOpt>
+					<toCertOpt>Lobster</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Lobster</name>
 					<certID>534</certID>
 					<itemID>372</itemID>
+					<fromCertOpt>Raw lobster</fromCertOpt>
+					<toCertOpt>Raw Lobster</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Swordfish</name>
 					<certID>535</certID>
 					<itemID>370</itemID>
+					<fromCertOpt>Swordfish</fromCertOpt>
+					<toCertOpt>swordfish</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Swordfish</name>
 					<certID>536</certID>
 					<itemID>369</itemID>
+					<fromCertOpt>Raw swordfish</fromCertOpt>
+					<toCertOpt>Raw swordfish</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -312,21 +397,29 @@
 					<name>Shark</name>
 					<certID>630</certID>
 					<itemID>546</itemID>
+					<fromCertOpt>shark</fromCertOpt>
+					<toCertOpt>shark</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Shark</name>
 					<certID>631</certID>
 					<itemID>545</itemID>
+					<fromCertOpt>Raw shark</fromCertOpt>
+					<toCertOpt>Raw shark</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Bass</name>
 					<certID>628</certID>
 					<itemID>555</itemID>
+					<fromCertOpt>bass</fromCertOpt>
+					<toCertOpt>bass</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Bass</name>
 					<certID>629</certID>
 					<itemID>554</itemID>
+					<fromCertOpt>Raw bass</fromCertOpt>
+					<toCertOpt>Raw bass</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -340,16 +433,22 @@
 					<name>Iron</name>
 					<certID>517</certID>
 					<itemID>151</itemID>
+					<fromCertOpt>iron</fromCertOpt>
+					<toCertOpt>iron</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Coal</name>
 					<certID>518</certID>
 					<itemID>155</itemID>
+					<fromCertOpt>Coal</fromCertOpt>
+					<toCertOpt>Coal</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Mithril</name>
 					<certID>519</certID>
 					<itemID>153</itemID>
+					<fromCertOpt>mithril</fromCertOpt>
+					<toCertOpt>mithril</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -363,21 +462,29 @@
 					<name>Lobster</name>
 					<certID>533</certID>
 					<itemID>373</itemID>
+					<fromCertOpt>Lobster</fromCertOpt>
+					<toCertOpt>Lobster</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Lobster</name>
 					<certID>534</certID>
 					<itemID>372</itemID>
+					<fromCertOpt>Raw lobster</fromCertOpt>
+					<toCertOpt>Raw Lobster</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Swordfish</name>
 					<certID>535</certID>
 					<itemID>370</itemID>
+					<fromCertOpt>Swordfish</fromCertOpt>
+					<toCertOpt>swordfish</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Raw Swordfish</name>
 					<certID>536</certID>
 					<itemID>369</itemID>
+					<fromCertOpt>Raw swordfish</fromCertOpt>
+					<toCertOpt>Raw swordfish</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -391,6 +498,8 @@
 					<name>Limpwurt Root</name>
 					<certID>1271</certID>
 					<itemID>220</itemID>
+					<fromCertOpt>Limpwurt Root Certificates</fromCertOpt>
+					<toCertOpt>Limpwurt Root</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
@@ -404,11 +513,15 @@
 					<name>Gold</name>
 					<certID>521</certID>
 					<itemID>152</itemID>
+					<fromCertOpt>Gold</fromCertOpt>
+					<toCertOpt>Gold</toCertOpt>
 				</CertDef>
 				<CertDef>
 					<name>Silver</name>
 					<certID>520</certID>
 					<itemID>383</itemID>
+					<fromCertOpt>silver</fromCertOpt>
+					<toCertOpt>silver</toCertOpt>
 				</CertDef>
 			</certs>
 		</CerterDef>
