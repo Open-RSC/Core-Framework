@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.defaults;
 
 import com.openrsc.server.constants.AppearanceId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Spells;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.external.ItemDefinition;
@@ -10,6 +11,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -33,7 +35,7 @@ public class Default implements DefaultHandler,
 	AttackNpcTrigger, PlayerDeathTrigger, KillNpcTrigger, PlayerLoginTrigger,
 	PlayerLogoutTrigger, SpellInvTrigger, SpellPlayerTrigger, SpellNpcTrigger,
 	SpellLocTrigger, EscapeNpcTrigger, PlayerKilledPlayerTrigger, PlayerRangePlayerTrigger,
-	PlayerRangeNpcTrigger, StartupTrigger, TalkNpcTrigger, OpBoundTrigger {
+	PlayerRangeNpcTrigger, StartupTrigger, TalkNpcTrigger, OpBoundTrigger, WineFermentTrigger {
 
 	public static final DoorAction doors = new DoorAction();
 	private static final Ladders ladders = new Ladders();
@@ -126,6 +128,16 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public boolean blockCatGrowth(Player player) {
+		return false;
+	}
+
+	@Override
+	public void onWineFerment(Player player) {
+		// No default actions
+	}
+
+	@Override
+	public boolean blockWineFerment(Player player) {
 		return false;
 	}
 
@@ -308,12 +320,33 @@ public class Default implements DefaultHandler,
 			return;
 		}
 
+		if (attackPrevented(player, affectedMob)) {
+			return;
+		}
+
 		player.startCombat(affectedMob);
 		if (config().WANT_PARTIES) {
 			if (player.getParty() != null) {
 				player.getParty().sendParty();
 			}
 		}
+	}
+
+	private boolean attackPrevented(Player player, Player affectedMob) {
+		boolean prevented = false;
+		if (affectedMob.getLocation().isInBank(player.getConfig().BASED_MAP_DATA)) {
+			player.message("You cannot attack other players inside the bank");
+			prevented = true;
+		}
+
+		Npc guard = ifnearvisnpc(player, NpcId.GUARD.id(), 3);
+		if (guard != null) {
+			guard.getUpdateFlags().setChatMessage(new ChatMessage(guard, "Hey! No fighting!", player));
+			delay(2);
+			guard.startCombat(player);
+			prevented = true;
+		}
+		return prevented;
 	}
 
 	@Override
@@ -399,7 +432,9 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onSpellPlayer(Player player, Player affectedPlayer, Spells spellEnum) {
-		// No default actions
+		if (attackPrevented(player, affectedPlayer)) {
+			return;
+		}
 	}
 
 	@Override
@@ -440,7 +475,9 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onPlayerRangePlayer(Player player, Player affectedMob) {
-		// No default actions
+		if (attackPrevented(player, affectedMob)) {
+			return;
+		}
 	}
 
 	@Override
@@ -487,5 +524,4 @@ public class Default implements DefaultHandler,
 	public boolean blockWearObj(Player player, Integer invIndex, EquipRequest request) {
 		return false;
 	}
-
 }

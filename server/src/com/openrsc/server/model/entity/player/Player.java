@@ -40,6 +40,7 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.triggers.CatGrowthTrigger;
 import com.openrsc.server.plugins.triggers.DropObjTrigger;
+import com.openrsc.server.plugins.triggers.WineFermentTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -535,6 +536,22 @@ public final class Player extends Mob {
 
 	public void setLastCommand(final long newTime) {
 		this.lastCommand = newTime;
+	}
+
+	public void setNextRegionLoad() {
+		int x = this.getLocation().getX();
+		int y = this.getLocation().getY();
+
+		int PLANE_WIDTH = 2304;
+		int PLANE_HEIGHT = 1776;
+
+		int lx = x + PLANE_WIDTH;
+		int ly = y + PLANE_HEIGHT;
+
+		int sectionx = (lx + 24) / 48;
+		int sectiony = (ly + 24) / 48;
+
+		this.setAttribute("midpointRegion", new Point((sectionx * 48) - PLANE_WIDTH, (sectiony * 48) - PLANE_HEIGHT));
 	}
 
 	public boolean requiresAppearanceUpdateFor(final Player player) {
@@ -1758,7 +1775,7 @@ public final class Player extends Mob {
 	}
 
 	private void incrementActivity(final int amount) {
-		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+		if (!(getWorld().getServer().getConfig().RESTRICT_ITEM_ID >= 0 && getWorld().getServer().getConfig().RESTRICT_ITEM_ID < ItemId.CAT.id())) {
 			activity += amount;
 			if (activity >= KITTEN_ACTIVITY_THRESHOLD) {
 				activity -= KITTEN_ACTIVITY_THRESHOLD;
@@ -1779,6 +1796,13 @@ public final class Player extends Mob {
 	 */
 	public void stepIncrementActivity() {
 		incrementActivity(2);
+	}
+
+	public void changeZone() {
+		if (getConfig().FERMENTED_WINE ||
+			(getConfig().RESTRICT_ITEM_ID >= 0 && getConfig().RESTRICT_ITEM_ID < ItemId.CHEESE.id())) {
+			getWorld().getServer().getPluginHandler().handlePlugin(WineFermentTrigger.class, this, new Object[]{this});
+		}
 	}
 
 	public int getGroupID() {
@@ -3668,9 +3692,6 @@ public final class Player extends Mob {
 		Npc closestNpc = null;
 		for (int next = 0; next < radius; next++) {
 			for (final Npc n : npcsInView) {
-				if (n.getID() == npcId) {
-
-				}
 				if (n.getID() == npcId && n.withinRange(player.getLocation(), next) && !n.isBusy()) {
 					closestNpc = n;
 				}

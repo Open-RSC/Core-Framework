@@ -55,6 +55,15 @@ public class InvCooking implements UseInvTrigger {
 		// Wine
 		if (item1.getCatalogId() == ItemId.GRAPES.id() && item2.getCatalogId() == ItemId.JUG_OF_WATER.id()
 			|| item1.getCatalogId() == ItemId.JUG_OF_WATER.id() && item2.getCatalogId() == ItemId.GRAPES.id()) {
+			if (player.getConfig().FERMENTED_WINE ||
+				(player.getConfig().RESTRICT_ITEM_ID >= 0 && player.getConfig().RESTRICT_ITEM_ID < ItemId.CHEESE.id())) {
+				player.getCarriedItems().remove(new Item(ItemId.JUG_OF_WATER.id()));
+				player.getCarriedItems().remove(new Item(ItemId.GRAPES.id()));
+				delay(5);
+				player.playerServerMessage(MessageType.QUEST, "You add some grapes to the jug"); //unknown message
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_OR_UNFERMENTED_WINE.id()));
+				return;
+			}
 			if (player.getSkills().getLevel(Skill.COOKING.id()) < 35) {
 				player.message("You need level 35 cooking to do this");
 				return;
@@ -75,7 +84,7 @@ public class InvCooking implements UseInvTrigger {
 					player.incExp(Skill.COOKING.id(), 440, true);
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
-					player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_OR_UNFERMENTED_WINE.id()));
 				}
 			}
 

@@ -152,7 +152,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 				player.incExp(Skill.COOKING.id(), 550, true);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
-				player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_OR_UNFERMENTED_WINE.id()));
 			}
 		}
 	}

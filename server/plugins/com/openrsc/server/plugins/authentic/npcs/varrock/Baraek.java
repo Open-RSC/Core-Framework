@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.npcs.varrock;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -100,9 +101,18 @@ public final class Baraek implements
 		} else if (chosenOption == 1) {
 			say(player, n, "Can you sell me some furs?");
 			npcsay(player, n, "Yeah sure they're 20 gold coins a piece");
+			boolean canHaggle = true;
+			if (player.getConfig().INFLUENCE_INSTEAD_QP && player.getSkills().getLevel(Skill.INFLUENCE.id()) < 5) {
+				canHaggle = false;
+			}
+			ArrayList<String> furOptions = new ArrayList<>();
+			furOptions.add("Yeah, okay here you go");
+			if (canHaggle) {
+				furOptions.add("20 gold coins thats an outrage");
+			}
+			String[] finalFurOptions = new String[furOptions.size()];
 			int opts = multi(player, n, false, //do not send over
-				"Yeah, okay here you go",
-				"20 gold coins thats an outrage");
+				furOptions.toArray(finalFurOptions));
 			if (opts == 0) {
 				if (!ifheld(player, ItemId.COINS.id(), 20)) {
 					say(player, n, "Oh dear I don't seem to have enough money");
@@ -114,7 +124,7 @@ public final class Baraek implements
 					player.message("You buy a fur from Baraek");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.FUR.id()));
 				}
-			} else if (opts == 1) {
+			} else if (opts == 1 && canHaggle) {
 				say(player, n, "20 gold coins that's an outrage");
 				npcsay(player, n, "Well, okay I'll go down to 18");
 				bargained = true;

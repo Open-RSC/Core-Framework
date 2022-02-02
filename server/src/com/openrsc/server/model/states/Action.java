@@ -32,6 +32,7 @@ public enum Action {
 	spellground(EntityType.COORDINATE,"spellground"),
 	// Not fully authentic Actions here
 	catgrowth(EntityType.NONE, "catgrowth"),
+	wineferment(EntityType.NONE, "wineferment"),
 	command(EntityType.NONE, "command"),
 	playerdeath(EntityType.NONE, "playerdeath"),
 	playerkilledplayer(EntityType.PLAYER, "playerkilledplayer"),

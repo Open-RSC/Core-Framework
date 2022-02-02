@@ -240,6 +240,17 @@ public final class GameStateUpdater {
 	protected void updatePlayers(final Player playerToUpdate) {
 		MobsUpdateStruct struct = new MobsUpdateStruct();
 		ClearMobsStruct clearStruct = new ClearMobsStruct();
+
+		Point midRegion = playerToUpdate.getAttribute("midpointRegion");
+		if (midRegion != null) {
+			if (!playerToUpdate.getLocation().inBounds(midRegion.getX() - 32, midRegion.getY() - 32, midRegion.getX() + 32, midRegion.getY() + 32)) {
+				playerToUpdate.setNextRegionLoad();
+				playerToUpdate.changeZone();
+			}
+		} else {
+			playerToUpdate.setNextRegionLoad();
+		}
+
 		if (playerToUpdate.isRetroClient()) {
 			// TODO: check impl
 			List<Object> mobsUpdate = new ArrayList<>();

@@ -167,18 +167,19 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			return -1;
 
 		final String[] names = certerDef.getCertNames();
-		final String[] fromCertOpts = certerDef.getFromCertOpts();
-		final String[] toCertOpts = certerDef.getToCertOpts();
+		final String[] opts = option == 0 ? certerDef.getFromCertOpts()
+			: (option == 1 ? certerDef.getToCertOpts() : new String[0]);
 		// authentic bug on original rsc - menu to cert was shifted by 2 for fish
 		int shift = certerDef.getType().equalsIgnoreCase("fish") && option == 1 ? 2 : 0;
 		Collections.rotate(Arrays.asList(names), shift);
+		Collections.rotate(Arrays.asList(opts), shift);
 		switch(option) {
 			case 0:
 				player.message("what sort of certificate do you wish to trade in?");
-				return multi(player, n, false, fromCertOpts);
+				return multi(player, n, false, opts);
 			case 1:
 				player.message("what sort of " + certerDef.getType() + ending + " do you wish to trade in?");
-				return multi(player, n, false, toCertOpts);
+				return multi(player, n, false, opts);
 			default:
 				return -1;
 		}

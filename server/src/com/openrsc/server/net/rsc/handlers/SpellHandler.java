@@ -1345,7 +1345,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().playerServerMessage(MessageType.QUEST, "This world does not support fear spell");
 							return;
 						}
-						if (!affectedMob.isNpc() || !affectedMob.inCombat() || affectedMob.getHitsMade() < 2) {
+						if (!affectedMob.isNpc() || !((Npc)affectedMob).getDef().isAttackable()) {
 							getPlayer().playerServerMessage(MessageType.QUEST, "This spell can only be used on monsters engaged in combat");
 							return;
 						}
@@ -1354,12 +1354,23 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
+						if (affectedMob.inCombat() && affectedMob.getHitsMade() < 2) {
+							getPlayer().message("Your opponent can't retreat during the first 3 rounds of combat");
+							return;
+						}
+
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, 1, setChasing) {
 							@Override
 							public void doSpell() {
-								affectedMob.getOpponent().resetCombatEvent();
-								affectedMob.resetCombatEvent();
-								getPlayer().message("Your opponent is retreating");
+								// https://runescape.wiki/w/Fear
+								// https://www.tip.it/runescape/times/view/615-forever-runescape-part-1
+								if (affectedMob.inCombat()) {
+									affectedMob.getOpponent().resetCombatEvent();
+									affectedMob.resetCombatEvent();
+									getPlayer().message("Your opponent is retreating");
+								} else {
+									affectedMob.remove();
+								}
 							}
 						});
 

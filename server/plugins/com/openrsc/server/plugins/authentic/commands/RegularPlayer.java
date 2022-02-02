@@ -99,7 +99,7 @@ public final class RegularPlayer implements CommandTrigger {
 			queryCommands(player, 0);
 		} else if (command.equalsIgnoreCase("b") && config().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
-				if (player.getLocation().isInBank()) {
+				if (player.getLocation().isInBank(config().BASED_MAP_DATA)) {
 					player.getBank().quickFeature(null, player, false);
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You are not inside a bank.");

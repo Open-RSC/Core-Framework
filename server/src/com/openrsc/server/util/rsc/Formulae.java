@@ -582,6 +582,13 @@ public final class Formulae {
 		return Formulae.calcProductionSuccessfulLegacy(levelReq, firemakingLvl, true, levelStopFail);
 	}
 
+	/**
+	 * Should getting regular logs succeed? (Retro)
+	 * */
+	public static boolean chopLogs(int woodcuttingLvl) {
+		return Formulae.calcProductionSuccessfulLegacy(1, woodcuttingLvl, true, 60);
+	}
+
 	public static int getLevelsToReduceAttackKBD(Player player) {
 		int levels = 0;
 		int currLvl = getCurrentLevel(player, Skill.RANGED.id());

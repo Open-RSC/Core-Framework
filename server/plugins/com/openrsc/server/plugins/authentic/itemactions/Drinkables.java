@@ -54,8 +54,14 @@ public class Drinkables implements OpInvTrigger {
 			|| id == ItemId.DRUNK_DRAGON.id() || id == ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id()) {
 			handleSpecialCocktail(player, item, sendUpdate);
 
-		} else if (id == ItemId.BAD_WINE.id())
+		} else if (id == ItemId.BAD_OR_UNFERMENTED_WINE.id()) {
+			if (player.getConfig().FERMENTED_WINE ||
+				(player.getConfig().RESTRICT_ITEM_ID >= 0 && player.getConfig().RESTRICT_ITEM_ID < ItemId.CHEESE.id())) {
+				// item can't be drunk since is treated unfermented wine
+				return;
+			}
 			handleBadWine(player, item, sendUpdate);
+		}
 
 		else if (id == ItemId.HALF_FULL_WINE_JUG.id() || id == ItemId.WINE.id())
 			handleWine(player, item, sendUpdate);

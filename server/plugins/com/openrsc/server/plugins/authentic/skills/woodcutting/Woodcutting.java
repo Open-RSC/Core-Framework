@@ -94,13 +94,16 @@ public class Woodcutting implements OpLocTrigger, UseLocTrigger {
 			return;
 		}
 
-		if (getLog(def, player.getSkills().getLevel(Skill.WOODCUTTING.id()), axeId)) {
+		// New trees update; map32 introduced new trees & made woodcut xp no longer be scaled
+		boolean isOldWoodcut = (player.getConfig().SCALED_WOODCUT_XP || player.getConfig().BASED_MAP_DATA < 32) && def.getLogId() == ItemId.LOGS.id();
+		if ((!isOldWoodcut && getLog(def, player.getSkills().getLevel(Skill.WOODCUTTING.id()), axeId))
+			|| (isOldWoodcut && Formulae.chopLogs(player.getSkills().getLevel(Skill.WOODCUTTING.id())))) {
 			//check if the tree is still up
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			if (!player.getConfig().SHARED_GATHERING_RESOURCES || obj != null) {
 				player.getCarriedItems().getInventory().add(log);
 				player.playerServerMessage(MessageType.QUEST, "You get some wood");
-				if (player.getConfig().SCALED_WOODCUT_XP && def.getLogId() == ItemId.LOGS.id()) {
+				if (isOldWoodcut) {
 					player.incExp(Skill.WOODCUTTING.id(), getExpRetro(player.getSkills().getMaxStat(Skill.WOODCUTTING.id()), 25), true);
 				} else {
 					player.incExp(Skill.WOODCUTTING.id(), def.getExp(), true);

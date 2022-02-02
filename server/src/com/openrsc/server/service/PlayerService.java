@@ -162,6 +162,7 @@ public class PlayerService implements IPlayerService {
         player.setLastLogin(playerData.loginDate);
         player.setLastIP(playerData.loginIp);
         player.setInitialLocation(new Point(playerData.xLocation, playerData.yLocation));
+        player.setNextRegionLoad();
 
         player.setFatigue(playerData.fatigue);
         player.setKills(playerData.kills);
