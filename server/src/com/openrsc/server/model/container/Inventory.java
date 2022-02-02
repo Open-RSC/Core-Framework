@@ -526,7 +526,10 @@ public class Inventory {
 			int temp = 0;
 			for (Item i : list) {
 				if (i.getCatalogId() == id && (!noted.isPresent() || (i.getNoted() == noted.get()))) {
-					temp += i.getAmount();
+					final int amount = i.getAmount();
+					if (amount > Integer.MAX_VALUE - temp)
+						return Integer.MAX_VALUE;
+					temp += amount;
 				}
 			}
 			return temp;

@@ -220,7 +220,10 @@ public class Bank {
 			int ret = 0;
 			for (Item i : list) {
 				if (i.getCatalogId() == catalogID) {
-					ret += i.getAmount();
+					final int amount = i.getAmount();
+					if (amount > Integer.MAX_VALUE - ret)
+						return Integer.MAX_VALUE;
+					ret += amount;
 				}
 			}
 			return ret;
@@ -585,17 +588,11 @@ public class Bank {
 		}
 	}
 
-	// Add the items to the inventory one slot at a time.
+	// Add the items to the inventory one slot at a time or all at once if stackable/noted.
 	private void addToInventory(Item item, ItemDefinition def, int requestedAmount, boolean updateClient) {
-		int i = 1;
-		int slotAmount = 1;
-		if(def.isStackable() || item.getNoted()) {
-			i = slotAmount = requestedAmount;
-		}
-		for (; i <= requestedAmount; i++) {
-			item = new Item(item.getCatalogId(), slotAmount, item.getNoted());
+		if (def.isStackable() || item.getNoted()) {
+			item = new Item(item.getCatalogId(), requestedAmount, item.getNoted());
 
-			// Make sure they have enough space in their inventory
 			if (!player.getCarriedItems().getInventory().canHold(item)) {
 				player.message("You don't have room to hold everything!");
 				return;
@@ -604,10 +601,21 @@ public class Bank {
 			// Add the item to the inventory (or fail and place it back into the bank).
 			if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
 				add(item);
-				if (updateClient && player.isUsingCustomClient()) {
-					ActionSender.sendInventory(player);
+			}
+		} else {
+			for (int i = 1; i <= requestedAmount; i++) {
+				item = new Item(item.getCatalogId(), 1, item.getNoted());
+
+				if (!player.getCarriedItems().getInventory().canHold(item)) {
+					player.message("You don't have room to hold everything!");
+					return;
 				}
-				return;
+
+				// Add the item to the inventory (or fail and place it back into the bank).
+				if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
+					add(item);
+					break;
+				}
 			}
 		}
 		if (updateClient && player.isUsingCustomClient()) {

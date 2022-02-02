@@ -73,9 +73,10 @@ public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct
 		}
 
 		if (inventorySlot != -1) {
-			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()))) {
-				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
-			}
+			final int idCount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
+
+			if (amount > idCount)
+				amount = idCount;
 		}
 
 		final boolean fromInventory = inventorySlot != -1;
