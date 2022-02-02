@@ -104,7 +104,7 @@ public class Social {
 			|| (player.getSocial().isFriendsWith(this.player.getUsernameHash())) && !blockAll)) {
 			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash());
 		} else if (!this.player.getSocial().isFriendsWith(player.getUsernameHash()) && this.player.getUsernameHash() != player.getUsernameHash() && player.getHideOnline() != 1) {
-			this.player.message("@cya@" + player.getUsername() + " has logged in");
+			// this.player.message("@cya@" + player.getUsername() + " has logged in");
 		}
 	}
 
