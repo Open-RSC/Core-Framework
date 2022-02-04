@@ -644,49 +644,35 @@ public class Inventory {
 		return freedSlots;
 	}
 
-	public int getRequiredSlots(Item item) {
-		synchronized(list) {
-			// Check item definition
-			ItemDefinition itemDef = item.getDef(player.getWorld());
-			return getRequiredSlots(item.getCatalogId(), item.getAmount(), item.getNoted());
-		}
+	public int getRequiredSlots(final Item item) {
+		return this.getRequiredSlots(item.getCatalogId(), item.getAmount(), item.getNoted());
 	}
 
-	public int getRequiredSlots(int itemCatalogId, int amount, boolean isNoted) {
-		synchronized(list) {
-			final int MAXSTACK = !player.getConfig().SHORT_MAX_STACKS ? Integer.MAX_VALUE : (Short.MAX_VALUE - Short.MIN_VALUE);
+	public int getRequiredSlots(final int itemCatalogId, final int itemAmount, final boolean isNoted) {
+		synchronized (this.list) {
+			final int maxItemStack = this.player.getConfig().SHORT_MAX_STACKS ?
+				(Short.MAX_VALUE - Short.MIN_VALUE) :
+				Integer.MAX_VALUE;
 
-			// Check item definition
-			ItemDefinition itemDef =  player.getWorld().getServer().getEntityHandler().getItemDef(itemCatalogId);
-			if (itemDef == null)
-				return MAXSTACK;
+			final ItemDefinition itemDef = this.player.getWorld()
+				.getServer()
+				.getEntityHandler()
+				.getItemDef(itemCatalogId);
 
-			// Check if the item is a stackable
-			if (itemDef.isStackable() || isNoted) {
-				// Check if there's a stack that can be added to
-				for (Item inventoryItem : list) {
-					// Check for matching catalogID
-					if (inventoryItem.getCatalogId() != itemCatalogId)
-						continue;
+			if (itemDef == null) return maxItemStack; // ???
 
-					// Check for matching noted status
-					if (inventoryItem.getNoted() != isNoted)
-						continue;
+			if (!itemDef.isStackable() && !isNoted) return itemAmount;
 
-					// Make sure there's room in the stack
-					if (inventoryItem.getAmount() == MAXSTACK)
-						continue;
-
-					// Check if all of the stack can fit in the existing stack
-					int remainingSize = MAXSTACK - inventoryItem.getAmount();
-					return remainingSize < amount ? 1 : 0;
-				}
-
-				// Theres no stack found
-				return 1;
-			} else {
-				return amount;
+			// Check for existing stack
+			for (final Item inventoryItem : this.list) {
+				if (inventoryItem.getCatalogId() == itemCatalogId &&
+					inventoryItem.getNoted() == isNoted &&
+					inventoryItem.getAmount() != maxItemStack)
+					return itemAmount > maxItemStack - inventoryItem.getAmount() ? 1 : 0;
 			}
+
+			// Require new stack
+			return 1;
 		}
 	}
 
