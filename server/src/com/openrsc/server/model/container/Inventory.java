@@ -659,7 +659,8 @@ public class Inventory {
 				.getEntityHandler()
 				.getItemDef(itemCatalogId);
 
-			if (itemDef == null) return maxItemStack; // ???
+			// Handle error state by returning max value
+			if (itemDef == null) return maxItemStack;
 
 			if (!itemDef.isStackable() && !isNoted) return itemAmount;
 
