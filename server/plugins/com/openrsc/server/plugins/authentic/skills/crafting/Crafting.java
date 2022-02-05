@@ -553,14 +553,14 @@ public class Crafting implements UseInvTrigger,
 				break;
 			case 0:
 				result = new Item(ItemId.UNFIRED_PIE_DISH.id(), 1);
-				reqLvl = 4;
-				exp = 60;
+				reqLvl = !config().OLD_SKILL_DEFS ? 4 : 3;
+				exp = !config().OLD_SKILL_DEFS ? 60 : 30;
 				msg.set("pie dishes");
 				break;
 			case 2:
 				result = new Item(ItemId.UNFIRED_BOWL.id(), 1);
-				reqLvl = 7;
-				exp = 40;
+				reqLvl = !config().OLD_SKILL_DEFS ? 7 : 5;
+				exp = !config().OLD_SKILL_DEFS ? 40 : 30;
 				msg.set("a bowl");
 				break;
 			default:
@@ -616,20 +616,20 @@ public class Crafting implements UseInvTrigger,
 			case UNFIRED_POT:
 				result = new Item(ItemId.POT.id(), 1);
 				reqLvl = 1;
-				xp = 25;
+				xp = !config().OLD_SKILL_DEFS ? 25 : 0;
 				// should not use this, as pot is made at level 1
 				msg.set("a pot");
 				break;
 			case UNFIRED_PIE_DISH:
 				result = new Item(ItemId.PIE_DISH.id(), 1);
-				reqLvl = 4;
-				xp = 40;
+				reqLvl = !config().OLD_SKILL_DEFS ? 4 : 3;
+				xp = !config().OLD_SKILL_DEFS ? 40 : 30;
 				msg.set("pie dishes");
 				break;
 			case UNFIRED_BOWL:
 				result = new Item(ItemId.BOWL.id(), 1);
-				reqLvl = 7;
-				xp = 60;
+				reqLvl = !config().OLD_SKILL_DEFS ? 7 : 5;
+				xp = !config().OLD_SKILL_DEFS ? 60 : 30;
 				msg.set("a bowl");
 				break;
 			default:
@@ -981,7 +981,7 @@ public class Crafting implements UseInvTrigger,
 		switch (type) {
 			case 0:
 				result = new Item(ItemId.LEATHER_ARMOUR.id(), 1);
-				reqLvl = 14;
+				reqLvl = !config().OLD_SKILL_DEFS ? 14 : 7;
 				exp = 100;
 				break;
 			case 1:
@@ -991,7 +991,7 @@ public class Crafting implements UseInvTrigger,
 				break;
 			case 2:
 				result = new Item(ItemId.BOOTS.id(), 1);
-				reqLvl = 7;
+				reqLvl = !config().OLD_SKILL_DEFS ? 7 : 2;
 				exp = 65;
 				break;
 			case 3:
@@ -1013,17 +1013,17 @@ public class Crafting implements UseInvTrigger,
 				switch (customType) {
 					case 0:
 						result = new Item(ItemId.LEATHER_CHAPS.id(), 1);
-						reqLvl = 10;
+						reqLvl = !config().OLD_SKILL_DEFS ? 10 : 5;
 						exp = 80;
 						break;
 					case 1:
 						result = new Item(ItemId.LEATHER_TOP.id(), 1);
-						reqLvl = 14;
+						reqLvl = !config().OLD_SKILL_DEFS ? 14 : 7;
 						exp = 100;
 						break;
 					case 2:
 						result = new Item(ItemId.LEATHER_SKIRT.id(), 1);
-						reqLvl = 10;
+						reqLvl = !config().OLD_SKILL_DEFS ? 10 : 5;
 						exp = 80;
 						break;
 					default:

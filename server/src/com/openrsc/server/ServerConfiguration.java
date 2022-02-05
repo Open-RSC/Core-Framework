@@ -263,6 +263,8 @@ public class ServerConfiguration {
 	public boolean SHARED_GATHERING_RESOURCES;
 	public boolean HAS_PLAYER_OWNED_HOUSES;
 	public boolean SPINACH_ROLL_BOOSTS;
+	public boolean OLD_SKILL_DEFS;
+	public boolean WANTS_KILL_STEALING;
 	public boolean OSRS_COMBAT_MELEE;
 	public boolean OSRS_COMBAT_RANGED;
 	public boolean SANTA_GIVES_PRESENTS;
@@ -427,6 +429,8 @@ public class ServerConfiguration {
 		SHARED_GATHERING_RESOURCES = tryReadBool("shared_gathering_resources").orElse(false);
 		HAS_PLAYER_OWNED_HOUSES = tryReadBool("has_player_owned_houses").orElse(false);
 		SPINACH_ROLL_BOOSTS = tryReadBool("spinach_roll_boosts").orElse(false);
+		OLD_SKILL_DEFS = tryReadBool("old_skill_defs").orElse(false);
+		WANTS_KILL_STEALING = tryReadBool("wants_kill_stealing").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

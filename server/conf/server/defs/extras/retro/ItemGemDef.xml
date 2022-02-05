@@ -1,0 +1,66 @@
+<map>
+	<entry>
+		<int>160</int>
+		<ItemGemDef>
+			<gemID>164</gemID>
+			<requiredLvl>8</requiredLvl>
+			<exp>50</exp>
+		</ItemGemDef>
+	</entry>
+	<entry>
+		<int>159</int>
+		<ItemGemDef>
+			<gemID>163</gemID>
+			<requiredLvl>13</requiredLvl>
+			<exp>70</exp>
+		</ItemGemDef>
+	</entry>
+	<entry>
+		<int>158</int>
+		<ItemGemDef>
+			<gemID>162</gemID>
+			<requiredLvl>20</requiredLvl>
+			<exp>90</exp>
+		</ItemGemDef>
+	</entry>
+	<entry>
+		<int>157</int>
+		<ItemGemDef>
+			<gemID>161</gemID>
+			<requiredLvl>28</requiredLvl>
+			<exp>110</exp>
+		</ItemGemDef>
+	</entry>
+	<entry>
+		<int>542</int>
+		<ItemGemDef>
+			<gemID>523</gemID>
+			<requiredLvl>38</requiredLvl>
+			<exp>130</exp>
+		</ItemGemDef>
+	</entry>
+	<entry>
+		<int>891</int> <!-- Uncut Opal -->
+		<ItemGemDef>
+			<gemID>894</gemID>
+			<requiredLvl>5</requiredLvl>
+			<exp>30</exp>
+		</ItemGemDef>
+	</entry>
+	<entry>
+		<int>890</int> <!-- Uncut Jade -->
+		<ItemGemDef>
+			<gemID>893</gemID>
+			<requiredLvl>6</requiredLvl>
+			<exp>35</exp>
+		</ItemGemDef>
+	</entry>
+	<entry>
+		<int>889</int> <!-- Uncut Red topaz -->
+		<ItemGemDef>
+			<gemID>892</gemID>
+			<requiredLvl>7</requiredLvl>
+			<exp>40</exp>
+		</ItemGemDef>
+	</entry>
+</map>

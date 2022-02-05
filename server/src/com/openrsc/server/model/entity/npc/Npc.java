@@ -13,6 +13,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.EntityType;
 import com.openrsc.server.model.entity.GroundItem;
+import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -517,6 +518,40 @@ public class Npc extends Mob {
 		final int totalCombatXP = Formulae.combatExperience(this);
 		UUID UUIDWithMostDamage = attacker.getUUID();
 		int currentHighestDamage = 0;
+
+		if (this.getWorld().getServer().getConfig().WANTS_KILL_STEALING && attacker.isPlayer()) {
+			// determine to what skill give xp
+			KillType type = attacker.getKillType();
+			Player lastAttacker = (Player)attacker;
+
+			if (type == KillType.COMBAT) {
+				int[] skillsDist = new int[Skill.maxId(Skill.ATTACK.name(), Skill.DEFENSE.name(),
+					Skill.STRENGTH.name(), Skill.HITS.name()) + 1];
+				switch (lastAttacker.getCombatStyle()) {
+					case Skills.CONTROLLED_MODE: // CONTROLLED
+						for (int skillId : new int[]{Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()}) {
+							skillsDist[skillId] = 1;
+						}
+						break;
+					case Skills.AGGRESSIVE_MODE: // AGGRESSIVE
+						skillsDist[Skill.STRENGTH.id()] = 3;
+						break;
+					case Skills.ACCURATE_MODE: // ACCURATE
+						skillsDist[Skill.ATTACK.id()] = 3;
+						break;
+					case Skills.DEFENSIVE_MODE: // DEFENSIVE
+						skillsDist[Skill.DEFENSE.id()] = 3;
+						break;
+				}
+				skillsDist[Skill.HITS.id()] = 1;
+				lastAttacker.incExp(skillsDist, totalCombatXP, true);
+			} else if (type == KillType.RANGED) {
+				lastAttacker.incExp(Skill.RANGED.id(), totalCombatXP * 4, true);
+				ActionSender.sendStat(lastAttacker, Skill.RANGED.id());
+			} // for MAGIC is of type per spell
+
+			return lastAttacker.getUUID();
+		}
 
 		// Melee damagers
 		for (UUID ID : getCombatDamagers()) {

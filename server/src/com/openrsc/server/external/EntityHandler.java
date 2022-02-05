@@ -173,29 +173,29 @@ public final class EntityHandler {
 		}
 		tiles = (TileDef[]) getPersistenceManager().load("defs/TileDef.xml");
 
-		herbSeconds = (ItemHerbSecond[]) getPersistenceManager().load("defs/extras/ItemHerbSecond.xml");
-		dartTips = (HashMap<Integer, ItemDartTipDef>) getPersistenceManager().load("defs/extras/ItemDartTipDef.xml");
-		gems = (HashMap<Integer, ItemGemDef>) getPersistenceManager().load("defs/extras/ItemGemDef.xml");
-		logCut = (HashMap<Integer, ItemLogCutDef>) getPersistenceManager().load("defs/extras/ItemLogCutDef.xml");
-		bowString = (HashMap<Integer, ItemBowStringDef>) getPersistenceManager().load("defs/extras/ItemBowStringDef.xml");
-		arrowHeads = (HashMap<Integer, ItemArrowHeadDef>) getPersistenceManager().load("defs/extras/ItemArrowHeadDef.xml");
-		firemaking = (HashMap<Integer, FiremakingDef>) getPersistenceManager().load("defs/extras/FiremakingDef.xml");
-		itemAffectedTypes = (HashMap<Integer, int[]>) getPersistenceManager().load("defs/extras/ItemAffectedTypes.xml");
-		itemUnIdentHerb = (HashMap<Integer, ItemUnIdentHerbDef>) getPersistenceManager().load("defs/extras/ItemUnIdentHerbDef.xml");
-		itemHerb = (HashMap<Integer, ItemHerbDef>) getPersistenceManager().load("defs/extras/ItemHerbDef.xml");
-		itemEdibleHeals = (HashMap<Integer, Integer>) getPersistenceManager().load("defs/extras/ItemEdibleHeals.xml");
-		itemCooking = (HashMap<Integer, ItemCookingDef>) getPersistenceManager().load("defs/extras/ItemCookingDef.xml");
-		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) getPersistenceManager().load("defs/extras/ItemPerfectCookingDef.xml");
-		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) getPersistenceManager().load("defs/extras/ItemSmeltingDef.xml");
-		itemSmithing = (ItemSmithingDef[]) getPersistenceManager().load("defs/extras/ItemSmithingDef.xml");
-		itemCrafting = (ItemCraftingDef[]) getPersistenceManager().load("defs/extras/ItemCraftingDef.xml");
-		objectMining = (HashMap<Integer, ObjectMiningDef>) getPersistenceManager().load("defs/extras/ObjectMining.xml");
-		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load("defs/extras/ObjectWoodcutting.xml");
-		objectRunecraft = (HashMap<Integer, ObjectRunecraftDef>) getPersistenceManager().load("defs/extras/ObjectRunecraft.xml");
-		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load("defs/extras/ObjectFishing.xml");
-		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load("defs/extras/ObjectHarvesting.xml");
-		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml");
-		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load("defs/extras/NpcCerters.xml");
+		herbSeconds = (ItemHerbSecond[]) getPersistenceManager().load(getPath("defs/extras/ItemHerbSecond.xml"));
+		dartTips = (HashMap<Integer, ItemDartTipDef>) getPersistenceManager().load(getPath("defs/extras/ItemDartTipDef.xml"));
+		gems = (HashMap<Integer, ItemGemDef>) getPersistenceManager().load(getPath("defs/extras/ItemGemDef.xml"));
+		logCut = (HashMap<Integer, ItemLogCutDef>) getPersistenceManager().load(getPath("defs/extras/ItemLogCutDef.xml"));
+		bowString = (HashMap<Integer, ItemBowStringDef>) getPersistenceManager().load(getPath("defs/extras/ItemBowStringDef.xml"));
+		arrowHeads = (HashMap<Integer, ItemArrowHeadDef>) getPersistenceManager().load(getPath("defs/extras/ItemArrowHeadDef.xml"));
+		firemaking = (HashMap<Integer, FiremakingDef>) getPersistenceManager().load(getPath("defs/extras/FiremakingDef.xml"));
+		itemAffectedTypes = (HashMap<Integer, int[]>) getPersistenceManager().load(getPath("defs/extras/ItemAffectedTypes.xml"));
+		itemUnIdentHerb = (HashMap<Integer, ItemUnIdentHerbDef>) getPersistenceManager().load(getPath("defs/extras/ItemUnIdentHerbDef.xml"));
+		itemHerb = (HashMap<Integer, ItemHerbDef>) getPersistenceManager().load(getPath("defs/extras/ItemHerbDef.xml"));
+		itemEdibleHeals = (HashMap<Integer, Integer>) getPersistenceManager().load(getPath("defs/extras/ItemEdibleHeals.xml"));
+		itemCooking = (HashMap<Integer, ItemCookingDef>) getPersistenceManager().load(getPath("defs/extras/ItemCookingDef.xml"));
+		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) getPersistenceManager().load(getPath("defs/extras/ItemPerfectCookingDef.xml"));
+		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) getPersistenceManager().load(getPath("defs/extras/ItemSmeltingDef.xml"));
+		itemSmithing = (ItemSmithingDef[]) getPersistenceManager().load(getPath("defs/extras/ItemSmithingDef.xml"));
+		itemCrafting = (ItemCraftingDef[]) getPersistenceManager().load(getPath("defs/extras/ItemCraftingDef.xml"));
+		objectMining = (HashMap<Integer, ObjectMiningDef>) getPersistenceManager().load(getPath("defs/extras/ObjectMining.xml"));
+		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load(getPath("defs/extras/ObjectWoodcutting.xml"));
+		objectRunecraft = (HashMap<Integer, ObjectRunecraftDef>) getPersistenceManager().load(getPath("defs/extras/ObjectRunecraft.xml"));
+		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load(getPath("defs/extras/ObjectFishing.xml"));
+		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load(getPath("defs/extras/ObjectHarvesting.xml"));
+		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load(getPath("locs/extras/ObjectTelePoints.xml"));
+		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load(getPath("defs/extras/NpcCerters.xml"));
 
 		for (int fishSpot : objectFishing.keySet()) {
 			for (ObjectFishingDef fishDef : objectFishing.get(fishSpot)) {
@@ -206,6 +206,25 @@ public final class EntityHandler {
 		for (int tree : objectWoodcutting.keySet()) {
 			objectWoodcutting.get(tree).calculateWoodRates();
 		}
+	}
+
+	private String getPath(String filePath) {
+		String path = filePath;
+		if (getServer().getConfig().OLD_SKILL_DEFS) {
+			int idx = filePath.lastIndexOf('/');
+			String retroPath = path.substring(0, idx + 1) + "retro/" + path.substring(idx + 1);
+			File theFile = new File(getServer().getConfig().CONFIG_DIR, retroPath);
+			if (!theFile.exists()) {
+				// fallback for old servers using .gz definitions
+				theFile = new File(getServer().getConfig().CONFIG_DIR, retroPath + ".gz");
+				if (theFile.exists()) {
+					path = retroPath;
+				}
+			} else {
+				path = retroPath;
+			}
+		}
+		return path;
 	}
 
 	private void loadNpcs(String filename) {

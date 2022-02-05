@@ -429,7 +429,7 @@ public class MainWindow extends JFrame {
 
 		y += this.cabbageCard.rscText.getHeight() - 3;
 		this.O1ScapeCard.rscText = makeButton("2001", x, y, helvetica24b, yellow, show2001ScapeCard());
-		this.O1ScapeCard.serverName = makeButton("Scape (alpha)", x + this.O1ScapeCard.rscText.getWidth(), y + (this.cabbageCard.serverName.getHeight() - 2 - this.cabbageCard.rscText.getHeight()), helvetica16b, yellow, show2001ScapeCard());
+		this.O1ScapeCard.serverName = makeButton("Scape (beta)", x + this.O1ScapeCard.rscText.getWidth(), y + (this.cabbageCard.serverName.getHeight() - 2 - this.cabbageCard.rscText.getHeight()), helvetica16b, yellow, show2001ScapeCard());
 
 		this.O1ScapeCard.underConstruction = new JLabel(Utils.getImage("undercon.gif"));
 		this.O1ScapeCard.underConstruction.setBounds(O1scape_x, launch_button_row3_y + 62, 38, 38);
