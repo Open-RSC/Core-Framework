@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static com.openrsc.server.net.rsc.ActionSender.isRetroClient;
 import static com.openrsc.server.net.rsc.ActionSender.tryFinalizeAndSendPacket;
 
 public final class GameStateUpdater {
@@ -128,7 +129,8 @@ public final class GameStateUpdater {
 	protected void updateNpcs(final Player playerToUpdate) {
 		MobsUpdateStruct struct = new MobsUpdateStruct();
 		ClearMobsStruct clearStruct = new ClearMobsStruct();
-		if (playerToUpdate.isRetroClient()) {
+		boolean isRetroClient = playerToUpdate.isUsing38CompatibleClient() || playerToUpdate.isUsing39CompatibleClient();
+		if (isRetroClient) {
 			// TODO: check impl
 			List<Object> mobsUpdate = new ArrayList<>();
 			List<Integer> clearIdx = new ArrayList<>();
@@ -251,7 +253,9 @@ public final class GameStateUpdater {
 			playerToUpdate.setNextRegionLoad();
 		}
 
-		if (playerToUpdate.isRetroClient()) {
+		boolean isRetroClient = playerToUpdate.isUsing38CompatibleClient() || playerToUpdate.isUsing39CompatibleClient();
+
+		if (isRetroClient) {
 			// TODO: check impl
 			List<Object> mobsUpdate = new ArrayList<>();
 			List<Integer> clearIdx = new ArrayList<>();
@@ -335,7 +339,7 @@ public final class GameStateUpdater {
 		} else {
 			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
 
-			if (playerToUpdate.isUsing140CompatibleClient()) {
+			if (playerToUpdate.isUsing140CompatibleClient() || playerToUpdate.isUsing69CompatibleClient()) {
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getX(), 10));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getY(), 12));
 			} else {
@@ -392,7 +396,7 @@ public final class GameStateUpdater {
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getSprite(), 4));
-					if (playerToUpdate.isUsing177CompatibleClient()) {
+					if (playerToUpdate.isUsing177CompatibleClient() || playerToUpdate.isUsing140CompatibleClient() || playerToUpdate.isUsing69CompatibleClient()) {
 						mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.isKnownPlayer(otherPlayer.getIndex()) ? 1 : 0, 1));
 					}
 
@@ -467,7 +471,7 @@ public final class GameStateUpdater {
 				updates.add((short) chatMessage.getSender().getIndex());
 				updates.add((byte) 1);
 				updates.add((short) (chatMessage.getRecipient() == null ? -1 : chatMessage.getRecipient().getIndex()));
-				if (player.isRetroClient()) {
+				if (isRetroClient(player)) {
 					updates.add((byte) chatMessage.getMessageString().length());
 					updates.add(chatMessage.getMessageString());
 				} else if (player.isUsing177CompatibleClient()) {
@@ -637,9 +641,9 @@ public final class GameStateUpdater {
 			if (updateSize > 0) {
 				AppearanceUpdateStruct mainStruct = new AppearanceUpdateStruct();
 				AppearanceUpdateStruct altStruct = new AppearanceUpdateStruct(); // for early mudclient, appearance update was sent appart;
-				boolean isRetroClient = player.isRetroClient();
+				boolean isRetroClient = player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient();
 				boolean isCustomClient = player.isUsingCustomClient();
-				boolean is177Compat = player.isUsing177CompatibleClient() || player.isUsing140CompatibleClient();
+				boolean is177Compat = player.isUsing177CompatibleClient() || player.isUsing140CompatibleClient() || player.isUsing69CompatibleClient();
 
 				List<Object> updatesMain = new ArrayList<>();
 				List<Object> updatesAlt = new ArrayList<>();

@@ -99,5 +99,7 @@ public enum OpcodeOut {
 	SEND_EQUIPMENT_UPDATE, // custom
 	SEND_REMOVE_WORLD_NPC, // retro rsc protocol
 	SEND_REMOVE_WORLD_PLAYER, // retro rsc protocol
-	RUNESCAPE_UPDATED; // rsc era protocol
+	RUNESCAPE_UPDATED, // rsc era protocol
+	SEND_YOPTIN, // added by mudclient 61 (or earlier, but post 40) and missing by 93 (present in mudclient 75)
+	SEND_INVENTORY_SIZE; // known to be in mudclient69 to 75
 }

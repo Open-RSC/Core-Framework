@@ -326,6 +326,9 @@ public class LoginPacketHandler {
 
 						final String password = packet.readString(20).trim();
 
+						final int protocolVersion = packet.readShort();
+						clientVersion.set(getVersion(protocolVersion, null));
+
 						if (packet.getLength() >= 34) {
 							// local IP or some sort of seed
 							packet.readByte();
@@ -853,22 +856,51 @@ public class LoginPacketHandler {
 	}
 
 	public int getVersion(int retrievedVersion, Player player) {
-		if (retrievedVersion >= 93 && retrievedVersion <= 235) {
+		if (retrievedVersion >= 61 && retrievedVersion <= 5235) {
 			return retrievedVersion;
 		}
-		if (retrievedVersion < 93) {
+
+		// Until some client > 40 && <= 61, client version was not sent, but a protocol version was sent instead.
+		// The only clients we have with this behaviour are clients 39/40, but we can guess at the other times
+		// that the network protocol needed a new version.
+		switch (retrievedVersion) {
+			case 1: // initial RuneScape release
+				return 14; // 2001-01-23
+			case 2:
+				// spellbook added
+				return 16; // guess @ 2001-01-27 client version
+			case 3:
+				// options menu added
+				return 23; // guess @ 2001-02-28 client version
+			case 4:
+				// friends list added
+				return 26; // 2001-04-06, according to Desu forum post
+			case 5:
+				// right click menu added
+				// technically should be something like 37, but we'll use 38 as default
+				return 38; // guess @ 2001-05-08 client version
+			case 6:
+				// good magic/prayer & evil magic/prayer merged
+				return 39; // 2001-05-10
+		}
+
+		if (null == player) {
+			return retrievedVersion;
+		}
+
+		if (retrievedVersion < 61) {
 			// not known version from login info
 			// retrievedVersion is more of a guess
 			int lastSetVersion;
 			if (player.getCache().hasKey("client_version") &&
 				player.getCache().getInt("client_version") >= 14
-				&& player.getCache().getInt("client_version") < 93) {
+				&& player.getCache().getInt("client_version") < 61) {
 				// although the mudclient 14 has not been retrieved yet, this would allow it
 				lastSetVersion = player.getCache().getInt("client_version");
 			} else {
 				lastSetVersion = retrievedVersion;
 			}
-			return  lastSetVersion;
+			return lastSetVersion;
 		}
 		return player.getWorld().getServer().getConfig().CLIENT_VERSION;
 	}

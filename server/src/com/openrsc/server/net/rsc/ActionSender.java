@@ -52,8 +52,10 @@ public class ActionSender {
 	 * */
 	public static PayloadGenerator<OpcodeOut> getGenerator(Player player) {
 		PayloadGenerator<OpcodeOut> generator;
-		if (player.isRetroClient()) {
+		if (player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient()) {
 			generator = new Payload38Generator();
+		} else if (player.isUsing69CompatibleClient()) {
+			generator = new Payload69Generator();
 		} else if (player.isUsing233CompatibleClient()) {
 			generator = new Payload235Generator();
 		} else if (player.isUsing177CompatibleClient()) {
@@ -84,7 +86,7 @@ public class ActionSender {
 
 	public static boolean isRetroClient(Player player) {
 		//return player.getClientVersion() == 38;
-		return player.isRetroClient();
+		return player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient() || player.isUsing69CompatibleClient();
 	}
 
 	/**
@@ -142,6 +144,21 @@ public class ActionSender {
 		player.setChangingAppearance(true);
 		NoPayloadStruct struct = new NoPayloadStruct();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_APPEARANCE_SCREEN, struct, player);
+	}
+
+	/**
+	 * Send players using mudclients 61 to 75 a prototype Yoptin signup screen.
+	 * @param player
+	 */
+	public static void sendYoptinScreen(Player player) {
+		NoPayloadStruct struct = new NoPayloadStruct();
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_YOPTIN, struct, player);
+	}
+
+	public static void sendMaxInventorySpaces(Player player, int size) {
+		InventoryStruct struct = new InventoryStruct();
+		struct.inventorySize = size;
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_INVENTORY_SIZE, struct, player);
 	}
 
 	public static void sendRecoveryScreen(Player player) {
@@ -846,6 +863,11 @@ public class ActionSender {
 	public static void sendInventory(Player player) {
 		if (player == null)
 			return; /* In this case, it is a trade offer */
+		if (player.isUsing69CompatibleClient()) {
+			// TODO: implement if user is Yoptin enabled
+			boolean yoptinEnabled = true;
+			sendMaxInventorySpaces(player, yoptinEnabled ? 35 : 30);
+		}
 		InventoryStruct struct = new InventoryStruct();
 		int inventorySize, i;
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
@@ -1004,7 +1026,7 @@ public class ActionSender {
 	public static void sendLogoutRequestConfirm(final Player player) {
 		Packet p;
 		AbstractStruct<OpcodeOut> struct;
-		if (!player.isRetroClient()) {
+		if (!player.isUsing38CompatibleClient() || !player.isUsing39CompatibleClient() || !player.isUsing69CompatibleClient()) {
 			NoPayloadStruct npStruct = new NoPayloadStruct();
 			npStruct.setOpcode(OpcodeOut.SEND_LOGOUT_REQUEST_CONFIRM);
 			struct = npStruct;

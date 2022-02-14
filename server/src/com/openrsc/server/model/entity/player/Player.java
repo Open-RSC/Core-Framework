@@ -33,6 +33,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.PayloadProcessorManager;
+import com.openrsc.server.net.rsc.generators.impl.Payload69Generator;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.parsers.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
@@ -2229,8 +2230,10 @@ public final class Player extends Mob {
 						() -> {
 							activePackets.remove(activePackets.indexOf(curPacket.getID()));
 							PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
-							if (isRetroClient()) {
+							if (isUsing38CompatibleClient() || isUsing39CompatibleClient()) {
 								parser = new Payload38Parser();
+							} else if (isUsing69CompatibleClient()) {
+								parser = new Payload69Parser();
 							} else if (isUsing233CompatibleClient()) {
 								parser = new Payload235Parser();
 							} else if (isUsing177CompatibleClient()) {
@@ -3553,22 +3556,22 @@ public final class Player extends Mob {
 		return this.clientVersion;
 	}
 
-	// TODO: needs to be redefined
-	public boolean isRetroClient() {
-		// temporary for setversion command to not break if player enters in range
-		return this.clientVersion >= 14 && this.clientVersion < 93;
-	}
-
 	public boolean isUsingClientBeforeQP() {
 		return this.clientVersion >= 14 && this.clientVersion <= 38;
 	}
 
-	public boolean isUsing177CompatibleClient() {
-		return this.clientVersion == 177;
-	}
+	public boolean isUsing38CompatibleClient() { return this.clientVersion == 38; }
+
+	public boolean isUsing39CompatibleClient() { return this.clientVersion == 39 || this.clientVersion == 40; }
+
+	public boolean isUsing69CompatibleClient() { return this.clientVersion == 69; }
 
 	public boolean isUsing140CompatibleClient() {
 		return this.clientVersion == 140;
+	}
+
+	public boolean isUsing177CompatibleClient() {
+		return this.clientVersion == 177;
 	}
 
 	public boolean isUsing233CompatibleClient() {

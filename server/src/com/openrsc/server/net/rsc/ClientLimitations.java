@@ -57,6 +57,30 @@ public class ClientLimitations {
 			mapHash = "14";
 		}
 
+		else if (clientVersion == 69) {
+			// TODO: correct these
+			maxAnimationId = 122;
+			maxItemId = 382;
+			maxNpcId = 173;
+			maxSceneryId = 194;
+			maxPrayerId = 13; // already added all prayers by now
+			maxSkillId = 15;
+			maxSpellId = 8;
+			maxRoofId = -1; // not implemented until client 115 on 2001-12-24
+			maxTextureId = -1; // not implemented until client 115 on 2001-12-24
+			maxTileId = 2;
+			maxBoundaryId = 47;
+			maxTeleBubbleId = -1; // not implemented until client 119 on 2002-01-24
+			maxProjectileSprite = 2;
+			maxSkinColor = 4;
+			maxHairColor = 9;
+			maxClothingColor = 14;
+			maxQuestId = 15; // 16 quests existed
+			maxDialogueOptions = 5;
+			maxBankItems = 0; // item bank not implemented until client 72 on 2001-07-26
+			mapHash = "20";
+		}
+
 		else if (clientVersion >= 177 && clientVersion <= 235) {
 			// not sure which client in 2009 added this feature
 			// 224 is the only 2009 RSC client I have.

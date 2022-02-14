@@ -199,6 +199,8 @@ public final class Admins implements CommandTrigger {
 			playerQueryIP(player, args);
 		} else if (command.equalsIgnoreCase("appearance") || command.equalsIgnoreCase("changeappearance")) {
 			sendAppearanceScreen(player, args);
+		} else if (command.equalsIgnoreCase("yoptin")) {
+			sendYoptinScreen(player, args);
 		} else if (command.equalsIgnoreCase("spawnnpc")) {
 			spawnNpc(player, command, args);
 		} else if (command.equalsIgnoreCase("winterholidayevent") || command.equalsIgnoreCase("toggleholiday")) {
@@ -2088,6 +2090,28 @@ public final class Admins implements CommandTrigger {
 		}
 		targetPlayer.setChangingAppearance(true);
 		ActionSender.sendAppearanceScreen(targetPlayer);
+	}
+
+	private void sendYoptinScreen(Player player, String[] args) {
+		Player targetPlayer = args.length > 0 ?
+			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
+			player;
+
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if (targetPlayer.getClientVersion() <= 75 && targetPlayer.getClientVersion() >= 61) {
+			player.message(messagePrefix + targetPlayer.getUsername() + " has been sent the yoptin screen");
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "A staff member has sent you to the prototype Yoptin signup screen");
+			}
+			ActionSender.sendYoptinScreen(targetPlayer);
+		} else {
+			player.message(messagePrefix + "That player is using client " + targetPlayer.getClientVersion() + ".");
+			player.message(messagePrefix + "This command only works for clients between mudclient 61 and 75 inclusive.");
+		}
 	}
 
 	private void spawnNpc(Player player, String command, String[] args) {

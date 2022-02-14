@@ -111,6 +111,8 @@ public class PayloadValidator {
 		put(OpcodeOut.SEND_EQUIPMENT, EquipmentStruct.class); // custom
 		put(OpcodeOut.SEND_EQUIPMENT_UPDATE, EquipmentUpdateStruct.class); // custom
 		put(OpcodeOut.RUNESCAPE_UPDATED, NoPayloadStruct.class); // TODO: might be relevant at some custom 2001scape ?
+		put(OpcodeOut.SEND_YOPTIN, NoPayloadStruct.class); // retro rsc
+		put(OpcodeOut.SEND_INVENTORY_SIZE, InventoryStruct.class); // retro rsc
 	}};
 
 	public static boolean isPayloadCorrectInstance(AbstractStruct<OpcodeOut> payload, OpcodeOut opcode) {
