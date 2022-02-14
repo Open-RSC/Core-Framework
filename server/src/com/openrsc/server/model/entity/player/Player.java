@@ -2386,6 +2386,7 @@ public final class Player extends Mob {
 		menu = null;
 		menuHandler = null;
 		ActionSender.hideMenu(this);
+		setBusy(false);
 	}
 
 	public void resetRange() {
