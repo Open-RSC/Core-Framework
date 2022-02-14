@@ -14,6 +14,7 @@ import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.database.impl.mysql.queries.logging.LoginLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.database.impl.mysql.queries.player.login.PlayerOnlineFlagQuery;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -800,7 +801,15 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				}
 			}
 
-			player.getChannel().attr(attachment).set(null);
+			// close the channel after a safe amount of time for the logout packet to reach the player
+			// does not matter if player logs back in while this still hasn't been destroyed, it's just to free memory.
+			player.getWorld().getServer().getGameEventHandler().add(
+				new DelayedEvent(player.getWorld(), null, 2500, "Free channel attachment memory") {
+				public void run() {
+					player.getChannel().attr(attachment).set(null);
+					stop();
+				}
+			});
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
