@@ -153,98 +153,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		// TODO: For runescript compatibility, all of the calls to getCurrentAction/setCurrentAction should be done in the drop handler.
-
-		// Get the amount to drop from our temporary item construct.
-		int amountToDrop = item.getAmount();
-		batchDrop(player, item, fromInventory, amountToDrop, amountToDrop, invIndex);
-	}
-
-	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop, int totalToDrop, int invIndex) {
-
-		Item searchItem;
-		boolean found = false;
-		if (fromInventory) {
-			if (invIndex >= 0 && invIndex < player.getCarriedItems().getInventory().size()) {
-				// search inventory using specified index
-				searchItem = player.getCarriedItems().getInventory().get(invIndex);
-				if (searchItem.equals(item)) {
-					item = searchItem;
-					found = true;
-				}
-			}
-			if (!found) {
-				// Grab the last item by the ID we are trying to drop when batching.
-				item = player.getCarriedItems().getInventory().get(
-					player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
-				);
-			}
-		}
-		else {
-			item = player.getCarriedItems().getEquipment().get(
-				player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())
-			);
-		}
-
-		if (item == null) {
-			player.message("You don't have the entered amount to drop");
-			return;
-		}
-
-		int removingThisIteration = 1;
-		if (fromInventory) {
-			// Stacks or notes need to check their amount compared to the amount to drop.
-			if (item.getAmount() > 1) {
-				removingThisIteration = Math.min(amountToDrop, item.getAmount());
-			}
-			if (item.getItemId() != -1) {
-				player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration, item.getNoted(), item.getItemId()));
-			} else {
-				player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration, item.getNoted()));
-			}
-			amountToDrop -= removingThisIteration;
-		} else {
-			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId());
-			if (slot == -1) return;
-
-			// Always remove all when from equipment.
-			removingThisIteration = item.getAmount();
-			player.getCarriedItems().getEquipment().remove(item, removingThisIteration);
-			ActionSender.sendEquipmentStats(player);
-
-			final ItemDefinition itemDef = item.getDef(player.getWorld());
-			final AppearanceId appearance = AppearanceId.getById(itemDef.getAppearanceId());
-			if (itemDef.getWieldPosition() < 12 ||
-				(itemDef.getWieldPosition() == AppearanceId.SLOT_MORPHING_RING && appearance.id() != AppearanceId.NOTHING.id())) {
-				player.updateWornItems(itemDef.getWieldPosition(),
-					player.getSettings().getAppearance().getSprite(itemDef.getWieldPosition()));
-			}
-			amountToDrop = 0;
-		}
-
-		GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), removingThisIteration, player, item.getNoted());
-		ActionSender.sendSound(player, "dropobject");
-
-		if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
-			return;
-		}
-
-		player.getWorld().registerItem(groundItem, config().GAME_TICK * 300);
-		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
-			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
-
-		// Display the Dropping x/y message only if we want batching,
-		// we're dropping more than one item, and the item isn't a stack.
-		if (config().BATCH_PROGRESSION && totalToDrop > 1 && removingThisIteration == 1) {
-			player.message("Dropping " + (totalToDrop - amountToDrop) + "/" + totalToDrop
-				+ " " + player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName());
-		}
-
-		// Repeat
-		if (!ifinterrupted() && amountToDrop > 0) {
-			delay();
-			batchDrop(player, item, fromInventory, amountToDrop, totalToDrop, -1);
-		}
+		// No default actions
 	}
 
 	@Override
@@ -314,39 +223,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onAttackPlayer(Player player, Player affectedMob) {
-		if (affectedMob.getLocation().inBounds(220, 107, 224, 111)) { // mage arena block real rsc.
-			player.message("Here kolodion protects all from your attack");
-			player.face(affectedMob); // TODO: not necessary to do this if the walk handler would do it for us.
-			return;
-		}
-
-		if (attackPrevented(player, affectedMob)) {
-			return;
-		}
-
-		player.startCombat(affectedMob);
-		if (config().WANT_PARTIES) {
-			if (player.getParty() != null) {
-				player.getParty().sendParty();
-			}
-		}
-	}
-
-	private boolean attackPrevented(Player player, Player affectedMob) {
-		boolean prevented = false;
-		if (affectedMob.getLocation().isInBank(player.getConfig().BASED_MAP_DATA)) {
-			player.message("You cannot attack other players inside the bank");
-			prevented = true;
-		}
-
-		Npc guard = ifnearvisnpc(player, NpcId.GUARD.id(), 3);
-		if (guard != null) {
-			guard.getUpdateFlags().setChatMessage(new ChatMessage(guard, "Hey! No fighting!", player));
-			delay(2);
-			guard.startCombat(player);
-			prevented = true;
-		}
-		return prevented;
+		// No default actions
 	}
 
 	@Override
@@ -371,7 +248,6 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onPlayerDeath(Player player) {
-		// TODO: This plugin is not handled anywhere
 		// No default actions
 	}
 
@@ -432,9 +308,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onSpellPlayer(Player player, Player affectedPlayer, Spells spellEnum) {
-		if (attackPrevented(player, affectedPlayer)) {
-			return;
-		}
+		// No default actions
 	}
 
 	@Override
@@ -464,7 +338,6 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onEscapeNpc(Player player, Npc n) {
-		// TODO: This plugin is not handled anywhere
 		// No default actions
 	}
 
@@ -475,9 +348,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onPlayerRangePlayer(Player player, Player affectedMob) {
-		if (attackPrevented(player, affectedMob)) {
-			return;
-		}
+		// No default actions
 	}
 
 	@Override
