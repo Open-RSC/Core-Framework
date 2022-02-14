@@ -11,6 +11,9 @@ public class ArravInvUseOnPlayer implements UsePlayerTrigger {
 
 	@Override
 	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
+		if (!player.isIronMan() && !otherPlayer.isIronMan()) {
+			return false;
+		}
 		if (item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_1.id() || item.getCatalogId() == ItemId.BROKEN_SHIELD_ARRAV_2.id()) {
 			return true;
 		}
