@@ -32,6 +32,8 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 
 		Player affectedPlayer = player.getWorld().getPlayer(friend);
 		if (pID == packetOne) { // Add friend
+			if (friendName.equalsIgnoreCase("")) return;
+
 			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().friendCount() >= maxFriends) {
@@ -89,6 +91,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				}
 			}
 		} else if (pID == packetThree) { // Add ignore
+			if (friendName.equalsIgnoreCase("")) return;
 			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
@@ -96,6 +99,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				ActionSender.sendIgnoreList(player);
 				return;
 			}
+
 			if (friend > 0L) {
 				try {
 					int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(friend));
