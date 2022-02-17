@@ -3,6 +3,7 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -757,7 +758,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case INCREASE_DEFENSE:
 				int amount = payload.amount;
 				int amountx = amount * 4;
-				if (!checkIncreaseLevelReqs(player, amount)) {
+				if (!checkIncreaseLevelReqs(player, amountx, Skill.DEFENSE.id())) {
 					return;
 				}
 				player.getSkills().addExperience(Skill.DEFENSE.id(), amountx);
@@ -768,7 +769,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case INCREASE_ATTACK:
 				int amount0 = payload.amount;
 				int amountx0 = amount0 * 4;
-				if (!checkIncreaseLevelReqs(player, amount0)) {
+				if (!checkIncreaseLevelReqs(player, amountx0, Skill.ATTACK.id())) {
 					return;
 				}
 				player.getSkills().addExperience(Skill.ATTACK.id(), amountx0);
@@ -779,7 +780,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case INCREASE_STRENGTH:
 				int amount2 = payload.amount;
 				int amountx2 = amount2 * 4;
-				if (!checkIncreaseLevelReqs(player, amount2)) {
+				if (!checkIncreaseLevelReqs(player, amountx2, Skill.STRENGTH.id())) {
 					return;
 				}
 				player.getSkills().addExperience(Skill.STRENGTH.id(), amountx2);
@@ -790,7 +791,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case INCREASE_RANGED:
 				int amount3 = payload.amount;
 				int amountx3 = amount3 * 4;
-				if (!checkIncreaseLevelReqs(player, amount3)) {
+				if (!checkIncreaseLevelReqs(player, amountx3, Skill.RANGED.id())) {
 					return;
 				}
 				player.getSkills().addExperience(Skill.RANGED.id(), amountx3);
@@ -800,7 +801,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case INCREASE_PRAYER:
 				int amount4 = payload.amount;
 				int amountx4 = amount4 * 4;
-				if (!checkIncreaseLevelReqs(player, amount4)) {
+				if (!checkIncreaseLevelReqs(player, amountx4, Skill.PRAYER.id())) {
 					return;
 				}
 				player.getSkills().addExperience(Skill.PRAYER.id(), amountx4);
@@ -810,7 +811,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case INCREASE_MAGIC:
 				int amount5 = payload.amount;
 				int amountx5 = amount5 * 4;
-				if (!checkIncreaseLevelReqs(player, amount5)) {
+				if (!checkIncreaseLevelReqs(player, amountx5, Skill.MAGIC.id())) {
 					return;
 				}
 				player.getSkills().addExperience(Skill.MAGIC.id(), amountx5);
@@ -910,7 +911,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 		}
 	}
 
-	private final boolean checkReduceLevelReqs(Player player, int exp, int stat) {
+	private final boolean checkReduceLevelReqs(Player player, int points, int stat) {
 		if(player.getLocation().inWilderness()){
 			player.message("You cannot do that in the wilderness");
 			return false;
@@ -927,13 +928,17 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			player.message("You must be out of combat for 10 seconds before changing stats");
 			return false;
 		}
-		if(player.getSkills().getExperience(stat) < exp){
+		if(player.getSkills().getExperience(stat) < points){
 			player.message("You do not have that much exp in that stat");
+			return false;
+		}
+		if(points > Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) {
+			player.message("You cannot decrease your exp that much");
 			return false;
 		}
 		return true;
 	}
-	private final boolean checkIncreaseLevelReqs(Player player, int points) {
+	private final boolean checkIncreaseLevelReqs(Player player, int points, int stat) {
 		if(player.getLocation().inWilderness()){
 			player.message("You cannot do that in the wilderness");
 			return false;
@@ -952,6 +957,15 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 		}
 		if(player.getOpenPkPoints() < points){
 			player.message("You do not have enough points");
+			return false;
+		}
+		if(points > Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) {
+			player.message("You cannot increase your exp that much");
+			return false;
+		}
+		//Additional check for exp beyond the maximum exp for a stat, may not be necessary but nice to have.
+		if(player.getSkills().getExperience(stat) == Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) {
+			player.message("You have reached the maximum exp for that stat");
 			return false;
 		}
 		return true;

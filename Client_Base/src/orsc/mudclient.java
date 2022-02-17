@@ -5757,6 +5757,9 @@ public final class mudclient implements Runnable {
 						if (intOverflowCheck < Integer.MAX_VALUE) {
 							var4 = Integer.parseInt(str);
 						}
+						if (var4 > this.experienceArray[Config.S_PLAYER_LEVEL_LIMIT - 2]) {
+							var4 = this.experienceArray[Config.S_PLAYER_LEVEL_LIMIT - 2]; //104273167 is the maximum XP possible in OpenPK, level 120 exp is originalCurveExperienceArray[lvl - 2] / 4.
+						}
 						this.packetHandler.getClientStream().newPacket(199);
 						this.packetHandler.getClientStream().bufferBits.putByte(13);
 						this.packetHandler.getClientStream().bufferBits.putByte(pointsOptionId);
@@ -5810,6 +5813,9 @@ public final class mudclient implements Runnable {
 						if (intOverflowCheck < Integer.MAX_VALUE) {
 							var4 = Integer.parseInt(str);
 						}
+						if (var4 > this.experienceArray[Config.S_PLAYER_LEVEL_LIMIT - 2]) {
+							var4 = this.experienceArray[Config.S_PLAYER_LEVEL_LIMIT - 2]; //104273167 is the maximum XP possible in OpenPK, level 120 exp is originalCurveExperienceArray[lvl - 2] / 4.
+						}
 						this.packetHandler.getClientStream().newPacket(199);
 						this.packetHandler.getClientStream().bufferBits.putByte(13);
 						this.packetHandler.getClientStream().bufferBits.putByte(pointsOptionId);
@@ -5831,7 +5837,7 @@ public final class mudclient implements Runnable {
 						int n2800;
 						n2800 = this.playerStatBase[pointsSkillId] - var4;
 						if (n2800 < 1) {
-							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							this.showMessage(false, null, "Stat cannot be lower than 1", MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -10520,18 +10526,28 @@ public final class mudclient implements Runnable {
 									this.showUiTab = 0;
 							}
 
-							if (isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
-								if (S_WANT_OPENPK_POINTS) {
+							if (isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && S_WANT_OPENPK_POINTS) {
+								if (combatTimeout == 0) {
 									//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
 									pointInterface.setVisible(true);
 									if (!C_CUSTOM_UI)
 										this.showUiTab = 0;
+								} else {
+									this.showMessage(false, null,
+									"You must be out of combat for 10 seconds before changing stats.",
+									MessageType.GAME, 0, null);
 								}
 							} else if (!isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && S_WANT_OPENPK_POINTS) {
-								//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
-								pointInterface.setVisible(true);
-								if (!C_CUSTOM_UI)
-									this.showUiTab = 0;
+								if (combatTimeout == 0) {
+									//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
+									pointInterface.setVisible(true);
+									if (!C_CUSTOM_UI)
+										this.showUiTab = 0;
+								} else {
+										this.showMessage(false, null,
+										"You must be out of combat for 10 seconds before changing stats.",
+										MessageType.GAME, 0, null);
+									}
 							}
 						}
 					}
