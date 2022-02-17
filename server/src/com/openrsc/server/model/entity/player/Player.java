@@ -2421,7 +2421,11 @@ public final class Player extends Mob {
 	}
 
 	public void logout() {
-		ActionSender.sendLogoutRequestConfirm(this);
+		try {
+			ActionSender.sendLogoutRequestConfirm(this);
+		} catch (NullPointerException ex) {
+			LOGGER.info("Connection closed quickly for " + this.getUsername());
+		}
 
 		FishingTrawler trawlerInstance = getWorld().getFishingTrawler(this);
 
