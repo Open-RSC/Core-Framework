@@ -531,6 +531,31 @@ public final class ItemDefinition extends EntityDef {
 			return this;
 		}
 
+		public ItemDefinitionBuilder armourBonus(long armourBonus) {
+			this.armourBonus = armourBonus;
+			return this;
+		}
+
+		public ItemDefinitionBuilder weaponAimBonus(int weaponAimBonus) {
+			this.weaponAimBonus = weaponAimBonus;
+			return this;
+		}
+
+		public ItemDefinitionBuilder weaponPowerBonus(int weaponPowerBonus) {
+			this.weaponPowerBonus = weaponPowerBonus;
+			return this;
+		}
+
+		public ItemDefinitionBuilder magicBonus(int magicBonus) {
+			this.magicBonus = magicBonus;
+			return this;
+		}
+
+		public ItemDefinitionBuilder prayerBonus(int prayerBonus) {
+			this.prayerBonus = prayerBonus;
+			return this;
+		}
+
 		public ItemDefinition build() {
 			ItemDefinition definition =  new ItemDefinition(this);
 			return definition;

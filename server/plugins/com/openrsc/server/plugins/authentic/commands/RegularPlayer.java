@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static com.openrsc.server.plugins.Functions.config;
-import static com.openrsc.server.plugins.Functions.multi;
+import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isPhoenixGang;
 
@@ -241,12 +240,20 @@ public final class RegularPlayer implements CommandTrigger {
 		player.updateTotalPlayed();
 		long timePlayed = player.getCache().getLong("total_played");
 
-		ActionSender.sendBox(player,
-			"@lre@Player Information: %"
-				+ " %"
-				+ "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
-				+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
-			, true);
+		if (player.getClientLimitations().supportsMessageBox) {
+			ActionSender.sendBox(player,
+				"@lre@Player Information: %"
+					+ " %"
+					+ "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
+					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
+				, true);
+		} else {
+			player.message("@lre@Player Information:");
+			delay(2);
+			player.message("@gre@Coordinates:@whi@ " + player.getLocation().toString());
+			delay(2);
+			player.message("@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed));
+		}
 	}
 
 	private void queryEvents(Player player) {
@@ -778,42 +785,27 @@ public final class RegularPlayer implements CommandTrigger {
 
 	private void queryCommands(Player player, int page) {
 		if (page == 0) {
-			ActionSender.sendBox(player, ""
-				+ "@yel@Commands available: %"
-				+ "@lre@Type :: before you enter your command, see the list below. %"
-				+ " %" // this adds a line of whitespace for readability
-				+ "@whi@::gameinfo - shows player and server information %"
-				+ "@whi@::online - shows players currently online %"
-				+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
-				+ "@whi@::onlinelist - shows players currently online in a list %"
-				+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
-				+ "@whi@::pk <message> - to talk in @or1@pking @whi@global chat channel %"
-				+ "@whi@::c <message> - talk in clan chat %"
-				+ "@whi@::p <message> - talk in party chat %"
-				+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
-				+ "@whi@::wilderness - shows the wilderness activity %"
-				+ "@whi@::event - to enter an ongoing server event %"
-				+ "@whi@::kills - shows kill counts of npcs %"
-				+ "@whi@::qoloptout - opts you out of Quality of Life features %"
-				+ "@whi@::certoptout - opts you out of the traditional 'cert' system %",true
-			);
+			if (player.getClientLimitations().supportsMessageBox) {
+				ActionSender.sendBox(player, String.join("", pageZeroCommands), true);
+			} else {
+				for (String command : pageZeroCommands) {
+					player.playerServerMessage(MessageType.QUEST, command.replace("%", ""));
+					delay(2);
+				}
+			}
 			int cont = multi(player, "continue reading", "finished reading");
 			if (cont == 0) {
 				queryCommands(player, 1);
 			}
 		} else if (page == 1) {
-			ActionSender.sendBox(player, ""
-				+ "@yel@Commands available: %"
-				+ "@lre@Type :: before you enter your command, see the list below. %"
-				+ " %" // this adds a line of whitespace for readability
-				+ "@whi@::time - shows the current server time %"
-				+ "@whi@::toggleglobalchat - toggle blocking Global$ messages %"
-				+ "@whi@::toggleblockchat - toggle blocking all chat messages %"
-				+ "@whi@::toggleblockprivate - toggle block all private messages %"
-				+ "@whi@::toggleblocktrade - toggle blocking all trade requests %"
-				+ "@whi@::toggleblockduel - toggle blocking all duel requests %"
-				+ "@whi@::groups - shows available ranks on the server %",true
-			);
+			if (player.getClientLimitations().supportsMessageBox) {
+				ActionSender.sendBox(player, String.join("", pageOneCommands), true);
+			} else {
+				for (String command : pageOneCommands) {
+					player.playerServerMessage(MessageType.QUEST, command.replace("%", ""));
+					delay(2);
+				}
+			}
 		}
 
 	}
@@ -867,4 +859,37 @@ public final class RegularPlayer implements CommandTrigger {
 		if (player.isDev()) return;
 		player.tellCoordinates();
 	}
+
+	private static final String[] pageZeroCommands = new String[]{
+		"@yel@Commands available: %",
+		"@lre@Type :: before you enter your command, see the list below. %",
+		" %", // this adds a line of whitespace for readability
+		"@whi@::gameinfo - shows player and server information %",
+		"@whi@::online - shows players currently online %",
+		"@whi@::uniqueonline - shows number of unique IPs logged in %",
+		"@whi@::onlinelist - shows players currently online in a list %",
+		"@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %",
+		"@whi@::pk <message> - to talk in @or1@pking @whi@global chat channel %",
+		"@whi@::c <message> - talk in clan chat %",
+		"@whi@::p <message> - talk in party chat %",
+		"@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %",
+		"@whi@::wilderness - shows the wilderness activity %",
+		"@whi@::event - to enter an ongoing server event %",
+		"@whi@::kills - shows kill counts of npcs %",
+		"@whi@::qoloptout - opts you out of Quality of Life features %",
+		"@whi@::certoptout - opts you out of the traditional 'cert' system %"
+	};
+
+	private static final String[] pageOneCommands = new String[]{
+		"@yel@Commands available: %",
+		"@lre@Type :: before you enter your command, see the list below. %",
+		" %", // this adds a line of whitespace for readability
+		"@whi@::time - shows the current server time %",
+		"@whi@::toggleglobalchat - toggle blocking Global$ messages %",
+		"@whi@::toggleblockchat - toggle blocking all chat messages %",
+		"@whi@::toggleblockprivate - toggle block all private messages %",
+		"@whi@::toggleblocktrade - toggle blocking all trade requests %",
+		"@whi@::toggleblockduel - toggle blocking all duel requests %",
+		"@whi@::groups - shows available ranks on the server %"
+	};
 }

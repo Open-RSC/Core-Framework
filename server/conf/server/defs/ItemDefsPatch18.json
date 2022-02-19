@@ -1469,6 +1469,7 @@
 			"description": "A bright red cape",
 			"command": "",
 			"isStackable": 0,
+			"armourBonus": 0,
 			"basePrice": 2
 		},
 		{
@@ -1573,7 +1574,8 @@
 			"description": "Provides excellent protection",
 			"command": "",
 			"isStackable": 0,
-			"basePrice": 4550
+			"basePrice": 4550,
+			"armourBonus": 32
 		},
 		{
 			"id": 197,
@@ -1677,7 +1679,8 @@
 			"description": "A warm black cape",
 			"command": "",
 			"isStackable": 0,
-			"basePrice": 7
+			"basePrice": 7,
+			"armourBonus": 1
 		},
 		{
 			"id": 210,
@@ -1845,7 +1848,8 @@
 			"description": "A full face helmet",
 			"command": "",
 			"isStackable": 0,
-			"basePrice": 1238
+			"basePrice": 1238,
+			"armourBonus": 10
 		},
 		{
 			"id": 231,
@@ -1885,7 +1889,8 @@
 			"description": "It increases my aim",
 			"command": "",
 			"isStackable": 0,
-			"basePrice": 100
+			"basePrice": 100,
+			"weaponAimBonus": 2
 		},
 		{
 			"id": 236,
@@ -1989,7 +1994,8 @@
 			"description": "These look pretty heavy",
 			"command": "",
 			"isStackable": 0,
-			"basePrice": 2275
+			"basePrice": 2275,
+			"armourBonus": 17
 		},
 		{
 			"id": 249,

@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -100,6 +101,7 @@ import java.util.stream.Collectors;
 public class Functions {
 
 	private static final int DEFAULT_TICK = 640;
+	public static int ZERO_RESERVED = Integer.MAX_VALUE;
 
 	/**
 	 * The asynchronous logger.
@@ -1040,8 +1042,9 @@ public class Functions {
 
 		@SuppressWarnings("unchecked")
 		T result = (T) base.getClass().newInstance();
-		Object[] fields = Arrays.stream(base.getClass().getDeclaredFields()).filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList()).toArray();
+		List<Field> fields = Arrays.stream(base.getClass().getDeclaredFields()).filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList());
 		boolean accessibleChange = false;
+		Object fieldOfDiff, fieldOfBase;
 		for (Object fieldObj : fields) {
 			Field field = (Field) fieldObj;
 			if (!field.isAccessible()) {
@@ -1049,10 +1052,12 @@ public class Functions {
 				accessibleChange = true;
 			}
 			boolean isPrimitive = field.getType().isPrimitive();
-			field.set(result, !isPrimitive ? (field.get(diff) != null ? field.get(diff) : field.get(base)) : (
-				!field.get(diff).toString().equals("0") && !field.get(diff).toString().equals("0.0")
-					&& !field.get(diff).toString().equals("false") && !field.get(diff).toString().equals("")
-					? field.get(diff) : field.get(base)
+			fieldOfDiff = field.get(diff);
+			fieldOfBase = field.get(base);
+			field.set(result, !isPrimitive ? (fieldOfDiff != null ? fieldOfDiff : fieldOfBase) : (
+				!fieldOfDiff.toString().equals("0") && !fieldOfDiff.toString().equals("0.0")
+					&& !fieldOfDiff.toString().equals("false") && !fieldOfDiff.toString().equals("")
+					? (fieldOfDiff.toString().equals(Long.toString(ZERO_RESERVED)) ? 0 : fieldOfDiff) : fieldOfBase
 				));
 			if (accessibleChange) {
 				accessibleChange = false;

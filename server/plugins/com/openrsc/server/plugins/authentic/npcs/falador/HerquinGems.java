@@ -14,10 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class HerquinGems extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 60000 * 10, 100, 70, 3, new Item(ItemId.UNCUT_SAPPHIRE.id(),
-		1), new Item(ItemId.UNCUT_EMERALD.id(), 0), new Item(ItemId.UNCUT_RUBY.id(), 0), new Item(ItemId.UNCUT_DIAMOND.id(), 0),
-		new Item(ItemId.SAPPHIRE.id(), 1), new Item(ItemId.EMERALD.id(), 0), new Item(ItemId.RUBY.id(), 0),
-		new Item(ItemId.DIAMOND.id(), 0));
+	private Shop shop = null;
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
@@ -26,7 +23,7 @@ public final class HerquinGems extends AbstractShop {
 
 	@Override
 	public Shop[] getShops(World world) {
-		return new Shop[]{shop};
+		return new Shop[]{getShop(world)};
 	}
 
 	@Override
@@ -46,10 +43,25 @@ public final class HerquinGems extends AbstractShop {
 		if (option == 0) {
 			say(player, n, "Do you wish to trade?");
 			npcsay(player, n, "Why yes this a jewel shop after all");
-			player.setAccessingShop(shop);
-			ActionSender.showShop(player, shop);
+			player.setAccessingShop(getShop(player.getWorld()));
+			ActionSender.showShop(player, getShop(player.getWorld()));
 		} else if (option == 1) {
 			say(player, n, "Sorry I don't want to talk to you actually");
 		}
+	}
+
+	public Shop getShop(World world) {
+		if(shop == null) {
+			shop = (world.getServer().getConfig().BASED_CONFIG_DATA >= 24 ?
+				new Shop(false, 60000 * 10, 100, 70, 3, new Item(ItemId.UNCUT_SAPPHIRE.id(),
+					1), new Item(ItemId.UNCUT_EMERALD.id(), 0), new Item(ItemId.UNCUT_RUBY.id(), 0), new Item(ItemId.UNCUT_DIAMOND.id(), 0),
+					new Item(ItemId.SAPPHIRE.id(), 1), new Item(ItemId.EMERALD.id(), 0), new Item(ItemId.RUBY.id(), 0),
+					new Item(ItemId.DIAMOND.id(), 0)) :
+				new Shop(false, 60000 * 10, 100, 70, 3, new Item(ItemId.UNCUT_SAPPHIRE.id(),
+					0), new Item(ItemId.UNCUT_EMERALD.id(), 0), new Item(ItemId.UNCUT_RUBY.id(), 0), new Item(ItemId.UNCUT_DIAMOND.id(), 0),
+					new Item(ItemId.SAPPHIRE.id(), 0), new Item(ItemId.EMERALD.id(), 0), new Item(ItemId.RUBY.id(), 0),
+					new Item(ItemId.DIAMOND.id(), 0)));
+		}
+		return shop;
 	}
 }

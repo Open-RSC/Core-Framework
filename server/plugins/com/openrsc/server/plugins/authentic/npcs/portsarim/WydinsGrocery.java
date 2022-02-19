@@ -17,10 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger {
 
-	private final Shop shop = new Shop(false, 12500, 100, 70, 1, new Item(ItemId.POT_OF_FLOUR.id(),
-		3), new Item(ItemId.RAW_CHICKEN.id(), 1), new Item(ItemId.CABBAGE.id(), 3), new Item(ItemId.BANANA.id(), 3),
-		new Item(ItemId.REDBERRIES.id(), 1), new Item(ItemId.BREAD.id(), 0), new Item(ItemId.CHOCOLATE_BAR.id(), 1),
-		new Item(ItemId.CHEESE.id(), 3), new Item(ItemId.TOMATO.id(), 3), new Item(ItemId.POTATO.id(), 1));
+	private Shop shop = null;
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
@@ -35,7 +32,7 @@ public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger 
 
 	@Override
 	public Shop[] getShops(World world) {
-		return new Shop[]{shop};
+		return new Shop[]{getShop(world)};
 	}
 
 	@Override
@@ -65,8 +62,8 @@ public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger 
 			switch (option) {
 				case 0:
 					say(player, n, "Yes please");
-					player.setAccessingShop(shop);
-					ActionSender.showShop(player, shop);
+					player.setAccessingShop(getShop(player.getWorld()));
+					ActionSender.showShop(player, getShop(player.getWorld()));
 					break;
 				case 2:
 					say(player, n, "What can you recommend?");
@@ -91,11 +88,26 @@ public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger 
 			} else if (option == 3) {
 				say(player, n, "Can I buy something please");
 				npcsay(player, n, "Yes Ok");
-				player.setAccessingShop(shop);
-				ActionSender.showShop(player, shop);
+				player.setAccessingShop(getShop(player.getWorld()));
+				ActionSender.showShop(player, getShop(player.getWorld()));
 			}
 		}
 
+	}
+
+	public Shop getShop(World world) {
+		if(shop == null) {
+			shop = (world.getServer().getConfig().BASED_CONFIG_DATA >= 28 ?
+				new Shop(false, 12500, 100, 70, 1, new Item(ItemId.POT_OF_FLOUR.id(),
+					3), new Item(ItemId.RAW_CHICKEN.id(), 1), new Item(ItemId.CABBAGE.id(), 3), new Item(ItemId.BANANA.id(), 3),
+					new Item(ItemId.REDBERRIES.id(), 1), new Item(ItemId.BREAD.id(), 0), new Item(ItemId.CHOCOLATE_BAR.id(), 1),
+					new Item(ItemId.CHEESE.id(), 3), new Item(ItemId.TOMATO.id(), 3), new Item(ItemId.POTATO.id(), 1)) :
+				new Shop(false, 12500, 100, 70, 1, new Item(ItemId.POT_OF_FLOUR.id(),
+					1), new Item(ItemId.RAW_CHICKEN.id(), 1), new Item(ItemId.CABBAGE.id(), 3), new Item(ItemId.BANANA.id(), 3),
+					new Item(ItemId.REDBERRIES.id(), 1), new Item(ItemId.BREAD.id(), 0), new Item(ItemId.CHOCOLATE_BAR.id(), 1),
+					new Item(ItemId.CHEESE.id(), 3), new Item(ItemId.TOMATO.id(), 3), new Item(ItemId.POTATO.id(), 1)));
+		}
+		return shop;
 	}
 
 	@Override

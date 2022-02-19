@@ -59,7 +59,11 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	public void handleReward(Player player) {
 		player.message("Sir Amik hands you 2500 coins");
 		give(player, ItemId.COINS.id(), 2500);
-		player.message("Well done.You have completed the Black Knights fortress quest");
+		if (player.getConfig().INFLUENCE_INSTEAD_QP) {
+			player.message("Well done.You have completed the spy quest");
+		} else {
+			player.message("Well done.You have completed the Black Knights fortress quest");
+		}
 		final QuestReward reward = Quest.BLACK_KNIGHTS_FORTRESS.reward();
 		for (XPReward xpReward : reward.getXpRewards()) {
 			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());

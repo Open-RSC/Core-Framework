@@ -6,6 +6,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Guildmaster implements TalkNpcTrigger {
@@ -18,9 +20,16 @@ public class Guildmaster implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 
+		ArrayList<String> masterOptions = new ArrayList<>();
+		masterOptions.add("What is this place?");
+		boolean canStartQuest = player.getConfig().BASED_MAP_DATA >= 23 && player.getClientVersion() >= 73;
+		if (canStartQuest) {
+			masterOptions.add("Do you know know where I could get a rune plate mail body?");
+		}
+		String[] finalMasterOptions = new String[masterOptions.size()];
+
 		int option = multi(player, n, false, //do not send over
-			"What is this place?",
-			"Do you know know where I could get a rune plate mail body?");
+			masterOptions.toArray(finalMasterOptions));
 
 		if (option == 0) {
 			say(player, n, "What is this place?");
@@ -33,7 +42,7 @@ public class Guildmaster implements TalkNpcTrigger {
 				"So will the requirements to get in here",
 				"But so will the rewards");
 
-		} else if (option == 1) {
+		} else if (option == 1 && canStartQuest) {
 			say(player, n, "Do you know where I could get a rune plate mail body?");
 			npcsay(player,
 				n,

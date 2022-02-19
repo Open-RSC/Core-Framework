@@ -487,7 +487,7 @@ public class LoginPacketHandler {
 						channel.writeAndFlush(new PacketBuilder().writeShort((short) 0).toPacket()); // not known what this should write
 
 						if (server.getPacketFilter().shouldAllowLogin(IP, true)) {
-							CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email, 38);
+							CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email, true, 38);
 							server.getLoginExecutor().add(characterCreateRequest);
 						}
 					} else if (packet.getLength() == 32) {
@@ -624,7 +624,7 @@ public class LoginPacketHandler {
 					String email = getString(packet.getBuffer()).trim();
 
 					if (server.getPacketFilter().shouldAllowLogin(IP, true)) {
-						CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email, server.getConfig().CLIENT_VERSION);
+						CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email, false, server.getConfig().CLIENT_VERSION);
 						server.getLoginExecutor().add(characterCreateRequest);
 					}
 					break;

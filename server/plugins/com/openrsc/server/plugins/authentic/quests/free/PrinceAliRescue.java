@@ -1264,8 +1264,10 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				mes("The prince has escaped, well done!");
 				delay(2);
 				mes("You are now a friend of Al kharid");
-				delay(2);
-				mes("And may pass through the Al Kharid toll gate for free");
+				if (player.getConfig().BASED_MAP_DATA >= 18 && player.getClientVersion() >= 56) {
+					delay(2);
+					mes("And may pass through the Al Kharid toll gate for free");
+				}
 				delay(2);
 				player.updateQuestStage(this, 3);
 				break;

@@ -40,12 +40,12 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 		this.setClientVersion(clientVersion);
 	}
 
-	public CharacterCreateRequest(final Server server, final Channel channel, final String username, final String password, final String email, final int clientVersion) {
+	public CharacterCreateRequest(final Server server, final Channel channel, final String username, final String password, final String email, final boolean isAuthenticClient, final int clientVersion) {
 		this.server = server;
 		this.setEmail(email);
 		this.setUsername(DataConversions.sanitizeUsername(username));
 		this.setPassword(password);
-		this.setAuthenticClient(false);
+		this.setAuthenticClient(isAuthenticClient);
 		this.setChannel(channel);
 		this.setIpAddress(getChannel().remoteAddress().toString());
 		this.setClientVersion(clientVersion);

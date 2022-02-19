@@ -50,7 +50,11 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void handleReward(Player player) {
-		player.message("Well done you have completed the knight's sword quest");
+		if (player.getConfig().INFLUENCE_INSTEAD_QP) {
+			player.message("Well done you have completed the sword quest");
+		} else {
+			player.message("Well done you have completed the knight's sword quest");
+		}
 		final QuestReward reward = Quest.THE_KNIGHTS_SWORD.reward();
 		for (XPReward xpReward : reward.getXpRewards()) {
 			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());

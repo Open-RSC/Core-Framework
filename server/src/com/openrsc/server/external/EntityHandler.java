@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.openrsc.server.plugins.Functions.ZERO_RESERVED;
 import static com.openrsc.server.plugins.Functions.patchObject;
 
 /**
@@ -342,13 +343,18 @@ public final class EntityHandler {
 			JSONArray itemPatchDefs = object.getJSONArray(JSONObject.getNames(object)[0]);
 			for (int i = 0; i < itemPatchDefs.length(); i++) {
 				JSONObject item = itemPatchDefs.getJSONObject(i);
-				ItemDefinition toAdd =
+				ItemDefinition.ItemDefinitionBuilder toAddBuild =
 					new ItemDefinition.ItemDefinitionBuilder(item.getInt("id"), item.getString("name"))
 						.description(item.getString("description"))
 						.command(item.getString("command").split(","))
 						.isStackable(item.getInt("isStackable") == 1)
-						.defaultPrice(item.getInt("basePrice"))
-						.build();
+						.defaultPrice(item.getInt("basePrice"));
+				if (item.has("armourBonus")) toAddBuild.armourBonus(ifZeroReserve(item.getLong("armourBonus")));
+				if (item.has("weaponAimBonus")) toAddBuild.weaponAimBonus((int)ifZeroReserve(item.getInt("weaponAimBonus")));
+				if (item.has("weaponPowerBonus")) toAddBuild.weaponPowerBonus((int)ifZeroReserve(item.getInt("weaponPowerBonus")));
+				if (item.has("magicBonus")) toAddBuild.magicBonus((int)ifZeroReserve(item.getInt("magicBonus")));
+				if (item.has("prayerBonus")) toAddBuild.prayerBonus((int)ifZeroReserve(item.getInt("prayerBonus")));
+				ItemDefinition toAdd = toAddBuild.build();
 				if (toAdd.getCommand().length == 1 && "".equals(toAdd.getCommand()[0])) {
 					toAdd.nullCommand();
 				}
@@ -358,6 +364,10 @@ public final class EntityHandler {
 		catch (Exception e) {
 			LOGGER.error(e);
 		}
+	}
+
+	private long ifZeroReserve(long value) {
+		return value == 0 ? ZERO_RESERVED : value;
 	}
 
 	private void patchItems() {
