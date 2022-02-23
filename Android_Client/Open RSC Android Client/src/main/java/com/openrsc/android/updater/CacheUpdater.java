@@ -166,7 +166,7 @@ public class CacheUpdater extends Activity {
                 switch (which) {
 					case 0: // Open RSC
                         // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-						String ip_openrsc = "136.56.70.50";
+						String ip_openrsc = "162.198.202.160";
 						String port_openrsc = "43596";
 						FileOutputStream fileout_openrsc;
 						try {
@@ -192,7 +192,7 @@ public class CacheUpdater extends Activity {
 						return;
                     case 1: // RSC Cabbage
                         // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-                        String ip_cabbage = "136.56.70.50"; //2605:a601:a623:fe00:3cd7:cec9:fe65:c106
+                        String ip_cabbage = "162.198.202.160"; //2605:a601:a623:fe00:3cd7:cec9:fe65:c106
                         String port_cabbage = "43595";
                         FileOutputStream fileout_cabbage;
 
@@ -226,7 +226,7 @@ public class CacheUpdater extends Activity {
                         return;
 					case 2: // RSC Uranium
                         // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-						String ip_uranium = "136.56.70.50";
+						String ip_uranium = "162.198.202.160";
 						String port_uranium = "43235";
 						FileOutputStream fileout_uranium;
 
@@ -254,7 +254,7 @@ public class CacheUpdater extends Activity {
 						return;
 					case 3: // RSC Coleslaw
                         // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-						String ip_coleslaw = "136.56.70.50";
+						String ip_coleslaw = "162.198.202.160";
 						String port_coleslaw = "43599";
 						FileOutputStream fileout_coleslaw;
 
