@@ -263,6 +263,7 @@ public class Updater {
 		props.put("url", "game.openrsc.com");
 		props.put("name", "RSC Preservation");
 		props.put("servertype", "1");
+		props.put("hiscores_url", "https\\://rsc.vet/player/preservation/%USERNAME%");
 
 		createPropsConfig(config, props);
 	}
@@ -275,6 +276,7 @@ public class Updater {
 		props.put("url", "game.openrsc.com");
 		props.put("name", "RSC Uranium");
 		props.put("servertype", "1");
+		props.put("hiscores_url", "https\\://rsc.vet/player/uranium/%USERNAME%");
 
 		createPropsConfig(config, props);
 	}
