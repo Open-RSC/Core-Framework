@@ -47,6 +47,9 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 		int amount = payload.amount;
 
 		if (amount <= 0) return;
+		if (player.getClientVersion() <= 204 && amount > 1) {
+			amount = 1;
+		}
 
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(catalogID);
 		if (def == null) {
@@ -98,7 +101,7 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 				if (checkPurchaseValidity(player, shop, def, catalogID, i, totalMoneySpent, i)) {
 					break;
 				}
-				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), i);
+				totalMoneySpent += shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), i);
 				totalBought++;
 			}
 
@@ -122,7 +125,7 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent, 1)) {
 					break;
 				}
-				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought);
+				totalMoneySpent += shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), totalBought);
 				totalBought++;
 
 				player.getCarriedItems().getInventory().add(new Item(catalogID, 1));
@@ -164,7 +167,7 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 			player.message("The shop has ran out of stock");
 			return true;
 		}
-		int price = shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought);
+		int price = shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), totalBought);
 		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) - totalMoneySpent < price) {
 			player.message("You don't have enough coins");
 			return true;
@@ -214,7 +217,7 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 			amount = Math.min(amount, toSell.getAmount());
 			int sellAmount = 0;
 			for (int i = 1; i <= amount; i++) {
-				sellAmount += shop.getItemSellPrice(catalogID, def.getDefaultPrice(), i);
+				sellAmount += shop.getItemSellPrice(player, catalogID, def.getDefaultPrice(), i);
 			}
 
 			totalMoney += sellAmount;
@@ -240,7 +243,7 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 
 				player.getCarriedItems().remove(new Item(toSell.getCatalogId(), 1, toSell.getNoted(), toSell.getItemId()));
 
-				int sellAmount = shop.getItemSellPrice(catalogID, def.getDefaultPrice(), 1);
+				int sellAmount = shop.getItemSellPrice(player, catalogID, def.getDefaultPrice(), 1);
 				totalMoney += sellAmount;
 				totalSold++;
 

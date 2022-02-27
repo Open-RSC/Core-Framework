@@ -16,10 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class CraftingEquipmentShops extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 5000, 100, 65, 2,
-		new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
-		new Item(ItemId.AMULET_MOULD.id(), 2), new Item(ItemId.NEEDLE.id(), 3), new Item(ItemId.THREAD.id(), 100),
-		new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3));
+	private Shop shop = null;
 	private Shop[] shops = null;
 
 	@Override
@@ -31,8 +28,8 @@ public final class CraftingEquipmentShops extends AbstractShop {
 	public Shop[] getShops(World world) {
 		if (shops == null) {
 			shops = new Shop[2];
-			shops[0] = new Shop(shop, "Al_Kharid", NpcId.DOMMIK.id());
-			shops[1] = new Shop(shop, "Rimmington", NpcId.ROMMIK.id());
+			shops[0] = new Shop(getShop(world), "Al_Kharid", NpcId.DOMMIK.id());
+			shops[1] = new Shop(getShop(world), "Rimmington", NpcId.ROMMIK.id());
 
 		}
 		return shops;
@@ -96,5 +93,23 @@ public final class CraftingEquipmentShops extends AbstractShop {
 		}
 
 		return accessedShop;
+	}
+
+	public Shop getShop(World world) {
+		if(shop == null) {
+			shop = (world.getServer().getConfig().BASED_CONFIG_DATA >= 29 ?
+				new Shop(false, 5000, 100, 65, 2,
+					new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
+					new Item(ItemId.AMULET_MOULD.id(), 2), new Item(ItemId.NEEDLE.id(), 3), new Item(ItemId.THREAD.id(), 100),
+					new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3)) : (
+						world.getServer().getConfig().BASED_CONFIG_DATA >= 28 ?
+							new Shop(false, 5000, 100, 65, 2,
+								new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
+								new Item(ItemId.AMULET_MOULD.id(), 2), new Item(ItemId.NEEDLE.id(), 3), new Item(ItemId.THREAD.id(), 100)) :
+							new Shop(false, 5000, 100, 65, 2,
+								new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
+								new Item(ItemId.AMULET_MOULD.id(), 2))));
+		}
+		return shop;
 	}
 }

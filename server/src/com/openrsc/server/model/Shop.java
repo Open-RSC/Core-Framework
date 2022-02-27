@@ -172,15 +172,31 @@ public final class Shop {
 			&& currentStock(item) < (Short.MAX_VALUE - Short.MIN_VALUE);
 	}
 
-	public int getItemBuyPrice(int itemID, int defaultPrice, int totalBought) {
-		int priceMod = buyModifier + getStockBuyOffset(itemID, totalBought);
+	public int getItemBuyPrice(Player player, int itemID, int defaultPrice, int totalBought) {
+		int buyOffset;
+		// TBD how will be handled
+		/*if (player.getClientVersion() <= 204) {
+			buyOffset = getRetroStockOffset(itemID);
+		} else {
+			buyOffset = getStockBuyOffset(itemID, totalBought);
+		}*/
+		buyOffset = getStockBuyOffset(itemID, totalBought);
+		int priceMod = buyModifier + buyOffset;
 		if (priceMod < 10)
 			priceMod = 10;
 		return (priceMod * defaultPrice) / 100;
 	}
 
-	public int getItemSellPrice(int itemID, int defaultPrice, int totalRemoved) {
-		int priceMod = sellModifier + getStockOffset(itemID, totalRemoved);
+	public int getItemSellPrice(Player player, int itemID, int defaultPrice, int totalRemoved) {
+		int sellOffset;
+		// TBD how will be handled
+		/*if (player.getClientVersion() <= 204) {
+			sellOffset = getRetroStockOffset(itemID);
+		} else {
+			sellOffset = getStockOffset(itemID, totalRemoved);
+		}*/
+		sellOffset = getStockOffset(itemID, totalRemoved);
+		int priceMod = sellModifier + sellOffset;
 		if (priceMod < 10)
 			priceMod = 10;
 		return (priceMod * defaultPrice) / 100;
@@ -268,6 +284,12 @@ public final class Shop {
 		else if (offset > 100)
 			offset = 100;
 		return offset;
+	}
+
+	public int getRetroStockOffset(int itemID) {
+		int amount = getItemCount(itemID);
+		int baseAmount = getStock(itemID);
+		return baseAmount - amount;
 	}
 
 

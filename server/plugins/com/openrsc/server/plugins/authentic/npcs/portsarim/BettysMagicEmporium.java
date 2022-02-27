@@ -18,10 +18,7 @@ import static com.openrsc.server.plugins.custom.minigames.micetomeetyou.MiceQues
 
 public final class BettysMagicEmporium extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 6000, 100, 75, 2, new Item(ItemId.FIRE_RUNE.id(),
-		30), new Item(ItemId.WATER_RUNE.id(), 30), new Item(ItemId.AIR_RUNE.id(), 30), new Item(ItemId.EARTH_RUNE.id(),
-		30), new Item(ItemId.MIND_RUNE.id(), 30), new Item(ItemId.BODY_RUNE.id(), 30), new Item(ItemId.EYE_OF_NEWT.id(),
-		30), new Item(ItemId.BLUE_WIZARDSHAT.id(), 1), new Item(ItemId.BLACK_WIZARDSHAT.id(), 1));
+	private Shop shop = null;
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc npc) {
@@ -30,7 +27,7 @@ public final class BettysMagicEmporium extends AbstractShop {
 
 	@Override
 	public Shop[] getShops(World world) {
-		return new Shop[]{shop};
+		return new Shop[]{getShop(world)};
 	}
 
 	@Override
@@ -69,7 +66,7 @@ public final class BettysMagicEmporium extends AbstractShop {
 
 			if (opt == 0) {
 				npcsay("Yes");
-				openshop(shop);
+				openshop(getShop(player.getWorld()));
 			} else if (opt == 1) {
 				npcsay("Send anyone my way who is");
 			}
@@ -83,6 +80,21 @@ public final class BettysMagicEmporium extends AbstractShop {
 				}
 			}
 		}
+	}
+
+	public Shop getShop(World world) {
+		if(shop == null) {
+			shop = (world.getServer().getConfig().BASED_CONFIG_DATA >= 46 ?
+				new Shop(false, 6000, 100, 75, 2, new Item(ItemId.FIRE_RUNE.id(),
+					30), new Item(ItemId.WATER_RUNE.id(), 30), new Item(ItemId.AIR_RUNE.id(), 30), new Item(ItemId.EARTH_RUNE.id(),
+					30), new Item(ItemId.MIND_RUNE.id(), 30), new Item(ItemId.BODY_RUNE.id(), 30), new Item(ItemId.EYE_OF_NEWT.id(),
+					30), new Item(ItemId.BLUE_WIZARDSHAT.id(), 1), new Item(ItemId.BLACK_WIZARDSHAT.id(), 1)) :
+				new Shop(false, 6000, 100, 75, 2, new Item(ItemId.FIRE_RUNE.id(),
+					30), new Item(ItemId.WATER_RUNE.id(), 30), new Item(ItemId.AIR_RUNE.id(), 30), new Item(ItemId.EARTH_RUNE.id(),
+					30), new Item(ItemId.MIND_RUNE.id(), 30), new Item(ItemId.BODY_RUNE.id(), 30), new Item(ItemId.EYE_OF_NEWT.id(),
+					2), new Item(ItemId.BLUE_WIZARDSHAT.id(), 1), new Item(ItemId.BLACK_WIZARDSHAT.id(), 1)));
+		}
+		return shop;
 	}
 
 	private void miceToMeetYou(final Player player, final Npc npc) {
