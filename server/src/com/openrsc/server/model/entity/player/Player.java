@@ -72,7 +72,6 @@ public final class Player extends Mob {
 	public int sessionId;
 	private int totalLevel = 0;
 	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
-	private long lastSave = System.currentTimeMillis();
 	private int actionsMouseStill = 0;
 	private long lastMouseMoved = 0;
 	private Map<Integer, Integer> achievements = new ConcurrentHashMap<>();
@@ -2177,13 +2176,6 @@ public final class Player extends Mob {
 		} else {
 			actionsMouseStill = 0;
 			lastMouseMoved = System.currentTimeMillis();
-		}
-	}
-
-	public void process() {
-		if (System.currentTimeMillis() - lastSave >= 300000) {
-			save();
-			lastSave = System.currentTimeMillis();
 		}
 	}
 

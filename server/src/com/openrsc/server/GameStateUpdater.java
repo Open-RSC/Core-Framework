@@ -95,7 +95,7 @@ public final class GameStateUpdater {
 	protected void updateTimeouts(final Player player) {
 		final long curTime = System.currentTimeMillis();
 		final int timeoutLimit = getServer().getConfig().IDLE_TIMER; // 5 minute idle log out
-		final int autoSave = getServer().getConfig().AUTO_SAVE; // 30 second autosave
+		final int autoSave = getServer().getConfig().AUTO_SAVE; // 30 second autosave by default
 		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;
 		}
@@ -1212,7 +1212,6 @@ public final class GameStateUpdater {
 	public final long updateClient(final Player player) {
 		return getServer().bench(() -> {
 			sendUpdatePackets(player);
-			player.process();
 		});
 	}
 
