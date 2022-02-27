@@ -52,7 +52,7 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 			return;
 		}
 
-		player.setMale(headRestrictions == 1); // TODO: expand gender preferences
+		player.setMale(headRestrictions == 1);
 
 		if (player.isMale()) {
 			if (player.getConfig().WANT_EQUIPMENT_TAB) {

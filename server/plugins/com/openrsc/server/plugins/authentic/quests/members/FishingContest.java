@@ -251,7 +251,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 		switch (player.getQuestStage(this)) {
 			case 1:
 			case 2:
-				npcsay(player, n, "Hello young man", "Come to visit old Grandpa Jack?",
+				npcsay(player, n, player.getText("FishingContestGrandpaJackHelloYoungOne"), "Come to visit old Grandpa Jack?",
 					"I can tell ye stories for sure",
 					"I used to be the best fisherman these parts have seen");
 				int first = multi(player, n,
@@ -304,7 +304,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				}
 				break;
 			default:
-				npcsay(player, n, "Hello young man", "Come to visit old Grandpa Jack?",
+				npcsay(player, n, player.getText("FishingContestGrandpaJackHelloYoungOne"), "Come to visit old Grandpa Jack?",
 					"I can tell ye stories for sure",
 					"I used to be the best fisherman these parts have seen");
 				first = multi(player, n,

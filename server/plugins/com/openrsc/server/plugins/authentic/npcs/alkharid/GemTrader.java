@@ -49,8 +49,7 @@ public final class GemTrader extends AbstractShop {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.GEM_TRADER.id()) {
-			npcsay(player, n, "good day to you " + ((player.isMale()) ? "sir"
-				: "madam"), "Would you be interested in buying some gems?");
+			npcsay(player, n, player.getText("GemTraderGoodDayToYou"), "Would you be interested in buying some gems?");
 
 			final String[] options;
 			if (player.getQuestStage(Quests.FAMILY_CREST) <= 2 || player.getQuestStage(Quests.FAMILY_CREST) >= 5) {

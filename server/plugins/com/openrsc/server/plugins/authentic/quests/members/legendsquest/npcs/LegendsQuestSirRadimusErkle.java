@@ -107,7 +107,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_ONE);
 						} else if (menu == 1) {
 							say(player, n, "No, I've got something else to do at the moment.");
-							npcsay(player, n, "Very well young " + (player.isMale() ? "man" : "lady") + ".",
+							npcsay(player, n, player.getText("LegendsQuestSirRadimusErkleVeryWellYoungOne"),
 								"Return when you are able, but don't leave it too long.",
 								"You'll benefit alot from this training.",
 								"Now, do excuse me while, I have other things to attend to.",
@@ -233,7 +233,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 			if (cID == -1) {
 				switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0:
-						npcsay(player, n, "Good day to you " + (player.isMale() ? "Sir" : "my Lady") + " !",
+						npcsay(player, n, player.getText("LegendsQuestSirRadimusErkleGoodDayToYou"),
 							"No doubt you are keen to become a member of the Legends Guild ?");
 						int menu = multi(player, n, false, //do not send over
 							"Yes actually, what's involved?",
@@ -480,7 +480,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				return;
 			}
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 10) {
-				npcsay(player, n, (player.isMale() ? "Sir" : "Madam") + ", this is truly amazing...");
+				npcsay(player, n, player.getText("LegendsQuestSirRadimusErkleThisIsTrulyAmazing"));
 				if (!player.getCarriedItems().hasCatalogID(ItemId.RADIMUS_SCROLLS_COMPLETE.id(), Optional.of(false))) {
 					npcsay(player, n, "However, I need you to complete the map of the ,",
 						"Kharazi Jungle before your quest is complete.");
@@ -515,7 +515,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					"Do you think you could get something more authentic ?");
 		}
 		else if (n.getID() == NpcId.SIR_RADIMUS_ERKLE_HOUSE.id() && item.getCatalogId() == ItemId.RADIMUS_SCROLLS_COMPLETE.id()) {
-			npcsay(player, n, "Well done " + (player.isMale() ? "Sir" : "Madam") + ", very well done...",
+			npcsay(player, n, player.getText("LegendsQuestSirRadimusErkleWellDoneVeryWellDone"),
 				"However, you'll probably need it while you search",
 				"for natives of the Kharazi tribe in the Kharazi jungle.",
 				"Remember, we want a very special token of friendship from them.",

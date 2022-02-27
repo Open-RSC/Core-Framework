@@ -259,7 +259,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 									say(player, n, "Someone's been kidnapped",
 										"and is being held in a plague house");
 									npcsay(player, n, "I'll see what I can do I suppose",
-										"Mr Bravek there's a " + (player.isMale() ? "man" : "lady") + " here who really needs to speak to you");
+										player.getText("PlagueCityMrBravekTheresSomeoneHere"));
 									Npc bravek = ifnearvisnpc(player, NpcId.BRAVEK.id(), 15);
 									if (bravek != null) {
 										npcsay(player, bravek, "I suppose they can come in then",
@@ -275,7 +275,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "Someone's been kidnapped",
 								"and is being held in a plague house");
 							npcsay(player, n, "I'll see what I can do I suppose",
-								"Mr Bravek there's a " + (player.isMale() ? "man" : "lady") + " here who really needs to speak to you");
+								player.getText("PlagueCityMrBravekTheresSomeoneHere"));
 							Npc bravek = ifnearvisnpc(player, NpcId.BRAVEK.id(), 15);
 							if (bravek != null) {
 								npcsay(player, bravek, "I suppose they can come in then",
@@ -296,7 +296,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "Someone's been kidnapped",
 								"and is being held in a plague house");
 							npcsay(player, n, "I'll see what I can do I suppose",
-								"Mr Bravek there's a " + (player.isMale() ? "man" : "lady") + " here who really needs to speak to you");
+								player.getText("PlagueCityMrBravekTheresSomeoneHere"));
 							Npc bravek = ifnearvisnpc(player, NpcId.BRAVEK.id(), 15);
 							if (bravek != null) {
 								npcsay(player, bravek, "I suppose they can come in then",

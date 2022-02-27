@@ -205,6 +205,47 @@ public class Functions {
 	}
 
 	/**
+	 * Displays server message(s) with type
+	 * This is a i18n translation helper in OpenRSC, and not part of original RuneScript
+	 *
+	 * @param messageKeys
+	 */
+	public static void mez(final String... messageKeys) {
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		final Player player = scriptContext.getContextPlayer();
+		if (player == null) return;
+		for (final String messageKey : messageKeys) {
+			if (!messageKey.equalsIgnoreCase("null")) {
+				String message = player.getMez(messageKey);
+				String infoContained = message.substring(1, 2);
+				String messageContent = "Cabbage";
+				String colorString = null;
+				switch (infoContained) {
+					case ";": // no special info contained
+						messageContent = message.substring(2);
+						break;
+					case "@": // color included
+						messageContent = message.substring(2, message.length() - 5);
+						colorString = message.substring(message.length() - 5);
+						break;
+				}
+				MessageType messageType = MessageType.GAME;
+				try {
+					messageType = MessageType.lookup(Integer.parseInt(message.substring(0, 1)));
+				} catch (NumberFormatException ex) {
+					LOGGER.error("Bad message type in mez: \"" + message + "\";; player language locale: " + player.getPreferredLanguage().getLocaleName());
+				}
+				if (null == messageType) {
+					messageType = MessageType.GAME;
+				}
+
+				ActionSender.sendMessage(player, null, messageType, messageContent, 0, colorString);
+			}
+		}
+	}
+
+	/**
 	 * Player message(s), each message has 2.2s delay between.
 	 *
 	 * @param player

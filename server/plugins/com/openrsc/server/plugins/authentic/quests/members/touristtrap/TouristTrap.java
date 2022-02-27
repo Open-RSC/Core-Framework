@@ -254,8 +254,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					}
 					break;
 				case Irene.REWARD:
-					npcsay(player, npc, "Well, yes, you'll have my gratitude young " +
-							(player.isMale() ? "man." : "lady."),
+					npcsay(player, npc, player.getText("TouristTrapIreneWellYesYoullHaveMyGratitude"),
 						"And I'm sure that Ana will also be very pleased!",
 						"And I may see if I can get a small reward together...",
 						"But I cannot promise anything.",
@@ -931,7 +930,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							}
 						} else if (menu == 2) {
 							npcsay(player, npc, "I will not tolerate such insults..",
-								"Guards, kill " + (player.isMale() ? "him." : "her."));
+								player.getText("TouristTrapMercenaryCaptainGuardsKillThem"));
 							mes("The captain marches away in disgust leaving his guards to tackle you.");
 							delay(3);
 							captainWantToThrowPlayer(player, npc);
@@ -2540,7 +2539,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					npc.startCombat(player);
 					mes("Other guards start arriving.");
 					delay(3);
-					npcsay(player, npc, "Get " + (player.isMale() ? "him" : "her") + " men!");
+					npcsay(player, npc, player.getText("TouristTrapMercenaryLiftPlatformGetThemMen"));
 					player.message("The guards rough you up a bit and then drag you to a cell.");
 					player.teleport(76, 3625);
 				}
@@ -2567,7 +2566,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					npc.startCombat(player);
 					mes("Other guards start arriving.");
 					delay(3);
-					npcsay(player, npc, "Get " + (player.isMale() ? "him" : "her") + " men!");
+					npcsay(player, npc, player.getText("TouristTrapMercenaryLiftPlatformGetThemMen"));
 					player.message("The guards rough you up a bit and then drag you to a cell.");
 					player.teleport(76, 3625);
 				}
@@ -3126,7 +3125,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					"You're in serious trouble now!");
 				if (DataConversions.getRandom().nextBoolean()) {
 					npcsay(player, n,
-						"Ok men, we need to teach this " + (player.isMale() ? "man" : "woman") + " a thing or two",
+						player.getText("TouristTrapCaptainWantsToThrowPlayerOkMenWeNeedToTeachThis"),
 						"about desert survival techniques.");
 					mes("The guards grab you and beat you up.");
 					delay(3);
@@ -3176,7 +3175,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			npcsay(player, n, "Right, we'd better teach you a lesson as well!");
 			mes("The guards rough you up a bit.");
 			delay(3);
-			npcsay(player, n, "Right lads, stuff " + (player.isMale() ? "him" : "her") + " in the mining cell!",
+			npcsay(player, n, player.getText("TouristTrapFailEscapeAnaInBarrelRightLadsStuff"),
 				"Specially for our most honoured guests.");
 			player.message("The guards drag you away to a cell.");
 			mes("@yel@Guards: There you go, we hope you 'dig' you're stay here.");

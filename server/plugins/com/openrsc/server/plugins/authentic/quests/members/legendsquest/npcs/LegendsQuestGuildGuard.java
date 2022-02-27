@@ -20,7 +20,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 			if (cID == -1) {
 				switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0: /* Not started Legends Quest */
-						npcsay(player, n, "Yes " + (player.isMale() ? "Sir" : "Ma'am") + ", how can I help you?");
+						npcsay(player, n, player.getText("LegendsQuestGuildGuardYesHowCanIHelpYou"));
 						int menu = multi(player, n,
 							"What is this place?",
 							"How do I get in here?",
@@ -47,7 +47,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					case 9:
 					case 10:
 						player.message("A guard nods at you as you walk past.");
-						npcsay(player, n, "Hope the quest is going well " + (player.isMale() ? "Sir" : "Ma'am") + " !");
+						npcsay(player, n, player.getText("LegendsQuestGuildGuardHopeTheQuestIsGoingWell"));
 						break;
 					case 11:
 					case -1:
@@ -60,7 +60,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 			}
 			switch (cID) {
 				case LegendsGuard.WHAT_IS_THIS_PLACE:
-					npcsay(player, n, "This is the Legends Guild " + (player.isMale() ? "sir" : "Maaam") + " !",
+					npcsay(player, n, player.getText("LegendsQuestGuildGuardThisIsTheLegendsGuild"),
 						"Legendary RuneScape citizens are invited on a quest",
 						"in order to become members of the guild.");
 					int opt = multi(player, n,
@@ -73,7 +73,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					}
 					break;
 				case LegendsGuard.HOW_DO_I_GET_IN_HERE:
-					npcsay(player, n, "Well " + (player.isMale() ? "sir," : "Ma'am, "),
+					npcsay(player, n, player.getText("LegendsQuestGuildGuardHowDoIGetInHereWell"),
 						"you'll need to be a legendary citizen of RuneScape.",
 						"If you want to use the Legends Hall, ",
 						"you'll be invited to complete a quest.",
@@ -92,7 +92,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					}
 					break;
 				case LegendsGuard.CAN_I_SPEAK_TO_SOMEONE_IN_CHARGE:
-					npcsay(player, n, "Well, " + (player.isMale() ? "Sir" : "Ma'am") + ",",
+					npcsay(player, n, player.getText("LegendsQuestGuildGuardCanISpeakToSomeoneInChargeWell"),
 						"Radimus Erkle is the Grand Vizier of the Legends Guild.",
 						"He's a very busy man.",
 						"And he'll only talk to those people eligible for the quest.");
@@ -106,7 +106,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					}
 					break;
 				case LegendsGuard.ITS_OK_THANKS:
-					npcsay(player, n, "Very well " + (player.isMale() ? "Sir" : "Ma'am") + " !");
+					npcsay(player, n, player.getText("LegendsQuestGuildGuardVeryWell"));
 					break;
 				case LegendsGuard.CAN_I_GO_ON_THE_QUEST:
 					mes("The guard gets out a scroll of paper and starts looking through it.");
@@ -165,7 +165,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					}
 					break;
 				case LegendsGuard.WHAT_KIND_OF_QUEST_IS_IT:
-					npcsay(player, n, "Well, to be honest " + (player.isMale() ? "Sir" : "Ma'am") + ", I'm not really sure.",
+					npcsay(player, n, player.getText("LegendsQuestGuildGuardWellToBeHonestImNotReallySure"),
 						"You'll need to talk to Grand Vizier Erkle to find that out.");
 					int opt4 = multi(player, n, false, //do not send over
 						"Can I go on the quest?",
@@ -266,7 +266,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					case 10:
 						if (legends_guard != null) {
 							player.message("A guard nods at you as you walk past.");
-							npcsay(player, legends_guard, "Hope the quest is going well " + (player.isMale() ? "Sir" : "Ma'am") + " !");
+							npcsay(player, legends_guard, player.getText("LegendsQuestGuildGuardHopeTheQuestIsGoingWell"));
 						}
 						openGates(player);
 						break;

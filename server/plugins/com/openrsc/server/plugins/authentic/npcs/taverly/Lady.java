@@ -16,7 +16,7 @@ public class Lady implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		npcsay(player, n, "Good day to you " + (player.isMale() ? "sir" : "madam"));
+		npcsay(player, n, player.getText("LadyGoodDayToYou"));
 
 		ArrayList<String> options = new ArrayList<>();
 

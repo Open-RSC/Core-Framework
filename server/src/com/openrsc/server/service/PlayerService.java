@@ -16,6 +16,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.util.languages.PreferredLanguage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,6 +61,8 @@ public class PlayerService implements IPlayerService {
                 loadPlayerLastSpellCast(loaded);
                 loadPlayerNpcKills(loaded);
             });
+
+			loadPlayerLanguage(loaded);
 			loaded.getSettings().setPrivacySetting(PlayerSettings.PRIVACY_HIDE_ONLINE_STATUS, (byte)loaded.getHideOnline());
 
             return loaded;
@@ -442,4 +445,12 @@ public class PlayerService implements IPlayerService {
     private void savePlayerCastTime(final Player player) {
         player.getCache().store("last_spell_cast", player.getCastTimer());
     }
+
+	private void loadPlayerLanguage(final Player player) {
+		try {
+			player.setPreferredLanguage(PreferredLanguage.getByLocaleName(player.getCache().getString("preferredLanguage")));
+		} catch (NoSuchElementException ex) {
+			player.setPreferredLanguage(PreferredLanguage.NONE_SET);
+		}
+	}
 }

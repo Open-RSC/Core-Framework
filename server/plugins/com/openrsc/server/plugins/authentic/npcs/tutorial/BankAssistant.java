@@ -27,7 +27,7 @@ public class BankAssistant implements
 		if (player.getCache().hasKey("tutorial")
 			&& player.getCache().getInt("tutorial") == 55) {
 			say(player, n, "Can I access my bank account please?");
-			npcsay(player, n, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+			npcsay(player, n, player.getText("BankersRegularCertainly"));
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
 			player.getCache().set("tutorial", 60);
@@ -36,7 +36,7 @@ public class BankAssistant implements
 			int menu = multi(player, n, "Can I access my bank account please?",
 				"Okay thankyou for your help");
 			if (menu == 0) {
-				npcsay(player, n, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+				npcsay(player, n, player.getText("BankersRegularCertainly"));
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			} else if (menu == 1) {

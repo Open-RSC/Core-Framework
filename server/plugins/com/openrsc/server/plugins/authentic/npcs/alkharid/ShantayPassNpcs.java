@@ -193,7 +193,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				"I am a little inexperienced.",
 				"Er, neither, I'm an adventurer.");
 			if (menu2 == 0) {
-				npcsay(player, n, "Ha, very funny.....", "Guards arrest " + (player.isMale() ? "him!" : "her!"));
+				npcsay(player, n, "Ha, very funny.....", player.getText("ShantayPassNpcsGuardsArrestThem"));
 				mes("The guards arrest you and place you in the jail.");
 				delay(3);
 				if (isShantay) {

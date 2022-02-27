@@ -58,7 +58,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.getCache().remove("magic_words");
-		player.message("Well done you have completed the Merlin's crystal quest");
+		mez("WellDoneYouHaveCompletedMerlinsCrystal");
 		final QuestReward reward = Quest.MERLINS_CRYSTAL.reward();
 		for (XPReward xpReward : reward.getXpRewards()) {
 			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
@@ -79,42 +79,42 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 292 || obj.getID() == 293) {
 			Npc arhein = ifnearvisnpc(player, NpcId.ARHEIN.id(), 10);
 			if (player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 2) {
-				player.playerServerMessage(MessageType.QUEST, "I have no reason to do that");
+				mez("MerlinsCrystalIHaveNoReasonToDoThat");
 			} else if (arhein != null) {
-				npcsay(player, arhein, "Oi get away from there!");
+				npcsay(player, arhein, player.getText("MerlinsCrystalArheinOiGetAwayFromThere"));
 			} else {
 				player.teleport(456, 3352, false);
-				player.message("You hide away in the ship");
+				mez("MerlinsCrystalYouHideAwayInTheShip");
 				delay(2);
-				player.message("The ship starts to move");
+				mez("MerlinsCrystalTheShipStartsToMove");
 				delay(5);
-				player.message("You are out at sea");
+				mez("MerlinsCrystalYouAreOutAtSea");
 				delay(5);
-				player.message("The ship comes to a stop");
+				mez("MerlinsCrystalTheShipComesToAStop");
 				player.teleport(456, 520, false);
-				mes("You sneak out of the ship");
+				mez("MerlinsCrystalYouSneakOutOfTheShip");
 				delay(3);
 			}
 		} else if (obj.getID() == 291) {
-			player.message("there are buckets in this crate");
+			mez("MerlinsCrystalThereAreBucketsInCrate");
 			delay(2);
-			player.message("would you like a bucket?");
-			int opt = multi(player, "Yes", "No");
+			mez("MerlinsCrystalWouldYouLikeABucket");
+			int opt = multi(player, player.getText("CapitalYes0"), player.getText("CapitalNo0"));
 			if (opt == 0) {
-				player.message("you take a bucket.");
+				mez("MerlinsCrystalYouTakeABucket");
 				give(player, ItemId.BUCKET.id(), 1);
 			}
 		} else if (obj.getID() == 296) {
-			mes("You find a small inscription at the bottom of the altar");
+			mez("MerlinsCrystalYouFindASmallInscription");
 			delay(3);
-			mes("It reads Snarthon Candtrick Termanto");
+			mez("MerlinsCrystalSnarthonCandtrickTermanto");
 			delay(3);
 			if (!player.getCache().hasKey("magic_words")) {
 				player.getCache().store("magic_words", true);
 			}
 		} else if (obj.getID() == 295) {
 			player.teleport(player.getX(), player.getY() + 944);
-			player.message("You climb up the ladder");
+			mez("YouClimbUpTheLadder");
 			if ((player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 3) || !player.getCache().hasKey("lady_test")) {
 				return;
 			}

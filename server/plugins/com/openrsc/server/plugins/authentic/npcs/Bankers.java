@@ -72,9 +72,9 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 
 			if(validatebankpin(player, npc)) {
 				if (npc.getID() == NpcId.GNOME_BANKER.id()) {
-					npcsay(player, npc, "absolutely sir");
+					npcsay(player, npc, player.getText("BankersGnomeBankerAbsolutely"));
 				} else {
-					npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+					npcsay(player, npc, player.getText("BankersRegularCertainly"));
 				}
 
 				if (!config().COIN_BANK && player.getClientLimitations().supportsItemBank) {

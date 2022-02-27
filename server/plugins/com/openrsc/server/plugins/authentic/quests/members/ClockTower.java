@@ -85,7 +85,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 					int menu = multi(player, n, "Ok old monk what can I do?",
 						"Not now old monk");
 					if (menu == 0) {
-						npcsay(player, n, "Oh thank you kind sir",
+						npcsay(player, n, player.getText("ClockTowerKojoOhThankYou"),
 							"In the cellar below you'll find four cogs",
 							"They're too heavy for me, but you should",
 							"Be able to carry them one at a time",

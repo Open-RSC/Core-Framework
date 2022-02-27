@@ -32,7 +32,7 @@ public class Kaleb implements TalkNpcTrigger {
 					"There is a dormitory upstairs if you are tired, it costs 35 gold",
 					"pieces which covers the costs of laundry and cleaning.");
 			} else if (menu == 1) {
-				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				npcsay(player, n, player.getText("KalebVeryGood"));
 				if (ifheld(player, ItemId.COINS.id(), 1)) {
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id()));
 					give(player, ItemId.WINE.id(), 1);
@@ -41,7 +41,7 @@ public class Kaleb implements TalkNpcTrigger {
 					npcsay(player, n, "Sorry Bwana, you don't have enough money.");
 				}
 			} else if (menu == 2) {
-				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				npcsay(player, n, player.getText("KalebVeryGood"));
 				if (ifheld(player, ItemId.COINS.id(), 2)) {
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
 					give(player, ItemId.BEER.id(), 1);
@@ -50,7 +50,7 @@ public class Kaleb implements TalkNpcTrigger {
 					npcsay(player, n, "Sorry Bwana, you don't have enough money.");
 				}
 			} else if (menu == 3) {
-				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				npcsay(player, n, player.getText("KalebVeryGood"));
 				if (ifheld(player, ItemId.COINS.id(), 35)) {
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 35));
 					give(player, ItemId.PARAMAYA_REST_TICKET.id(), 1);
@@ -59,7 +59,7 @@ public class Kaleb implements TalkNpcTrigger {
 					npcsay(player, n, "Sorry Bwana, you don't have enough money.");
 				}
 			} else if (menu == 5) {
-				npcsay(player, n, "Very good " + (player.isMale() ? "sir" : "madam") + "!");
+				npcsay(player, n, player.getText("KalebVeryGood"));
 				if (ifheld(player, ItemId.COINS.id(), 175)) {
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 175));
 					give(player, ItemId.PARAMAYA_REST_TICKET.id(), 5);

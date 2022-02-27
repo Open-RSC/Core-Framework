@@ -18,7 +18,7 @@ public class BakerMerchant extends AbstractShop {
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
-		npcsay(player, n, "Good day " + (player.isMale() ? "Monsieur" : "Madame"),
+		npcsay(player, n, player.getText("BakerMerchantGoodDay"),
 			"Would you like ze nice freshly baked bread",
 			"Or perhaps a nice piece of cake");
 		int menu = multi(player, n, "Lets see what you have", "No thankyou");

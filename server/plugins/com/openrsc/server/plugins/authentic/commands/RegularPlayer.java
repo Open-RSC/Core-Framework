@@ -16,6 +16,7 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.languages.PreferredLanguage;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
@@ -140,6 +141,73 @@ public final class RegularPlayer implements CommandTrigger {
 			setOldTrade(player);
 		} else if (command.equalsIgnoreCase("coords")) {
 			tellCoordinates(player);
+		} else if (command.equalsIgnoreCase("setlanguage")) {
+			setLanguage(command, player, args);
+		} else if (command.equalsIgnoreCase("language")) {
+			getLanguage(command, player, args);
+		}
+	}
+
+	private void setLanguage(String command, Player player, String[] args) {
+		if (args.length < 1) {
+			setLanguageBadSyntax(command, player);
+			return;
+		}
+		PreferredLanguage lang = PreferredLanguage.getByLocaleName(args[0]);
+		if (lang == PreferredLanguage.NONE_SET) {
+			setLanguageBadSyntax(command, player);
+			return;
+		}
+
+		if (player.isMod() && args.length >= 2) {
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[1]));
+
+			if (targetPlayer == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
+				player.message(messagePrefix + "You can not change the language of a staff member of equal or greater rank.");
+				return;
+			}
+
+			targetPlayer.setPreferredLanguage(lang);
+			targetPlayer.playerServerMessage(MessageType.QUEST, "Your language has been set to " + lang.getLocaleName());
+			player.playerServerMessage(MessageType.QUEST, targetPlayer.getUsername() + " had their language set to @cya@" + lang.getLocaleName());
+		} else {
+			player.setPreferredLanguage(lang);
+			player.playerServerMessage(MessageType.QUEST, "Your language has been set to @cya@" + lang.getLocaleName());
+		}
+	}
+
+	private void setLanguageBadSyntax(String command, Player player) {
+		player.playerServerMessage(MessageType.QUEST, badSyntaxPrefix + command.toUpperCase() + " [language name]");
+		player.playerServerMessage(MessageType.QUEST, "Available language names are:");
+		player.playerServerMessage(MessageType.QUEST, "@yel@\"@cya@en_UK_male@yel@\", \"@cya@en_UK_female@yel@\", \"@cya@en_UK_female_no_misgender@yel@\", and \"@cya@en_UK_gender_neutral@yel@\"");
+	}
+
+	private void getLanguage(String command, Player player, String[] args) {
+		if (player.isMod() && args.length >= 1) {
+			Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[1]));
+
+			if (targetPlayer == null) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+			PreferredLanguage lang = targetPlayer.getPreferredLanguage();
+			if (lang == PreferredLanguage.NONE_SET) {
+				player.playerServerMessage(MessageType.QUEST, targetPlayer.getUsername() + "has not set any custom language settings.");
+			} else {
+				player.playerServerMessage(MessageType.QUEST, targetPlayer.getUsername() + " has their language set to @cya@" + lang.getLocaleName());
+			}
+		} else {
+			PreferredLanguage lang = player.getPreferredLanguage();
+			if (lang == PreferredLanguage.NONE_SET) {
+				player.playerServerMessage(MessageType.QUEST, "You have not set any custom language settings.");
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "Your language set to @cya@" + lang.getLocaleName());
+			}
 		}
 	}
 

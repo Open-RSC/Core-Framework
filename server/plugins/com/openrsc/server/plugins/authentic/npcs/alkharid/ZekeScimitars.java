@@ -45,7 +45,7 @@ public final class ZekeScimitars extends AbstractShop {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		final String[] options;
-		npcsay(player, n, "A thousand greetings " + ((player.isMale()) ? "sir" : "madam"));
+		npcsay(player, n, player.getText("ZekeAThousandGreetings"));
 		if (player.getQuestStage(Quests.FAMILY_CREST) <= 2 || player.getQuestStage(Quests.FAMILY_CREST) >= 5) {
 			options = new String[]{
 				"Do you want to trade?",

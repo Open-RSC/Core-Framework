@@ -35,7 +35,7 @@ public final class NedInShip implements
 			return;
 		} else {
 			if (player.getQuestStage(Quests.DRAGON_SLAYER) == 3 || player.getQuestStage(Quests.DRAGON_SLAYER) == -1) {
-				npcsay(player, n, "Hello again " + (player.isMale() ? "lad" : "lass"));
+				npcsay(player, n, player.getText("NedInShipHelloAgain"));
 				int menu = multi(player, n, false, //do not send over
 					"Can you take me back to Crandor again",
 					"How did you get back?");
@@ -68,7 +68,7 @@ public final class NedInShip implements
 				}
 				return;
 			} else {
-				npcsay(player, n, "Hello there " + (player.isMale() ? "lad" : "lass"));
+				npcsay(player, n, player.getText("NedInShipHelloThere"));
 				int opt = multi(player, n,
 					"So are you going to take me to Crandor Island now then?",
 					"So are you still up to sailing this ship?");

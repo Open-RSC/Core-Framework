@@ -31,6 +31,7 @@ import com.openrsc.server.util.LogUtil;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.ServerAwareThreadFactory;
 import com.openrsc.server.util.SystemUtil;
+import com.openrsc.server.util.languages.I18NService;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
 import com.openrsc.server.util.rsc.StringUtil;
@@ -78,6 +79,7 @@ public class Server implements Runnable {
 	private final Constants constants;
 	private final RSCPacketFilter packetFilter;
 	private final IPlayerService playerService;
+	private final I18NService i18nService;
 
 	private final World world;
 	private final String name;
@@ -259,6 +261,7 @@ public class Server implements Runnable {
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
 		playerService = new PlayerService(world, config, database);
+		i18nService = new I18NService(this);
 
 		maxItemId = 0;
 	}
@@ -851,6 +854,10 @@ public class Server implements Runnable {
 
 	public AchievementSystem getAchievementSystem() {
 		return achievementSystem;
+	}
+
+	public I18NService getI18nService() {
+		return i18nService;
 	}
 
 	public boolean isRestarting() {

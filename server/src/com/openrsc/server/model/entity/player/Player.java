@@ -33,7 +33,6 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.PayloadProcessorManager;
-import com.openrsc.server.net.rsc.generators.impl.Payload69Generator;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.parsers.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
@@ -42,6 +41,7 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.triggers.CatGrowthTrigger;
 import com.openrsc.server.plugins.triggers.DropObjTrigger;
 import com.openrsc.server.plugins.triggers.WineFermentTrigger;
+import com.openrsc.server.util.languages.PreferredLanguage;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -130,6 +130,7 @@ public final class Player extends Mob {
 	private boolean certOptOutWarned = false;
 	public boolean speakTongues = false;
 	private ClientLimitations clientLimitations;
+	public PreferredLanguage preferredLanguage = PreferredLanguage.NONE_SET;
 
 	private final UUID uuid;
 
@@ -3718,5 +3719,22 @@ public final class Player extends Mob {
 
 	public boolean isUsingAndroidClient() {
 		return getClientLimitations().isAndroidClient;
+	}
+
+	public PreferredLanguage getPreferredLanguage() {
+		return preferredLanguage;
+	}
+
+	public void setPreferredLanguage(PreferredLanguage language) {
+		getCache().store("preferredLanguage", language.getLocaleName());
+		preferredLanguage = language;
+	}
+
+	public String getText(String key) {
+		return getWorld().getServer().getI18nService().getText(key, this);
+	}
+
+	public String getMez(String key) {
+		return getWorld().getServer().getI18nService().getMez(key, this);
 	}
 }

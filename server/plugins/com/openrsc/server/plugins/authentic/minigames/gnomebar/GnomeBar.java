@@ -514,8 +514,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 		give(player, ItemId.EQUA_LEAVES.id(), 1);
 		give(player, ItemId.COCKTAIL_GLASS.id(), 1);
 		say(player, npc, "ok i'll do best");
-		npcsay(player, npc, "I'm sure you'll make a great " +
-		(player.isMale() ? "bar man" : "bartender"));
+		npcsay(player, npc, player.getText("GnomeBarImSureYoullMakeAGreatBartender"));
 		player.getCache().set("gnome_bartending", 6);
 	}
 
