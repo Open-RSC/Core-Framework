@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,12 +24,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import orsc.osConfig;
 import orsc.util.GenUtil;
@@ -43,8 +50,15 @@ public class CacheUpdater extends Activity {
     List<String> excludedFiles = new ArrayList<>();
     List<String> refuseUpdate = new ArrayList<>();
 
+	final AtomicReference<String> realPath = new AtomicReference<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+    	// This is so we can do network stuff on the main thread
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+		StrictMode.setThreadPolicy(policy);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.updater);
         progressBar = findViewById(R.id.progressBar);
@@ -124,10 +138,55 @@ public class CacheUpdater extends Activity {
             showGameSelectionDialog();
         }
 
-        void showGameSelectionDialog() {
+        private boolean isIp(final String address) {
+			Pattern pattern = Pattern.compile("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$");
+			Matcher matcher = pattern.matcher(address);
+			return matcher.matches();
+		}
 
+        private void selectServer(final String serverUrl, final String serverPort) {
+			String ip;
+			if (isIp(serverUrl)) {
+				ip = serverUrl;
+			} else { // Attempt to get the IPv4 address of the hostname.
+				try {
+					Inet4Address address = (Inet4Address) InetAddress.getByName(new URL(serverUrl).getHost());
+					ip = address.getHostAddress();
+					System.out.println(ip);
+
+				} catch (MalformedURLException | UnknownHostException ex) {
+					System.out.println("Error getting IP address from URL");
+					ex.printStackTrace();
+					return;
+				}
+			}
+
+			FileOutputStream outputStream;
+			try {
+				outputStream = new FileOutputStream(realPath.get() + "ip.txt");
+				OutputStreamWriter outputWriter = new OutputStreamWriter(outputStream);
+				outputWriter.write(ip);
+				outputWriter.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				outputStream = new FileOutputStream(realPath.get() + "port.txt");
+				OutputStreamWriter outputWriter = new OutputStreamWriter(outputStream);
+				outputWriter.write(serverPort);
+				outputWriter.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Intent mainIntent = new Intent(CacheUpdater.this, GameActivity.class);
+			mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(mainIntent);
+			finish();
+		}
+
+        void showGameSelectionDialog() {
             String desiredPath = "/storage/emulated/0/Android/data/user/0/com.openrsc.client/files" + File.separator;
-            final AtomicReference<String> realPath = new AtomicReference<String>();
+
             FileOutputStream fos = null;
 
             try {
@@ -165,127 +224,17 @@ public class CacheUpdater extends Activity {
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
 					case 0: // Open RSC
-                        // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-						String ip_openrsc = "162.198.202.160";
-						String port_openrsc = "43596";
-						FileOutputStream fileout_openrsc;
-						try {
-							fileout_openrsc = new FileOutputStream(realPath.get() + "ip.txt");
-							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
-							outputWriter.write(ip_openrsc);
-							outputWriter.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						try {
-							fileout_openrsc = new FileOutputStream(realPath.get() + "port.txt");
-							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
-							outputWriter.write(port_openrsc);
-							outputWriter.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						Intent mainIntent_openrsc = new Intent(CacheUpdater.this, GameActivity.class);
-						mainIntent_openrsc.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(mainIntent_openrsc);
-						finish();
-						return;
+						selectServer("https://game.openrsc.com", "43596");
+						break;
                     case 1: // RSC Cabbage
-                        // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-                        String ip_cabbage = "162.198.202.160"; //2605:a601:a623:fe00:3cd7:cec9:fe65:c106
-                        String port_cabbage = "43595";
-                        FileOutputStream fileout_cabbage;
-
-                        String pack = "Menus:1";
-                        FileOutputStream fileout_cabbage2;
-                        try {
-                            fileout_cabbage = new FileOutputStream(realPath.get() + "ip.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_cabbage);
-                            outputWriter.write(ip_cabbage);
-                            outputWriter.close();
-
-                            fileout_cabbage2 = new FileOutputStream(realPath.get() + "config.txt");
-                            OutputStreamWriter outputWriter2 = new OutputStreamWriter(fileout_cabbage2);
-                            outputWriter2.write(pack);
-                            outputWriter2.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileout_cabbage = new FileOutputStream(realPath.get() + "port.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_cabbage);
-                            outputWriter.write(port_cabbage);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Intent mainIntent_cabbage = new Intent(CacheUpdater.this, GameActivity.class);
-                        mainIntent_cabbage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mainIntent_cabbage);
-                        finish();
-                        return;
+						selectServer("https://game.openrsc.com", "43595");
+						break;
 					case 2: // RSC Uranium
-                        // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-						String ip_uranium = "162.198.202.160";
-						String port_uranium = "43235";
-						FileOutputStream fileout_uranium;
-
-						FileOutputStream fileout_uranium2;
-						try {
-							fileout_uranium = new FileOutputStream(realPath.get() + "ip.txt");
-							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_uranium);
-							outputWriter.write(ip_uranium);
-							outputWriter.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						try {
-							fileout_uranium2 = new FileOutputStream(realPath.get() + "port.txt");
-							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_uranium2);
-							outputWriter.write(port_uranium);
-							outputWriter.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						Intent mainIntent_uraninum = new Intent(CacheUpdater.this, GameActivity.class);
-						mainIntent_uraninum.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(mainIntent_uraninum);
-						finish();
-						return;
+						selectServer("https://game.openrsc.com", "43235");
+						break;
 					case 3: // RSC Coleslaw
-                        // TODO: This is a temporary fix for Android to force IPv4 and should be replaced with game.rsc.vet once the firewall is sorted out for IPv6
-						String ip_coleslaw = "162.198.202.160";
-						String port_coleslaw = "43599";
-						FileOutputStream fileout_coleslaw;
-
-						String pack2 = "Menus:1";
-						FileOutputStream fileout_coleslaw2;
-						try {
-							fileout_coleslaw = new FileOutputStream(realPath.get() + "ip.txt");
-							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_coleslaw);
-							outputWriter.write(ip_coleslaw);
-							outputWriter.close();
-
-							fileout_coleslaw2 = new FileOutputStream(realPath.get() + "config.txt");
-							OutputStreamWriter outputWriter2 = new OutputStreamWriter(fileout_coleslaw2);
-							outputWriter2.write(pack2);
-							outputWriter2.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						try {
-							fileout_coleslaw = new FileOutputStream(realPath.get() + "port.txt");
-							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_coleslaw);
-							outputWriter.write(port_coleslaw);
-							outputWriter.close();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						Intent mainIntent_coleslaw = new Intent(CacheUpdater.this, GameActivity.class);
-						mainIntent_coleslaw.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(mainIntent_coleslaw);
-						finish();
-						return;
+						selectServer("https://game.openrsc.com", "43599");
+						break;
                     case 4: // Manual
                         LinearLayout layout = new LinearLayout(CacheUpdater.this);
 
@@ -314,27 +263,7 @@ public class CacheUpdater extends Activity {
                                         port_local = portBox.getText().toString().trim();
                                     }
 
-                                    FileOutputStream fileout_local;
-                                    try {
-                                        fileout_local = new FileOutputStream(realPath.get() + "ip.txt");
-                                        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
-                                        outputWriter.write(ip_local);
-                                        outputWriter.close();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    try {
-                                        fileout_local = new FileOutputStream(realPath.get() + "port.txt");
-                                        OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_local);
-                                        outputWriter.write(port_local);
-                                        outputWriter.close();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    Intent mainIntent_dev1 = new Intent(CacheUpdater.this, GameActivity.class);
-                                    mainIntent_dev1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(mainIntent_dev1);
-                                    finish();
+                                    selectServer(ip_local, port_local);
                                 })
                                 .show();
                 }
