@@ -48,12 +48,12 @@ public class Updater {
 			// Download new or update existing, then execute
 			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
 
-			if (!_PRESERVATION_CONFIG.exists()) {
+			// if (!_PRESERVATION_CONFIG.exists()) {
 				createPreservationConfig(_PRESERVATION_CONFIG);
-			}
-			if (!_URANIUM_CONFIG.exists()) {
+			// }
+			// if (!_URANIUM_CONFIG.exists()) {
 				createUraniumConfig(_URANIUM_CONFIG);
-			}
+			// }
 
 			if (_DEFAULT_CONFIG.exists())
 				_DEFAULT_CONFIG.delete();
@@ -106,6 +106,32 @@ public class Updater {
 
 			// Download new or update existing, execute elsewhere
 			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void updateRSCTimes() throws SecurityException, IOException {
+		try {
+			// Set variables
+			File _GAME_PATH = new File(_CACHE_DIR + "/extras/rsctimes/");
+			String _FILE_NAME = "rsctimes-master.zip";
+			String _URL = Defaults._RSCTIMES_REPOSITORY_DL;
+			Double _EXTRA_VERSION = Defaults._RSCTIMES_VERISION;
+			File _2001SCAPE_CONFIG = new File( _CACHE_DIR + "/extras/rsctimes/worlds/01_2001scape.ini");
+			File _DEFAULT_CONFIG = new File(_CACHE_DIR + "/extras/rsctimes/worlds/01_World 1.ini");
+
+			// Download new or update existing, then execute
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+
+			//if (!_2001SCAPE_CONFIG.exists()) {
+				create2001scapeConfig(_2001SCAPE_CONFIG);
+			//}
+
+			if (_DEFAULT_CONFIG.exists())
+				_DEFAULT_CONFIG.delete();
+
+			ClientLauncher.launchRSCTimes();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
@@ -277,6 +303,19 @@ public class Updater {
 		props.put("name", "RSC Uranium");
 		props.put("servertype", "1");
 		props.put("hiscores_url", "https\\://rsc.vet/player/uranium/%USERNAME%");
+
+		createPropsConfig(config, props);
+	}
+
+	public static void create2001scapeConfig(File config) {
+		Properties props = new Properties();
+		props.put("rsa_pub_key", "7112866275597968156550007489163685737528267584779959617759901583041864787078477876689003422509099353805015177703670715380710894892460637136582066351659813");
+		props.put("port", "43593");
+		props.put("rsa_exponent", "65537");
+		props.put("url", "game.openrsc.com");
+		props.put("name", "2001scape");
+		props.put("servertype", "1");
+		props.put("hiscores_url", "https\\://rsc.vet/player/2001scape/%USERNAME%");
 
 		createPropsConfig(config, props);
 	}

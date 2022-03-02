@@ -429,12 +429,7 @@ public class MainWindow extends JFrame {
 
 		y += this.cabbageCard.rscText.getHeight() - 3;
 		this.O1ScapeCard.rscText = makeButton("2001", x, y, helvetica24b, yellow, show2001ScapeCard());
-		this.O1ScapeCard.serverName = makeButton("Scape (beta)", x + this.O1ScapeCard.rscText.getWidth(), y + (this.cabbageCard.serverName.getHeight() - 2 - this.cabbageCard.rscText.getHeight()), helvetica16b, yellow, show2001ScapeCard());
-
-		this.O1ScapeCard.underConstruction = new JLabel(Utils.getImage("undercon.gif"));
-		this.O1ScapeCard.underConstruction.setBounds(O1scape_x, launch_button_row3_y + 62, 38, 38);
-		this.O1ScapeCard.underConstruction.setFocusable(false);
-		this.O1ScapeCard.underConstruction.setBorder(BorderFactory.createEmptyBorder());
+		this.O1ScapeCard.serverName = makeButton("Scape", x + this.O1ScapeCard.rscText.getWidth(), y + (this.cabbageCard.serverName.getHeight() - 2 - this.cabbageCard.rscText.getHeight()), helvetica16b, yellow, show2001ScapeCard());
 
 		y += this.O1ScapeCard.rscText.getHeight() + 3;
 
@@ -463,12 +458,15 @@ public class MainWindow extends JFrame {
 		(this.openPkCard.logo = new LaunchButton("openpk")).setBounds(openPk_x, launch_button_row3_y - 3, launch_button_width, launch_button_height);
 		this.openPkCard.clientLogo = defineClientLogo(this.openPkCard.logo);
 
-		x = openPk_x + 110;
+		x = openPk_x + 40;
 		y = launch_button_row3_y;
+
+		this.openPkCard.comingSoonPlaceholder = drawString("More to come soon...", x, y + 40, helvetica20b, yellow, !showOpenPk() && !Settings.showBotButtons);
+		x += 70;
 
 		y += this.cabbageCard.rscText.getHeight() - 3;
 		this.openPkCard.serverName = makeButton("Open PK ", x, y, helvetica24b, yellow, showOpenPk());
-		this.openPkCard.rscText = makeButton("(alpha)", x + this.O1ScapeCard.serverName.getWidth(), y + (this.cabbageCard.serverName.getHeight() - 2 - this.cabbageCard.rscText.getHeight()), helvetica16b, yellow, showOpenPk());
+		this.openPkCard.rscText = makeButton("(alpha)", x + this.openPkCard.serverName.getWidth(), y + (this.cabbageCard.serverName.getHeight() - 2 - this.cabbageCard.rscText.getHeight()), helvetica16b, yellow, showOpenPk());
 
 		this.openPkCard.underConstruction = new JLabel(Utils.getImage("undercon.gif"));
 		this.openPkCard.underConstruction.setBounds(openPk_x, launch_button_row3_y + 62, 38, 38);
@@ -540,8 +538,6 @@ public class MainWindow extends JFrame {
 				this._BACKGROUND.add(this.O1ScapeCard.wikiLogo);
 				this._BACKGROUND.setComponentZOrder(this.O1ScapeCard.wikiLogo, 2);
 				this._BACKGROUND.add(this.O1ScapeCard.playersLogo);
-				this._BACKGROUND.add(this.O1ScapeCard.underConstruction);
-				this._BACKGROUND.setComponentZOrder(this.O1ScapeCard.underConstruction, 2);
 			}
 			if (showOpenPk()) {
 				this._BACKGROUND.add(this.openPkCard.logo);
@@ -725,7 +721,7 @@ public class MainWindow extends JFrame {
 	}
 
 	private boolean show2001ScapeCard() {
-		return !Settings.showBotButtons && Settings.showPrerelease;
+		return !Settings.showBotButtons;
 	}
 
 	private boolean showOpenPk() {

@@ -155,6 +155,16 @@ public class ClientDescriptions {
 				"if a more authentic client were to be made compatible.</font></html>"
 		);
 
+		JLabel webclient2001scapeExplanation = new JLabel(
+			"<html><font color=\"white\">RuneScape began in the web browser. Its accessibility in-browser<br/>" +
+				"is a huge part of why the game became so popular. Unfortunately,<br/>" +
+				"around 2015 many of the technologies necessary for this original<br/>" +
+				"experience became unsupported and harder for users to access.<br/><br/>" +
+				"Thanks to the efforts of many people, we are able to offer this<br/>" +
+				"original experience again by converting the recreated mudclient 38<br/>" +
+				"(from 2001-05-08) into javascript & webasm.</font></html>"
+		);
+
 		// Preservation
 		preservationClientDescriptions.put(ClientSettingsCard.WINRUNE, winruneGeneralExplanation);
 		preservationClientDescriptions.put(ClientSettingsCard.RSCPLUS, rscplusGeneralExplanation);
@@ -168,6 +178,7 @@ public class ClientDescriptions {
 		O1scapeClientDescriptions.put(ClientSettingsCard.MUD38, mudclient38GeneralExplanation);
 		O1scapeClientDescriptions.put(ClientSettingsCard.RSCTIMES, rsctimesGeneralExplanation);
 		O1scapeClientDescriptions.put(ClientSettingsCard.OPENRSC, openrscNotRecommendedForAuthentic2001Servers);
+		O1scapeClientDescriptions.put(ClientSettingsCard.WEBCLIENT, webclient2001scapeExplanation);
 
 		// OpenPK
 		openpkClientDescriptions.put(ClientSettingsCard.OPENRSC, openrscClientOpenPKExplanation);

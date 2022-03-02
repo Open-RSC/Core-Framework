@@ -15,6 +15,7 @@ public class ServerCard {
 	public JLabel horizontalRule;
 	public JLabel bannerSticker;
     public JLabel underConstruction;
+    public JLabel comingSoonPlaceholder;
 
     public JLabel removeAll(JLabel background) {
 		if (null != this.logo)
@@ -41,6 +42,8 @@ public class ServerCard {
 			background.remove(this.bannerSticker);
 		if (null != this.underConstruction)
 			background.remove(this.underConstruction);
+		if (null != this.comingSoonPlaceholder)
+			background.remove(this.comingSoonPlaceholder);
 		return background;
 	}
 

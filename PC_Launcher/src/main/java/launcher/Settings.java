@@ -54,6 +54,15 @@ public class Settings {
 		Properties props = new Properties();
 
 		try {
+			File cacheDir = new File(Defaults._DEFAULT_CONFIG_DIR);
+			if (!cacheDir.exists()) {
+				Logger.Error("Could not find Cache directory at " + cacheDir.getAbsolutePath());
+				Logger.Error("Please ensure all files needed to run the launcher exist.");
+				return;
+			} else {
+				Logger.Info("Cache dir: " + cacheDir.getAbsolutePath());
+			}
+
 			File configFile = new File(Defaults._DEFAULT_CONFIG_DIR + "/launcherSettings.conf");
 			if (!configFile.isDirectory()) {
 				if (!configFile.exists()) {
