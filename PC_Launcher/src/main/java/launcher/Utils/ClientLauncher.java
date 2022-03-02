@@ -164,6 +164,7 @@ public class ClientLauncher {
 				switch (client) {
 					case Settings.MUD38:
 					case ClientSettingsCard.MUD38:
+					default:
 						try {
 							Updater.updateWinRune();
 						} catch (IOException e) {
@@ -171,9 +172,14 @@ public class ClientLauncher {
 						}
 						launchWinRune(ip, port, "2001");
 						break;
-					// TODO: implement rsctimes client
 					case Settings.RSCTIMES:
 					case ClientSettingsCard.RSCTIMES:
+						try {
+							Updater.updateRSCTimes();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						break;
 					case Settings.RSCPLUS:
 					case ClientSettingsCard.RSCPLUS:
 						try {
@@ -184,9 +190,12 @@ public class ClientLauncher {
 						break;
 					case Settings.OPENRSC:
 					case ClientSettingsCard.OPENRSC:
-					default:
 						setOpenRSCClientEndpoint(ip, port);
 						launchOpenRSCClient();
+						break;
+					case Settings.WEBCLIENT:
+					case ClientSettingsCard.WEBCLIENT:
+						Utils.openWebpage("http://game.openrsc.com/play/2001scape/members");
 						break;
 				}
 				return;
@@ -242,6 +251,11 @@ public class ClientLauncher {
 	public static void launchRSCPlus() {
 		File rscplusJar = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "rscplus" + File.separator + "rscplus.jar");
 		Utils.execCmd(new String[]{"java", "-jar", rscplusJar.getAbsolutePath()}, rscplusJar.getParentFile());
+	}
+
+	public static void launchRSCTimes() {
+		File rsctimesJar = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "rsctimes" + File.separator + "rsctimes.jar");
+		Utils.execCmd(new String[]{"java", "-jar", rsctimesJar.getAbsolutePath()}, rsctimesJar.getParentFile());
 	}
 
 	public static void launchFleaCircus() {

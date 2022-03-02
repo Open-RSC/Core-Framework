@@ -33,7 +33,7 @@ public class PopupFrame extends JLabel {
 	private final int SERVER_Y = 10;
 	private final String preservationName = "RSC Preservation";
 	private final String cabbageName = "RSC Cabbage";
-	private final String O1scapeName = "2001scape (pre-release)";
+	private final String O1scapeName = "2001scape";
 	private final String kaleName = "RSC Kale";
 	private final String openPKName = "Open PK (pre-release)";
 	private final String uraniumName = "RSC Uranium";
@@ -203,14 +203,12 @@ public class PopupFrame extends JLabel {
 			false);
 
 		setupCard(O1scapeSettingsCard,
-			// TODO: implement RSCTIMES
-			//  new String[] { ClientSettingsCard.MUD38, ClientSettingsCard.RSCTIMES, ClientSettingsCard.OPENRSC },
-			new String[] { ClientSettingsCard.MUD38, ClientSettingsCard.OPENRSC },
+			new String[] { ClientSettingsCard.MUD38, ClientSettingsCard.RSCTIMES, ClientSettingsCard.WEBCLIENT },
 			Settings.preferredClient2001scape,
 			MainWindow.get().O1ScapeCard.logo,
 			false,
 			ClientDescriptions.O1scapeClientDescriptions,
-			true);
+			false);
 
 		setupCard(openpkSettingsCard,
 			new String[] { ClientSettingsCard.OPENRSC },
