@@ -72,6 +72,38 @@ public final class Event implements CommandTrigger {
 		.put("digsite", Point.location(20, 527))
 		.put("legend", Point.location(513, 543))
 		.build();
+	private static final Map<String, Point> townLocationsRetro = new ImmutableMap.Builder<String, Point>()
+		.put("varrock", Point.location(122, 509))
+		.put("falador", Point.location(304, 542))
+		.put("draynor", Point.location(210, 624))
+		.put("portsarim", Point.location(269, 643))
+		.put("karamja", Point.location(334, 713))
+		.put("battlefield", Point.location(361, 706)) // Karamja middle
+		.put("karamjamiddle", Point.location(361, 706)) // alias
+		.put("alkharid", Point.location(72, 685))
+		.put("lumbridge", Point.location(120, 648))
+		.put("edgeville", Point.location(217, 461))
+		.put("ghosttown", Point.location(217, 461)) // alias
+		.put("barbarian", Point.location(233, 513))
+		.put("rimmington", Point.location(325, 663))
+		.put("alkharidmodroom", Point.location(75, 1641))
+		.put("modroom", Point.location(81,522))
+		.put("gertrude", Point.location(160, 515))
+		.put("icemountain", Point.location(288, 461))
+		.put("champion", Point.location(151, 556))
+		.put("poh", Point.location(93, 508))
+		.put("varrockpoh", Point.location(93, 508)) // alias
+		.put("playerownedhouses", Point.location(93, 508)) // alias
+		.put("faladorpoh", Point.location(284, 556))
+		.put("wizardstower", Point.location(216, 686))
+		.put("tower", Point.location(216, 686)) // alias
+		.put("swamp", Point.location(119, 706))
+		.put("chasm", Point.location(71,592))
+		.put("eastvarrockmine", Point.location(70,545))
+		.put("varrockmineeast", Point.location(70,545)) // alias
+		.put("westvarrockmine", Point.location(158,544))
+		.put("varrockminewest", Point.location(158,544)) // alias
+		.build();
 
 	public boolean blockCommand(Player player, String command, String[] args) {
 		return player.isEvent();
@@ -323,7 +355,11 @@ public final class Event implements CommandTrigger {
 			// Check player first
 			Player tpTo = player.getWorld().getPlayer(DataConversions.usernameToHash(town));
 			if (tpTo == null) {
-				teleportTo = townLocations.get(town.toLowerCase());
+				if (player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient() || player.isUsing69CompatibleClient()) {
+					teleportTo = townLocationsRetro.get(town.toLowerCase());
+				} else {
+					teleportTo = townLocations.get(town.toLowerCase());
+				}
 				if (teleportTo == null) {
 					player.message(messagePrefix + "Invalid target");
 					return;

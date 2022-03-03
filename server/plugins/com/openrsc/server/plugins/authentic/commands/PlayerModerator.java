@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -733,7 +734,11 @@ public final class PlayerModerator implements CommandTrigger {
 			mes("Don't know where to wield it, sorry");
 			return;
 		}
-		if (appearanceId.id() > player.getClientLimitations().maxAnimationId) {
+		int id = appearanceId.id();
+		if (player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient()) {
+			id = AppearanceRetroConverter.convert(appearanceId.id());
+		}
+		if (id > player.getClientLimitations().maxAnimationId || id == 0) {
 			mes("Your client doesn't know about that NPC.");
 			return;
 		}
