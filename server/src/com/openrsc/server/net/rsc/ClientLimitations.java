@@ -30,7 +30,7 @@ public class ClientLimitations {
 
 	public void setKnownLimitations(int clientVersion) {
 		if (clientVersion >= 38 && clientVersion <= 40) {
-			maxAnimationId = 114;
+			maxAnimationId = 115;
 			maxItemId = 306;
 			maxNpcId = 157;
 			maxSceneryId = 179;

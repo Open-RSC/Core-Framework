@@ -9,7 +9,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Guide implements TalkNpcTrigger {
 	private void GuideDialogue(Player player, Npc npc, int cID) {
-		if (npc.getID() == NpcId.GUIDE_ORIGINAL.id() || npc.getID() == NpcId.GUIDE_ORIGINAL2.id()) {
+		if (npc.getID() == NpcId.GUIDE.id() || npc.getID() == NpcId.GUIDE_FEMALE.id()) {
 			switch(cID) {
 				case GUIDE.WHERE_START:
 					npcsay(player, npc, "You are at Lumbridge castle.",
@@ -417,7 +417,7 @@ public class Guide implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc npc) {
-		return npc.getID() == NpcId.GUIDE_ORIGINAL.id() || npc.getID() == NpcId.GUIDE_ORIGINAL2.id();
+		return npc.getID() == NpcId.GUIDE.id() || npc.getID() == NpcId.GUIDE_FEMALE.id();
 	}
 
 	class GUIDE {

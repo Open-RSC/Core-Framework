@@ -6,26 +6,6 @@ import java.util.Map;
 import static com.openrsc.server.constants.AppearanceSlots.*;
 
 // Normally you should just do ItemDefinition.getAppearanceId(), but not all animations have items associated with them.
-
-class AppearanceSlots {
-	static final int NPC = -2;
-	static final int ANY = -1;
-	static final int HEAD = 0;
-	static final int SHIRT = 1;
-	static final int PANTS = 2;
-	static final int SHIELD = 3;
-	static final int WEAPON = 4;
-	static final int HAT = 5;
-	static final int BODY = 6;
-	static final int LEGS = 7;
-	static final int GLOVES = 8;
-	static final int BOOTS = 9;
-	static final int AMULET = 10;
-	static final int CAPE = 11;
-	static final int ARROW = 12;
-	static final int MORPHING_RING = 13;
-}
-
 public enum AppearanceId {
 	NOTHING(0, ANY),
 	SHORT_HAIR(1, HEAD),
@@ -229,8 +209,8 @@ public enum AppearanceId {
 	PASTEL_BLUE_GNOME_TOP(199, BODY),
 	PASTEL_YELLOW_GNOME_TOP(200, BODY),
 	PASTEL_CYAN_GNOME_TOP(201, BODY),
-	GREEN_ROBE(202, BODY), // NO ITEM (Unused, perhaps planned for Brimstail?)
-	GREEN_SKIRT(203, LEGS), // NO ITEM (Unused, perhaps planned for Brimstail?)
+	GREEN_ROBE(202, BODY), // NO ITEM (Used for Rashiliyia)
+	GREEN_SKIRT(203, LEGS), // NO ITEM (Used for Rashiliyia)
 	PASTEL_PINK_GNOME_BOOTS(204, BOOTS),
 	PASTEL_GREEN_GNOME_BOOTS(205, BOOTS),
 	PASTEL_BLUE_GNOME_BOOTS(206, BOOTS),

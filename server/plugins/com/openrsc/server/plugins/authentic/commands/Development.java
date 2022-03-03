@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.constants.Skills;
@@ -18,6 +19,7 @@ import com.openrsc.server.plugins.authentic.quests.members.touristtrap.Tourist_T
 import com.openrsc.server.plugins.authentic.skills.fishing.Fishing;
 import com.openrsc.server.plugins.authentic.skills.woodcutting.Woodcutting;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
@@ -107,6 +109,9 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("cyclescenery")) {
 			cycleScenery(player, args);
+		}
+		else if (command.equalsIgnoreCase("cycleclothing")) {
+			cycleClothing(player, args);
 		}
 		else if (command.equalsIgnoreCase("abort")) {
 			setAbortFlag();
@@ -332,6 +337,34 @@ public final class Development implements CommandTrigger {
 		delay(8);
 		player.toggleDenyAllLogoutRequests();
 	}
+
+	private void cycleClothing(Player player, String[] args) {
+		// render player invisible
+		for (int i = 0; i < 12; i++) {
+			player.updateWornItems(i, 0);
+		}
+		player.toggleDenyAllLogoutRequests();
+
+		boolean isRetroClient = player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient();
+		int delayLen = Integer.parseInt(args[0]);
+
+		player.message("Now displaying all animations in RuneScape Classic in 5 second intervals.");
+
+		for (int id = 0; id <= player.getClientLimitations().maxAnimationId; id++) {
+			player.message("animation id: " + (isRetroClient ? AppearanceRetroConverter.convert(id) : id));
+			player.updateWornItems(AppearanceId.SLOT_BODY, id);
+			delay(delayLen);
+			if (abortFlag) {
+				player.message("Aborting cycle!");
+				abortFlag = false;
+				return;
+			}
+		}
+		player.message("That is all of the animations in RuneScape Classic!");
+		delay(8);
+		player.toggleDenyAllLogoutRequests();
+	}
+
 	private void setAbortFlag() { abortFlag = true; }
 
 	private void rotateObject(Player player, String command, String[] args) {
