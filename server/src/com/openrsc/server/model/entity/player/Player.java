@@ -2375,11 +2375,22 @@ public final class Player extends Mob {
 	}
 
 	public void resetMenuHandler() {
+		resetMenuHandler(true);
+	}
+
+	public void resetMenuHandler(boolean hideMenu) {
 		setOption(-1);
 		menu = null;
 		menuHandler = null;
-		ActionSender.hideMenu(this);
-		setBusy(false);
+		if (hideMenu)
+			ActionSender.hideMenu(this);
+	}
+
+	public void cancelMenuHandler() {
+		if (menuHandler != null) {
+			resetMenuHandler(false);
+			setBusy(false);
+		}
 	}
 
 	public void resetRange() {
