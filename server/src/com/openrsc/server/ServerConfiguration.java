@@ -133,6 +133,7 @@ public class ServerConfiguration {
 	public boolean RIGHT_CLICK_TRADE;
 	public boolean FIX_OVERHEAD_CHAT;
 	public boolean WANT_FATIGUE;
+	public boolean WARN_EXCESSIVE_CAPTCHA_FAILURE;
 	public int STOP_SKILLING_FATIGUED;
 	public boolean WANT_CUSTOM_SPRITES;
 	public boolean WANT_CUSTOM_LANDSCAPE;
@@ -356,6 +357,7 @@ public class ServerConfiguration {
 		int CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
 		int CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
 		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);
+		WARN_EXCESSIVE_CAPTCHA_FAILURE = tryReadBool("warn_excessive_captcha_failure").orElse(true);
 		STOP_SKILLING_FATIGUED = tryReadInt("stop_skilling_fatigued").orElse(1);
 		AGGRO_RANGE = tryReadInt("aggro_range").orElse(1);
 		CHARACTER_CREATION_MODE = tryReadInt("character_creation_mode").orElse(0);
