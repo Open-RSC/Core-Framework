@@ -101,7 +101,7 @@ public final class Moderator implements CommandTrigger {
 			new StaffLog(player, 15, player.getUsername() + " has summoned "
 				+ targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
 		player.message(messagePrefix + "You have summoned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been summoned by " + player.getStaffName());
 		}
 	}
@@ -241,6 +241,11 @@ public final class Moderator implements CommandTrigger {
 	}
 
 	private void sendAnnouncement(Player player, String command, String[] args) {
+		if (args.length == 0) {
+			player.message("Just put all the words you want to say after the \"" + command + "\" command");
+			return;
+		}
+
 		StringBuilder newStr = new StringBuilder();
 
 		for (String arg : args) {
