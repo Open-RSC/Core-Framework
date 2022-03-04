@@ -62,7 +62,9 @@ public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeI
 				ActionSender.sendIncorrectSleepword(player);
 				player.incrementSleepTries();
 				if (player.getIncorrectSleepTimes() > 5) {
-					player.getWorld().sendModAnnouncement(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!");
+					if (player.getConfig().WARN_EXCESSIVE_CAPTCHA_FAILURE) {
+						player.getWorld().sendModAnnouncement(player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!");
+					}
 					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " has failed sleeping captcha " + player.getIncorrectSleepTimes() + " times!"));
 				}
 
