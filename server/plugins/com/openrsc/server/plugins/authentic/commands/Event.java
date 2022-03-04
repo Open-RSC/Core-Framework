@@ -395,7 +395,7 @@ public final class Event implements CommandTrigger {
 		targetPlayer.resetFollowing();
 
 		player.message(messagePrefix + "You have teleported " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
-		if(targetPlayer.getUsernameHash() != player.getUsernameHash() && targetPlayer.getLocation() != originalLocation) {
+		if(targetPlayer.getUsernameHash() != player.getUsernameHash() && targetPlayer.getLocation() != originalLocation && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been teleported to " + targetPlayer.getLocation() + " from " + originalLocation);
 		}
 
@@ -433,7 +433,7 @@ public final class Event implements CommandTrigger {
 				+ targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
 		player.message(messagePrefix + "You have returned " + targetPlayer.getUsername() + " to "
 			+ targetPlayer.getLocation() + " from " + originalLocation);
-		if(targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if(targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been returned by " + player.getStaffName());
 		}
 	}
@@ -579,7 +579,7 @@ public final class Event implements CommandTrigger {
 
 		String invisibleText = newInvisible ? "invisible" : "visible";
 		player.message(messagePrefix + targetPlayer.getUsername() + " is now " + invisibleText);
-		if(targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if(targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "A staff member has made you " + invisibleText);
 		}
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 14, player.getUsername() + " has made " + targetPlayer.getUsername() + " " + invisibleText));
@@ -637,7 +637,7 @@ public final class Event implements CommandTrigger {
 
 		String invulnerbleText = newInvulnerable ? "invulnerable" : "vulnerable";
 		player.message(messagePrefix + targetPlayer.getUsername() + " is now " + invulnerbleText);
-		if(targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if(targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "A staff member has made you " + invulnerbleText);
 		}
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, player.getUsername() + " has made " + targetPlayer.getUsername() + " " + invulnerbleText));
@@ -962,7 +962,7 @@ public final class Event implements CommandTrigger {
 			}
 
 			targetPlayer.setGroupID(newGroup);
-			if(targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if(targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message(messagePrefix + player.getStaffName()
 					+ "@whi@ has set your group to " + Group.getStaffPrefix(targetPlayer.getWorld(), newGroup)
 					+ newGroupName + (targetPlayer.isDev() ? " (" + newGroup + ")" : ""));
@@ -1113,7 +1113,7 @@ public final class Event implements CommandTrigger {
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s " + statName + " to experience " + experienceSt);
 			otherPlayer.getSkills().sendUpdateAll();
-			if(player.getUsernameHash() != player.getUsernameHash()) {
+			if(player.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(otherPlayer)) {
 				otherPlayer.message(messagePrefix + "Your " + statName + " has been set to experience " + experienceSt + " by a staff member");
 				otherPlayer.getSkills().sendUpdateAll();
 			}
@@ -1136,7 +1136,8 @@ public final class Event implements CommandTrigger {
 				if(otherPlayer.getParty() != null){
 					otherPlayer.getParty().sendParty();
 				}
-				otherPlayer.message(messagePrefix + "All of your stats have been set to experience " + experienceSt + " by a staff member");
+				if (!player.isInvisibleTo(otherPlayer))
+					otherPlayer.message(messagePrefix + "All of your stats have been set to experience " + experienceSt + " by a staff member");
 				otherPlayer.getSkills().sendUpdateAll();
 			}
 		}
@@ -1272,7 +1273,7 @@ public final class Event implements CommandTrigger {
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s " + statName + " to level " + level);
 			otherPlayer.getSkills().sendUpdateAll();
-			if(player.getUsernameHash() != player.getUsernameHash()) {
+			if(player.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(otherPlayer)) {
 				otherPlayer.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
 				otherPlayer.getSkills().sendUpdateAll();
 			}
@@ -1295,7 +1296,8 @@ public final class Event implements CommandTrigger {
 				if(otherPlayer.getParty() != null){
 					otherPlayer.getParty().sendParty();
 				}
-				otherPlayer.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
+				if (!player.isInvisibleTo(otherPlayer))
+					otherPlayer.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
 				otherPlayer.getSkills().sendUpdateAll();
 			}
 		}
@@ -1427,7 +1429,7 @@ public final class Event implements CommandTrigger {
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s effective " + statName + " level " + level);
 			otherPlayer.getSkills().sendUpdateAll();
-			if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if(otherPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(otherPlayer)) {
 				otherPlayer.message(messagePrefix + "Your effective " + statName + " level has been set to " + level + " by a staff member");
 				otherPlayer.getSkills().sendUpdateAll();
 			}
@@ -1440,7 +1442,7 @@ public final class Event implements CommandTrigger {
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s effective levels to " + level);
 			otherPlayer.getSkills().sendUpdateAll();
-			if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if(otherPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(otherPlayer)) {
 				otherPlayer.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
 				otherPlayer.getSkills().sendUpdateAll();
 			}

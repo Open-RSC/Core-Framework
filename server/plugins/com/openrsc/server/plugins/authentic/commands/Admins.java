@@ -117,6 +117,8 @@ public final class Admins implements CommandTrigger {
 			recalcLoggedInCounts(player);
 		} else if (command.equalsIgnoreCase("item")) {
 			spawnItemInventory(player, command, args, false);
+		} else if (command.equalsIgnoreCase("ritem")) {
+			removeItemInventory(player, command, args);
 		} else if (command.equalsIgnoreCase("certeditem") || command.equals("noteditem")) {
 			spawnItemInventory(player, command, args, true);
 		} else if (command.equalsIgnoreCase("bankitem") || command.equalsIgnoreCase("bitem") || command.equalsIgnoreCase("addbank")) {
@@ -191,7 +193,7 @@ public final class Admins implements CommandTrigger {
 			playerQueryCombatStyle(player, command, args);
 		} else if (command.equalsIgnoreCase("setnpcstats")) {
 			npcSetStats(player, command, args);
-		} else if (command.equalsIgnoreCase("skull")) {
+		} else if (command.equalsIgnoreCase("skull") || command.equalsIgnoreCase("unskull") || command.equalsIgnoreCase("rskull")) {
 			playerSkull(player, command, args);
 		} else if (command.equalsIgnoreCase("npcrangeevent2")) {
 			npcRangedPlayer(player, command, args);
@@ -718,7 +720,7 @@ public final class Admins implements CommandTrigger {
 
 		if (successAddingItem) {
 			player.message(messagePrefix + "You have spawned " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
-			if (player.getUsernameHash() != p.getUsernameHash()) {
+			if (player.getUsernameHash() != p.getUsernameHash() && !player.isInvisibleTo(p)) {
 				p.message(messagePrefix + "A staff member has given you " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 			}
 		} else {
@@ -777,7 +779,7 @@ public final class Admins implements CommandTrigger {
 		p.getBank().add(new Item(id, amount));
 
 		player.message(messagePrefix + "You have spawned to bank " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
-		if (player.getUsernameHash() != p.getUsernameHash()) {
+		if (player.getUsernameHash() != p.getUsernameHash() && !player.isInvisibleTo(p)) {
 			p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 		}
 	}
@@ -804,7 +806,7 @@ public final class Admins implements CommandTrigger {
 					targetPlayer.getBank().remove(item, false);
 				}
 			}
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message(messagePrefix + "Your bank has been wiped by an admin");
 			}
 			success = true;
@@ -974,7 +976,7 @@ public final class Admins implements CommandTrigger {
 
 		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.HITS.id()) - targetPlayer.getSkills().getMaxStat(Skill.HITS.id())));
 		targetPlayer.getSkills().normalize(Skill.HITS.id());
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been healed by an admin");
 		}
 		player.message(messagePrefix + "Healed: " + targetPlayer.getUsername());
@@ -991,7 +993,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		targetPlayer.getSkills().normalize(Skill.PRAYER.id());
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "Your prayer has been recharged by an admin");
 		}
 		player.message(messagePrefix + "Recharged: " + targetPlayer.getUsername());
@@ -1035,7 +1037,7 @@ public final class Admins implements CommandTrigger {
 		if (targetPlayer.getSkills().getLevel(Skill.HITS.id()) <= 0)
 			targetPlayer.killedBy(player);
 
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "Your hits have been set to " + newHits + " by an admin");
 		}
 		player.message(messagePrefix + "Set " + targetPlayer.getUsername() + "'s hits to " + newHits);
@@ -1076,7 +1078,7 @@ public final class Admins implements CommandTrigger {
 
 		targetPlayer.getSkills().setLevel(Skill.PRAYER.id(), newPrayer);
 
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
 		}
 		player.message(messagePrefix + "Set " + targetPlayer.getUsername() + "'s prayer to " + newPrayer);
@@ -1103,7 +1105,7 @@ public final class Admins implements CommandTrigger {
 		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.HITS.id())));
 		targetPlayer.getSkills().setLevel(Skill.HITS.id(), 0);
 		targetPlayer.killedBy(player);
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been killed by an admin");
 		}
 		player.message(messagePrefix + "Killed " + targetPlayer.getUsername());
@@ -1140,10 +1142,169 @@ public final class Admins implements CommandTrigger {
 		if (targetPlayer.getSkills().getLevel(Skill.HITS.id()) <= 0)
 			targetPlayer.killedBy(player);
 
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been taken " + damage + " damage from an admin");
 		}
 		player.message(messagePrefix + "Damaged " + targetPlayer.getUsername() + " " + damage + " hits");
+	}
+
+	private void removeItemInventory(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + "  [id or ItemId name] (amount) (player)");
+			return;
+		}
+
+		int idToRemove;
+		try {
+			idToRemove = Integer.parseInt(args[0]);
+		} catch (NumberFormatException ex) {
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				return;
+			} else {
+				idToRemove = item.id();
+			}
+		}
+
+		int amountToRemove;
+		try {
+			amountToRemove = Integer.parseInt(args[1]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+			return;
+		}
+
+		boolean success = false;
+		int removedCount = 0;
+
+		String targetPlayerName = args[2];
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
+		if (targetPlayer != null) {
+			// player is online
+			synchronized (targetPlayer.getCarriedItems().getInventory()) {
+				List<Item> items = targetPlayer.getCarriedItems().getInventory().getItems();
+				Item curItem;
+				for (int i = items.size() - 1; i >= 0; i--) {
+					curItem = items.get(i);
+					if (curItem.getCatalogId() == idToRemove && removedCount < amountToRemove) {
+						int available = curItem.getAmount();
+						if (available > 1) {
+							int toRemove = Math.min(amountToRemove, available);
+							targetPlayer.getCarriedItems().remove(new Item(curItem.getCatalogId(), toRemove));
+							removedCount += toRemove;
+						} else {
+							targetPlayer.getCarriedItems().remove(curItem);
+							removedCount++;
+						}
+					}
+				}
+			}
+
+			if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
+				synchronized (targetPlayer.getCarriedItems().getEquipment()) {
+					for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+						Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
+						if (equipped == null)
+							continue;
+						if (equipped.getCatalogId() == idToRemove && removedCount < amountToRemove) {
+							int available = equipped.getAmount();
+							if (available > 1) {
+								int toRemove = Math.min(amountToRemove, available);
+								if (amountToRemove >= available) {
+									targetPlayer.getCarriedItems().getEquipment().unequipItem(
+										new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
+									);
+								} else {
+									targetPlayer.getCarriedItems().remove(new Item(equipped.getCatalogId(), toRemove));
+									removedCount += toRemove;
+								}
+							} else {
+								targetPlayer.getCarriedItems().getEquipment().unequipItem(
+									new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
+								);
+								targetPlayer.getCarriedItems().remove(equipped);
+								removedCount++;
+							}
+						}
+					}
+				}
+			}
+
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+				targetPlayer.message(messagePrefix + "Your inventory has had items removed by an admin");
+			}
+
+			success = true;
+		} else {
+			// player is offline
+			List<Item> inventory;
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
+			try {
+				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+
+			// delete items
+			try {
+				int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerName);
+				if (playerId == -1) {
+					throw new GameDatabaseException(Admins.class, "Could not find player.");
+				}
+
+				for (Item curItem : inventory) {
+					if (curItem.getCatalogId() == idToRemove && removedCount < amountToRemove) {
+						int available = curItem.getAmount();
+						int toRemove = Math.min(amountToRemove, available);
+						if (available > 1) {
+							if (amountToRemove < available) {
+								player.message(messagePrefix + "Could not remove partial stack of item from offline player.");
+								player.message(messagePrefix + "Try increasing the amount to remove to at least " + available + " if you would like to continue.");
+								return;
+							}
+						}
+						player.getWorld().getServer().getDatabase().inventoryRemove(playerId, curItem);
+						removedCount += toRemove;
+
+						if (removedCount == amountToRemove) break;
+					}
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
+
+			// verify success
+			try {
+				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName).size();
+				if (sizeAfter == inventory.size()) {
+					success = false;
+				} else {
+					player.message(messagePrefix + "Player still has " + sizeAfter + " items in their inventory.");
+				}
+				if (removedCount > 0) {
+					success = true;
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! (Could not verify inventory item removal). Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
+		}
+
+		if (success) {
+			if (removedCount < amountToRemove) {
+				player.message(messagePrefix + "Successfully removed " + removedCount + "/" + amountToRemove + " " + args[0] + " from the inventory of " + targetPlayerName);
+			} else {
+				player.message(messagePrefix + "Successfully removed " + removedCount + " " + args[0] + " from the inventory of " + targetPlayerName);
+			}
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully removed items from inventory of "+ targetPlayerName));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully removed items from inventory of "+ targetPlayerName));
+		}
 	}
 
 	private void removeItemInventoryAll(Player player, String command, String[] args) {
@@ -1166,7 +1327,6 @@ public final class Admins implements CommandTrigger {
 			}
 
 			if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
-				int wearableId;
 				synchronized (targetPlayer.getCarriedItems().getEquipment()) {
 					for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 						Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
@@ -1180,9 +1340,10 @@ public final class Admins implements CommandTrigger {
 				}
 			}
 
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message(messagePrefix + "Your inventory has been wiped by an admin");
 			}
+
 			success = true;
 		} else {
 			// player is offline
@@ -1226,7 +1387,11 @@ public final class Admins implements CommandTrigger {
 		}
 
 		if (success) {
-			player.message(messagePrefix + "Wiped inventory of " + targetPlayerName);
+			if (!player.isInvisibleTo(targetPlayer)) {
+				player.message(messagePrefix + "Wiped inventory of " + targetPlayerName);
+			} else {
+				player.message(messagePrefix + "Silently wiped inventory of " + targetPlayerName);
+			}
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the inventory of "+ targetPlayerName));
 		} else {
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the inventory of "+ targetPlayerName));
@@ -1725,7 +1890,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		String freezeMessage = newFreezeXp ? "frozen" : "unfrozen";
-		if (player.getUsernameHash() != player.getUsernameHash()) {
+		if (player.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			player.message(messagePrefix + "Your experience has been " + freezeMessage + " by an admin");
 		}
 		player.message(messagePrefix + "Experience has been " + freezeMessage + ": " + player.getUsername());
@@ -1992,7 +2157,7 @@ public final class Admins implements CommandTrigger {
 
 	private void playerSkull(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] (boolean)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player]");
 			return;
 		}
 
@@ -2008,34 +2173,37 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		boolean skull;
-		boolean toggle;
-		if (args.length > 1) {
-			try {
-				skull = DataConversions.parseBoolean(args[1]);
-				toggle = false;
-			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] (boolean)");
-				return;
-			}
-		} else {
-			toggle = true;
-			skull = false;
-		}
+		boolean skull = command.equalsIgnoreCase("skull");
 
-		if ((toggle && targetPlayer.isSkulled()) || (!toggle && !skull)) {
-			targetPlayer.removeSkull();
+		String skullMessage = "";
+		boolean wasSkulled = targetPlayer.isSkulled();
+		if (!skull) {
+			if (wasSkulled) {
+				targetPlayer.removeSkull();
+				skullMessage = "removed";
+			}
 		} else {
 			targetPlayer.addSkull(targetPlayer.getConfig().GAME_TICK * 2000);
 			targetPlayer.getCache().store("skull_remaining", targetPlayer.getConfig().GAME_TICK * 2000); // Saves the skull timer to the database if the player logs out before it expires
 			targetPlayer.getCache().store("last_skull", System.currentTimeMillis()); // Sets the last time a player had a skull
+			if (wasSkulled) {
+				skullMessage = "renewed";
+			} else {
+				skullMessage = "added";
+			}
 		}
 
-		String skullMessage = player.isSkulled() ? "added" : "removed";
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
-			targetPlayer.message(messagePrefix + "PK skull has been " + skullMessage + " by a staff member");
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+			if (!(!wasSkulled && !skull)) {
+				targetPlayer.message(messagePrefix + "PK skull has been " + skullMessage + " by a staff member");
+			}
 		}
-		player.message(messagePrefix + "PK skull has been " + skullMessage + ": " + targetPlayer.getUsername());
+
+		if (!wasSkulled && !skull) {
+			player.message(messagePrefix + "PK skull was already inactive: " + targetPlayer.getUsername());
+		} else {
+			player.message(messagePrefix + "PK skull has been " + skullMessage + ": " + targetPlayer.getUsername());
+		}
 	}
 
 	private void npcRangedPlayer(Player player, String command, String[] args) {
@@ -2085,7 +2253,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		player.message(messagePrefix + targetPlayer.getUsername() + " has been sent the change appearance screen");
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "A staff member has sent you the change appearance screen");
 		}
 		targetPlayer.setChangingAppearance(true);
@@ -2104,7 +2272,7 @@ public final class Admins implements CommandTrigger {
 
 		if (targetPlayer.getClientVersion() <= 75 && targetPlayer.getClientVersion() >= 61) {
 			player.message(messagePrefix + targetPlayer.getUsername() + " has been sent the yoptin screen");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message(messagePrefix + "A staff member has sent you to the prototype Yoptin signup screen");
 			}
 			ActionSender.sendYoptinScreen(targetPlayer);
