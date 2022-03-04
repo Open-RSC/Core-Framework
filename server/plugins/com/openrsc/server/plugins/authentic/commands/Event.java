@@ -1086,7 +1086,9 @@ public final class Event implements CommandTrigger {
 			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 				otherPlayer.getSkills().setExperience(i, experience);
 			}
-			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			if (Skill.PRAYER.id() != Skill.NONE.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			}
 
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to experience " + experienceSt);
@@ -1243,7 +1245,9 @@ public final class Event implements CommandTrigger {
 			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 				otherPlayer.getSkills().setLevelTo(i, level);
 			}
-			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			if (Skill.PRAYER.id() != Skill.NONE.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			}
 
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to level " + level);

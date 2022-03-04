@@ -13,7 +13,7 @@ public enum Spells {
 	BURST_OF_STRENGTH, // good magic spell
 	CONFUSE,
 	SHOCK_BOLT, // evil magic spell
-	CAMOUFLAGE, // good magic spell
+	CAMOFLAUGE, // good magic spell
 	WATER_STRIKE,
 	ENCHANT_LVL1_AMULET,
 	ELEMENTAL_BOLT, // evil magic spell

@@ -28,7 +28,7 @@ public class SpinningWheel implements UseLocTrigger {
 		if (item.getCatalogId() == ItemId.WOOL.id()) {
 			produceID = ItemId.BALL_OF_WOOL.id();
 			requiredLevel = 1;
-			experience = 10;
+			experience = !config().OLD_SKILL_DEFS ? 10 : 0;
 			verb = "spin";
 			consumedItem = "sheeps wool";
 			producedItem = "nice ball of wool";
