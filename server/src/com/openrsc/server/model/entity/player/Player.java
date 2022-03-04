@@ -500,6 +500,14 @@ public final class Player extends Mob {
 		return getCache().hasKey("setting_hide_online") ? getCache().getInt("setting_hide_online") : 0;
 	}
 
+	public void setShowReceipts(boolean show) {
+		getCache().store("show_receipts", show);
+	}
+
+	public boolean getShowReceipts() {
+		return getCache().hasKey("show_receipts") ? getCache().getBoolean("show_receipts") : false;
+	}
+
 	public void resetCannonEvent() {
 		if (cannonEvent != null) {
 			cannonEvent.stop();
