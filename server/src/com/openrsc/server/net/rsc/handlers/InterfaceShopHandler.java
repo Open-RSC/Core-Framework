@@ -10,7 +10,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ShopStruct;
+import com.openrsc.server.plugins.PriceMismatchException;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
@@ -91,17 +93,28 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 
 		int totalBought = 0;
 		int totalMoneySpent = 0;
+		int expectedMoneySpent = 0;
 
 		Item tempItem = new Item(catalogID);
+		String receiptMessage;
+		int buyPrice;
 		if (tempItem.getDef(player.getWorld()).isStackable() || tempItem.getNoted()) {
 			// If purchase is valid, proceed to set totals.
 			totalMoneySpent = 0;
 			totalBought = 0;
+			expectedMoneySpent = 0;
 			for (int i = 0; i < amount; i++) {
 				if (checkPurchaseValidity(player, shop, def, catalogID, i, totalMoneySpent, i)) {
 					break;
 				}
-				totalMoneySpent += shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), i);
+				try {
+					buyPrice = shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), i);
+					expectedMoneySpent += buyPrice;
+					totalMoneySpent += buyPrice;
+				} catch (PriceMismatchException pme) {
+					expectedMoneySpent += pme.getDesiredPrice();
+					totalMoneySpent += pme.getEffectivePrice();
+				}
 				totalBought++;
 			}
 
@@ -109,6 +122,15 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 				shop.removeShopItem(new Item(catalogID, totalBought));
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
 				player.getCarriedItems().getInventory().add(new Item(catalogID, totalBought));
+				if (expectedMoneySpent != totalMoneySpent) {
+					boolean isRetroPrice = player.getWorld().getServer().getConfig().USES_RETRO_STOCK_SENSITIVITY;
+					receiptMessage = "Due to " + (isRetroPrice ? "retro" : "modern") + " prices you spent " + totalMoneySpent + " coins";
+				} else {
+					receiptMessage = "You spent " + totalMoneySpent + " coins";
+				}
+				if (player.getShowReceipts()) {
+					player.playerServerMessage(MessageType.QUEST, receiptMessage);
+				}
 			}
 		}
 
@@ -125,7 +147,14 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent, 1)) {
 					break;
 				}
-				totalMoneySpent += shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), totalBought);
+				try {
+					buyPrice = shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), totalBought);
+					expectedMoneySpent += buyPrice;
+					totalMoneySpent += buyPrice;
+				} catch (PriceMismatchException pme) {
+					expectedMoneySpent += pme.getDesiredPrice();
+					totalMoneySpent += pme.getEffectivePrice();
+				}
 				totalBought++;
 
 				player.getCarriedItems().getInventory().add(new Item(catalogID, 1));
@@ -136,6 +165,15 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 			if (totalMoneySpent > 0) {
 				shop.removeShopItem(new Item(catalogID, totalBought));
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
+				if (expectedMoneySpent != totalMoneySpent) {
+					boolean isRetroPrice = player.getWorld().getServer().getConfig().USES_RETRO_STOCK_SENSITIVITY;
+					receiptMessage = "Due to " + (isRetroPrice ? "retro" : "modern") + " prices you spent " + totalMoneySpent + " coins";
+				} else {
+					receiptMessage = "You spent " + totalMoneySpent + " coins";
+				}
+				if (player.getShowReceipts()) {
+					player.playerServerMessage(MessageType.QUEST, receiptMessage);
+				}
 			}
 		}
 
@@ -167,9 +205,14 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 			player.message("The shop has ran out of stock");
 			return true;
 		}
-		int price = shop.getItemBuyPrice(player, catalogID, def.getDefaultPrice(), totalBought);
+		boolean isWorldRetroPrice = player.getWorld().getServer().getConfig().USES_RETRO_STOCK_SENSITIVITY;
+		boolean isPlayerRetroPrice = player.getClientVersion() <= 204;
+		int price = shop.calcItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought, isWorldRetroPrice);
 		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) - totalMoneySpent < price) {
 			player.message("You don't have enough coins");
+			if (isPlayerRetroPrice != isWorldRetroPrice) {
+				player.message("The actual cost is " + price + " coins");
+			}
 			return true;
 		}
 		if (!player.getCarriedItems().getInventory().canHold(catalogID, buyingNow)) {
@@ -205,6 +248,10 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 		}
 
 		Item tempItem = new Item(catalogID);
+		String receiptMessage;
+		int sellPrice;
+		int sellAmount = 0;
+		int expectedSell = 0;
 		tempItem.getItemStatus().setNoted(player.getCarriedItems().getInventory().countId(catalogID, Optional.of(true)) > 0);
 		if (tempItem.getDef(player.getWorld()).isStackable() || tempItem.getNoted()) {
 			Item toSell = player.getCarriedItems().getInventory().get(
@@ -215,9 +262,16 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 				return;
 			}
 			amount = Math.min(amount, toSell.getAmount());
-			int sellAmount = 0;
+
 			for (int i = 1; i <= amount; i++) {
-				sellAmount += shop.getItemSellPrice(player, catalogID, def.getDefaultPrice(), i);
+				try {
+					sellPrice = shop.getItemSellPrice(player, catalogID, def.getDefaultPrice(), i);
+					expectedSell += sellPrice;
+					sellAmount += sellPrice;
+				} catch (PriceMismatchException pme) {
+					expectedSell += pme.getDesiredPrice();
+					sellAmount += pme.getEffectivePrice();
+				}
 			}
 
 			totalMoney += sellAmount;
@@ -229,6 +283,17 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 
 			if (sellAmount > 0) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
+			}
+			if (totalMoney > 0) {
+				if (expectedSell != totalMoney) {
+					boolean isRetroPrice = player.getWorld().getServer().getConfig().USES_RETRO_STOCK_SENSITIVITY;
+					receiptMessage = "Due to " + (isRetroPrice ? "retro" : "modern") + " prices you got " + totalMoney + " coins";
+				} else {
+					receiptMessage = "You got " + totalMoney + " coins";
+				}
+				if (player.getShowReceipts()) {
+					player.playerServerMessage(MessageType.QUEST, receiptMessage);
+				}
 			}
 		}
 		else {
@@ -243,7 +308,14 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 
 				player.getCarriedItems().remove(new Item(toSell.getCatalogId(), 1, toSell.getNoted(), toSell.getItemId()));
 
-				int sellAmount = shop.getItemSellPrice(player, catalogID, def.getDefaultPrice(), 1);
+				try {
+					sellPrice = shop.getItemSellPrice(player, catalogID, def.getDefaultPrice(), 1);
+					expectedSell += sellPrice;
+					sellAmount = sellPrice;
+				} catch (PriceMismatchException pme) {
+					expectedSell += pme.getDesiredPrice();
+					sellAmount = pme.getEffectivePrice();
+				}
 				totalMoney += sellAmount;
 				totalSold++;
 
@@ -252,6 +324,18 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 				}
 
 				shop.addShopItem(new Item(catalogID, 1));
+			}
+
+			if (totalMoney > 0) {
+				if (expectedSell != totalMoney) {
+					boolean isRetroPrice = player.getWorld().getServer().getConfig().USES_RETRO_STOCK_SENSITIVITY;
+					receiptMessage = "Due to " + (isRetroPrice ? "retro" : "modern") + " prices you got " + totalMoney + " coins";
+				} else {
+					receiptMessage = "You got " + totalMoney + " coins";
+				}
+				if (player.getShowReceipts()) {
+					player.playerServerMessage(MessageType.QUEST, receiptMessage);
+				}
 			}
 		}
 

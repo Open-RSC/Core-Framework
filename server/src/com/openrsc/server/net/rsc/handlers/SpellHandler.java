@@ -264,7 +264,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						if (checkCastOnPlayer(player, affectedPlayer, payload.spell)) return;
 
-						handleMobCast(player, affectedPlayer, payload.spell);
+						handleMobCast(player, affectedPlayer, payload.spell, spell.getSpellType());
 					}
 					break;
 				case CAST_ON_NPC:
@@ -287,7 +287,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						if (checkCastOnNpc(player, affectedNpc, spell)) return;
 
-						handleMobCast(player, affectedNpc, payload.spell);
+						handleMobCast(player, affectedNpc, payload.spell, spell.getSpellType());
 					}
 					break;
 				case CAST_ON_INVENTORY_ITEM:
@@ -433,7 +433,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						if (checkCastOnPlayer(player, affectedPlayer, payload.spell)) return;
 
-						handleMobCast(player, affectedPlayer, payload.spell);
+						handleMobCast(player, affectedPlayer, payload.spell, spell.getSpellType());
 					}
 					break;
 				case CAST_ON_NPC:
@@ -446,7 +446,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						if (checkCastOnNpc(player, affectedNpc, spell)) return;
 
-						handleMobCast(player, affectedNpc, payload.spell);
+						handleMobCast(player, affectedNpc, payload.spell, spell.getSpellType());
 					}
 					break;
 				case CAST_ON_INVENTORY_ITEM:
@@ -1221,7 +1221,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		});
 	}
 
-	private void handleMobCast(final Player player, final Mob affectedMob, Spells spellEnum) {
+	private void handleMobCast(final Player player, final Mob affectedMob, Spells spellEnum, int spellType) {
 		if (player.getDuel().isDuelActive() && affectedMob.isPlayer()) {
 			Player aff = (Player) affectedMob;
 			if (!player.getDuel().getDuelRecipient().getUsername().toLowerCase()
@@ -1254,7 +1254,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (!player.withinRange(affectedMob, 4) && player.inCombat()) return;
 
 		// Retro RSC mechanic, could not use magic if already engaged in combat
-		if (player.inCombat() && player.getConfig().BLOCK_USE_MAGIC_IN_COMBAT) {
+		// and spell was not personal spell (cast on self, type = 0)
+		if (player.inCombat() && spellType != 0
+			&& spellEnum != Spells.FEAR && player.getConfig().BLOCK_USE_MAGIC_IN_COMBAT) {
 			player.message("You cannot do that whilst fighting!");
 			return;
 		}
@@ -1362,14 +1364,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, 1, setChasing) {
 							@Override
 							public void doSpell() {
-								// https://runescape.wiki/w/Fear
 								// https://www.tip.it/runescape/times/view/615-forever-runescape-part-1
+								// https://web.archive.org/web/20010410193705/http://www.geocities.com/ngrunescape/magic.html
 								if (affectedMob.inCombat()) {
 									affectedMob.getOpponent().resetCombatEvent();
 									affectedMob.resetCombatEvent();
 									getPlayer().message("Your opponent is retreating");
-								} else {
-									affectedMob.remove();
 								}
 							}
 						});
@@ -1378,8 +1378,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						break;
 
 					case CONFUSE_R:
-						double reduceBy = 0.02; // to date not known effect, but possible
-						int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+						double reduceBy = 0.02; // to date not known percentage, but possible
+						int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id()};
 						int lowerAmt, newLvl, maxLower;
 						for (int affectedStat : stats) {
 							lowerAmt = (int) Math.ceil((affectedMob.getSkills().getLevel(affectedStat) * reduceBy));
@@ -1408,8 +1408,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 									affectedMob.getSkills().setLevel(stat, newStat);
 								}
 
+								// https://web.archive.org/web/20010410193705/http://www.geocities.com:80/ngrunescape/magic.html
 								if (affectedMob.isPlayer()) {
-									((Player) affectedMob).message("You have been weakened");
+									((Player) affectedMob).message("Your Attack and Defense have been lowered from a confuse spell!");
 								}
 							}
 						});
@@ -1678,7 +1679,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private boolean isBoostSpell(Player player, Spells spellEnum) {
 		return spellEnum == Spells.THICK_SKIN || spellEnum == Spells.BURST_OF_STRENGTH
-			|| spellEnum == Spells.CAMOUFLAGE || spellEnum == Spells.ROCK_SKIN;
+			|| spellEnum == Spells.CAMOFLAUGE || spellEnum == Spells.ROCK_SKIN;
 	}
 
 	private boolean canTeleport(Player player, SpellDef spell, Spells spellEnum) {
@@ -1764,7 +1765,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 	private void handleBoost(Player player, SpellDef spell, Spells spellEnum) {
 		switch (spellEnum) {
 			case BURST_OF_STRENGTH:
-			case CAMOUFLAGE:
+			case CAMOFLAUGE:
 			case ROCK_SKIN:
 			case THICK_SKIN:
 				double raisesBy = 0.0;
@@ -1778,7 +1779,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				} else if (spellEnum == Spells.ROCK_SKIN) {
 					raisesBy = 0.10;
 					affectedStat = Skill.DEFENSE.id();
-				} else if (spellEnum == Spells.CAMOUFLAGE) {
+				} else if (spellEnum == Spells.CAMOFLAUGE) {
 					affectedStat = Skill.NONE.id();
 				}
 

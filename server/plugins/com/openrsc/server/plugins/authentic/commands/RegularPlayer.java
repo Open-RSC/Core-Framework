@@ -145,6 +145,8 @@ public final class RegularPlayer implements CommandTrigger {
 			setLanguage(command, player, args);
 		} else if (command.equalsIgnoreCase("language")) {
 			getLanguage(command, player, args);
+		} else if (command.equalsIgnoreCase("togglereceipts")) {
+			toggleReceipts(player);
 		}
 	}
 
@@ -584,7 +586,13 @@ public final class RegularPlayer implements CommandTrigger {
 				}
 			}
 		}
-		ActionSender.sendOnlineList(player, players, locations, online);
+		if (player.getClientLimitations().supportsMessageBox) {
+			ActionSender.sendOnlineList(player, players, locations, online);
+		} else {
+			player.playerServerMessage(MessageType.QUEST,"Your game client does not support showing online players");
+			delay(2);
+			player.playerServerMessage(MessageType.QUEST,"Please consult the server's current players page");
+		}
 	}
 
 	private void confirmQOLOptOut(Player player) {
@@ -928,6 +936,16 @@ public final class RegularPlayer implements CommandTrigger {
 		player.tellCoordinates();
 	}
 
+	private void toggleReceipts(Player player) {
+		boolean toggledShow = !player.getShowReceipts();
+		if (toggledShow) {
+			player.playerServerMessage(MessageType.QUEST, "You will now get receipts when selling/buying at the shop");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You will no longer get receipts when selling/buying at the shop");
+		}
+		player.setShowReceipts(toggledShow);
+	}
+
 	private static final String[] pageZeroCommands = new String[]{
 		"@yel@Commands available: %",
 		"@lre@Type :: before you enter your command, see the list below. %",
@@ -958,6 +976,7 @@ public final class RegularPlayer implements CommandTrigger {
 		"@whi@::toggleblockprivate - toggle block all private messages %",
 		"@whi@::toggleblocktrade - toggle blocking all trade requests %",
 		"@whi@::toggleblockduel - toggle blocking all duel requests %",
-		"@whi@::groups - shows available ranks on the server %"
+		"@whi@::groups - shows available ranks on the server %",
+		"@whi@::togglereceipts - toggle showing shop receipts %"
 	};
 }

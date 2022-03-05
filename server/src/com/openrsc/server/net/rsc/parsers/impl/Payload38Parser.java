@@ -394,7 +394,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 							spell = Spells.BURST_OF_STRENGTH;
 							break;
 						case 2:
-							spell = Spells.CAMOUFLAGE;
+							spell = Spells.CAMOFLAUGE;
 							break;
 						case 3:
 							spell = Spells.ROCK_SKIN;

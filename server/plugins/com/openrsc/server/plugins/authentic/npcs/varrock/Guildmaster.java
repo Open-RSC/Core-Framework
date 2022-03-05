@@ -28,8 +28,11 @@ public class Guildmaster implements TalkNpcTrigger {
 		}
 		String[] finalMasterOptions = new String[masterOptions.size()];
 
-		int option = multi(player, n, false, //do not send over
-			masterOptions.toArray(finalMasterOptions));
+		int option = 0;
+		if (finalMasterOptions.length > 1) {
+			option = multi(player, n, false, //do not send over
+				masterOptions.toArray(finalMasterOptions));
+		}
 
 		if (option == 0) {
 			say(player, n, "What is this place?");
