@@ -83,7 +83,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_DUEL_CLOSE, 225);
 		put(OpcodeOut.SEND_OPEN_DETAILS, 232); // part of rsc era protocol
 		put(OpcodeOut.SEND_UPDATE_PLAYERS, 234);
-		put(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, 237);
+		put(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, 237); // TODO: implement name changes
 		put(OpcodeOut.SEND_GAME_SETTINGS, 240);
 		put(OpcodeOut.SEND_SLEEP_FATIGUE, 244);
 		put(OpcodeOut.SEND_OPTIONS_MENU_OPEN, 245);
