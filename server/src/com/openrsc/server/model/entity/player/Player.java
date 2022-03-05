@@ -45,6 +45,7 @@ import com.openrsc.server.util.languages.PreferredLanguage;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+import com.openrsc.server.util.rsc.PrerenderedSleepword;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -130,6 +131,8 @@ public final class Player extends Mob {
 	public boolean speakTongues = false;
 	private ClientLimitations clientLimitations;
 	public PreferredLanguage preferredLanguage = PreferredLanguage.NONE_SET;
+	public PrerenderedSleepword queuedSleepword = null;
+	public Player queuedSleepwordSender = null;
 
 	private final UUID uuid;
 
@@ -158,10 +161,6 @@ public final class Player extends Mob {
 	 * Current active packets - used on packets that should be rated to 1-per-player.
 	 */
 	private final ArrayList<Integer> activePackets = new ArrayList<>();
-	/**
-	 * Added by Zerratar: Correct sleepword we are looking for! Case SenSitIvE
-	 */
-	private String correctSleepword = "";
 	/**
 	 * The last menu reply this player gave in a quest
 	 */
@@ -835,6 +834,11 @@ public final class Player extends Mob {
 				getCache().store("openpk_points", getOpenPkPoints());
 			}
 			getCache().store("last_spell_cast", lastSpellCast);
+			if (null != queuedSleepword) {
+				try {
+					queuedSleepwordSender.playerServerMessage(MessageType.QUEST, getUsername() + " logged out!!");
+				} catch (Exception ex) {} // moderator may have logged out as well
+			}
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
 		} else {
@@ -1079,14 +1083,6 @@ public final class Player extends Mob {
 	public void setCombatStyle(final int style) {
 		combatStyle = style;
 		ActionSender.sendCombatStyle(this);
-	}
-
-	public String getCorrectSleepword() {
-		return correctSleepword;
-	}
-
-	public void setCorrectSleepword(final String correctSleepword) {
-		this.correctSleepword = correctSleepword;
 	}
 
 	public String getCurrentIP() {

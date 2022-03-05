@@ -9,7 +9,6 @@ public class PrerenderedSleepword {
     public byte[] pngData;
     public byte[] rleData;
     public boolean knowTheCorrectWord;
-    public List<String> userGuesses;
 
     PrerenderedSleepword(String _filename, String _correctWord, boolean _knowTheCorrectWord, byte[] _pngData, byte[] _rleData) {
         this.filename = _filename;
@@ -17,6 +16,5 @@ public class PrerenderedSleepword {
         this.knowTheCorrectWord = _knowTheCorrectWord;
         this.pngData = _pngData;
         this.rleData = _rleData;
-        this.userGuesses = new ArrayList<String>();
     }
 }

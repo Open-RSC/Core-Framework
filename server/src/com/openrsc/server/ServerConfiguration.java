@@ -134,6 +134,8 @@ public class ServerConfiguration {
 	public boolean FIX_OVERHEAD_CHAT;
 	public boolean WANT_FATIGUE;
 	public boolean WARN_EXCESSIVE_CAPTCHA_FAILURE;
+	public boolean LOAD_PRERENDERED_SLEEPWORDS;
+	public boolean LOAD_SPECIAL_PRERENDERED_SLEEPWORDS;
 	public int STOP_SKILLING_FATIGUED;
 	public boolean WANT_CUSTOM_SPRITES;
 	public boolean WANT_CUSTOM_LANDSCAPE;
@@ -358,6 +360,8 @@ public class ServerConfiguration {
 		int CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
 		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);
 		WARN_EXCESSIVE_CAPTCHA_FAILURE = tryReadBool("warn_excessive_captcha_failure").orElse(true);
+		LOAD_PRERENDERED_SLEEPWORDS = tryReadBool("load_prerendered_sleepwords").orElse(true);
+		LOAD_SPECIAL_PRERENDERED_SLEEPWORDS = tryReadBool("load_special_prerendered_sleepwords").orElse(true);
 		STOP_SKILLING_FATIGUED = tryReadInt("stop_skilling_fatigued").orElse(1);
 		AGGRO_RANGE = tryReadInt("aggro_range").orElse(1);
 		CHARACTER_CREATION_MODE = tryReadInt("character_creation_mode").orElse(0);

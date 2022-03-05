@@ -219,7 +219,7 @@ public final class SuperModerator implements CommandTrigger {
 		}
 
 		targetPlayer.updateQuestStage(quest, stage);
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "A staff member has changed your quest stage for QuestID " + quest + " to stage " + stage);
 		}
 		player.message(messagePrefix + "You have changed " + targetPlayer.getUsername() + "'s QuestID: " + quest + " to Stage: " + stage + ".");
@@ -252,7 +252,7 @@ public final class SuperModerator implements CommandTrigger {
 		}
 
 		targetPlayer.sendQuestComplete(quest);
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
 		}
 		player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + targetPlayer.getUsername());
@@ -379,7 +379,7 @@ public final class SuperModerator implements CommandTrigger {
 			fatigue = 100;
 		targetPlayer.setFatigue(fatigue * 1500);
 
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "Your fatigue has been set to " + ((targetPlayer.getFatigue() / 25) * 100 / 1500) + "% by a staff member");
 		}
 		player.message(messagePrefix + targetPlayer.getUsername() + "'s fatigue has been set to " + ((targetPlayer.getFatigue() / 25) * 100 / 1500 / 4) + "%");
@@ -414,7 +414,7 @@ public final class SuperModerator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new StaffLog(player, 5, player.getUsername() + " has summoned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
 		player.message(messagePrefix + "You have jailed " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been jailed to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
 		}
 	}
@@ -443,7 +443,7 @@ public final class SuperModerator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new StaffLog(player, 5, player.getUsername() + " has returned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
 		player.message(messagePrefix + "You have released " + targetPlayer.getUsername() + " from jail to " + targetPlayer.getLocation() + " from " + originalLocation);
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been released from jail to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
 		}
 	}

@@ -317,9 +317,17 @@ public class Server implements Runnable {
 					SystemUtil.exit(1);
 				}
 
-				LOGGER.info("Loading Prerendered Sleepword Images...");
-                CaptchaGenerator.loadPrerenderedCaptchas();
-                LOGGER.info("Loaded " + CaptchaGenerator.prerenderedSleepwordsSize + " Prerendered Sleepword Images");
+				if (getConfig().LOAD_PRERENDERED_SLEEPWORDS) {
+					LOGGER.info("Loading Prerendered Sleepword Images...");
+					CaptchaGenerator.loadPrerenderedCaptchas();
+					LOGGER.info("Loaded " + CaptchaGenerator.prerenderedSleepwordsSize + " Prerendered Sleepword Images");
+				}
+
+				if (getConfig().LOAD_SPECIAL_PRERENDERED_SLEEPWORDS) {
+					LOGGER.info("Loading Special Prerendered Sleepword Images...");
+					CaptchaGenerator.loadSpecialPrerenderedCaptchas();
+					LOGGER.info("Loaded " + CaptchaGenerator.prerenderedSleepwordsSpecialSize + " Special Prerendered Sleepword Images");
+				}
 
 				LOGGER.info("Loading Game Definitions...");
 				getEntityHandler().load();
