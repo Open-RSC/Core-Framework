@@ -1467,6 +1467,10 @@ public final class Admins implements CommandTrigger {
 						player.playerServerMessage(MessageType.QUEST, "@ora@This command does not support deleting stackable items.");
 						return;
 					}
+					if (items.get(inventorySlot).isWielded()) {
+						player.playerServerMessage(MessageType.QUEST, "@ora@This command does not support swapping out item that are equipped.");
+						return;
+					}
 					removedItemId = items.get(inventorySlot).getCatalogId();
 					if (removedItemId > 0) {
 						items.get(inventorySlot).setCatalogId(idToAdd);

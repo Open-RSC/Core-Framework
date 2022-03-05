@@ -61,6 +61,8 @@ public final class Moderator implements CommandTrigger {
 			queueSleepword(player, command, args);
 		} else if (command.equalsIgnoreCase("qssls") || command.equalsIgnoreCase("lsqss") || command.equalsIgnoreCase("listspecialsleepwords")) {
 			listSpecialSleepwords(player, command, args);
+		} else if (command.equalsIgnoreCase("forcesleep")) {
+			forceSleep(player, command, args);
 		}
 	}
 
@@ -321,7 +323,7 @@ public final class Moderator implements CommandTrigger {
 	}
 
 	private void queueSleepword(Player player, String command, String[] args) {
-		if (args.length < 1) {
+		if (args.length < 2) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [index] (special)");
 			return;
 		}
@@ -389,5 +391,25 @@ public final class Moderator implements CommandTrigger {
 			sb.append("@mag@" + i + "@whi@ " + fn + "%");
 		}
 		ActionSender.sendBox(player, sb.toString(), true);
+	}
+
+	private void forceSleep(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player]");
+			return;
+		}
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+		if (targetPlayer.getConfig().BASED_MAP_DATA < 49) { // approximately what the map version should be when fatigue was added
+			player.message(messagePrefix + "Fatigue is not supported on this server");
+			return;
+		}
+
+		ActionSender.sendEnterSleep(targetPlayer);
+		targetPlayer.startSleepEvent(false);
+		player.message(messagePrefix + " " + targetPlayer.getUsername() + " was put to sleep. Zzzzzz");
 	}
 }

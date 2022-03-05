@@ -64,6 +64,16 @@ Admin Commands
   - If no amount is specified, then 1 is used.
   - If no player is specified, then it spawns the item to the current player.
   - For non-stackable items, only up to 30 may be spawned at one time.
+- ritem
+  - Usage: `::ritem [id or ItemId name] (amount) (player)"`
+  - Removes an item for the specified player.
+  - If no amount is specified, then 1 is used.
+  - If no player is specified, then it spawns the item to the current player.
+  - Partial stacks of items can be removed by amount parameter
+- swapitem
+  - Usage: `::swapitem [Inventory Slot # OR ItemId name] [Item Id OR ItemID name] [player]`
+  - Inventory Slot # is zero-indexed, i.e. the first inventory slot is # 0, and the last inventory slot is typically # 29.
+  - Cannot swap out stackable or currently equipped items. Use `::ritem` or `::item` commands instead.
 - certeditem
   - Usage: `::certeditem [id or ItemID name] (amount) (player)`
   - Alias: `::noteditem`
@@ -166,9 +176,12 @@ Admin Commands
   - Freezes the specified player's experience such that they can not gain anymore experience until the freeze is lifted.
   - If no boolean is supplied, then this command works as a toggle.
 - skull
-  - Usage: `::skull [player] (boolean)`
-  - Gives or removes the PK skull for the specified player.
-  - If no boolean is supplied, then this command works as a toggle.
+  - Usage: `::skull [player]`
+  - Gives a PK skull or renews its duration for the specified player.
+- unskull
+  - Usage: `::unskull [player]`
+  - Alias: `::rskull`
+  - Removes a PK skull for the specified player.
 - ip
   - Usage: `::ip (name)`
   - Shows the IP address of the specified player.
@@ -269,9 +282,12 @@ Developer Commands
 - cyclescenery
   - Usage: `::cyclescenery`
   - Shows all scenery in game in order.
+- cycleclothing
+  - Usage: `::cycleclothing`
+  - Shows all animations that the player's current client supports. 
 - abort
   - Usage: `::abort`
-  - Aborts `cyclescenery` before it finishes.
+  - Aborts `cyclescenery` or `cycleclothing` before it finishes.
 ------------------------
 Super/Senior Moderator Commands
 ------------------------
@@ -377,7 +393,24 @@ Moderator Commands
 - kick
   - Usage: `::kick [player]`
   - Kicks the specified player from the server.
-  - You can not kick a staff member of equal or greater rank.
+- queuesleepword
+  - Usage: `::queuesleepword [player] [index] (special)`
+  - Alias: `::qs` or if special is true, then `::queuesleepwordspecial` or `::qss`
+  - Selects a specific sleepword to show to player next time they sleep.
+  - `[index]` is a number between 0 and however many prerendered sleepwords are installed on the server.
+  - if `(special)` is true, then it selects from the specialsleepwords folder instead.
+- queuesleepwordspecial
+  - Usage: `::queuesleepwordspecial [player] [index]`
+  - Alias: `::qss`
+  - Selects a specific sleepword to show to player next time they sleep.
+  - `[index]` is a number between 0 and however many prerendered sleepwords are installed on the server.
+- listspecialsleepwords
+  - Usage: `::listspecialsleepwords`
+  - Alias: `::qssls` or `::lsqss`
+  - Shows all the special sleepwords available and their names.
+- forcesleep
+  - Usage: `::forcesleep [player]`
+  - Puts a user to sleep immediately.
 - wilderness
   - Usage: `::wilderness`
   - Shows how many players are in the wilderness and where they are.
