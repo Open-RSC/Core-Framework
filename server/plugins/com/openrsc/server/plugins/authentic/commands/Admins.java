@@ -119,6 +119,8 @@ public final class Admins implements CommandTrigger {
 			spawnItemInventory(player, command, args, false);
 		} else if (command.equalsIgnoreCase("ritem")) {
 			removeItemInventory(player, command, args);
+		} else if (command.equalsIgnoreCase("swapitem")) {
+			swapItemInventory(player, command, args);
 		} else if (command.equalsIgnoreCase("certeditem") || command.equals("noteditem")) {
 			spawnItemInventory(player, command, args, true);
 		} else if (command.equalsIgnoreCase("bankitem") || command.equalsIgnoreCase("bitem") || command.equalsIgnoreCase("addbank")) {
@@ -1395,6 +1397,106 @@ public final class Admins implements CommandTrigger {
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the inventory of "+ targetPlayerName));
 		} else {
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the inventory of "+ targetPlayerName));
+		}
+	}
+
+	private void swapItemInventory(Player player, String command, String[] args) {
+		if (args.length < 3) {
+			player.playerServerMessage(MessageType.QUEST, badSyntaxPrefix + command.toUpperCase() + " [Inventory Slot # OR ItemId name] [Item Id OR ItemID name] [player]");
+			player.playerServerMessage(MessageType.QUEST,  "Inventory Slot # is zero-indexed. Recommended to use ritem or item commands if stackables are removed.");
+			return;
+		}
+
+		int inventorySlot = -1;
+		int idToRemove = -1;
+		try {
+			inventorySlot = Integer.parseInt(args[0]);
+		} catch (NumberFormatException ex) {
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.playerServerMessage(MessageType.QUEST, badSyntaxPrefix + command.toUpperCase() + " [Inventory Slot # OR ItemId name] [Item Id OR ItemID name] [player]");
+				player.playerServerMessage(MessageType.QUEST,  "Inventory Slot # is zero-indexed. Recommended to use ::ritem or ::item commands if stackables are removed.");
+				return;
+			} else {
+				idToRemove = item.id();
+			}
+		}
+
+		if (inventorySlot > 29) {
+			player.playerServerMessage(MessageType.QUEST, badSyntaxPrefix + command.toUpperCase() + " [Inventory Slot # OR ItemId name] [Item Id OR ItemID name] [player]");
+			player.playerServerMessage(MessageType.QUEST,  "Inventory Slot # is zero-indexed. Recommended to use ::ritem or ::item commands if stackables are removed.");
+			return;
+		}
+
+		int idToAdd;
+		try {
+			idToAdd = Integer.parseInt(args[1]);
+		} catch (NumberFormatException ex) {
+			ItemId item = ItemId.getByName(args[1]);
+			if (item == ItemId.NOTHING) {
+				player.playerServerMessage(MessageType.QUEST, badSyntaxPrefix + command.toUpperCase() + " [Inventory Slot # OR ItemId name] [Item Id OR ItemID name] [player]");
+				player.playerServerMessage(MessageType.QUEST,  "Inventory Slot # is zero-indexed. Recommended to use ::ritem or ::item commands if stackables are removed.");
+				return;
+			} else {
+				idToAdd = item.id();
+			}
+		}
+
+		boolean success = false;
+		int removedItemId = -1;
+
+		String targetPlayerName = args[2];
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
+		if (targetPlayer != null) {
+			// player is online
+			synchronized (targetPlayer.getCarriedItems().getInventory()) {
+				List<Item> items = targetPlayer.getCarriedItems().getInventory().getItems();
+				for (int i = 0; i < items.size() && inventorySlot != -1; i++) {
+					if (items.get(i).getCatalogId() == idToRemove) {
+						inventorySlot = i;
+						break;
+					}
+				}
+				if (inventorySlot != -1) {
+					if (inventorySlot > items.size()) {
+						player.playerServerMessage(MessageType.QUEST, "@red@Player is not currently holding that many items.");
+						player.playerServerMessage(MessageType.QUEST, "@red@Please check their ::inventory before blindly replacing items!");
+						return;
+					}
+					if (items.get(inventorySlot).getDef(player.getWorld()).isStackable()) {
+						player.playerServerMessage(MessageType.QUEST, "@ora@This command does not support deleting stackable items.");
+						return;
+					}
+					removedItemId = items.get(inventorySlot).getCatalogId();
+					if (removedItemId > 0) {
+						items.get(inventorySlot).setCatalogId(idToAdd);
+						success = true;
+					}
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "Could not find an item on the player to remove.");
+					return;
+				}
+			}
+
+			if (success && targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+				targetPlayer.message(messagePrefix + "Your items have been modified by an admin");
+			}
+		} else {
+			// player is offline
+			player.playerServerMessage(MessageType.QUEST, messagePrefix + "Could not find player. They may be offline.");
+			player.playerServerMessage(MessageType.QUEST, messagePrefix + "::ritem and ::item commands support players offline, this command does not.");
+			return;
+		}
+
+		if (success) {
+			String removedString = "Item ID @cya@" + removedItemId + "@whi@ (aka @cya@" + new Item(removedItemId).getDef(player.getWorld()).getName() + "@whi@) at inventory slot @cya@" +  inventorySlot;
+			String addedString = "was replaced by Item ID @mag@" + idToAdd + "@whi@ (aka @mag@" + new Item(idToAdd).getDef(player.getWorld()).getName() + "@whi@) for player @mag@" + targetPlayerName;
+			ActionSender.sendInventoryUpdateItem(targetPlayer, inventorySlot);
+			player.playerServerMessage(MessageType.QUEST, messagePrefix + removedString);
+			player.playerServerMessage(MessageType.QUEST, addedString);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + removedString + " " + addedString));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully swapped an item in the inventory of "+ targetPlayerName));
 		}
 	}
 
