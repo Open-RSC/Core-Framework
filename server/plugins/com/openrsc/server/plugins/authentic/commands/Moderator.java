@@ -1,8 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
-import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
-import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -10,6 +8,7 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
@@ -58,6 +57,10 @@ public final class Moderator implements CommandTrigger {
 			player.toggleDenyAllLogoutRequests();
 		} else if (command.equalsIgnoreCase("wilderness")) {
 			queryWildernessState(player);
+		} else if (command.equalsIgnoreCase("queuesleepword") || command.equalsIgnoreCase("qs") || command.equalsIgnoreCase("queuesleepwordspecial") || command.equalsIgnoreCase("qss")) {
+			queueSleepword(player, command, args);
+		} else if (command.equalsIgnoreCase("qssls") || command.equalsIgnoreCase("lsqss") || command.equalsIgnoreCase("listspecialsleepwords")) {
+			listSpecialSleepwords(player, command, args);
 		}
 	}
 
@@ -100,9 +103,9 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new StaffLog(player, 15, player.getUsername() + " has summoned "
 				+ targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
-		player.message(messagePrefix + "You have summoned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
+		player.playerServerMessage(MessageType.QUEST,messagePrefix + "You have summoned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-			targetPlayer.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+			targetPlayer.playerServerMessage(MessageType.QUEST,messagePrefix + "You have been summoned by " + player.getStaffName());
 		}
 	}
 
@@ -242,7 +245,7 @@ public final class Moderator implements CommandTrigger {
 
 	private void sendAnnouncement(Player player, String command, String[] args) {
 		if (args.length == 0) {
-			player.message("Just put all the words you want to say after the \"" + command + "\" command");
+			player.playerServerMessage(MessageType.QUEST,"Just put all the words you want to say after the \"" + command + "\" command");
 			return;
 		}
 
@@ -273,6 +276,7 @@ public final class Moderator implements CommandTrigger {
 			player.message(messagePrefix + "Invalid name or player is not online");
 			return;
 		}
+		/* Commented out as it may be useful to kick self/others if the account gets stuck for some reason
 		if (targetPlayer == player) {
 			player.message(messagePrefix + "You can't kick yourself");
 			return;
@@ -281,11 +285,12 @@ public final class Moderator implements CommandTrigger {
 			player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
 			return;
 		}
+		*/
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new StaffLog(player, 6, targetPlayer, targetPlayer.getUsername()
 				+ " has been kicked by " + player.getUsername()));
 		targetPlayer.unregister(true, "You have been kicked by " + player.getUsername());
-		player.message(targetPlayer.getUsername() + " has been kicked.");
+		player.playerServerMessage(MessageType.QUEST,targetPlayer.getUsername() + " has been kicked.");
 	}
 
 	private void queryWildernessState(Player player) {
@@ -313,5 +318,76 @@ public final class Moderator implements CommandTrigger {
 				+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
 				+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
 			, false);
+	}
+
+	private void queueSleepword(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [index] (special)");
+			return;
+		}
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		int id = 0;
+		try {
+			id = Integer.parseInt(args[1]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [index or name]");
+			return;
+		}
+
+		boolean special = false;
+		if (args.length >= 3) {
+			if (args[2].equalsIgnoreCase("true") || args[2].equals("1")) {
+				special = true;
+			}
+		}
+		if (command.equals("qss") || command.equals("queuesleepwordspecial")) {
+			special = true;
+		}
+
+		if (special) {
+			if (!CaptchaGenerator.usingPrerenderedSleepwordsSpecial) {
+				player.playerServerMessage(MessageType.QUEST, "Server is not using special prerendered sleepwords.");
+				return;
+			}
+			targetPlayer.queuedSleepword = CaptchaGenerator.prerenderedSleepwordsSpecial.get(id);
+		} else {
+			if (!CaptchaGenerator.usingPrerenderedSleepwords) {
+				player.message("Server is not using prerendered sleepwords.");
+				return;
+			}
+			targetPlayer.queuedSleepword = CaptchaGenerator.prerenderedSleepwords.get(id);
+		}
+		targetPlayer.queuedSleepwordSender = player;
+
+		player.playerServerMessage(MessageType.QUEST, "@whi@" + targetPlayer.getUsername() + "'s next sleepword will be @cya@" +
+			targetPlayer.queuedSleepword.filename + "@whi@ with correct guess: @cya@" +
+			(targetPlayer.queuedSleepword.knowTheCorrectWord ? targetPlayer.queuedSleepword.correctWord : "-null-"));
+	}
+
+	private void listSpecialSleepwords(Player player, String command, String[] args) {
+		StringBuilder sb = new StringBuilder();
+		String fn;
+		for (int i = 0; i < CaptchaGenerator.prerenderedSleepwordsSpecialSize; i++) {
+			fn = CaptchaGenerator.prerenderedSleepwordsSpecial.get(i).filename;
+			if (fn.startsWith("sleep_")) {
+				fn = fn.substring("sleep_".length());
+			}
+			if (fn.startsWith("!ACCEPTANY!")) {
+				fn = fn.substring("!ACCEPTANY!".length());
+			}
+			if (fn.endsWith(".png")) {
+				fn = fn.substring(0, fn.length() - 4);
+			}
+			if (fn.endsWith("__special")) {
+				fn = fn.substring(0, fn.length() - "__special".length());
+			}
+			sb.append("@mag@" + i + "@whi@ " + fn + "%");
+		}
+		ActionSender.sendBox(player, sb.toString(), true);
 	}
 }

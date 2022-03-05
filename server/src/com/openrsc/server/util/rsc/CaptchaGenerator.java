@@ -24,12 +24,16 @@ public class CaptchaGenerator {
 	private static List<String> words = new ArrayList<>();
 	private static String fontFolder = "." + File.separator + "conf" + File.separator + "server" + File.separator + "fonts" + File.separator;
     private static String sleepwordsFolder = "." + File.separator + "conf" + File.separator + "server" + File.separator + "data" + File.separator + "sleepwords" + File.separator;
+	private static String specialSleepwordsFolder = "." + File.separator + "conf" + File.separator + "server" + File.separator + "data" + File.separator + "specialsleepwords" + File.separator;
 	private static Font loadedFonts[];
 	public static int prerenderedSleepwordsSize = 0;
-	public static boolean usingPrerenderedSleepwords = false; // TODO: this needs to be a server config option
+	public static int prerenderedSleepwordsSpecialSize = 0;
+	public static boolean usingPrerenderedSleepwords = false;
+	public static boolean usingPrerenderedSleepwordsSpecial = false;
 	public static List<PrerenderedSleepword> prerenderedSleepwords = new ArrayList<PrerenderedSleepword>();
+	public static List<PrerenderedSleepword> prerenderedSleepwordsSpecial = new ArrayList<PrerenderedSleepword>();
 
-	// used for inauthentic RSCL captchas
+	// used for inauthentic RSCL style captchas
 	static {
 		loadFonts();
 		colors.clear();
@@ -43,17 +47,31 @@ public class CaptchaGenerator {
 	}
 
 	public static byte[] generateCaptcha(Player player) {
-	    if (usingPrerenderedSleepwords) {
-	        int rand = DataConversions.random(0, prerenderedSleepwordsSize - 1);
-            player.setSleepword(rand);
-	        if (!player.isUsingCustomClient()) {
-                return prerenderedSleepwords.get(rand).rleData;
-            } else {
-	            return prerenderedSleepwords.get(rand).pngData;
-            }
-        } else {
-	        return generateRSCLCaptcha(player);
+		boolean queuedSleepword = player.queuedSleepword != null;
+	    if (usingPrerenderedSleepwords || (queuedSleepword && usingPrerenderedSleepwordsSpecial)) {
+	    	if (queuedSleepword) {
+	    		// moderator has sent player a specific sleepword to fill out
+	    		try {
+	    			player.queuedSleepwordSender.message(player.getUsername() + " is now seeing your queued sleepword...");
+				} catch (Exception ex) {} // probably the moderator logged off or something
+
+				if (!player.isUsingCustomClient()) {
+					return player.queuedSleepword.rleData;
+				} else {
+					return player.queuedSleepword.pngData;
+				}
+			} else {
+	    		// normal sleep word generation
+				int rand = DataConversions.random(0, prerenderedSleepwordsSize - 1);
+				player.setSleepword(rand);
+				if (!player.isUsingCustomClient()) {
+					return prerenderedSleepwords.get(rand).rleData;
+				} else {
+					return prerenderedSleepwords.get(rand).pngData;
+				}
+	    	}
         }
+	    return generateRSCLCaptcha(player);
 	}
 
 	private static byte[] generateRSCLCaptcha(Player player) {
@@ -69,7 +87,6 @@ public class CaptchaGenerator {
         }
     }
 
-
 	public static void loadPrerenderedCaptchas() {
 	    if (prerenderedSleepwordsSize > 0) {
 	        return; // currently don't support loading more than once
@@ -84,7 +101,6 @@ public class CaptchaGenerator {
         for (File fname : sleepwordFiles) {
             String correctWord = "-null-";
             boolean knowTheWord = false;
-
 
             int endOfWordIndex = fname.getName().indexOf('_', 6);
             if (endOfWordIndex < 6) {
@@ -118,10 +134,59 @@ public class CaptchaGenerator {
 
         prerenderedSleepwordsSize = prerenderedSleepwords.size();
 
-        if (prerenderedSleepwordsSize > 0) {
-            usingPrerenderedSleepwords = true;
-        }
+		if (prerenderedSleepwordsSize > 0) {
+			usingPrerenderedSleepwords = true;
+		}
     }
+
+	public static void loadSpecialPrerenderedCaptchas() {
+		if (prerenderedSleepwordsSpecialSize > 0) {
+			return; // currently don't support loading more than once
+		}
+
+		File sleepwordDataDir = new File(specialSleepwordsFolder);
+		File[] sleepwordFiles = sleepwordDataDir.listFiles();
+		if (sleepwordFiles == null) {
+			// server owner doesn't have a specialsleepwords directory
+			return;
+		}
+		for (File fname : sleepwordFiles) {
+			String correctWord = "-null-";
+			boolean knowTheWord;
+
+			int endOfWordIndex = fname.getName().indexOf('_', 6);
+			if (endOfWordIndex < 6) {
+				// filename parsed is not of the expected format. assuming all characters except last 4 are the correct word.
+				knowTheWord = true;
+				correctWord = fname.getName().substring(0, fname.getName().length() - 4); // remove 4 character file extension
+			} else {
+				// example filename:
+				// sleep_!ACCEPTANY!how_many_planes__special.png
+				// sleep_thirteen__special.png
+				String candidateWord = fname.getName().substring(6, fname.getName().indexOf('_', 6));
+				knowTheWord = !candidateWord.contains("!ACCEPTANY!");
+				if (knowTheWord) {
+					correctWord = candidateWord;
+				}
+			}
+
+			prerenderedSleepwordsSpecial.add(
+				new PrerenderedSleepword(
+					fname.getName(),
+					correctWord,
+					knowTheWord,
+					readFull(fname),
+					imageFileToRLE(fname)
+				)
+			);
+		}
+
+		prerenderedSleepwordsSpecialSize = prerenderedSleepwordsSpecial.size();
+
+		if (prerenderedSleepwordsSpecialSize > 0) {
+			usingPrerenderedSleepwordsSpecial = true;
+		}
+	}
 
     private static byte[] readFull(File f) {
         try {

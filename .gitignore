@@ -138,3 +138,4 @@ server/create_db.log
 server/create_db_error.log
 
 .idea/sqldialects.xml
+server/conf/server/data/specialsleepwords/
