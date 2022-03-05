@@ -3665,6 +3665,7 @@ public final class Player extends Mob {
 				}
 			}
 		}
+		getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	public void setClientLimitations(ClientLimitations cl) {

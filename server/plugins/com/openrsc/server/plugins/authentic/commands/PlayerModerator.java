@@ -136,7 +136,7 @@ public final class PlayerModerator implements CommandTrigger {
 				player.message(messagePrefix + "You are not allowed to unmute users.");
 			} else {
 				player.message("You have lifted the mute of " + targetPlayer.getUsername() + ".");
-				if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 					targetPlayer.message("Your mute has been lifted. Happy RSC scaping.");
 				}
 				targetPlayer.setMuteExpires(System.currentTimeMillis());
@@ -153,7 +153,7 @@ public final class PlayerModerator implements CommandTrigger {
 				return;
 			}
 			player.message(messagePrefix + "You have given " + targetPlayer.getUsername() + " a permanent mute from ::g chat.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message(messagePrefix + "You have received a permanent mute from (::g) chat.");
 			}
 			targetPlayer.getCache().store("global_mute", -1);
@@ -167,7 +167,7 @@ public final class PlayerModerator implements CommandTrigger {
 				return;
 			}
 			player.message(messagePrefix + "You have given " + targetPlayer.getUsername() + " a " + minutes + " minute mute from ::g chat.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message(messagePrefix + "You have received a " + minutes + " minute mute in (::g) chat.");
 			}
 			targetPlayer.getCache().store("global_mute", (System.currentTimeMillis() + (minutes * 60000)));
@@ -248,7 +248,7 @@ public final class PlayerModerator implements CommandTrigger {
 				player.message(messagePrefix + "You are not allowed to unmute users.");
 			} else {
 				player.message("You have lifted the mute of " + targetPlayer.getUsername() + ".");
-				if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 					targetPlayer.message("Your mute has been lifted. Happy RSC scaping.");
 				}
 				targetPlayer.setMuteExpires(System.currentTimeMillis());
@@ -265,7 +265,7 @@ public final class PlayerModerator implements CommandTrigger {
 				return;
 			}
 			player.message("You have given " + targetPlayer.getUsername() + " a permanent mute.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message("You have received a permanent mute. Appeal is available on Discord.");
 			}
 			targetPlayer.setMuteExpires(-1);
@@ -279,7 +279,7 @@ public final class PlayerModerator implements CommandTrigger {
 				return;
 			}
 			player.message("You have given " + targetPlayer.getUsername() + " a " + minutes + " minute mute.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 				targetPlayer.message("You have received a " + minutes + " minute mute. Appeal is available on Discord.");
 			}
 			targetPlayer.setMuteExpires((System.currentTimeMillis() + (minutes * 60000)));
@@ -322,6 +322,7 @@ public final class PlayerModerator implements CommandTrigger {
 		player.updateWornItems(ZAMORAK_WIZARDSHAT); // unobtainable zamorak hat sprite, used by gnomeish peoples
 		player.updateWornItems(ZAMORAK_MONK_ROBE);
 		player.updateWornItems(ZAMORAK_MONK_SKIRT);
+		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	private void setRobes(Player player, String[] args) {
@@ -449,6 +450,8 @@ public final class PlayerModerator implements CommandTrigger {
 			default:
 				mes("don't know that one, sorry.");
 		}
+
+		affectedPlayer.getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	private void becomeNpc(Player player, String[] args) {
@@ -727,6 +730,7 @@ public final class PlayerModerator implements CommandTrigger {
 					player.message("Could not find an npc named " + npcName);
 				}
 		}
+		affectedPlayer.getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	private void updateAppearanceToNpc(Player player, AppearanceId appearanceId, int wieldPosition) {
@@ -752,6 +756,7 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 		player.updateWornItems(wieldPosition, appearanceId);
+		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	private void becomeGod(Player player) {
@@ -759,6 +764,7 @@ public final class PlayerModerator implements CommandTrigger {
 		for (int i = 0; i < 12; i++) {
 			player.updateWornItems(i, random(124, 180));
 		}
+		player.getUpdateFlags().setAppearanceChanged(true);
 
 		speakTongues(player, 1);
 	}
