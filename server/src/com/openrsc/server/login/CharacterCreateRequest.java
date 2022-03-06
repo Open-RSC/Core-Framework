@@ -113,7 +113,10 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 
 	protected void processInternal() {
 		if (getAuthenticClient()) {
-			final int registerResponse = validateRegister();
+			int registerResponse = validateRegister();
+			if (clientVersion <= 204) {
+				registerResponse = RegisterLoginResponse.translateNewToOld(registerResponse, clientVersion, true);
+			}
 			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) registerResponse).toPacket());
 			if (registerResponse != RegisterLoginResponse.REGISTER_SUCCESSFUL) {
 				getChannel().close();
@@ -206,7 +209,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return (byte) RegisterLoginResponse.CLIENT_UPDATED;
 			}
 
-			if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
+			if (getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
 				return (byte) RegisterLoginResponse.WORLD_IS_FULL;
 			}
 
@@ -218,7 +221,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return (byte) RegisterLoginResponse.ACCOUNT_LOGGEDIN;
 			}
 
-			if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+			if (getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
 				return (byte) RegisterLoginResponse.IP_IN_USE;
 			}
 
@@ -257,6 +260,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			LOGGER.catching(e);
 			return (byte) RegisterLoginResponse.UNSUCCESSFUL;
 		}
+		System.out.println("Register was successful!");
 		return (byte) RegisterLoginResponse.REGISTER_SUCCESSFUL;
 	}
 

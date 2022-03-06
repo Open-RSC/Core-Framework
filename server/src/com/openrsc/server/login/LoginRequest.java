@@ -108,7 +108,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		int loginResponse = validateLogin();
 
 		if (clientVersion <= 204) {
-			loginResponse = RegisterLoginResponse.translateNewToOld(loginResponse);
+			loginResponse = RegisterLoginResponse.translateNewToOld(loginResponse, clientVersion, false);
 		}
 		loginValidated(loginResponse);
 
