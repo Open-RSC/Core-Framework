@@ -871,12 +871,16 @@ public final class Player extends Mob {
 	public void updateTotalPlayed() {
 		if (cache.hasKey("total_played")) {
 			long oldTotal = cache.getLong("total_played");
-			long sessionLength = oldTotal + (System.currentTimeMillis() - sessionStart);
-			cache.store("total_played", sessionLength);
+			long newTotal = oldTotal + getSessionPlay();
+			cache.store("total_played", newTotal);
 		} else {
-			cache.store("total_played", System.currentTimeMillis() - sessionStart);
+			cache.store("total_played", getSessionPlay());
 		}
 		sessionStart = System.currentTimeMillis();
+	}
+
+	public long getSessionPlay() {
+		return System.currentTimeMillis() - sessionStart;
 	}
 
 	private void updateSkullRemaining() {

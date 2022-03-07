@@ -268,6 +268,8 @@ public class ServerConfiguration {
 	public boolean SPINACH_ROLL_BOOSTS;
 	public boolean OLD_SKILL_DEFS;
 	public boolean WANTS_KILL_STEALING;
+	public boolean RANGED_GIVES_XP_HIT;
+	public boolean ONLY_BASIC_RUNES;
 	public boolean OSRS_COMBAT_MELEE;
 	public boolean OSRS_COMBAT_RANGED;
 	public boolean SANTA_GIVES_PRESENTS;
@@ -439,6 +441,8 @@ public class ServerConfiguration {
 		SPINACH_ROLL_BOOSTS = tryReadBool("spinach_roll_boosts").orElse(false);
 		OLD_SKILL_DEFS = tryReadBool("old_skill_defs").orElse(false);
 		WANTS_KILL_STEALING = tryReadBool("wants_kill_stealing").orElse(false);
+		RANGED_GIVES_XP_HIT = tryReadBool("ranged_gives_xp_hit").orElse(false);
+		ONLY_BASIC_RUNES = tryReadBool("only_basic_runes").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

@@ -397,6 +397,13 @@ public class Npc extends Mob {
 			ArrayList<Item> items = drops.rollItem(ringOfWealth, owner);
 			for (Item item : items) {
 				if (item != null) {
+					if ((getWorld().getServer().getConfig().RESTRICT_ITEM_ID >= 0 && item.getCatalogId() > getWorld().getServer().getConfig().RESTRICT_ITEM_ID)
+					|| (getWorld().getServer().getConfig().ONLY_BASIC_RUNES
+						&& getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName().endsWith("-Rune")
+						&& item.getCatalogId() >= ItemId.LIFE_RUNE.id())) {
+						// world does not allow drop
+						continue;
+					}
 					if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
 						dropStackItem(item.getCatalogId(), item.getAmount(), owner);
 					} else {
@@ -546,8 +553,14 @@ public class Npc extends Mob {
 				skillsDist[Skill.HITS.id()] = 1;
 				lastAttacker.incExp(skillsDist, totalCombatXP, true);
 			} else if (type == KillType.RANGED) {
-				lastAttacker.incExp(Skill.RANGED.id(), totalCombatXP * 4, true);
-				ActionSender.sendStat(lastAttacker, Skill.RANGED.id());
+				int maxTotalXP = totalCombatXP * 4;
+				int damageDoneByPlayer = getRangeDamageDoneBy(lastAttacker.getUUID());
+				int alreadyGivenXp = this.getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT ? 16 * damageDoneByPlayer / 3 : 0;
+				int remainderXP = maxTotalXP - alreadyGivenXp;
+				if (remainderXP > 0) {
+					lastAttacker.incExp(Skill.RANGED.id(), remainderXP, true);
+					ActionSender.sendStat(lastAttacker, Skill.RANGED.id());
+				}
 			} // for MAGIC is of type per spell
 
 			return lastAttacker.getUUID();
@@ -599,9 +612,13 @@ public class Npc extends Mob {
 
 			Player player = getWorld().getPlayerByUUID(ID);
 			if (player != null) {
-				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
-				player.incExp(Skill.RANGED.id(), totalXP * 4, true);
-				ActionSender.sendStat(player, Skill.RANGED.id());
+				int maxTotalXP = (int) (((double) (totalCombatXP * 4) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
+				int alreadyGivenXp = this.getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT ? 16 * damageDoneByPlayer / 3 : 0;
+				int remainderXP = maxTotalXP - alreadyGivenXp;
+				if (remainderXP > 0) {
+					player.incExp(Skill.RANGED.id(), remainderXP, true);
+					ActionSender.sendStat(player, Skill.RANGED.id());
+				}
 			}
 		}
 

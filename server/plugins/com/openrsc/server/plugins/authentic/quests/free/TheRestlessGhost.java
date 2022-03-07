@@ -50,7 +50,11 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 
 	@Override
 	public void handleReward(Player player) {
-		player.message("You have completed the restless ghost quest");
+		if (player.getConfig().INFLUENCE_INSTEAD_QP) {
+			player.message("You have completed the ghost quest");
+		} else {
+			player.message("You have completed the restless ghost quest");
+		}
 		final QuestReward reward = Quest.THE_RESTLESS_GHOST.reward();
 		for (XPReward xpReward : reward.getXpRewards()) {
 			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());

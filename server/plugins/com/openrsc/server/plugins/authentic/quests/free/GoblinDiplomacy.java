@@ -38,7 +38,11 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 
 	@Override
 	public void handleReward(Player player) {
-		player.message("Well done you have completed the goblin diplomacy quest");
+		if (player.getConfig().INFLUENCE_INSTEAD_QP) {
+			player.message("Well done you have completed the goblin quest");
+		} else {
+			player.message("Well done you have completed the goblin diplomacy quest");
+		}
 		final QuestReward reward = Quest.GOBLIN_DIPLOMACY.reward();
 		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 		for (XPReward xpReward : reward.getXpRewards()) {
