@@ -307,8 +307,9 @@ public final class RegularPlayer implements CommandTrigger {
 	}
 
 	private void queryPlayerInfo(Player player) {
-		player.updateTotalPlayed();
-		long timePlayed = player.getCache().getLong("total_played");
+		long sessionPlay = player.getSessionPlay();
+		long timePlayed = (player.getCache().hasKey("total_played") ?
+			player.getCache().getLong("total_played") : 0) + sessionPlay;
 
 		if (player.getClientLimitations().supportsMessageBox) {
 			ActionSender.sendBox(player,

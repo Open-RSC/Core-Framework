@@ -1,8 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
-import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
-import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -19,7 +17,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.plugins.Functions.mes;
 
 public final class Moderator implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Moderator.class);
@@ -113,8 +112,9 @@ public final class Moderator implements CommandTrigger {
 			return;
 		}
 
-		targetPlayer.updateTotalPlayed();
-		long timePlayed = targetPlayer.getCache().getLong("total_played");
+		long sessionPlay = targetPlayer.getSessionPlay();
+		long timePlayed = (targetPlayer.getCache().hasKey("total_played") ?
+			targetPlayer.getCache().getLong("total_played") : 0) + sessionPlay;
 		long timeMoved = System.currentTimeMillis() - targetPlayer.getLastMoved();
 		long timeOnline = System.currentTimeMillis() - targetPlayer.getCurrentLogin();
 		ActionSender.sendBox(player,

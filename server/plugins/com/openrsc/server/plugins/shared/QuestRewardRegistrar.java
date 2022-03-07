@@ -77,7 +77,7 @@ public final class QuestRewardRegistrar extends AbstractRegistrar {
 		// 6 - ERNEST_THE_CHICKEN
 		rewardsList = new ArrayList<>();
 		if (awardInfluence)
-			rewardsList.add(new XPReward(Skill.INFLUENCE, 300, 400));
+			rewardsList.add(new XPReward(Skill.INFLUENCE, 900, 300));
 		skillRewardsAdd = new XPReward[rewardsList.size()];
 		mapQuests.put(Quests.ERNEST_THE_CHICKEN,
 			new AbstractMap.SimpleImmutableEntry<>(++questNum, new QuestReward(4, rewardsList.toArray(skillRewardsAdd))));

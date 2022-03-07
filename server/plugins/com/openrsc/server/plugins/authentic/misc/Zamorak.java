@@ -15,7 +15,8 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 
 	@Override
 	public void onTakeObj(Player owner, GroundItem item) {
-		if (item.getID() == ItemId.WINE_OF_ZAMORAK.id() && item.getX() == 333 && item.getY() == 434) {
+		if ((item.getID() == ItemId.WINE_OF_ZAMORAK.id() || (item.getID() == ItemId.HALF_FULL_WINE_JUG.id() && owner.getConfig().BASED_MAP_DATA <= 28))
+			&& item.getX() == 333 && item.getY() == 434) {
 			Npc zam = ifnearvisnpc(owner, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
 			if (zam != null && !zam.inCombat()) {
 				owner.face(zam);
@@ -30,7 +31,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 
 	@Override
 	public boolean blockTakeObj(Player player, GroundItem i) {
-		return i.getID() == ItemId.WINE_OF_ZAMORAK.id();
+		return i.getID() == ItemId.WINE_OF_ZAMORAK.id() || i.getID() == ItemId.HALF_FULL_WINE_JUG.id();
 	}
 
 	@Override
