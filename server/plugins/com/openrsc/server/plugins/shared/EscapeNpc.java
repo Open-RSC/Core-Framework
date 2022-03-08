@@ -12,6 +12,6 @@ public class EscapeNpc implements EscapeNpcTrigger {
 
 	@Override
 	public boolean blockEscapeNpc(Player player, Npc npc) {
-		return true;
+		return false;
 	}
 }

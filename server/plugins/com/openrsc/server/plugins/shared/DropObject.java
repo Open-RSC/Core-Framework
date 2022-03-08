@@ -14,10 +14,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DropObject implements DropObjTrigger {
-
-	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop, int totalToDrop, int invIndex) {
-
+public class DropObject {
+	public static void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop, int totalToDrop, int invIndex) {
 		Item searchItem;
 		boolean found = false;
 		if (fromInventory) {
@@ -101,19 +99,5 @@ public class DropObject implements DropObjTrigger {
 			delay();
 			batchDrop(player, item, fromInventory, amountToDrop, totalToDrop, -1);
 		}
-	}
-
-	@Override
-	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		// TODO: For runescript compatibility, all of the calls to getCurrentAction/setCurrentAction should be done in the drop handler. -- Kenix
-
-		// Get the amount to drop from our temporary item construct.
-		int amountToDrop = item.getAmount();
-		batchDrop(player, item, fromInventory, amountToDrop, amountToDrop, invIndex);
-	}
-
-	@Override
-	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		return true;
 	}
 }

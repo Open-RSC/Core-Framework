@@ -16,6 +16,8 @@ import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.DefaultHandler;
+import com.openrsc.server.plugins.shared.AttackPlayer;
+import com.openrsc.server.plugins.shared.DropObject;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -153,7 +155,11 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		// No default actions
+		// TODO: For runescript compatibility, all of the calls to getCurrentAction/setCurrentAction should be done in the drop handler.
+
+		// Get the amount to drop from our temporary item construct.
+		int amountToDrop = item.getAmount();
+		DropObject.batchDrop(player, item, fromInventory, amountToDrop, amountToDrop, invIndex);
 	}
 
 	@Override
@@ -223,7 +229,22 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onAttackPlayer(Player player, Player affectedMob) {
-		// No default actions
+		if (affectedMob.getLocation().inBounds(220, 107, 224, 111)) { // mage arena block real rsc.
+			player.message("Here kolodion protects all from your attack");
+			player.face(affectedMob); // TODO: not necessary to do this if the walk handler would do it for us.
+			return;
+		}
+
+		if (AttackPlayer.attackPrevented(player, affectedMob)) {
+			return;
+		}
+
+		player.startCombat(affectedMob);
+		if (config().WANT_PARTIES) {
+			if (player.getParty() != null) {
+				player.getParty().sendParty();
+			}
+		}
 	}
 
 	@Override

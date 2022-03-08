@@ -517,7 +517,6 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 	}
 
 	private boolean checkCastOnPlayer(Player player, Player affectedPlayer, Spells spellEnum) {
-
 		// Duel with "No Magic" selected.
 		if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(1)) {
 			player.message("Magic cannot be used during this duel!");
@@ -1255,8 +1254,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 		// Retro RSC mechanic, could not use magic if already engaged in combat
 		// and spell was not personal spell (cast on self, type = 0)
-		if (player.inCombat() && spellType != 0
-			&& spellEnum != Spells.FEAR && player.getConfig().BLOCK_USE_MAGIC_IN_COMBAT) {
+		if (player.getConfig().BLOCK_USE_MAGIC_IN_COMBAT && player.inCombat() &&
+			spellType != 0 && spellEnum != Spells.FEAR) {
 			player.message("You cannot do that whilst fighting!");
 			return;
 		}

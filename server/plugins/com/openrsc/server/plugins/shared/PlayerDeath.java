@@ -11,6 +11,6 @@ public class PlayerDeath implements PlayerDeathTrigger {
 
 	@Override
 	public boolean blockPlayerDeath(Player player) {
-		return true;
+		return false;
 	}
 }

@@ -10,6 +10,6 @@ public class ServerStartup implements StartupTrigger {
 
 	@Override
 	public boolean blockStartup() {
-		return true;
+		return false;
 	}
 }

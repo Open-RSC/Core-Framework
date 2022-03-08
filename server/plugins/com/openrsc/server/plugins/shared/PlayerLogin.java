@@ -11,6 +11,6 @@ public class PlayerLogin implements PlayerLoginTrigger {
 
 	@Override
 	public boolean blockPlayerLogin(Player player) {
-		return true;
+		return false;
 	}
 }
