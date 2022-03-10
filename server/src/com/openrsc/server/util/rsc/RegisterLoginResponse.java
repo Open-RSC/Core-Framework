@@ -86,6 +86,8 @@ public class RegisterLoginResponse {
 				case LoginResponse.CLIENT_UPDATED:
 					return CLIENT_UPDATED_RETRO;
 				case LoginResponse.INVALID_CREDENTIALS:
+					if (!registering) return INVALID_USERNAME_OR_PASSWORD_RETRO;
+					else return USERNAME_TAKEN_RETRO;
 				case LoginResponse.ACCOUNT_LOGGEDIN:
 				case LoginResponse.IP_IN_USE:
 				case LoginResponse.USERNAME_ALREADY_IN_USE:

@@ -1533,6 +1533,8 @@ public class ActionSender {
 		int questPoints = player.getQuestPoints();
 		struct.questPoints = questPoints;
 
+		struct.hasPrayDrain = !player.getConfig().LACKS_PRAYERS;
+
 		// computed for compat if retro client on modern world
 		struct.useInfluence = player.getConfig().INFLUENCE_INSTEAD_QP;
 		int computedInfluence = DataConversions.questPointsToInfluence(questPoints, player.getConfig().PLAYER_LEVEL_LIMIT);

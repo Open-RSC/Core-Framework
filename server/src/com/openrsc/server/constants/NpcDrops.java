@@ -893,7 +893,7 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BALL_OF_WOOL.id(), 1, 8);
 		currentNpcDrops.addItemDrop(ItemId.HAMMER.id(), 1, 8);
 		currentNpcDrops.addItemDrop(ItemId.BLUE_WIZARDSHAT.id(), 1, 8);
-		currentNpcDrops.addItemDrop(ItemId.ASHES.id(), 1, 6);		
+		currentNpcDrops.addItemDrop(ItemId.ASHES.id(), 1, 6);
 		currentNpcDrops.addItemDrop(ItemId.EGG.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.RAW_CHICKEN.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.RED_BEAD.id(), 1, 5);
@@ -1298,13 +1298,13 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.BLACK_DEMON.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("Black Dragon (291)");
-		currentNpcDrops.addTableDrop(herbDropTable, 3); 
+		currentNpcDrops.addTableDrop(herbDropTable, 3);
 		currentNpcDrops.addTableDrop(rareDropTable, 3);
 		currentNpcDrops.addTableDrop(ultraRareDropTable, 2);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 196, 40);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 66, 20);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 330, 10);
-		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 2, 8);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 50, 8);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
 		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 2, 6);
 		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 2, 5);

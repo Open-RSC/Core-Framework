@@ -127,17 +127,24 @@ public class StatInfoStruct  extends AbstractStruct<OpcodeOut> {
 	public int computedInfluence = 1; // computed from quest points
 	public int computedExperienceInfluence; // computed from quest points (based on exp curve)
 	public boolean useInfluence = false;
+	public boolean hasPrayDrain = false;
 
 	public int getCurrentPrayGood() {
-		return Math.max(currentPrayGood, currentPrayer);
+		int min = Math.min(currentPrayGood, currentPrayer);
+		int max = Math.max(currentPrayGood, currentPrayer);
+		return (!hasPrayDrain || min > 0) ? max : 0;
 	}
 
 	public int getCurrentPrayEvil() {
-		return Math.max(currentPrayEvil, currentPrayer);
+		int min = Math.min(currentPrayEvil, currentPrayer);
+		int max = Math.max(currentPrayEvil, currentPrayer);
+		return (!hasPrayDrain || min > 0) ? max : 0;
 	}
 
 	public int getCurrentPrayer() {
-		return Math.max(currentPrayer, Math.max(currentPrayGood, currentPrayEvil));
+		int min = Math.min(currentPrayer, Math.min(currentPrayGood, currentPrayEvil));
+		int max = Math.max(currentPrayer, Math.max(currentPrayGood, currentPrayEvil));
+		return (!hasPrayDrain || min > 0) ? max : 0;
 	}
 
 	public int getCurrentGoodMagic() {
