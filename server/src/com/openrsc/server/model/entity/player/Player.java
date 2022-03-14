@@ -510,8 +510,8 @@ public final class Player extends Mob {
 	public void resetCannonEvent() {
 		if (cannonEvent != null) {
 			cannonEvent.stop();
+			cannonEvent = null;
 		}
-		cannonEvent = null;
 	}
 
 	public boolean isCannonEventActive() {
