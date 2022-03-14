@@ -114,9 +114,6 @@ public class EntityList<T extends Entity> extends AbstractCollection<T> {
     public synchronized T remove(final int index) {
         if(index >= 0) {
             T entity = (T) entities[index];
-            if (entity != null) {
-                entity.setIndex(-1);
-            }
             entities[index] = null;
             occupiedIndices.remove(index);
             priorityIdPool.offer(index);
