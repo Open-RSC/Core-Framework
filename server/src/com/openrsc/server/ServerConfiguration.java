@@ -270,6 +270,7 @@ public class ServerConfiguration {
 	public boolean WANTS_KILL_STEALING;
 	public boolean RANGED_GIVES_XP_HIT;
 	public boolean ONLY_BASIC_RUNES;
+	public boolean CAN_OFFER_UNTRADEABLES;
 	public boolean OSRS_COMBAT_MELEE;
 	public boolean OSRS_COMBAT_RANGED;
 	public boolean SANTA_GIVES_PRESENTS;
@@ -443,6 +444,7 @@ public class ServerConfiguration {
 		WANTS_KILL_STEALING = tryReadBool("wants_kill_stealing").orElse(false);
 		RANGED_GIVES_XP_HIT = tryReadBool("ranged_gives_xp_hit").orElse(false);
 		ONLY_BASIC_RUNES = tryReadBool("only_basic_runes").orElse(false);
+		CAN_OFFER_UNTRADEABLES = tryReadBool("can_offer_untradeables").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

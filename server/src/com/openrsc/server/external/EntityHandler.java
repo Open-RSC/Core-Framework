@@ -41,6 +41,7 @@ public final class EntityHandler {
 	public ArrayList<ItemDefinition> items;
 	public ArrayList<ItemDefinition> itemsPatch;
 	public ArrayList<NPCDef> npcs;
+	public ArrayList<NPCDef> npcsPatch;
 	public SpellDef[] spells;
 	private HashMap<Integer, ItemArrowHeadDef> arrowHeads;
 	private HashMap<Integer, ItemBowStringDef> bowString;
@@ -112,6 +113,7 @@ public final class EntityHandler {
 
 	public void unload() {
 		npcs = null;
+		npcsPatch = null;
 		items = null;
 		itemsPatch = null;
 
@@ -148,9 +150,11 @@ public final class EntityHandler {
 
 	public void load() {
 		npcs = new ArrayList<>();
+		npcsPatch = new ArrayList<>();
 		LOGGER.info("Loading npc definitions...");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
+		patchNpcs();
 		customNpcConditions();
 		LOGGER.info("Loaded " + npcs.size() + " total npc definitions");
 
@@ -270,6 +274,53 @@ public final class EntityHandler {
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
+		}
+	}
+
+	private void loadPatchNpcs(String filename) {
+		try {
+			JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(filename))));
+			JSONArray npcPatchDefs = object.getJSONArray(JSONObject.getNames(object)[0]);
+			for (int i = 0; i < npcPatchDefs.length(); i++) {
+				JSONObject npc = npcPatchDefs.getJSONObject(i);
+				NPCDef.NPCDefinitionBuilder toAddBuild =
+					new NPCDef.NPCDefinitionBuilder(npc.getInt("id"), npc.getString("name"))
+						.description(npc.getString("description"))
+						.command(npc.getString("command"))
+						.attack((int)ifZeroReserve(npc.getInt("attack")))
+						.strength((int)ifZeroReserve(npc.getInt("strength")))
+						.hits((int)ifZeroReserve(npc.getInt("hits")))
+						.defense((int)ifZeroReserve(npc.getInt("defense")))
+						.ranged(npc.getBoolean("ranged") ? 1 : 0)
+						.combatLevel(npc.getInt("combatlvl"))
+						.members(npc.getInt("isMembers") == 1)
+						.attackable(npc.getInt("attackable") == 1)
+						.aggressive(npc.getInt("aggressive") == 1);
+				NPCDef toAdd = toAddBuild.build();
+				npcsPatch.add(toAdd);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+		}
+	}
+
+	private void patchNpcs() {
+		File file;
+		if (getServer().getConfig().BASED_CONFIG_DATA < 85) {
+			String filePath = getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsPatch" + getServer().getConfig().BASED_CONFIG_DATA + ".json";
+			file = new File(filePath);
+			if (file.exists()) {
+				LOGGER.info("Patching npc definitions...");
+				loadPatchNpcs(filePath);
+				try {
+					for (int i = 0; i < npcsPatch.size(); i++) {
+						npcs.set(i, patchObject(npcs.get(i), npcsPatch.get(i)));
+					}
+				} catch (Exception e) {
+					LOGGER.error(e);
+				}
+			}
 		}
 	}
 

@@ -280,22 +280,37 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	private void showCoinBank(Player player, Npc npc) {
 		// Transaction Menu
 		int transactionType = transactionMenu(player, npc);
+		boolean canDoTransaction = true;
 		if (transactionType == 0) {
-			player.message("How much would you like to withdraw?");
+			int maxBank = player.getBank().countId(ItemId.COINS.id());
+			if (maxBank > 0) {
+				player.message("How much would you like to withdraw?");
+			} else {
+				canDoTransaction = false;
+				player.message("There are no coins in your bank");
+				delay(2);
+			}
 		} else if (transactionType == 1) {
-			player.message("How much would you like to deposit?");
+			int maxHeld = player.getCarriedItems().getInventory().countId(ItemId.COINS.id());
+			if (maxHeld > 0) {
+				player.message("How much would you like to deposit?");
+			} else {
+				canDoTransaction = false;
+				player.message("You do not have coins in your inventory");
+				delay(2);
+			}
 		}
 
 		int amountChoice;
 		int requestedAmount = 0;
 
 		// Amount
-		if (transactionType != 2) {
+		if (transactionType != 2 && canDoTransaction) {
 			amountChoice = amountMenu(player, npc, transactionType);
 			if (amountChoice < 0)
 				return;
 
-			final int[] possibleAmounts = new int[]{1, 10, 100, 1000, 2500};
+			final int[] possibleAmounts = new int[]{1, 10, 50, 250, 2500};
 			requestedAmount = possibleAmounts[amountChoice];
 		}
 
@@ -329,38 +344,55 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 			return -1;
 
 		ArrayList<String> options = new ArrayList<>();
-		Collections.addAll(options,
-			"1 gp",
-			"10 gp",
-			"100 gp"); // early on there was no 1000 nor 2500 options. 1000 option added in 12 June 2001, 2500 unmentioned hidden update
-		// We will allow those options as well if world is item bank
-		// per Leclerc the amounts were like they were
-		if (!player.getConfig().COIN_BANK) {
-			Collections.addAll(options,
-				"1000 gp",
-				"2500 gp");
+
+		// early on there was no 1000 / 2500 option. 1000 option added in 12 June 2001, possible change to 2500 unmentioned hidden update
+		// We will allow that option if world is item bank
+		// per "thehate" the amounts of coin bank initially were 1/10/50
+		Collections.addAll(options, "1 gp");
+		switch(transactionType) {
+			case 0: // withdraw
+				int maxBank = player.getBank().countId(ItemId.COINS.id());
+				if (maxBank >= 10) Collections.addAll(options, "10 gp");
+				if (maxBank >= 50) Collections.addAll(options, "50 gp");
+				if (maxBank >= 250) Collections.addAll(options, "250 gp");
+				if (maxBank >= 2500 && !player.getConfig().COIN_BANK) Collections.addAll(options, "2500 gp");
+				break;
+			case 1: // deposit
+				int maxHeld = player.getCarriedItems().getInventory().countId(ItemId.COINS.id());
+				if (maxHeld >= 10) Collections.addAll(options, "10 gp");
+				if (maxHeld >= 50) Collections.addAll(options, "50 gp");
+				if (maxHeld >= 250) Collections.addAll(options, "250 gp");
+				if (maxHeld >= 2500 && !player.getConfig().COIN_BANK) Collections.addAll(options, "2500 gp");
+				break;
 		}
+
 		String[] finalOptions = new String[options.size()];
 
-		return multi(player, options.toArray(finalOptions));
+		int selection = multi(player, options.toArray(finalOptions));
+
+		return selection >= 0 && selection < finalOptions.length ? selection : -1;
 	}
 
 	private void withdraw(Player player, Npc npc, int amount) {
-		if (player.getBank().countId(ItemId.COINS.id()) >= amount) {
-			player.getBank().remove(ItemId.COINS.id(), amount, false);
-			give(player, ItemId.COINS.id(), amount);
-		} else {
-			player.message("Sorry you don't have enough balance to complete the transaction");
+		if (amount > 0) {
+			if (player.getBank().countId(ItemId.COINS.id()) >= amount) {
+				player.getBank().remove(ItemId.COINS.id(), amount, false);
+				give(player, ItemId.COINS.id(), amount);
+			} else {
+				player.message("Sorry you don't have enough balance to complete the transaction");
+			}
 		}
 		askAnotherTransaction(player, npc);
 	}
 
 	private void deposit(Player player, Npc npc, int amount) {
-		if (ifheld(player, ItemId.COINS.id(), amount)) {
-			player.getCarriedItems().remove(new Item(ItemId.COINS.id(), amount));
-			player.getBank().add(new Item(ItemId.COINS.id(), amount));
-		} else {
-			player.message("Sorry you don't have enough gold to complete the transaction");
+		if (amount > 0) {
+			if (ifheld(player, ItemId.COINS.id(), amount)) {
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), amount));
+				player.getBank().add(new Item(ItemId.COINS.id(), amount));
+			} else {
+				player.message("Sorry you don't have enough gold to complete the transaction");
+			}
 		}
 		askAnotherTransaction(player, npc);
 	}

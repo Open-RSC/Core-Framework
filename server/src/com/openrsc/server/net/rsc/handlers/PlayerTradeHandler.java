@@ -255,7 +255,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
-					if (tItem.getDef(player.getWorld()).isUntradable() && !player.isAdmin()) {
+					if (tItem.getDef(player.getWorld()).isUntradable() && !player.getWorld().getServer().getConfig().CAN_OFFER_UNTRADEABLES) {
 						player.message("This object cannot be traded with other players");
 						player.setRequiresOfferUpdate(true);
 						continue;

@@ -336,7 +336,7 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}
-					if (tItem.getDef(player.getWorld()).isUntradable()) {
+					if (tItem.getDef(player.getWorld()).isUntradable() && !player.getWorld().getServer().getConfig().CAN_OFFER_UNTRADEABLES) {
 						player.message("This object cannot be added to a duel offer");
 						ActionSender.sendDuelOpponentItems(player);
 						continue;

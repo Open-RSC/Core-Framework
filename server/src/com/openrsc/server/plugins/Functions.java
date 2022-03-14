@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -1083,7 +1084,7 @@ public class Functions {
 
 		@SuppressWarnings("unchecked")
 		T result = (T) base.getClass().newInstance();
-		List<Field> fields = Arrays.stream(base.getClass().getDeclaredFields()).filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList());
+		List<Field> fields = getAllFields(base.getClass()).stream().filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList());
 		boolean accessibleChange = false;
 		Object fieldOfDiff, fieldOfBase;
 		for (Object fieldObj : fields) {
@@ -1106,6 +1107,14 @@ public class Functions {
 			}
 		}
 		return result;
+	}
+
+	public static List<Field> getAllFields(Class<?> type) {
+		List<Field> fields = new ArrayList<Field>();
+		for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+			fields.addAll(Arrays.asList(c.getDeclaredFields()));
+		}
+		return fields;
 	}
 
 	public static boolean inArray(Object o, Object... oArray) {

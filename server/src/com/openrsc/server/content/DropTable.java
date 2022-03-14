@@ -6,6 +6,7 @@ import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -194,7 +195,12 @@ public class DropTable {
 			total = total + drop.weight;
 			if (drop.weight == 0 && drop.id != ItemId.NOTHING.id()) {
 
-				Item item = new Item(drop.id, drop.amount, drop.noted);
+				Item item;
+				if (owner.getConfig().BASED_CONFIG_DATA < 50 && Formulae.isGeneralMeat(new Item(drop.id))) {
+					item = new Item(ItemId.RAW_CHICKEN.id(), drop.amount, drop.noted);
+				} else {
+					item = new Item(drop.id, drop.amount, drop.noted);
+				}
 
 				// Remove from the table once it's dropped.
 				it.remove();

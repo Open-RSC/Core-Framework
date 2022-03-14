@@ -224,7 +224,7 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 	}
 
 	private void sellShopItem(Player player, Shop shop, ItemDefinition def, int catalogID, int amount) {
-		if (def.isUntradable() || !shop.shouldStock(catalogID)) {
+		if ((def.isUntradable() && !player.getWorld().getServer().getConfig().CAN_OFFER_UNTRADEABLES) || !shop.shouldStock(catalogID)) {
 			player.message("This object can't be sold in shops");
 			return;
 		}

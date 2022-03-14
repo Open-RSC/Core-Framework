@@ -282,7 +282,7 @@ public class ObjectCooking implements UseLocTrigger {
 		itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 			itemName.contains("pie") ? "pie" :
 				itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
-		boolean isGenMeat = isGeneralMeat(item);
+		boolean isGenMeat = Formulae.isGeneralMeat(item);
 		if (isGenMeat)
 			itemName = "meat";
 		String message = "You cook the " + itemName + " on the " +
@@ -321,10 +321,5 @@ public class ObjectCooking implements UseLocTrigger {
 			ItemId.UNCOOKED_CAKE.id(), // Cake
 			ItemId.UNCOOKED_PITTA_BREAD.id(), // Pitta Bread
 		}, item.getCatalogId());
-	}
-
-	private boolean isGeneralMeat(Item item) {
-		return DataConversions.inArray(new int[]{ItemId.COOKEDMEAT.id(), ItemId.RAW_CHICKEN.id(),
-				ItemId.RAW_BEAR_MEAT.id(), ItemId.RAW_RAT_MEAT.id(), ItemId.RAW_BEEF.id()}, item.getCatalogId());
 	}
 }

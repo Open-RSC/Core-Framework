@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 
@@ -571,6 +572,11 @@ public final class Formulae {
 			}
 		}
 		return true;
+	}
+
+	public static boolean isGeneralMeat(Item item) {
+		return DataConversions.inArray(new int[]{ItemId.COOKEDMEAT.id(), ItemId.RAW_CHICKEN.id(),
+			ItemId.RAW_BEAR_MEAT.id(), ItemId.RAW_RAT_MEAT.id(), ItemId.RAW_BEEF.id()}, item.getCatalogId());
 	}
 
 	/**

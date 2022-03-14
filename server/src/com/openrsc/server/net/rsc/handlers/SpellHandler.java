@@ -4,10 +4,10 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.MiniEvent;
-import com.openrsc.server.event.rsc.impl.projectile.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
-import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
+import com.openrsc.server.event.rsc.impl.projectile.CustomProjectileEvent;
+import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
 import com.openrsc.server.external.ItemSmeltingDef;
 import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
@@ -17,10 +17,7 @@ import com.openrsc.server.model.action.ActionType;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.GameObject;
-import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.KillType;
-import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -1340,6 +1337,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 				}
 				getPlayer().resetAllExceptDueling();
+				EntityType entityType = mob.isPlayer() ? EntityType.PLAYER : EntityType.NPC;
 				switch (spellEnum) {
 					case FEAR:
 						if (!getPlayer().getConfig().HAS_FEAR_SPELL) {
@@ -1587,12 +1585,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}
-						int maxR = -1;
-						if (spellEnum == Spells.CHILL_BOLT || spellEnum == Spells.SHOCK_BOLT) {
-							maxR = 1;
-						} else if (spellEnum == Spells.ELEMENTAL_BOLT || spellEnum == Spells.WIND_BOLT_R) {
-							maxR = 2;
-						}
+
+						int maxR = (int)getPlayer().getWorld().getServer().getConstants().getSpellDamages().getSpellDamage(spellEnum, entityType, SpellDamages.MagicType.GOODEVILMAGIC);
 
 						int damageR = CombatFormula.calculateMagicDamage(maxR + 1) - 1;
 
@@ -1655,11 +1649,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
-						int max = -1;
-						for (int i = 0; i < getPlayer().getWorld().getServer().getConstants().SPELLS.length; i++) {
-							if (spell.getReqLevel() == getPlayer().getWorld().getServer().getConstants().SPELLS[i][0])
-								max = getPlayer().getWorld().getServer().getConstants().SPELLS[i][1];
-						}
+						int max = (int)getPlayer().getWorld().getServer().getConstants().getSpellDamages().getSpellDamage(spellEnum, entityType, SpellDamages.MagicType.MODERNMAGIC);
 
 						if (getPlayer().getMagicPoints() > 30
 							|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))

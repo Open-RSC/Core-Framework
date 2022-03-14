@@ -488,7 +488,19 @@ public final class Player extends Mob {
 	}
 
 	public int getPkChanges() {
-		return getCache().hasKey("pk_changes_left") ? getCache().getInt("pk_changes_left") : 0;
+		int changes_left;
+		if (!getCache().hasKey("pk_changes_left")) {
+			if (this.getConfig().USES_PK_MODE) {
+				changes_left = 2;
+				setPkChanges(changes_left);
+			} else {
+				changes_left = 0;
+			}
+		} else {
+			changes_left = getCache().getInt("pk_changes_left");
+		}
+
+		return changes_left;
 	}
 
 	public void setHideOnline(byte hideOnline) {
