@@ -76,6 +76,9 @@ public final class Event implements CommandTrigger {
 		.put("varrock", Point.location(122, 509))
 		.put("falador", Point.location(304, 542))
 		.put("draynor", Point.location(210, 624))
+		.put("draynormanor", Point.location(210, 567))
+		.put("countdraynor", Point.location(204, 3382))
+		.put("goblin", Point.location(323, 448))
 		.put("portsarim", Point.location(269, 643))
 		.put("karamja", Point.location(334, 713))
 		.put("battlefield", Point.location(361, 706)) // Karamja middle
@@ -83,6 +86,12 @@ public final class Event implements CommandTrigger {
 		.put("alkharid", Point.location(72, 685))
 		.put("lumbridge", Point.location(120, 648))
 		.put("edgeville", Point.location(217, 461))
+		.put("monk", Point.location(256, 462))
+		.put("palace", Point.location(130, 470))
+		.put("thurgo", Point.location(287, 707))
+		.put("doric", Point.location(325, 489))
+		.put("cook", Point.location(179, 483))
+		.put("jollyboar", Point.location(81, 444))
 		.put("ghosttown", Point.location(217, 461)) // alias
 		.put("barbarian", Point.location(233, 513))
 		.put("rimmington", Point.location(325, 663))

@@ -2,6 +2,7 @@ package com.openrsc.server;
 
 import com.google.common.collect.ImmutableList;
 import com.openrsc.server.database.DatabaseType;
+import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.YMLReader;
 import org.apache.logging.log4j.LogManager;
@@ -340,7 +341,7 @@ public class ServerConfiguration {
 		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(5);
 		int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = tryReadInt("suspicious_player_ip_ban_minutes").orElse(60);
 		String SERVER_LOCATION = tryReadString("server_location").orElse("USA");
-		MAX_PLAYERS = tryReadInt("max_players").orElse(2000);
+		MAX_PLAYERS = tryReadInt("max_players").orElse(EntityList.DEFAULT_CAPACITY);
 		MAX_PLAYERS_PER_IP = tryReadInt("max_players_per_ip").orElse(10);
 		SESSION_ID_SENDER_TIMER = tryReadInt("session_id_sender_timer").orElse(640);
 		AVATAR_GENERATOR = tryReadBool("avatar_generator").orElse(false);

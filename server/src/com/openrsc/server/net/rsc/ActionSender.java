@@ -23,6 +23,7 @@ import com.openrsc.server.net.rsc.generators.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -2047,23 +2048,61 @@ public class ActionSender {
 		}
 	}
 
-	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
+	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online, final boolean retroClientListsAll) {
 	    if (!player.isUsingCustomClient()) {
-	    	StringBuilder onlinePlayers = new StringBuilder(String.format("@lre@Players online @gre@(%d) %%", online));
-			for (int i = 0; i < players.size(); i++) {
-				onlinePlayers.append("@whi@");
-				onlinePlayers.append(players.get(i).getUsername());
-				if (locations.get(i).length() > 0) {
-					onlinePlayers.append(" @yel@(");
-					onlinePlayers.append(locations.get(i));
-					onlinePlayers.append(")");
+			if (player.getClientLimitations().supportsMessageBox) {
+				StringBuilder onlinePlayers = new StringBuilder(String.format("@lre@Players online @gre@(%d) %%", online));
+				for (int i = 0; i < players.size(); i++) {
+					onlinePlayers.append("@whi@");
+					onlinePlayers.append(players.get(i).getUsername());
+					if (locations.get(i).length() > 0) {
+						onlinePlayers.append(" @yel@(");
+						onlinePlayers.append(locations.get(i));
+						onlinePlayers.append(")");
+					}
+					if (i + 1 != players.size()) {
+						onlinePlayers.append(" @mag@; ");
+					}
 				}
-				if (i + 1 != players.size()) {
-					onlinePlayers.append(" @mag@; ");
+
+				ActionSender.sendBox(player, onlinePlayers.toString(), true);
+			} else {
+				// Client is older than 2002-01-29. Fallback to game messages.
+				player.playerServerMessage(MessageType.QUEST, "@lre@Players online @gre@(" +  online + ")");
+				int playerLimit = 20;
+				if (!retroClientListsAll && players.size() > playerLimit) {
+					player.playerServerMessage(MessageType.QUEST, "@red@Warning: @whi@Player list has been truncated due to too many players online.");
+					player.playerServerMessage(MessageType.QUEST, "Visit the onlinelist of your server on the web to see the full list,");
+					player.playerServerMessage(MessageType.QUEST, "or use the command @mag@::onlinelist all");
+				}
+				int playersToList = Math.min(players.size(), retroClientListsAll ? EntityList.DEFAULT_CAPACITY : playerLimit);
+				int messagesSent = 0;
+
+				StringBuilder onlinePlayers = new StringBuilder();
+				int colorLength = 0;
+				for (int i = 0; i < playersToList; i++) {
+					onlinePlayers.append("@whi@");
+					colorLength += 5;
+					onlinePlayers.append(players.get(i).getUsername());
+					if (i + 1 != players.size()) {
+						onlinePlayers.append(" @mag@; ");
+						colorLength += 5;
+					}
+					if (onlinePlayers.length() - colorLength > 70) {
+						player.playerServerMessage(MessageType.QUEST, onlinePlayers.toString());
+						colorLength = 0;
+						onlinePlayers = new StringBuilder();
+						messagesSent++;
+					}
+				}
+				if (onlinePlayers.length() > 0) {
+					player.playerServerMessage(MessageType.QUEST, onlinePlayers.toString());
+					messagesSent++;
+				}
+				if (messagesSent > 4) {
+					player.playerServerMessage(MessageType.QUEST, "@lre@Listed all @gre@(" +  online + ")@lre@ players online.");
 				}
 			}
-
-			ActionSender.sendBox(player, onlinePlayers.toString(), true);
         } else {
 			OnlineListStruct struct = new OnlineListStruct();
 			struct.numberOnline = online;

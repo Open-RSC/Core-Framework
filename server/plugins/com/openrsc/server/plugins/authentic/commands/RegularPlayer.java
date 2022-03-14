@@ -84,7 +84,7 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("shareexp")) {
 			toggleExperienceShare(player);
 		} else if (command.equalsIgnoreCase("onlinelist")) {
-			queryOnlinePlayers(player);
+			queryOnlinePlayers(player, args);
 		} else if (command.equalsIgnoreCase("groups") || command.equalsIgnoreCase("ranks")) {
 			queryGroupIDs(player);
 		} else if (command.equalsIgnoreCase("time") || command.equalsIgnoreCase("date") || command.equalsIgnoreCase("datetime")) {
@@ -552,7 +552,17 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 	}
 
-	public static void queryOnlinePlayers(Player player) {
+	public static void queryOnlinePlayers(Player player, String[] args) {
+		if (args.length > 0) {
+			if (args[0].equalsIgnoreCase("all") || args[0].equalsIgnoreCase("yes") || args[0].equals("1") || args[0].equalsIgnoreCase("true")) {
+				queryOnlinePlayers(player, true);
+				return;
+			}
+		}
+		queryOnlinePlayers(player, false);
+	}
+
+	public static void queryOnlinePlayers(Player player, boolean retroClientListsAll) {
 		int online = 0;
 		ArrayList<Player> players = new ArrayList<>();
 		ArrayList<String> locations = new ArrayList<>();
@@ -587,13 +597,8 @@ public final class RegularPlayer implements CommandTrigger {
 				}
 			}
 		}
-		if (player.getClientLimitations().supportsMessageBox) {
-			ActionSender.sendOnlineList(player, players, locations, online);
-		} else {
-			player.playerServerMessage(MessageType.QUEST,"Your game client does not support showing online players");
-			delay(2);
-			player.playerServerMessage(MessageType.QUEST,"Please consult the server's current players page");
-		}
+
+		ActionSender.sendOnlineList(player, players, locations, online, retroClientListsAll);
 	}
 
 	private void confirmQOLOptOut(Player player) {

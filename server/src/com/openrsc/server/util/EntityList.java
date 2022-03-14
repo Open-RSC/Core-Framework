@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 @SuppressWarnings("ConstantConditions")
 public class EntityList<T extends Entity> extends AbstractCollection<T> {
 
-    private static final int DEFAULT_CAPACITY = 2000;
+    public static final int DEFAULT_CAPACITY = 2000;
     private Queue<Integer> priorityIdPool;
     private ConcurrentHashMap<Integer, Object> occupiedIndices;
     private final int capacity;
