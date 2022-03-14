@@ -133,6 +133,7 @@ public final class Player extends Mob {
 	public PreferredLanguage preferredLanguage = PreferredLanguage.NONE_SET;
 	public PrerenderedSleepword queuedSleepword = null;
 	public Player queuedSleepwordSender = null;
+	private int saveAttempts = 0;
 
 	private final UUID uuid;
 
@@ -3760,5 +3761,13 @@ public final class Player extends Mob {
 
 	public String getMez(String key) {
 		return getWorld().getServer().getI18nService().getMez(key, this);
+	}
+
+	public boolean checkAndIncrementSaveAttempts() {
+		return saveAttempts++ > 3;
+	}
+
+	public void resetSaveAttempts() {
+		saveAttempts = 0;
 	}
 }

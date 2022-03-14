@@ -80,9 +80,9 @@ public class PlayerService implements IPlayerService {
         try {
             if (!database.playerExists(player.getDatabaseID())) {
                 LOGGER.error("ERROR SAVING : PLAYER DOES NOT EXIST : {}", player.getUsername());
-                return false;
+                return player.checkAndIncrementSaveAttempts();
             }
-            return database.atomically(() -> {
+            boolean realSuccess = database.atomically(() -> {
                 savePlayerBankPresets(player);
                 savePlayerInventory(player);
                 savePlayerEquipment(player);
@@ -96,12 +96,16 @@ public class PlayerService implements IPlayerService {
                 savePlayerSkills(player);
                 savePlayerSocial(player);
             });
+            if (realSuccess) {
+            	player.resetSaveAttempts();
+			}
+            return realSuccess;
         } catch (final Exception ex) {
             LOGGER.error(
                     MessageFormat.format("Unable to save player to database: {}", player.getUsername()),
                     ex
             );
-            return false;
+			return player.checkAndIncrementSaveAttempts();
         }
     }
 
