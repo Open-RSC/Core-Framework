@@ -149,7 +149,8 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
 			}
 
-			if(getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
+			// TODO: check threshold for webclients, since they get associated IP 127.0.0.1
+			if(!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 
@@ -181,7 +182,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
 			}
 
-			if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+			if(!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
 				LOGGER.debug(getIpAddress() + " is using " + getServer().getPacketFilter().getPlayersCount(getIpAddress()) + " out of " + getServer().getConfig().MAX_PLAYERS_PER_IP + " allowed sessions.");
 				return (byte) LoginResponse.IP_IN_USE;
 			}

@@ -197,7 +197,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 
 			boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
 
-			if (getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
+			// TODO: check threshold for webclients, since they get associated IP 127.0.0.1
+			if (!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
 				return (byte) RegisterLoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 
@@ -221,7 +222,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return (byte) RegisterLoginResponse.ACCOUNT_LOGGEDIN;
 			}
 
-			if (getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+			if (!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
 				return (byte) RegisterLoginResponse.IP_IN_USE;
 			}
 
@@ -240,7 +241,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
-				boolean recentlyRegistered = getServer().getDatabase().checkRecentlyRegistered(getIpAddress());
+				boolean recentlyRegistered = !getIpAddress().equals("127.0.0.1") && getServer().getDatabase().checkRecentlyRegistered(getIpAddress());
 				if (recentlyRegistered) {
 					LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
 					return (byte) RegisterLoginResponse.LOGIN_ATTEMPTS_EXCEEDED; // closest match for authentic client
