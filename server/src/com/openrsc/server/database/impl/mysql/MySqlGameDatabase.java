@@ -347,11 +347,11 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	}
 
 	@Override
-	public boolean queryRecentlyRegistered(final String ipAddress) throws GameDatabaseException {
+	public boolean queryRecentlyRegistered(final String ipAddress, final int minutes) throws GameDatabaseException {
 		boolean recentlyRegistered = false;
 		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().recentlyRegistered)) {
 			statement.setString(1, ipAddress);
-			statement.setLong(2, (System.currentTimeMillis() / 1000) - 60);
+			statement.setLong(2, (System.currentTimeMillis() / 1000) - ((long)minutes * 60L));
 
 			try (final ResultSet result = statement.executeQuery()) {
 				if (result.next()) {

@@ -10,6 +10,8 @@ import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetSocketAddress;
+
 /**
  * Used to create a Character on the Login thread
  */
@@ -36,7 +38,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 		this.setPassword(password);
 		this.setAuthenticClient(isAuthenticClient);
 		this.setChannel(channel);
-		this.setIpAddress(getChannel().remoteAddress().toString());
+		this.setIpAddress(((InetSocketAddress) getChannel().remoteAddress()).getAddress().getHostAddress());
 		this.setClientVersion(clientVersion);
 	}
 
@@ -47,7 +49,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 		this.setPassword(password);
 		this.setAuthenticClient(isAuthenticClient);
 		this.setChannel(channel);
-		this.setIpAddress(getChannel().remoteAddress().toString());
+		this.setIpAddress(((InetSocketAddress) getChannel().remoteAddress()).getAddress().getHostAddress());
 		this.setClientVersion(clientVersion);
 	}
 
@@ -124,6 +126,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			LOGGER.info("Processed register request for " + getUsername() + " response: " + registerResponse);
 		} else {
 			try {
+				boolean applyHarshRegistration = getServer().getConfig().MAX_PLAYERS_PER_IP < 5; // could potentially fall in config?
+
 				if (getUsername().length() < 2 || getUsername().length() > 12) {
 					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 7).toPacket());
 					getChannel().close();
@@ -151,7 +155,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				}
 
 				if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
-					boolean recentlyRegistered = getServer().getDatabase().checkRecentlyRegistered(getIpAddress());
+					int registerTimeout = applyHarshRegistration ? 720 : 1; //time in minutes
+					boolean recentlyRegistered = getIpAddress().equals("127.0.0.1") || getServer().getDatabase().checkRecentlyRegistered(getIpAddress(), registerTimeout);
 					if (recentlyRegistered) {
 						LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
 						getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
@@ -193,6 +198,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 	public byte validateRegister() {
 		PlayerLoginData playerData;
 		try {
+			boolean applyHarshRegistration = getServer().getConfig().MAX_PLAYERS_PER_IP < 5; // could potentially fall in config?
+
 			playerData = getServer().getDatabase().getPlayerLoginData(username);
 
 			boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
@@ -222,7 +229,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return (byte) RegisterLoginResponse.ACCOUNT_LOGGEDIN;
 			}
 
-			if (!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+			// Disabled 127.0.0.1 since can't be tracked of abuse
+			if ((getIpAddress().equals("127.0.0.1") || getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP) && !isAdmin) {
 				return (byte) RegisterLoginResponse.IP_IN_USE;
 			}
 
@@ -241,7 +249,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
-				boolean recentlyRegistered = !getIpAddress().equals("127.0.0.1") && getServer().getDatabase().checkRecentlyRegistered(getIpAddress());
+				int registerTimeout = applyHarshRegistration ? 720 : 1; //time in minutes
+				boolean recentlyRegistered = getIpAddress().equals("127.0.0.1") || getServer().getDatabase().checkRecentlyRegistered(getIpAddress(), registerTimeout);
 				if (recentlyRegistered) {
 					LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
 					return (byte) RegisterLoginResponse.LOGIN_ATTEMPTS_EXCEEDED; // closest match for authentic client

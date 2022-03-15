@@ -104,7 +104,7 @@ public abstract class GameDatabase {
 
 	protected abstract void queryCreatePlayer(String username, String email, String password, long creationDate, String ip) throws GameDatabaseException;
 
-	protected abstract boolean queryRecentlyRegistered(String ipAddress) throws GameDatabaseException;
+	protected abstract boolean queryRecentlyRegistered(String ipAddress, int minutes) throws GameDatabaseException;
 
 	public abstract void queryInitializeMaxStats(int playerId) throws GameDatabaseException;
 
@@ -376,8 +376,8 @@ public abstract class GameDatabase {
 		return playerId;
 	}
 
-	public boolean checkRecentlyRegistered(String ipAddress) throws GameDatabaseException {
-		return queryRecentlyRegistered(ipAddress);
+	public boolean checkRecentlyRegistered(String ipAddress, int minutes) throws GameDatabaseException {
+		return queryRecentlyRegistered(ipAddress, minutes * 60);
 	}
 
 	public boolean playerExists(final int playerId) throws GameDatabaseException {
