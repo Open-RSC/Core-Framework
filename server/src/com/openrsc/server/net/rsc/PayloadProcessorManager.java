@@ -163,7 +163,15 @@ public class PayloadProcessorManager {
 				if (method != null) {
 					if (!OpcodeIn.QUESTION_DIALOG_ANSWER.equals(payload.getOpcode()) && !OpcodeIn.HEARTBEAT.equals(payload.getOpcode())) {
 						// any player action other than choosing a dialogue choice must cancel the menu handler and set them non-busy
+						boolean menucancelremove = false; // TODO: REMOVE
+						if (player.getMenuHandler() != null) {
+							System.out.println("Cancelling Menu.");
+							menucancelremove = true;
+						}
 						player.cancelMenuHandler();
+						if (menucancelremove) {
+							System.out.println("Cancelled by: " + payload.getOpcode()); // TODO: REMOVE
+						}
 					}
 					method.invoke(processor, payload, player); //processor.process(payload, player);
 				}
