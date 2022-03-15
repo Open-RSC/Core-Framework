@@ -1344,7 +1344,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().playerServerMessage(MessageType.QUEST, "This world does not support fear spell");
 							return;
 						}
-						if (!affectedMob.isNpc() || !((Npc)affectedMob).getDef().isAttackable()) {
+						if (!affectedMob.isNpc() || !((Npc)affectedMob).getDef().isAttackable() || !affectedMob.inCombat()) {
 							getPlayer().playerServerMessage(MessageType.QUEST, "This spell can only be used on monsters engaged in combat");
 							return;
 						}
