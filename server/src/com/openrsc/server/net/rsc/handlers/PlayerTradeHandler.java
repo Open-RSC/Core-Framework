@@ -2,6 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -362,6 +363,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 						player.getTrade().resetAll();
 						return;
 					}
+					ItemDefinition inventoryDef = affectedItem.getDef(player.getWorld());
 					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 					}
@@ -373,7 +375,8 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
 					// Remove item to be traded quantity from inventory.
-					player.getCarriedItems().getInventory().remove(affectedItem, true);
+					// bypass item id position in case its stackable or noteable to end up with clean stacks
+					player.getCarriedItems().getInventory().remove(affectedItem, true, inventoryDef.isStackable() || affectedItem.getNoted());
 				}
 
 				for (Item item : theirOffer) {
@@ -383,6 +386,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 						player.getTrade().resetAll();
 						return;
 					}
+					ItemDefinition inventoryDef = affectedItem.getDef(player.getWorld());
 					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 						affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 					}
@@ -393,7 +397,8 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
 					// Remove item to be traded quantity from inventory.
-					affectedPlayer.getCarriedItems().getInventory().remove(affectedItem, true);
+					// bypass item id position in case its stackable or noteable to end up with clean stacks
+					affectedPlayer.getCarriedItems().getInventory().remove(affectedItem, true, inventoryDef.isStackable() || affectedItem.getNoted());
 				}
 
 				for (Item item : myOffer) {

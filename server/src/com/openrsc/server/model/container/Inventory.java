@@ -229,6 +229,10 @@ public class Inventory {
 	}
 
 	public int remove(Item item, boolean sendInventory) {
+		return remove(item, sendInventory, false);
+	}
+
+	public int remove(Item item, boolean sendInventory, boolean bypassItemId) {
 		synchronized (list) {
 			// Confirm items exist in the inventory
 			if (list.isEmpty())
@@ -244,7 +248,7 @@ public class Inventory {
 
 			int size = list.size();
 			ListIterator<Item> iterator = list.listIterator(size);
-			boolean continueRemoval = false;
+			boolean continueRemoval = bypassItemId;
 			int amountToRemove = amount;
 			for (int index = size - 1; iterator.hasPrevious(); index--) {
 				Item inventoryItem = iterator.previous();
@@ -527,7 +531,7 @@ public class Inventory {
 	public Item get(Item item) {
 		synchronized (list) {
 			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).equals(item)) {
+				if (list.get(index).equals(item) && list.get(index).getAmount() >= item.getAmount()) {
 					return list.get(index);
 				}
 			}

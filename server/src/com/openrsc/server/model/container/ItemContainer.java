@@ -92,7 +92,7 @@ public class ItemContainer {
 	public Item get(Item item) {
 		synchronized (list) {
 			for (Item i : list) {
-				if (item.equals(i)) {
+				if (item.equals(i) && i.getAmount() >= item.getAmount()) {
 					return i;
 				}
 			}
