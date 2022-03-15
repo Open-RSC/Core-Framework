@@ -244,10 +244,15 @@ public class Inventory {
 
 			int size = list.size();
 			ListIterator<Item> iterator = list.listIterator(size);
+			boolean continueRemoval = false;
+			int amountToRemove = amount;
 			for (int index = size - 1; iterator.hasPrevious(); index--) {
 				Item inventoryItem = iterator.previous();
 				// Loop until we have the correct item.
-				if (inventoryItem.getItemId() != itemID)
+				// Works since desired itemid is commonly last that matches desired catalog id
+				// only case distinct is drop but that one is up to the stack of that position
+				if ((inventoryItem.getItemId() != itemID && !continueRemoval) || (continueRemoval &&
+					(inventoryItem.getCatalogId() != catalogId || inventoryItem.getNoted() != item.getNoted())))
 					continue;
 				// Confirm itemDef exists.
 				ItemDefinition inventoryDef = inventoryItem.getDef(player.getWorld());
@@ -256,12 +261,9 @@ public class Inventory {
 
 				if (inventoryDef.isStackable() || inventoryItem.getNoted()) {
 
-					// Make sure there's enough in the stack
-					if (inventoryItem.getAmount() < amount)
-						return -1;
-
-					// If we remove the entire stack, remove the item status.
-					if (inventoryItem.getAmount() == amount) {
+					// Start removing whichever amount is possible from current stack
+					if (inventoryItem.getAmount() < amountToRemove) {
+						amountToRemove -= inventoryItem.getAmount();
 
 						// Update the Server
 						iterator.remove();
@@ -270,15 +272,34 @@ public class Inventory {
 						if (sendInventory)
 							ActionSender.sendRemoveItem(player, index);
 
+						continueRemoval = true;
+					}
+
+					// If we remove the entire stack, remove the item status.
+					else if (inventoryItem.getAmount() == amountToRemove) {
+						amountToRemove -= inventoryItem.getAmount();
+
+						// Update the Server
+						iterator.remove();
+
+						// Update the client
+						if (sendInventory)
+							ActionSender.sendRemoveItem(player, index);
+
+						continueRemoval = amountToRemove > 0;
+
 					// Removing only part of the stack
 					} else {
 
 						// Update the Database and Server Bank
-						inventoryItem.changeAmount(-amount);
+						inventoryItem.changeAmount(-amountToRemove);
+						amountToRemove = 0;
 
 						// Update the client
 						if (sendInventory)
 							ActionSender.sendInventoryUpdateItem(player, index);
+
+						continueRemoval = false;
 					}
 
 				// Non-stacking items
@@ -300,7 +321,11 @@ public class Inventory {
 						ActionSender.sendRemoveItem(player, index);
 				}
 
-				return inventoryItem.getItemId();
+				if (!continueRemoval) return inventoryItem.getItemId();
+			}
+			if (continueRemoval) {
+				// could not satisfy removal
+				return -1;
 			}
 			System.out.println("Item not found: " + item.getItemId() + " for player " + player.getUsername());
 		}
