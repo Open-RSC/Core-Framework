@@ -106,7 +106,7 @@ public class RSCPacketFilter {
 
 	public void ipBanHost(final String hostAddress, final long until, String reason) {
 		// Do not IP ban afmans!
-		if(isHostAdmin(hostAddress)) {
+		if(isHostAdmin(hostAddress) || hostAddress.equals("127.0.0.1")) {
 			String time = (until == -1) ? "permanently" : "until " + DateFormat.getInstance().format(until);
 			if (until != 0) {
 				LOGGER.info("Won't IP ban Afman " + hostAddress + ", would have been banned " + time + " for " + reason);
@@ -186,7 +186,7 @@ public class RSCPacketFilter {
 
 		final int cps = getConnectionsPerSecond(hostAddress);
 		final int connectionCount = getConnectionCount(hostAddress);
-		final boolean allowConnection = isHostAdmin(hostAddress) || (
+		final boolean allowConnection = hostAddress.equals("127.0.0.1") || isHostAdmin(hostAddress) || (
 			(connectionCount <= getServer().getConfig().MAX_CONNECTIONS_PER_IP) &&
 			(cps <= getServer().getConfig().MAX_CONNECTIONS_PER_SECOND)
 		);
