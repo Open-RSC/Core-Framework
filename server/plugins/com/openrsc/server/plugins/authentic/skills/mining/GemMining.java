@@ -96,6 +96,9 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 		}
 
 		if (player.click == 0 && (obj.getID() != GEM_ROCK)) {
+			player.playSound("mine");
+			int pickBubbleId = player.getClientLimitations().supportsTypedPickaxes ? ItemId.IRON_PICKAXE.id() : ItemId.BRONZE_PICKAXE.id();
+			thinkbubble(new Item(pickBubbleId)); // authentic to only show the original pickaxe sprite
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");

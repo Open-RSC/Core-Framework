@@ -188,6 +188,9 @@ public final class Mining implements OpLocTrigger, UseLocTrigger {
 			return;
 		}
 		if (player.click == 0 && (def == null || (def.getRespawnTime() < 1 && rock.getID() != 496) || (def.getOreId() == 315 && player.getQuestStage(Quests.FAMILY_CREST) < 6))) {
+			player.playSound("mine");
+			int pickBubbleId = player.getClientLimitations().supportsTypedPickaxes ? ItemId.IRON_PICKAXE.id() : ItemId.BRONZE_PICKAXE.id();
+			thinkbubble(new Item(pickBubbleId)); // authentic to only show the original pickaxe sprite
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
