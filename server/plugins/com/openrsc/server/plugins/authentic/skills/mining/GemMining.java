@@ -37,7 +37,6 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 		int repeat = 1;
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
-			default:
 			case IRON_PICKAXE:
 				repeat = 2;
 				break;
@@ -71,15 +70,21 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 			player.playSound("prospect");
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
 			delay(3);
-			if (obj.getID() == GEM_ROCK) {
+			if (obj.getID() != GEM_ROCK) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
-				return;
 			}
-			//should not get into the else, just a fail-safe
+			// Before the fatigue system (13 November 2002) it was possible to fail prospecting
+			// which could happen based on "some chance" when the player had the level to mine the rock
+			// and always failed when the player did not meet the level to mine the rock
+			// here we set it as config option
+			else if (player.getConfig().CAN_PROSPECT_FAIL
+				&& (DataConversions.random(0, 3) != 1 || reqlvl > mineLvl)) {
+				player.playerServerMessage(MessageType.QUEST, "You fail to find any ore in the rock");
+			}
 			else {
-				player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
-				return;
+				player.playerServerMessage(MessageType.QUEST, "This rock contains gems");
 			}
+			return;
 		}
 
 		if (axeId < 0 || reqlvl > mineLvl) {
@@ -87,6 +92,13 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 			delay(3);
 			mes("You do not have a pickaxe which you have the mining level to use");
 			delay(3);
+			return;
+		}
+
+		if (player.click == 0 && (obj.getID() != GEM_ROCK)) {
+			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
+			delay(3);
+			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
 			return;
 		}
 
@@ -151,11 +163,18 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 
+		GameObject objRock = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
+		if(objRock == null) {
+			// There is no more ore in the rock, end batch
+			stopbatch();
+			return;
+		}
+
 		// Repeat
 		updatebatch();
 		boolean customBatch = config().BATCH_PROGRESSION;
 		if (!isbatchcomplete()) {
-			if ((customBatch && !ifinterrupted()) || !customBatch) {
+			if (!customBatch || !ifinterrupted()) {
 				batchMining(player, obj, axeId, mineLvl);
 			}
 		}

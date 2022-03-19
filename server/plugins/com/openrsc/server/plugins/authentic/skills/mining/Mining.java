@@ -165,6 +165,14 @@ public final class Mining implements OpLocTrigger, UseLocTrigger {
 			} else {
 				if (def == null || def.getRespawnTime() < 1) {
 					player.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
+				}
+				// Before the fatigue system (13 November 2002) it was possible to fail prospecting
+				// which could happen based on "some chance" when the player had the level to mine the rock
+				// and always failed when the player did not meet the level to mine the rock
+				// here we set it as config option
+				else if (player.getConfig().CAN_PROSPECT_FAIL
+					&& (DataConversions.random(0, 3) != 1 || reqlvl > mineLvl)) {
+					player.playerServerMessage(MessageType.QUEST, "You fail to find any ore in the rock");
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName());
 				}

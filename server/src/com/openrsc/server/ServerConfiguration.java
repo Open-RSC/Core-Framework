@@ -274,6 +274,7 @@ public class ServerConfiguration {
 	public boolean RANGED_GIVES_XP_HIT;
 	public boolean ONLY_BASIC_RUNES;
 	public boolean CAN_OFFER_UNTRADEABLES;
+	public boolean CAN_PROSPECT_FAIL;
 	public boolean OSRS_COMBAT_MELEE;
 	public boolean OSRS_COMBAT_RANGED;
 	public boolean SANTA_GIVES_PRESENTS;
@@ -450,6 +451,7 @@ public class ServerConfiguration {
 		RANGED_GIVES_XP_HIT = tryReadBool("ranged_gives_xp_hit").orElse(false);
 		ONLY_BASIC_RUNES = tryReadBool("only_basic_runes").orElse(false);
 		CAN_OFFER_UNTRADEABLES = tryReadBool("can_offer_untradeables").orElse(false);
+		CAN_PROSPECT_FAIL = tryReadBool("can_prospect_fail").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);
