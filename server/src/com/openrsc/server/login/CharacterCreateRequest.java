@@ -30,6 +30,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 	private int clientVersion;
 	private boolean authenticClient;
 	private Channel channel;
+	private boolean isSimRegister;
 
 	public CharacterCreateRequest(final Server server, final Channel channel, final String username, final String password, final boolean isAuthenticClient, final int clientVersion) {
 		this.server = server;
@@ -40,6 +41,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 		this.setChannel(channel);
 		this.setIpAddress(((InetSocketAddress) getChannel().remoteAddress()).getAddress().getHostAddress());
 		this.setClientVersion(clientVersion);
+		this.isSimRegister = false;
 	}
 
 	public CharacterCreateRequest(final Server server, final Channel channel, final String username, final String password, final String email, final boolean isAuthenticClient, final int clientVersion) {
@@ -51,6 +53,18 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 		this.setChannel(channel);
 		this.setIpAddress(((InetSocketAddress) getChannel().remoteAddress()).getAddress().getHostAddress());
 		this.setClientVersion(clientVersion);
+		this.isSimRegister = false;
+	}
+
+	public CharacterCreateRequest(final Server server, final String username, final String ip, final int clientVersion) {
+		this.server = server;
+		this.setEmail("");
+		this.setUsername(DataConversions.sanitizeUsername(username));
+		this.setAuthenticClient(clientVersion <= 235);
+		this.setChannel(null);
+		this.setIpAddress(ip);
+		this.setClientVersion(clientVersion);
+		this.isSimRegister = true;
 	}
 
 	public String getIpAddress() {
@@ -230,7 +244,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			// Disabled 127.0.0.1 since can't be tracked of abuse
-			if ((getIpAddress().equals("127.0.0.1") || getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP) && !isAdmin) {
+			if (((getServer().getConfig().IS_LOCALHOST_RESTRICTED && getIpAddress().equals("127.0.0.1"))
+				|| (!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP) && !isAdmin)) {
 				return (byte) RegisterLoginResponse.IP_IN_USE;
 			}
 
@@ -250,7 +265,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 
 			if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
 				int registerTimeout = applyHarshRegistration ? 720 : 1; //time in minutes
-				boolean recentlyRegistered = getIpAddress().equals("127.0.0.1") || getServer().getDatabase().checkRecentlyRegistered(getIpAddress(), registerTimeout);
+				boolean recentlyRegistered = (getServer().getConfig().IS_LOCALHOST_RESTRICTED && getIpAddress().equals("127.0.0.1"))
+					|| (!getIpAddress().equals("127.0.0.1") && getServer().getDatabase().checkRecentlyRegistered(getIpAddress(), registerTimeout));
 				if (recentlyRegistered) {
 					LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
 					return (byte) RegisterLoginResponse.LOGIN_ATTEMPTS_EXCEEDED; // closest match for authentic client
@@ -258,9 +274,14 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			/* Create the game character */
-			final int playerId = getServer().getDatabase().createPlayer(getUsername(), getEmail(),
-				DataConversions.hashPassword(getPassword(), null),
-				System.currentTimeMillis() / 1000, getIpAddress());
+			int playerId;
+			if (!isSimRegister) {
+				playerId = getServer().getDatabase().createPlayer(getUsername(), getEmail(),
+					DataConversions.hashPassword(getPassword(), null),
+					System.currentTimeMillis() / 1000, getIpAddress());
+			} else {
+				playerId = 1;
+			}
 
 			if (playerId == -1) {
 				LOGGER.info(getIpAddress() + " - Registration failed: Player id not found.");
@@ -270,7 +291,10 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			LOGGER.catching(e);
 			return (byte) RegisterLoginResponse.UNSUCCESSFUL;
 		}
-		System.out.println("Register was successful!");
+
+		if (!isSimRegister) {
+			System.out.println("Register was successful!");
+		}
 		return (byte) RegisterLoginResponse.REGISTER_SUCCESSFUL;
 	}
 

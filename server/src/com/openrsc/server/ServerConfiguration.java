@@ -70,6 +70,7 @@ public class ServerConfiguration {
 	public int NETWORK_FLOOD_IP_BAN_MINUTES;
 	public boolean WANT_PCAP_LOGGING;
 	public boolean WANT_THREADING__BREAK_PID_PRIORITY;
+	public boolean IS_LOCALHOST_RESTRICTED;
 
 	// Location of the server conf files.
 	public String CONFIG_DIR = "conf" + File.separator + "server";
@@ -202,6 +203,7 @@ public class ServerConfiguration {
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
 	public boolean FEATURES_SLEEP;
 	public int RESTRICT_ITEM_ID;
+	public int RESTRICT_SCENERY_ID;
 	public int COMBAT_LEVEL_NON_MELEE_MASK;
 	public int PACKET_LIMIT;
 	//quest-minigame related
@@ -360,6 +362,7 @@ public class ServerConfiguration {
 		NPC_RESPAWN_MULTIPLIER = tryReadDouble("npc_respawn_multiplier").orElse(1.0);
 		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
+		IS_LOCALHOST_RESTRICTED = tryReadBool("is_localhost_restricted").orElse(true);
 		GLOBAL_MESSAGE_COOLDOWN = tryReadInt("global_message_cooldown").orElse(0);
 		int CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
 		int CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
@@ -386,6 +389,7 @@ public class ServerConfiguration {
 		BASED_CONFIG_DATA = tryReadInt("based_config_data").orElse(85);
 		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
 		RESTRICT_ITEM_ID = tryReadInt("restrict_item_id").orElse(1289);
+		RESTRICT_SCENERY_ID = tryReadInt("restrict_scenery_id").orElse(1188);
 		COMBAT_LEVEL_NON_MELEE_MASK = tryReadInt("combat_level_non_melee_mask").orElse(7);
 		OSRS_COMBAT_MELEE = tryReadBool("osrs_combat_melee").orElse(false);
 		OSRS_COMBAT_RANGED = tryReadBool("osrs_combat_ranged").orElse(false);

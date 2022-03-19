@@ -316,7 +316,13 @@ public final class Development implements CommandTrigger {
 
 		player.message("Now displaying all scenery in RuneScape Classic in 5 second intervals.");
 
-		for (int id = 0; id <= 1188; id++) {
+		int maxScenery;
+		if (player.getConfig().RESTRICT_SCENERY_ID >= 0) {
+			maxScenery = Math.min(player.getClientLimitations().maxSceneryId, player.getConfig().RESTRICT_SCENERY_ID);
+		} else {
+			maxScenery = player.getClientLimitations().maxSceneryId;
+		}
+		for (int id = 0; id <= maxScenery; id++) {
 			GameObject object = player.getViewArea().getGameObject(player.getLocation());
 			if (object != null) {
 				player.getWorld().unregisterGameObject(object);

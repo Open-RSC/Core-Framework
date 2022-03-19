@@ -31,6 +31,8 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	private int clientVersion;
 	private boolean authenticClient;
 	private boolean reconnecting;
+	private boolean checkPass;
+	private boolean isSimLogin;
 
 	protected LoginRequest(final Server server, final Channel channel, final String username, final String password, final boolean isAuthenticClient, final int clientVersion, final boolean reconnecting) {
 		this.server = server;
@@ -42,6 +44,21 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		this.setClientVersion(clientVersion);
 		this.setUsernameHash(DataConversions.usernameToHash(username));
 		this.reconnecting = reconnecting;
+		this.checkPass = true;
+		this.isSimLogin = false;
+	}
+
+	protected LoginRequest(final Server server, final String username, final String ip, final int clientVersion) {
+		this.server = server;
+		this.channel = null;
+		this.setUsername(DataConversions.sanitizeUsername(username));
+		this.setAuthenticClient(clientVersion <= 235);
+		this.setIpAddress(ip);
+		this.setClientVersion(clientVersion);
+		this.setUsernameHash(DataConversions.usernameToHash(username));
+		this.reconnecting = false;
+		this.checkPass = false;
+		this.isSimLogin = true;
 	}
 
 	public String getIpAddress() {
@@ -112,7 +129,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		}
 		loginValidated(loginResponse);
 
-		if (isLoginSuccessful(loginResponse)) {
+		if (!isSimLogin && isLoginSuccessful(loginResponse)) {
 			final Player loadedPlayer = getServer().getPlayerService().loadPlayer(this);
 			loadedPlayer.setLoggedIn(true);
 
@@ -160,7 +177,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			}
 
 			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION
-				&& !isAdmin && getClientVersion() < 14) {
+				&& !isAdmin && getClientVersion() > 235) {
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 
@@ -198,7 +215,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			if (!DataConversions.checkPassword(getPassword(), playerData.salt, playerData.password)) {
+			if (this.checkPass && !DataConversions.checkPassword(getPassword(), playerData.salt, playerData.password)) {
 				server.getPacketFilter().addPasswordAttempt(getIpAddress());
 				return (byte) LoginResponse.INVALID_CREDENTIALS;
 			}

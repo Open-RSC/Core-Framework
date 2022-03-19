@@ -59,6 +59,10 @@ public class YMLReader {
 				if (line.split("#").length < 2)
 					continue;
 
+				// Handle commented out properties
+				if (line.indexOf('#') < line.indexOf(':'))
+					continue;
+
 				// Handle in-line comments
 				String[] sublines = line.split("#");
 				for (String subline : sublines) {

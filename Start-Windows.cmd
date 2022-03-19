@@ -84,7 +84,7 @@ echo:
 echo Choices:
 echo   %RED%1%NC% - Preservation (Play the game as it was at the end of its life)
 echo   %RED%2%NC% - Cabbage (Modified XP rates, new game modes, and custom content - see wiki for more info)
-echo   %RED%3%NC% - 2001scape (RSC as it was in the beginning. Currently in alpha)
+echo   %RED%3%NC% - 2001scape (RSC as it was in the beginning)
 echo   %RED%4%NC% - OpenPK (Stork PK recreation based on the OpenRSC framework. Currently in alpha)
 echo   %RED%5%NC% - Return
 echo:
@@ -119,7 +119,8 @@ echo Please make sure you do not have local.conf or port.txt open.
 echo:
 pause
 del "server\local.conf"
-copy "server\%newtype%.conf" "server\local.conf"
+echo is_localhost_restricted: false > "server\local.conf"
+type "server\%newtype%.conf" >> "server\local.conf"
 echo %newport%> "Client_Base\Cache\port.txt"
 echo The change is complete; you can now start the game!
 echo:

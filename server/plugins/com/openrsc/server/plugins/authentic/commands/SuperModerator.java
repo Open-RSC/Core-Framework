@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.login.CharacterCreateRequest;
+import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -73,6 +75,10 @@ public final class SuperModerator implements CommandTrigger {
 			countOnlineByIP(player, command, args);
 		} else if (command.equalsIgnoreCase("renameplayer")) {
 			renameplayer(player, command, args);
+		} else if (command.equalsIgnoreCase("simlogin")) {
+			simulateLoginResponse(player, command, args);
+		} else if (command.equalsIgnoreCase("simregister")) {
+			simulateRegisterResponse(player, command, args);
 		}
 	}
 
@@ -637,5 +643,41 @@ public final class SuperModerator implements CommandTrigger {
 			player.message("A database error has occurred.");
 			LOGGER.catching(ex);
 		}
+	}
+
+	private void simulateLoginResponse(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [ip]");
+			return;
+		}
+
+		String playerName = args[0];
+		String ip = args.length >= 2 ? args[1] : "1.1.1.1";
+
+		final LoginRequest request = new LoginRequest(player.getWorld().getServer(), playerName, ip, 235) {
+			@Override
+			public void loginValidated(int response) {}
+
+			@Override
+			public void loadingComplete(Player loadedPlayer) {}
+		};
+		int code = request.validateLogin();
+
+		player.message("Simulated login for " + playerName + " (" + ip + ") returned response code: " + code);
+	}
+
+	private void simulateRegisterResponse(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [ip]");
+			return;
+		}
+
+		String playerName = args[0];
+		String ip = args.length >= 2 ? args[1] : "1.1.1.1";
+
+		final CharacterCreateRequest request = new CharacterCreateRequest(player.getWorld().getServer(), playerName, ip, 235);
+		int code = request.validateRegister();
+
+		player.message("Simulated register for " + playerName + " (" + ip + ") returned response code: " + code);
 	}
 }
