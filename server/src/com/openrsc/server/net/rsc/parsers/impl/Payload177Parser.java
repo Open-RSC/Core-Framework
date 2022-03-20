@@ -135,6 +135,9 @@ public class Payload177Parser implements PayloadParser<OpcodeIn> {
 			case 250: // 346
 				opcode = OpcodeIn.GROUND_ITEM_USE_ITEM;
 				break;
+			case 220: // 567
+				opcode = OpcodeIn.CAST_ON_INVENTORY_ITEM;
+				break;
 			case 240: // 377
 				opcode = OpcodeIn.ITEM_USE_ITEM;
 				break;
