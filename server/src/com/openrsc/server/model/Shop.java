@@ -5,6 +5,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PriceMismatchException;
+import com.openrsc.server.util.rsc.MathUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -358,7 +359,7 @@ public final class Shop {
 	public int getRetroStockOffset(int itemID) {
 		int amount = getItemCount(itemID);
 		int baseAmount = getStock(itemID);
-		return baseAmount - amount;
+		return MathUtil.boundedNumber(baseAmount - amount, -127, 127);
 	}
 
 

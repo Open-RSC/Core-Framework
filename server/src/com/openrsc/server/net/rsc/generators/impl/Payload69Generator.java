@@ -4,7 +4,6 @@ import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.RSCString;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -15,6 +14,7 @@ import com.openrsc.server.net.rsc.generators.PayloadGenerator;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MathUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -269,7 +269,7 @@ public class Payload69Generator implements PayloadGenerator<OpcodeOut> {
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);
-						builder.writeByte((s.baseAmount[i] - s.amount[i]) & 0xFF);
+						builder.writeByte(MathUtil.boundedNumber(s.baseAmount[i] - s.amount[i], -127, 127));
 					}
 					break;
 

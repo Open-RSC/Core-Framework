@@ -12,6 +12,7 @@ import com.openrsc.server.net.rsc.generators.PayloadGenerator;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MathUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -243,7 +244,7 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);
-						builder.writeByte((s.baseAmount[i] - s.amount[i]) & 0xFF);
+						builder.writeByte(MathUtil.boundedNumber(s.baseAmount[i] - s.amount[i], -127, 127));
 					}
 					break;
 
