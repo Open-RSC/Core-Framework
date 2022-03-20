@@ -14,6 +14,11 @@ Now copy and paste the following in Terminal and press enter:
 brew install adoptopenjdk/openjdk
 ```
 
+Then run
+```
+brew install ant
+```
+
 ## Step 2
 
 You are now ready to use "Start-Linux.sh" (Skip the option for Install). Open Terminal, navigate to this folder, and execute:
