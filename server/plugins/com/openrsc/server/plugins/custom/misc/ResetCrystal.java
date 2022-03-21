@@ -19,11 +19,17 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger {
 
-	private void smiteNpc(Player player, Npc npc) {
-		GameObject sara = new GameObject(player.getWorld(), npc.getLocation(), 1031, 0, 0);
+	private static void smiteNpc(Player player, Npc npc) {
+		int sceneryOfDestruction = 97; // fire
+		int smiteDuration = 1200;
+		if (player.getClientLimitations().maxSceneryId >= 1031) {
+			sceneryOfDestruction = 1031; // saradomin strike
+			smiteDuration = 600;
+		}
+		GameObject sara = new GameObject(player.getWorld(), npc.getLocation(), sceneryOfDestruction, 0, 0);
 		int damage = 9999;
 		player.getWorld().registerGameObject(sara);
-		player.getWorld().delayedRemoveObject(sara, 600);
+		player.getWorld().delayedRemoveObject(sara, smiteDuration);
 		npc.getUpdateFlags().setDamage(new Damage(npc, damage));
 		npc.getSkills().subtractLevel(Skill.HITS.id(), damage);
 		if (npc.getSkills().getLevel(Skill.HITS.id()) < 1) {
@@ -36,7 +42,7 @@ public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger 
 		}
 	}
 
-	private void resetScenery(Player player, GameObject gameObject) {
+	private static void resetScenery(Player player, GameObject gameObject) {
 		Point objectCoordinates = Point.location(gameObject.getLoc().getX(), gameObject.getLoc().getY());
 		final int initialObjectID = player.getWorld().getSceneryLoc(objectCoordinates);
 		if (initialObjectID != gameObject.getID()) {
@@ -86,11 +92,21 @@ public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger 
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		doResetCrystal(player, true);
+	}
+
+	public static void doResetCrystal(Player player, boolean isCrystal) {
+		if (!player.hasElevatedPriveledges()) {
+			player.playerServerMessage(MessageType.QUEST, config().BAD_SYNTAX_PREFIX + " Only administrators can use this command");
+			return;
+		}
 		player.playerServerMessage(MessageType.QUEST, "@ora@You can smite or reset scenery to their initial state");
 		player.playerServerMessage(MessageType.QUEST, "@ora@Near your view area");
-		delay(2);
-		player.playerServerMessage(MessageType.QUEST, "@ora@To apply the action just for a particular npc or scenery");
-		player.playerServerMessage(MessageType.QUEST, "@ora@Use the crystal on them");
+		if (isCrystal) {
+			delay(2);
+			player.playerServerMessage(MessageType.QUEST, "@ora@To apply the action just for a particular npc or scenery");
+			player.playerServerMessage(MessageType.QUEST, "@ora@Use the crystal on them");
+		}
 		int opt = multi(player, "Smite Npcs", "Reset Sceneries", "Cancel");
 		if (opt == 0) {
 			for (Iterator<Npc> iter = player.getViewArea().getNpcsInView().iterator(); iter.hasNext();) {

@@ -56,9 +56,9 @@ public class Fluffs implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigger, Us
 			} else {
 				// fluffs' pronouns are she/her according to Gertrude's transcript
 				player.playerServerMessage(MessageType.QUEST, "Eventually, Fluffs meows and you think you can hear her say something?");
-				delay(4);
-				player.playerServerMessage(MessageType.QUEST, "@yel@Fluffs: @dre@... It's just you and me, kid.");
 				delay(3);
+				player.playerServerMessage(MessageType.QUEST, "@yel@Fluffs: @dre@... It's just you and me, kid.");
+				delay(2);
 				player.playerServerMessage(MessageType.QUEST, "@yel@Fluffs: Could we go visit Gertrude some time?");
 			}
 		}

@@ -88,6 +88,7 @@ public final class Event implements CommandTrigger {
 		.put("edgeville", Point.location(217, 461))
 		.put("monk", Point.location(256, 462))
 		.put("palace", Point.location(130, 470))
+		.put("reldo", Point.location(128, 457))
 		.put("thurgo", Point.location(287, 707))
 		.put("doric", Point.location(325, 489))
 		.put("cook", Point.location(179, 483))
@@ -134,7 +135,7 @@ public final class Event implements CommandTrigger {
 		if (command.equalsIgnoreCase("teleport") || command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("tele") || command.equalsIgnoreCase("town") || command.equalsIgnoreCase("goto") || command.equalsIgnoreCase("tpto") || command.equalsIgnoreCase("teleportto") || command.equalsIgnoreCase("tpat")) {
 			teleportCommand(player, command, args);
 		}
-		else if (command.equalsIgnoreCase("rftele")) {
+		else if (command.equalsIgnoreCase("rftele") || command.equalsIgnoreCase("rtele") || command.equalsIgnoreCase("ftele")) {
 			rfteleToTp(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("return")) {
@@ -216,8 +217,16 @@ public final class Event implements CommandTrigger {
 
 		Point absoluteCoordinate;
 		if (args.length >= 2 && !secondArgIsPlayer) {
+			if (command.equalsIgnoreCase("rtele")) {
+				tellBadRfTele(player, command);
+				return;
+			}
 			absoluteCoordinate = Point.jagexPointToPoint(args[0] + " " + args[1]);
 		} else {
+			if (command.equalsIgnoreCase("ftele")) {
+				tellBadRfTele(player, command);
+				return;
+			}
 			absoluteCoordinate = Point.jagexPointToPoint(args[0]);
 		}
 
@@ -227,9 +236,6 @@ public final class Event implements CommandTrigger {
 				case Point.NOT_A_NUMBER:
 				default:
 					tellBadRfTele(player, command);
-					return;
-				case Point.OFFSET_OUT_OF_BOUNDS:
-					player.message("Offset out of bounds, must be 47 or less");
 					return;
 			}
 		}

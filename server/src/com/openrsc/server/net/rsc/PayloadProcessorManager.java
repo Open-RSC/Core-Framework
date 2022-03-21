@@ -161,18 +161,7 @@ public class PayloadProcessorManager {
 					}
 				}
 				if (method != null) {
-					if (!OpcodeIn.QUESTION_DIALOG_ANSWER.equals(payload.getOpcode()) && !OpcodeIn.HEARTBEAT.equals(payload.getOpcode())) {
-						// any player action other than choosing a dialogue choice must cancel the menu handler and set them non-busy
-						boolean menucancelremove = false; // TODO: REMOVE
-						if (player.getMenuHandler() != null) {
-							System.out.println("Cancelling Menu.");
-							menucancelremove = true;
-						}
-						player.cancelMenuHandler();
-						if (menucancelremove) {
-							System.out.println("Cancelled by: " + payload.getOpcode()); // TODO: REMOVE
-						}
-					}
+					checkIfShouldCancelMenu(player, payload.getOpcode());
 					method.invoke(processor, payload, player); //processor.process(payload, player);
 				}
 			} catch(Exception e) {
@@ -181,6 +170,18 @@ public class PayloadProcessorManager {
 			return true;
 		}
 		return false;
+	}
+
+	private static void checkIfShouldCancelMenu(Player player, OpcodeIn opcode) {
+		// any player action other than choosing a dialogue choice must cancel the menu handler and set them non-busy
+		if (!OpcodeIn.QUESTION_DIALOG_ANSWER.equals(opcode)
+			&& !OpcodeIn.HEARTBEAT.equals(opcode)
+			&& !OpcodeIn.KNOWN_PLAYERS.equals(opcode)
+			&& !OpcodeIn.CHAT_MESSAGE.equals(opcode)
+			&& !OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.equals(opcode)) {
+
+			player.cancelMenuHandler();
+		}
 	}
 
 	private static PayloadProcessor<? extends AbstractStruct<OpcodeIn>, OpcodeIn> get(OpcodeIn opcode) {

@@ -54,8 +54,9 @@ public final class ItemEquip implements PayloadProcessor<EquipStruct, OpcodeIn> 
 			request.item = player.getBank().get(bankSlot);
 			request.requestType = EquipRequest.RequestType.FROM_BANK;
 			request.bankSlot = bankSlot;
-		} else
+		} else {
 			return;
+		}
 
 		//Check to make sure the item is wieldable
 		if (request.item == null || !request.item.getDef(player.getWorld()).isWieldable()) {

@@ -46,8 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.openrsc.server.plugins.Functions.config;
-import static com.openrsc.server.plugins.Functions.npcattack;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Admins implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -219,11 +218,14 @@ public final class Admins implements CommandTrigger {
 			giveModTools(player);
 		} else if (command.equalsIgnoreCase("givetools")) {
 			giveTools(player);
+		} else if (command.equalsIgnoreCase("lemons") || command.equalsIgnoreCase("lemon")) {
+			giveLemons(player, args);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
 		} */
 	}
+
 
 	private void saveAll(Player player) {
 		int count = 0;
@@ -728,6 +730,44 @@ public final class Admins implements CommandTrigger {
 		} else {
 			player.message(messagePrefix + "Something went wrong spawning " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
 		}
+	}
+
+	private void giveLemons(Player player, String[] args) {
+		Player lemonRecipient;
+		if (args.length >= 1) {
+			lemonRecipient = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		} else {
+			lemonRecipient = player;
+		}
+
+		if (lemonRecipient == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		int[] lemonIds = {855, 856, 860};
+		char[] lemons = {'L', 'E', 'M', 'O', 'N', 'S', '!'};
+		StringBuilder lemonMessage = new StringBuilder();
+		for (int i = 0; i < 5; i++) {
+			for (char lemonLetter : lemons) {
+				if (random(0, 4) == 0) {
+					lemonMessage.append("@ora@");
+				} else {
+					lemonMessage.append("@yel@");
+				}
+				lemonMessage.append(lemonLetter);
+			}
+			lemonMessage.append(" ");
+		}
+
+		if (player.getConfig().BASED_MAP_DATA >= 51) { // 51 should be the version of maps used 2002-12-12, when Lemons were released
+			int lemonsToGive = lemonRecipient.getCarriedItems().getInventory().getFreeSlots();
+			for (int i = 0; i < lemonsToGive; i++) {
+				lemonRecipient.getCarriedItems().getInventory().add(new Item(lemonIds[random(0, 2)], 1));
+			}
+		}
+		player.playerServerMessage(MessageType.QUEST, lemonMessage.toString());
+		lemonRecipient.playerServerMessage(MessageType.QUEST, lemonMessage.toString());
 	}
 
 	private void spawnItemBank(Player player, String command, String[] args) {

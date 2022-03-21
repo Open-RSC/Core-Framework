@@ -64,7 +64,53 @@ public final class Moderator implements CommandTrigger {
 			listSpecialSleepwords(player, command, args);
 		} else if (command.equalsIgnoreCase("forcesleep")) {
 			forceSleep(player, command, args);
+		} else if (command.toLowerCase().startsWith("defineslot")) {
+			defineSlot(player, command, args);
 		}
+	}
+
+	private void defineSlot(Player player, String command, String[] args) {
+		// parse slot #
+		String slotStr = command.replace("defineslot", "");
+		int slot = -1;
+		try {
+			slot = Integer.parseInt(slotStr);
+		} catch (NumberFormatException ignored) {}
+		if (slot == -1) {
+			player.message("Couldn't parse slot number.");
+			player.message("Usage: @mag@::defineslotX [full command]@whi@ where X is the slot # you would like to change.");
+			player.message("Call @mag@::defineslotX@whi@ with no argument to unset the saved command.");
+			return;
+		}
+
+		// parse & sanitize command to save
+		StringBuilder newStr = new StringBuilder();
+		for (String arg : args) {
+			newStr.append(arg).append(" ");
+		}
+
+		String commandToSave = newStr.toString().trim();
+		if (commandToSave.startsWith("::")) {
+			commandToSave = commandToSave.substring(2);
+		}
+		if (commandToSave.equals("")) {
+			commandToSave = "(unset)";
+		}
+
+		// get old command
+		String oldSavedCommand = "";
+		if (player.getCache().hasKey("savedcommand" + slot)) {
+			oldSavedCommand = player.getCache().getString("savedcommand" + slot);
+		}
+
+		// save new command
+		player.getCache().store("savedcommand" + slot, commandToSave);
+
+		// tell player what happened
+		if (!oldSavedCommand.equals("") && !oldSavedCommand.equals("(unset)")) {
+			player.playerServerMessage(MessageType.QUEST, "Old command removed from slot @mag@" + slot + "@whi@: @mag@" + oldSavedCommand);
+		}
+		player.playerServerMessage(MessageType.QUEST, "New command saved to slot @mag@" + slot + "@whi@: @mag@" + commandToSave);
 	}
 
 	private void forceGlobalMessage(Player player, String[] args) {

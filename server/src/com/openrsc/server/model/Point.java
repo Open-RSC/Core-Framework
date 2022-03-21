@@ -618,8 +618,9 @@ public class Point {
 		sectorY = (yCalc / 48) + 37;
 		offsetX = x % 48;
 		offsetY = yCalc % 48;
-		if (offsetX == 0 && offsetY == 0) {
-			// not known if short form notation is at 0, 0 offset or not.
+		if (offsetX == 24 && offsetY == 24) {
+			// According to Rab, the spot that a new player spawns at is where /rtele 05050 went to
+			// It is the center of the chunk.
 			return String.format("%d%02d%02d", height, sectorX, sectorY);
 		}
 		return String.format("%d%02d%02d %02d%02d", height, sectorX, sectorY, offsetX, offsetY);
@@ -628,7 +629,6 @@ public class Point {
 	public static final int UNABLE_TO_CONVERT = -10000;
 	public static final int BAD_COORDINATE_LENGTH = 0;
 	public static final int NOT_A_NUMBER = 1;
-	public static final int OFFSET_OUT_OF_BOUNDS = 2;
 	public static Point jagexPointToPoint(String jagexPoint) {
 		int x = 0;
 		int y = 0;
@@ -654,9 +654,18 @@ public class Point {
 		} catch (NumberFormatException ex) {
 			return new Point(UNABLE_TO_CONVERT, NOT_A_NUMBER);
 		}
+		if (jagexPoint.length() == 5) {
+			offsetX = 24;
+			offsetY = 24;
+		}
 
-		if (offsetX > 47 || offsetY > 47) {
-			return new Point(UNABLE_TO_CONVERT, OFFSET_OUT_OF_BOUNDS);
+		while (offsetX > 47) {
+			sectorX += 1;
+			offsetX -= 48;
+		}
+		while (offsetY > 47) {
+			sectorY += 1;
+			offsetY -= 48;
 		}
 
 		x = ((sectorX - 48) * 48) + offsetX;

@@ -319,11 +319,9 @@ public final class RegularPlayer implements CommandTrigger {
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
 				, true);
 		} else {
-			player.message("@lre@Player Information:");
-			delay(2);
-			player.message("@gre@Coordinates:@whi@ " + player.getLocation().toString());
-			delay(2);
-			player.message("@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed));
+			player.playerServerMessage(MessageType.QUEST,"@lre@Player Information:");
+			player.playerServerMessage(MessageType.QUEST,"@gre@Coordinates:@whi@ " + player.getLocation().toString());
+			player.playerServerMessage(MessageType.QUEST,"@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed));
 		}
 	}
 

@@ -7044,7 +7044,7 @@
             "description": "I wonder if I can get this enchanted",
             "command": "twiddle",
             "isFemaleOnly": 0,
-            "isMembersOnly": 1,
+            "isMembersOnly": 0,
             "isStackable": 0,
             "isUntradable": 0,
             "isWearable": 0,
