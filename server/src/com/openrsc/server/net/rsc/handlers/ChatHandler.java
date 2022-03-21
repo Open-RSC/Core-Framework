@@ -29,10 +29,6 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 		}
 
 		String message = payload.message;
-		if ((sender.isUsing38CompatibleClient() || sender.isUsing39CompatibleClient()) && sender.isEvent() && payload.message.startsWith("::")) {
-			CommandHandler.handleCommandString(sender, message.substring(2));
-			return;
-		}
 		if (!sender.speakTongues) {
 			message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(message));

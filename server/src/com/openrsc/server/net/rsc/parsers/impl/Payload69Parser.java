@@ -245,15 +245,20 @@ public class Payload69Parser implements PayloadParser<OpcodeIn> {
 
 			case CHAT_MESSAGE:
 				String message = packet.readString();
-				try {
-					ChatStruct cs = new ChatStruct();
-					cs.message = StringUtil.getChatString(message);
-					result = cs;
-				} catch (RuntimeException re) {
+				if (message.startsWith("/")) {
+					CommandStruct cms = new CommandStruct();
+					cms.command = message.substring(1); // strip out /
+					result = cms;
+					opcode = OpcodeIn.COMMAND;
+				} else if (message.startsWith("::")) {
 					CommandStruct cms = new CommandStruct();
 					cms.command = message.substring(2); // strip out ::
 					result = cms;
 					opcode = OpcodeIn.COMMAND;
+				} else {
+					ChatStruct cs = new ChatStruct();
+					cs.message = message;
+					result = cs;
 				}
 				break;
 			case SOCIAL_ADD_FRIEND:
