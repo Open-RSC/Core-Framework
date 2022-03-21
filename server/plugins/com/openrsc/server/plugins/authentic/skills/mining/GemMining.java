@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.mining;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
@@ -150,9 +151,7 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 
 			if (!config().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
 				if (object != null && object.getID() == obj.getID()) {
-					GameObject newObject = new GameObject(player.getWorld(), obj.getLocation(), 98, obj.getDirection(), obj.getType());
-					player.getWorld().replaceGameObject(obj, newObject);
-					player.getWorld().delayedSpawnObject(object.getLoc(), 120 * 1000); // 2 minute respawn time
+					changeloc(obj, 120 * 1000, SceneryId.ROCK_GENERIC.id()); // 2 minute respawn time
 				}
 				return;
 			}

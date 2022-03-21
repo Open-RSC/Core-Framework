@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.skills.mining;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.GameObjectDef;
@@ -266,8 +267,7 @@ public final class Mining implements OpLocTrigger, UseLocTrigger {
 				}
 				if (!config().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
 					if (def.getRespawnTime() > 0) {
-						GameObject newObject = new GameObject(player.getWorld(), rock.getLocation(), 98, rock.getDirection(), rock.getType());
-						changeloc(rock, def.getRespawnTime() * 1000, newObject.getID());
+						changeloc(rock, def.getRespawnTime() * 1000, SceneryId.ROCK_GENERIC.id());
 					}
 					return;
 				}

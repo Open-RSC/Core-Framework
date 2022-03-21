@@ -37,6 +37,10 @@ public class GameObject extends Entity {
 		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction, type));
 	}
 
+	public GameObject(final World world, final Point location, final int id, final int perm_id, final int direction, final int type) {
+		this(world, new GameObjectLoc(id, perm_id, location.getX(), location.getY(), direction, type));
+	}
+
 	public GameObject(World world, Point location, int id, int direction, int type, String owner) {
 		this(world, new GameObjectLoc(id, location.getX(), location.getY(), direction, type, owner));
 	}

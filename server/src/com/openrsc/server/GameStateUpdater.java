@@ -2,6 +2,7 @@ package com.openrsc.server;
 
 import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
@@ -1044,7 +1045,10 @@ public final class GameStateUpdater {
 
 			final int offsetX = newObject.getX() - playerToUpdate.getX();
 			final int offsetY = newObject.getY() - playerToUpdate.getY();
-			objectLocs.add(new GameObjectLoc(newObject.getID(), offsetX, offsetY, newObject.getDirection(), 0));
+
+			final int newObjectId = retroRockConverter(playerToUpdate, newObject.getLoc());
+
+			objectLocs.add(new GameObjectLoc(newObjectId, offsetX, offsetY, newObject.getDirection(), 0));
 			playerToUpdate.getLocalGameObjects().add(newObject);
 			changed = true;
 		}
@@ -1052,6 +1056,20 @@ public final class GameStateUpdater {
 		if (changed) {
 			tryFinalizeAndSendPacket(OpcodeOut.SEND_SCENERY_HANDLER, struct, playerToUpdate);
 		}
+	}
+
+	// Rocks should not have their appearances changed prior to client 157 which introduced fatigue & mining improvements
+	private int retroRockConverter(Player playerToUpdate, GameObjectLoc curSceneryLoc) {
+		int permId = curSceneryLoc.perm_id;
+		int curId = curSceneryLoc.id;
+		if (curId == SceneryId.ROCK_GENERIC.id()) {
+			if (permId != SceneryId.ROCK_GENERIC.id()) {
+				if (playerToUpdate.getClientVersion() < 157) {
+					return permId;
+				}
+			}
+		}
+		return curId;
 	}
 
 	protected void updateGroundItems(final Player playerToUpdate) {
