@@ -79,27 +79,27 @@ public class RSCPacketFilter {
 		}
 
 		synchronized (connections) {
-			loginAttempts.clear();
+			connections.clear();
 		}
 
 		synchronized (adminHosts) {
-			loginAttempts.clear();
+			adminHosts.clear();
 		}
 
 		synchronized (packets) {
-			loginAttempts.clear();
+			packets.clear();
 		}
 
 		synchronized (ipBans) {
-			loginAttempts.clear();
+			ipBans.clear();
 		}
 
 		synchronized (loggedInTracker) {
-			loginAttempts.clear();
+			loggedInTracker.clear();
 		}
 
 		synchronized (passwordAttempts) {
-			loginAttempts.clear();
+			passwordAttempts.clear();
 		}
 	}
 
