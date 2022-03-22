@@ -64,7 +64,7 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 		world.getClanManager().checkAndUnattachFromClan(getPlayer());
 		world.getPartyManager().checkAndUnattachFromParty(getPlayer());
 
-		getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP());
+		getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP(), getPlayer().getUsernameHash());
 
 		getPlayer().remove();
 		getServer().getWorld().getPlayers().remove(getPlayer());

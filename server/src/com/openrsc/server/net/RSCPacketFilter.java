@@ -8,8 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class RSCPacketFilter {
 	/**
@@ -46,9 +45,9 @@ public class RSCPacketFilter {
 	 */
 	private final HashMap<String, Long> ipBans;
 	/**
-	 * Holds counts of logged in players per IP address
+	 * Holds track of logged in players per IP address
 	 */
-	private final HashMap<String, Integer> loggedInCount;
+	private final HashMap<String, Set<Long>> loggedInTracker;
 	/**
 	 * Holds host address and it's password guess attempt times
 	 */
@@ -62,7 +61,7 @@ public class RSCPacketFilter {
 		this.adminHosts = new ArrayList<>();
 		this.packets = new HashMap<>();
 		this.ipBans = new HashMap<>();
-		this.loggedInCount = new HashMap<>();
+		this.loggedInTracker = new HashMap<>();
 		this.passwordAttempts = new HashMap<>();
 	}
 
@@ -95,7 +94,7 @@ public class RSCPacketFilter {
 			loginAttempts.clear();
 		}
 
-		synchronized (loggedInCount) {
+		synchronized (loggedInTracker) {
 			loginAttempts.clear();
 		}
 
@@ -294,20 +293,24 @@ public class RSCPacketFilter {
 		}
 	}
 
-	public void removeLoggedInPlayer(final String hostAddress) {
-		synchronized(loggedInCount) {
-			if(loggedInCount.containsKey(hostAddress)) {
-				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) - 1);
+	public void removeLoggedInPlayer(final String hostAddress, final Long playerHash) {
+		synchronized(loggedInTracker) {
+			if(loggedInTracker.containsKey(hostAddress)) {
+				Set<Long> players = loggedInTracker.get(hostAddress);
+				players.remove(playerHash);
+				loggedInTracker.put(hostAddress, players);
 			}
 		}
 	}
 
-	public void addLoggedInPlayer(final String hostAddress) {
-		synchronized(loggedInCount) {
-			if(!loggedInCount.containsKey(hostAddress)) {
-				loggedInCount.put(hostAddress, 1);
+	public void addLoggedInPlayer(final String hostAddress, final Long playerHash) {
+		synchronized(loggedInTracker) {
+			if(!loggedInTracker.containsKey(hostAddress)) {
+				loggedInTracker.put(hostAddress, new HashSet<Long>() {{ add(playerHash); }});
 			} else {
-				loggedInCount.put(hostAddress, loggedInCount.get(hostAddress) + 1);
+				Set<Long> players = loggedInTracker.get(hostAddress);
+				players.add(playerHash);
+				loggedInTracker.put(hostAddress, players);
 			}
 		}
 	}
@@ -419,9 +422,9 @@ public class RSCPacketFilter {
 	}
 
 	public final int getPlayersCount(final String hostAddress) {
-		synchronized(loggedInCount) {
-			if (loggedInCount.containsKey(hostAddress)) {
-				return loggedInCount.get(hostAddress);
+		synchronized(loggedInTracker) {
+			if (loggedInTracker.containsKey(hostAddress)) {
+				return loggedInTracker.get(hostAddress).size();
 			} else {
 				return 0;
 			}
@@ -445,15 +448,27 @@ public class RSCPacketFilter {
 
 	public int recalculateLoggedInCounts() {
 		int fixedIps = 0;
-		synchronized (loggedInCount) {
-			for (String hostAddress : loggedInCount.keySet()) {
-				int currentLoginCount = loggedInCount.get(hostAddress);
+		synchronized (loggedInTracker) {
+			Iterator<Long> iter;
+			Long playerHash;
+			for (String hostAddress : loggedInTracker.keySet()) {
+				Set<Long> currentTrackedPlayers = loggedInTracker.get(hostAddress);
+				iter = currentTrackedPlayers.iterator();
+				while (iter.hasNext()) {
+					playerHash = iter.next();
+					if (getServer().getWorld().getPlayer(playerHash) == null
+						|| !getServer().getWorld().getPlayer(playerHash).getCurrentIP().equals(hostAddress)) {
+						iter.remove();
+					}
+				}
+				loggedInTracker.put(hostAddress, currentTrackedPlayers);
+				/*int currentLoginCount = loggedInTracker.get(hostAddress);
 				int currentConnectionCount = getConnectionCount(hostAddress);
 				if (currentLoginCount > currentConnectionCount) {
-					loggedInCount.put(hostAddress, currentConnectionCount);
+					loggedInTracker.put(hostAddress, currentConnectionCount);
 					++fixedIps;
 					LOGGER.warn("Impossible scenario of more logged in characters than connections corrected for IP: " + hostAddress);
-				}
+				}*/
 			}
 		}
 		return fixedIps;

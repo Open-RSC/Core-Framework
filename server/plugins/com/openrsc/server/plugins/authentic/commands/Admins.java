@@ -114,6 +114,8 @@ public final class Admins implements CommandTrigger {
 			clearIpBans(player);
 		} else if (command.equalsIgnoreCase("fixloggedincount")) {
 			recalcLoggedInCounts(player);
+		} else if (command.equalsIgnoreCase("getloggedincount")) {
+			obtainLoggedInCounts(player, args);
 		} else if (command.equalsIgnoreCase("item")) {
 			spawnItemInventory(player, command, args, false);
 		} else if (command.equalsIgnoreCase("ritem")) {
@@ -590,6 +592,13 @@ public final class Admins implements CommandTrigger {
 		  int fixedIps = player.getWorld().getServer().recalculateLoggedInCounts();
 		  player.message(messagePrefix + "Fixed lingering loggedInCounts for " + fixedIps + " IP address" + (fixedIps != 1 ? "es." : "."));
 	  }
+
+	private void obtainLoggedInCounts(Player player, String[] args) {
+		String ip = args.length >= 1 ? args[0] : "127.0.0.1";
+
+		int counts = player.getWorld().getServer().getPlayersCount(ip);
+		player.message(messagePrefix + "Found " + counts + " players for IP address " + ip);
+	}
 
 	private void serverShutdown(Player player, String[] args) {
 		int seconds = 300;

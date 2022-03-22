@@ -801,6 +801,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				}
 			}
 
+			getServer().getPacketFilter().removeLoggedInPlayer(player.getCurrentIP(), player.getUsernameHash());
+
 			// close the channel after a safe amount of time for the logout packet to reach the player
 			// does not matter if player logs back in while this still hasn't been destroyed, it's just to free memory.
 			player.getWorld().getServer().getGameEventHandler().add(

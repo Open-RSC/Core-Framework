@@ -762,6 +762,10 @@ public class Server implements Runnable {
 		return packetFilter.recalculateLoggedInCounts();
 	}
 
+	public final int getPlayersCount(String hostAddress) {
+		return packetFilter.getPlayersCount(hostAddress);
+	}
+
 	public final long getLastIncomingPacketsDuration() {
 		return lastIncomingPacketsDuration;
 	}
