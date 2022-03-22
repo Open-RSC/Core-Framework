@@ -447,7 +447,8 @@ public class RSCPacketFilter {
 	}
 
 	public int recalculateLoggedInCounts() {
-		int fixedIps = 0;
+		//int fixedIps = 0;
+		Set<String> fixedIPs = new HashSet<>();
 		synchronized (loggedInTracker) {
 			Iterator<Long> iter;
 			Long playerHash;
@@ -459,6 +460,9 @@ public class RSCPacketFilter {
 					if (getServer().getWorld().getPlayer(playerHash) == null
 						|| !getServer().getWorld().getPlayer(playerHash).getCurrentIP().equals(hostAddress)) {
 						iter.remove();
+						if (!fixedIPs.contains(hostAddress)) {
+							fixedIPs.add(hostAddress);
+						}
 					}
 				}
 				loggedInTracker.put(hostAddress, currentTrackedPlayers);
@@ -471,7 +475,7 @@ public class RSCPacketFilter {
 				}*/
 			}
 		}
-		return fixedIps;
+		return fixedIPs.size();
 	}
 
 	public final Server getServer() {
