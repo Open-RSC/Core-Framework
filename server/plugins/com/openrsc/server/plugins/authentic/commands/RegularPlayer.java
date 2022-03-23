@@ -147,7 +147,14 @@ public final class RegularPlayer implements CommandTrigger {
 			getLanguage(command, player, args);
 		} else if (command.equalsIgnoreCase("togglereceipts")) {
 			toggleReceipts(player);
+		} else if (command.equalsIgnoreCase("getpidlesscatching") || command.equalsIgnoreCase("tellpidlesscatching") || command.equalsIgnoreCase("pidless")) {
+			tellPidlessCatching(player);
 		}
+	}
+
+	private void tellPidlessCatching(Player player) {
+		player.playerServerMessage(MessageType.QUEST, "@ora@Pidless catching is currently @gre@" +
+			(player.getConfig().PIDLESS_CATCHING ? "Enabled" : "Disabled"));
 	}
 
 	private void setLanguage(String command, Player player, String[] args) {

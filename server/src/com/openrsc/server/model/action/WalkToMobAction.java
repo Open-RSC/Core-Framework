@@ -36,5 +36,10 @@ public abstract class WalkToMobAction extends WalkToAction {
 		return getPlayer().withinRange(mob, radius)
 			&& PathValidation.checkAdjacentDistance(getPlayer().getWorld(), getPlayer().getLocation(), mob.getLocation(), ignoreProjectileAllowed);
 	}
+
+	@Override
+	public boolean isPvPAttack() {
+		return mob.isPlayer() && actionType == ActionType.ATTACK;
+	}
 }
 

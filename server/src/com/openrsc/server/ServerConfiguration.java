@@ -279,6 +279,7 @@ public class ServerConfiguration {
 	public boolean OSRS_COMBAT_RANGED;
 	public boolean SANTA_GIVES_PRESENTS;
 	public boolean USES_RETRO_STOCK_SENSITIVITY;
+	public boolean PIDLESS_CATCHING;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -396,6 +397,7 @@ public class ServerConfiguration {
 		OSRS_COMBAT_RANGED = tryReadBool("osrs_combat_ranged").orElse(false);
 		SANTA_GIVES_PRESENTS = tryReadBool("santa_gives_presents").orElse(false);
 		USES_RETRO_STOCK_SENSITIVITY = tryReadBool("uses_retro_stock_sensitivity").orElse(false);
+		PIDLESS_CATCHING = tryReadBool("pidless_catching").orElse(false);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);

@@ -15,6 +15,7 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -191,6 +192,38 @@ public final class Event implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("npctalk") || command.equalsIgnoreCase("npcsay")) {
 			npcTalk(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("setpidless") || command.equalsIgnoreCase("setpidlesscatching")) {
+			setPidless(player, command, args);
+		}
+	}
+
+	private void setPidless(Player player, String command, String[] args) {
+		if(args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [on/off]");
+			return;
+		}
+		boolean before = player.getConfig().PIDLESS_CATCHING;
+		if (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("yes") || args[0].equals("1") || args[0].equalsIgnoreCase("true")) {
+			player.getConfig().PIDLESS_CATCHING = true;
+		} else if (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("no") || args[0].equals("0") || args[0].equalsIgnoreCase("false")) {
+			player.getConfig().PIDLESS_CATCHING = false;
+		} else {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [on/off]");
+			return;
+		}
+
+		if (before != player.getConfig().PIDLESS_CATCHING) {
+			String announcement = "@ran@ANNOUCEMENT: @whi@" + player.getUsername() + "@ora@ set pidless catching to @gre@" + (player.getConfig().PIDLESS_CATCHING ? "Enabled" : "Disabled");
+			for (Player playerToUpdate : player.getWorld().getPlayers()) {
+				if (!playerToUpdate.isUsingCustomClient()) {
+					ActionSender.sendMessage(playerToUpdate, null, MessageType.QUEST, announcement, player.getIconAuthentic(), null);
+				} else {
+					ActionSender.sendMessage(playerToUpdate, player, MessageType.GLOBAL_CHAT, announcement, player.getIcon(), null);
+				}
+			}
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "@ora@Nothing changed, PIDLESS_CATCHING remains @gre@" + player.getConfig().PIDLESS_CATCHING);
 		}
 	}
 
@@ -661,6 +694,7 @@ public final class Event implements CommandTrigger {
 	private void queryPlayerAlternateCharacters(Player player, String command, String[] args) {
 		if(args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player]");
+			return;
 		}
 
 		String targetUsername	= args[0];

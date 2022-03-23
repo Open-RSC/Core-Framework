@@ -49,4 +49,7 @@ public abstract class WalkToAction {
 		this.executed = executed;
 	}
 
+	public boolean isPvPAttack() {
+		return false;
+	}
 }

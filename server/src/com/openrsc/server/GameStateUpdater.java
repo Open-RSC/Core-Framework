@@ -1350,4 +1350,22 @@ public final class GameStateUpdater {
 			}
 		});
 	}
+
+	public long executePidlessCatching() {
+		return getServer().bench(() -> {
+			if (getServer().getConfig().PIDLESS_CATCHING) {
+				// Executed after all players have moved, we check a second time this tick
+				// if the higher pid player is now close enough to catch the lower pid player.
+				for (final Player player : getServer().getWorld().getPlayers()) {
+					if (player.getWalkToAction() != null) {
+						if (player.getWalkToAction().isPvPAttack()) {
+							if (player.getWalkToAction().shouldExecute()) {
+								player.getWalkToAction().execute();
+							}
+						}
+					}
+				}
+			}
+		});
+	}
 }

@@ -533,6 +533,7 @@ public class Server implements Runnable {
 							for (final Player player : getWorld().getPlayers()) {
 								player.processTick();
 							}
+							incrementLastExecuteWalkToActionsDuration(getGameUpdater().executePidlessCatching());
 							incrementLastProcessMessageQueuesDuration(getWorld().processGlobalMessageQueue());
 							incrementLastProcessNpcsDuration(getGameUpdater().processNpcs());
 							for (final Player player : getWorld().getPlayers()) {
