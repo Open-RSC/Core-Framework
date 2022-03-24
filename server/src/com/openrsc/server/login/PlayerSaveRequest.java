@@ -47,15 +47,29 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 	}
 
 	public void logoutSaveSuccess() {
-
-		getPlayer().setLoggedIn(false);
-
 		/* IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
 		{
 			wildernessIPTracker.remove(player.getCurrentIP());
 		}*/
 
+		LOGGER.info("logoutSaveSuccess pre-removeLoggedInPlayer for user account " + getPlayer().getUsername() + "((" + getPlayer().getCurrentIP() + ",," + getPlayer().getUsernameHash() + "))");
+		try {
+			getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP(), getPlayer().getUsernameHash());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		LOGGER.info("logoutSaveSuccess post-removeLoggedInPlayer for user account " + getPlayer().getUsername());
+
+		getPlayer().remove(); // remove player from region
+		getServer().getWorld().getPlayers().remove(getPlayer()); // remove player from player list
+		getPlayer().setLoggedIn(false);
+		LOGGER.info("Removed player " + getPlayer().getUsername());
+
+		updateFriendsLists();
+	}
+
+	private void updateFriendsLists() {
 		final World world = getPlayer().getWorld();
 		for (Player other : world.getPlayers()) {
 			other.getSocial().alertOfLogout(getPlayer());
@@ -63,12 +77,6 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 
 		world.getClanManager().checkAndUnattachFromClan(getPlayer());
 		world.getPartyManager().checkAndUnattachFromParty(getPlayer());
-
-		getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP(), getPlayer().getUsernameHash());
-
-		getPlayer().remove();
-		getServer().getWorld().getPlayers().remove(getPlayer());
-		LOGGER.info("Removed player " + getPlayer().getUsername());
 	}
 
 }

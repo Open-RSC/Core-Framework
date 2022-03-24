@@ -2214,6 +2214,7 @@ public final class Player extends Mob {
 
 	public void processTick() {
 		getWorld().getServer().incrementLastIncomingPacketsDuration(processIncomingPackets());
+		processLogout(this);
 		getWorld().getServer().incrementLastExecuteWalkToActionsDuration(
 			getWorld().getServer().getGameUpdater().executeWalkToActions(this));
 		getWorld().getServer().incrementLastEventsDuration(
@@ -2222,6 +2223,13 @@ public final class Player extends Mob {
 			getWorld().getServer().getGameUpdater().movePlayer(this));
 		getWorld().getServer().incrementLastProcessMessageQueuesDuration(
 			getWorld().getServer().getGameUpdater().processMessageQueue(this));
+	}
+
+	private void processLogout(Player player) {
+		// Check isLoggedIn() because we don't want to unregister more than once
+		if (player.isUnregistering() && player.isLoggedIn()) {
+			getWorld().unregisterPlayer(player);
+		}
 	}
 
 	public void sendUpdates() {

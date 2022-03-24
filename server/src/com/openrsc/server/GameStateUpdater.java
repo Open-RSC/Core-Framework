@@ -111,7 +111,10 @@ public final class GameStateUpdater {
 		}
 
 		if (player.warnedToMove()) {
-			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) && player.loggedIn() && !player.hasElevatedPriveledges()) {
+			if (curTime - player.getLastMoved() >= (timeoutLimit + 60000) &&
+				player.loggedIn() &&
+				!player.hasElevatedPriveledges() &&
+				!(player.inCombat() && player.getDuel().isDuelActive())) {
 				player.unregister(true, "Movement time-out");
 			} else if (player.hasMoved()) {
 				player.setWarnedToMove(false);
@@ -1331,14 +1334,6 @@ public final class GameStateUpdater {
 	 */
 	public final long movePlayer(final Player player) {
 		return getServer().bench(() -> {
-
-			// TODO: probably don't have this in move player
-			// Checking login because we don't want to unregister more than once
-			if (player.isUnregistering() && player.isLoggedIn()) {
-				getServer().getWorld().unregisterPlayer(player);
-				return;
-			}
-
 			// Only do the walking tick here if the Players' walking tick matches the game tick
 			if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
 				player.updatePosition();

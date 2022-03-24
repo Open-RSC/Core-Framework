@@ -366,6 +366,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					ItemDefinition inventoryDef = affectedItem.getDef(player.getWorld());
 					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+						player.getUpdateFlags().setAppearanceChanged(true);
 					}
 
 					// Create item to be traded.
@@ -389,6 +390,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					ItemDefinition inventoryDef = affectedItem.getDef(player.getWorld());
 					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 						affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
+						affectedPlayer.getUpdateFlags().setAppearanceChanged(true);
 					}
 
 					int amount = Math.min(affectedItem.getAmount(), item.getAmount());
