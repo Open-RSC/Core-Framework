@@ -2455,6 +2455,7 @@ public final class Player extends Mob {
 	}
 
 	public void logout() {
+		LOGGER.info("Player logout requested for " + this.getUsername());
 		try {
 			ActionSender.sendLogoutRequestConfirm(this);
 		} catch (NullPointerException ex) {
@@ -2492,6 +2493,7 @@ public final class Player extends Mob {
 		getCache().set("gnomeball_npc", getAttribute("gnomeball_npc", 0));
 
 		save(true);
+		LOGGER.info("Player save & logout request queued for " + this.getUsername());
 	}
 
 	public void sendMemberErrorMessage() {
