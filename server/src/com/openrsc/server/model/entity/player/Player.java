@@ -54,7 +54,6 @@ import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -254,7 +253,7 @@ public final class Player extends Mob {
 	/**
 	 * Whether the player is currently logged in
 	 */
-	private AtomicBoolean loggedIn = new AtomicBoolean(false);
+	private boolean loggedIn = false;
 	/**
 	 * Is the character male?
 	 */
@@ -1921,7 +1920,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isLoggedIn() {
-		return loggedIn.get();
+		return loggedIn;
 	}
 
 	public void setLoggedIn(final boolean loggedIn) {
@@ -1939,7 +1938,7 @@ public final class Player extends Mob {
 			}
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 		}
-		this.loggedIn.set(loggedIn);
+		this.loggedIn = loggedIn;
 	}
 
 	public void toggleDenyAllLogoutRequests() {
@@ -2034,7 +2033,7 @@ public final class Player extends Mob {
 
 	@Override
 	public void killedBy(final Mob mob) {
-		if (!loggedIn.get()) {
+		if (!loggedIn) {
 			return;
 		}
 		if (this.killed) return;
@@ -2147,7 +2146,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean loggedIn() {
-		return loggedIn.get();
+		return loggedIn;
 	}
 
 	public void message(final String string) {

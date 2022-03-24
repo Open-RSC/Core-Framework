@@ -4,9 +4,9 @@ import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.projectile.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
+import com.openrsc.server.event.rsc.impl.projectile.RangeEventNpc;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.container.Item;
@@ -49,7 +49,7 @@ public abstract class Mob extends Entity {
 	 * Flag to indicate that this mob will be needed to be unregistered after
 	 * next update tick.
 	 */
-	protected AtomicBoolean unregistering = new AtomicBoolean(false);
+	protected boolean unregistering;
 	/**
 	 * The combat event instance.
 	 */
@@ -1056,11 +1056,11 @@ public abstract class Mob extends Entity {
 	}
 
 	public boolean isUnregistering() {
-		return unregistering.get();
+		return unregistering;
 	}
 
 	public void setUnregistering(final boolean unregistering) {
-		this.unregistering.set(unregistering);
+		this.unregistering = unregistering;
 	}
 
 	public KillType getKillType() {
