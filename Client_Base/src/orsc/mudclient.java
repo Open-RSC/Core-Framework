@@ -7188,7 +7188,15 @@ public final class mudclient implements Runnable {
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y && mouseY < y + boxHeight
 						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
-						selectedSpell = lastSelectedSpell;
+						if (color.equals("@yel@") || S_WANT_CUSTOM_SPRITES) {
+							// due to magic cape can't determine client side if spell will not require runes
+							selectedSpell = lastSelectedSpell;
+						} else {
+							this.showMessage(false, null,
+								"You don't have all the reagents you need for this spell",
+								MessageType.GAME, 0, null);
+							selectedSpell = -1;
+						}
 						mouseButtonClick = 0;
 					}
 

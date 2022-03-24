@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Group;
@@ -178,6 +179,8 @@ public final class Moderator implements CommandTrigger {
 				+ "@gre@Fatigue:@whi@ " + (targetPlayer.getFatigue() / 1500) + " %"
 				+ "@gre@Group ID:@whi@ " + Group.GROUP_NAMES.get(targetPlayer.getGroupID()) + " (" + targetPlayer.getGroupID() + ") %"
 				+ "@gre@Busy:@whi@ " + (targetPlayer.isBusy() ? "true" : "false") + " %"
+				+ "@gre@Logged In:@whi@ " + (targetPlayer.isLoggedIn() ? "true" : "false") + " %"
+				+ "@gre@Unregistering:@whi@ " + (targetPlayer.isUnregistering() ? "true" : "false") + " %"
 				+ "@gre@IP:@whi@ " + targetPlayer.getLastIP() + " %"
 				+ "@gre@Last Login:@whi@ " + targetPlayer.getDaysSinceLastLogin() + " days ago %"
 				+ "@gre@Coordinates:@whi@ " + targetPlayer.getLocation().toString() + " %"
@@ -340,6 +343,20 @@ public final class Moderator implements CommandTrigger {
 			new StaffLog(player, 6, targetPlayer, targetPlayer.getUsername()
 				+ " has been kicked by " + player.getUsername()));
 		targetPlayer.unregister(true, "You have been kicked by " + player.getUsername());
+
+		final String userHash = args[0];
+		DelayedEvent forceUnregister = new DelayedEvent(player.getWorld(), null, 1000, "Manual Unregister Player") {
+			@Override
+			public void run() {
+				Player forcedPlayer = getWorld().getPlayer(DataConversions.usernameToHash(userHash));
+				if (forcedPlayer != null) {
+					getWorld().unregisterPlayer(forcedPlayer);
+				}
+				running = false;
+			}
+		};
+		player.getWorld().getServer().getGameEventHandler().add(forceUnregister);
+
 		player.playerServerMessage(MessageType.QUEST,targetPlayer.getUsername() + " has been kicked.");
 	}
 

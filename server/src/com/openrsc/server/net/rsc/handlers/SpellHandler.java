@@ -27,6 +27,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.SpellStruct;
+import com.openrsc.server.plugins.SpellFailureException;
 import com.openrsc.server.plugins.triggers.SpellInvTrigger;
 import com.openrsc.server.plugins.triggers.SpellLocTrigger;
 import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
@@ -94,10 +95,18 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		return true;
 	}
 
-	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
-		if (SkillCapes.shouldActivate(player, ItemId.MAGIC_CAPE)) {
+	/**
+	 * Checks if player can cast spell
+	 * @param player
+	 * @param spell
+	 * @param rollMagicCape
+	 * @return The set of required runes that would be consumed or null if the next cast should be free due to Magic Cape
+	 * @throws SpellFailureException when player lacks the required runes to cast spell
+	 */
+	public static Set<Entry<Integer, Integer>> checkSpellRunes(Player player, SpellDef spell, boolean rollMagicCape) throws SpellFailureException {
+		if (rollMagicCape && SkillCapes.shouldActivate(player, ItemId.MAGIC_CAPE)) {
 			player.message("You manage to cast the spell without using any runes");
-			return true;
+			return null;
 		}
 		Set<Entry<Integer, Integer>> runesToConsume = new HashSet<>();
 
@@ -130,14 +139,36 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			if (player.getCarriedItems().getInventory().countId(e.getKey()) < e.getValue()) {
 				player.setSuspiciousPlayer(true, "player not all reagents for spell");
 				player.message("You don't have all the reagents you need for this spell");
+				throw new SpellFailureException("Player does not have all the reagents you need for this spell");
+			}
+			runesToConsume.add(new AbstractMap.SimpleEntry<>(e.getKey(), e.getValue()));
+		}
+		return runesToConsume;
+	}
+
+	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
+		// check also against magic cape activation
+		return checkAndRemoveRunes(player, spell, null);
+	}
+
+	public static boolean checkAndRemoveRunes(Player player, SpellDef spell, Boolean magicCapeActivated) {
+		if (magicCapeActivated == null || !magicCapeActivated) {
+			try {
+				Set<Entry<Integer, Integer>> runesToConsume = checkSpellRunes(player, spell, magicCapeActivated == null);
+				if (runesToConsume != null) {
+					// remove now all the runes needed to be consumed
+					for (Entry<Integer, Integer> r : runesToConsume) {
+						player.getCarriedItems().remove(new Item(r.getKey(), r.getValue()));
+					}
+				}
+			} catch (SpellFailureException re) {
+				// cape did not activate and
+				// player does not have all runes
+				// message already displayed in checkSpellRunes
 				return false;
 			}
-			runesToConsume.add(new AbstractMap.SimpleEntry<Integer, Integer>(e.getKey(), e.getValue()));
 		}
-		// remove now if player meets all rune requirements
-		for (Entry<Integer, Integer> r : runesToConsume) {
-			player.getCarriedItems().remove(new Item(r.getKey(), r.getValue()));
-		}
+
 		return true;
 	}
 
@@ -1301,8 +1332,21 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					}
 				}
 				boolean setChasing = true;
+				Set<Entry<Integer, Integer>> necessaryRunes;
+				try {
+					necessaryRunes = checkSpellRunes(player, spell, true);
+				} catch (SpellFailureException re) {
+					// magic cape effect did not roll out and
+					// player does not meet required spell runes
+					// message already given out
+					getPlayer().resetPath();
+					return;
+				}
+				boolean capeActivated = necessaryRunes == null;
+
 				if (affectedMob.isNpc()) {
 					Npc n = (Npc) affectedMob;
+
 					if (n.getID() == NpcId.DRAGON.id() || n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 						getPlayer().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 						int percentage = 20;
@@ -1349,7 +1393,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 
@@ -1392,7 +1436,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							}
 						}
 
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 
@@ -1460,7 +1504,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + getPlayer().getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
 							return;
 						}
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 						final int stat = affectsStat;
@@ -1486,7 +1530,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 						int damaga = DataConversions.random(3, Constants.CRUMBLE_UNDEAD_MAX);
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 						if (DataConversions.random(0, 8) == 2)
@@ -1511,7 +1555,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().message("at iban's temple");
 							return;
 						}
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 						if (getPlayer().getCache().hasKey(spell.getName() + "_casts")) {
@@ -1556,7 +1600,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 								return;
 							}
 						}
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 						if (getPlayer().getLocation().inMageArena()) {
@@ -1582,7 +1626,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					case SHOCK_BOLT:
 					case ELEMENTAL_BOLT:
 					case WIND_BOLT_R:
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 
@@ -1596,7 +1640,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						break;
 
 					default:
-						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
 						// SALARIN THE TWISTED - STRIKE SPELLS

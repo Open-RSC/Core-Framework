@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.login.CharacterCreateRequest;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.Point;
@@ -572,6 +573,19 @@ public final class SuperModerator implements CommandTrigger {
 
 		if (targetPlayer != null) {
 			targetPlayer.unregister(true, "You have been banned by " + player.getUsername() + " " + (time == -1 ? "permanently" : " for " + time + " minutes"));
+
+			final String userHash = args[0];
+			DelayedEvent forceUnregister = new DelayedEvent(player.getWorld(), null, 1000, "Manual Unregister Player") {
+				@Override
+				public void run() {
+					Player forcedPlayer = getWorld().getPlayer(DataConversions.usernameToHash(userHash));
+					if (forcedPlayer != null) {
+						getWorld().unregisterPlayer(forcedPlayer);
+					}
+					running = false;
+				}
+			};
+			player.getWorld().getServer().getGameEventHandler().add(forceUnregister);
 		}
 
 		if (time == 0) {
