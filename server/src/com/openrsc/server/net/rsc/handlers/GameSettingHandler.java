@@ -96,6 +96,7 @@ public final class GameSettingHandler implements PayloadProcessor<GameSettingStr
 				if (changesLeft > 0) {
 					player.setPkMode(payload.playerKiller);
 					player.setPkChanges(changesLeft - 1);
+					player.getUpdateFlags().setAppearanceChanged(true);
 				}
 			} else if (idx == 2) { // 2: Number of Mouse Buttons
 				player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS, payload.mouseButtonOne == 1);
