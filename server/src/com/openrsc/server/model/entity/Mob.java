@@ -49,7 +49,7 @@ public abstract class Mob extends Entity {
 	 * Flag to indicate that this mob will be needed to be unregistered after
 	 * next update tick.
 	 */
-	protected boolean unregistering;
+	protected AtomicBoolean unregistering = new AtomicBoolean(false);
 	/**
 	 * The combat event instance.
 	 */
@@ -1056,11 +1056,11 @@ public abstract class Mob extends Entity {
 	}
 
 	public boolean isUnregistering() {
-		return unregistering;
+		return unregistering.get();
 	}
 
 	public void setUnregistering(final boolean unregistering) {
-		this.unregistering = unregistering;
+		this.unregistering.set(unregistering);
 	}
 
 	public KillType getKillType() {

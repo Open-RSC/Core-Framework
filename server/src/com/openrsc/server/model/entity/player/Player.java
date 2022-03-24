@@ -54,6 +54,7 @@ import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -253,7 +254,7 @@ public final class Player extends Mob {
 	/**
 	 * Whether the player is currently logged in
 	 */
-	private boolean loggedIn = false;
+	private AtomicBoolean loggedIn = new AtomicBoolean(false);
 	/**
 	 * Is the character male?
 	 */
@@ -842,7 +843,7 @@ public final class Player extends Mob {
 	 * @param reason - reason why the player was unregistered.
 	 */
 	public void unregister(final boolean force, final String reason) {
-		if (unregistering) {
+		if (this.isUnregistering()) {
 			return;
 		}
 		if (force || canLogout()) {
@@ -861,7 +862,7 @@ public final class Player extends Mob {
 				} catch (Exception ex) {} // moderator may have logged out as well
 			}
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
-			unregistering = true;
+			this.setUnregistering(true);
 		} else {
 			if (unregisterEvent != null) {
 				return;
@@ -1920,7 +1921,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isLoggedIn() {
-		return loggedIn;
+		return loggedIn.get();
 	}
 
 	public void setLoggedIn(final boolean loggedIn) {
@@ -1938,7 +1939,7 @@ public final class Player extends Mob {
 			}
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 		}
-		this.loggedIn = loggedIn;
+		this.loggedIn.set(loggedIn);
 	}
 
 	public void toggleDenyAllLogoutRequests() {
@@ -2033,7 +2034,7 @@ public final class Player extends Mob {
 
 	@Override
 	public void killedBy(final Mob mob) {
-		if (!loggedIn) {
+		if (!loggedIn.get()) {
 			return;
 		}
 		if (this.killed) return;
@@ -2146,7 +2147,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean loggedIn() {
-		return loggedIn;
+		return loggedIn.get();
 	}
 
 	public void message(final String string) {
