@@ -280,6 +280,7 @@ public class ServerConfiguration {
 	public boolean SANTA_GIVES_PRESENTS;
 	public boolean USES_RETRO_STOCK_SENSITIVITY;
 	public boolean PIDLESS_CATCHING;
+	public int SPELL_RANGE_DISTANCE;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -398,6 +399,7 @@ public class ServerConfiguration {
 		SANTA_GIVES_PRESENTS = tryReadBool("santa_gives_presents").orElse(false);
 		USES_RETRO_STOCK_SENSITIVITY = tryReadBool("uses_retro_stock_sensitivity").orElse(false);
 		PIDLESS_CATCHING = tryReadBool("pidless_catching").orElse(false);
+		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);

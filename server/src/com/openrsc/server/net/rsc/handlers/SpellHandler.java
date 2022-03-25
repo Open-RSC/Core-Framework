@@ -556,7 +556,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		// Only ranged & melee are authentically blocked in that safespot.
 
 		// Stop the player if they are close enough to their opponent.
-		if (player.withinRange(affectedPlayer, 4)) {
+		if (player.withinRange(affectedPlayer, player.getConfig().SPELL_RANGE_DISTANCE)) {
 			player.resetPath();
 		}
 
@@ -589,7 +589,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 
 		// Stop movement if the player is within range.
-		if (player.withinRange(affectedNpc, 4)) {
+		if (player.withinRange(affectedNpc, player.getConfig().SPELL_RANGE_DISTANCE)) {
 			player.resetPath();
 		}
 
@@ -1278,7 +1278,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 
 		// Do not cast if the mob is too far away and we are already in a fight.
-		if (!player.withinRange(affectedMob, 4) && player.inCombat()) return;
+		if (!player.withinRange(affectedMob, player.getConfig().SPELL_RANGE_DISTANCE) && player.inCombat()) return;
 
 		// Retro RSC mechanic, could not use magic if already engaged in combat
 		// and spell was not personal spell (cast on self, type = 0)

@@ -17,7 +17,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.Functions.mes;
@@ -171,23 +174,47 @@ public final class Moderator implements CommandTrigger {
 			targetPlayer.getCache().getLong("total_played") : 0) + sessionPlay;
 		long timeMoved = System.currentTimeMillis() - targetPlayer.getLastMoved();
 		long timeOnline = System.currentTimeMillis() - targetPlayer.getCurrentLogin();
-		ActionSender.sendBox(player,
-			"@lre@Player Information: %"
-				+ " %"
-				+ "@gre@Name:@whi@ " + targetPlayer.getUsername() + " %"
-				+ "@gre@Group:@whi@ " + targetPlayer.getGroupID() + " %"
-				+ "@gre@Fatigue:@whi@ " + (targetPlayer.getFatigue() / 1500) + " %"
-				+ "@gre@Group ID:@whi@ " + Group.GROUP_NAMES.get(targetPlayer.getGroupID()) + " (" + targetPlayer.getGroupID() + ") %"
-				+ "@gre@Busy:@whi@ " + (targetPlayer.isBusy() ? "true" : "false") + " %"
-				+ "@gre@Logged In:@whi@ " + (targetPlayer.isLoggedIn() ? "true" : "false") + " %"
-				+ "@gre@Unregistering:@whi@ " + (targetPlayer.isUnregistering() ? "true" : "false") + " %"
-				+ "@gre@IP:@whi@ " + targetPlayer.getLastIP() + " %"
-				+ "@gre@Last Login:@whi@ " + targetPlayer.getDaysSinceLastLogin() + " days ago %"
-				+ "@gre@Coordinates:@whi@ " + targetPlayer.getLocation().toString() + " %"
-				+ "@gre@Last Moved:@whi@ " + DataConversions.getDateFromMsec(timeMoved) + " %"
-				+ "@gre@Time Logged In:@whi@ " + DataConversions.getDateFromMsec(timeOnline) + " %"
-				+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
-			, true);
+		final Map<String, String> playerInfo = new LinkedHashMap<String, String>(){{
+			put("@gre@Name:@whi@", targetPlayer.getUsername());
+			put("@gre@Group:@whi@", Integer.toString(targetPlayer.getGroupID()));
+			put("@gre@Group ID:@whi@", Group.GROUP_NAMES.get(targetPlayer.getGroupID()) + " (" + targetPlayer.getGroupID() + ")");
+			if (player.getConfig().WANT_FATIGUE) put("@gre@Fatigue:@whi@",  Integer.toString((targetPlayer.getFatigue() / 1500)));
+			put("@gre@Busy:@whi@", (targetPlayer.isBusy() ? "true" : "false"));
+			put("@gre@Logged In:@whi@", (targetPlayer.isLoggedIn() ? "true" : "false"));
+			put("@gre@Unregistering:@whi@", (targetPlayer.isUnregistering() ? "true" : "false"));
+			put("@gre@IP:@whi@", targetPlayer.getLastIP());
+			put("@gre@Last Login:@whi@", targetPlayer.getDaysSinceLastLogin() + " days ago");
+			put("@gre@Coordinates:@whi@", targetPlayer.getLocation().toString());
+			put("@gre@Last Moved:@whi@", DataConversions.getDateFromMsec(timeMoved));
+			put("@gre@Time Logged In:@whi@", DataConversions.getDateFromMsec(timeOnline));
+			put("@gre@Total Time Played:@whi@", DataConversions.getDateFromMsec(timePlayed));
+		}};
+		if (player.getClientLimitations().supportsMessageBox) {
+			String infoString = playerInfo.entrySet().stream().map((entry) -> //stream each entry, map it to string value
+					entry.getKey() + " " + entry.getValue() + " %")
+				.collect(Collectors.joining(""));
+			ActionSender.sendBox(player,
+				"@lre@Player Information: %"
+					+ " %"
+					+ infoString
+				, true);
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "@lre@Player Information:");
+			int countInLine = 0;
+			String message = "";
+			String entryString;
+			for (Map.Entry<String,String> entry : playerInfo.entrySet()) {
+				entryString = entry.getKey() + " " + entry.getValue() + " ; ";
+				if ((message.length() + entryString.length() < 80) && ++countInLine < 4) {
+					message += entryString;
+				} else {
+					player.playerServerMessage(MessageType.QUEST, message);
+					message = entryString;
+					countInLine = 0;
+				}
+			}
+			player.playerServerMessage(MessageType.QUEST, message);
+		}
 	}
 
 	private void queryPlayerInventory(Player player, String command, String[] args) {

@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 import com.openrsc.server.util.rsc.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -516,11 +517,19 @@ public final class SuperModerator implements CommandTrigger {
 	}
 
 	private void queryIPBans(Player player, String command, String[] args) {
-		StringBuilder bans = new StringBuilder("Banned IPs % %");
-		for (Map.Entry<String, Long> entry : player.getWorld().getServer().getPacketFilter().getIpBans().entrySet()) {
-			bans.append("IP: ").append(entry.getKey()).append(" - Unban Date: ").append((entry.getValue() == -1) ? "Never" : DateFormat.getInstance().format(entry.getValue())).append("%");
+		Map<String, Long> bannedIPs = player.getWorld().getServer().getPacketFilter().getIpBans();
+		if (player.getClientLimitations().supportsMessageBox) {
+			StringBuilder bans = new StringBuilder(String.format("Banned IPs (%d)", bannedIPs.size()) +" % %");
+			for (Map.Entry<String, Long> entry : bannedIPs.entrySet()) {
+				bans.append("IP: ").append(entry.getKey()).append(" - Unban Date: ").append((entry.getValue() == -1) ? "Never" : DateFormat.getInstance().format(entry.getValue())).append("%");
+			}
+			ActionSender.sendBox(player, bans.toString(), true);
+		} else {
+			player.playerServerMessage(MessageType.QUEST, String.format("Banned IPs (%d)", bannedIPs.size()));
+			for (Map.Entry<String, Long> entry : bannedIPs.entrySet()) {
+				player.playerServerMessage(MessageType.QUEST, String.format("IP: %s - Unban Date: %s", entry.getKey(), ((entry.getValue() == -1) ? "Never" : DateFormat.getInstance().format(entry.getValue()))));
+			}
 		}
-		ActionSender.sendBox(player, bans.toString(), true);
 	}
 
 	private void banPlayerIP(Player player, String command, String[] args) {

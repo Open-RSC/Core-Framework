@@ -49,7 +49,7 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 		int amount = payload.amount;
 
 		if (amount <= 0) return;
-		if (player.getClientVersion() <= 204 && amount > 1) {
+		if ((player.getClientVersion() <= 204 || player.getConfig().USES_RETRO_STOCK_SENSITIVITY) && amount > 1) {
 			amount = 1;
 		}
 

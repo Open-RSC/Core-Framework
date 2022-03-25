@@ -10,6 +10,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -299,7 +300,11 @@ public final class PlayerModerator implements CommandTrigger {
 			if (targetPlayer != null) {
 				for (int i = 1; i < args.length; i++)
 					message.append(args[i]).append(" ");
-				ActionSender.sendBox(targetPlayer, player.getStaffName() + ":@whi@ " + message, false);
+				if (targetPlayer.getClientLimitations().supportsMessageBox) {
+					ActionSender.sendBox(targetPlayer, player.getStaffName() + ":@whi@ " + message, false);
+				} else {
+					player.playerServerMessage(MessageType.QUEST, player.getStaffName() + ":@whi@ " + message);
+				}
 				player.message(messagePrefix + "Alerted " + targetPlayer.getUsername());
 			} else
 				player.message(messagePrefix + "Invalid name or player is not online");
