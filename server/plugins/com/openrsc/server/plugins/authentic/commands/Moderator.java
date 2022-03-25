@@ -7,6 +7,7 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.RSCPacketFilter;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
@@ -174,20 +175,26 @@ public final class Moderator implements CommandTrigger {
 			targetPlayer.getCache().getLong("total_played") : 0) + sessionPlay;
 		long timeMoved = System.currentTimeMillis() - targetPlayer.getLastMoved();
 		long timeOnline = System.currentTimeMillis() - targetPlayer.getCurrentLogin();
+		final RSCPacketFilter filter = player.getWorld().getServer().getPacketFilter();
 		final Map<String, String> playerInfo = new LinkedHashMap<String, String>(){{
 			put("@gre@Name:@whi@", targetPlayer.getUsername());
 			put("@gre@Group:@whi@", Integer.toString(targetPlayer.getGroupID()));
 			put("@gre@Group ID:@whi@", Group.GROUP_NAMES.get(targetPlayer.getGroupID()) + " (" + targetPlayer.getGroupID() + ")");
-			if (player.getConfig().WANT_FATIGUE) put("@gre@Fatigue:@whi@",  Integer.toString((targetPlayer.getFatigue() / 1500)));
+			if (player.getConfig().WANT_FATIGUE)
+				put("@gre@Fatigue:@whi@",  Integer.toString((targetPlayer.getFatigue() / 1500)));
 			put("@gre@Busy:@whi@", (targetPlayer.isBusy() ? "true" : "false"));
 			put("@gre@Logged In:@whi@", (targetPlayer.isLoggedIn() ? "true" : "false"));
 			put("@gre@Unregistering:@whi@", (targetPlayer.isUnregistering() ? "true" : "false"));
-			put("@gre@IP:@whi@", targetPlayer.getLastIP());
+			put("@gre@IP:@whi@", targetPlayer.getCurrentIP());
+			if (!targetPlayer.getLastIP().equals(targetPlayer.getCurrentIP()))
+				put("@gre@Last IP:@whi@", targetPlayer.getLastIP());
 			put("@gre@Last Login:@whi@", targetPlayer.getDaysSinceLastLogin() + " days ago");
 			put("@gre@Coordinates:@whi@", targetPlayer.getLocation().toString());
 			put("@gre@Last Moved:@whi@", DataConversions.getDateFromMsec(timeMoved));
 			put("@gre@Time Logged In:@whi@", DataConversions.getDateFromMsec(timeOnline));
 			put("@gre@Total Time Played:@whi@", DataConversions.getDateFromMsec(timePlayed));
+			put("@gre@Connections/s:@whi@", Integer.toString(filter.getConnectionsPerSecond(targetPlayer.getCurrentIP())));
+			put("@gre@Connection Count:@whi@", Integer.toString(filter.getConnectionCount(targetPlayer.getCurrentIP())));
 		}};
 		if (player.getClientLimitations().supportsMessageBox) {
 			String infoString = playerInfo.entrySet().stream().map((entry) -> //stream each entry, map it to string value

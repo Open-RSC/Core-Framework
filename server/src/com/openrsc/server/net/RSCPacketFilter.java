@@ -158,9 +158,9 @@ public class RSCPacketFilter {
 		//LOGGER.info("Channel Read: " + hostAddress + ", Allowed: " + allowPacket + ", PPS: " + pps);
 
 		if(!allowPacket) {
-			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the PPS limit: " + pps);
+			LOGGER.info(hostAddress + " (" + player + ") filtered for exceeding the PPS limit: " + pps + "/" + getServer().getConfig().MAX_PACKETS_PER_SECOND);
 			if(doIpBans) {
-				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "reaching the PPS limit");
+				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "packets per second limit");
 			}
 		}
 
@@ -185,17 +185,23 @@ public class RSCPacketFilter {
 
 		final int cps = getConnectionsPerSecond(hostAddress);
 		final int connectionCount = getConnectionCount(hostAddress);
+		final boolean connectionCountExceeds = connectionCount > getServer().getConfig().MAX_CONNECTIONS_PER_IP;
+		final boolean connectionRateExceeds = cps > getServer().getConfig().MAX_CONNECTIONS_PER_SECOND;
 		final boolean allowConnection = hostAddress.equals("127.0.0.1") || isHostAdmin(hostAddress) || (
-			(connectionCount <= getServer().getConfig().MAX_CONNECTIONS_PER_IP) &&
-			(cps <= getServer().getConfig().MAX_CONNECTIONS_PER_SECOND)
+			(!connectionCountExceeds && !connectionRateExceeds)
 		);
 
 		//LOGGER.info("Channel Registered: " + hostAddress + ", Allowed: " + allowConnection + ", CPS: " + cps);
 
 		if(!allowConnection) {
-			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the connections per second limit: " + cps);
+			if (connectionRateExceeds) {
+				LOGGER.info(hostAddress + " (" + player + ") filtered for exceeding the connections per second limit: " + cps + "/" + getServer().getConfig().MAX_CONNECTIONS_PER_SECOND);
+			}
+			if (connectionCountExceeds) {
+				LOGGER.info(hostAddress + " (" + player + ") filtered for exceeding the connection count limit: " + connectionCount + "/" + getServer().getConfig().MAX_CONNECTIONS_PER_IP);
+			}
 			if(doIpBans) {
-				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "connections per second limit");
+				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "connections per second or connection count limit");
 			}
 		}
 
@@ -337,7 +343,7 @@ public class RSCPacketFilter {
 		return pps;
 	}
 
-	private final int getConnectionsPerSecond(final String hostAddress) {
+	public final int getConnectionsPerSecond(final String hostAddress) {
 		final long now = System.currentTimeMillis();
 		int cps = 0;
 
@@ -382,7 +388,7 @@ public class RSCPacketFilter {
 		return countAttempts;
 	}
 
-	private final int getConnectionCount(final String hostAddress) {
+	public final int getConnectionCount(final String hostAddress) {
 		synchronized (connections) {
 			if(connections.containsKey(hostAddress)) {
 				ArrayList<Channel> hostConnections = connections.get(hostAddress);
