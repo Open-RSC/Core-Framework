@@ -53,16 +53,11 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 			wildernessIPTracker.remove(player.getCurrentIP());
 		}*/
 
-		LOGGER.info("logoutSaveSuccess pre-removeLoggedInPlayer for user account " + getPlayer().getUsername() + "((" + getPlayer().getCurrentIP() + ",," + getPlayer().getUsernameHash() + "))");
-		try {
-			getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP(), getPlayer().getUsernameHash());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		LOGGER.info("logoutSaveSuccess post-removeLoggedInPlayer for user account " + getPlayer().getUsername());
+		getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP(), getPlayer().getUsernameHash());
 
 		getPlayer().remove(); // remove player from region
 		getServer().getWorld().getPlayers().remove(getPlayer()); // remove player from player list
+		getServer().getWorld().removePlayer(getPlayer().getUsernameHash()); // remove player by hash in case they were not found in region
 		getPlayer().setLoggedIn(false);
 		LOGGER.info("Removed player " + getPlayer().getUsername());
 

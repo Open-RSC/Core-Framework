@@ -41,4 +41,12 @@ public class PlayerList extends EntityList<Player> {
     public Player getPlayerByHash(long hash) {
         return playerHashIndex.get(hash);
     }
+	/**
+	 * Remove a player by their username hash
+	 * @param hash username hash
+	 * @return the player associated with this hash
+	 */
+	public Player removePlayerByHash(long hash) {
+		return playerHashIndex.remove(hash);
+	}
 }

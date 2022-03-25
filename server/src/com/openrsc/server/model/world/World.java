@@ -260,6 +260,13 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	}
 
 	/**
+	 * Removes a player by their username hash
+	 */
+	public Player removePlayer(final long usernameHash) {
+		return players.removePlayerByHash(usernameHash);
+	}
+
+	/**
 	 * Gets a player by their ID
 	 */
 	public Player getPlayerID(final int databaseID) {
