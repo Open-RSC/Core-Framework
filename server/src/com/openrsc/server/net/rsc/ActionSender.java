@@ -1027,7 +1027,7 @@ public class ActionSender {
 	public static void sendLogoutRequestConfirm(final Player player) {
 		Packet p;
 		AbstractStruct<OpcodeOut> struct;
-		if (!player.isUsing38CompatibleClient() || !player.isUsing39CompatibleClient() || !player.isUsing69CompatibleClient()) {
+		if (!player.isUsing38CompatibleClient() && !player.isUsing39CompatibleClient() && !player.isUsing69CompatibleClient()) {
 			NoPayloadStruct npStruct = new NoPayloadStruct();
 			npStruct.setOpcode(OpcodeOut.SEND_LOGOUT_REQUEST_CONFIRM);
 			struct = npStruct;
@@ -1038,7 +1038,13 @@ public class ActionSender {
 			struct = mStruct;
 		}
 		p = getGenerator(player).generate(struct, player);
-		player.getChannel().writeAndFlush(p).addListener((ChannelFutureListener) arg0 -> arg0.channel().close());
+		if (p != null) {
+			player.getChannel().writeAndFlush(p).addListener((ChannelFutureListener) arg0 -> arg0.channel().close());
+		} else {
+			// Packet was not able to be generated
+			// Just proceed to close the channel
+			player.getChannel().close();
+		}
 	}
 
 	/**

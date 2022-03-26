@@ -60,6 +60,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
@@ -292,6 +293,13 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public EntityList<Player> getPlayers() {
 		return players;
+	}
+
+	/**
+	 * Get list of players by IP
+	 */
+	public EntityList<Player> getPlayers(String ip) {
+		return players.stream().filter(p -> p.getCurrentIP().equals(ip)).collect(Collectors.toCollection(EntityList::new));
 	}
 
 	/**

@@ -2,13 +2,16 @@ package com.openrsc.server.net;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.util.EntityList;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RSCPacketFilter {
 	/**
@@ -279,6 +282,44 @@ public class RSCPacketFilter {
 				hostConnections.remove(channel);
 				connections.put(hostAddress, hostConnections);
 			}
+		}
+	}
+
+	public int cleanIdleConnections() {
+		synchronized (connections) {
+			int num = 0;
+			for (Map.Entry<String, ArrayList<Channel>> entry : connections.entrySet()) {
+				num += cleanIdleConnections(entry.getKey());
+			}
+			return num;
+		}
+	}
+
+	public int cleanIdleConnections(final String hostAddress) {
+		synchronized (connections) {
+			int initialLen, finalLen;
+			initialLen = finalLen = 0;
+			ArrayList<Channel> hostConnections = connections.get(hostAddress);
+			if (hostConnections != null && hostConnections.size() > 0) {
+				initialLen = hostConnections.size();
+				EntityList<Player> hostPlayers = getServer().getWorld().getPlayers(hostAddress);
+				List<Channel> loggedInConnections = hostPlayers.stream().map(Player::getChannel).collect(Collectors.toList());
+				Iterator<Channel> connIter = hostConnections.iterator();
+				while (connIter.hasNext()) {
+					Channel channel = connIter.next();
+					if (!loggedInConnections.contains(channel)) {
+						try {
+							channel.close().addListener((ChannelFutureListener) arg0 -> arg0.channel().deregister());
+						} catch (Exception e) {
+							LOGGER.debug("An exception occurred while closing and de-registering the channel for " + channel.remoteAddress());
+						}
+						connIter.remove();
+					}
+				}
+				finalLen = hostConnections.size();
+				connections.put(hostAddress, hostConnections);
+			}
+			return initialLen - finalLen;
 		}
 	}
 

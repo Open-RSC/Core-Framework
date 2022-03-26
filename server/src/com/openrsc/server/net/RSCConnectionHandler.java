@@ -5,8 +5,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
-import com.openrsc.server.plugins.Functions;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -48,6 +46,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) {
 		ctx.channel().close();
+		ctx.fireChannelInactive();
 	}
 
 	@Override

@@ -81,6 +81,8 @@ public final class SuperModerator implements CommandTrigger {
 			simulateLoginResponse(player, command, args);
 		} else if (command.equalsIgnoreCase("simregister")) {
 			simulateRegisterResponse(player, command, args);
+		} else if (command.equalsIgnoreCase("cleanidle") || command.equalsIgnoreCase("cleanidleconns") || command.equalsIgnoreCase("cleanidleconnections")) {
+			cleanIdleConnections(player, command, args);
 		}
 	}
 
@@ -675,7 +677,7 @@ public final class SuperModerator implements CommandTrigger {
 		}
 
 		String playerName = args[0];
-		String ip = args.length >= 2 ? args[1] : "1.1.1.1";
+		String ip = args.length >= 2 && (StringUtil.isIPv4Address(args[1]) || StringUtil.isIPv6Address(args[1])) ? args[1] : "1.1.1.1";
 
 		final LoginRequest request = new LoginRequest(player.getWorld().getServer(), playerName, ip, 235) {
 			@Override
@@ -696,11 +698,22 @@ public final class SuperModerator implements CommandTrigger {
 		}
 
 		String playerName = args[0];
-		String ip = args.length >= 2 ? args[1] : "1.1.1.1";
+		String ip = args.length >= 2 && (StringUtil.isIPv4Address(args[1]) || StringUtil.isIPv6Address(args[1])) ? args[1] : "1.1.1.1";
 
 		final CharacterCreateRequest request = new CharacterCreateRequest(player.getWorld().getServer(), playerName, ip, 235);
 		int code = request.validateRegister();
 
 		player.message("Simulated register for " + playerName + " (" + ip + ") returned response code: " + code);
+	}
+
+	private void cleanIdleConnections(Player player, String command, String[] args) {
+		if (args.length < 1 || !(StringUtil.isIPv4Address(args[0]) || StringUtil.isIPv6Address(args[0]))) {
+			int numCleared = player.getWorld().getServer().getPacketFilter().cleanIdleConnections();
+			player.message(messagePrefix + "Cleaned " + numCleared + " connections not associated to players online");
+		} else {
+			String ip = args[0];
+			int numCleared = player.getWorld().getServer().getPacketFilter().cleanIdleConnections(ip);
+			player.message(messagePrefix + "Cleaned " + numCleared + " connections for " + ip + " not associated to players online");
+		}
 	}
 }
