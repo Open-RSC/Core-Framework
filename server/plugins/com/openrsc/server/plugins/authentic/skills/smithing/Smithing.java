@@ -102,10 +102,24 @@ public class Smithing implements UseLocTrigger {
 			return false;
 		}
 
+		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
+		boolean worldSupportsGoldSmithing = !player.getConfig().LACKS_GOLD_SMITHING && MathUtil.maxUnsigned(maxItemId, ItemId.GOLDEN_BOWL.id()) == maxItemId;
+		if (item.getCatalogId() == ItemId.GOLD_BAR.id() && !worldSupportsGoldSmithing) {
+			player.message("Nothing interesting happens");
+			return false;
+		}
+
 		if (player.getSkills().getLevel(Skill.SMITHING.id()) < minSmithingLevel) {
-			player.message("You need at least level "
-				+ minSmithingLevel + " smithing to work with "
-				+ item.getDef(player.getWorld()).getName().toLowerCase().replaceAll("bar", ""));
+			if (item.getCatalogId() != ItemId.GOLD_BAR.id()) {
+				player.message("You need at least level "
+					+ minSmithingLevel + " smithing to work with "
+					+ item.getDef(player.getWorld()).getName().toLowerCase().replaceAll("bar", ""));
+			} else {
+				// not entirely sure should give message here or this one is once Legends started
+				// on OSRS the advice is to try to use furnace
+				// Logg tested before legends but with level past 50 and was "You're not quite sure what to make from the gold.."
+				player.message("You need at least level 50 smithing to work gold...");
+			}
 			return false;
 		}
 
@@ -125,16 +139,17 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 
+		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
+		boolean worldSupportsGoldSmithing = !player.getConfig().LACKS_GOLD_SMITHING && MathUtil.maxUnsigned(maxItemId, ItemId.GOLDEN_BOWL.id()) == maxItemId;
 		// Failure to make a gold bowl without Legend's Quest.
-		if (item.getCatalogId() == ItemId.GOLD_BAR.id() && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
+		if (item.getCatalogId() == ItemId.GOLD_BAR.id() && worldSupportsGoldSmithing && player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && player.getQuestStage(Quests.LEGENDS_QUEST) <= 2) {
 			player.message("You're not quite sure what to make from the gold..");
 			return;
 		}
 
 		// Gold
-		int maxItemId = player.getConfig().RESTRICT_ITEM_ID;
 		if (item.getCatalogId() == ItemId.GOLD_BAR.id()) {
-			if (MathUtil.maxUnsigned(maxItemId, ItemId.GOLDEN_BOWL.id()) == maxItemId) {
+			if (worldSupportsGoldSmithing) {
 				player.message("What would you like to make?");
 				handleGoldSmithing(player);
 			} else {

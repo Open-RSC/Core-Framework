@@ -196,6 +196,13 @@ public final class Event implements CommandTrigger {
 		else if (command.equalsIgnoreCase("setpidless") || command.equalsIgnoreCase("setpidlesscatching")) {
 			setPidless(player, command, args);
 		}
+		else if (command.equalsIgnoreCase("groupteleport") || command.equalsIgnoreCase("grouptele") || command.equalsIgnoreCase("grouptp")
+			|| command.equalsIgnoreCase("groupteleportto") || command.equalsIgnoreCase("groupteleto") || command.equalsIgnoreCase("grouptpto")) {
+			groupTeleport(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("returngroup") || command.equalsIgnoreCase("grouptele") || command.equalsIgnoreCase("grouptp")) {
+			returnGroup(player, command, args);
+		}
 	}
 
 	private void setPidless(Player player, String command, String[] args) {
@@ -1503,5 +1510,208 @@ public final class Event implements CommandTrigger {
 		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [player]");
 		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [xxyy] OR");
 		player.message(badSyntaxPrefix + command.toUpperCase() + " [hXXYY] [xxyy] [player] OR ");
+	}
+
+	private void groupTeleport(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [town/player] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [x] [y] OR");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [town/player] [radius] OR");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [x] [y] [radius]");
+			return;
+		}
+
+		boolean isTownOrPlayer = false; // false if input is an X & Y coordinate.
+		String town = "";
+		int x = -1;
+		int y = -1;
+		int radius = 5;
+		Point originalLocation;
+		Point teleportTo;
+		boolean isSummon = command.toLowerCase().endsWith("to");
+
+		// determine if will be to town/player
+		try {
+			x = Integer.parseInt(args[0]);
+			isTownOrPlayer = false;
+			boolean missingCoord = false;
+			if (args.length < 2) {
+				// y coordinate not supplied
+				missingCoord = true;
+			} else {
+				try {
+					y = Integer.parseInt(args[1]);
+				} catch (NumberFormatException ex1) {
+					missingCoord = true;
+				}
+			}
+
+			if (missingCoord) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [x] [y] OR");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [x] [y] [radius]");
+				return;
+			}
+
+			if (args.length > 2) {
+				// grab radius
+				try {
+					radius = Integer.parseInt(args[2]);
+					if (radius < 0) {
+						radius = 0;
+					}
+					if (radius > 16) {
+						radius = 16;
+					}
+				} catch (NumberFormatException ex1) {
+					// ignore, use default radius
+				}
+			}
+
+		} catch (NumberFormatException ex) {
+			// town/player
+			town = args[0];
+			isTownOrPlayer = true;
+
+			if (args.length > 1) {
+				// grab radius
+				try {
+					radius = Integer.parseInt(args[1]);
+					if (radius < 0) {
+						radius = 0;
+					}
+					if (radius > 16) {
+						radius = 16;
+					}
+				} catch (NumberFormatException ex1) {
+					// ignore, use default radius
+				}
+			}
+		}
+
+		if (isTownOrPlayer) {
+
+			// Check player first
+			Player tpTo = player.getWorld().getPlayer(DataConversions.usernameToHash(town));
+			if (tpTo == null) {
+				if (player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient() || player.isUsing69CompatibleClient()) {
+					teleportTo = townLocationsRetro.get(town.toLowerCase());
+				} else {
+					teleportTo = townLocations.get(town.toLowerCase());
+				}
+				if (teleportTo == null) {
+					player.message(messagePrefix + "Invalid target");
+					return;
+				}
+			} else {
+				if (tpTo.isInvisibleTo(player) && !player.isAdmin()) {
+					player.message(messagePrefix + "You can not teleport group to an invisible player.");
+					return;
+				}
+				teleportTo = tpTo.getLocation();
+			}
+		}
+		else {
+			teleportTo = new Point(x, y);
+		}
+
+		if (!player.getWorld().withinWorld(teleportTo.getX(), teleportTo.getY())) {
+			player.message(messagePrefix + "Invalid coordinates");
+			return;
+		}
+
+		if (player.isJailed() && !player.isAdmin()) {
+			player.message(messagePrefix + "You can not teleport while you are jailed.");
+			return;
+		}
+
+		// for performance reasons only search within the players region
+		int numTeleported = 0;
+		for (Player targetPlayer : player.getRegion().getPlayers()) {
+			// only teleport those near the staff player
+			if (!targetPlayer.withinRange(player.getLocation(), radius)) continue;
+			if (targetPlayer.equals(player)) continue;
+
+			if (!targetPlayer.isDefaultUser() && player.getGroupID() >= targetPlayer.getGroupID()) {
+				// not able to teleport staff member of equal or greater rank
+				continue;
+			}
+
+			// Same player and command usage, we want to set a return point in order to use either ::return or ::returngroup later
+			if (isSummon) {
+				targetPlayer.setSummonReturnPoint();
+			}
+
+			originalLocation = targetPlayer.getLocation();
+			targetPlayer.teleport(teleportTo.getX(), teleportTo.getY(), true);
+			targetPlayer.resetFollowing();
+
+			if(targetPlayer.getUsernameHash() != player.getUsernameHash() && targetPlayer.getLocation() != originalLocation && !player.isInvisibleTo(targetPlayer)) {
+				targetPlayer.message(messagePrefix + "You have been teleported to " + targetPlayer.getLocation() + " from " + originalLocation);
+			}
+			numTeleported++;
+		}
+
+		if (numTeleported > 0) {
+			if (isSummon) {
+				player.setSummonReturnPoint();
+			}
+
+			originalLocation = player.getLocation();
+			player.teleport(teleportTo.getX(), teleportTo.getY(), true);
+			player.resetFollowing();
+
+			player.message(messagePrefix + "You have teleported local group to " + teleportTo + " from nearby " + originalLocation);
+
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has teleported local group to " + teleportTo + " from  nearby " + originalLocation));
+		} else {
+			player.message(messagePrefix + "No nearby players within " + radius + " tiles were found in your region");
+		}
+	}
+
+	private void returnGroup(Player player, String command, String[] args) {
+		if(!player.isMod()) {
+			player.message(messagePrefix + "You can not return other players.");
+			return;
+		}
+		int radius = 15;
+
+		// for performance reasons only search within the players region
+		int numReturned = 0;
+		for (Player targetPlayer : player.getRegion().getPlayers()) {
+			// only return those near the staff player
+			if (!targetPlayer.withinRange(player.getLocation(), radius)) continue;
+			if (targetPlayer.equals(player)) continue;
+
+			if (!targetPlayer.isDefaultUser() && player.getGroupID() >= targetPlayer.getGroupID()) {
+				// not able to return staff member of equal or greater rank
+				continue;
+			}
+
+			if(!targetPlayer.wasSummoned()) {
+				// player was not summoned
+				continue;
+			}
+
+			targetPlayer.returnFromSummon();
+			if(!player.isInvisibleTo(targetPlayer)) {
+				targetPlayer.message(messagePrefix + "You have been returned by " + player.getStaffName());
+			}
+			numReturned++;
+		}
+
+		if (numReturned > 0) {
+			Point originalLocation = player.getLocation();
+			if (!player.wasSummoned()) {
+				// was not summoned
+			} else {
+				player.returnFromSummon();
+			}
+
+			player.message(messagePrefix + "You have returned local group from nearby " + originalLocation);
+
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has returned local group from nearby " + originalLocation));
+		} else {
+			player.message(messagePrefix + "No nearby players within " + radius + " tiles were found in your region");
+		}
 	}
 }

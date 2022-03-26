@@ -99,7 +99,7 @@ public class Region {
 	 *
 	 * @return The list of players.
 	 */
-	protected Collection<Player> getPlayers() {
+	public Collection<Player> getPlayers() {
 		return players.values();
 	}
 
