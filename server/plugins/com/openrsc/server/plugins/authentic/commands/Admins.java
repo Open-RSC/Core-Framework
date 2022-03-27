@@ -223,10 +223,52 @@ public final class Admins implements CommandTrigger {
 			giveTools(player);
 		} else if (command.equalsIgnoreCase("lemons") || command.equalsIgnoreCase("lemon")) {
 			giveLemons(player, args);
+		} else if (command.equalsIgnoreCase("setmaxplayersperip") || command.equalsIgnoreCase("smppi")) {
+			setMaxPlayersPerIp(player, command,args);
+		} else if (command.equalsIgnoreCase("setmaxconnectionsperip") || command.equalsIgnoreCase("smcpi")) {
+			setMaxConnectionsPerIp(player, command,args);
+		} else if (command.equalsIgnoreCase("setmaxconnectionspersecond") || command.equalsIgnoreCase("smcps")) {
+			setMaxConnectionsPerSecond(player, command,args);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
 		} */
+	}
+
+	private void setMaxPlayersPerIp(Player player, String command, String[] args) {
+		int newMaxPlayers = 10;
+		try {
+			newMaxPlayers = Integer.parseInt(args[0]);
+		} catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+			player.message("give a number please.");
+			return;
+		}
+		player.getConfig().MAX_PLAYERS_PER_IP = newMaxPlayers;
+		player.message("set player.getConfig().MAX_PLAYERS_PER_IP to " + player.getConfig().MAX_PLAYERS_PER_IP);
+	}
+
+	private void setMaxConnectionsPerSecond(Player player, String command, String[] args) {
+		int newMaxConnectionsPerSecond = 10;
+		try {
+			newMaxConnectionsPerSecond = Integer.parseInt(args[0]);
+		} catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+			player.message("give a number please.");
+			return;
+		}
+		player.getConfig().MAX_CONNECTIONS_PER_SECOND = newMaxConnectionsPerSecond;
+		player.message("set player.getConfig().MAX_CONNECTIONS_PER_SECOND to " + player.getConfig().MAX_CONNECTIONS_PER_SECOND);
+	}
+
+	private void setMaxConnectionsPerIp(Player player, String command, String[] args) {
+		int newMaxConnectionsPerIp = 10;
+		try {
+			newMaxConnectionsPerIp = Integer.parseInt(args[0]);
+		} catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+			player.message("give a number please.");
+			return;
+		}
+		player.getConfig().MAX_CONNECTIONS_PER_IP = newMaxConnectionsPerIp;
+		player.message("set player.getConfig().MAX_CONNECTIONS_PER_IP to " + player.getConfig().MAX_CONNECTIONS_PER_IP);
 	}
 
 
