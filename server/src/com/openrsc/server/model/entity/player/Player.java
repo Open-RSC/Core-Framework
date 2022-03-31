@@ -2214,7 +2214,8 @@ public final class Player extends Mob {
 
 	public void processTick() {
 		getWorld().getServer().incrementLastIncomingPacketsDuration(processIncomingPackets());
-		processLogout(this);
+		// commented out to test if regression was caused
+		// processLogout(this);
 		getWorld().getServer().incrementLastExecuteWalkToActionsDuration(
 			getWorld().getServer().getGameUpdater().executeWalkToActions(this));
 		getWorld().getServer().incrementLastEventsDuration(

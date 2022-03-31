@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.authentic.commands;
 
-import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.constants.*;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
@@ -11,6 +10,7 @@ import com.openrsc.server.event.custom.HourlyNpcLootEvent;
 import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.projectile.RangeEventNpc;
 import com.openrsc.server.external.GameObjectLoc;
@@ -37,6 +37,8 @@ import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -229,6 +231,8 @@ public final class Admins implements CommandTrigger {
 			setMaxConnectionsPerIp(player, command,args);
 		} else if (command.equalsIgnoreCase("setmaxconnectionspersecond") || command.equalsIgnoreCase("smcps")) {
 			setMaxConnectionsPerSecond(player, command,args);
+		} else if (command.equalsIgnoreCase("stockgroup")) {
+			spawnStockGroupInventory(player, command, args, false);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
@@ -714,6 +718,26 @@ public final class Admins implements CommandTrigger {
 		}
 	}
 
+	private int getItemId(Player player, String arg) throws Exception {
+		int id;
+		try {
+			id = Integer.parseInt(arg);
+		} catch (NumberFormatException ex) {
+			ItemId item = ItemId.getByName(arg);
+			if (item == ItemId.NOTHING) {
+				throw new Exception("Invalid item id");
+			} else {
+				id = item.id();
+			}
+		}
+
+		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
+			throw new Exception("Invalid item id");
+		}
+
+		return id;
+	}
+
 	private void spawnItemInventory(Player player, String command, String[] args, Boolean noted) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
@@ -722,19 +746,9 @@ public final class Admins implements CommandTrigger {
 
 		int id;
 		try {
-			id = Integer.parseInt(args[0]);
-		} catch (NumberFormatException ex) {
-			ItemId item = ItemId.getByName(args[0]);
-			if (item == ItemId.NOTHING) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
-				return;
-			} else {
-				id = item.id();
-			}
-		}
-
-		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
-			player.message(messagePrefix + "Invalid item id");
+			id = getItemId(player, args[0]);
+		} catch (Exception e) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 			return;
 		}
 
@@ -797,7 +811,7 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		int[] lemonIds = {855, 856, 860};
+		int[] lemonIds = {ItemId.LEMON.id(), ItemId.LEMON_SLICES.id(), ItemId.DICED_LEMON.id()};
 		char[] lemons = {'L', 'E', 'M', 'O', 'N', 'S', '!'};
 		StringBuilder lemonMessage = new StringBuilder();
 		for (int i = 0; i < 5; i++) {
@@ -2608,6 +2622,79 @@ public final class Admins implements CommandTrigger {
 		lumbridgeSanta.setShouldRespawn(false);
 		player.getWorld().registerNpc(faladorSanta);
 		player.message("Santa Claus has come to town(s)!");
+	}
+
+	private void spawnStockGroupInventory(Player player, String command, String[] args, Boolean noted) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount), [id or ItemId name] (amount), ...");
+			return;
+		}
+
+		// validate and set the list
+		List<Pair<Integer, Integer>> listItems = new ArrayList<>();
+		int id = 0, amount = 1;
+		int nextExpected = 0; // 0 = item, 1 = amount
+		int i = 0;
+		boolean isLastElem = false;
+		String elem;
+		while (i < args.length) {
+			elem = args[i];
+			isLastElem = i == args.length - 1;
+			if (nextExpected == 0) {
+				if (!elem.endsWith(",")) nextExpected = 1;
+				else {
+					elem = elem.substring(0, elem.lastIndexOf(","));
+					amount = 1;
+				}
+
+				try {
+					id = getItemId(player, elem);
+				} catch (Exception e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount), [id or ItemId name] (amount), ...");
+					return;
+				}
+			} else if (nextExpected == 1) {
+				if (!elem.endsWith(",")) {
+					if (!isLastElem) {
+						player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount), [id or ItemId name] (amount), ...");
+						return;
+					}
+				} else {
+					elem = elem.substring(0, elem.lastIndexOf(","));
+					nextExpected = 0;
+				}
+
+				try {
+					amount = Integer.parseInt(elem);
+					amount = Math.max(0, amount);
+				} catch(Exception e) {
+					amount = 1;
+				}
+			}
+
+			if (args[i].endsWith(",") || isLastElem) {
+				// add to list
+				listItems.add(new ImmutablePair<>(id, amount));
+			}
+			i++;
+		}
+
+		int radius = 15;
+		for (Player targetPlayer : player.getRegion().getPlayers()) {
+			// only stock those near the staff player
+			if (!targetPlayer.withinRange(player.getLocation(), radius)) continue;
+			if (targetPlayer.equals(player)) continue;
+
+			if (targetPlayer.hasElevatedPriveledges()) {
+				// command only applies to non-staff accounts
+				continue;
+			}
+
+			for (Pair<Integer, Integer> item : listItems) {
+				spawnItemInventory(player, command,
+					new String[]{Integer.toString(item.getKey()), Integer.toString(item.getValue()), targetPlayer.getUsername()}, false);
+			}
+		}
 	}
 
 	private void startResetEvent(Player player, String command, String[] args) {

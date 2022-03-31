@@ -242,23 +242,23 @@ public class Superchisel implements OpInvTrigger, UseInvTrigger, UseNpcTrigger {
 					int whatKindOfAmulet = multi(player, "Gold", "Sapphire", "Emerald", "Ruby", "Diamond");
 					switch (whatKindOfAmulet) {
 						case 0:
-							give(player, 301, 1);
+							give(player, ItemId.GOLD_AMULET.id(), 1);
 							player.incExp(Skill.CRAFTING.id(), 30 * 4, true);
 							break;
 						case 1:
-							give(player, 302, 1);
+							give(player, ItemId.SAPPHIRE_AMULET.id(), 1);
 							player.incExp(Skill.CRAFTING.id(), 65 * 4, true);
 							break;
 						case 2:
-							give(player, 303, 1);
+							give(player, ItemId.EMERALD_AMULET.id(), 1);
 							player.incExp(Skill.CRAFTING.id(), 70 * 4, true);
 							break;
 						case 3:
-							give(player, 304, 1);
+							give(player, ItemId.RUBY_AMULET.id(), 1);
 							player.incExp(Skill.CRAFTING.id(), 85 * 4, true);
 							break;
 						case 4:
-							give(player, 305, 1);
+							give(player, ItemId.DIAMOND_AMULET.id(), 1);
 							player.incExp(Skill.CRAFTING.id(), 100 * 4, true);
 							break;
 					}

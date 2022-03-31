@@ -4,7 +4,6 @@ import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.EntityList;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -308,11 +307,12 @@ public class RSCPacketFilter {
 				while (connIter.hasNext()) {
 					Channel channel = connIter.next();
 					if (!loggedInConnections.contains(channel)) {
-						try {
-							channel.close().addListener((ChannelFutureListener) arg0 -> arg0.channel().deregister());
-						} catch (Exception e) {
-							LOGGER.debug("An exception occurred while closing and de-registering the channel for " + channel.remoteAddress());
-						}
+						// Not good the below code since some may be logging out temporarily to seek better pid
+						// try {
+						//	channel.close().addListener((ChannelFutureListener) arg0 -> arg0.channel().deregister());
+						// } catch (Exception e) {
+						//	LOGGER.debug("An exception occurred while closing and de-registering the channel for " + channel.remoteAddress());
+						// }
 						connIter.remove();
 					}
 				}

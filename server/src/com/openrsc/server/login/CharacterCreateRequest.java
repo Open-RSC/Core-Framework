@@ -140,7 +140,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			LOGGER.info("Processed register request for " + getUsername() + " response: " + registerResponse);
 		} else {
 			try {
-				boolean applyHarshRegistration = getServer().getConfig().MAX_PLAYERS_PER_IP < 5; // could potentially fall in config?
+				boolean applyHarshRegistration = false; // could potentially fall in config?
 
 				if (getUsername().length() < 2 || getUsername().length() > 12) {
 					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 7).toPacket());
@@ -212,7 +212,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 	public byte validateRegister() {
 		PlayerLoginData playerData;
 		try {
-			boolean applyHarshRegistration = getServer().getConfig().MAX_PLAYERS_PER_IP < 5; // could potentially fall in config?
+			boolean applyHarshRegistration = false; // could potentially fall in config?
 
 			playerData = getServer().getDatabase().getPlayerLoginData(username);
 
