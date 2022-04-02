@@ -25,5 +25,4 @@ services:
 
 networks: # Required for connectivity with separate docker-compose web framework
   default:
-    external:
-      name: database
+    name: database
