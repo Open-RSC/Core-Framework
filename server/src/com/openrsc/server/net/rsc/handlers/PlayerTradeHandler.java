@@ -240,10 +240,16 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 				affectedPlayer.getTrade().setTradeConfirmAccepted(false);
 
 				player.getTrade().resetOffer();
-				int count = payload.tradeCount;
+				int count = Math.min(payload.tradeCount, 12);
 				for (int slot = 0; slot < count; slot++) {
-					Item tItem;
-					tItem = new Item(payload.tradeCatalogIDs[slot], payload.tradeAmounts[slot], payload.tradeNoted[slot]);
+					Item ttItem, tItem;
+					ttItem = new Item(payload.tradeCatalogIDs[slot], payload.tradeAmounts[slot], payload.tradeNoted[slot]);
+					ItemDefinition itDef = ttItem.getDef(player.getWorld());
+					if (itDef.isStackable() || ttItem.getNoted()) {
+						tItem = new Item(ttItem.getCatalogId(), ttItem.getAmount(), ttItem.getNoted());
+					} else {
+						tItem = new Item(ttItem.getCatalogId(), 1, false);
+					}
 
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "item less than 0");

@@ -2,6 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Equipment;
@@ -323,9 +324,17 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 				affectedPlayer.getDuel().setDuelConfirmAccepted(false);
 
 				player.getDuel().resetDuelOffer();
-				int count = payload.duelCount;
+				int count = Math.min(payload.duelCount, 12);
 				for (int slot = 0; slot < count; slot++) {
-					Item tItem = new Item(payload.duelCatalogIDs[slot], payload.duelAmounts[slot], payload.duelNoted[slot]);
+					Item ttItem, tItem;
+					ttItem = new Item(payload.duelCatalogIDs[slot], payload.duelAmounts[slot], payload.duelNoted[slot]);
+					ItemDefinition itDef = ttItem.getDef(player.getWorld());
+					if (itDef.isStackable() || ttItem.getNoted()) {
+						tItem = new Item(ttItem.getCatalogId(), ttItem.getAmount(), ttItem.getNoted());
+					} else {
+						tItem = new Item(ttItem.getCatalogId(), 1, false);
+					}
+
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "duel item amount < 1");
 						continue;

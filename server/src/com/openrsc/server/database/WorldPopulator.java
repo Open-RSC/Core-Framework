@@ -1,6 +1,5 @@
 package com.openrsc.server.database;
 
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
@@ -312,6 +311,14 @@ public final class WorldPopulator {
 				max = locObj.getJSONObject("max");
 				loc.maxX = max.getInt("X");
 				loc.maxY = max.getInt("Y");
+				// npcs should initially be only max one per tile
+				if (npclocs.stream().anyMatch(x -> x.startX == loc.startX && x.startY == loc.startY)) {
+					// sometimes may be desired to replace a base npc,
+					// in which case the start X and start Y should match
+					// commented out since there are about ~ 22 digsite workmen that need to be corrected
+					// to not be all same tile
+					// npclocs.removeIf(npc -> npc.startX == loc.startX && npc.startY == loc.startY);
+				}
 				npclocs.add(loc);
 			}
 		}
@@ -334,6 +341,11 @@ public final class WorldPopulator {
 				loc.y = pos.getInt("Y");
 				loc.amount = locObj.getInt("amount");
 				loc.respawnTime = locObj.getInt("respawn");
+				if (itemlocs.stream().anyMatch(it -> it.x == loc.x && it.y == loc.y)) {
+					// sometimes may be desired to replace a base grounditem,
+					// in which case x and y should match
+					itemlocs.removeIf(it -> it.x == loc.x && it.y == loc.y);
+				}
 				itemlocs.add(loc);
 			}
 		}
