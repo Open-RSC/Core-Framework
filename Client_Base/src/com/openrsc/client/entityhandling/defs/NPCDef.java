@@ -48,6 +48,10 @@ public class NPCDef extends EntityDef {
 		return command1;
 	}
 
+	public void updateCommand2(String command) {
+		this.command2 = command;
+	}
+
 	public String getCommand2() {
 		return command2;
 	}

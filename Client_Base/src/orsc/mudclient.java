@@ -17567,8 +17567,10 @@ public final class mudclient implements Runnable {
 			questStages[RuneMysteriesID] == -1) {
 			NPCDef AuburyDef = EntityHandler.getNpcDef(AuburyID);
 			NPCDef SedridorDef = EntityHandler.getNpcDef(SedridorID);
-			if (AuburyDef != null)
+			if (AuburyDef != null) {
 				AuburyDef.updateCommand1("Teleport");
+				if (Config.S_RIGHT_CLICK_TRADE) AuburyDef.updateCommand2("Trade");
+			}
 			if (SedridorDef != null)
 				SedridorDef.updateCommand1("Teleport");
 		}
