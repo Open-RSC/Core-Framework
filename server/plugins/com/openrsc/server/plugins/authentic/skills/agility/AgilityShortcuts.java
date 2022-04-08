@@ -265,13 +265,12 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You grab the rope and try and swing across");
+				delay(2);
 				if (!succeed(player, 57, 77)) {
 					mes("You miss the opposite side and fall to the level below");
-					delay(3);
 					teleport(player, 596, 3534);
 					return;
 				}
-				delay(4);
 				teleport(player, 596, 3581);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skill.AGILITY.id(), 110, true);
@@ -288,13 +287,12 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You grab the rope and try and swing across");
+				delay(2);
 				if (!succeed(player, 57, 77)) {
 					mes("You miss the opposite side and fall to the level below");
-					delay(3);
 					teleport(player, 598, 3536);
 					return;
 				}
-				delay(4);
 				teleport(player, 598, 3585);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skill.AGILITY.id(), 110, true);
@@ -312,11 +310,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You put your foot on the ledge and try to edge across");
-				delay(4);
+				delay(3);
 				if (!succeed(player, 40, 65)) {
 					mes("you lose your footing and fall to the level below");
-					delay(3);
 					teleport(player, 603, 3520);
+					player.damage((int)(getCurrentLevel(player, Skill.HITS.id()) * 0.2D)); // unknown if should depend on current hits (very likely) was taken at 47 hits
 					return;
 				}
 				teleport(player, 601, 3563);
@@ -335,11 +333,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You put your foot on the ledge and try to edge across");
-				delay(4);
+				delay(3);
 				if (!succeed(player, 40, 65)) {
 					mes("you lose your footing and fall to the level below");
-					delay(3);
 					teleport(player, 603, 3520);
+					player.damage((int)(getCurrentLevel(player, Skill.HITS.id()) * 0.2D)); // unknown if should depend on current hits (very likely) was taken at 47 hits
 					return;
 				}
 				teleport(player, 601, 3557);
@@ -383,7 +381,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You squeeze through the pipe");
-				delay(4);
+				delay(2);
 				teleport(player, 608, 3568);
 				player.incExp(Skill.AGILITY.id(), 30, true);
 				break;
@@ -399,7 +397,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You squeeze through the pipe");
-				delay(4);
+				delay(2);
 				teleport(player, 605, 3568);
 				player.incExp(Skill.AGILITY.id(), 30, true);
 				break;
@@ -409,14 +407,14 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You grab the rope and try and swing across");
-				delay(4);
+				delay(2);
 				teleport(player, 664, 755);
 				player.message("You skillfully swing across the stream");
 				player.incExp(Skill.AGILITY.id(), 50, true);
 				break;
 			case GREW_ISLAND_SWING_BACK:
 				player.message("You grab the rope and try and swing across");
-				delay(4);
+				delay(2);
 				teleport(player, 666, 755);
 				player.message("You skillfully swing across the stream");
 				player.incExp(Skill.AGILITY.id(), 50, true);
@@ -528,36 +526,36 @@ public class AgilityShortcuts implements OpLocTrigger,
 				break;
 
 			case TAVERLY_PIPE_RETURN:
-			if (getCurrentLevel(player, Skill.AGILITY.id()) < 70) {
-				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
-				return;
-			}
-			if (config().WANT_FATIGUE) {
-				if (player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("You are too tired to squeeze through the pipe");
+				if (getCurrentLevel(player, Skill.AGILITY.id()) < 70) {
+					player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 					return;
 				}
-			}
-			player.message("You squeeze through the pipe");
-			teleport(player, 372, 3352);
-			player.incExp(Skill.AGILITY.id(), 30, true);
-			break;
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to squeeze through the pipe");
+						return;
+					}
+				}
+				player.message("You squeeze through the pipe");
+				teleport(player, 372, 3352);
+				player.incExp(Skill.AGILITY.id(), 30, true);
+				break;
 
 			case TAVERLY_PIPE:
-			if (getCurrentLevel(player, Skill.AGILITY.id()) < 70) {
-				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
-				return;
-			}
-			if (config().WANT_FATIGUE) {
-				if (player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("You are too tired to squeeze through the pipe");
+				if (getCurrentLevel(player, Skill.AGILITY.id()) < 70) {
+					player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 					return;
 				}
-			}
-			player.message("You squeeze through the pipe");
-			teleport(player, 375, 3352);
-			player.incExp(Skill.AGILITY.id(), 30, true);
-			break;
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to squeeze through the pipe");
+						return;
+					}
+				}
+				player.message("You squeeze through the pipe");
+				teleport(player, 375, 3352);
+				player.incExp(Skill.AGILITY.id(), 30, true);
+				break;
 			case ENTRANA_RUBBLE:
 				if (getCurrentLevel(player, Skill.AGILITY.id()) < 55) {
 					player.message("You need an agility level of 55 to climb the rubble");
