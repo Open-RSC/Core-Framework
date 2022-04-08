@@ -63,14 +63,23 @@ public class ItemContainer {
 		}
 	}
 
-	public int countId(int id) {
+	public int countId(final int id) {
 		synchronized (list) {
-			for (Item i : list) {
-				if (i.getCatalogId() == id) {
-					return i.getAmount();
-				}
+			int count = 0;
+
+			for (final Item item : list) {
+				if (item.getCatalogId() != id)
+					continue;
+
+				final int itemAmount = item.getAmount();
+
+				if (itemAmount > Integer.MAX_VALUE - count)
+					return Integer.MAX_VALUE;
+
+				count += itemAmount;
 			}
-			return 0;
+
+			return count;
 		}
 	}
 

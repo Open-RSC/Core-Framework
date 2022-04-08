@@ -218,6 +218,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 				break;
 			case PLAYER_ADDED_ITEMS_TO_TRADE_OFFER:
 				affectedPlayer = player.getTrade().getTradeRecipient();
+
 				if (affectedPlayer == null || busy(affectedPlayer) || !player.getTrade().isTradeActive()
 					|| !affectedPlayer.getTrade().isTradeActive()
 					|| (player.getTrade().isTradeAccepted() && affectedPlayer.getTrade().isTradeAccepted())
@@ -232,51 +233,49 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					player.getTrade().setTradeAccepted(false);
 					ActionSender.sendOwnTradeAcceptUpdate(player);
 				}
+
 				if (affectedPlayer.getTrade().isTradeAccepted()) {
 					affectedPlayer.getTrade().setTradeAccepted(false);
 					ActionSender.sendOwnTradeAcceptUpdate(affectedPlayer);
 				}
+
 				player.getTrade().setTradeConfirmAccepted(false);
 				affectedPlayer.getTrade().setTradeConfirmAccepted(false);
 
 				player.getTrade().resetOffer();
-				int count = Math.min(payload.tradeCount, 12);
-				for (int slot = 0; slot < count; slot++) {
-					Item ttItem, tItem;
-					ttItem = new Item(payload.tradeCatalogIDs[slot], payload.tradeAmounts[slot], payload.tradeNoted[slot]);
-					ItemDefinition itDef = ttItem.getDef(player.getWorld());
-					if (itDef.isStackable() || ttItem.getNoted()) {
-						tItem = new Item(ttItem.getCatalogId(), ttItem.getAmount(), ttItem.getNoted());
-					} else {
-						tItem = new Item(ttItem.getCatalogId(), 1, false);
-					}
 
-					if (tItem.getAmount() < 1) {
-						player.setSuspiciousPlayer(true, "item less than 0");
+				final int itemCount = Math.min(payload.tradeCount, 12);
+
+				for (int i = 0; i < itemCount; i++) {
+					final Item item = new Item(payload.tradeCatalogIDs[i], payload.tradeAmounts[i], payload.tradeNoted[i]);
+
+					if (item.getAmount() < 1) {
+						player.setSuspiciousPlayer(true,
+							String.format("trading invalid amount of itemId: %d", item.getCatalogId()));
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
-					if (tItem.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+					if (item.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
 						player.message("Notes can no longer be traded with other players.");
 						player.message("You may either deposit it in the bank or sell to a shop instead.");
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
-					if (tItem.getDef(player.getWorld()).isUntradable() && !player.getWorld().getServer().getConfig().CAN_OFFER_UNTRADEABLES) {
+					if (item.getDef(player.getWorld()).isUntradable() && !player.getWorld().getServer().getConfig().CAN_OFFER_UNTRADEABLES) {
 						player.message("This object cannot be traded with other players");
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
-					if (tItem.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
+					if (item.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
 						player.message("The other player is unable to receive the offered object");
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
-					if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
+					if (item.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
-					if (CertUtil.isCert(tItem.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
+					if (CertUtil.isCert(item.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
 						if (player.getCertOptOut()) {
 							player.message("You have opted out of trading certs with other players");
 						}
@@ -287,12 +286,16 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 						continue;
 					}
 
-					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId(), Optional.of(tItem.getNoted()))) {
-						player.setSuspiciousPlayer(true, "trade item amount greater than inventory countid");
+					final int invCount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
+					final int tradeCount = player.getTrade().getTradeOffer().countId(item.getCatalogId());
+
+					if (item.getAmount() > (invCount - tradeCount)) {
+						player.setSuspiciousPlayer(true, String.format("trading insufficient amount of itemId: %d", item.getCatalogId()));
 						player.getTrade().resetAll();
 						return;
 					}
-					player.getTrade().addToOffer(tItem);
+
+					player.getTrade().addToOffer(item);
 				}
 
 				affectedPlayer.setRequiresOfferUpdate(true);

@@ -309,6 +309,7 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 				break;
 			case DUEL_OFFER_ITEM:
 				affectedPlayer = player.getDuel().getDuelRecipient();
+
 				if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 					|| !affectedPlayer.getDuel().isDuelActive()
 					|| (player.getDuel().isDuelAccepted() && affectedPlayer.getDuel().isDuelAccepted())
@@ -320,42 +321,39 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 
 				player.getDuel().setDuelAccepted(false);
 				player.getDuel().setDuelConfirmAccepted(false);
+
 				affectedPlayer.getDuel().setDuelAccepted(false);
 				affectedPlayer.getDuel().setDuelConfirmAccepted(false);
 
 				player.getDuel().resetDuelOffer();
-				int count = Math.min(payload.duelCount, 12);
-				for (int slot = 0; slot < count; slot++) {
-					Item ttItem, tItem;
-					ttItem = new Item(payload.duelCatalogIDs[slot], payload.duelAmounts[slot], payload.duelNoted[slot]);
-					ItemDefinition itDef = ttItem.getDef(player.getWorld());
-					if (itDef.isStackable() || ttItem.getNoted()) {
-						tItem = new Item(ttItem.getCatalogId(), ttItem.getAmount(), ttItem.getNoted());
-					} else {
-						tItem = new Item(ttItem.getCatalogId(), 1, false);
-					}
 
-					if (tItem.getAmount() < 1) {
-						player.setSuspiciousPlayer(true, "duel item amount < 1");
+				final int itemCount = Math.min(payload.duelCount, 8);
+
+				for (int i = 0; i < itemCount; i++) {
+					final Item item = new Item(payload.duelCatalogIDs[i], payload.duelAmounts[i], payload.duelNoted[i]);
+
+					if (item.getAmount() < 1) {
+						player.setSuspiciousPlayer(true,
+							String.format("staking invalid amount of itemId: %d", item.getCatalogId()));
 						continue;
 					}
-					if (tItem.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+					if (item.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
 						player.message("Notes can no longer be staked with other players.");
 						player.message("You may either deposit it in the bank or sell to a shop instead.");
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}
-					if (tItem.getDef(player.getWorld()).isUntradable() && !player.getWorld().getServer().getConfig().CAN_OFFER_UNTRADEABLES) {
+					if (item.getDef(player.getWorld()).isUntradable() && !player.getWorld().getServer().getConfig().CAN_OFFER_UNTRADEABLES) {
 						player.message("This object cannot be added to a duel offer");
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}
-					if (tItem.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
+					if (item.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
 						player.message("The other player is unable to receive the staked object");
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}
-					if (CertUtil.isCert(tItem.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
+					if (CertUtil.isCert(item.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
 						if (player.getCertOptOut()) {
 							player.message("You have opted out of dueling certs with other players");
 						}
@@ -365,7 +363,7 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}
-					if (tItem.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
+					if (item.getDef(player.getWorld()).getName().toLowerCase().contains("-rune") && !player.getDuel().getDuelSetting(1)) {
 						player.getDuel().setDuelSetting(1, true);
 						affectedPlayer.getDuel().setDuelSetting(1, true);
 						player.message("When runes are staked, magic can't be used during the duel");
@@ -374,14 +372,21 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 						ActionSender.sendDuelSettingUpdate(affectedPlayer);
 						continue;
 					}
-					if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId(), Optional.of(tItem.getNoted()))) {
-						if (!(player.getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(tItem.getCatalogId()))) {
-							player.setSuspiciousPlayer(true, "not want equipment and duel trade item amount 1 and isweilding item");
+
+					final int invCount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
+					final int duelCount = player.getDuel().getDuelOffer().countId(item.getCatalogId());
+
+					if (item.getAmount() > (invCount - duelCount)) {
+						if (!(player.getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(item.getCatalogId()))) {
+							player.setSuspiciousPlayer(true,  String.format("staking insufficient amount of itemId: %d", item.getCatalogId()));
+							player.getDuel().resetAll();
 							return;
 						}
 					}
-					player.getDuel().addToDuelOffer(tItem);
+
+					player.getDuel().addToDuelOffer(item);
 				}
+
 				ActionSender.sendDuelOpponentItems(affectedPlayer);
 				ActionSender.sendDuelOpponentItems(player);
 				break;
