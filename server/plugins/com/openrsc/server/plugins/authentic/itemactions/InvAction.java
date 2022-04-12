@@ -144,28 +144,28 @@ public class InvAction implements OpInvTrigger {
 			handleOldJournal(player);
 		}
 		else if (id == ItemId.BURNTPIE.id() && command.equalsIgnoreCase("empty dish")) {
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) == -1) return;
 			player.message("you remove the burnt pie from the pie dish");
-			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 		}
 		else if (id == ItemId.BURNT_STEW.id() && command.equalsIgnoreCase("empty")) {
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) == -1) return;
 			player.message("you remove the burnt stew from the bowl");
-			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 		}
 		else if (id == ItemId.BURNT_CURRY.id() && command.equalsIgnoreCase("empty")) {
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) == -1) return;
 			player.message("you remove the burnt curry from the bowl");
-			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 		}
 		else if (id == ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) == -1) return;
 			player.message("You empty the plain water out of the Blessed Golden Bowl.");
-			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
 		}
 		else if (id == ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id() && command.equalsIgnoreCase("empty")) {
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) == -1) return;
 			player.message("You empty the plain water out of the Golden Bowl.");
-			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL.id()));
 		}
 		else if (id == ItemId.SPADE.id()) {
@@ -176,10 +176,10 @@ public class InvAction implements OpInvTrigger {
 	private void handleOyster(Player player, int oyster) {
 		player.message("you open the oyster shell");
 		if (DataConversions.random(0, 10) == 1) {
-			player.getCarriedItems().remove(new Item(oyster));
+			if (player.getCarriedItems().remove(new Item(oyster)) == -1) return;
 			player.getCarriedItems().getInventory().add(new Item(ItemId.OYSTER_PEARLS.id()));
 		} else {
-			player.getCarriedItems().remove(new Item(oyster));
+			if (player.getCarriedItems().remove(new Item(oyster)) == -1) return;
 			player.getCarriedItems().getInventory().add(new Item(ItemId.EMPTY_OYSTER.id()));
 		}
 	}
@@ -595,7 +595,7 @@ public class InvAction implements OpInvTrigger {
 	private void handleJangerberries(Player player) {
 		mes("You eat the Jangerberries");
 		delay(3);
-		player.getCarriedItems().remove(new Item(ItemId.JANGERBERRIES.id()));
+		if (player.getCarriedItems().remove(new Item(ItemId.JANGERBERRIES.id())) == -1) return;
 		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		int attack = player.getSkills().getMaxStat(Skill.ATTACK.id()) + 2;
 		int strength = player.getSkills().getMaxStat(Skill.STRENGTH.id()) + 1;
@@ -707,8 +707,8 @@ public class InvAction implements OpInvTrigger {
 	}
 
 	private void handleNightshade(Player player) {
+		if (player.getCarriedItems().remove(new Item(ItemId.NIGHTSHADE.id())) == -1) return;
 		player.message("You eat the nightshade...");
-		player.getCarriedItems().remove(new Item(ItemId.NIGHTSHADE.id()));
 		say(player, null, "Ahhhh! what have I done !");
 		player.damage((int) ((getCurrentLevel(player, Skill.HITS.id()) * 0.166666666D) + 14));
 		player.message("The nightshade was highly poisonous");

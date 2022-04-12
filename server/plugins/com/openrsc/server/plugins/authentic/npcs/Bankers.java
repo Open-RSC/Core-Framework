@@ -388,8 +388,9 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	private void deposit(Player player, Npc npc, int amount) {
 		if (amount > 0) {
 			if (ifheld(player, ItemId.COINS.id(), amount)) {
-				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), amount));
-				player.getBank().add(new Item(ItemId.COINS.id(), amount));
+				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), amount)) != -1) {
+					player.getBank().add(new Item(ItemId.COINS.id(), amount));
+				}
 			} else {
 				player.message("Sorry you don't have enough gold to complete the transaction");
 			}

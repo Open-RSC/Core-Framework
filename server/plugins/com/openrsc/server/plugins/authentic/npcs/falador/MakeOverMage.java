@@ -22,7 +22,7 @@ public class MakeOverMage implements TalkNpcTrigger {
 			if (!ifheld(player, ItemId.COINS.id(), 3000)) {
 				say(player, n, "I'll just go and get the cash");
 			} else {
-				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3000));
+				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3000)) == -1) return;
 				player.setChangingAppearance(true);
 				ActionSender.sendAppearanceScreen(player);
 			}

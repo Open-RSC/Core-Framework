@@ -342,20 +342,27 @@ public class Inventory {
 
 	// Used in custom bank interface to swap items.
 	public void swap(int slot, int to) {
-		if (slot <= 0 && to <= 0 && to == slot) {
+		if (slot < 0 || to < 0 || to == slot) {
 			return;
 		}
-		int idx = list.size() - 1;
-		if (to > idx) {
+
+		final int invSize = list.size();
+
+		if (slot >= invSize || to >= invSize) {
 			return;
 		}
-		Item item = get(slot);
-		Item item2 = get(to);
-		if (item != null && item2 != null) {
-			list.set(slot, item2);
-			list.set(to, item);
-			ActionSender.sendInventory(player);
+
+		final Item item1 = get(slot);
+		final Item item2 = get(to);
+
+		if (item1 == null || item2 == null)
+		{
+			return;
 		}
+
+		list.set(slot, item2);
+		list.set(to, item1);
+		ActionSender.sendInventory(player);
 	}
 
 	// Used in custom bank interface to insert items.
@@ -363,16 +370,22 @@ public class Inventory {
 		if (slot < 0 || to < 0 || to == slot) {
 			return false;
 		}
-		int idx = list.size() - 1;
-		if (to > idx) {
+
+		final int invSize = list.size();
+
+		if (slot >= invSize || to >= invSize) {
 			return false;
 		}
-		Item from = list.get(slot);
-		Item[] array = list.toArray(new Item[list.size()]);
-		if (slot >= array.length || from == null || to >= array.length) {
+
+		final Item item = list.get(slot);
+
+		if (item == null) {
 			return false;
 		}
+
+		final Item[] array = list.toArray(new Item[0]);
 		array[slot] = null;
+
 		if (slot > to) {
 			int shiftFrom = to;
 			int shiftTo = slot;
@@ -398,7 +411,8 @@ public class Inventory {
 			System.arraycopy(array, sliceStart, slice, 0, slice.length);
 			System.arraycopy(slice, 0, array, sliceStart - 1, slice.length);
 		}
-		array[to] = from;
+
+		array[to] = item;
 		list = new ArrayList<Item>(Arrays.asList(array));
 		return true;
 	}

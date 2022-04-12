@@ -244,8 +244,9 @@ public class Eating implements OpInvTrigger {
 			addFoodResult(player, id);
 
 		} else if (item.getCatalogId() == ItemId.FISH_OIL.id()) {
-			ActionSender.sendSound(player, "eat");
 			int id = item.getCatalogId();
+			if (player.getCarriedItems().remove(new Item(id, 1)) == -1) return;
+			ActionSender.sendSound(player, "eat");
 			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 
 			player.playerServerMessage(MessageType.QUEST, "You eat the fish oil");
@@ -267,11 +268,10 @@ public class Eating implements OpInvTrigger {
 					player.playerServerMessage(MessageType.QUEST, "You don't feel a difference");
 				}
 			}
-			// Remove
-			player.getCarriedItems().remove(new Item(id, 1));
 		} else if (item.getCatalogId() == ItemId.SWEETENED_SLICES.id() || item.getCatalogId() == ItemId.SWEETENED_CHUNKS.id()) {
-			ActionSender.sendSound(player, "eat");
 			int id = item.getCatalogId();
+			if (player.getCarriedItems().remove(new Item(id, 1)) == -1) return;
+			ActionSender.sendSound(player, "eat");
 			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 
 			player.playerServerMessage(MessageType.QUEST, "You eat the sweetened fruit");
@@ -288,8 +288,6 @@ public class Eating implements OpInvTrigger {
 				}
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 			}
-			// Remove
-			player.getCarriedItems().remove(new Item(id, 1));
 		}
 	}
 

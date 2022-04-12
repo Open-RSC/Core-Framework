@@ -55,13 +55,14 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 			}
 
 			player.face(otherPlayer);
-			//otherPlayer.face(player);
 
 			thinkbubble(item);
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 
 			delay();
+
+			if (player.getCarriedItems().remove(item) == -1) return;
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
@@ -79,8 +80,6 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 				otherPlayer.getCarriedItems().getInventory().add(phat);
 				otherPlayer.getCarriedItems().getInventory().add(prize);
 			}
-
-			player.getCarriedItems().remove(item);
 		}
 	}
 
@@ -112,6 +111,8 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 				player.playerServerMessage(MessageType.QUEST, "The banker pulls the christmas cracker on you");
 
 				delay();
+
+				if (player.getCarriedItems().remove(item) == -1) return;
 
 				int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 				int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

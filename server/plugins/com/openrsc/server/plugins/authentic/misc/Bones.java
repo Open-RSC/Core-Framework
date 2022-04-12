@@ -47,8 +47,9 @@ public class Bones implements OpInvTrigger {
 		player.message("You dig a hole in the ground");
 		delay();
 		player.message("You bury the " + item.getDef(player.getWorld()).getName().toLowerCase());
-		player.getCarriedItems().remove(toRemove);
-		giveBonesExperience(player, item);
+		if (player.getCarriedItems().remove(toRemove) != -1) {
+			giveBonesExperience(player, item);
+		}
 
 		// Repeat
 		updatebatch();

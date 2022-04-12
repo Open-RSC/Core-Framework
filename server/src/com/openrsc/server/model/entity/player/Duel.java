@@ -175,16 +175,18 @@ public class Duel implements ContainerListener {
 						player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 							player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
 							item.getDef(player.getWorld()).getWearableId(), false);
-						player.getCarriedItems().getEquipment().remove(item, item.getAmount());
-						log.addDroppedItem(item);
-						player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+						if (player.getCarriedItems().getEquipment().remove(item, item.getAmount()) != -1) {
+							log.addDroppedItem(item);
+							player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+						}
 					}
 					LOGGER.info("Missing staked item [" + item.getCatalogId() + ", " + item.getAmount()
 						+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
 				} else {
-					player.getCarriedItems().remove(new Item(item.getCatalogId(), item.getAmount(), item.getNoted(), affectedItem.getItemId()));
-					log.addDroppedItem(item);
-					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent, item.getNoted()));
+					if (player.getCarriedItems().remove(new Item(item.getCatalogId(), item.getAmount(), item.getNoted(), affectedItem.getItemId())) != -1) {
+						log.addDroppedItem(item);
+						player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent, item.getNoted()));
+					}
 				}
 			}
 		}

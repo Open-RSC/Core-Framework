@@ -314,40 +314,52 @@ public class Bank {
 
 	public boolean swap(int slot, int to) {
 		synchronized(list) {
-			if (slot <= 0 && to <= 0 && to == slot) {
+			if (slot < 0 || to < 0 || slot == to) {
 				return false;
 			}
-			int idx = list.size() - 1;
-			if (to > idx) {
+
+			final int bankSize = list.size();
+
+			if (slot >= bankSize || to >= bankSize) {
 				return false;
 			}
-			Item item = get(slot);
-			Item item2 = get(to);
-			if (item != null && item2 != null) {
-				list.set(slot, item2);
-				list.set(to, item);
-				return true;
+
+			final Item item1 = get(slot);
+			final Item item2 = get(to);
+
+			if (item1 == null || item2 == null) {
+				return false;
 			}
-			return false;
+
+			list.set(slot, item2);
+			list.set(to, item1);
+			return true;
 		}
 	}
 
 	public boolean insert(int slot, int to) {
 		synchronized(list) {
-			if (slot <= 0 && to <= 0 && to == slot) {
+			if (slot < 0 || to < 0 || to == slot) {
 				return false;
 			}
-			int idx = list.size() - 1;
-			if (to > idx) {
+
+			final int bankSize = list.size();
+
+			if (slot >= bankSize || to >= bankSize) {
 				return false;
 			}
+
+			final Item item = get(slot);
+
+			if (item == null) {
+				return false;
+			}
+
+			final Item[] array = list.toArray(new Item[0]);
+
 			// we reset the item in the from slot
-			Item from = get(slot);
-			Item[] array = list.toArray(new Item[list.size()]);
-			if (slot >= array.length || from == null || to >= array.length) {
-				return false;
-			}
 			array[slot] = null;
+
 			// find which direction to shift in
 			if (slot > to) {
 				int shiftFrom = to;
@@ -374,8 +386,9 @@ public class Bank {
 				System.arraycopy(array, sliceStart, slice, 0, slice.length);
 				System.arraycopy(slice, 0, array, sliceStart - 1, slice.length);
 			}
+
 			// now fill in the target slot
-			array[to] = from;
+			array[to] = item;
 			list = new ArrayList<Item>(Arrays.asList(array));
 			return true;
 		}
@@ -543,16 +556,12 @@ public class Bank {
 				int itemToAddCatalogId = depositItem.getCatalogId();
 				int itemToAddAmount = requestedAmount;
 
-				if (player.getAttribute("swap_cert", false)) {
+				if (player.getConfig().WANT_CERT_DEPOSIT && player.getAttribute("swap_cert", false)) {
 					itemToAddCatalogId = uncertedID(itemToAddCatalogId);
 
 					if (itemToAddCatalogId != depositItem.getCatalogId()) {
 						itemToAddAmount *= 5;
 					}
-
-					// With this line in place, players can only swap certs once per client session
-					// Not sure why it's here... commenting it out
-					//player.setAttribute("swap_cert", false);
 				}
 
 				Item itemToAdd = new Item(itemToAddCatalogId, itemToAddAmount);

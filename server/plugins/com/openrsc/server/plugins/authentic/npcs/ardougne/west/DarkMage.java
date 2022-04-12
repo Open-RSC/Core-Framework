@@ -52,12 +52,13 @@ public class DarkMage implements TalkNpcTrigger {
 						delay(3);
 						mes("and the staff of iban");
 						delay(3);
-						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
-						player.getCarriedItems().remove(new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()));
-						player.message("the mage fixes the staff and returns it to you");
-						give(player, ItemId.STAFF_OF_IBAN.id(), 1);
-						say(player, n, "thanks mage");
-						npcsay(player, n, "you be carefull with that thing");
+						if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000),
+							new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()))) {
+							player.message("the mage fixes the staff and returns it to you");
+							give(player, ItemId.STAFF_OF_IBAN.id(), 1);
+							say(player, n, "thanks mage");
+							npcsay(player, n, "you be carefull with that thing");
+						}
 					}
 				}
 			}

@@ -12,8 +12,6 @@ import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.BankStruct;
 import com.openrsc.server.util.rsc.MessageType;
 
-import java.util.Optional;
-
 public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn> {
 
 	public void process(BankStruct payload, Player player) throws Exception {
@@ -89,7 +87,6 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 					return;
 				}
 
-				amount = Math.min(player.getCarriedItems().getInventory().countId(catalogID, Optional.empty()), amount);
 				player.getBank().depositItemFromInventory(catalogID, amount, true);
 				break;
 			case BANK_DEPOSIT_ALL_FROM_INVENTORY:

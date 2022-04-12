@@ -69,9 +69,7 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 					Item i = inv.get(slot);
 					if (i.isWieldable(player.getWorld()) && i.getDef(player.getWorld()).getWieldPosition() == 1
 						&& i.isWielded() && i.getDef(player.getWorld()).isFemaleOnly()) {
-						if(!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
-							player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_BANK, false));
-						}
+						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
 						ActionSender.sendInventoryUpdateItem(player, slot);
 						break;
 					}

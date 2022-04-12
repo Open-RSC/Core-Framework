@@ -128,7 +128,7 @@ public class PayloadProcessorManager {
 		bind(OpcodeIn.SKIP_TUTORIAL, TutorialHandler.class);
 		bind(OpcodeIn.ON_BLACK_HOLE, BlackHoleHandler.class);
 
-		bind(OpcodeIn.COMBAT_STYLE_CHANGED, StyleHandler.class);
+		bind(OpcodeIn.COMBAT_STYLE_CHANGED, CombatStyleHandler.class);
 		bind(OpcodeIn.SEND_DEBUG_INFO, ClientDebugHandler.class);
 
 		bind(OpcodeIn.KNOWN_PLAYERS, KnownPlayersHandler.class); // TODO: class logic needs to be implemented

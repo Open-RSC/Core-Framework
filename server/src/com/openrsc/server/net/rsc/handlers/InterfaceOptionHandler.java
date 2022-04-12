@@ -26,8 +26,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
 
 public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, OpcodeIn> {
-
-
 	private static String[] badWords = {
 		"fuck", "ass", "bitch", "admin", "mod", "dev", "developer", "nigger", "niger",
 		"whore", "pussy", "porn", "penis", "chink", "faggot", "cunt", "clit", "cock"};
@@ -38,12 +36,16 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			player.message("You can't do that whilst you are fighting");
 			return;
 		}
+
 		final InterfaceOptions option = InterfaceOptions.getById(payload.index);
+
 		switch (option) {
 			case SWAP_CERT:
+				if (!player.getConfig().WANT_CERT_DEPOSIT) return;
 				player.setAttribute("swap_cert", payload.value == 1);
 				break;
 			case SWAP_NOTE:
+				if (!player.getConfig().WANT_BANK_NOTES) return;
 				player.setAttribute("swap_note", payload.value == 1);
 				break;
 			case BANK_SWAP:
@@ -53,36 +55,38 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				handleBankInsert(player, payload);
 				break;
 			case INVENTORY_INSERT:
+				if (!player.getConfig().WANT_CUSTOM_BANKS) return;
 				handleInventoryInsert(player, payload);
 				break;
 			case INVENTORY_SWAP:
+				if (!player.getConfig().WANT_CUSTOM_BANKS) return;
 				handleInventorySwap(player, payload);
 				break;
 			case CANCEL_BATCH:
-				// Cancel Batch
-				if (player.getConfig().BATCH_PROGRESSION) {
-					player.interruptPlugins();
-				}
+				if (!player.getConfig().BATCH_PROGRESSION) return;
+				player.interruptPlugins();
 				break;
 			case IRONMAN_MODE:
+				if (!player.getConfig().SPAWN_IRON_MAN_NPCS) return;
 				handleIronmanMode(player, payload);
 				break;
 			case BANK_PIN:
+				if (!player.getConfig().WANT_BANK_PINS) return;
 				handleBankPinEntry(player, payload);
 				break;
 			case AUCTION:
 				if (!player.getConfig().SPAWN_AUCTION_NPCS) return;
 				handleAuction(player, payload);
 				break;
-			case CLAN: // Clan Actions
+			case CLAN:
 				if (!player.getConfig().WANT_CLANS) return;
 				handleClan(player, payload);
 				break;
-			case PARTY: // Party
+			case PARTY:
 				if (!player.getConfig().WANT_PARTIES) return;
 				handleParty(player, payload);
 				break;
-			case POINTS: //OpenPK Points
+			case POINTS:
 				if (!player.getConfig().WANT_OPENPK_POINTS) return;
 				handlePoints(player, payload);
 				break;

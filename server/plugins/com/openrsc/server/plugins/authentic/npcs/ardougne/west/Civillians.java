@@ -98,11 +98,12 @@ public class Civillians implements TalkNpcTrigger {
 				npcsay(player, n, "well, i'm not giving you anymore");
 			} else if (sub_menu == 1) {
 				player.message("you hand over the cat");
-				player.getCarriedItems().remove(new Item(ItemId.CAT.id()));
-				player.message("you are given 25 death runes");
-				give(player, ItemId.DEATH_RUNE.id(), 25);
-				npcsay(player, n, "great, thanks for that");
-				say(player, n, "that's ok, take care");
+				if (player.getCarriedItems().remove(new Item(ItemId.CAT.id())) != -1) {
+					player.message("you are given 25 death runes");
+					give(player, ItemId.DEATH_RUNE.id(), 25);
+					npcsay(player, n, "great, thanks for that");
+					say(player, n, "that's ok, take care");
+				}
 			}
 		} else if (menu == 1) {
 			// nothing

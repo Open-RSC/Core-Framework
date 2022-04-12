@@ -24,12 +24,13 @@ public class MuddyChest implements OpLocTrigger, UseLocTrigger {
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == MUDDY_CHEST && item.getCatalogId() == ItemId.MUDDY_KEY.id()) {
+			if (player.getCarriedItems().remove(new Item(ItemId.MUDDY_KEY.id())) == -1) return;
+
 			int respawnTime = 3000;
 			player.message("you unlock the chest with your key");
 			changeloc(obj, respawnTime, MUDDY_CHEST_OPEN);
 			player.message("You find some treasure in the chest");
 
-			player.getCarriedItems().remove(new Item(ItemId.MUDDY_KEY.id())); // remove the muddy key.
 			give(player, ItemId.UNCUT_RUBY.id(), 1);
 			give(player, ItemId.MITHRIL_BAR.id(), 1);
 			give(player, ItemId.LAW_RUNE.id(), 2);

@@ -821,7 +821,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					jewelryType = RING;
 					break;
 			}
-			player.getCarriedItems().remove(affectedItem);
+			if (player.getCarriedItems().remove(affectedItem) == -1) return;
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
@@ -878,7 +878,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (newTalisman == null) return;
 
 		// Remove it
-		player.getCarriedItems().remove(item);
+		if (player.getCarriedItems().remove(item) == -1) return;
 		player.getCarriedItems().getInventory().add(newTalisman);
 		finalizeSpell(player, spell, "You successfully cast " + spell.getName()
 			+ " on the " + item.getDef(player.getWorld()).getName());
@@ -905,7 +905,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					jewelryType = NECKLACE;
 					break;
 			}
-			player.getCarriedItems().remove(affectedItem);
+			if (player.getCarriedItems().remove(affectedItem) == -1) return;
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
@@ -933,7 +933,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					jewelryType = NECKLACE;
 					break;
 			}
-			player.getCarriedItems().remove(affectedItem);
+			if (player.getCarriedItems().remove(affectedItem) == -1) return;
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
@@ -961,7 +961,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					jewelryType = NECKLACE;
 					break;
 			}
-			player.getCarriedItems().remove(affectedItem);
+			if (player.getCarriedItems().remove(affectedItem) == -1) return;
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
@@ -985,7 +985,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
-			player.getCarriedItems().remove(affectedItem);
+			if (player.getCarriedItems().remove(affectedItem) == -1) return;
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
@@ -1009,10 +1009,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			player.message("@gre@Ana: Don't you start casting spells on me!");
 			finalizeSpellNoMessage(player, spell);
 		} else {
-			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) > -1) {
-				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D * affectedItem.getAmount());
-				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 40%
-			}
+			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) == -1) return;
+			int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D * affectedItem.getAmount());
+			player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 40%
 			finalizeSpell(player, spell, "Alchemy spell successful");
 		}
 	}
@@ -1034,10 +1033,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			player.message("@gre@Ana: Don't you start casting spells on me!");
 			finalizeSpellNoMessage(player, spell);
 		} else {
-			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) > -1) {
-				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D * affectedItem.getAmount());
-				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 60%
-			}
+			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) == -1) return;
+			int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D * affectedItem.getAmount());
+			player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 60%
 			finalizeSpell(player, spell, "Alchemy spell successful");
 		}
 	}
@@ -1075,23 +1073,22 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			return;
 		}
 		Item bar = new Item(smeltingDef.getBarId());
-		if (player.getCarriedItems().remove(affectedItem) > -1) {
-			for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
-				int toUse = reqOre.getAmount();
-				if (reqOre.getId() == ItemId.COAL.id()
-					&& SkillCapes.shouldActivate(player, ItemId.SMITHING_CAPE)) {
+		if (player.getCarriedItems().remove(affectedItem) == -1) return;
+		for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
+			int toUse = reqOre.getAmount();
+			if (reqOre.getId() == ItemId.COAL.id()
+				&& SkillCapes.shouldActivate(player, ItemId.SMITHING_CAPE)) {
 
-					toUse = reqOre.getAmount()/2;
-					player.message("You heat the ore using half the usual amount of coal");
-				}
-				for (int i = 0; i < toUse; i++) {
-					player.getCarriedItems().remove(new Item(reqOre.getId()));
-				}
+				toUse = reqOre.getAmount()/2;
+				player.message("You heat the ore using half the usual amount of coal");
 			}
-			player.playerServerMessage(MessageType.QUEST, "You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
-			player.getCarriedItems().getInventory().add(bar);
-			player.incExp(Skill.SMITHING.id(), smeltingDef.getExp(), true);
+			for (int i = 0; i < toUse; i++) {
+				player.getCarriedItems().remove(new Item(reqOre.getId()));
+			}
 		}
+		player.playerServerMessage(MessageType.QUEST, "You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
+		player.getCarriedItems().getInventory().add(bar);
+		player.incExp(Skill.SMITHING.id(), smeltingDef.getExp(), true);
 		finalizeSpellNoMessage(player, spell);
 	}
 

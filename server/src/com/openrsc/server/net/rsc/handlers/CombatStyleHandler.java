@@ -6,7 +6,7 @@ import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.CombatStyleStruct;
 
-public class StyleHandler implements PayloadProcessor<CombatStyleStruct, OpcodeIn> {
+public class CombatStyleHandler implements PayloadProcessor<CombatStyleStruct, OpcodeIn> {
 
 	public void process(final CombatStyleStruct payload, final Player player) throws Exception {
 

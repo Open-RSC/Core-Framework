@@ -296,7 +296,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			player.message("You exchange your " + certerDef.getType() + ending
 				+ " for certificates");
 			for (int x = 0; x < itemAmount; x++) {
-				player.getCarriedItems().remove(new Item(itemID));
+				if (player.getCarriedItems().remove(new Item(itemID)) == -1) return;
 			}
 			player.getCarriedItems().getInventory().add(new Item(certID, certAmount));
 		}
@@ -396,16 +396,14 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		mes("You hand " + npcName + " your " + (isNoted ? "certed " : "") + itemName + (toExchange > 1 ? "s" : ""));
 		delay(3);
 		if (isNoted) {
-			// Remove the items
-			player.getCarriedItems().remove(new Item(item.getCatalogId(), toExchange, true));
-			// Add them back
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId(), toExchange, true)) == -1) return;
 			for (int i = 0; i < toExchange; i++) {
 				player.getCarriedItems().getInventory().add(new Item(item.getCatalogId()));
 			}
 		} else {
 			// Remove the (non-noted) items
 			for (int i = 0; i < toExchange; i++) {
-				player.getCarriedItems().remove(new Item(item.getCatalogId(), 1, false));
+				if (player.getCarriedItems().remove(new Item(item.getCatalogId(), 1, false)) == -1) return;
 			}
 
 			// Add back the noted items.
@@ -436,11 +434,11 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		delay(3);
 		mes(npc, String.format("%s hands you %d %s bank certificates", npcName, amountToGet, newItemName));
 		delay(3);
-		player.getCarriedItems().remove(new Item(item.getCatalogId(), amountHeld));
-		player.getCarriedItems().getInventory().add(itemToGet);
-
-		npcsay(player, npc, "There you go");
-		say(player, npc, "Thankyou very much");
+		if (player.getCarriedItems().remove(new Item(item.getCatalogId(), amountHeld)) != -1) {
+			player.getCarriedItems().getInventory().add(itemToGet);
+			npcsay(player, npc, "There you go");
+			say(player, npc, "Thankyou very much");
+		}
 	}
 
 	public static boolean certExchangeBlock(final Player player, final Npc npc, final Item item) {

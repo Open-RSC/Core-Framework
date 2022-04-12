@@ -711,98 +711,92 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 						//inexistent
 						break;
 					case AUCTION:
-						if (player.getConfig().SPAWN_AUCTION_NPCS) {
-							os.value = packet.readByte();
-							final AuctionOptions auctionOption = AuctionOptions.getById((int)os.value);
-							switch (auctionOption) {
-								case BUY:
-									os.id = packet.readInt();
-									os.amount = packet.readInt();
-									break;
-								case CREATE:
-									os.id = packet.readInt();
-									os.amount = packet.readInt();
-									os.price = packet.readInt();
-									break;
-								case ABORT:
-								case DELETE:
-									os.id = packet.readInt();
-									break;
-								case REFRESH:
-								case CLOSE:
-									// nothing
-									break;
-							}
+						os.value = packet.readByte();
+						final AuctionOptions auctionOption = AuctionOptions.getById((int)os.value);
+						switch (auctionOption) {
+							case BUY:
+								os.id = packet.readInt();
+								os.amount = packet.readInt();
+								break;
+							case CREATE:
+								os.id = packet.readInt();
+								os.amount = packet.readInt();
+								os.price = packet.readInt();
+								break;
+							case ABORT:
+							case DELETE:
+								os.id = packet.readInt();
+								break;
+							case REFRESH:
+							case CLOSE:
+								// nothing
+								break;
 						}
 						break;
 					case CLAN:
-						if (player.getConfig().WANT_CLANS) {
-							os.value = packet.readByte();
-							final ClanOptions clanOption = ClanOptions.getById((int)os.value);
-							switch (clanOption) {
-								case CREATE:
-									os.name = packet.readString();
-									os.tag = packet.readString();
-									break;
-								case LEAVE:
-								case ACCEPT_INVITE:
-								case DECLINE_INVITE:
-								case SEND_CLAN_INFO:
-									//nothing
-									break;
-								case INVITE_PLAYER:
-								case KICK_PLAYER:
-									os.player = packet.readString();
-									break;
-								case RANK_PLAYER:
-									os.player = packet.readString();
-									os.value2 = packet.readByte();
-									break;
-								case CLAN_SETTINGS:
-									os.value2 = packet.readByte();
-									if (os.value2 >= 0 && os.value2 <= 3) {
-										os.value3 = packet.readByte();
-									}
-									break;
-							}
+						os.value = packet.readByte();
+						final ClanOptions clanOption = ClanOptions.getById((int)os.value);
+						switch (clanOption) {
+							case CREATE:
+								os.name = packet.readString();
+								os.tag = packet.readString();
+								break;
+							case LEAVE:
+							case ACCEPT_INVITE:
+							case DECLINE_INVITE:
+							case SEND_CLAN_INFO:
+								//nothing
+								break;
+							case INVITE_PLAYER:
+							case KICK_PLAYER:
+								os.player = packet.readString();
+								break;
+							case RANK_PLAYER:
+								os.player = packet.readString();
+								os.value2 = packet.readByte();
+								break;
+							case CLAN_SETTINGS:
+								os.value2 = packet.readByte();
+								if (os.value2 >= 0 && os.value2 <= 3) {
+									os.value3 = packet.readByte();
+								}
+								break;
 						}
 						break;
 					case PARTY:
-						if (player.getConfig().WANT_PARTIES) {
-							os.value = packet.readByte();
-							final PartyOptions partyOption = PartyOptions.getById((int)os.value);
-							switch (partyOption) {
-								case CREATE_OR_INVITE:
-									os.id = packet.readShort();
-									os.name = packet.readString();
-									os.tag = packet.readString();
-									break;
-								case INIT:
-								case LEAVE:
-								case ACCEPT_INVITE:
-								case DECLINE_INVITE:
-								case SEND_PARTY_INFO:
-									//nothing
-									break;
-								case KICK_PLAYER:
-									os.player = packet.readString();
-									break;
-								case RANK_PLAYER:
-									os.player = packet.readString();
-									os.value2 = packet.readByte();
-									break;
-								case PARTY_SETTINGS:
-									os.value2 = packet.readByte();
-									if (os.value2 >= 0 && os.value2 <= 3) {
-										os.value3 = packet.readByte();
-									}
-									break;
-								case INVITE_PLAYER_OR_MAKE:
-									os.player = packet.readString();
-									os.name = packet.readString();
-									os.tag = packet.readString();
-									break;
-							}
+						os.value = packet.readByte();
+						final PartyOptions partyOption = PartyOptions.getById((int)os.value);
+						switch (partyOption) {
+							case CREATE_OR_INVITE:
+								os.id = packet.readShort();
+								os.name = packet.readString();
+								os.tag = packet.readString();
+								break;
+							case INIT:
+							case LEAVE:
+							case ACCEPT_INVITE:
+							case DECLINE_INVITE:
+							case SEND_PARTY_INFO:
+								//nothing
+								break;
+							case KICK_PLAYER:
+								os.player = packet.readString();
+								break;
+							case RANK_PLAYER:
+								os.player = packet.readString();
+								os.value2 = packet.readByte();
+								break;
+							case PARTY_SETTINGS:
+								os.value2 = packet.readByte();
+								if (os.value2 >= 0 && os.value2 <= 3) {
+									os.value3 = packet.readByte();
+								}
+								break;
+							case INVITE_PLAYER_OR_MAKE:
+								os.player = packet.readString();
+								os.name = packet.readString();
+								os.tag = packet.readString();
+								break;
 						}
 						break;
 					case POINTS:

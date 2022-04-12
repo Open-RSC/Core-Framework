@@ -35,13 +35,14 @@ public class SinisterChest implements OpLocTrigger, UseLocTrigger {
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.SINISTER_KEY.id() && obj.getID() == SINISTER_CHEST) {
+			if (player.getCarriedItems().remove(new Item(ItemId.SINISTER_KEY.id())) == -1) return;
+
 			int respawnTime = 3000;
 			player.message("you unlock the chest with your key");
 			changeloc(obj, respawnTime, SINISTER_CHEST_OPEN);
 			player.message("A foul gas seeps from the chest");
 			player.message("You find a lot of herbs in the chest");
 
-			player.getCarriedItems().remove(new Item(ItemId.SINISTER_KEY.id())); // remove the sinister key.
 			// ADD 9 HERB ITEMS FROM CHEST.
 			// they are always the same rewarded herbs (see replay, there's also a rsc vid of
 			// someone looting it)

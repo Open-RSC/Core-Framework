@@ -112,7 +112,7 @@ public final class WormBrain implements OpBoundTrigger {
 		}
 		else if (option == 1) {
 			if (ifheld(player, ItemId.COINS.id(), 10000)) {
-				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10000));
+				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10000)) == -1) return;
 				player.message("You buy the map piece from Wormbrain");
 				npcsay(player, npc, "Fank you very much! Now me can bribe da guards, hehehe");
 				give(player, ItemId.MAP_PIECE_1.id(), 1);

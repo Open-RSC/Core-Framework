@@ -1,7 +1,9 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /** CarriedItems: A wrapper for inventory and equipment items.
@@ -119,5 +121,118 @@ public class CarriedItems {
 			}
 		}
 		return -1;
+	}
+
+	public boolean remove(final Item... items)
+	{
+		return remove(items, true);
+	}
+
+	/**
+	 * Removes multiple items from inventory/equipment if and only if all items can be removed.
+	 *
+	 * @param items items to be removed.
+	 * @param updateClient whether to update the player's client or not.
+	 * @return true if all items were removed otherwise returns false.
+	 */
+	public boolean remove(final Item[] items, final boolean updateClient)
+	{
+		if (items.length == 0)
+		{
+			// Nothing to remove
+			return false;
+		}
+
+		final List<Item> inventoryItems = new ArrayList<>(items.length);
+		List<Item> equipmentItems = null;
+
+		if (player.getConfig().WANT_EQUIPMENT_TAB)
+		{
+			equipmentItems = new ArrayList<>(items.length);
+		}
+
+		synchronized (inventory.getItems())
+		{
+			synchronized (equipment.getList())
+			{
+				for (final Item item : items)
+				{
+					int idx = inventory.getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()));
+
+					if (idx != -1)
+					{
+						// Matching item found in inventory
+						final Item invItem = inventory.get(idx);
+						final ItemDefinition itemDef = invItem.getDef(player.getWorld());
+
+						if (itemDef == null)
+						{
+							return false;
+						}
+
+						if ((itemDef.isStackable() || invItem.getNoted()) && invItem.getAmount() < item.getAmount())
+						{
+							// Insufficient quantity
+							return false;
+						}
+
+						// Create copy of inventory item with amount to remove
+						final Item removeItem = new Item(invItem.getCatalogId(), item.getAmount(), invItem.getNoted(), invItem.getItemId());
+
+						inventoryItems.add(removeItem);
+						continue;
+					}
+
+					if (equipmentItems == null)
+					{
+						return false;
+					}
+
+					idx = equipment.searchEquipmentForItem(item.getCatalogId());
+
+					if (idx == -1)
+					{
+						return false;
+					}
+
+					// Matching item found in Equipment
+					final Item equipItem = equipment.get(idx);
+					final ItemDefinition itemDef = equipItem.getDef(player.getWorld());
+
+					if (itemDef == null)
+					{
+						return false;
+					}
+
+					if (itemDef.isStackable() && equipItem.getAmount() < item.getAmount())
+					{
+						// Insufficient quantity
+						return false;
+					}
+
+					// Create copy of equipment item with amount to remove
+					final Item removeItem = new Item(equipItem.getCatalogId(), item.getAmount(), equipItem.getNoted(), equipItem.getItemId());
+
+					equipmentItems.add(removeItem);
+				}
+
+				// Matching items were found in inventory/equipment for all items to be removed.
+
+				for (final Item item : inventoryItems)
+				{
+					inventory.remove(item, updateClient);
+				}
+
+				if (equipmentItems != null)
+				{
+					for (final Item item : equipmentItems)
+					{
+						equipment.remove(item, item.getAmount(), updateClient);
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 }

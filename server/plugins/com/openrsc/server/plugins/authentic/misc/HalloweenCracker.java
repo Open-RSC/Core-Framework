@@ -132,7 +132,7 @@ public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
-			player.getCarriedItems().remove(item);
+			if (player.getCarriedItems().remove(item) == -1) return;
 
 			delay();
 

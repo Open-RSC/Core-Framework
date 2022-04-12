@@ -86,13 +86,14 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 						Item currentNeckItem = player.getCarriedItems().getEquipment().getNeckItem();
 						if (config().WANT_EQUIPMENT_TAB && currentNeckItem != null
 							&& currentNeckItem.getCatalogId() == chargedId) {
-
-							player.getCarriedItems().getEquipment().remove(currentNeckItem, 1);
-							player.getCarriedItems().getEquipment().add(toAdd);
+							if (player.getCarriedItems().getEquipment().remove(currentNeckItem, 1) != -1) {
+								player.getCarriedItems().getEquipment().add(toAdd);
+							}
 						}
 						else {
-							player.getCarriedItems().remove(new Item(chargedId));
-							player.getCarriedItems().getInventory().add(toAdd);
+							if (player.getCarriedItems().remove(new Item(chargedId)) != -1) {
+								player.getCarriedItems().getInventory().add(toAdd);
+							}
 						}
 						ItemDefinition itemDef = item.getDef(player.getWorld());
 						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
@@ -130,8 +131,9 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 		);
 		player.message("You dip the amulet in the fountain");
 		delay(2);
-		player.getCarriedItems().remove(item);
-		player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+		if (player.getCarriedItems().remove(item) != -1) {
+			player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+		}
 
 		mes("You feel more power emanating from it than before");
 		delay(3);

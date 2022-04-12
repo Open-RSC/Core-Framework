@@ -4,14 +4,14 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import static com.openrsc.server.plugins.Functions.compareItemsIds;
+import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.plugins.Functions.delay;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
-import org.apache.commons.lang.ArrayUtils;
-
 import java.util.Arrays;
 import java.util.Optional;
-
-import static com.openrsc.server.plugins.Functions.*;
+import org.apache.commons.lang.ArrayUtils;
 
 public class InvUseOnItem implements UseInvTrigger {
 	private int[] capes = {
@@ -198,11 +198,8 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().getInventory().countId(pieces[0]) < 1 || player.getCarriedItems().getInventory().countId(pieces[1]) < 1 ||
 				player.getCarriedItems().getInventory().countId(pieces[2]) < 1) {
 				player.message("You still need one more piece of map");
-			} else {
+			} else if (player.getCarriedItems().remove(new Item(pieces[0]), new Item(pieces[1]), new Item(pieces[2]))) {
 				player.message("You put all the pieces of map together");
-				player.getCarriedItems().remove(new Item(pieces[0]));
-				player.getCarriedItems().remove(new Item(pieces[1]));
-				player.getCarriedItems().remove(new Item(pieces[2]));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.MAP.id(), 1));
 			}
 		}
@@ -214,11 +211,8 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().getInventory().countId(fragments[0]) < 1 || player.getCarriedItems().getInventory().countId(fragments[1]) < 1 ||
 				player.getCarriedItems().getInventory().countId(fragments[2]) < 1) {
 				player.message("You still need one more piece of the crest");
-			} else {
+			} else if (player.getCarriedItems().remove(new Item(fragments[0]), new Item(fragments[1]), new Item(fragments[2]))) {
 				player.message("You put all the pieces of the crest together");
-				player.getCarriedItems().remove(new Item(fragments[0]));
-				player.getCarriedItems().remove(new Item(fragments[1]));
-				player.getCarriedItems().remove(new Item(fragments[2]));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.FAMILY_CREST.id(), 1));
 			}
 		}

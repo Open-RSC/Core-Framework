@@ -37,12 +37,13 @@ public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
+			if (player.getCarriedItems().remove(new Item(ItemId.CRYSTAL_KEY.id())) == -1) return;
+
 			int respawnTime = 1000;
 			player.message("you unlock the chest with your key");
 			changeloc(obj, respawnTime, CRYSTAL_CHEST_OPEN);
 			player.message("You find some treasure in the chest");
 
-			player.getCarriedItems().remove(new Item(ItemId.CRYSTAL_KEY.id())); // remove the crystal key.
 			ArrayList<Item> loot = new ArrayList<Item>();
 			loot.add(new Item(ItemId.UNCUT_DRAGONSTONE.id(), 1));
 			int percent = DataConversions.random(0, 10000);
