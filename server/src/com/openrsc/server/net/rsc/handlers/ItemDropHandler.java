@@ -22,6 +22,11 @@ public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct
 			return;
 		}
 
+		if (player.getTrade().isTradeActive() || (player.getDuel().isDuelActive() && !player.inCombat())) {
+			// prevent dropping of items during trade & duels windows
+			return;
+		}
+
 		player.resetAll();
 		int inventorySlot = payload.index;
 		int amount;

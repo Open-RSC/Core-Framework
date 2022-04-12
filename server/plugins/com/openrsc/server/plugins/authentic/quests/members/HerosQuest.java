@@ -60,6 +60,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the hero guild entry quest");
 		player.getCache().remove("talked_grip");
+		player.getCache().remove("killed_grip");
 		player.getCache().remove("hq_impersonate");
 		player.getCache().remove("talked_alf");
 		player.getCache().remove("talked_grubor");
@@ -706,7 +707,10 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
 			player.getWorld().registerItem(
-					new GroundItem(player.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
+					new GroundItem(player.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, null));
+			if (!player.getCache().hasKey("killed_grip") && player.getQuestStage(this) >= 1) {
+				player.getCache().store("killed_grip", true);
+			}
 			removeReturnEventIfPresent(player);
 		}
 	}

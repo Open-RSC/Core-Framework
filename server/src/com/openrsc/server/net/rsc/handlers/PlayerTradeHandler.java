@@ -2,6 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
@@ -336,6 +337,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 	private void performTrade(Player player, Player affectedPlayer) {
 		List<Item> myOffer = player.getTrade().getTradeOffer().getItems();
 		List<Item> theirOffer = affectedPlayer.getTrade().getTradeOffer().getItems();
+		boolean updateOwnAppearance = false, updateOtherAppearance = false;
 
 		synchronized(myOffer) {
 			synchronized(theirOffer) {
@@ -375,7 +377,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					ItemDefinition inventoryDef = affectedItem.getDef(player.getWorld());
 					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
-						player.getUpdateFlags().setAppearanceChanged(true);
+						updateOwnAppearance = true;
 					}
 
 					// Create item to be traded.
@@ -399,7 +401,7 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					ItemDefinition inventoryDef = affectedItem.getDef(player.getWorld());
 					if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 						affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
-						affectedPlayer.getUpdateFlags().setAppearanceChanged(true);
+						updateOtherAppearance = true;
 					}
 
 					int amount = Math.min(affectedItem.getAmount(), item.getAmount());
@@ -410,6 +412,30 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					// Remove item to be traded quantity from inventory.
 					// bypass item id position in case its stackable or noteable to end up with clean stacks
 					affectedPlayer.getCarriedItems().getInventory().remove(affectedItem, true, inventoryDef.isStackable() || affectedItem.getNoted());
+				}
+
+				// set as next tick to ensure appearance update occurs
+				if (updateOwnAppearance) {
+					player.getWorld().getServer().getGameEventHandler().add(
+						new DelayedEvent(player.getWorld(), player, player.getConfig().GAME_TICK, "Update Appearance") {
+							@Override
+							public void run() {
+								getOwner().getUpdateFlags().setAppearanceChanged(true);
+								stop();
+							}
+						}
+					);
+				}
+				if (updateOtherAppearance) {
+					affectedPlayer.getWorld().getServer().getGameEventHandler().add(
+						new DelayedEvent(affectedPlayer.getWorld(), affectedPlayer, affectedPlayer.getConfig().GAME_TICK, "Update Appearance") {
+							@Override
+							public void run() {
+								getOwner().getUpdateFlags().setAppearanceChanged(true);
+								stop();
+							}
+						}
+					);
 				}
 
 				for (Item item : myOffer) {

@@ -246,6 +246,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (opcode == null)
 			return;
 
+		if (opcode == OpcodeIn.CAST_ON_INVENTORY_ITEM
+			&& (player.getTrade().isTradeActive() || (player.getDuel().isDuelActive() && !player.inCombat()))) {
+			// prevent of changing inventory items via magic during trade & duels windows
+			return;
+		}
+
 		player.resetAllExceptDueling();
 
 		if (!player.isUsingCustomClient()) {

@@ -49,7 +49,8 @@ public class ManPhoenix implements TalkNpcTrigger {
 				npcsay(player, n, "You need to be more careful", "Ah well", "Have this spare");
 				give(player, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
 				return;
-			} else if (player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && !player.getCache().hasKey("armband")) {
+			} else if (player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && player.getCache().hasKey("killed_grip")
+				&& !player.getCache().hasKey("armband")) {
 				say(player, n, "I have retrieved a candlestick");
 				npcsay(player, n, "Hmm not a bad job",
 					"Let's see it, make sure it's genuine");
@@ -72,8 +73,12 @@ public class ManPhoenix implements TalkNpcTrigger {
 				"That might be enough to get you the rank",
 				"Go talk to our man Alfonse the waiter in the shrimp and parrot",
 				"Use the secret word gherkin to show you're one of us");
-			player.getCache().store("pheonix_mission", true);
-			player.getCache().store("pheonix_alf", true);
+			if (!player.getCache().hasKey("pheonix_mission")) {
+				player.getCache().store("pheonix_mission", true);
+			}
+			if (!player.getCache().hasKey("pheonix_alf")) {
+				player.getCache().store("pheonix_alf", true);
+			}
 		} else if (!player.getBank().hasItemId(ItemId.PHOENIX_GANG_WEAPON_KEY.id()) && !player.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_WEAPON_KEY.id(), Optional.of(false)) &&
 			(player.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || player.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
 			&& isPhoenixGang(player)) {

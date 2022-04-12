@@ -241,7 +241,8 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 					}
 					say(player, n, "Hey");
 					npcsay(player, n, "Hey");
-					if (player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && !player.getCache().hasKey("armband")) {
+					if (player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.of(false)) && player.getCache().hasKey("talked_grip")
+						&& !player.getCache().hasKey("armband")) {
 						int choice3 = multi(player, n,
 							"Who are all those people in there?",
 							"I have a candlestick now");
