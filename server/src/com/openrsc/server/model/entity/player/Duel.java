@@ -125,11 +125,14 @@ public class Duel implements ContainerListener {
 	}
 
 	public void resetAll() {
-		Player duelOpponent = getDuelRecipient();
+		if (duelRecipient != null) {
+			final Player duelRecipient = this.duelRecipient;
 
-		if (duelOpponent != null) {
-			setDuelRecipient(null);
-			duelOpponent.getDuel().resetAll();
+			this.duelRecipient = null;
+
+			if (player.equals(duelRecipient.getDuel().getDuelRecipient())) {
+				duelRecipient.getDuel().resetAll();
+			}
 		}
 
 		if (isDuelActive()) {
