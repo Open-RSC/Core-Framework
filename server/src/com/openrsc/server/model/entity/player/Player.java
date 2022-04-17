@@ -338,6 +338,7 @@ public final class Player extends Mob {
 	 * Controls if were allowed to accept contact details updates
 	 */
 	private boolean changingDetails = false;
+	private boolean[] unlockedSkinColours;
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -389,6 +390,7 @@ public final class Player extends Mob {
 		channel = request.getChannel();
 
 		currentIP = ((InetSocketAddress) request.getChannel().remoteAddress()).getAddress().getHostAddress();
+		clientVersion = request.getClientVersion();
 		currentLogin = System.currentTimeMillis();
 
 		setBusy(true);
@@ -3620,7 +3622,11 @@ public final class Player extends Mob {
 	}
 
 	public boolean isUsingCustomClient() {
-		return this.clientVersion > 10000;
+		return this.clientVersion > 10000 && this.clientVersion < 20000;
+	}
+
+	public boolean supportsPlayerUnlockedAppearancesPacket() {
+		return this.clientVersion >= 10009 && this.clientVersion < 20000;
 	}
 
 	public boolean getQolOptOutWarned() {
@@ -3780,5 +3786,15 @@ public final class Player extends Mob {
 
 	public void resetSaveAttempts() {
 		saveAttempts = 0;
+	}
+
+    public boolean[] getUnlockedSkinColours() {
+		return this.unlockedSkinColours;
+    }
+
+	public void setUnlockedSkinColours(boolean[] colours) {
+		this.unlockedSkinColours = colours;
+		if (loggedIn)
+			ActionSender.sendUnlockedAppearances(this);
 	}
 }

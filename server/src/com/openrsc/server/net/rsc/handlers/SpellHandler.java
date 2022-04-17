@@ -1160,7 +1160,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().message("Telegrab has been disabled");
 							return;
 						}
-						if (affectedItem.getLocation().isInSeersPartyHall()) {
+						if (affectedItem.getLocation().isInSeersPartyHallUpstairs()) {
+							// Only the upstairs is affected, see "RSC 2001/LAST 2 DAYS REPLAYS (ACCOUNT 1)/flying sno train - 08-05-2018 22.55.55" at 33:00
 							getPlayer().message("You can't cast this spell within the vicinity of the party hall");
 							return;
 						}
@@ -1186,10 +1187,11 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 						if (affectedItem.getLocation().inBounds(97, 1428, 106, 1440)) {
+							// upstairs of Varrock Museum, where drop parties were sometimes held
 							getPlayer().message("Telekinetic grab cannot be used in here");
 							return;
 						}
-						if (affectedItem.getLocation().inBounds(114, 532, 115, 535) && affectedItem.getID() == ItemId.PUMPKIN.id()) {
+						if (config().MICE_TO_MEET_YOU_EVENT && affectedItem.getLocation().inBounds(114, 532, 115, 535) && affectedItem.getID() == ItemId.PUMPKIN.id()) {
 							getPlayer().message("A strange power prevents you from telegrabbing the pumpkin.");
 							delay(3);
 							getPlayer().message("@yel@Death: Do NOT cast magic on my belongings!!");

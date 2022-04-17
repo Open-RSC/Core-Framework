@@ -163,9 +163,9 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 						}
 					} else {
 						// After Jan 8 2022
-						mes("@yelEak the Mouse: I could really go for a Pumpkin pie right now");
+						mes("@yel@Eak the Mouse: I could really go for a Pumpkin pie right now");
 						delay(5);
-						mes("@yelEak the Mouse: Maybe with some cheese on the side...?");
+						mes("@yel@Eak the Mouse: Maybe with some cheese on the side...?");
 						delay(5);
 						say("I'll see about that, Eak");
 					}

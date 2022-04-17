@@ -269,6 +269,28 @@ public class Functions {
 		}
 	}
 
+	/**
+	 * Player message(s), no delay
+	 *
+	 * @param player
+	 * @param npc
+	 * @param messages
+	 */
+	public static void qsay(final Player player, Npc npc, final String... messages) {
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		npc = npc != null ? npc : scriptContext.getInteractingNpc();
+		if(npc != null) {
+			npc.face(player);
+		}
+		if (npc != null && !player.inCombat()) {
+			player.face(npc);
+		}
+		for (final String message : messages) {
+			if (deliverMessage(player, npc, message)) return;
+		}
+	}
+
 	static boolean deliverMessage(Player player, Npc npc, String message) {
 		if (!message.equalsIgnoreCase("null")) {
 			if (npc != null) {

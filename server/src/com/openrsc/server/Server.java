@@ -27,10 +27,7 @@ import com.openrsc.server.plugins.triggers.StartupTrigger;
 import com.openrsc.server.service.IPlayerService;
 import com.openrsc.server.service.PcapLoggerService;
 import com.openrsc.server.service.PlayerService;
-import com.openrsc.server.util.LogUtil;
-import com.openrsc.server.util.NamedThreadFactory;
-import com.openrsc.server.util.ServerAwareThreadFactory;
-import com.openrsc.server.util.SystemUtil;
+import com.openrsc.server.util.*;
 import com.openrsc.server.util.languages.I18NService;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
@@ -317,6 +314,8 @@ public class Server implements Runnable {
 					SystemUtil.exit(1);
 				}
 
+				PidShuffler.init();
+
 				if (getConfig().LOAD_PRERENDERED_SLEEPWORDS) {
 					LOGGER.info("Loading Prerendered Sleepword Images...");
 					CaptchaGenerator.loadPrerenderedCaptchas();
@@ -530,15 +529,29 @@ public class Server implements Runnable {
 							resetBenchmarkDurations();
 							incrementLastEventsDuration(getGameEventHandler().processNonPlayerEvents());
 							incrementLastWorldUpdateDuration(getGameUpdater().updateWorld());
-							for (final Player player : getWorld().getPlayers()) {
-								player.processTick();
+							if (config.SHUFFLE_PID_ORDER) {
+								for (int curPid : PidShuffler.pidProcessingOrder) {
+									Player player = getWorld().getPlayer(curPid);
+									if (player != null) {
+										player.processTick();
+									}
+								}
+								if (getCurrentTick() % config.SHUFFLE_PID_ORDER_INTERVAL == 0) {
+									PidShuffler.shuffle();
+								}
+							} else {
+								for (final Player player : getWorld().getPlayers()) {
+									player.processTick();
+								}
 							}
+
 							incrementLastExecuteWalkToActionsDuration(getGameUpdater().executePidlessCatching());
 							incrementLastProcessMessageQueuesDuration(getWorld().processGlobalMessageQueue());
 							incrementLastProcessNpcsDuration(getGameUpdater().processNpcs());
 							for (final Player player : getWorld().getPlayers()) {
 								player.sendUpdates();
 							}
+
 							incrementLastDoCleanupDuration(getGameUpdater().doCleanup());
 							getGameEventHandler().cleanupEvents();
 						} catch (final Throwable t) {

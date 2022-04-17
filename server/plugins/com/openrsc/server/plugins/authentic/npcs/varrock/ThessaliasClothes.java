@@ -173,8 +173,8 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				npcsay(player, n, "Hey! thanks for coming to see me");
 				npcsay(player, n,"Someone came and left some easter eggs for you");
 				npcsay(player, n,"They also left a message");
-				npcsay(player, n,"@cya@\"Come check out RSC Cabbage and Coleslaw\""); // TODO: location of quest start
-				npcsay(player, n,"@cya@\"for a special custom Holiday Quest!\"");
+				npcsay(player, n,"@cya@\"Come check out RSC Cabbage and Coleslaw\"");
+				npcsay(player, n,"@cya@\"for a special custom Holiday Quest in Lumbridge Swamp!\"");
 				npcsay(player, n,"Anyway, here's your easter eggs");
 				int allocatedEggs = player.getCache().getInt("easter_egg_voucher");
 				player.getCache().remove("easter_egg_voucher");

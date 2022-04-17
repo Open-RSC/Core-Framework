@@ -111,6 +111,7 @@ public class PacketHandler {
 		put(147, "SEND_KILLS2");
 		put(148, "SET_OPENPK_POINTS");
 		put(150, "UPDATE_PRESET");
+		put(250, "UPDATE_UNLOCKED_APPEARANCES");
 		put(254, "UPDATE_EQUIPMENT");
 		put(255, "UPDATE_EQUIPMENT_SLOT");
 	}};
@@ -490,7 +491,10 @@ public class PacketHandler {
 			    //sync combat style with server (needed to compensate for network errors)
 			else if (opcode == 129) gotCombatStylePacket();
 
-			else mc.closeConnection(true);
+				// sync unlocked hair/skin/clothing colours & styles
+			else if (opcode == 250) gotUnlockedPlayerAppearancesPacket();
+
+			else handleUnknownPacket(opcode);
 
 		} catch (RuntimeException var17) {
 			String var5 = "T2 - " + opcode + " - " + length + " rx:" + mc.getLocalPlayerX() + " ry:" + mc.getLocalPlayerZ()
@@ -502,6 +506,12 @@ public class PacketHandler {
 			var17.printStackTrace();
 			mc.closeConnection(true);
 		}
+	}
+
+	private void handleUnknownPacket(int opcode) {
+		this.mc.showMessage(false, null,
+			"Unknown opcode " + opcode + " received. You may need to update your client.", MessageType.GAME, 0,
+			null);
 	}
 
 	private void createNPC() {
@@ -1502,6 +1512,75 @@ public class PacketHandler {
 	private void gotCombatStylePacket() {
 		mc.timeOfLastCombatStylePacket = System.currentTimeMillis();
 		mc.proposedStyle = packetsIncoming.getByte();
+	}
+
+	private void gotUnlockedPlayerAppearancesPacket() {
+		int unlockedHairStyles = packetsIncoming.get32();
+		int unlockedBodyTypes = packetsIncoming.get32();
+		int unlockedSkinColours = packetsIncoming.get32();
+		int unlockedHairColours = packetsIncoming.get32();
+		int unlockedTopColours = packetsIncoming.get32();
+		int unlockedBottomColours = packetsIncoming.get32();
+
+		if (unlockedHairStyles > 256) {
+			this.mc.showMessage(false, null,
+				"UnlockedHairStyles out of byte boundary: " + unlockedHairStyles + ". You will need a new client.", MessageType.GAME, 0,
+				null);
+			return;
+		}
+		if (unlockedBodyTypes > 256) {
+			this.mc.showMessage(false, null,
+				"UnlockedBodyTypes out of byte boundary: " + unlockedBodyTypes + ". You will need a new client.", MessageType.GAME, 0,
+				null);
+			return;
+		}
+		if (unlockedSkinColours > 256) {
+			this.mc.showMessage(false, null,
+				"UnlockedSkinColours out of byte boundary: " + unlockedSkinColours + ". You will need a new client.", MessageType.GAME, 0,
+				null);
+			return;
+
+		}
+		if (unlockedHairColours > 256) {
+			this.mc.showMessage(false, null,
+				"UnlockedHairColours out of byte boundary: " + unlockedHairColours + ". You will need a new client.", MessageType.GAME, 0,
+				null);
+			return;
+		}
+		if (unlockedTopColours > 256) {
+			this.mc.showMessage(false, null,
+				"UnlockedTopColours out of byte boundary: " + unlockedTopColours + ". You will need a new client.", MessageType.GAME, 0,
+				null);
+			return;
+		}
+		if (unlockedBottomColours > 256) {
+			this.mc.showMessage(false, null,
+				"UnlockedBottomColours out of byte boundary: " + unlockedBottomColours + ". You will need a new client.", MessageType.GAME, 0,
+				null);
+			return;
+		}
+
+		packetsIncoming.startBitAccess();
+		// for (int i = 0; i < unlockedHairStyles; i++) {
+		packetsIncoming.getBitMask(unlockedHairStyles);
+		// }
+		//for (int i = 0; i < unlockedBodyTypes; i++) {
+		packetsIncoming.getBitMask(unlockedBodyTypes);
+		// }
+		for (int i = 0; i < unlockedSkinColours; i++) {
+			mc.unlockedSkinColours[i] = (packetsIncoming.getBitMask(1) == 1);
+		}
+		/*
+		for (int i = 0; i < unlockedHairColours; i++) {
+
+		}
+		for (int i = 0; i < unlockedTopColours; i++) {
+
+		}
+		for (int i = 0; i < unlockedBottomColours; i++) {
+
+		}
+		 */
 	}
 
 	private void updateInventoryItem() {

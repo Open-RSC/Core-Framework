@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.authentic.npcs.varrock.ManPhoenix;
+import com.openrsc.server.plugins.custom.quests.free.PeelingTheOnion;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -106,6 +107,10 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case 67:
+				if (player.getConfig().WANT_CUSTOM_QUESTS && obj.getX() == 221 && obj.getY() == 3518) {
+					PeelingTheOnion.bookcaseSearch(player);
+					return;
+				}
 				if (player.getQuestStage(this) == 1) {
 					say(player, null, "Aha the shield of Arrav");
 					say(player, null, "That was what I was looking for");

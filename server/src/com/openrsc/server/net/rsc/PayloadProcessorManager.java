@@ -173,12 +173,15 @@ public class PayloadProcessorManager {
 	}
 
 	private static void checkIfShouldCancelMenu(Player player, OpcodeIn opcode) {
-		// any player action other than choosing a dialogue choice must cancel the menu handler and set them non-busy
+		// most player actions other than choosing a dialogue choice must cancel the menu handler and set them non-busy
 		if (!OpcodeIn.QUESTION_DIALOG_ANSWER.equals(opcode)
 			&& !OpcodeIn.HEARTBEAT.equals(opcode)
 			&& !OpcodeIn.KNOWN_PLAYERS.equals(opcode)
 			&& !OpcodeIn.CHAT_MESSAGE.equals(opcode)
-			&& !OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.equals(opcode)) {
+			&& !OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.equals(opcode)
+			&& !OpcodeIn.COMBAT_STYLE_CHANGED.equals(opcode)
+			&& !OpcodeIn.GAME_SETTINGS_CHANGED.equals(opcode)
+			&& !OpcodeIn.PRIVACY_SETTINGS_CHANGED.equals(opcode)) {
 
 			player.cancelMenuHandler();
 		}

@@ -111,6 +111,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_SLEEP_FATIGUE, 244);
 		put(OpcodeOut.SEND_OPTIONS_MENU_OPEN, 245);
 		put(OpcodeOut.SEND_BANK_UPDATE, 249);
+		put(OpcodeOut.SEND_UNLOCKED_APPEARANCES, 250);
 		put(OpcodeOut.SEND_OPTIONS_MENU_CLOSE, 252);
 		put(OpcodeOut.SEND_DUEL_OTHER_ACCEPTED, 253);
 		put(OpcodeOut.SEND_EQUIPMENT, 254); // custom
@@ -954,6 +955,38 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) pss.allowSearchJoin);
 					builder.writeByte((byte) pss.allowSetting0);
 					builder.writeByte((byte) pss.allowSetting1);
+					break;
+
+				case SEND_UNLOCKED_APPEARANCES:
+					UnlockedAppearancesStruct uas = (UnlockedAppearancesStruct) payload;
+
+					builder.writeInt(uas.unlockedHairStyles.length);
+					builder.writeInt(uas.unlockedBodyTypes.length);
+					builder.writeInt(uas.unlockedSkinColours.length);
+					builder.writeInt(uas.unlockedHairColours.length);
+					builder.writeInt(uas.unlockedTopColours.length);
+					builder.writeInt(uas.unlockedBottomColours.length);
+
+					builder.startBitAccess();
+					for (int i = 0; i < uas.unlockedHairStyles.length; i++) {
+						builder.writeBits(uas.unlockedHairStyles[i] ? 1 : 0, 1);
+					}
+					for (int i = 0; i < uas.unlockedBodyTypes.length; i++) {
+						builder.writeBits(uas.unlockedBodyTypes[i] ? 1 : 0, 1);
+					}
+					for (int i = 0; i < uas.unlockedSkinColours.length; i++) {
+						builder.writeBits(uas.unlockedSkinColours[i] ? 1 : 0, 1);
+					}
+					for (int i = 0; i < uas.unlockedHairColours.length; i++) {
+						builder.writeBits(uas.unlockedHairColours[i] ? 1 : 0, 1);
+					}
+					for (int i = 0; i < uas.unlockedTopColours.length; i++) {
+						builder.writeBits(uas.unlockedTopColours[i] ? 1 : 0, 1);
+					}
+					for (int i = 0; i < uas.unlockedBottomColours.length; i++) {
+						builder.writeBits(uas.unlockedBottomColours[i] ? 1 : 0, 1);
+					}
+					builder.finishBitAccess();
 					break;
 			}
 		}

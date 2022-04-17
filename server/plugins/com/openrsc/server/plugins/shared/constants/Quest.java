@@ -60,7 +60,8 @@ public class Quest {
 		DIGSITE = new Quest(Quests.DIGSITE),
 		GERTRUDES_CAT = new Quest(Quests.GERTRUDES_CAT),
 		LEGENDS_QUEST = new Quest(Quests.LEGENDS_QUEST),
-		RUNE_MYSTERIES = new Quest(Quests.RUNE_MYSTERIES);
+		RUNE_MYSTERIES = new Quest(Quests.RUNE_MYSTERIES),
+		PEELING_THE_ONION = new Quest(Quests.PEELING_THE_ONION);
 
 	static {
 		nameMap.put(Quests.NONE, new Quest(Quests.NONE, -1, QuestReward.NONE));

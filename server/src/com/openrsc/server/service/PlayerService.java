@@ -2,6 +2,7 @@ package com.openrsc.server.service;
 
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.AppearanceId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.*;
@@ -63,6 +64,7 @@ public class PlayerService implements IPlayerService {
             });
 
 			loadPlayerLanguage(loaded);
+			updateUnlockedPlayerSkins(loaded);
 			loaded.getSettings().setPrivacySetting(PlayerSettings.PRIVACY_HIDE_ONLINE_STATUS, (byte)loaded.getHideOnline());
 
             return loaded;
@@ -199,7 +201,7 @@ public class PlayerService implements IPlayerService {
                 playerData.headSprite,
                 playerData.bodySprite
         );
-        if (!pa.isValid()) {
+        if (!pa.isValid(player)) {
             pa = new PlayerAppearance(
                     0, 0, 0, 0, 1, 2
             );
@@ -456,5 +458,44 @@ public class PlayerService implements IPlayerService {
 		} catch (NoSuchElementException ex) {
 			player.setPreferredLanguage(PreferredLanguage.NONE_SET);
 		}
+	}
+	public static void updateUnlockedPlayerSkins(final Player player) {
+		boolean[] unlockedPlayerSkinColours = new boolean[]{
+			// original player skin colours
+			// 0xECDED0, 0xCCB366, 0xB38C40, 0x997326, 0x906020, 4
+			true, true, true, true, true,
+
+			// authentic npc skin colours (with previously used colours removed)
+			// 0x000000, 0x000004, 0x0066FF, 0x009000, 0x3CB371, 9
+			false, false, false, false, false,
+			// 0x55BFEE, 0x55CFFF, 0x604020, 0x663300, 0x6F5737, 14
+			false, false, false, false, false,
+			// 0x705010, 0x804000, 0x996633, 0x999999, 0xAC9E90, 19
+			false, false, false, false, false,
+			// 0xDCC399, 0xDCCEA0, 0xDCFFD0, 0xDD3040, 0xEADED2, 24
+			false, false, false, false, false,
+			// 0xECEED0, 0xECFED0, 0xECFFD0, 0xFCEEE0, 0xFF3333, 29
+			false, false, false, false, false,
+			// 0xFF9F55, 0xFFDED2, 0xFFFEF0, 0xFFFFFF, // 33
+			false, false, false, false,
+
+			false, // 0x00A0A0, // teal 34
+			false, // 0xFFFF00, // yellow 35
+			false, // 0xFF69B4, // hot pink 36
+			false, // 0x0180A2, // rsc zombie 37
+			false, // 0x86668e, // evequill purple 38
+			false, // 0x663399, // rebecca purple 39
+			false, // 0xB5FF1D, // easter ogre 40
+			false, // 0xA0C0C0, // silver man 41
+			false, // 0x608080, // coal woman 42
+		};
+		if (player.getQuestStage(Quests.PEELING_THE_ONION) == -1) {
+			unlockedPlayerSkinColours[35] = true; // Yellow
+			unlockedPlayerSkinColours[37] = true; // RSC Zombie
+			unlockedPlayerSkinColours[38] = true; // Evequill purple
+			unlockedPlayerSkinColours[40] = true; // Kresh green
+		}
+
+		player.setUnlockedSkinColours(unlockedPlayerSkinColours);
 	}
 }

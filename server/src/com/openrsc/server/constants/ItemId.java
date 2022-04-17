@@ -1543,12 +1543,20 @@ public enum ItemId {
 	EAK_THE_MOUSE(1495),
 
 	// Christmas 2021
-	YOYO(1496);
+	YOYO(1496),
+
+	// Easter 2022 (Peeling an Onion)
+	OGRE_EARS(1497),
+	LEATHER_VEST(1498),
+	MAKEOVER_WAIVER(1499),
+	YELLOWGREEN_CLAY(1500),
+	OGRE_RECIPES(1501);
+
 
 	private int itemId;
 
 	public static final int maxAuthentic = 1289;
-	public static final int maxCustom = 1496;
+	public static final int maxCustom = 1501;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
 	private static final Map<String, ItemId> byName = new HashMap<String, ItemId>();

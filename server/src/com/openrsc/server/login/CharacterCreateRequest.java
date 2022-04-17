@@ -5,6 +5,7 @@ import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.PlayerLoginData;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.LoginResponse;
 import com.openrsc.server.util.rsc.RegisterLoginResponse;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
@@ -227,8 +228,16 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return (byte) RegisterLoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin && getClientVersion() > 235) {
-				return (byte) RegisterLoginResponse.CLIENT_UPDATED;
+			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
+				if (getClientVersion() > 10000) {
+					if (getServer().getConfig().ENFORCE_CUSTOM_CLIENT_VERSION) {
+						return (byte) RegisterLoginResponse.CLIENT_UPDATED;
+					}
+				} else {
+					if (getServer().getConfig().WANT_CUSTOM_SPRITES) {
+						return (byte) RegisterLoginResponse.CLIENT_UPDATED;
+					}
+				}
 			}
 
 			if (getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {

@@ -34,6 +34,7 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.PidShuffler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -226,17 +227,54 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("lemons") || command.equalsIgnoreCase("lemon")) {
 			giveLemons(player, args);
 		} else if (command.equalsIgnoreCase("setmaxplayersperip") || command.equalsIgnoreCase("smppi")) {
-			setMaxPlayersPerIp(player, command,args);
+			setMaxPlayersPerIp(player, command, args);
 		} else if (command.equalsIgnoreCase("setmaxconnectionsperip") || command.equalsIgnoreCase("smcpi")) {
-			setMaxConnectionsPerIp(player, command,args);
+			setMaxConnectionsPerIp(player, command, args);
 		} else if (command.equalsIgnoreCase("setmaxconnectionspersecond") || command.equalsIgnoreCase("smcps")) {
-			setMaxConnectionsPerSecond(player, command,args);
+			setMaxConnectionsPerSecond(player, command, args);
 		} else if (command.equalsIgnoreCase("stockgroup")) {
 			spawnStockGroupInventory(player, command, args, false);
+		} else if (command.equalsIgnoreCase("shufflepid") || command.equalsIgnoreCase("pidshuffle")) {
+			shufflePid(player, command, args);
+		} else if (command.equalsIgnoreCase("setpidshuffleinterval")) {
+			setPidShufflingSchedule(player, command, args);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
 		} */
+	}
+
+	private void setPidShufflingSchedule(Player player, String command, String[] args) {
+		if (args.length == 1) {
+			try {
+				int before = player.getConfig().SHUFFLE_PID_ORDER_INTERVAL;
+				player.getConfig().SHUFFLE_PID_ORDER_INTERVAL = Integer.parseInt(args[0]);
+				player.message("PID shuffling interval set from " + before + " to " + player.getConfig().SHUFFLE_PID_ORDER_INTERVAL);
+				return;
+			} catch (NumberFormatException ignored) {
+			}
+		}
+		player.message(badSyntaxPrefix + command.toUpperCase() + " [Number of ticks between shuffles]");
+	}
+
+	private void shufflePid(Player player, String command, String[] args) {
+		if (args.length == 0) {
+			player.getConfig().SHUFFLE_PID_ORDER = true;
+			PidShuffler.shuffle();
+			player.message("PID @ran@sHuffLeD");
+		}
+		if (args.length == 1) {
+			if (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("yes") || args[0].equals("1") || args[0].equalsIgnoreCase("true")) {
+				player.getConfig().SHUFFLE_PID_ORDER = true;
+				player.message("PID shuffling enabled");
+			} else if (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("no") || args[0].equals("0") || args[0].equalsIgnoreCase("false")) {
+				player.getConfig().SHUFFLE_PID_ORDER = false;
+				player.message("PID shuffling disabled");
+			} else {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (on/off)");
+				return;
+			}
+		}
 	}
 
 	private void setMaxPlayersPerIp(Player player, String command, String[] args) {

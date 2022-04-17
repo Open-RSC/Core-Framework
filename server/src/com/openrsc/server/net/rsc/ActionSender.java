@@ -23,6 +23,7 @@ import com.openrsc.server.net.rsc.generators.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.service.PlayerService;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -143,6 +144,7 @@ public class ActionSender {
 	 */
 	public static void sendAppearanceScreen(Player player) {
 		player.setChangingAppearance(true);
+		PlayerService.updateUnlockedPlayerSkins(player);
 		NoPayloadStruct struct = new NoPayloadStruct();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_APPEARANCE_SCREEN, struct, player);
 	}
@@ -1967,6 +1969,7 @@ public class ActionSender {
                 sendLoginBox(player);
 
 				sendPlayerOnBlackHole(player);
+				sendUnlockedAppearances(player);
 				if (player.getLastLogin() == 0L) {
 					sendAppearanceScreen(player);
 					if (!player.getConfig().USES_CLASSES) {
@@ -2327,6 +2330,20 @@ public class ActionSender {
 		struct.allowSetting0 = player.getParty().isAllowed(0, player) ? 1 : 0;
 		struct.allowSetting1 = player.getParty().isAllowed(1, player) ? 1 : 0;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_PARTY_SETTINGS, struct, player);
+	}
+
+	public static void sendUnlockedAppearances(Player player) {
+		if (!player.supportsPlayerUnlockedAppearancesPacket()) {
+			return;
+		}
+		UnlockedAppearancesStruct struct = new UnlockedAppearancesStruct();
+		struct.unlockedHairStyles = new boolean[0];
+		struct.unlockedBodyTypes = new boolean[0];
+		struct.unlockedSkinColours = player.getUnlockedSkinColours();
+		struct.unlockedHairColours = new boolean[0];
+		struct.unlockedTopColours = new boolean[0];
+		struct.unlockedBottomColours = new boolean[0];
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_UNLOCKED_APPEARANCES, struct, player);
 	}
 
 	public static void sendIronManMode(Player player) {

@@ -116,6 +116,17 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("abort")) {
 			setAbortFlag();
 		}
+		else if (command.equalsIgnoreCase("getappearance")) {
+			dumpAppearance(player, args);
+		}
+	}
+
+	private void dumpAppearance(Player player, String[] args) {
+		for (int i = 0; i < player.getSettings().getAppearance().getSprites().length; i++) {
+			mes(i + ": " +  player.getSettings().getAppearance().getSprites()[i]);
+		}
+		mes("Top color: " + player.getSettings().getAppearance().getTopColour());
+		mes("Trouser color: " + player.getSettings().getAppearance().getTrouserColour());
 	}
 
 	private void createNpc(Player player, String command, String[] args) {

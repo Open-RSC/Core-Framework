@@ -637,9 +637,10 @@ public final class GameStateUpdater {
 												   final Queue<Damage> playersNeedingDamageUpdate,final Queue<HpUpdate> playersNeedingHpUpdate,
 												   final Queue<Player> playersNeedingAppearanceUpdate) {
 		if (player.loggedIn()) {
+			final int playersNeedingAppearanceUpdateSize = playersNeedingAppearanceUpdate.size();
 			final int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
 				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
-				+ playersNeedingAppearanceUpdate.size();
+				+ playersNeedingAppearanceUpdateSize;
 
 			// TODO: needs to be later revised for mc38
 			if (updateSize > 0) {
@@ -652,11 +653,11 @@ public final class GameStateUpdater {
 				List<Object> updatesMain = new ArrayList<>();
 				List<Object> updatesAlt = new ArrayList<>();
 				if (isRetroClient) {
-					if (updateSize - playersNeedingAppearanceUpdate.size() > 0) {
-						updatesMain.add((short) (updateSize - playersNeedingAppearanceUpdate.size()));
+					if (updateSize - playersNeedingAppearanceUpdateSize > 0) {
+						updatesMain.add((short) (updateSize - playersNeedingAppearanceUpdateSize));
 					}
-					if (playersNeedingAppearanceUpdate.size() > 0) {
-						updatesAlt.add((short) playersNeedingAppearanceUpdate.size());
+					if (playersNeedingAppearanceUpdateSize > 0) {
+						updatesAlt.add((short) playersNeedingAppearanceUpdateSize);
 					}
 				} else if (!player.isUsingCustomClient()) {
 					updatesMain.add((short) updateSize);
@@ -805,7 +806,15 @@ public final class GameStateUpdater {
 						if (player.isUsing233CompatibleClient()) {
 							updatesMain.add((short) player.getAppearanceID());
 							updatesMain.add(playerNeedingAppearanceUpdate.getUsername());
-							updatesMain.add(playerNeedingAppearanceUpdate.getUsername()); // Pretty sure this is unnecessary & always redundant authentically.
+
+							// TODO: just send username twice if this packet can be chunked up better later
+							// TODO: updatesMain.add(playerNeedingAppearanceUpdate.getUsername()); // Pretty sure this is unnecessary & always redundant authentically.
+							if (playerNeedingAppearanceUpdate.equals(player) || playersNeedingAppearanceUpdateSize < 65) {
+								updatesMain.add(playerNeedingAppearanceUpdate.getUsername());
+							} else {
+								// this current behaviour is slightly buggy esp on rsc+, but will save bytes towards the 5000 allowed.
+								updatesMain.add(playerNeedingAppearanceUpdate.getUsername().substring(0, 1));
+							}
 						} else if (is177Compat) {
 							updatesMain.add((short) player.getAppearanceID());
 							updatesMain.add((long) DataConversions.usernameToHash(playerNeedingAppearanceUpdate.getUsername()));
@@ -948,7 +957,7 @@ public final class GameStateUpdater {
 						updatesAlt.add((char) appearance.getHairColour());
 						updatesAlt.add((char) appearance.getTopColour());
 						updatesAlt.add((char) appearance.getTrouserColour());
-						updatesAlt.add((char) appearance.getSkinColour());
+						updatesAlt.add((char) appearance.getSkinColour(playerNeedingAppearanceUpdate.getClientLimitations().maxSkinColor));
 						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getPkMode()); //is player attackable?
 						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getCombatLevel());
 						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getSkullType());
@@ -956,7 +965,7 @@ public final class GameStateUpdater {
 						updatesMain.add((char) appearance.getHairColour());
 						updatesMain.add((char) appearance.getTopColour());
 						updatesMain.add((char) appearance.getTrouserColour());
-						updatesMain.add((char) appearance.getSkinColour());
+						updatesMain.add((char) appearance.getSkinColour(playerNeedingAppearanceUpdate.getClientLimitations().maxSkinColor));
 						updatesMain.add((byte) playerNeedingAppearanceUpdate.getCombatLevel());
 						updatesMain.add((byte) playerNeedingAppearanceUpdate.getSkullType());
 					}

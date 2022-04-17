@@ -417,6 +417,15 @@ public final class QuestRewardRegistrar extends AbstractRegistrar {
 		mapQuests.put(Quests.RUNE_MYSTERIES,
 			new AbstractMap.SimpleImmutableEntry<>(++questNum, new QuestReward(1, rewardsList.toArray(skillRewardsAdd))));
 
+		// 51 - PEELING_THE_ONION
+		rewardsList = new ArrayList<>();
+		rewardsList.add(new XPReward(Skill.COOKING, 200, 100));
+		rewardsList.add(new XPReward(Skill.CRAFTING, 200, 75));
+		skillRewardsAdd = new XPReward[rewardsList.size()];
+		mapQuests.put(Quests.PEELING_THE_ONION,
+			new AbstractMap.SimpleImmutableEntry<>(++questNum, new QuestReward(2, rewardsList.toArray(skillRewardsAdd))));
+
+
 		///////////////////////////////////////
 		// Call to initialize into Enum-like //
 		///////////////////////////////////////

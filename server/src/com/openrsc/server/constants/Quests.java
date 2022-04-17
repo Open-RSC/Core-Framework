@@ -52,6 +52,7 @@ public final class Quests {
 	public static final int GERTRUDES_CAT = 48;
 	public static final int LEGENDS_QUEST = 49;
 	public static final int RUNE_MYSTERIES = 50;
+	public static final int PEELING_THE_ONION = 51;
 
 	public static final int QUEST_STAGE_NOT_STARTED = 0;
 	public static final int QUEST_STAGE_COMPLETED = -1;

@@ -81,6 +81,12 @@ public class Duck implements TalkNpcTrigger {
 				npcsay("I am disinclined to acquiesce to your request",
 					"Prithee return when you have mastered your tongue");
 			} else if (option == 2) {
+				if (stage == 6 && player.getConfig().ESTERS_BUNNIES_STINGY_DUCK) {
+					npcsay("You are well-spoken",
+						"Alas I must not acquiesce to your request",
+						"It would be inappropriate in these circumstances");
+					return;
+				}
 				npcsay("You are well-spoken",
 					"I am inclined to acquiesce to your request");
 				mes("The duck gets a funny look on his face");
@@ -94,6 +100,10 @@ public class Duck implements TalkNpcTrigger {
 				player.getCache().set("esters_bunnies", 6);
 				npcsay("There you are",
 					"Try not to eat it on your way back");
+				if (player.getConfig().ESTERS_BUNNIES_STINGY_DUCK) {
+					npcsay("You mustn't lose it",
+						"For such an egg, it is only proper to be laid once a year");
+				}
 			}
 		}
 	}

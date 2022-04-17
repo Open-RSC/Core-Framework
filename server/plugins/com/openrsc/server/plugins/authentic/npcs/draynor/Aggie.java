@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.quests.free.PeelingTheOnion;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -28,9 +29,15 @@ public final class Aggie implements TalkNpcTrigger {
 	private static final int DYES = 9;
 	private static final int MAKEME = 10;
 	private static final int HAPPY = 11;
+	private static final int OGRE_EARS = 12;
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc npc) {
+		if (PeelingTheOnion.aggieHasDialogue(player)) {
+			PeelingTheOnion.aggieDialogue(player, npc);
+			return;
+		}
+
 		if (config().MICE_TO_MEET_YOU_EVENT && player.getCache().hasKey("mice_to_meet_you")) {
 			int queststate = player.getCache().getInt("mice_to_meet_you");
 			if (queststate >= EAK_IS_IMMORTAL && queststate <= AGGIE_HAS_GIVEN_PIE)  {
@@ -38,10 +45,11 @@ public final class Aggie implements TalkNpcTrigger {
 				return;
 			}
 		}
+
 		aggieDialogue(player, npc, -1);
 	}
 
-	public void aggieDialogue(final Player player, final Npc npc, int cID) {
+	public static void aggieDialogue(final Player player, final Npc npc, int cID) {
 		if (cID == -1) {
 			npcsay("What can I help you with?");
 			if (player.getQuestStage(Quests.PRINCE_ALI_RESCUE) == 2) {
@@ -172,10 +180,19 @@ public final class Aggie implements TalkNpcTrigger {
 				npcsay("I mostly just make what I find pretty",
 					"I sometimes make dye for the womens clothes, brighten the place up",
 					"I can make red,yellow and blue dyes would u like some");
-				int menu2 = multi("What do you need to make some red dye please",
-					"What do you need to make some yellow dye please",
-					"What do you need to make some blue dye please",
-					"No thanks, I am happy the colour I am");
+				int menu2;
+				if (player.getQuestStage(Quests.PEELING_THE_ONION) == -1) {
+					menu2 = multi("What do you need to make some red dye please",
+						"What do you need to make some yellow dye please",
+						"What do you need to make some blue dye please",
+						"No thanks, I am happy the colour I am",
+						"Could you make me some more yellowgreen clay actually?");
+				} else {
+					menu2 = multi("What do you need to make some red dye please",
+						"What do you need to make some yellow dye please",
+						"What do you need to make some blue dye please",
+						"No thanks, I am happy the colour I am");
+				}
 				if (menu2 == 0) {
 					aggieDialogue(player, npc, Aggie.RED_DYE);
 				} else if (menu2 == 1) {
@@ -184,6 +201,8 @@ public final class Aggie implements TalkNpcTrigger {
 					aggieDialogue(player, npc, Aggie.BLUE_DYE);
 				} else if (menu2 == 3) {
 					aggieDialogue(player, npc, Aggie.HAPPY);
+				} else if (menu2 == 4 && player.getQuestStage(Quests.PEELING_THE_ONION) == -1) {
+					aggieDialogue(player, npc, Aggie.OGRE_EARS);
 				}
 				break;
 			case Aggie.YELLOW_DYE:
@@ -300,6 +319,9 @@ public final class Aggie implements TalkNpcTrigger {
 			case Aggie.HAPPY:
 				npcsay("You are easily pleased with yourself then",
 					"when you need dyes, come to me");
+				break;
+			case Aggie.OGRE_EARS:
+				PeelingTheOnion.makeAnotherClay(player, npc, true);
 				break;
 		}
 	}

@@ -2266,6 +2266,9 @@ public class EntityHandler {
 		// head, shirt, pants, shield, weapon, hat, body, legs, gloves, boots, amulet, cape
 		sprites = new int[]{6, 1, 2, -1, -1, 208, 395, 396, 46, -1, -1, -1};
 		npcs.add(new NPCDef("Santa", "He sure could do with gaining some weight", "", 123, 123, 123, 123, false, sprites, 16777215, 0xFF0000, 0xFF0000, 15523536, 160, 220, 6, 6, 5, i++));
+		// head, shirt, pants, shield, weapon, hat, body, legs, gloves, boots, amulet, cape
+		sprites = new int[]{7, 1, 2, -1, -1, 500, 501, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Kresh", "He's kind of like an onion", "", 123, 123, 123, 123, false, sprites, 0, 0xFFFFFF, 0x802415, 0xb5ff1d, 160, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3936,6 +3939,13 @@ public class EntityHandler {
 		// Christmas 2021
 		items.add(new ItemDef("Yoyo", "This technology shouldn't be possible!", "Play", 100, -1, "items:yoyo", false, true, 16, 0xFFFFFF,false, true, false, 1496));
 
+		// Easter 2022 (Peeling the Onion)
+		items.add(new ItemDef("Ogre Ears", "The ogres in Gu'Tannoth don't have ears like this...", "", 100, -1, "items:ogreears", false, true, 32, 0xFFFFFF, false, true, false, 1497));
+		items.add(new ItemDef("Leather vest", "It's kind of fashionable?", "", 15, -1, "items:leathervest", false, true, 64, 0xFFFFFF, false, false, true, 1498));
+		items.add(new ItemDef("Makeover Waiver", "yada yada yada...", "Read", 15, -1, "items:427", false, false, 0, 0xFFFFFF, false, true, false, 1499));
+		items.add(new ItemDef("Soft Yellowgreen Clay", "I hope this colour doesn't get on my clothes", "Shape", 2, 105, "items:yellowgreenclay", false, false, 0, 0xFFFFFF, false, true, false, 1500));
+		items.add(new ItemDef("Ogre recipes", "Just like grandma used to make", "read", 1, 234, "items:234", false, false, 0, 0, false, true, false, 1501));
+
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
 		items.get(435).spriteLocation = "items:588";
@@ -4578,6 +4588,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("yoyo_anim_crazy_10", "equipment", 0, 0, true, false, 0)); // 497 yoyo crazy 10'oclock
 			animations.add(new AnimationDef("yoyo_anim_crazy_11", "equipment", 0, 0, true, false, 0)); // 498 yoyo crazy 11'oclock
 			animations.add(new AnimationDef("yoyo_anim_crazy_12", "equipment", 0, 0, true, false, 0)); // 499 yoyo crazy 12'oclock
+
+			// Easter 2022 aka Peeling the Onion
+			animations.add(new AnimationDef("ogreears", "equipment", 0xb5ff1d, 0, true, false, 0)); // 500 ogre ears
+			animations.add(new AnimationDef("leathervest", "equipment", 0, 0, true, false, 0)); // 501 leather vest
 		}
 	}
 

@@ -68,17 +68,17 @@ public class RangeUtils {
         // Arrows
         allowedProjectilesMap.put(ItemId.SHORTBOW.id(), BASIC_ARROWS);
         allowedProjectilesMap.put(ItemId.LONGBOW.id(), BASIC_ARROWS);
-        allowedProjectilesMap.put(ItemId.OAK_SHORTBOW.id(), BASIC_ARROWS);
+        allowedProjectilesMap.put(ItemId.OAK_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS));
         allowedProjectilesMap.put(ItemId.OAK_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS));
-        allowedProjectilesMap.put(ItemId.WILLOW_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS));
+        allowedProjectilesMap.put(ItemId.WILLOW_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS));
         allowedProjectilesMap.put(ItemId.WILLOW_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS));
-        allowedProjectilesMap.put(ItemId.MAPLE_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS));
+        allowedProjectilesMap.put(ItemId.MAPLE_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS));
         allowedProjectilesMap.put(ItemId.MAPLE_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS));
         allowedProjectilesMap.put(ItemId.YEW_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, ICE_ARROWS));
         allowedProjectilesMap.put(ItemId.YEW_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, ICE_ARROWS));
         allowedProjectilesMap.put(ItemId.MAGIC_SHORTBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, ICE_ARROWS));
         allowedProjectilesMap.put(ItemId.MAGIC_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, ICE_ARROWS));
-        allowedProjectilesMap.put(ItemId.DRAGON_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, DRAGON_ARROWS));
+        allowedProjectilesMap.put(ItemId.DRAGON_LONGBOW.id(), combine(BASIC_ARROWS, STEEL_ARROWS, MITHRIL_ARROWS, ADDY_ARROWS, RUNE_ARROWS, DRAGON_ARROWS, ICE_ARROWS));
 
         // Crossbow
         allowedProjectilesMap.put(ItemId.CROSSBOW.id(), BASIC_BOLTS);

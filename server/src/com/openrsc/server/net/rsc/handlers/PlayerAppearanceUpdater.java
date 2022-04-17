@@ -47,7 +47,7 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 
 		PlayerAppearance appearance = new PlayerAppearance(hairColour,
 			topColour, trouserColour, skinColour, headSprite, bodySprite);
-		if (!appearance.isValid()) {
+		if (!appearance.isValid(player)) {
 			player.setSuspiciousPlayer(true, "player invalid appearance");
 			return;
 		}

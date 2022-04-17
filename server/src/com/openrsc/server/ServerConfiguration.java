@@ -36,6 +36,7 @@ public class ServerConfiguration {
 	public boolean MEMBER_WORLD;
 	public int WORLD_NUMBER;
 	public int CLIENT_VERSION;
+	public boolean ENFORCE_CUSTOM_CLIENT_VERSION;
 	public int MAX_PLAYERS;
 	public int MAX_PLAYERS_PER_IP;
 	public int SESSION_ID_SENDER_TIMER;
@@ -238,6 +239,7 @@ public class ServerConfiguration {
 	// public List<String> adminIp;
 	public boolean WANT_RANGED_FACE_PLAYER = false;
 	public boolean ESTERS_BUNNIES_EVENT = false;
+	public boolean ESTERS_BUNNIES_STINGY_DUCK = false;
 	public boolean MICE_TO_MEET_YOU_EVENT = false;
 	public boolean DEATH_ISLAND = false;
 	public int BASED_MAP_DATA = 64;
@@ -281,6 +283,8 @@ public class ServerConfiguration {
 	public boolean SANTA_GIVES_PRESENTS;
 	public boolean USES_RETRO_STOCK_SENSITIVITY;
 	public boolean PIDLESS_CATCHING;
+	public boolean SHUFFLE_PID_ORDER;
+	public int SHUFFLE_PID_ORDER_INTERVAL;
 	public int SPELL_RANGE_DISTANCE;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
@@ -337,7 +341,8 @@ public class ServerConfiguration {
 		WANT_CUSTOM_WALK_SPEED = tryReadBool("want_custom_walking_speed").orElse(false);
 		IDLE_TIMER = tryReadInt("idle_timer").orElse(300000); // 5 minutes
 		AUTO_SAVE = tryReadInt("auto_save").orElse(30000); // 30 seconds
-		CLIENT_VERSION = tryReadInt("client_version").orElse(10008); // version 10008
+		CLIENT_VERSION = tryReadInt("client_version").orElse(10009);
+		ENFORCE_CUSTOM_CLIENT_VERSION = tryReadBool("enforce_custom_client_version").orElse(true);
 		SERVER_PORT = tryReadInt("server_port").orElse(43594);
 		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(20);
 		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
@@ -400,6 +405,8 @@ public class ServerConfiguration {
 		SANTA_GIVES_PRESENTS = tryReadBool("santa_gives_presents").orElse(false);
 		USES_RETRO_STOCK_SENSITIVITY = tryReadBool("uses_retro_stock_sensitivity").orElse(false);
 		PIDLESS_CATCHING = tryReadBool("pidless_catching").orElse(false);
+		SHUFFLE_PID_ORDER = tryReadBool("shuffle_pid_order").orElse(true);
+		SHUFFLE_PID_ORDER_INTERVAL = tryReadInt("shuffle_pid_order_interval").orElse(500);
 		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);
 
 		// Client
@@ -594,6 +601,7 @@ public class ServerConfiguration {
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
 		ESTERS_BUNNIES_EVENT = tryReadBool("esters_bunnies").orElse(false);
+		ESTERS_BUNNIES_STINGY_DUCK = tryReadBool("esters_bunnies_stingy_duck").orElse(false);
 		MICE_TO_MEET_YOU_EVENT = tryReadBool("mice_to_meet_you").orElse(false);
 		DEATH_ISLAND = tryReadBool("death_island").orElse(false);
 
