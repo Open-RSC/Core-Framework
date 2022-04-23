@@ -533,6 +533,13 @@ public class Point {
 			|| inBounds(96, 2513, 142, 2559); // 2nd Floor
 	}
 
+	public boolean fromHopper() {
+		return this.equals(new Point(166, 599)) // lumbridge chute
+			|| this.equals(new Point(179, 481)) // cooks guild chute
+			|| this.equals(new Point(565, 532)) // ardougne chute
+			|| this.equals(new Point(162, 3533)); // zanaris chute
+	}
+
 	public boolean inArea(Area area) {
 		return area.inBounds(this);
 	}

@@ -54,6 +54,25 @@ public final class Formulae {
 	public static final int[] fishingToolIDs = {ItemId.OILY_FISHING_ROD.id(), ItemId.LOBSTER_POT.id(), ItemId.HARPOON.id(),
 		ItemId.FLY_FISHING_ROD.id(), ItemId.BIG_NET.id(), ItemId.FISHING_ROD.id(), ItemId.NET.id()};
 
+	public static int[] unidentifiedHerbs = {
+		ItemId.UNIDENTIFIED_GUAM_LEAF.id(),
+		ItemId.UNIDENTIFIED_MARRENTILL.id(),
+		ItemId.UNIDENTIFIED_TARROMIN.id(),
+		ItemId.UNIDENTIFIED_HARRALANDER.id(),
+		ItemId.UNIDENTIFIED_RANARR_WEED.id(),
+		ItemId.UNIDENTIFIED_IRIT_LEAF.id(),
+		ItemId.UNIDENTIFIED_AVANTOE.id(),
+		ItemId.UNIDENTIFIED_KWUARM.id(),
+		ItemId.UNIDENTIFIED_CADANTINE.id(),
+		ItemId.UNIDENTIFIED_DWARF_WEED.id(),
+		ItemId.UNIDENTIFIED_TORSTOL.id(),
+		ItemId.UNIDENTIFIED_SNAKE_WEED.id(),
+		ItemId.UNIDENTIFIED_ARDRIGAL.id(),
+		ItemId.UNIDENTIFIED_SITO_FOIL.id(),
+		ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(),
+		ItemId.UNIDENTIFIED_ROGUES_PURSE.id()
+	};
+
 	/**
 	 * Cubic P2P boundaries. MinX, MinY - MaxX, MaxY
 	 */
@@ -706,6 +725,10 @@ public final class Formulae {
 
 	public static int calculateHerbDrop() throws InvalidParameterException {
 		return weightedRandomChoice(herbDropIDs, herbDropWeights, ItemId.UNIDENTIFIED_GUAM_LEAF.id());
+	}
+
+	public static boolean isUnidHerb(Item item) {
+		return DataConversions.inArray(unidentifiedHerbs, item.getCatalogId());
 	}
 
 }

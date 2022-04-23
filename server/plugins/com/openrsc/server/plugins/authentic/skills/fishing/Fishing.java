@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.skills.fishing;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.GameObjectDef;
 import com.openrsc.server.external.ObjectFishDef;
@@ -9,6 +10,7 @@ import com.openrsc.server.external.ObjectFishingDef;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -343,6 +345,13 @@ public class Fishing implements OpLocTrigger, UseLocTrigger {
 
 				inventory.add(fish);
 				player.incExp(Skill.FISHING.id(), fishLst.get(0).getExp(), true);
+
+				if (EnchantedCrowns.shouldActivate(player, ItemId.CROWN_OF_THE_ITEMS)) {
+					player.playerServerMessage(MessageType.QUEST, "Your crown shines and an extra item appears on the ground");
+					player.getWorld().registerItem(
+						new GroundItem(player.getWorld(), fish.getCatalogId(), player.getX(), player.getY(), 1, player), player.getConfig().GAME_TICK * 50);
+					EnchantedCrowns.useCharge(player, ItemId.CROWN_OF_THE_ITEMS);
+				}
 
 				// Inauthentically check if the fishing spot should deplete
 				handleDepletableFishing(player, def, object);

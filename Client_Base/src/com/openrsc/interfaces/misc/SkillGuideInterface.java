@@ -695,8 +695,10 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(288, "6", "Gold Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(296, "8", "Gold Amulet"));
 				skillMenuEntries.add(new SkillMenuItem(284, "8", "Sapphire Ring"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1503, "9", "Gold Crown"));
 				skillMenuEntries.add(new SkillMenuItem(289, "10", "Sapphire Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(297, "13", "Sapphire Amulet"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1504, "15", "Sapphire Crown"));
 				skillMenuEntries.add(new SkillMenuItem(44, "16", "Holy Symbol"));
 				skillMenuEntries.add(new SkillMenuItem(1027, "16", "Unholy Symbol"));
 				skillMenuEntries.add(new SkillMenuItem(285, "18", "Emerald Ring"));
@@ -704,14 +706,18 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(298, "30", "Emerald Amulet"));
 				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1321, "30", "Opal Ring"));
 				skillMenuEntries.add(new SkillMenuItem(286, "30", "Ruby Ring"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1505, "36", "Emerald Crown"));
 				skillMenuEntries.add(new SkillMenuItem(291, "40", "Ruby Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(287, "42", "Diamond Ring"));
 				skillMenuEntries.add(new SkillMenuItem(299, "50", "Ruby Amulet"));
 				skillMenuEntries.add(new SkillMenuItem(543, "54", "Dragonstone Ring"));
 				skillMenuEntries.add(new SkillMenuItem(292, "56", "Diamond Necklace"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1506, "60", "Ruby Crown"));
 				skillMenuEntries.add(new SkillMenuItem(300, "70", "Diamond Amulet"));
 				skillMenuEntries.add(new SkillMenuItem(544, "72", "Dragonstone Necklace"));
 				skillMenuEntries.add(new SkillMenuItem(524, "80", "Dragonstone Amulet"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1507, "84", "Diamond Crown"));
+				if (Config.S_WANT_CUSTOM_SPRITES) skillMenuEntries.add(new SkillMenuItem(1508, "93", "Dragonstone Crown"));
 			} else if (curTab == 4) {
 				skillMenuEntries.add(new SkillMenuItem(207, "1", "Ball of Wool"));
 				skillMenuEntries.add(new SkillMenuItem(676, "10", "Bow String"));

@@ -3946,6 +3946,20 @@ public class EntityHandler {
 		items.add(new ItemDef("Soft Yellowgreen Clay", "I hope this colour doesn't get on my clothes", "Shape", 2, 105, "items:yellowgreenclay", false, false, 0, 0xFFFFFF, false, true, false, 1500));
 		items.add(new ItemDef("Ogre recipes", "Just like grandma used to make", "read", 1, 234, "items:234", false, false, 0, 0, false, true, false, 1501));
 
+		items.add(new ItemDef("Crown mould", "Used to make gold crowns", "", 5, 594, "items:594", false, false, 0, 0, false, false, true, 1502));
+		items.add(new ItemDef("Gold Crown", "I wonder what an enchantment would do on this valuable", "", 550, 545, "items:545", false, true, 32, 16763980, false, false, true, 1503));
+		items.add(new ItemDef("Sapphire Crown", "I wonder what an enchantment would do on this valuable", "", 1200, 545, "items:545", false, true, 32, 19711, false, false, true, 1504));
+		items.add(new ItemDef("Emerald Crown", "I wonder what an enchantment would do on this valuable", "", 1575, 545, "items:545", false, true, 32, 3394611, false, false, true, 1505));
+		items.add(new ItemDef("Ruby Crown", "I wonder what an enchantment would do on this valuable", "", 2325, 545, "items:545", false, true, 32, 16724736, false, false, true, 1506));
+		items.add(new ItemDef("Diamond Crown", "I wonder what an enchantment would do on this valuable", "", 3825, 545, "items:545", false, true, 32, 0, false, false, true, 1507));
+		items.add(new ItemDef("Dragonstone Crown", "I wonder what an enchantment would do on this valuable", "", 19125, 545, "items:545", false, true, 32, 12255487, true, false, true, 1508));
+		items.add(new ItemDef("Crown of dew", "It gives me a humidifier sense", "Check,Break,Configure", 1200, 545, "items:545", false, true, 32, 19711, false, false, true, 1509));
+		items.add(new ItemDef("Crown of mimicry", "It helps me avoid monsters when skilling", "Check,Break", 1575, 545, "items:545", false, true, 32, 3394611, false, false, true, 1510));
+		items.add(new ItemDef("Crown of the artisan", "It assists my skilling experience", "Check,Break", 2325, 545, "items:545", false, true, 32, 16724736, false, false, true, 1511));
+		items.add(new ItemDef("Crown of the items", "It brings forth an item on the ground when skilling", "Check,Break", 3825, 545, "items:545", false, true, 32, 0, false, false, true, 1512));
+		items.add(new ItemDef("Crown of the herbalist", "It gives me a sense to be one with herbs", "Check,Break,Configure", 19125, 545, "items:545", false, true, 32, 12255487, true, false, true, 1513));
+		items.add(new ItemDef("Crown of the occult", "It gives me a sense to be one with bones", "Check,Break,Configure", 19125, 545, "items:545", false, true, 32, 12255487, true, false, true, 1514));
+
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
 		items.get(435).spriteLocation = "items:588";
@@ -4592,6 +4606,20 @@ public class EntityHandler {
 			// Easter 2022 aka Peeling the Onion
 			animations.add(new AnimationDef("ogreears", "equipment", 0xb5ff1d, 0, true, false, 0)); // 500 ogre ears
 			animations.add(new AnimationDef("leathervest", "equipment", 0, 0, true, false, 0)); // 501 leather vest
+
+			//Crowns
+			//Gold
+			animations.add(new AnimationDef("crown", "equipment", 16763980,0, true, false, 0));//502
+			//Sapphire
+			animations.add(new AnimationDef("crown", "equipment", 19711, 0, true, false, 0)); //503
+			//Emerald
+			animations.add(new AnimationDef("crown", "equipment", 3394611,0, true, false, 0)); //504
+			//Ruby
+			animations.add(new AnimationDef("crown", "equipment", 16724736,0, true, false, 0)); //505
+			//Diamond
+			animations.add(new AnimationDef("crown", "equipment", 16184564,0, true, false, 0)); //506
+			//Dragonstone
+			animations.add(new AnimationDef("crown", "equipment", 12255487,0, true, false, 0)); //507
 		}
 	}
 

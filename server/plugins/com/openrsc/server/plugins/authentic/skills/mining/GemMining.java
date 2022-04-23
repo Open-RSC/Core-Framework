@@ -3,9 +3,11 @@ package com.openrsc.server.plugins.authentic.skills.mining;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -145,6 +147,13 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 				player.message(minedString(gem.getCatalogId()));
 				player.incExp(Skill.MINING.id(), 200, true); // always 50XP
 				player.getCarriedItems().getInventory().add(gem);
+
+				if (EnchantedCrowns.shouldActivate(player, ItemId.CROWN_OF_THE_ITEMS)) {
+					player.playerServerMessage(MessageType.QUEST, "Your crown shines and an extra item appears on the ground");
+					player.getWorld().registerItem(
+						new GroundItem(player.getWorld(), gem.getCatalogId(), player.getX(), player.getY(), 1, player), player.getConfig().GAME_TICK * 50);
+					EnchantedCrowns.useCharge(player, ItemId.CROWN_OF_THE_ITEMS);
+				}
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 			}

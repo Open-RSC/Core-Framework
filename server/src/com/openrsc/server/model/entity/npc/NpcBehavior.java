@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity.npc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.ActionType;
@@ -202,7 +203,16 @@ public class NpcBehavior {
 			if (npc.withinRange(target, 1)
 				&& npc.canReach(target)
 				&& !target.inCombat()) {
-				setFighting(target);
+				if (target.isPlayer() && EnchantedCrowns.shouldActivate((Player)target, ItemId.CROWN_OF_MIMICRY)
+					&& ((Player)target).getBatch() != null && !((Player)target).getBatch().isComplete()) {
+					((Player)target).playerServerMessage(MessageType.QUEST, "Your crown shines and you dodge an attack!");
+					npc.setLastCombatState(CombatState.RUNNING);
+					target.setCombatTimer(target.getConfig().GAME_TICK * 5);
+					walk_retreat(-3);
+					EnchantedCrowns.useCharge(((Player)target), ItemId.CROWN_OF_MIMICRY);
+				} else {
+					setFighting(target);
+				}
 			}
 		}
 	}
@@ -314,9 +324,13 @@ public class NpcBehavior {
 
 		npc.resetCombatEvent();
 
+		walk_retreat(time);
+	}
+
+	private void walk_retreat(int time) {
 		Point walkTo;
 		if (time == -1) {
-			 walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
+			walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
 				DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
 		} else {
 			final int newX = npc.getX() + (DataConversions.random(-1, 1) * time);

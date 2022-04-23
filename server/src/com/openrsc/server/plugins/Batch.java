@@ -80,7 +80,7 @@ public class Batch {
 		}
 	}
 
-	private Player getPlayer() { return player; }
+	public Player getPlayer() { return player; }
 	private int getDelay() { return delay; }
 	private int getTotalBatch() { return totalBatch; }
 	private void incrementBatch() { current++; }

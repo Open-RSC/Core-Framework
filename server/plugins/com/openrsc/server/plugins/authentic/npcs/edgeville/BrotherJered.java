@@ -6,13 +6,13 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BrotherJered implements
-	TalkNpcTrigger {
+public class BrotherJered implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
@@ -58,4 +58,22 @@ public class BrotherJered implements
 		return n.getID() == NpcId.BROTHER_JERED.id();
 	}
 
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (item.getCatalogId() == ItemId.CROWN_OF_THE_HERBALIST.id()) {
+			if (!player.getCache().hasKey("herbalistcrown")) {
+				npcsay(player, npc, "I see you have an uncharged crown",
+					"Capable of purifying herbs back into nature",
+					"I will charge it for you");
+				player.getCache().set("herbalistcrown", 0);
+			} else {
+				npcsay(player, npc, "Your crown already holds charges");
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return npc.getID() == NpcId.BROTHER_JERED.id() && item.getCatalogId() == ItemId.CROWN_OF_THE_HERBALIST.id();
+	}
 }

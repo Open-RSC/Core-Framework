@@ -2,10 +2,12 @@ package com.openrsc.server.plugins.custom.skills.harvesting;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.external.ObjectHarvestingDef;
 import com.openrsc.server.model.TimePoint;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -262,6 +264,13 @@ public final class Harvesting implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
 					: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
 				player.incExp(Skill.HARVESTING.id(), prodEnum.get(prodId).getXp(), true);
+
+				if (EnchantedCrowns.shouldActivate(player, ItemId.CROWN_OF_THE_ITEMS)) {
+					player.playerServerMessage(MessageType.QUEST, "Your crown shines and an extra item appears on the ground");
+					player.getWorld().registerItem(
+						new GroundItem(player.getWorld(), produce.getCatalogId(), player.getX(), player.getY(), 1, player), player.getConfig().GAME_TICK * 50);
+					EnchantedCrowns.useCharge(player, ItemId.CROWN_OF_THE_ITEMS);
+				}
 			}
 			if (DataConversions.random(1, 100) <= (!objName.contains("herb") ? 20 : 10)) {
 				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -379,6 +388,13 @@ public final class Harvesting implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You get " +
 					(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
 				player.incExp(Skill.HARVESTING.id(), def.getExp(), true);
+
+				if (EnchantedCrowns.shouldActivate(player, ItemId.CROWN_OF_THE_ITEMS)) {
+					player.playerServerMessage(MessageType.QUEST, "Your crown shines and an extra item appears on the ground");
+					player.getWorld().registerItem(
+						new GroundItem(player.getWorld(), produce.getCatalogId(), player.getX(), player.getY(), 1, player), player.getConfig().GAME_TICK * 50);
+					EnchantedCrowns.useCharge(player, ItemId.CROWN_OF_THE_ITEMS);
+				}
 			}
 			if (DataConversions.random(1, 100) <= def.getExhaust()) {
 				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());

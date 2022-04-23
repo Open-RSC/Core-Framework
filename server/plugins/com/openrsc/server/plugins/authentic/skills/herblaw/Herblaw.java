@@ -130,7 +130,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.getCarriedItems().remove(herbToRemove);
 		player.getCarriedItems().getInventory().add(newItem);
 		player.playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(player.getWorld()).getName());
-		player.incExp(Skill.HERBLAW.id(), herbDef.getExp(), true);
+		giveHerbExperience(player, herb);
 		delay(2);
 
 		// Repeat
@@ -138,6 +138,15 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchIdentify(player, herb, herbDef);
 		}
+	}
+
+	private void giveHerbExperience(Player player, Item item) {
+		ItemUnIdentHerbDef herbDef = item.getUnIdentHerbDef(player.getWorld());
+		if (herbDef == null) {
+			return;
+		}
+
+		player.incExp(Skill.HERBLAW.id(), herbDef.getExp(), true);
 	}
 
 	@Override

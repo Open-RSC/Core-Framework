@@ -2,6 +2,7 @@ package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.*;
+import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -36,6 +37,7 @@ import com.openrsc.server.net.rsc.PayloadProcessorManager;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.parsers.impl.*;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
+import com.openrsc.server.plugins.Batch;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.triggers.CatGrowthTrigger;
@@ -55,6 +57,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static com.openrsc.server.plugins.Functions.inArray;
 
 /**
  * A single player.
@@ -258,6 +262,10 @@ public final class Player extends Mob {
 	 * Is the character male?
 	 */
 	private boolean maleGender;
+	/**
+	 * The current active batch
+	 */
+	private Batch batch;
 	/**
 	 * The current active menu
 	 */
@@ -1195,6 +1203,14 @@ public final class Player extends Mob {
 		return lastClientActivity;
 	}
 
+	public Batch getBatch() {
+		return batch;
+	}
+
+	public void setBatch(final Batch batch) {
+		this.batch = batch;
+	}
+
 	public Menu getMenu() {
 		return menu;
 	}
@@ -1551,7 +1567,7 @@ public final class Player extends Mob {
 				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
 			return;
 		}
-		incExp(i, appliedAmount, useFatigue);
+		incExp(i, appliedAmount, useFatigue, true);
 	}
 
 	/**
@@ -1612,12 +1628,16 @@ public final class Player extends Mob {
 			for (int i = 0; i < skillDist.length; i++) {
 				xp = skillXP * skillDist[i];
 				if (xp == 0) continue;
-				incExp(i, xp, useFatigue);
+				incExp(i, xp, useFatigue, false);
 			}
 		}
 	}
 
-	public void incExp(final int skill, int skillXP, final boolean useFatigue) {
+	public void incExp(final int skill, int origSkillXP, final boolean useFatigue) {
+		incExp(skill, origSkillXP, useFatigue, false);
+	}
+
+	public void incExp(final int skill, int origSkillXP, final boolean useFatigue, final boolean fromQuest) {
 		// Warn the player that they currently cannot gain XP.
 		if (isExperienceFrozen()) {
 			if (getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -1633,6 +1653,17 @@ public final class Player extends Mob {
 				this.setAttribute("warned_xp_off", true);
 			}
 			return;
+		}
+
+		int skillXP = origSkillXP;
+		boolean doubledXp = false;
+
+		if (useFatigue && !fromQuest
+			&& !inArray(skill, Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.HITS.id(), Skill.RANGED.id(),
+			Skill.MAGIC.id(), Skill.EVILMAGIC.id(), Skill.GOODMAGIC.id(), Skill.PRAYER.id(), Skill.PRAYEVIL.id(), Skill.PRAYGOOD.id())
+			&& EnchantedCrowns.shouldActivate(this, ItemId.CROWN_OF_THE_ARTISAN)) {
+			skillXP *= 2;
+			doubledXp = true;
 		}
 
 		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -1663,6 +1694,11 @@ public final class Player extends Mob {
 					fatigue = this.MAX_FATIGUE;
 				}
 			}
+		}
+
+		if (doubledXp) {
+			this.playerServerMessage(MessageType.QUEST, "Your crown shines and you become more experienced");
+			EnchantedCrowns.useCharge(this, ItemId.CROWN_OF_THE_ARTISAN);
 		}
 
 		// Player cannot gain more than 200 fishing xp on tutorial island

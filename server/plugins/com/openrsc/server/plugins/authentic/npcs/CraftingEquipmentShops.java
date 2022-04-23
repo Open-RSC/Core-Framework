@@ -12,6 +12,10 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class CraftingEquipmentShops extends AbstractShop {
@@ -97,18 +101,28 @@ public final class CraftingEquipmentShops extends AbstractShop {
 
 	public Shop getShop(World world) {
 		if(shop == null) {
-			shop = (world.getServer().getConfig().BASED_CONFIG_DATA >= 29 ?
-				new Shop(false, 5000, 100, 65, 2,
-					new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
-					new Item(ItemId.AMULET_MOULD.id(), 2), new Item(ItemId.NEEDLE.id(), 3), new Item(ItemId.THREAD.id(), 100),
-					new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3)) : (
-						world.getServer().getConfig().BASED_CONFIG_DATA >= 28 ?
-							new Shop(false, 5000, 100, 65, 2,
-								new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
-								new Item(ItemId.AMULET_MOULD.id(), 2), new Item(ItemId.NEEDLE.id(), 3), new Item(ItemId.THREAD.id(), 100)) :
-							new Shop(false, 5000, 100, 65, 2,
-								new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
-								new Item(ItemId.AMULET_MOULD.id(), 2))));
+			List<Item> shopItems = new ArrayList<>();
+			Collections.addAll(shopItems,
+				new Item(ItemId.CHISEL.id(), 2),
+				new Item(ItemId.RING_MOULD.id(), 4),
+				new Item(ItemId.NECKLACE_MOULD.id(), 2),
+				new Item(ItemId.AMULET_MOULD.id(), 2));
+			if (world.getServer().getConfig().BASED_CONFIG_DATA >= 28) {
+				Collections.addAll(shopItems,
+					new Item(ItemId.NEEDLE.id(), 3),
+					new Item(ItemId.THREAD.id(), 100));
+			}
+			if (world.getServer().getConfig().BASED_CONFIG_DATA >= 29) {
+				Collections.addAll(shopItems,
+					new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3));
+			}
+			if (world.getServer().getConfig().WANT_CUSTOM_SPRITES) {
+				Collections.addAll(shopItems,
+					new Item(ItemId.CROWN_MOULD.id(), 2));
+			}
+			Item[] finalItems = new Item[shopItems.size()];
+			shop = new Shop(false, 5000, 100, 65, 2,
+				shopItems.toArray(finalItems));
 		}
 		return shop;
 	}

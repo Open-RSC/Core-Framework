@@ -56,6 +56,7 @@ public class Crafting implements UseInvTrigger,
 		ItemId.RING_MOULD.id(),
 		ItemId.NECKLACE_MOULD.id(),
 		ItemId.AMULET_MOULD.id(),
+		ItemId.CROWN_MOULD.id(),
 	};
 
 	public final static int[] silver_moulds = {
@@ -251,11 +252,21 @@ public class Crafting implements UseInvTrigger,
 		AtomicReference<String> reply = new AtomicReference<String>();
 
 		// select type
-		String[] options = new String[]{
-			"ring",
-			"Necklace",
-			"amulet"
-		};
+		String[] options;
+		if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect other than Cabbage server config
+			options = new String[]{
+				"ring",
+				"Necklace",
+				"amulet"
+			};
+		} else {
+			options = new String[]{
+				"ring",
+				"Necklace",
+				"amulet",
+				"Crown"
+			};
+		}
 
         thinkbubble(new Item(ItemId.GOLD_BAR.id())); // bubble will be displayed after menu
 		int type = multi(player, options);

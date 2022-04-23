@@ -2,6 +2,7 @@ package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.constants.*;
 import com.openrsc.server.content.DropTable;
+import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
@@ -22,6 +23,8 @@ import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MathUtil;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -362,11 +365,24 @@ public class Npc extends Mob {
 		/* 2. Drop bones (or nothing). */
 		int bones = getBonesDrop();
 		if (bones != ItemId.NOTHING.id()) {
-			GroundItem groundItem = new GroundItem(
-				owner.getWorld(), bones, getX(), getY(), 1, owner
-			);
-			groundItem.setAttribute("npcdrop", true);
-			getWorld().registerItem(groundItem);
+			boolean destroyBones = false;
+			if (EnchantedCrowns.shouldActivate(owner, ItemId.CROWN_OF_THE_OCCULT)) {
+				int conf = owner.getCache().hasKey("bone_conf") ? owner.getCache().getInt("bone_conf") : 7;
+				int boneTier = getBoneTier(bones);
+				destroyBones = MathUtil.isKthBitSet(conf, boneTier + 1);
+			}
+
+			if (!destroyBones) {
+				GroundItem groundItem = new GroundItem(
+					owner.getWorld(), bones, getX(), getY(), 1, owner
+				);
+				groundItem.setAttribute("npcdrop", true);
+				getWorld().registerItem(groundItem);
+			} else {
+				EnchantedCrowns.giveBonesExperience(owner, new Item(bones));
+				owner.playerServerMessage(MessageType.QUEST, "Your crown shines and the bone gets destroyed");
+				EnchantedCrowns.useCharge(owner, ItemId.CROWN_OF_THE_OCCULT);
+			}
 		}
 
 		/* 3. Get the rest of the mob's drops. */
@@ -411,6 +427,38 @@ public class Npc extends Mob {
 					}
 				}
 			}
+		}
+	}
+
+	private int getBoneTier(int boneId) {
+		switch(ItemId.getById(boneId)) {
+			case BONES:
+			case BAT_BONES:
+			default:
+				return 0;
+			case BIG_BONES:
+				return 1;
+			case DRAGON_BONES:
+				return 2;
+		}
+	}
+
+	private int getHerbTier(int boneId) {
+		switch(ItemId.getById(boneId)) {
+			case UNIDENTIFIED_GUAM_LEAF:
+			case UNIDENTIFIED_MARRENTILL:
+			case UNIDENTIFIED_TARROMIN:
+			case UNIDENTIFIED_HARRALANDER:
+			default:
+				return 0;
+			case UNIDENTIFIED_RANARR_WEED:
+			case UNIDENTIFIED_IRIT_LEAF:
+			case UNIDENTIFIED_AVANTOE:
+				return 1;
+			case UNIDENTIFIED_KWUARM:
+			case UNIDENTIFIED_CADANTINE:
+			case UNIDENTIFIED_DWARF_WEED:
+				return 2;
 		}
 	}
 
@@ -508,9 +556,23 @@ public class Npc extends Mob {
 				&& !getConfig().MEMBER_WORLD) {
 				continue; // Members item on a non-members world.
 			} else if (dropID != ItemId.NOTHING.id()) {
-				groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner, item.getNoted());
-				groundItem.setAttribute("npcdrop", true);
-				getWorld().registerItem(groundItem);
+				boolean destroyHerbs = false;
+				if (Formulae.isUnidHerb(new Item(dropID)) && EnchantedCrowns.shouldActivate(owner, ItemId.CROWN_OF_THE_HERBALIST)) {
+					int conf = owner.getCache().hasKey("herb_conf") ? owner.getCache().getInt("herb_conf") : 7;
+					int herbTier = getHerbTier(dropID);
+					destroyHerbs = MathUtil.isKthBitSet(conf, herbTier + 1);
+				}
+
+				if (!destroyHerbs) {
+					groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner, item.getNoted());
+					groundItem.setAttribute("npcdrop", true);
+					getWorld().registerItem(groundItem);
+				} else {
+					EnchantedCrowns.giveHerbExperience(owner, new Item(item.getCatalogId()));
+					owner.playerServerMessage(MessageType.QUEST, "Your crown shines and the herb gets destroyed");
+					EnchantedCrowns.useCharge(owner, ItemId.CROWN_OF_THE_HERBALIST);
+				}
+
 			}
 		}
 	}

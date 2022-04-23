@@ -9,12 +9,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
+public class SpiritOfScorpius implements TalkNpcTrigger, UseNpcTrigger, OpLocTrigger {
 
 	public int GRAVE_OF_SCORPIUS = 941;
 
@@ -118,6 +119,25 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 			npcsay(player, n, "We are waiting for you");
 			n.startCombat(player);
 		}
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (item.getCatalogId() == ItemId.CROWN_OF_THE_OCCULT.id()) {
+			if (!player.getCache().hasKey("occultcrown")) {
+				npcsay(player, npc, "I see you have an uncharged crown",
+					"Capable of cremating bones to the underground",
+					"I will charge it for you");
+				player.getCache().set("occultcrown", 0);
+			} else {
+				npcsay(player, npc, "Your crown already holds charges");
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return npc.getID() == NpcId.SPIRIT_OF_SCORPIUS.id() && item.getCatalogId() == ItemId.CROWN_OF_THE_OCCULT.id();
 	}
 
 	@Override

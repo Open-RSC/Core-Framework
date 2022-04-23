@@ -50,6 +50,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 	private static final String AMULET = "amulet";
 	private static final String RING = "ring";
 	private static final String NECKLACE = "necklace";
+	private static final String CROWN = "crown";
 	private static final String DEFAULT = "";
 	private static final int[] elementalRunes = new int[4];
 
@@ -803,8 +804,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private void enchantTierOneJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.SAPPHIRE_AMULET.id()
-				|| (player.getConfig().WANT_EQUIPMENT_TAB
-				&& (affectedItem.getCatalogId() == ItemId.SAPPHIRE_RING.id() || affectedItem.getCatalogId() == ItemId.OPAL_RING.id()))) {
+			|| (player.getConfig().WANT_EQUIPMENT_TAB
+			&& (inArray(affectedItem.getCatalogId(), ItemId.SAPPHIRE_CROWN.id(), ItemId.SAPPHIRE_RING.id(), ItemId.OPAL_RING.id())))) {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
@@ -814,6 +815,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				case SAPPHIRE_AMULET:
 					itemID = ItemId.SAPPHIRE_AMULET_OF_MAGIC.id();
 					jewelryType = AMULET;
+					break;
+				case SAPPHIRE_CROWN:
+					itemID = ItemId.CROWN_OF_DEW.id();
+					jewelryType = CROWN;
 					break;
 				case SAPPHIRE_RING:
 					itemID = ItemId.RING_OF_RECOIL.id();
@@ -892,7 +897,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private void enchantTierTwoJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.EMERALD_AMULET.id()
-				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.EMERALD_RING.id())) {
+			|| (player.getConfig().WANT_EQUIPMENT_TAB
+			&& (inArray(affectedItem.getCatalogId(), ItemId.EMERALD_CROWN.id(), ItemId.EMERALD_RING.id())))) {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
@@ -902,6 +908,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				case EMERALD_AMULET:
 					itemID = ItemId.EMERALD_AMULET_OF_PROTECTION.id();
 					jewelryType = AMULET;
+					break;
+				case EMERALD_CROWN:
+					itemID = ItemId.CROWN_OF_MIMICRY.id();
+					jewelryType = CROWN;
 					break;
 				case EMERALD_RING:
 					itemID = ItemId.RING_OF_SPLENDOR.id();
@@ -920,7 +930,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private void enchantTierThreeJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.RUBY_AMULET.id()
-				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.RUBY_RING.id())) {
+			|| (player.getConfig().WANT_EQUIPMENT_TAB
+			&& (inArray(affectedItem.getCatalogId(), ItemId.RUBY_CROWN.id(), ItemId.RUBY_RING.id())))) {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
@@ -930,6 +941,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				case RUBY_AMULET:
 					itemID = ItemId.RUBY_AMULET_OF_STRENGTH.id();
 					jewelryType = AMULET;
+					break;
+				case RUBY_CROWN:
+					itemID = ItemId.CROWN_OF_THE_ARTISAN.id();
+					jewelryType = CROWN;
 					break;
 				case RUBY_RING:
 					itemID = ItemId.RING_OF_FORGING.id();
@@ -948,7 +963,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private void enchantTierFourJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.DIAMOND_AMULET.id()
-				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DIAMOND_RING.id())){
+			|| (player.getConfig().WANT_EQUIPMENT_TAB
+			&& (inArray(affectedItem.getCatalogId(), ItemId.DIAMOND_CROWN.id(), ItemId.DIAMOND_RING.id())))){
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
@@ -958,6 +974,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				case DIAMOND_AMULET:
 					itemID = ItemId.DIAMOND_AMULET_OF_POWER.id();
 					jewelryType = AMULET;
+					break;
+				case DIAMOND_CROWN:
+					itemID = ItemId.CROWN_OF_THE_ITEMS.id();
+					jewelryType = CROWN;
 					break;
 				case DIAMOND_RING:
 					itemID = ItemId.RING_OF_LIFE.id();

@@ -1007,6 +1007,7 @@ public class Functions {
 		Batch batch = new Batch(player);
 		batch.initialize(totalBatch);
 		batch.start();
+		player.setBatch(batch);
 		scriptContext.setBatch(batch);
 	}
 
@@ -1020,6 +1021,7 @@ public class Functions {
 	}
 
 	public static void stopbatch() {
+		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(batch -> batch.getPlayer().setBatch(null));
 		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::stop);
 	}
 

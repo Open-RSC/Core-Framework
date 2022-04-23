@@ -15,6 +15,11 @@
 		<itemID>296</itemID>
 		<exp>120</exp>
 	</ItemCraftingDef>
+	<ItemCraftingDef><!-- Crown -->
+		<requiredLvl>9</requiredLvl>
+		<itemID>1503</itemID>
+		<exp>180</exp>
+	</ItemCraftingDef>
 	<!-- SAPPHIRE -->
 	<ItemCraftingDef><!-- Ring -->
 		<requiredLvl>8</requiredLvl>
@@ -30,6 +35,11 @@
 		<requiredLvl>13</requiredLvl>
 		<itemID>297</itemID>
 		<exp>260</exp>
+	</ItemCraftingDef>
+	<ItemCraftingDef><!-- Crown -->
+		<requiredLvl>15</requiredLvl>
+		<itemID>1504</itemID>
+		<exp>280</exp>
 	</ItemCraftingDef>
 	<!-- EMERALD -->
 	<ItemCraftingDef><!-- Ring -->
@@ -47,6 +57,11 @@
 		<itemID>298</itemID>
 		<exp>280</exp>
 	</ItemCraftingDef>
+	<ItemCraftingDef><!-- Crown -->
+		<requiredLvl>36</requiredLvl>
+		<itemID>1505</itemID>
+		<exp>320</exp>
+	</ItemCraftingDef>
 	<!-- RUBY -->
 	<ItemCraftingDef><!-- Ring -->
 		<requiredLvl>30</requiredLvl>
@@ -62,6 +77,11 @@
 		<requiredLvl>50</requiredLvl>
 		<itemID>299</itemID>
 		<exp>340</exp>
+	</ItemCraftingDef>
+	<ItemCraftingDef><!-- Crown -->
+		<requiredLvl>60</requiredLvl>
+		<itemID>1506</itemID>
+		<exp>380</exp>
 	</ItemCraftingDef>
 	<!-- DIAMOND -->
 	<ItemCraftingDef><!-- Ring -->
@@ -79,6 +99,11 @@
 		<itemID>300</itemID>
 		<exp>400</exp>
 	</ItemCraftingDef>
+	<ItemCraftingDef><!-- Crown -->
+		<requiredLvl>84</requiredLvl>
+		<itemID>1507</itemID>
+		<exp>560</exp>
+	</ItemCraftingDef>
 	<!-- DRAGONSTONE -->
 	<ItemCraftingDef><!-- Ring -->
 		<requiredLvl>54</requiredLvl>
@@ -95,6 +120,11 @@
 		<itemID>524</itemID>
 		<exp>600</exp>
 	</ItemCraftingDef>
+	<ItemCraftingDef><!-- Crown -->
+		<requiredLvl>93</requiredLvl>
+		<itemID>1508</itemID>
+		<exp>840</exp>
+	</ItemCraftingDef>
 	<!-- OPAL -->
 	<ItemCraftingDef><!-- Ring -->
 		<requiredLvl>30</requiredLvl>
@@ -110,5 +140,10 @@
 		<requiredLvl>-1</requiredLvl>
 		<itemID>-1</itemID>
 		<exp>120</exp>
+	</ItemCraftingDef>
+	<ItemCraftingDef><!-- Crown -->
+		<requiredLvl>-1</requiredLvl>
+		<itemID>-1</itemID>
+		<exp>140</exp>
 	</ItemCraftingDef>
 </ItemCraftingDef-array>
