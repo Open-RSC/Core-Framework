@@ -126,7 +126,7 @@ public class CombatFormula {
 
 		return roll <= odds;
 	}
-	
+
 	/**
 	 * Calculates an accuracy check (For melee)
 	 *
@@ -178,7 +178,10 @@ public class CombatFormula {
 		boolean isHit = calculateMeleeAccuracy(source, victim);
 		boolean wasHit = isHit;
 		int damage = calculateMeleeDamage(source);
-		if (source instanceof Player) {
+		if (source instanceof Player && victim instanceof Player) {
+			// TODO: hopefully temp until this file contains more accurate pvp
+			return PVPCombatFormula.calcFightHit(source, victim);
+		} else if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){
 				isHit = calculateMeleeAccuracy(source, victim);
 			}
