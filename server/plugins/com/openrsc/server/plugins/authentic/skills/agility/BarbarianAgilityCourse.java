@@ -158,7 +158,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 			}
 		}
 		player.message("You jump over the wall");
-		delay(2);
+		delay(1);
 		boundaryTeleport(player, Point.location(player.getX() == obj.getX() ? player.getX() - 1 : player.getX() + 1, player.getY()));
 		player.incExp(Skill.AGILITY.id(), 20, true);
 		AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);
