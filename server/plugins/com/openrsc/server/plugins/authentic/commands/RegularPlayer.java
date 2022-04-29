@@ -149,7 +149,14 @@ public final class RegularPlayer implements CommandTrigger {
 			toggleReceipts(player);
 		} else if (command.equalsIgnoreCase("getpidlesscatching") || command.equalsIgnoreCase("tellpidlesscatching") || command.equalsIgnoreCase("pidless")) {
 			tellPidlessCatching(player);
+		} else if (command.equalsIgnoreCase("maxplayersperip") || command.equalsIgnoreCase("mppi")) {
+			queryMaxPlayersPerIp(player);
 		}
+	}
+
+	private void queryMaxPlayersPerIp(final Player player) {
+		player.playerServerMessage(MessageType.QUEST, String.format("%sMax players per ip: %d", messagePrefix, player.getConfig().MAX_PLAYERS_PER_IP));
+		player.playerServerMessage(MessageType.QUEST, String.format("%sYou have %d player(s) logged in.", messagePrefix, player.getWorld().getServer().getPacketFilter().getPlayersCount(player.getCurrentIP())));
 	}
 
 	private void tellPidlessCatching(Player player) {
