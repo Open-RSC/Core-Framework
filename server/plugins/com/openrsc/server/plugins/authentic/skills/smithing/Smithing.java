@@ -9,7 +9,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MathUtil;
@@ -69,11 +68,12 @@ public class Smithing implements UseLocTrigger {
 
 	private boolean allowDorics(Player player) {
 		if (player.getQuestStage(Quests.DORICS_QUEST) > -1) {
-			Npc doric = player.getWorld().getNpc(NpcId.DORIC.id(), 323, 327, 487, 492,
-				true);
-			doric.getUpdateFlags().setChatMessage(new ChatMessage(doric,
-				"Heh who said you could use that?", player));
-			player.message("You need to finish Doric's quest to use this anvil");
+			Npc doric = ifnearvisnpc(player, NpcId.DORIC.id(), 20);
+			if (doric != null) {
+				npcsay(player, doric, "Heh who said you could use that?");
+			}
+			//message likely not given out, see https://classic.runescape.wiki/w/Transcript:Doric?diff=79647&oldid=79230
+			//player.message("You need to finish Doric's quest to use this anvil");
 			return false;
 		}
 		return true;

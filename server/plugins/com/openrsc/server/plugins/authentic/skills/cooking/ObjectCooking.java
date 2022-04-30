@@ -22,10 +22,11 @@ import static com.openrsc.server.plugins.Functions.*;
 public class ObjectCooking implements UseLocTrigger {
 	@Override
 	public void onUseLoc(Player owner, GameObject object, Item item) {
-		Npc cook = ifnearvisnpc(owner, NpcId.COOK.id(), 20);
-		if (cook != null && owner.getQuestStage(Quests.COOKS_ASSISTANT) != -1
-			&& object.getID() == 119) {
-			npcsay(owner, cook, "Hey! Who said you could use that?");
+		if (object.getID() == 119 && owner.getQuestStage(Quests.COOKS_ASSISTANT) > -1) {
+			Npc cook = ifnearvisnpc(owner, NpcId.COOK.id(), 20);
+			if (cook != null) {
+				npcsay(owner, cook, "Hey! Who said you could use that?");
+			}
 		} else
 			handleCooking(item, owner, object);
 	}
