@@ -1727,7 +1727,7 @@ public final class Player extends Mob {
 
 				// Make sure the player is in range.
 				final boolean inRange = getConfig().PARTY_SHARE_INFINITE_RANGE
-					|| (Math.abs(this.getX() - partyMemberPlayer.getX()) <= getConfig().PARTY_SHARE_MAX_X
+					|| (Formulae.getHeight(this.getLocation()) == Formulae.getHeight(partyMemberPlayer.getLocation()) && Math.abs(this.getX() - partyMemberPlayer.getX()) <= getConfig().PARTY_SHARE_MAX_X
 					&& Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY())) <= getConfig().PARTY_SHARE_MAX_Y);
 
 				// Make sure the player isn't on the same IP
@@ -1737,7 +1737,7 @@ public final class Player extends Mob {
 				final boolean isntIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !partyMemberPlayer.isIronMan();
 
 				// Make sure the party member isn't this!!
-				final boolean notMe = this != partyMemberPlayer;
+				final boolean notMe = !this.equals(partyMemberPlayer);
 
 				if (inRange && notSameIp && isntIronMan && notMe) {
 					sharers.add(partyMember);
