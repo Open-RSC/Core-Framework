@@ -13,6 +13,7 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
@@ -2658,7 +2659,7 @@ public final class Player extends Mob {
 	}
 
 	public void startSleepEvent(final boolean bed) {
-		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, getWorld().getServer().getConfig().GAME_TICK, "Start Sleep Event") {
+		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, getWorld().getServer().getConfig().GAME_TICK, "Start Sleep Event", DuplicationStrategy.ONE_PER_MOB) {
 			@Override
 			public void run() {
 				if (getOwner().isRemoved() || sleepStateFatigue == 0 || !sleeping) {
