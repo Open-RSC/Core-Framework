@@ -21,12 +21,11 @@ import com.openrsc.server.util.rsc.Formulae;
 public class ThrowingEvent extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;
-	private final Mob target;
+	private Mob target;
 
-	public ThrowingEvent(World world, Player owner, Mob victim) {
-		super(world, owner, 1, "Throwing Event", DuplicationStrategy.ONE_PER_MOB);
+	public ThrowingEvent(final World world, final Player owner, final long ticksDelay, final Mob victim) {
+		super(world, owner, ticksDelay, "Throwing Event", DuplicationStrategy.ONE_PER_MOB);
 		this.target = victim;
-		this.deliveredFirstProjectile = false;
 	}
 
 	public boolean equals(Object o) {
@@ -39,6 +38,15 @@ public class ThrowingEvent extends GameTickEvent {
 
 	public Mob getTarget() {
 		return target;
+	}
+
+	public void reTarget(final Mob mob) {
+		target = mob;
+		setDelayTicks(2);
+	}
+
+	public void restart() {
+		running = true;
 	}
 
 	private GroundItem getFloorItem(int id) {

@@ -266,6 +266,10 @@ public class GameEventHandler {
 		return eventStore.getEvents(type);
 	}
 
+	public Collection<GameTickEvent> getPlayerEvents(final Player player) {
+		return eventStore.getPlayerEvents(player);
+	}
+
 	public void remove(final GameTickEvent event) {
 		eventStore.remove(event);
 	}

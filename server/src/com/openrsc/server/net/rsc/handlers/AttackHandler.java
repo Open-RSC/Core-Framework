@@ -1,6 +1,8 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.event.rsc.impl.projectile.RangeEvent;
 import com.openrsc.server.event.rsc.impl.projectile.ThrowingEvent;
 import com.openrsc.server.model.action.ActionType;
@@ -109,7 +111,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			player.setFollowing(affectedMob, 0, false);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false, ActionType.ATTACK) {
 				public void executeInternal() {
-					if(getPlayer().isBusy() || getPlayer().inCombat()) return;
+					if (getPlayer().isBusy() || getPlayer().inCombat()) return;
 					getPlayer().resetFollowing();
 					if (getMob().isPlayer()) {
 						Player affectedPlayer = (Player) getMob();
@@ -130,9 +132,59 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 					getPlayer().face(getPlayer().getX() + 1, getPlayer().getY() - 1);
 
 					if (getPlayer().getRangeEquip() > 0) {
-						getPlayer().setRangeEvent(new RangeEvent(getPlayer().getWorld(), getPlayer(), target));
+						final GameEventHandler gameEventHandler = getPlayer().getWorld()
+							.getServer()
+							.getGameEventHandler();
+
+						RangeEvent rangeEvent = null;
+
+						for (final GameTickEvent gameTickEvent : gameEventHandler.getPlayerEvents(getPlayer())) {
+							if (gameTickEvent instanceof RangeEvent) {
+								rangeEvent = (RangeEvent) gameTickEvent;
+								break;
+							}
+						}
+
+						if (rangeEvent != null) {
+							if (!rangeEvent.getTarget().equals(getMob())) {
+								rangeEvent.reTarget(getMob());
+							}
+
+							rangeEvent.restart();
+							getPlayer().setRangeEvent(rangeEvent);
+							return;
+						}
+
+						rangeEvent = new RangeEvent(getPlayer().getWorld(), getPlayer(), 1, target);
+						getPlayer().setRangeEvent(rangeEvent);
+						gameEventHandler.add(rangeEvent);
 					} else {
-						getPlayer().setThrowingEvent(new ThrowingEvent(getPlayer().getWorld(), getPlayer(), target));
+						final GameEventHandler gameEventHandler = getPlayer().getWorld()
+							.getServer()
+							.getGameEventHandler();
+
+						ThrowingEvent throwingEvent = null;
+
+						for (final GameTickEvent gameTickEvent : gameEventHandler.getPlayerEvents(getPlayer())) {
+							if (gameTickEvent instanceof ThrowingEvent) {
+								throwingEvent = (ThrowingEvent) gameTickEvent;
+								break;
+							}
+						}
+
+						if (throwingEvent != null) {
+							if (!throwingEvent.getTarget().equals(getMob())) {
+								throwingEvent.reTarget(getMob());
+							}
+
+							throwingEvent.restart();
+							getPlayer().setThrowingEvent(throwingEvent);
+							return;
+						}
+
+						throwingEvent = new ThrowingEvent(getPlayer().getWorld(), getPlayer(), 1, target);
+						getPlayer().setThrowingEvent(throwingEvent);
+						gameEventHandler.add(throwingEvent);
 					}
 				}
 			});

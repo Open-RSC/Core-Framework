@@ -25,12 +25,12 @@ public class RangeEvent extends GameTickEvent {
 	private boolean deliveredFirstProjectile;
 
 	private final Player player;
-	private final Mob target;
 	private final ServerConfiguration config;
 	private final PluginHandler pluginHandler;
+	private Mob target;
 
-	public RangeEvent(final World world, final Player owner, final Mob target) {
-		super(world, owner, 1, "Range Event", DuplicationStrategy.ONE_PER_MOB);
+	public RangeEvent(final World world, final Player owner, final long tickDelay, final Mob target) {
+		super(world, owner, tickDelay, "Range Event", DuplicationStrategy.ONE_PER_MOB);
 		this.player = owner;
 		this.target = target;
 		this.config = world.getServer().getConfig();
@@ -47,6 +47,15 @@ public class RangeEvent extends GameTickEvent {
 
 	public Mob getTarget() {
 		return target;
+	}
+
+	public void reTarget(final Mob mob) {
+		target = mob;
+		setDelayTicks(2);
+	}
+
+	public void restart() {
+		running = true;
 	}
 
 	public void run() {

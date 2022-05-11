@@ -1377,11 +1377,7 @@ public final class Player extends Mob {
 	}
 
 	public void setRangeEvent(final RangeEvent event) {
-		if (rangeEvent != null) {
-			rangeEvent.stop();
-		}
 		rangeEvent = event;
-		getWorld().getServer().getGameEventHandler().add(rangeEvent);
 	}
 
 	public ThrowingEvent getThrowingEvent() {
@@ -1389,11 +1385,7 @@ public final class Player extends Mob {
 	}
 
 	public void setThrowingEvent(final ThrowingEvent event) {
-		if (throwingEvent != null) {
-			throwingEvent.stop();
-		}
 		throwingEvent = event;
-		getWorld().getServer().getGameEventHandler().add(throwingEvent);
 	}
 
 	public String getStaffName() {
