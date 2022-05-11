@@ -14,7 +14,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -138,13 +137,6 @@ public class RangeUtils {
             ItemId.POISON_DRAGON_BOLTS.id(),
             ItemId.POISONED_DRAGON_DAGGER.id()
     );
-
-    public static void checkOutOfAmmo(Player player, int arrowId) {
-        if (arrowId < 0) {
-            ActionSender.sendSound(player, "outofammo");
-            throw new ProjectileException(ProjectileFailureReason.OUT_OF_AMMO);
-        }
-    }
 
     public static void poisonTarget(Mob aggressor, Mob target, int poisonDamage) {
         target.setPoisonDamage(poisonDamage);

@@ -100,15 +100,23 @@ public class ThrowingEvent extends GameTickEvent {
 
 		if (target.isNpc()) {
 			if (target.getWorld().getServer().getPluginHandler().handlePlugin(PlayerRangeNpcTrigger.class, getPlayerOwner(), new Object[]{getOwner(), target})) {
-				throw new ProjectileException(ProjectileFailureReason.HANDLED_BY_PLUGIN);
+				player.resetRange();
+				return;
 			}
-		} else if(target.isPlayer()) {
+		} else {
 			if (target.getWorld().getServer().getPluginHandler().handlePlugin(PlayerRangePlayerTrigger.class, player, new Object[]{getOwner(), target})) {
-				throw new ProjectileException(ProjectileFailureReason.HANDLED_BY_PLUGIN);
+				player.resetRange();
+				return;
 			}
 		}
 
-		RangeUtils.checkOutOfAmmo(player, throwingID);
+		if (throwingID == -1) {
+			ActionSender.sendSound(player, "outofammo");
+			player.message(ProjectileFailureReason.OUT_OF_AMMO.getText());
+			player.resetRange();
+			return;
+		}
+
 		Item rangeType;
 		int slot;
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {

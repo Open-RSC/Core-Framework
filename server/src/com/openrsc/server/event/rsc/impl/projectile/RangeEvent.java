@@ -5,8 +5,10 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Equipment;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
@@ -22,14 +24,15 @@ import com.openrsc.server.util.rsc.Formulae;
 public class RangeEvent extends GameTickEvent {
 	private boolean deliveredFirstProjectile;
 
+	private final Player player;
 	private final Mob target;
 	private final ServerConfiguration config;
 	private final PluginHandler pluginHandler;
 
-	public RangeEvent(World world, Player owner, Mob victim) {
+	public RangeEvent(final World world, final Player owner, final Mob target) {
 		super(world, owner, 1, "Range Event", DuplicationStrategy.ONE_PER_MOB);
-		this.target = victim;
-		this.deliveredFirstProjectile = false;
+		this.player = owner;
+		this.target = target;
 		this.config = world.getServer().getConfig();
 		this.pluginHandler = world.getServer().getPluginHandler();
 	}
@@ -48,164 +51,191 @@ public class RangeEvent extends GameTickEvent {
 
 	public void run() {
 		if (!running) return;
-		final Player player = getPlayerOwner();
 
-		try {
-			int bowId = player.getRangeEquip();
-			if (!player.loggedIn()
-					|| player.inCombat()
-					|| (target.isPlayer() && !((Player) target).loggedIn())
-					|| target.getSkills().getLevel(Skill.HITS.id()) <= 0
-					|| !player.checkAttack(target, true)
-					|| !player.withinRange(target)
-					|| bowId < 0
-			) {
-				player.resetRange();
+		final int weaponId = player.getRangeEquip();
+
+		if (weaponId == -1 ||
+			player.inCombat() ||
+			!player.loggedIn() ||
+			target.getSkills().getLevel(Skill.HITS.id()) <= 0 ||
+			(target.isPlayer() && (!((Player) target).loggedIn() || !player.checkAttack(target, true))) ||
+			!player.withinRange(target)) {
+			player.resetRange();
+			return;
+		}
+
+		if (!player.canProjectileReach(target)) {
+			player.walkToEntity(target.getX(), target.getY());
+
+			if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null) {
+				reset(ProjectileFailureReason.CANT_GET_CLOSE_ENOUGH);
 				return;
 			}
-			if (!player.canProjectileReach(target)) {
-				player.walkToEntity(target.getX(), target.getY());
-				if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null) {
-					throw new ProjectileException(ProjectileFailureReason.CANT_GET_CLOSE_ENOUGH);
-				}
-			}
-
-			setDelayTicks(3);
-
-			player.resetPath();
-			if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), target.getLocation())) {
-				throw new ProjectileException(ProjectileFailureReason.CANT_GET_CLEAR_SHOT);
-			}
-
-			if (config.WANT_RANGED_FACE_PLAYER) {
-				// 	Player faces victim when ranging
-				player.face(target.getX(), target.getY());
-			} else {
-				// Authentic player always faced NW
-				player.face(player.getX() + 1, player.getY() - 1);
-			}
-
-			if (target.isPlayer()) {
-				Player playerTarget = (Player) target;
-				if (playerTarget.getPrayers().isPrayerActivated(Prayers.PROTECT_FROM_MISSILES)) {
-					player.message("Player has a protection from missiles prayer active!");
-					return;
-				}
-			}
-
-			if (target.isNpc()) {
-				if (pluginHandler.handlePlugin(PlayerRangeNpcTrigger.class, getPlayerOwner(), new Object[]{getOwner(), target})) {
-					throw new ProjectileException(ProjectileFailureReason.HANDLED_BY_PLUGIN);
-				}
-			} else if (target.isPlayer()) {
-				if (pluginHandler.handlePlugin(PlayerRangePlayerTrigger.class, player, new Object[]{getOwner(), target})) {
-					throw new ProjectileException(ProjectileFailureReason.HANDLED_BY_PLUGIN);
-				}
-			}
-			boolean isCrossbow = RangeUtils.isCrossbow(bowId);
-			int ammoId;
-			final Equipment ownerEquipment = player.getCarriedItems().getEquipment();
-			if (config.WANT_EQUIPMENT_TAB) {
-				ammoId = takeAmmoFromEquipment(player, bowId, isCrossbow, ownerEquipment);
-			} else {
-				ammoId = takeAmmoFromInventory(player, isCrossbow, ownerEquipment);
-			}
-			RangeUtils.checkOutOfAmmo(player, ammoId);
-
-			int damage = RangeUtils.doRangedDamage(player, bowId, ammoId, target);
-
-			if (target.isPlayer() && damage > 0) {
-				player.incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
-			}
-			RangeUtils.applyDragonFireBreath(player, target, deliveredFirstProjectile);
-			RangeUtils.handleArrowLossAndDrop(getWorld(), player, target, damage, ammoId);
-			RangeUtils.applyPoison(player, target, ammoId);
-
-			ActionSender.sendSound(player, "shoot");
-			getOwner().setKillType(KillType.RANGED);
-			getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), player, target, damage, 2));
-			deliveredFirstProjectile = true;
-		} catch(ProjectileException error) {
-			ProjectileFailureReason reason = error.getReason();
-			final String message = reason.getText();
-			if(message != null) {
-				player.message(message);
-			}
-			player.resetRange();
 		}
+
+		player.resetPath();
+
+		if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), target.getLocation())) {
+			reset(ProjectileFailureReason.CANT_GET_CLEAR_SHOT);
+			return;
+		}
+
+		if (config.WANT_RANGED_FACE_PLAYER) {
+			player.face(target.getX(), target.getY()); // Player faces victim when ranging
+		} else {
+			player.face(player.getX() + 1, player.getY() - 1); // Authentic player always faced NW
+		}
+
+		if (target.isPlayer()) {
+			final Player playerTarget = (Player) target;
+
+			if (playerTarget.getPrayers().isPrayerActivated(Prayers.PROTECT_FROM_MISSILES)) {
+				player.message("Player has a protection from missiles prayer active!");
+				// TODO Should range event be reset here?
+				return;
+			}
+
+			if (pluginHandler.handlePlugin(PlayerRangePlayerTrigger.class, player, new Object[]{getOwner(), target})) {
+				reset(ProjectileFailureReason.HANDLED_BY_PLUGIN);
+				return;
+			}
+		} else {
+			if (pluginHandler.handlePlugin(PlayerRangeNpcTrigger.class, getPlayerOwner(), new Object[]{getOwner(), target})) {
+				reset(ProjectileFailureReason.HANDLED_BY_PLUGIN);
+				return;
+			}
+		}
+
+		final int ammoId;
+		final boolean isCrossbow = RangeUtils.isCrossbow(weaponId);
+
+		if (config.WANT_EQUIPMENT_TAB) {
+			ammoId = takeAmmoFromEquipment(weaponId, isCrossbow);
+		} else {
+			ammoId = takeAmmoFromInventory(weaponId, isCrossbow);
+		}
+
+		if (ammoId == -1) {
+			ActionSender.sendSound(player, "outofammo");
+			reset(ProjectileFailureReason.OUT_OF_AMMO);
+			return;
+		}
+
+		final int damage = RangeUtils.doRangedDamage(player, weaponId, ammoId, target);
+
+		if (target.isPlayer() && damage > 0) {
+			player.incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
+		}
+
+		RangeUtils.applyDragonFireBreath(player, target, deliveredFirstProjectile);
+		RangeUtils.handleArrowLossAndDrop(getWorld(), player, target, damage, ammoId);
+		RangeUtils.applyPoison(player, target, ammoId);
+
+		getOwner().setKillType(KillType.RANGED);
+		deliveredFirstProjectile = true;
+		setDelayTicks(3);
+
+		ActionSender.sendSound(player, "shoot");
+		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), player, target, damage, 2));
 	}
 
-	private int takeAmmoFromInventory(Player player, boolean isCrossbow, Equipment ownerEquipment) {
-		int ammoId = -1;
-		for (int aID : (isCrossbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
-			int slot = player.getCarriedItems().getInventory().getLastIndexById(aID);
-			if (slot < 0) {
+	private int takeAmmoFromInventory(final int weaponId, final boolean isCrossbow) {
+		final int[] ammoIds = isCrossbow ? Formulae.boltIDs : Formulae.arrowIDs;
+
+		final Inventory inventory = player.getCarriedItems().getInventory();
+
+		for (final int ammoId : ammoIds) {
+			final int slot = inventory.getLastIndexById(ammoId);
+
+			if (slot == -1) {
 				continue;
-			}
-			Item arrow = player.getCarriedItems().getInventory().get(slot);
-			if (arrow == null) { // This shouldn't happen
-				continue;
-			}
-			ammoId = aID;
-			if (!config.MEMBER_WORLD) {
-				if (ammoId != ItemId.BRONZE_ARROWS.id() && ammoId != ItemId.CROSSBOW_BOLTS.id()) {
-					if (ownerEquipment.hasEquipped(ItemId.DRAGON_BOLTS.id())) {
-						throw new ProjectileException(ProjectileFailureReason.NOT_ENOUGH_AMMO_BOLTS);
-					}
-					if (ownerEquipment.hasEquipped(ItemId.POISON_DRAGON_BOLTS.id())) {
-						throw new ProjectileException(ProjectileFailureReason.NOT_ENOUGH_AMMO_BOLTS);
-					} else {
-						throw new ProjectileException(ProjectileFailureReason.NOT_ENOUGH_AMMO_ARROWS);
-					}
-				}
 			}
 
-			if (!isCrossbow && ammoId > 0) {
-				if (!RangeUtils.canFire(player.getRangeEquip(), ammoId)) {
-					if (ownerEquipment.hasEquipped(ItemId.DRAGON_BOLTS.id())) {
-						throw new ProjectileException(ProjectileFailureReason.BOLTS_TOO_POWERFUL);
-					} else {
-						throw new ProjectileException(ProjectileFailureReason.ARROWS_TOO_POWERFUL);
-					}
-				}
+			final Item ammo = inventory.get(slot);
+
+			if (ammo == null) { // This shouldn't happen
+				continue;
 			}
-			Item toRemove = new Item(arrow.getCatalogId(), 1, false, arrow.getItemId());
-			player.getCarriedItems().remove(toRemove);
-			break;
+
+			if (!config.MEMBER_WORLD && ammoId != ItemId.BRONZE_ARROWS.id() && ammoId != ItemId.CROSSBOW_BOLTS.id()) {
+				reset(ProjectileFailureReason.NOT_ENOUGH_AMMO_ARROWS);
+				return -1;
+			}
+
+			if (!isCrossbow && !RangeUtils.canFire(weaponId, ammoId)) {
+				reset(ProjectileFailureReason.ARROWS_TOO_POWERFUL);
+				return -1;
+			}
+
+			final Item item = new Item(ammo.getCatalogId(), 1, false, ammo.getItemId());
+			player.getCarriedItems().remove(item);
+			return ammoId;
 		}
+
+		return -1;
+	}
+
+	private int takeAmmoFromEquipment(final int weaponId, final boolean isCrossbow) {
+		final Equipment equipment = player.getCarriedItems().getEquipment();
+
+		final Item ammo = equipment.getAmmoItem();
+
+		if (ammo == null) {
+			reset(ProjectileFailureReason.NO_AMMO_EQUIPPED);
+			return -1;
+		}
+
+		final ItemDefinition itemDef = ammo.getDef(getWorld());
+
+		if (itemDef == null) {
+			reset(ProjectileFailureReason.NO_AMMO_EQUIPPED);
+			return -1;
+		}
+
+		if (isCrossbow && itemDef.getWearableId() == RangeUtils.WEARABLE_ARROWS_ID) {
+			reset(ProjectileFailureReason.CANT_FIRE_ARROWS_WITH_CROSSBOW);
+			return -1;
+		}
+
+		if (!isCrossbow && itemDef.getWearableId() == RangeUtils.WEARABLE_BOLTS_ID) {
+			reset(ProjectileFailureReason.CANT_FIRE_BOLTS_WITH_BOW);
+			return -1;
+		}
+
+		final int ammoId = ammo.getCatalogId();
+
+		if (!RangeUtils.canFire(weaponId, ammoId)) {
+			if (ammoId == ItemId.DRAGON_BOLTS.id() || ammoId == ItemId.POISON_DRAGON_BOLTS.id()) {
+				reset(ProjectileFailureReason.BOLTS_TOO_POWERFUL);
+				return -1;
+			}
+
+			if (ammoId == ItemId.DRAGON_CROSSBOW.id()) {
+				reset(ProjectileFailureReason.BOLTS_WONT_FIT_DRAGON_CROSSBOW);
+				return -1;
+			}
+
+			if (ammoId == ItemId.DRAGON_LONGBOW.id()) {
+				reset(ProjectileFailureReason.ARROWS_WONT_FIT_DRAGON_LONGBOW);
+				return -1;
+			}
+
+			reset(ProjectileFailureReason.ARROWS_TOO_POWERFUL);
+			return -1;
+		}
+
+		equipment.remove(ammo, 1);
+		ActionSender.updateEquipmentSlot(player, 12);
 		return ammoId;
 	}
 
-	private int takeAmmoFromEquipment(Player player, int bowId, boolean isCrossbow, Equipment ownerEquipment) {
-		int arrowId;
-		Item ammo = ownerEquipment.getAmmoItem();
-		if (ammo == null || ammo.getDef(getWorld()) == null) {
-			throw new ProjectileException(ProjectileFailureReason.NO_AMMO_EQUIPPED);
-		}
-		if (isCrossbow && ammo.getDef(getWorld()).getWearableId() == RangeUtils.WEARABLE_ARROWS_ID) {
-			throw new ProjectileException(ProjectileFailureReason.CANT_FIRE_ARROWS_WITH_CROSSBOW);
-		} else if (!isCrossbow && ammo.getDef(getWorld()).getWearableId() == RangeUtils.WEARABLE_BOLTS_ID) {
-			throw new ProjectileException(ProjectileFailureReason.CANT_FIRE_BOLTS_WITH_BOW);
-		}
-		arrowId = ammo.getCatalogId();
-		if (!RangeUtils.canFire(bowId, arrowId)) {
-			if (ownerEquipment.hasEquipped(ItemId.DRAGON_BOLTS.id())) {
-				throw new ProjectileException(ProjectileFailureReason.BOLTS_TOO_POWERFUL);
-			}
-			if (ownerEquipment.hasEquipped(ItemId.POISON_DRAGON_BOLTS.id())) {
-				throw new ProjectileException(ProjectileFailureReason.BOLTS_TOO_POWERFUL);
-			}
-			if (ownerEquipment.hasEquipped(ItemId.DRAGON_CROSSBOW.id())) {
-				throw new ProjectileException(ProjectileFailureReason.BOLTS_WONT_FIT_DRAGON_CROSSBOW);
-			}
-			if (ownerEquipment.hasEquipped(ItemId.DRAGON_LONGBOW.id())) {
-				throw new ProjectileException(ProjectileFailureReason.ARROWS_WONT_FIT_DRAGON_LONGBOW);
-			} else {
-				throw new ProjectileException(ProjectileFailureReason.ARROWS_TOO_POWERFUL);
+	private void reset(final ProjectileFailureReason reason) {
+		if (reason != null) {
+			final String message = reason.getText();
+			if (message != null) {
+				player.message(message);
 			}
 		}
-		ownerEquipment.remove(ammo, 1);
-		ActionSender.updateEquipmentSlot(player, 12);
-		return arrowId;
+		player.resetRange();
 	}
 }

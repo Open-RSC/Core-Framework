@@ -35,6 +35,8 @@ public abstract class Mob extends Entity {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
+	protected static final int DEFAULT_PROJECTILE_RADIUS = 5;
+
 	private long lastMovementTime = 0;
 	private final Skills skills = new Skills(this.getWorld(), this);
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
@@ -1121,14 +1123,13 @@ public abstract class Mob extends Entity {
 		player.getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, player, new Object[]{player, this});
 	}
 
-	public boolean canProjectileReach(Mob mob) {
-		int radius = 5;
+	public boolean canProjectileReach(final Mob mob) {
 		if (this.isNpc()) {
-			return this.withinRange(mob, radius);
+			return this.withinRange(mob, DEFAULT_PROJECTILE_RADIUS);
 		}
 
 		Player player = (Player) this;
-		radius = player.getProjectileRadius(radius);
+		int radius = player.getProjectileRadius();
 		return player.withinRange(mob, radius);
 	}
 

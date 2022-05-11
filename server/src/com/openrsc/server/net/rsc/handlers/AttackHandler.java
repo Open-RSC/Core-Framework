@@ -57,8 +57,8 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 				}
 				return;
 			}
-		}
-		if (affectedMob.isNpc()) {
+		} else {
+			assert affectedMob instanceof Npc;
 			Npc n = (Npc) affectedMob;
 			if (n.isRespawning()) return;
 			if (n.getX() == 0 && n.getY() == 0)
@@ -82,7 +82,6 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			player.setFollowing(affectedMob, 0, false);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1, false, ActionType.ATTACK) {
 				public void executeInternal() {
-					getPlayer().resetPath();
 					getPlayer().resetFollowing();
 
 					if (mob.inCombat() && getPlayer().getRangeEquip() < 0 && getPlayer().getThrowingEquip() < 0) {
@@ -94,14 +93,9 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 						return;
 					}
 					if (mob.isNpc()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(AttackNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), (Npc) mob}, this)) {
-							return;
-						}
-					}
-					if (mob.isPlayer()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(AttackPlayerTrigger.class, getPlayer(), new Object[]{getPlayer(), mob}, this)) {
-							return;
-						}
+						getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(AttackNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), (Npc) mob}, this);
+					} else {
+						getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(AttackPlayerTrigger.class, getPlayer(), new Object[]{getPlayer(), mob}, this);
 					}
 				}
 			});
@@ -111,8 +105,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			}
 			final Mob target = affectedMob;
 			player.resetPath();
-			player.resetAll();
-			int radius = player.getProjectileRadius(5); // default radius of 5
+			int radius = player.getProjectileRadius();
 			player.setFollowing(affectedMob, 0, false);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false, ActionType.ATTACK) {
 				public void executeInternal() {
