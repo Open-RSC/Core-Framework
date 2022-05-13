@@ -201,4 +201,15 @@ public class Duel implements ContainerListener {
 			duelOpponent.save();
 		}
 	}
+
+	/**
+	 * Check if the player is dueling.
+	 *
+	 * Returns true if both the player and opponent have confirmed the duel.
+	 *
+	 * @return true if player is dueling, otherwise returns false.
+	 */
+	public boolean isDueling() {
+		return duelActive && duelConfirmAccepted && duelRecipient != null && duelRecipient.getDuel().isDuelConfirmAccepted();
+	}
 }

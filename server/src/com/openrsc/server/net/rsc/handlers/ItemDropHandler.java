@@ -17,6 +17,11 @@ public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct
 			player.resetPath();
 			return;
 		}
+
+		if (player.getDuel().isDueling()) {
+			return;
+		}
+
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

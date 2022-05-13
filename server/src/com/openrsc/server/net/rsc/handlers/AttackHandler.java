@@ -28,6 +28,10 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			return;
 		}
 
+		if (player.getDuel().isDueling()) {
+			return;
+		}
+
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

@@ -17,6 +17,11 @@ public final class PlayerFollowRequest implements PayloadProcessor<TargetMobStru
 		if (player.inCombat()) {
 			return;
 		}
+
+		if (player.getDuel().isDueling()) {
+			return;
+		}
+
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

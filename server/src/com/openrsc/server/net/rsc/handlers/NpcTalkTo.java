@@ -21,6 +21,10 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 			return;
 		}
 
+		if (player.getDuel().isDueling()) {
+			return;
+		}
+
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

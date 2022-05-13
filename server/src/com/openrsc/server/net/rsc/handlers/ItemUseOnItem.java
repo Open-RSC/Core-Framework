@@ -15,6 +15,11 @@ public final class ItemUseOnItem implements PayloadProcessor<ItemOnItemStruct, O
 			player.message("You can't do that whilst you are fighting");
 			return;
 		}
+
+		if (player.getDuel().isDueling()) {
+			return;
+		}
+
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

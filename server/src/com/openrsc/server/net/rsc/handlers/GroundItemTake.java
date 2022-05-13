@@ -19,6 +19,11 @@ public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, Op
 			player.message("You can't do that whilst you are fighting");
 			return;
 		}
+
+		if (player.getDuel().isDueling()) {
+			return;
+		}
+
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
