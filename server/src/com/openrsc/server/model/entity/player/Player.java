@@ -699,19 +699,22 @@ public final class Player extends Mob {
 	}
 
 	public void addCharge(final long timeLeft) {
-		if (chargeEvent == null) {
-			chargeEvent = new DelayedEvent(getWorld(), this, timeLeft, "Charge Spell Removal") {
-				// 6 minutes taken from RS2.
-				// the charge spell in RSC seem to be bugged, but 10 minutes most of the times.
-				// sometimes you are charged for 1 hour lol.
-				@Override
-				public void run() {
-					removeCharge();
-					getOwner().message("@red@Your magic charge fades");
-				}
-			};
-			getWorld().getServer().getGameEventHandler().add(chargeEvent);
+		if (chargeEvent != null) {
+			chargeEvent.resetCountdown();
+			return;
 		}
+
+		chargeEvent = new DelayedEvent(getWorld(), this, timeLeft, "Charge Spell Removal") {
+			// 6 minutes taken from RS2.
+			// the charge spell in RSC seem to be bugged, but 10 minutes most of the times.
+			// sometimes you are charged for 1 hour lol.
+			@Override
+			public void run() {
+				removeCharge();
+				getOwner().message("@red@Your magic charge fades");
+			}
+		};
+		getWorld().getServer().getGameEventHandler().add(chargeEvent);
 	}
 
 	public void close() {
