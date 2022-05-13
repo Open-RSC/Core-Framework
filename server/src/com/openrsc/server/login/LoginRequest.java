@@ -3,7 +3,10 @@ package com.openrsc.server.login;
 import com.openrsc.server.Server;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.PlayerLoginData;
+import com.openrsc.server.event.rsc.DuplicationStrategy;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -139,6 +142,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				@Override
 				public void action() {
 					loadingComplete(loadedPlayer);
+					loadedPlayer.desertHeatInit();
 				}
 			});
 

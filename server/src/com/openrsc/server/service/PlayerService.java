@@ -421,6 +421,8 @@ public class PlayerService implements IPlayerService {
     @Override
     public void savePlayerCache(final Player player) throws GameDatabaseException {
         player.getCache().store("last_spell_cast", player.getCastTimer());
+		if (player.desertHeatCounter > 0)
+			player.getCache().store("desert_heat_counter", player.desertHeatCounter);
         database.querySavePlayerCache(player);
     }
 
