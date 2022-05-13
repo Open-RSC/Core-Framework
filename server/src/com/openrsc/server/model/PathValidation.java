@@ -548,6 +548,9 @@ public class PathValidation {
 	}
 
 	public static boolean isPlayerBlocking(Player localPlayer, int x, int y) {
+		// Set player's target tile so we can check this later when they finish walking.
+		localPlayer.setLastTileClicked(new Point(x, y));
+		
 		switch(localPlayer.getConfig().PLAYER_BLOCKING) {
 			case 0: // Players can walk through players & directly on top of them
 				return false;
@@ -555,8 +558,9 @@ public class PathValidation {
 			case 2: // Players act like solid objects. Possibly authentic to very early RSC, based on reports that players could stand in doors to block off buildings.
 				Region region = localPlayer.getWorld().getRegionManager().getRegion(Point.location(x, y));
 				Player player = region.getPlayer(x, y, localPlayer, false);
+
 				if (player != null) {
-					localPlayer.face(player); // TODO: this needs to be somewhere else for it to work when distance to player > 1. :-/
+					localPlayer.face(player);
 					return true;
 				}
 			default:

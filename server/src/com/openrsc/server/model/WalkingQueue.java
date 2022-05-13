@@ -4,6 +4,7 @@ import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.region.Region;
 
 /**
  * A WalkingQueue stores steps the client needs to walk and allows
@@ -12,16 +13,42 @@ import com.openrsc.server.model.entity.player.Player;
  * is called. This should be called once per server cycle.
  */
 public class WalkingQueue {
-
-	//private static final boolean CHARACTER_FACING = true;
 	private boolean DEBUG = false;
-
 	private Mob mob;
 
 	public Path path;
+	public boolean playerWasWalking;
 
 	public WalkingQueue(Mob entity) {
 		this.mob = entity;
+	}
+
+   /**
+    * Handles logic to run when the player finishes walking. A player has finished walking if they 
+	* were walking and then their path becomes null or empty.
+    */ 
+	private void handlePlayerFinishedWalking() {
+		if (playerWasWalking) {
+			Player currentPlayer = mob.isPlayer() ? (Player)mob : null;
+
+			// Only track finished walking status of players.
+			if (currentPlayer != null) {
+				Point targetTile = currentPlayer.getLastTileClicked();
+
+				if (targetTile != null) {
+					Point targetTileLocation = Point.location(targetTile.getX(), targetTile.getY());
+					Region region = currentPlayer.getWorld().getRegionManager().getRegion(targetTileLocation);
+
+					// Target would be the other player currentPlayer clicked on.
+					Player target = region.getPlayer(targetTile.getX(), targetTile.getY(), currentPlayer, false);
+
+					// Face the other player. This will have no effect if player_blocking config is disabled.
+					if (target != null) currentPlayer.face(target);
+				}
+			}
+		}
+
+		playerWasWalking = false;
 	}
 
 	/**
@@ -29,11 +56,17 @@ public class WalkingQueue {
 	 */
 	public void processNextMovement() {
 		if (path == null) {
+			handlePlayerFinishedWalking();
 			return;
 		} else if (path.isEmpty()) {
+			handlePlayerFinishedWalking();
 			reset();
 			return;
 		}
+
+		// Player is walking if path is not null or empty.
+		playerWasWalking = true;
+
 		Point walkPoint = path.poll();
 
 		if (mob.getAttribute("blink", false)) {

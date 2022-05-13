@@ -138,6 +138,7 @@ public final class Player extends Mob {
 	public PrerenderedSleepword queuedSleepword = null;
 	public Player queuedSleepwordSender = null;
 	private int saveAttempts = 0;
+	private Point lastTileClicked = null;
 
 	private final UUID uuid;
 
@@ -567,6 +568,14 @@ public final class Player extends Mob {
 
 	public void setLastCommand(final long newTime) {
 		this.lastCommand = newTime;
+	}
+
+	public Point getLastTileClicked() {
+		return this.lastTileClicked;
+	}
+
+	public void setLastTileClicked(Point lastTileClicked) {
+		this.lastTileClicked = lastTileClicked;
 	}
 
 	public void setNextRegionLoad() {
