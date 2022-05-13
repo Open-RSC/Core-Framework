@@ -22,11 +22,10 @@ import com.openrsc.server.plugins.triggers.PlayerRangePlayerTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 public class RangeEvent extends GameTickEvent {
-	private boolean deliveredFirstProjectile;
-
 	private final Player player;
 	private final ServerConfiguration config;
 	private final PluginHandler pluginHandler;
+	private boolean deliveredFirstProjectile;
 	private Mob target;
 
 	public RangeEvent(final World world, final Player owner, final long tickDelay, final Mob target) {
@@ -73,16 +72,20 @@ public class RangeEvent extends GameTickEvent {
 			return;
 		}
 
-		if (!player.canProjectileReach(target)) {
-			player.walkToEntity(target.getX(), target.getY());
+		final int radius = RangeUtils.isCrossbow(weaponId) || weaponId == ItemId.SHORTBOW.id() ?
+			4 : 5;
 
+		if (!player.withinRange(target, radius)) {
 			if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null) {
 				reset(ProjectileFailureReason.CANT_GET_CLOSE_ENOUGH);
 				return;
 			}
+
+			player.walkToEntity(target.getX(), target.getY());
+			return;
 		}
 
-		player.resetPath();
+		if (!player.finishedPath()) player.resetPath();
 
 		if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), target.getLocation())) {
 			reset(ProjectileFailureReason.CANT_GET_CLEAR_SHOT);
