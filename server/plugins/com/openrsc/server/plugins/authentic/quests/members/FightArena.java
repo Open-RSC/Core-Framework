@@ -589,8 +589,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			Npc servil = ifnearvisnpc(player, NpcId.JEREMY_SERVIL.id(), 5);
-			Npc guard = ifnearvisnpc(player, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 5);
-			if (servil != null && guard != null) {
+			if (servil != null) {
 				if (player.getCache().hasKey("guard_sleeping") && player.getCarriedItems().hasCatalogID(ItemId.KHAZARD_CELL_KEYS.id(), Optional.of(false))) {
 					say(player, servil, "Jeremy, look, I have the cell keys");
 					npcsay(player, servil, "Wow! Please help me");
@@ -615,10 +614,13 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					servil.remove();
 					player.getCache().store("freed_servil", true);
 					player.getCache().remove("guard_sleeping");
-					npcsay(player, guard, "What are you doing?",
-						"It's an imposter!");
-					delay(2);
-					guard.setChasing(player);
+					Npc guard = ifnearvisnpc(player, NpcId.GUARD_KHAZARD_BYPRISONER.id(), 5);
+					if (guard != null) {
+						npcsay(player, guard, "What are you doing?",
+							"It's an imposter!");
+						delay(2);
+						guard.setChasing(player);
+					}
 					return;
 				}
 				npcsay(player, servil, "I'm Jeremy Servil",
