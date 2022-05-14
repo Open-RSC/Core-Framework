@@ -228,7 +228,7 @@ public class PlayerAppearance {
 		}
 
 		int smallestIndex = 0;
-		for (int i = 1; i < distances.length; i++) {
+		for (int i = 1; i < distances.length && i <= limit; i++) {
 			if (distances[i] < distances[smallestIndex]) {
 				smallestIndex = i;
 			}
