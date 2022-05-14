@@ -40,6 +40,8 @@ public class RangeUtils {
             ItemId.DRAGON_LONGBOW.id()
     );
     private final static Set<Integer> CROSSBOWS = ImmutableSet.of(ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW.id(), ItemId.DRAGON_CROSSBOW.id());
+	private final static Set<Integer> SHORT_BOWS = ImmutableSet.of(ItemId.SHORTBOW.id(), ItemId.OAK_SHORTBOW.id(), ItemId.WILLOW_SHORTBOW.id(),
+		ItemId.MAPLE_SHORTBOW.id(), ItemId.YEW_SHORTBOW.id(), ItemId.MAGIC_SHORTBOW.id());
 
     private final static Set<Integer> BASIC_ARROWS = ImmutableSet.of(ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id());
     private final static Set<Integer> STEEL_ARROWS = ImmutableSet.of(ItemId.STEEL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id());
@@ -239,6 +241,10 @@ public class RangeUtils {
     public static boolean isCrossbow(int weaponId) {
         return CROSSBOWS.contains(weaponId);
     }
+
+	public static boolean isShortBow(final int weaponId) {
+		return SHORT_BOWS.contains(weaponId);
+	}
 
     public static boolean isBow(int weaponId) {
         return BOWS.contains(weaponId);

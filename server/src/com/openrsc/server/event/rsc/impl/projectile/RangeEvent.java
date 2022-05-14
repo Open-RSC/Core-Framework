@@ -72,7 +72,7 @@ public class RangeEvent extends GameTickEvent {
 			return;
 		}
 
-		final int radius = RangeUtils.isCrossbow(weaponId) || weaponId == ItemId.SHORTBOW.id() ?
+		final int radius = RangeUtils.isCrossbow(weaponId) || RangeUtils.isShortBow(weaponId) ?
 			4 : 5;
 
 		if (!player.withinRange(target, radius)) {

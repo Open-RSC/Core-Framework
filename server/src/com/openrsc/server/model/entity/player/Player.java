@@ -3598,8 +3598,8 @@ public final class Player extends Mob {
 
 	// Ensures crossbows and shortbows have a shorter radius of 4 instead of the default 5
 	public int getProjectileRadius() {
-		final int itemId = getRangeEquip();
-		final boolean shortRadius = RangeUtils.isCrossbow(itemId) || itemId == ItemId.SHORTBOW.id();
+		final int weaponId = getRangeEquip();
+		final boolean shortRadius = RangeUtils.isCrossbow(weaponId) || RangeUtils.isShortBow(weaponId);
 		return shortRadius ? DEFAULT_PROJECTILE_RADIUS - 1 : DEFAULT_PROJECTILE_RADIUS;
 	}
 
