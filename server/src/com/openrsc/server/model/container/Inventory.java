@@ -1,7 +1,6 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import com.openrsc.server.database.struct.PlayerInventory;
@@ -417,120 +416,132 @@ public class Inventory {
 		return true;
 	}
 
-	public void dropOnDeath(Mob opponent) {
-
+	public void dropOnDeath(final Mob mob) {
 		// deathItemsMap: Compiles a list of Value : Items
 		// Stacks receive a value of -1, as they are always removed.
-		TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
+		final TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
 
 		// A list of all the items a player has prior to death.
-		ArrayList<Item> deathItemsList = new ArrayList<>();
-		// A list of all items equipped prior to death.
-		ArrayList<Integer> oldEquippedList = new ArrayList<>();
+		final ArrayList<Item> deathItemsList = new ArrayList<>();
+
 		Integer key;
 		ArrayList<Item> value;
 		ItemDefinition def;
 
 		// Add equipment items and values to deathItemsMap (only if config is enabled).
 		if (player.getConfig().WANT_EQUIPMENT_TAB) {
+			final Equipment equipment = player.getCarriedItems().getEquipment();
+
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				Item equipped = player.getCarriedItems().getEquipment().get(i);
-				if (equipped != null) {
-					def = equipped.getDef(player.getWorld());
-					key = def.isStackable() || equipped.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
-					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
-					value.add(equipped);
-					deathItemsMap.put(key, value);
-				}
+				final Item item = equipment.get(i);
+
+				if (item == null) continue;
+
+				def = item.getDef(player.getWorld());
+				key = def.isStackable() || item.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
+				value = deathItemsMap.getOrDefault(key, new ArrayList<>());
+				value.add(item);
+				deathItemsMap.put(key, value);
 			}
 		}
 
 		// Add inventory items and values to deathItemsMap
-		for (Item invItem : getItems()) {
-			def = invItem.getDef(player.getWorld());
-			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
-			value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
-			value.add(invItem);
+		for (final Item item : getItems()) {
+			def = item.getDef(player.getWorld());
+			key = def.isStackable() || item.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
+			value = deathItemsMap.getOrDefault(key, new ArrayList<>());
+			value.add(item);
 			deathItemsMap.put(key, value);
 		}
 
-		deathItemsMap.values().forEach(elem -> deathItemsList.addAll(elem));
+		deathItemsMap.values().forEach(deathItemsList::addAll);
 		deathItemsMap.clear();
-		ListIterator<Item> iterator = deathItemsList.listIterator();
 
-		if (!player.isIronMan(IronmanMode.Ultimate.id())) {
-			if (!player.isSkulled()) {
-				for (int items = 1; items <= 3 && iterator.hasNext(); items++) {
-					if (iterator.next().getDef(player.getWorld()).isStackable()) {
-						iterator.previous();
-						break;
-					}
+		final ListIterator<Item> iterator = deathItemsList.listIterator();
+
+		// Save three most expensive items by ItemDef default price
+		if (!player.isSkulled() && !player.isIronMan(IronmanMode.Ultimate.id())) {
+			for (int items = 1; items <= 3 && iterator.hasNext(); items++) {
+				if (iterator.next().getDef(player.getWorld()).isStackable()) {
+					iterator.previous();
+					break;
 				}
 			}
 		}
+
+		// Save a fourth item if protect item prayer is enabled
 		if (player.getPrayers().isPrayerActivated(Prayers.PROTECT_ITEMS) && iterator.hasNext()) {
 			if (iterator.next().getDef(player.getWorld()).isStackable()) {
 				iterator.previous();
 			}
 		}
-		DeathLog log = new DeathLog(player, opponent, false);
-		for (; iterator.hasNext(); ) {
+
+		final DeathLog deathLog = new DeathLog(player, mob, false);
+
+		// Remove items from inventory and drop them to either: the player, the mob, or the world
+		while (iterator.hasNext()) {
 			Item item = iterator.next();
 			item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
-			player.getCarriedItems().remove(item, false);
 
-			log.addDroppedItem(item);
-			Player dropOwner;
-			GroundItem groundItem;
+			// Try to remove the item from the player's inventory
+			if (player.getCarriedItems().remove(item, false) == -1) continue;
+
+			// Log the item removed
+			deathLog.addDroppedItem(item);
+
+			// Drop to the player if item is untradeable
 			if (item.getDef(player.getWorld()).isUntradable()) {
-				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player, item.getNoted());
-			} else {
-				dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
-				if (opponent != null) dropOwner = opponent.isPlayer() && ((Player)opponent).getIronMan() != IronmanMode.None.id() ? player : dropOwner;
-				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
-				groundItem.setAttribute("playerKill", true);
-				if (opponent != null && opponent.isPlayer()) {
-					// show loot to killer instantly
-					groundItem.setAttribute("killerHash", ((Player)opponent).getUsernameHash());
-				}
+				final GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(),
+					player.getY(), item.getAmount(), player, item.getNoted());
+				player.getWorld().registerItem(groundItem, player.getConfig().GAME_TICK * 1000);
+				continue;
 			}
+
+			// Drop to the world if mob is null or npc
+			if (mob == null || mob.isNpc()) {
+				final GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(),
+					player.getY(), item.getAmount(), null, item.getNoted());
+				player.getWorld().registerItem(groundItem, player.getConfig().GAME_TICK * 1000);
+				continue;
+			}
+
+			final Player playerMob = (Player) mob;
+
+			// Drop to the mob if they aren't an ironman, otherwise to the player
+			final Player dropOwner = playerMob.getIronMan() == IronmanMode.None.id() ? playerMob : player;
+
+			final GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(),
+				player.getY(), item.getAmount(), dropOwner, item.getNoted());
+
+			groundItem.setAttribute("playerKill", true);
+			groundItem.setAttribute("killerHash", playerMob.getUsernameHash());
+
 			player.getWorld().registerItem(groundItem, player.getConfig().GAME_TICK * 1000);
-
 		}
 
-		//check for fam crest gloves in bank, if not present there give player
-		int fam_gloves;
-		Gauntlets enchantment;
-		try {
-			enchantment = Gauntlets.getById(player.getCache().getInt("famcrest_gauntlets"));
-		} catch (Exception e) {
-			enchantment = Gauntlets.STEEL;
-		}
-		switch (enchantment) {
-			case GOLDSMITHING:
-				fam_gloves = ItemId.GAUNTLETS_OF_GOLDSMITHING.id();
-				break;
-			case COOKING:
-				fam_gloves = ItemId.GAUNTLETS_OF_COOKING.id();
-				break;
-			case CHAOS:
-				fam_gloves = ItemId.GAUNTLETS_OF_CHAOS.id();
-				break;
-			default:
-				fam_gloves = ItemId.STEEL_GAUNTLETS.id();
-				break;
+		deathLog.build();
+		player.getWorld().getServer().getGameLogger().addQuery(deathLog);
+
+		// Give player Family Crest gauntlets if they completed the quest but don't have them in bank/inventory.
+		// This authentically duplicates them if they were just dropped on death
+		if (player.getQuestStage(Quests.FAMILY_CREST) == -1) {
+			if (player.getCache().hasKey("famcrest_gauntlets")) {
+				final int itemId = Gauntlets.getById(player.getCache().getInt("famcrest_gauntlets")).catalogId();
+
+				if (!player.getBank().hasItemId(itemId) && !player.getCarriedItems().hasCatalogID(itemId)) {
+					add(new Item(itemId, 1), false);
+				}
+			} else {
+				// This shouldn't be possible unless there is a bug
+				player.setSuspiciousPlayer(true, "Missing famcrest_gauntlets cache key but quest is completed.");
+			}
 		}
 
-		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
-			&& !player.getCarriedItems().hasCatalogID(fam_gloves)) {
-			add(new Item(fam_gloves, 1), false);
-		}
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
 		ActionSender.sendUpdatedPlayer(player);
-		log.build();
-		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
+
 	//----------------------------------------------------------------
     //Methods that search the list------------------------------------
 	public Item get(int index) {
