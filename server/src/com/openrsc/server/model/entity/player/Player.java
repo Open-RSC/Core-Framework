@@ -2078,54 +2078,66 @@ public final class Player extends Mob {
 
 	@Override
 	public void killedBy(final Mob mob) {
-		if (!loggedIn) {
-			return;
-		}
-		if (this.killed) return;
-		this.killed = true;
+		if (!isLoggedIn()) return;
+		if (killed) return;
+		killed = true;
 
 		ActionSender.sendSound(this, "death");
 		ActionSender.sendDied(this);
 
-		ProjectileEvent projectileEvent = getAttribute("projectile");
-		if (projectileEvent != null)
-			projectileEvent.setCanceled(true);
-		getSettings().getAttackedBy().clear();
+		// Seems to never be set
+		final ProjectileEvent projectileEvent = getAttribute("projectile");
+		if (projectileEvent != null) projectileEvent.setCanceled(true);
 
+		getSettings().getAttackedBy().clear();
 		getCache().store("last_death", System.currentTimeMillis());
 
-		Player player = mob instanceof Player ? (Player) mob : null;
-		boolean stake = getDuel().isDuelActive() || (player != null && player.getDuel().isDuelActive());
+		final Player player = mob.isPlayer() ? (Player) mob : null;
 
 		if (player != null) {
-			player.message("You have defeated " + getUsername() + "!");
+			player.message(String.format("You have defeated %s!", getUsername()));
 			ActionSender.sendSound(player, "victory");
+
 			if (player.getLocation().inWilderness()) {
-				int id = -1;
-				if (player.getKillType() == KillType.COMBAT) {
-					id = player.getEquippedWeaponID();
-					if (id == -1 || id == 59 || id == 60)
-						id = 16;
-				} else if (player.getKillType() == KillType.MAGIC) {
-					id = -1;
-				} else if (player.getKillType() == KillType.RANGED) {
-					id = -2;
+				final int killTypeId;
+
+				switch (player.getKillType()) {
+					case COMBAT:
+						final int weaponId = player.getEquippedWeaponID();
+
+						if (weaponId == ItemId.NOTHING.id() || weaponId == ItemId.PHOENIX_CROSSBOW.id() ||
+							weaponId == ItemId.CROSSBOW.id()) {
+							killTypeId = 16;
+						} else {
+							killTypeId = weaponId;
+						}
+						break;
+					case RANGED:
+						killTypeId = -2;
+						break;
+					case MAGIC:
+					default:
+						killTypeId = -1;
+						break;
 				}
-				getWorld().sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash(), id);
+
+				getWorld().sendKilledUpdate(getUsernameHash(), player.getUsernameHash(), killTypeId);
 				player.incKills();
-				this.incDeaths();
-				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has PKed " + this.getUsername()));
-			}/* else if (stake) { // disables duel spam in activity feed
-				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
-					"has just won a stake against <strong>" + this.getUsername() + "</strong>"));
-			}*/
+				incDeaths();
+				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, String.format("has PKed %s", getUsername())));
+			}
+
+			getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		}
-		if (stake) {
+
+		if (getDuel().isDuelActive() || (player != null && player.getDuel().isDuelActive())) {
 			getDuel().dropOnDeath();
-		} else {
-			if (!hasElevatedPriveledges())
-				getCarriedItems().getInventory().dropOnDeath(mob);
+			 // disables duel spam in activity feed
+			 // if (player != null) getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, String.format("has just won a stake against <strong>%s</strong>", username)));
+		} else if (!hasElevatedPriveledges()) {
+			getCarriedItems().getInventory().dropOnDeath(mob);
 		}
+
 		if (isIronMan(IronmanMode.Hardcore.id())) {
 			updateHCIronman(IronmanMode.Ironman.id());
 			ActionSender.sendIronManMode(this);
@@ -2133,38 +2145,37 @@ public final class Player extends Mob {
 		}
 
 		resetCombatEvent();
-		this.setLastOpponent(null);
-		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
-		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
-			setLocation(Point.location(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y), true);
-		} else {
+		setLastOpponent(null);
+
+		if (getCache().hasKey("death_location_x") || getCache().hasKey("death_location_y")) {
+			// Seems to never be set
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
+		} else {
+			setLocation(Point.location(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y), true);
 		}
+
 		ActionSender.sendWorldInfo(this);
 		ActionSender.sendEquipmentStats(this);
 		ActionSender.sendInventory(this);
 
 		resetPath();
-		if (getWorld().getServer().getConfig().WANT_PARTIES) {
-			if (this.getParty() != null) {
-				this.getParty().sendParty();
-			}
-		}
-		this.cure();
+
+		final boolean party = getWorld().getServer().getConfig().WANT_PARTIES && getParty() != null;
+		if (party) getParty().sendParty();
+
+		cure();
+
 		// OG RSC did not reset active prayers after death
 		// prayers.resetPrayers();
 		getSkills().normalize();
-		if (getWorld().getServer().getConfig().WANT_PARTIES) {
-			if (getParty() != null) {
-				this.getParty().sendParty();
-			}
-		}
+
+		if (party) getParty().sendParty();
 
 		getUpdateFlags().reset();
 		removeSkull();
 
 		getWorld().getServer().getGameEventHandler().add(
-			new DelayedEvent(getWorld(), this, getConfig().GAME_TICK * 5, "Reset Killed") {
+			new DelayedEvent(getWorld(), this, getConfig().GAME_TICK * 5L, "Reset Killed") {
 				@Override
 				public void run() {
 					getOwner().killed = false;
