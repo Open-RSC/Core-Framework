@@ -108,7 +108,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			final Mob target = affectedMob;
 			player.resetPath();
 			int radius = player.getProjectileRadius();
-			player.setFollowing(affectedMob, 0, false);
+			player.setFollowing(affectedMob, radius, false);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false, ActionType.ATTACK) {
 				public void executeInternal() {
 					if (getPlayer().isBusy() || getPlayer().inCombat()) return;
