@@ -408,42 +408,34 @@ public abstract class Mob extends Entity {
 	}
 
 	public void setFollowing(final Mob mob, final int radius, final boolean canInterrupt) {
-		if (isFollowing()) {
-			resetFollowing();
-		}
+		if (isFollowing()) resetFollowing();
 		following = mob;
 		followEvent = new GameTickEvent(getWorld(), this, 0, "Mob Following Mob", DuplicationStrategy.ONE_PER_MOB) {
 			public void run() {
-				setDelayTicks(1);
-				Mob mob = getOwner().getFollowing();
+				if (getDelayTicks() == 0) setDelayTicks(1);
+
+				if (mob.isRemoved()) {
+					resetFollowing();
+					return;
+				}
 
 				// Handles the following cases:
 				//   1. Mob is out of view range,
 				//   2. Mob is removed,
 				//   3. Player is busy, but not in a duel (duel should not stop following opponent), and
 				//   4. Mob is not following something.
-				boolean duelActive = (getOwner().isPlayer() && ((Player) getOwner()).getDuel().isDuelActive());
-				boolean shouldInterrupt = canInterrupt && (!duelActive && getOwner().isBusy());
-				if (!getOwner().withinRange(mob) || mob.isRemoved() || shouldInterrupt) {
+				boolean duelActive = (isPlayer() && ((Player) Mob.this).getDuel().isDuelActive());
+				boolean shouldInterrupt = canInterrupt && (!duelActive && isBusy());
+				if (!withinRange(mob) || shouldInterrupt) {
 					if (!mob.isFollowing()) {
 						resetFollowing();
 					}
-				}
-
-				// We have not finished the current follow path, but we are in range!
-				else if (!getOwner().finishedPath() && getOwner().withinRange(mob, radius)) {
-					getOwner().resetPath();
-				}
-
-				// We have finished the current follow path, but we need to
-				//  keep walking to get to the target.
-				else if (getOwner().finishedPath() && !getOwner().withinRange(mob, radius)) {
-					getOwner().walkToEntity(mob.getX(), mob.getY());
-				}
-
-				// No point in following nothing.
-				else if (mob.isRemoved()) {
-					resetFollowing();
+				} else if (finishedPath()) {
+					// We have finished the current follow path, but we need to keep walking to get to the target.
+					if (!withinRange(mob, radius)) walkToEntity(mob.getX(), mob.getY());
+				} else {
+					// We have not finished the current follow path, but we are in range!
+					if (withinRange(mob, radius)) resetPath();
 				}
 			}
 		};
