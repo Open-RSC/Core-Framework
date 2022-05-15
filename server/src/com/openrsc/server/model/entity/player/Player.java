@@ -2126,9 +2126,10 @@ public final class Player extends Mob {
 				incDeaths();
 				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, String.format("has PKed %s", getUsername())));
 			}
-
-			getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		}
+
+		// Drops to world if player is null
+		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 
 		if (getDuel().isDuelActive() || (player != null && player.getDuel().isDuelActive())) {
 			getDuel().dropOnDeath();
