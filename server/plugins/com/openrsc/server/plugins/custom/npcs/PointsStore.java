@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.npcs;
+package com.openrsc.server.plugins.custom.npcs;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -18,8 +18,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class PointsStore extends AbstractShop {
 
-	private final Item[] openPkShopItems = new Item[] { //TODO: OpenPK general shop needs more items.
-		new Item(ItemId.IRON_2_HANDED_SWORD.id(), 10), new Item(ItemId.LOBSTER.id(), 1000), new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 100)
+	private final Item[] openPkShopItems = new Item[] {
+		new Item(ItemId.IRON_2_HANDED_SWORD.id(), 100), new Item(ItemId.KLANKS_GAUNTLETS.id(), 100), new Item(ItemId.LOBSTER.id(), 10000), new Item(ItemId.SHARK.id(), 10000), new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 100), new Item(ItemId.FULL_SUPER_ATTACK_POTION.id(), 10000), new Item(ItemId.FULL_SUPER_STRENGTH_POTION.id(), 10000), new Item(ItemId.FULL_SUPER_DEFENSE_POTION.id(), 10000), new Item(ItemId.FULL_RESTORE_PRAYER_POTION.id(), 10000), new Item(ItemId.FULL_RANGING_POTION.id(), 10000),
 	};
 
 	private Shop[] shops = null;
@@ -45,8 +45,8 @@ public final class PointsStore extends AbstractShop {
 	public Shop[] getShops(World world) {
 		if (shops == null) {
 			shops = new Shop[1];
-			final Shop genShop = new Shop(true, 12400, 130, 40, 3, Arrays.copyOfRange(openPkShopItems, 0, openPkShopItems.length));
-			shops[0] = new Shop(genShop, "General Store", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id(), NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id());
+			final Shop genShop = new Shop(false, 12400, 130, 40, 3, Arrays.copyOfRange(openPkShopItems, 0, openPkShopItems.length));
+			shops[0] = new Shop(genShop, "General Store", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id(), NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id(), NpcId.SHOPKEEPER_VARROCK.id(), NpcId.SHOP_ASSISTANT_VARROCK.id());
 
 		}
 		return shops;
@@ -89,7 +89,7 @@ public final class PointsStore extends AbstractShop {
 		if (storeOwner == null) return;
 		Shop shop = getShop(n, player);
 		if (player.getConfig().WANT_OPENPK_POINTS) {
-			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs  " + player.getConfig().OPENPK_POINTS_TO_GP_RATIO + " Points.");
+			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs " + player.getConfig().OPENPK_POINTS_TO_GP_RATIO + " Points.");
 			int option = multi(player, n, false,
 				"Yes please", "No thanks", "I would like to see your items for sale");
 			if (option == 0) {

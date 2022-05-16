@@ -169,6 +169,7 @@ public class ServerConfiguration {
 	public boolean WANT_BANK_PRESETS;
 	public boolean WANT_PARTIES;
 	public boolean WANT_OPENPK_POINTS;
+	public boolean WANT_OPENPK_PRESETS;
 	public int OPENPK_POINTS_TO_GP_RATIO;
 	public boolean WANT_PK_BOTS;
 	public int RESPAWN_LOCATION_X;
@@ -531,6 +532,7 @@ public class ServerConfiguration {
 		RESPAWN_LOCATION_X = tryReadInt("respawn_location_x").orElse(120);
 		RESPAWN_LOCATION_Y = tryReadInt("respawn_location_y").orElse(648);
 		CAN_FEATURE_MEMBS = tryReadBool("can_feature_membs").orElse(true);
+		WANT_OPENPK_PRESETS = tryReadBool("want_openpk_presets").orElse(false);
 
 		// Party settings
 		WANT_PARTIES = tryReadBool("want_parties").orElse(false);

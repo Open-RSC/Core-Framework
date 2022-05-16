@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.npcs.varrock;
+package com.openrsc.server.plugins.custom.npcs;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -12,15 +12,15 @@ import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class LowesArchery extends AbstractShop {
+public final class LowesArcheryOpenPk extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 3000, 100, 55, 1, new Item(ItemId.BRONZE_ARROWS.id(),
-		200), new Item(ItemId.CROSSBOW_BOLTS.id(), 150), new Item(ItemId.SHORTBOW.id(), 4), new Item(
-		ItemId.LONGBOW.id(), 2), new Item(ItemId.CROSSBOW.id(), 2));
+	private final Shop shop = new Shop(false, 3000, 100, 55, 1, new Item(ItemId.IRON_ARROWS.id(),
+		2000), new Item(ItemId.STEEL_ARROWS.id(), 1500), new Item(ItemId.SHORTBOW.id(), 100), new Item(
+		ItemId.LONGBOW.id(), 100), new Item(ItemId.WILLOW_LONGBOW.id(), 100), new Item(ItemId.WILLOW_SHORTBOW.id(), 100), new Item(ItemId.MAGIC_LONGBOW.id(), 100), new Item(ItemId.MAGIC_SHORTBOW.id(), 100));
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
-		return !player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.LOWE.id();
+		return player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.LOWE.id();
 	}
 
 	@Override

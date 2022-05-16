@@ -43,6 +43,8 @@ public final class PointInterface {
 	}
 
 	public void onRender(GraphicsController graphics) {
+		if (!Config.S_WANT_OPENPK_PRESETS)
+			height = 249;
 		reposition();
 
 		drawExperienceConfig();
@@ -53,6 +55,7 @@ public final class PointInterface {
 	}
 
 	private void drawExperienceConfig() {
+
 		reposition();
 
 		panelColour = 0x989898;
@@ -202,77 +205,79 @@ public final class PointInterface {
 				setVisible(false);
 			}
 		});
-		this.drawCloseButton(x + 265, y + 252, 82, 24, "Save Preset", 3, new ButtonHandler() {
-			@Override
-			void handle() {
-				mc.showItemModX(InputXPrompt.savePreset, InputXAction.SAVEPRESET_X, true);
-			}
-		});
-		this.drawCloseButton(x + 5, y + 252, 45, 24, "1", 3, new ButtonHandler() {
-			@Override
-			void handle() {
-				try {
-					mc.packetHandler.getClientStream().newPacket(199);
-					mc.packetHandler.getClientStream().bufferBits.putByte(13);
-					mc.packetHandler.getClientStream().bufferBits.putByte(14);
-					mc.packetHandler.getClientStream().finishPacket();
-				} catch (NumberFormatException var13) {
-					System.out.println("load preset x number format exception: " + var13);
+		if (Config.S_WANT_OPENPK_PRESETS) {
+			this.drawCloseButton(x + 265, y + 252, 82, 24, "Save Preset", 3, new ButtonHandler() {
+				@Override
+				void handle() {
+					mc.showItemModX(InputXPrompt.savePreset, InputXAction.SAVEPRESET_X, true);
 				}
-			}
-		});
-		this.drawCloseButton(x + 55, y + 252, 45, 24, "2", 3, new ButtonHandler() {
-			@Override
-			void handle() {
-				try {
-					mc.packetHandler.getClientStream().newPacket(199);
-					mc.packetHandler.getClientStream().bufferBits.putByte(13);
-					mc.packetHandler.getClientStream().bufferBits.putByte(15);
-					mc.packetHandler.getClientStream().finishPacket();
-				} catch (NumberFormatException var13) {
-					System.out.println("load preset x number format exception: " + var13);
+			});
+			this.drawCloseButton(x + 5, y + 252, 45, 24, "1", 3, new ButtonHandler() {
+				@Override
+				void handle() {
+					try {
+						mc.packetHandler.getClientStream().newPacket(199);
+						mc.packetHandler.getClientStream().bufferBits.putByte(13);
+						mc.packetHandler.getClientStream().bufferBits.putByte(14);
+						mc.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("load preset x number format exception: " + var13);
+					}
 				}
-			}
-		});
-		this.drawCloseButton(x + 105, y + 252, 45, 24, "3", 3, new ButtonHandler() {
-			@Override
-			void handle() {
-				try {
-					mc.packetHandler.getClientStream().newPacket(199);
-					mc.packetHandler.getClientStream().bufferBits.putByte(13);
-					mc.packetHandler.getClientStream().bufferBits.putByte(16);
-					mc.packetHandler.getClientStream().finishPacket();
-				} catch (NumberFormatException var13) {
-					System.out.println("load preset x number format exception: " + var13);
+			});
+			this.drawCloseButton(x + 55, y + 252, 45, 24, "2", 3, new ButtonHandler() {
+				@Override
+				void handle() {
+					try {
+						mc.packetHandler.getClientStream().newPacket(199);
+						mc.packetHandler.getClientStream().bufferBits.putByte(13);
+						mc.packetHandler.getClientStream().bufferBits.putByte(15);
+						mc.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("load preset x number format exception: " + var13);
+					}
 				}
-			}
-		});
-		this.drawCloseButton(x + 155, y + 252, 45, 24, "4", 3, new ButtonHandler() {
-			@Override
-			void handle() {
-				try {
-					mc.packetHandler.getClientStream().newPacket(199);
-					mc.packetHandler.getClientStream().bufferBits.putByte(13);
-					mc.packetHandler.getClientStream().bufferBits.putByte(17);
-					mc.packetHandler.getClientStream().finishPacket();
-				} catch (NumberFormatException var13) {
-					System.out.println("load preset x number format exception: " + var13);
+			});
+			this.drawCloseButton(x + 105, y + 252, 45, 24, "3", 3, new ButtonHandler() {
+				@Override
+				void handle() {
+					try {
+						mc.packetHandler.getClientStream().newPacket(199);
+						mc.packetHandler.getClientStream().bufferBits.putByte(13);
+						mc.packetHandler.getClientStream().bufferBits.putByte(16);
+						mc.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("load preset x number format exception: " + var13);
+					}
 				}
-			}
-		});
-		this.drawCloseButton(x + 205, y + 252, 45, 24, "5", 3, new ButtonHandler() {
-			@Override
-			void handle() {
-				try {
-					mc.packetHandler.getClientStream().newPacket(199);
-					mc.packetHandler.getClientStream().bufferBits.putByte(13);
-					mc.packetHandler.getClientStream().bufferBits.putByte(18);
-					mc.packetHandler.getClientStream().finishPacket();
-				} catch (NumberFormatException var13) {
-					System.out.println("load preset x number format exception: " + var13);
+			});
+			this.drawCloseButton(x + 155, y + 252, 45, 24, "4", 3, new ButtonHandler() {
+				@Override
+				void handle() {
+					try {
+						mc.packetHandler.getClientStream().newPacket(199);
+						mc.packetHandler.getClientStream().bufferBits.putByte(13);
+						mc.packetHandler.getClientStream().bufferBits.putByte(17);
+						mc.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("load preset x number format exception: " + var13);
+					}
 				}
-			}
-		});
+			});
+			this.drawCloseButton(x + 205, y + 252, 45, 24, "5", 3, new ButtonHandler() {
+				@Override
+				void handle() {
+					try {
+						mc.packetHandler.getClientStream().newPacket(199);
+						mc.packetHandler.getClientStream().bufferBits.putByte(13);
+						mc.packetHandler.getClientStream().bufferBits.putByte(18);
+						mc.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("load preset x number format exception: " + var13);
+					}
+				}
+			});
+		}
 
 		experienceConfig.clearList(experienceConfigScroll);
 		int nextLevelExpD = mc.getExperienceArray()[DEFENSE];

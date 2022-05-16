@@ -21,7 +21,7 @@ public final class HorvikTheArmourer extends AbstractShop {
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
-		return n.getID() == NpcId.HORVIK_THE_ARMOURER.id();
+		return !player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.HORVIK_THE_ARMOURER.id();
 	}
 
 	@Override

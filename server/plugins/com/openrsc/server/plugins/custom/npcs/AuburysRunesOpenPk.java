@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.npcs.varrock;
+package com.openrsc.server.plugins.custom.npcs;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -17,15 +17,15 @@ import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class AuburysRunes extends AbstractShop {
+public final class AuburysRunesOpenPk extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.FIRE_RUNE.id(),
-		50), new Item(ItemId.WATER_RUNE.id(), 50), new Item(ItemId.AIR_RUNE.id(), 50), new Item(ItemId.EARTH_RUNE.id(),
-		50), new Item(ItemId.MIND_RUNE.id(), 50), new Item(ItemId.BODY_RUNE.id(), 50));
+		500), new Item(ItemId.WATER_RUNE.id(), 500), new Item(ItemId.AIR_RUNE.id(), 500), new Item(ItemId.EARTH_RUNE.id(),
+		500), new Item(ItemId.MIND_RUNE.id(), 500), new Item(ItemId.BODY_RUNE.id(), 500), new Item(ItemId.ZAMORAK_CAPE.id(), 100), new Item(ItemId.SARADOMIN_CAPE.id(), 100), new Item(ItemId.GUTHIX_CAPE.id(), 100), new Item(ItemId.STAFF_OF_ZAMORAK.id(), 100), new Item(ItemId.STAFF_OF_GUTHIX.id(), 100), new Item(ItemId.STAFF_OF_SARADOMIN.id(), 100));
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
-		return !player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.AUBURY.id();
+		return player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.AUBURY.id();
 	}
 
 	@Override

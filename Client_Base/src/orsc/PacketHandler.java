@@ -941,7 +941,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio;
+		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio, wantOpenPkPresets;
 
 		String logoSpriteID;
 
@@ -1027,6 +1027,7 @@ public class PacketHandler {
 			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
 			wantOpenPkPoints = this.getClientStream().getUnsignedByte(); // 80
 			openPkPointsToGpRatio = this.getClientStream().getUnsignedByte(); // 81
+			wantOpenPkPresets = this.getClientStream().getUnsignedByte(); // 82
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1109,6 +1110,7 @@ public class PacketHandler {
 			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
 			wantOpenPkPoints = packetsIncoming.getUnsignedByte(); // 80
 			openPkPointsToGpRatio = packetsIncoming.getUnsignedByte(); // 81
+			wantOpenPkPresets = packetsIncoming.getUnsignedByte(); // 82
 		}
 
 		if (Config.DEBUG) {
@@ -1193,7 +1195,8 @@ public class PacketHandler {
 					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 78
 					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
 					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
-					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio // 81
+					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio + // 81
+					"\nS_WANT_OPENPK_PRESETS " + wantOpenPkPresets // 82
 			);
 		}
 
@@ -1282,6 +1285,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 79
 		props.setProperty("S_WANT_OPENPK_POINTS", wantOpenPkPoints == 1 ? "true" : "false"); // 80
 		props.setProperty("S_OPENPK_POINTS_TO_GP_RATIO", String.valueOf(openPkPointsToGpRatio)); // 81
+		props.setProperty("S_WANT_OPENPK_PRESETS", wantOpenPkPresets == 1 ? "true" : "false"); // 82
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

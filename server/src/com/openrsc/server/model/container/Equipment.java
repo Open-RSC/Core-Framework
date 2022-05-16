@@ -570,21 +570,21 @@ public class Equipment {
 		}
 
 		// Dragon sword
-		else if (item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
+		else if (!player.getConfig().WANT_OPENPK_POINTS && item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return false;
 		}
 
 		// Dragon battle axe
-		else if (item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
+		else if (!player.getConfig().WANT_OPENPK_POINTS && item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return false;
 		}
 
 		// Dragon square shield
-		else if (item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+		else if (!player.getConfig().WANT_OPENPK_POINTS && item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return false;

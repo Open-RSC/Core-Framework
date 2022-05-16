@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.npcs.varrock;
+package com.openrsc.server.plugins.custom.npcs;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -12,19 +12,25 @@ import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class VarrockSwords extends AbstractShop {
+public final class VarrockSwordsOpenPk extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2,
-		new Item(ItemId.BRONZE_SHORT_SWORD.id(), 5), new Item(ItemId.IRON_SHORT_SWORD.id(), 4), new Item(ItemId.STEEL_SHORT_SWORD.id(), 4),
-		new Item(ItemId.BLACK_SHORT_SWORD.id(), 3), new Item(ItemId.MITHRIL_SHORT_SWORD.id(), 3), new Item(ItemId.ADAMANTITE_SHORT_SWORD.id(), 2),
-		new Item(ItemId.BRONZE_LONG_SWORD.id(), 4), new Item(ItemId.IRON_LONG_SWORD.id(), 3), new Item(ItemId.STEEL_LONG_SWORD.id(), 3),
-		new Item(ItemId.BLACK_LONG_SWORD.id(), 2), new Item(ItemId.MITHRIL_LONG_SWORD.id(), 2), new Item(ItemId.ADAMANTITE_LONG_SWORD.id(), 1),
-		new Item(ItemId.BRONZE_DAGGER.id(), 10), new Item(ItemId.IRON_DAGGER.id(), 6), new Item(ItemId.STEEL_DAGGER.id(), 5),
-		new Item(ItemId.BLACK_DAGGER.id(), 4), new Item(ItemId.MITHRIL_DAGGER.id(), 3), new Item(ItemId.ADAMANTITE_DAGGER.id(), 2));
+		new Item(ItemId.IRON_2_HANDED_SWORD.id(), 100),
+		new Item(ItemId.STEEL_2_HANDED_SWORD.id(), 100),
+		new Item(ItemId.BLACK_2_HANDED_SWORD.id(), 100),
+		new Item(ItemId.MITHRIL_2_HANDED_SWORD.id(), 100),
+		new Item(ItemId.ADAMANTITE_2_HANDED_SWORD.id(), 100),
+		new Item(ItemId.IRON_BATTLE_AXE.id(), 100),
+		new Item(ItemId.STEEL_BATTLE_AXE.id(), 100),
+		new Item(ItemId.BLACK_BATTLE_AXE.id(), 100),
+		new Item(ItemId.MITHRIL_BATTLE_AXE.id(), 100),
+		new Item(ItemId.ADAMANTITE_BATTLE_AXE.id(), 100),
+		new Item(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 100),
+		new Item(ItemId.DRAGONSTONE_AMULET.id(), 100));
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
-		return !player.getConfig().WANT_OPENPK_POINTS && (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id());
+		return player.getConfig().WANT_OPENPK_POINTS && (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id());
 	}
 
 	@Override
