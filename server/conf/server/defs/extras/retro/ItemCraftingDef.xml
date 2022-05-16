@@ -1,114 +1,265 @@
-<ItemCraftingDef-array>
+<map>
 	<!-- GOLD -->
-	<ItemCraftingDef><!-- Ring -->
-		<requiredLvl>8</requiredLvl>
-		<itemID>283</itemID>
-		<exp>60</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Necklace -->
-		<requiredLvl>10</requiredLvl>
-		<itemID>288</itemID>
-		<exp>80</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Amulet -->
-		<requiredLvl>13</requiredLvl>
-		<itemID>296</itemID>
-		<exp>120</exp>
-	</ItemCraftingDef>
+	<entry>		
+		<int>283</int>
+		<ItemCraftingDef><!-- Ring -->
+			<requiredLvl>8</requiredLvl>
+			<itemID>283</itemID>
+			<exp>60</exp>
+			<gemID>-1</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>288</int>
+		<ItemCraftingDef><!-- Necklace -->
+			<requiredLvl>10</requiredLvl>
+			<itemID>288</itemID>
+			<exp>80</exp>
+			<gemID>-1</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>296</int>
+		<ItemCraftingDef><!-- Amulet -->
+			<requiredLvl>13</requiredLvl>
+			<itemID>296</itemID>
+			<exp>120</exp>
+			<gemID>-1</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>1503</int>
+		<ItemCraftingDef><!-- Crown -->
+			<requiredLvl>9</requiredLvl>
+			<itemID>1503</itemID>
+			<exp>128</exp>
+			<gemID>-1</gemID>
+		</ItemCraftingDef>
+	</entry>
+	
 	<!-- SAPPHIRE -->
-	<ItemCraftingDef><!-- Ring -->
-		<requiredLvl>8</requiredLvl>
-		<itemID>284</itemID>
-		<exp>160</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Necklace -->
-		<requiredLvl>10</requiredLvl>
-		<itemID>289</itemID>
-		<exp>220</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Amulet -->
-		<requiredLvl>13</requiredLvl>
-		<itemID>297</itemID>
-		<exp>260</exp>
-	</ItemCraftingDef>
+	<entry>
+		<int>284</int>
+		<ItemCraftingDef><!-- Ring -->
+			<requiredLvl>8</requiredLvl>
+			<itemID>284</itemID>
+			<exp>160</exp>
+			<gemID>164</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>289</int>
+		<ItemCraftingDef><!-- Necklace -->
+			<requiredLvl>10</requiredLvl>
+			<itemID>289</itemID>
+			<exp>220</exp>
+			<gemID>164</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>297</int>
+		<ItemCraftingDef><!-- Amulet -->
+			<requiredLvl>13</requiredLvl>
+			<itemID>297</itemID>
+			<exp>260</exp>
+			<gemID>164</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>1504</int>
+		<ItemCraftingDef><!-- Crown -->
+			<requiredLvl>15</requiredLvl>
+			<itemID>1504</itemID>
+			<exp>270</exp>
+			<gemID>164</gemID>
+		</ItemCraftingDef>
+	</entry>		
 	<!-- EMERALD -->
-	<ItemCraftingDef><!-- Ring -->
-		<requiredLvl>18</requiredLvl>
-		<itemID>285</itemID>
-		<exp>220</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Necklace -->
-		<requiredLvl>24</requiredLvl>
-		<itemID>290</itemID>
-		<exp>240</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Amulet -->
-		<requiredLvl>30</requiredLvl>
-		<itemID>298</itemID>
-		<exp>280</exp>
-	</ItemCraftingDef>
+	<entry>
+		<int>285</int>
+		<ItemCraftingDef><!-- Ring -->
+			<requiredLvl>18</requiredLvl>
+			<itemID>285</itemID>
+			<exp>220</exp>
+			<gemID>163</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>290</int>
+		<ItemCraftingDef><!-- Necklace -->
+			<requiredLvl>24</requiredLvl>
+			<itemID>290</itemID>
+			<exp>240</exp>
+			<gemID>163</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>298</int>
+		<ItemCraftingDef><!-- Amulet -->
+			<requiredLvl>30</requiredLvl>
+			<itemID>298</itemID>
+			<exp>280</exp>
+			<gemID>163</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>1505</int>
+		<ItemCraftingDef><!-- Crown -->
+			<requiredLvl>36</requiredLvl>
+			<itemID>1505</itemID>
+			<exp>300</exp>
+			<gemID>163</gemID>
+		</ItemCraftingDef>
+	</entry>
+	
 	<!-- RUBY -->
-	<ItemCraftingDef><!-- Ring -->
-		<requiredLvl>30</requiredLvl>
-		<itemID>286</itemID>
-		<exp>280</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Necklace -->
-		<requiredLvl>40</requiredLvl>
-		<itemID>291</itemID>
-		<exp>300</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Amulet -->
-		<requiredLvl>50</requiredLvl>
-		<itemID>299</itemID>
-		<exp>340</exp>
-	</ItemCraftingDef>
+	<entry>
+		<int>286</int>
+		<ItemCraftingDef><!-- Ring -->
+			<requiredLvl>30</requiredLvl>
+			<itemID>286</itemID>
+			<exp>280</exp>
+			<gemID>162</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>291</int>
+		<ItemCraftingDef><!-- Necklace -->
+			<requiredLvl>40</requiredLvl>
+			<itemID>291</itemID>
+			<exp>300</exp>
+			<gemID>162</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>299</int>
+		<ItemCraftingDef><!-- Amulet -->
+			<requiredLvl>50</requiredLvl>
+			<itemID>299</itemID>
+			<exp>340</exp>
+			<gemID>162</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>1506</int>
+		<ItemCraftingDef><!-- Crown -->
+			<requiredLvl>60</requiredLvl>
+			<itemID>1506</itemID>
+			<exp>360</exp>
+			<gemID>162</gemID>
+		</ItemCraftingDef>
+	</entry>
 	<!-- DIAMOND -->
-	<ItemCraftingDef><!-- Ring -->
-		<requiredLvl>42</requiredLvl>
-		<itemID>287</itemID>
-		<exp>340</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Necklace -->
-		<requiredLvl>56</requiredLvl>
-		<itemID>292</itemID>
-		<exp>360</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Amulet -->
-		<requiredLvl>70</requiredLvl>
-		<itemID>300</itemID>
-		<exp>400</exp>
-	</ItemCraftingDef>
+	<entry>
+		<int>287</int>
+		<ItemCraftingDef><!-- Ring -->
+			<requiredLvl>42</requiredLvl>
+			<itemID>287</itemID>
+			<exp>340</exp>
+			<gemID>161</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>292</int>
+		<ItemCraftingDef><!-- Necklace -->
+			<requiredLvl>56</requiredLvl>
+			<itemID>292</itemID>
+			<exp>360</exp>
+			<gemID>161</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>300</int>
+		<ItemCraftingDef><!-- Amulet -->
+			<requiredLvl>70</requiredLvl>
+			<itemID>300</itemID>
+			<exp>400</exp>
+			<gemID>161</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>1507</int>
+		<ItemCraftingDef><!-- Crown -->
+			<requiredLvl>84</requiredLvl>
+			<itemID>1507</itemID>
+			<exp>480</exp>
+			<gemID>161</gemID>
+		</ItemCraftingDef>
+	</entry>	
 	<!-- DRAGONSTONE -->
-	<ItemCraftingDef><!-- Ring -->
-		<requiredLvl>54</requiredLvl>
-		<itemID>543</itemID>
-		<exp>400</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Necklace -->
-		<requiredLvl>72</requiredLvl>
-		<itemID>544</itemID>
-		<exp>420</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Amulet -->
-		<requiredLvl>80</requiredLvl>
-		<itemID>524</itemID>
-		<exp>600</exp>
-	</ItemCraftingDef>
+	<entry>
+		<int>543</int>
+		<ItemCraftingDef><!-- Ring -->
+			<requiredLvl>54</requiredLvl>
+			<itemID>543</itemID>
+			<exp>400</exp>
+			<gemID>523</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>544</int>
+		<ItemCraftingDef><!-- Necklace -->
+			<requiredLvl>72</requiredLvl>
+			<itemID>544</itemID>
+			<exp>420</exp>
+			<gemID>523</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>524</int>
+		<ItemCraftingDef><!-- Amulet -->
+			<requiredLvl>80</requiredLvl>
+			<itemID>524</itemID>
+			<exp>600</exp>
+			<gemID>523</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>1508</int>
+		<ItemCraftingDef><!-- Crown -->
+			<requiredLvl>93</requiredLvl>
+			<itemID>1508</itemID>
+			<exp>800</exp>
+			<gemID>523</gemID>
+		</ItemCraftingDef>
+	</entry>
 	<!-- OPAL -->
-	<ItemCraftingDef><!-- Ring -->
-		<requiredLvl>30</requiredLvl>
-		<itemID>1321</itemID>
-		<exp>80</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Necklace -->
-		<requiredLvl>-1</requiredLvl>
-		<itemID>-1</itemID>
-		<exp>100</exp>
-	</ItemCraftingDef>
-	<ItemCraftingDef><!-- Amulet -->
-		<requiredLvl>-1</requiredLvl>
-		<itemID>-1</itemID>
-		<exp>120</exp>
-	</ItemCraftingDef>
-</ItemCraftingDef-array>
+	<entry>
+		<int>1321</int>
+		<ItemCraftingDef><!-- Ring -->
+			<requiredLvl>30</requiredLvl>
+			<itemID>1321</itemID>
+			<exp>80</exp>
+			<gemID>894</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<!-- TODO: unimplemented jewelry
+	<entry>
+		<int>-1</int>
+		<ItemCraftingDef>--><!-- Necklace --><!--
+			<requiredLvl>-1</requiredLvl>
+			<itemID>-1</itemID>
+			<exp>100</exp>
+			<gemID>894</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>-1</int>
+		<ItemCraftingDef>--><!-- Amulet --><!--
+			<requiredLvl>-1</requiredLvl>
+			<itemID>-1</itemID>
+			<exp>120</exp>
+			<gemID>894</gemID>
+		</ItemCraftingDef>
+	</entry>
+	<entry>
+		<int>-1</int>
+		<ItemCraftingDef>--><!-- Crown --><!--
+			<requiredLvl>-1</requiredLvl>
+			<itemID>-1</itemID>
+			<exp>140</exp>
+			<gemID>894</gemID>
+		</ItemCraftingDef>
+	</entry>
+	-->
+</map>
