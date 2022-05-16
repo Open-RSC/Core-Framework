@@ -410,7 +410,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 								npcsay(player, n, "You lie to me morsel!");
 							}
 						} else if (menu == 2) {
-							if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL1.id(), Optional.empty())) {
+							if (!player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL1.id(), Optional.empty())) {
 								npcsay(player, n, "I suppose you want another ?",
 									"I suppose just this once I could give you my copy...");
 								give(player, ItemId.POWERING_CRYSTAL1.id(), 1);
