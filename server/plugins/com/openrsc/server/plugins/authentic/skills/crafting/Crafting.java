@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.authentic.skills.crafting;
 
+import com.google.common.collect.ImmutableMap;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
@@ -20,10 +21,7 @@ import com.openrsc.server.util.rsc.MathUtil;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -52,15 +50,28 @@ public class Crafting implements UseInvTrigger,
 		ItemId.UNFIRED_BOWL.id()
 	};
 
-	public final static int[] gold_moulds = {
-		ItemId.RING_MOULD.id(),
-		ItemId.NECKLACE_MOULD.id(),
-		ItemId.AMULET_MOULD.id(),
-		ItemId.CROWN_MOULD.id(),
-	};
+	private static final String ring = "ring";
+	private static final String Necklace = "Necklace";
+	private static final String amulet = "amulet";
+	private static final String Crown = "Crown";
+	private static final String Gold = "Gold";
+	private static final String Sapphire = "Sapphire";
+	private static final String Emerald = "Emerald";
+	private static final String Ruby = "Ruby";
+	private static final String Diamond = "Diamond";
+	private static final String Dragonstone = "Dragonstone";
+	private static final String Opal = "Opal";
+	private static final String dragonstone = "dragonstone";
+
+	private static final Map<String, Mould> goldMoulds = new ImmutableMap.Builder<String, Mould>()
+		.put(ring, new Mould("ring", ItemId.RING_MOULD.id(), "You need a ring mould to make a gold ring"))
+		.put(Necklace, new Mould("Necklace", ItemId.NECKLACE_MOULD.id(), "You need a necklace mould to make a gold necklace"))
+		.put(amulet, new Mould("amulet", ItemId.AMULET_MOULD.id(), "You need an amulet mould to make a gold amulet"))
+		.put(Crown,new Mould("Crown", ItemId.CROWN_MOULD.id(), "You need a crown mould to make a gold crown"))
+		.build();
 
 	public final static int[] silver_moulds = {
-		ItemId.HOLY_SYMBOL_MOULD.id(),
+		ItemId.HOLY_SYMBOL_MOULD.id(), // "You need a Holy symbol mould to make a holy symbol!"
 		ItemId.UNHOLY_SYMBOL_MOULD.id(),
 	};
 
@@ -90,55 +101,13 @@ public class Crafting implements UseInvTrigger,
 			doGlassBlowing(player, item2, item1);
 		} else if (item1ID == ItemId.NEEDLE.id()) {
 			if (item2ID == ItemId.TEDDY_HEAD.id() || item2ID == ItemId.TEDDY_BOTTOM.id()) {
-				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
-					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
-					&& inventory.hasInInventory(ItemId.THREAD.id())) {
-					if (getCurrentLevel(player, Skill.CRAFTING.id()) < 15) {
-						player.message("You need level 15 crafting to fix the teddy");
-						return;
-					}
-
-					int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
-					if (stage < 1) {
-						player.message("I'd better get these parts back to the kid");
-						return;
-					}
-					carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
-					carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
-					carriedItems.remove(new Item(ItemId.THREAD.id()));
-					carriedItems.getInventory().add(new Item(ItemId.TEDDY.id()));
-					player.message("You stitch together the teddy parts");
-
-				} else {
-					player.message("You need the two teddy halves and some thread");
-				}
+				makeTeddy(player, inventory, carriedItems);
 			} else {
 				makeLeather(player, item1, item2);
 			}
 		} else if (item2ID == ItemId.NEEDLE.id()) {
 			if (item1ID == ItemId.TEDDY_HEAD.id() || item1ID == ItemId.TEDDY_BOTTOM.id()) {
-				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
-					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
-					&& inventory.hasInInventory(ItemId.THREAD.id())) {
-					if (getCurrentLevel(player, Skill.CRAFTING.id()) < 15) {
-						player.message("You need level 15 crafting to fix the teddy");
-						return;
-					}
-
-					int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
-					if (stage < 1) {
-						player.message("I'd better get these parts back to the kid");
-						return;
-					}
-					carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
-					carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
-					carriedItems.remove(new Item(ItemId.THREAD.id()));
-					carriedItems.getInventory().add(new Item(ItemId.TEDDY.id()));
-					player.message("You stitch together the teddy parts");
-
-				} else {
-					player.message("You need the two teddy halves and some thread");
-				}
+				makeTeddy(player, inventory, carriedItems);
 			} else {
 				makeLeather(player, item2, item1);
 			}
@@ -170,11 +139,34 @@ public class Crafting implements UseInvTrigger,
 		}
 	}
 
+	private void makeTeddy(Player player, Inventory inventory, CarriedItems carriedItems) {
+		if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
+			&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
+			&& inventory.hasInInventory(ItemId.THREAD.id())) {
+			if (getCurrentLevel(player, Skill.CRAFTING.id()) < 15) {
+				player.message("You need level 15 crafting to fix the teddy");
+				return;
+			}
+
+			int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+			if (stage < 1) {
+				player.message("I'd better get these parts back to the kid");
+				return;
+			}
+			carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
+			carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
+			carriedItems.remove(new Item(ItemId.THREAD.id()));
+			carriedItems.getInventory().add(new Item(ItemId.TEDDY.id()));
+			player.message("You stitch together the teddy parts");
+
+		} else {
+			player.message("You need the two teddy halves and some thread");
+		}
+	}
+
 	@Override
 	public void onUseLoc(final Player player, GameObject obj, final Item item) {
-
 		if (!craftingChecks(obj, item, player)) return;
-
 		beginCrafting(item, player);
 	}
 
@@ -213,16 +205,13 @@ public class Crafting implements UseInvTrigger,
 		boolean furnace = obj.getID() == 118 || obj.getID() == 813;
 		boolean furnaceItem = DataConversions.inArray(itemsFurnance, item.getCatalogId());
 		boolean jewelryBar = item.getCatalogId() == ItemId.SILVER_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR.id();
-		boolean wantBetterJewelryCrafting = player.getConfig().WANT_BETTER_JEWELRY_CRAFTING && !player.getQolOptOut();
 		boolean potteryOven = obj.getID() == 178;
 		boolean potteryItem = DataConversions.inArray(itemsOven, item.getCatalogId());
 		boolean spinningWheel = obj.getID() == 179;
 		boolean softClay = item.getCatalogId() == ItemId.SOFT_CLAY.id();
 
 		// Checks to make sure you're using the right item with the right object.
-		// If WANT_BETTER_JEWELRY_CRAFTING is true, we'll disallow jewelry crafting so it
-		// can be handled in the custom class.
-		return (furnace && furnaceItem && !(jewelryBar && wantBetterJewelryCrafting))
+		return (furnace && furnaceItem)
 			|| (potteryOven && potteryItem)
 			|| (spinningWheel && softClay);
 	}
@@ -248,103 +237,27 @@ public class Crafting implements UseInvTrigger,
 		}
 	}
 
-	private void doGoldJewelry(final Item item, final Player player) {
-		AtomicReference<String> reply = new AtomicReference<String>();
-
-		// select type
-		String[] options;
-		if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect other than Cabbage server config
-			options = new String[]{
-				"ring",
-				"Necklace",
-				"amulet"
-			};
-		} else {
-			options = new String[]{
-				"ring",
-				"Necklace",
-				"amulet",
-				"Crown"
-			};
-		}
-
-        thinkbubble(new Item(ItemId.GOLD_BAR.id())); // bubble will be displayed after menu
-		int type = multi(player, options);
-		if (type < 0 || type > 2) {
-			return;
-		}
-		reply.set(options[type]);
-
-		boolean noGemInIt = false;
-        if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect other than Cabbage server config
-            player.playerServerMessage(MessageType.QUEST,
-                "Would you like to put a gem in the " + options[type].toLowerCase() + "?");
-            options = new String[]{
-                "Yes",
-                "No"
-            };
-            noGemInIt = multi(player, options) == 1;
-        }
-
-		// select gem
-		options = new String[]{
-			"Sapphire",
-			"Emerald",
-			"Ruby",
-			"Diamond"
-		};
-		if (config().MEMBER_WORLD) {
-			if (config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
-				options = new String[]{
-					"Gold",
-					"Sapphire",
-					"Emerald",
-					"Ruby",
-					"Diamond",
-					"Dragonstone",
-					"Opal"
-				};
-			} else {
-				options = new String[]{
-					"Sapphire",
-					"Emerald",
-					"Ruby",
-					"Diamond",
-					"dragonstone"
-				};
-
-				// Dragonstone should be capitalized only when making a Necklace
-				if (type == 1) {
-                    options[4] = "Dragonstone";
-                }
+	private void doGoldJewelry(final Item goldBarItem, final Player player) {
+		ItemCraftingDef def = null;
+		if (player.getConfig().WANT_BETTER_JEWELRY_CRAFTING) {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.CROWN_MOULD.id()) &&
+				!player.getCarriedItems().hasCatalogID(ItemId.AMULET_MOULD.id()) &&
+				!player.getCarriedItems().hasCatalogID(ItemId.NECKLACE_MOULD.id()) &&
+				!player.getCarriedItems().hasCatalogID(ItemId.RING_MOULD.id())) {
+				player.message("You need a mould to craft jewelry");
+				return;
 			}
-		}
-		if (player.getCarriedItems().getInventory().countId(gold_moulds[type], Optional.of(false)) < 1) {
-			player.playerServerMessage(MessageType.QUEST,"You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(gold_moulds[type]).getName() + " to make a " + reply.get());
-			return;
-		}
-        int gem = 0;
-		if (!noGemInIt) {
-            player.playerServerMessage(MessageType.QUEST, "what sort of gem do you want to put in the " + reply.get() + "?");
-            gem = multi(player, options);
-
-            if (gem < 0 || gem > options.length)
-                return;
-
-            reply.set(options[gem]);
-
-            if (options.length < 6) {
-                gem++; // translate past the "Gold" gem
-            }
-        } else {
-            reply.set("Gold");
-        }
-
-		ItemCraftingDef def = player.getWorld().getServer().getEntityHandler().getCraftingDef((gem * 3) + type);
-		if (def == null) {
-			// No definition found
-			player.message("Nothing interesting happens");
-			return;
+			def = getDesiredGoldCraftingAutoDetection(goldBarItem, player);
+			if (def == null) {
+				// No definition found
+				player.message("Nothing interesting happens");
+				return;
+			}
+		} else {
+			def = getDesiredGoldCraftingAuthentic(goldBarItem, player);
+			if (def == null) {
+				return;
+			}
 		}
 
 		if (def.itemID == ItemId.NOTHING.id()) {
@@ -354,26 +267,379 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		int repeat = 1;
-
-		// Perfect gold bars shouldn't be batched
 		if (config().BATCH_PROGRESSION) {
-			if (item.getCatalogId() != ItemId.GOLD_BAR_FAMILYCREST.id()) {
-				if (gem > 0) {
-					repeat = Math.min(
-						player.getCarriedItems().getInventory().countId(gems[gem], Optional.of(false)),
-						player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false))
-					);
+			if (goldBarItem.getCatalogId() != ItemId.GOLD_BAR_FAMILYCREST.id()) { // Perfect gold bars shouldn't be batched
+				int mostThatCouldBeMade = 0;
+				if (def.getReqGem() == ItemId.NOTHING.id()) {
+					mostThatCouldBeMade = player.getCarriedItems().getInventory().countId(goldBarItem.getCatalogId(), Optional.of(false));
 				} else {
-					repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+					mostThatCouldBeMade = Math.min(
+						player.getCarriedItems().getInventory().countId(def.getReqGem(), Optional.of(false)),
+						player.getCarriedItems().getInventory().countId(goldBarItem.getCatalogId(), Optional.of(false))
+					);
+				}
+				if (mostThatCouldBeMade > 1) {
+					int howMany = multi(player, "Make all", "Make 1", "Make 3", "Make 5", "Make 10", "Make all but one");
+					switch (howMany) {
+						case 1:
+							repeat = Math.min(1, mostThatCouldBeMade);
+							break;
+						case 2:
+							repeat = Math.min(3, mostThatCouldBeMade);
+							break;
+						case 3:
+							repeat = Math.min(5, mostThatCouldBeMade);
+							break;
+						case 4:
+							repeat = Math.min(10, mostThatCouldBeMade);
+							break;
+						case 5:
+							if (mostThatCouldBeMade > 1) {
+								repeat = mostThatCouldBeMade - 1;
+							} else {
+								player.playerServerMessage(MessageType.QUEST, "Okay, all done making zero of your item.");
+								return;
+							}
+							break;
+						case 0:
+							repeat = mostThatCouldBeMade;
+					}
+				} else {
+					repeat = Math.min(1, mostThatCouldBeMade);
 				}
 			}
 		}
 
 		startbatch(repeat);
-		batchGoldJewelry(player, item, def, gem, gems, type, reply);
+		batchGoldJewelry(player, goldBarItem, def);
 	}
 
-	private void batchGoldJewelry(Player player, Item item, ItemCraftingDef def, int gem, int[] gems, int type, AtomicReference<String> reply) {
+	/* determine all possible jewelry that can be crafted by a player
+	   and display it to the user in a list ordered such that the highest xp products
+	   are at the top
+	 */
+	private ItemCraftingDef getDesiredGoldCraftingAutoDetection(Item item, Player player) {
+		ArrayList<String> options = new ArrayList<>();
+		ArrayList<Integer> itemIds = new ArrayList<>();
+		if (player.getCarriedItems().hasCatalogID(ItemId.CROWN_MOULD.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.DRAGONSTONE.id())) {
+				options.add("Dragonstone crown");
+				itemIds.add(ItemId.DRAGONSTONE_CROWN.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id())) {
+				options.add("Diamond crown");
+				itemIds.add(ItemId.DIAMOND_CROWN.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.RUBY.id())) {
+				options.add("Ruby crown");
+				itemIds.add(ItemId.RUBY_CROWN.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.EMERALD.id())) {
+				options.add("Emerald crown");
+				itemIds.add(ItemId.EMERALD_CROWN.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.SAPPHIRE.id())) {
+				options.add("Sapphire crown");
+				itemIds.add(ItemId.SAPPHIRE_CROWN.id());
+			}
+			options.add("Gold crown");
+			itemIds.add(ItemId.GOLD_CROWN.id());
+		}
+		if (player.getCarriedItems().hasCatalogID(ItemId.AMULET_MOULD.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.DRAGONSTONE.id())) {
+				options.add("Dragonstone amulet");
+				itemIds.add(ItemId.UNSTRUNG_DRAGONSTONE_AMULET.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id())) {
+				options.add("Diamond amulet");
+				itemIds.add(ItemId.UNSTRUNG_DIAMOND_AMULET.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.RUBY.id())) {
+				options.add("Ruby amulet");
+				itemIds.add(ItemId.UNSTRUNG_RUBY_AMULET.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.EMERALD.id())) {
+				options.add("Emerald amulet");
+				itemIds.add(ItemId.UNSTRUNG_EMERALD_AMULET.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.SAPPHIRE.id())) {
+				options.add("Sapphire amulet");
+				itemIds.add(ItemId.UNSTRUNG_SAPPHIRE_AMULET.id());
+			}
+			options.add("Gold amulet");
+			itemIds.add(ItemId.UNSTRUNG_GOLD_AMULET.id());
+		}
+		if (player.getCarriedItems().hasCatalogID(ItemId.NECKLACE_MOULD.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.DRAGONSTONE.id())) {
+				options.add("Dragonstone necklace");
+				itemIds.add(ItemId.DRAGONSTONE_NECKLACE.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id())) {
+				options.add("Diamond necklace");
+				itemIds.add(ItemId.DIAMOND_NECKLACE.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.RUBY.id())) {
+				options.add("Ruby necklace");
+				itemIds.add(ItemId.RUBY_NECKLACE.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.EMERALD.id())) {
+				options.add("Emerald necklace");
+				itemIds.add(ItemId.EMERALD_NECKLACE.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.SAPPHIRE.id())) {
+				options.add("Sapphire necklace");
+				itemIds.add(ItemId.SAPPHIRE_NECKLACE.id());
+			}
+			options.add("Gold necklace");
+			itemIds.add(ItemId.GOLD_NECKLACE.id());
+		}
+		if (player.getCarriedItems().hasCatalogID(ItemId.RING_MOULD.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.DRAGONSTONE.id())) {
+				options.add("Dragonstone ring");
+				itemIds.add(ItemId.DRAGONSTONE_RING.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id())) {
+				options.add("Diamond ring");
+				itemIds.add(ItemId.DIAMOND_RING.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.RUBY.id())) {
+				options.add("Ruby ring");
+				itemIds.add(ItemId.RUBY_RING.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.EMERALD.id())) {
+				options.add("Emerald ring");
+				itemIds.add(ItemId.EMERALD_RING.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.SAPPHIRE.id())) {
+				options.add("Sapphire ring");
+				itemIds.add(ItemId.SAPPHIRE_RING.id());
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.OPAL.id())) {
+				options.add("Opal ring");
+				itemIds.add(ItemId.OPAL_RING.id());
+			}
+			options.add("Gold ring");
+			itemIds.add(ItemId.GOLD_RING.id());
+		}
+
+		thinkbubble(new Item(ItemId.GOLD_BAR.id())); // bubble will be displayed after menu
+		if (options.size() == 0) {
+			player.playerServerMessage(MessageType.QUEST, "You do not have any moulds...!");
+			return null;
+		}
+		String[] finalOptions = new String[Math.min(options.size(), player.getClientLimitations().maxDialogueOptions)];
+		System.arraycopy(options.toArray(), 0, finalOptions, 0, Math.min(finalOptions.length, options.size()));
+		int menu = multi(player, finalOptions);
+		if (menu < 0 || menu > finalOptions.length) {
+			return null;
+		}
+		return player.getWorld().getServer().getEntityHandler().getCraftingDef(itemIds.get(menu));
+	}
+
+	private ItemCraftingDef getDesiredGoldCraftingAuthentic(Item item, Player player) {
+		// select type
+		String[] options;
+		if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect other than Cabbage server config
+			options = new String[]{
+				ring,
+				Necklace,
+				amulet
+			};
+		} else {
+			options = new String[]{
+				ring,
+				Necklace,
+				amulet,
+				Crown
+			};
+		}
+
+		thinkbubble(new Item(ItemId.GOLD_BAR.id())); // bubble will be displayed after menu
+		int shapeSelection = multi(player, options);
+		if (shapeSelection < 0 || shapeSelection > options.length - 1) {
+			return null;
+		}
+		String jewelryShape = options[shapeSelection];
+
+		if (!hasRequiredMould(player, jewelryShape)) return null;
+
+		boolean noGemUsed = false;
+		if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect other than Cabbage server config
+			player.playerServerMessage(MessageType.QUEST,
+				"Would you like to put a gem in the " + jewelryShape.toLowerCase() + "?");
+			options = new String[]{
+				"Yes",
+				"No"
+			};
+			noGemUsed = multi(player, options) == 1;
+		}
+
+		// select gem
+		options = new String[]{
+			Sapphire,
+			Emerald,
+			Ruby,
+			Diamond
+		};
+		if (config().MEMBER_WORLD) {
+			if (config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
+				options = new String[]{
+					Gold,
+					Sapphire,
+					Emerald,
+					Ruby,
+					Diamond,
+					Dragonstone,
+					Opal
+				};
+			} else {
+				options = new String[]{
+					Sapphire,
+					Emerald,
+					Ruby,
+					Diamond,
+					dragonstone
+				};
+
+				// Dragonstone should be capitalized only when making a Necklace
+				if (jewelryShape.equals(Necklace)) {
+					options[4] = Dragonstone;
+				}
+			}
+		}
+
+		String gem = Gold;
+		if (!noGemUsed) {
+			player.playerServerMessage(MessageType.QUEST, "what sort of gem do you want to put in the " + jewelryShape + "?");
+			int gemMultiSelection = multi(player, options);
+			if (gemMultiSelection < 0 || gemMultiSelection > options.length)
+				return null;
+
+			gem = options[gemMultiSelection];
+		}
+
+		return getCraftingDefByShapeAndGem(player, jewelryShape, gem);
+	}
+
+	private ItemCraftingDef getCraftingDefByShapeAndGem(Player player, String shape, String gem) {
+		int craftingProductItemId = -1;
+		switch (shape) {
+			case ring: {
+				switch (gem) {
+					case Gold:
+						craftingProductItemId = ItemId.GOLD_RING.id();
+						break;
+					case Sapphire:
+						craftingProductItemId = ItemId.SAPPHIRE_RING.id();
+						break;
+					case Emerald:
+						craftingProductItemId = ItemId.EMERALD_RING.id();
+						break;
+					case Ruby:
+						craftingProductItemId = ItemId.RUBY_RING.id();
+						break;
+					case Diamond:
+						craftingProductItemId = ItemId.DIAMOND_RING.id();
+						break;
+					case Dragonstone:
+					case dragonstone:
+						craftingProductItemId = ItemId.DRAGONSTONE_RING.id();
+						break;
+					case Opal:
+						craftingProductItemId = ItemId.OPAL_RING.id();
+						break;
+				}
+				break;
+			}
+			case Necklace: {
+				switch (gem) {
+					case Gold:
+						craftingProductItemId = ItemId.GOLD_NECKLACE.id();
+						break;
+					case Sapphire:
+						craftingProductItemId = ItemId.SAPPHIRE_NECKLACE.id();
+						break;
+					case Emerald:
+						craftingProductItemId = ItemId.EMERALD_NECKLACE.id();
+						break;
+					case Ruby:
+						craftingProductItemId = ItemId.RUBY_NECKLACE.id();
+						break;
+					case Diamond:
+						craftingProductItemId = ItemId.DIAMOND_NECKLACE.id();
+						break;
+					case Dragonstone:
+					case dragonstone:
+						craftingProductItemId = ItemId.DRAGONSTONE_NECKLACE.id();
+						break;
+				}
+				break;
+			}
+			case amulet: {
+				switch (gem) {
+					case Gold:
+						craftingProductItemId = ItemId.UNSTRUNG_GOLD_AMULET.id();
+						break;
+					case Sapphire:
+						craftingProductItemId = ItemId.UNSTRUNG_SAPPHIRE_AMULET.id();
+						break;
+					case Emerald:
+						craftingProductItemId = ItemId.UNSTRUNG_EMERALD_AMULET.id();
+						break;
+					case Ruby:
+						craftingProductItemId = ItemId.UNSTRUNG_RUBY_AMULET.id();
+						break;
+					case Diamond:
+						craftingProductItemId = ItemId.UNSTRUNG_DIAMOND_AMULET.id();
+						break;
+					case Dragonstone:
+					case dragonstone:
+						craftingProductItemId = ItemId.UNSTRUNG_DRAGONSTONE_AMULET.id();
+						break;
+				}
+				break;
+			}
+			case Crown: {
+				switch (gem) {
+					case Gold:
+						craftingProductItemId = ItemId.GOLD_CROWN.id();
+						break;
+					case Sapphire:
+						craftingProductItemId = ItemId.SAPPHIRE_CROWN.id();
+						break;
+					case Emerald:
+						craftingProductItemId = ItemId.EMERALD_CROWN.id();
+						break;
+					case Ruby:
+						craftingProductItemId = ItemId.RUBY_CROWN.id();
+						break;
+					case Diamond:
+						craftingProductItemId = ItemId.DIAMOND_CROWN.id();
+						break;
+					case Dragonstone:
+					case dragonstone:
+						craftingProductItemId = ItemId.DRAGONSTONE_CROWN.id();
+						break;
+				}
+				break;
+			}
+			default:
+				return null;
+		}
+
+		return player.getWorld().getServer().getEntityHandler().getCraftingDef(craftingProductItemId);
+
+	}
+
+	private boolean hasRequiredMould(Player player, String jewelryShape) {
+		if (player.getCarriedItems().getInventory().countId(goldMoulds.get(jewelryShape).itemId, Optional.of(false)) < 1) {
+			player.playerServerMessage(MessageType.QUEST, goldMoulds.get(jewelryShape).failString);
+			return false;
+		}
+		return true;
+	}
+
+	private void batchGoldJewelry(Player player, Item item, ItemCraftingDef def) {
 		if (!canReceive(player, new Item(def.getItemID()))) {
 			player.message("Your client does not support the desired object");
 			return;
@@ -390,59 +656,37 @@ public class Crafting implements UseInvTrigger,
         );
         if (goldBar == null) {
             // this message is inauthentic; authentically can't happen b/c there's no batching
-            player.message("You don't have a " + reply.get());
+            player.message("You don't have a gold bar.");
             return;
         }
 
         Item result;
-        if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
+        if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && def.getItemID() == ItemId.RUBY_RING.id()) {
             result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-        } else if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
+        } else if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && def.getItemID() == ItemId.RUBY_NECKLACE.id()) {
             result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
         } else {
             result = new Item(def.getItemID(), 1);
         }
 
-        String resultString = "You make ";
-        String connector = "a ";
-        String itemName = result.getDef(player.getWorld()).getName().toLowerCase();
-        if (itemName.contains("emerald")) {
-            itemName = StringUtils.capitalize(itemName);
-            connector = "an ";
-        }
-
         // Get last gem in inventory.
 		Item gemItem;
-		if (gem != 0) {
+		if (def.getReqGem() != ItemId.NOTHING.id()) {
 			gemItem = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(gems[gem], Optional.of(false))
+				player.getCarriedItems().getInventory().getLastIndexById(def.getReqGem(), Optional.of(false))
 			);
 			if (gemItem == null) {
-			    String cut = "cut ";
-
-			    if (def.getItemID() == ItemId.UNSTRUNG_DRAGONSTONE_AMULET.id()) {
-			        cut = ""; // there may be others where this string is omitted, but no evidence currently known
-                }
-                String gemName = reply.get().toLowerCase();
-			    if (gemName.contains("emerald")) {
-			        gemName = "Emerald";
-                }
-
-                player.playerServerMessage(MessageType.QUEST, "You do not have a " + cut + gemName + " to make a " + itemName);
+				tellPlayerNoGem(player, def);
 				return;
 			}
 		}
 
-        if (itemName.contains("sapphire")) {
-            itemName = StringUtils.capitalize(itemName);
-        }
-
 		// Remove items
         delay();
-        player.playerServerMessage(MessageType.QUEST, resultString + connector + itemName);
+		tellPlayerSuccessfullyProducedCraftingProduct(player, def);
 		player.getCarriedItems().remove(goldBar);
-		if (gem > 0) {
-			player.getCarriedItems().remove(new Item(gems[gem]));
+		if (def.getReqGem() != ItemId.NOTHING.id()) {
+			player.getCarriedItems().remove(new Item(def.getReqGem()));
 		}
 		player.getCarriedItems().getInventory().add(result);
 		player.incExp(Skill.CRAFTING.id(), def.getExp(), true);
@@ -451,7 +695,162 @@ public class Crafting implements UseInvTrigger,
 		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
-			batchGoldJewelry(player, item, def, gem, gems, type, reply);
+			batchGoldJewelry(player, item, def);
+		}
+	}
+
+	private void tellPlayerSuccessfullyProducedCraftingProduct(Player player, ItemCraftingDef def) {
+		switch (ItemId.getById(def.getItemID())) {
+			case GOLD_RING:
+				player.playerServerMessage(MessageType.QUEST, "You make a gold ring");
+				return;
+			case GOLD_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You make a gold necklace");
+				return;
+			case UNSTRUNG_GOLD_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You make a gold amulet");
+				return;
+			case GOLD_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You make a gold crown");
+				return;
+			case SAPPHIRE_RING:
+				player.playerServerMessage(MessageType.QUEST, "You make a Sapphire ring");
+				return;
+			case SAPPHIRE_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You make a Sapphire necklace");
+				return;
+			case UNSTRUNG_SAPPHIRE_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You make a Sapphire amulet");
+				return;
+			case SAPPHIRE_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You make a Sapphire crown");
+				return;
+			case EMERALD_RING:
+				player.playerServerMessage(MessageType.QUEST, "You make an Emerald ring");
+				return;
+			case EMERALD_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You make an Emerald necklace");
+				return;
+			case UNSTRUNG_EMERALD_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You make an Emerald amulet");
+				return;
+			case EMERALD_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You make an Emerald crown");
+				return;
+			case RUBY_RING:
+				player.playerServerMessage(MessageType.QUEST, "You make a ruby ring");
+				return;
+			case RUBY_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You make a ruby necklace");
+				return;
+			case UNSTRUNG_RUBY_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You make a ruby amulet");
+				return;
+			case RUBY_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You make a ruby crown");
+				return;
+			case DIAMOND_RING:
+				player.playerServerMessage(MessageType.QUEST, "You make a diamond ring");
+				return;
+			case DIAMOND_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You make a diamond necklace");
+				return;
+			case UNSTRUNG_DIAMOND_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You make a diamond amulet");
+				return;
+			case DIAMOND_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You make a diamond crown");
+				return;
+			case DRAGONSTONE_RING:
+				player.playerServerMessage(MessageType.QUEST, "You make a dragonstone ring");
+				return;
+			case DRAGONSTONE_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You make a dragonstone necklace");
+				return;
+			case UNSTRUNG_DRAGONSTONE_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You make a dragonstone amulet");
+				return;
+			case DRAGONSTONE_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You make a dragonstone crown");
+				return;
+			case OPAL_RING:
+				player.playerServerMessage(MessageType.QUEST, "You make an opal ring");
+				return;
+			default:
+				player.playerServerMessage(MessageType.QUEST, "Programmer has not defined a message for successfully crafting this product.");
+				player.playerServerMessage(MessageType.QUEST, "Please report this.");
+		}
+	}
+
+	private void tellPlayerNoGem(Player player, ItemCraftingDef def) {
+		switch (ItemId.getById(def.getItemID())) {
+			case SAPPHIRE_RING:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut sapphire to make a sapphire ring");
+				return;
+			case SAPPHIRE_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut sapphire to make a sapphire necklace");
+				return;
+			case SAPPHIRE_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut sapphire to make a sapphire amulet");
+				return;
+			case SAPPHIRE_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut sapphire to make a sapphire crown");
+				return;
+			case EMERALD_RING:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut Emerald to make a Emerald ring");
+				return;
+			case EMERALD_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut Emerald to make a Emerald necklace");
+				return;
+			case EMERALD_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut Emerald to make a Emerald amulet");
+				return;
+			case EMERALD_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut Emerald to make a Emerald crown");
+				return;
+			case RUBY_RING:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut ruby to make a ruby ring");
+				return;
+			case RUBY_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut ruby to make a ruby necklace");
+				return;
+			case RUBY_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut ruby to make a ruby amulet");
+				return;
+			case RUBY_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut ruby to make a ruby crown");
+				return;
+			case DIAMOND_RING:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut diamond to make a diamond ring");
+				return;
+			case DIAMOND_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut diamond to make a diamond necklace");
+				return;
+			case DIAMOND_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut diamond to make a diamond amulet");
+				return;
+			case DIAMOND_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut diamond to make a diamond crown");
+				return;
+			case DRAGONSTONE_RING:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut dragonstone to make a dragonstone ring");
+				return;
+			case DRAGONSTONE_NECKLACE:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut dragonstone to make a dragonstone necklace");
+				return;
+			case DRAGONSTONE_AMULET:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a dragonstone to make a dragonstone amulet");
+				return;
+			case DRAGONSTONE_CROWN:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut dragonstone to make a dragonstone crown");
+				return;
+			case OPAL_RING:
+				player.playerServerMessage(MessageType.QUEST, "You do not have a cut opal to make an opal ring");
+				return;
+			default:
+				player.playerServerMessage(MessageType.QUEST, "Programmer has not defined a message for failing to have the required gem.");
+				player.playerServerMessage(MessageType.QUEST, "Please report this.");
+				return;
 		}
 	}
 

@@ -13,6 +13,10 @@ public class ItemCraftingDef {
 	 * The crafting level required to make this item
 	 */
 	public int requiredLvl;
+	/**
+	 * The gem required to make this item
+	 */
+	public int gemID;
 
 	public int getExp() {
 		return exp;
@@ -24,5 +28,9 @@ public class ItemCraftingDef {
 
 	public int getReqLevel() {
 		return requiredLvl;
+	}
+
+	public int getReqGem() {
+		return gemID;
 	}
 }

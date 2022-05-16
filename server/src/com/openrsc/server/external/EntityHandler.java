@@ -55,7 +55,7 @@ public final class EntityHandler {
 	private HashMap<Integer, int[]> itemAffectedTypes;
 	private HashMap<Integer, ItemCookingDef> itemCooking;
 	private HashMap<Integer, ItemPerfectCookingDef> itemPerfectCooking;
-	private ItemCraftingDef[] itemCrafting;
+	private HashMap<Integer, ItemCraftingDef> itemCrafting;
 	private HashMap<Integer, Integer> itemEdibleHeals;
 	private HashMap<Integer, ItemHerbDef> itemHerb;
 	private HashMap<Integer, ItemSmeltingDef> itemSmelting;
@@ -193,7 +193,7 @@ public final class EntityHandler {
 		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) getPersistenceManager().load(getPath("defs/extras/ItemPerfectCookingDef.xml"));
 		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) getPersistenceManager().load(getPath("defs/extras/ItemSmeltingDef.xml"));
 		itemSmithing = (ItemSmithingDef[]) getPersistenceManager().load(getPath("defs/extras/ItemSmithingDef.xml"));
-		itemCrafting = (ItemCraftingDef[]) getPersistenceManager().load(getPath("defs/extras/ItemCraftingDef.xml"));
+		itemCrafting = (HashMap<Integer, ItemCraftingDef>) getPersistenceManager().load(getPath("defs/extras/ItemCraftingDef.xml"));
 		objectMining = (HashMap<Integer, ObjectMiningDef>) getPersistenceManager().load(getPath("defs/extras/ObjectMining.xml"));
 		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load(getPath("defs/extras/ObjectWoodcutting.xml"));
 		objectRunecraft = (HashMap<Integer, ObjectRunecraftDef>) getPersistenceManager().load(getPath("defs/extras/ObjectRunecraft.xml"));
@@ -692,10 +692,7 @@ public final class EntityHandler {
 	 * @return the ItemCraftingDef for the requested item
 	 */
 	public ItemCraftingDef getCraftingDef(int id) {
-		if (id < 0 || id >= itemCrafting.length) {
-			return null;
-		}
-		return itemCrafting[id];
+		return itemCrafting.getOrDefault(id, null);
 	}
 
 	/**

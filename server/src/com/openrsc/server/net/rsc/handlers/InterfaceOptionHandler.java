@@ -49,9 +49,11 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.setAttribute("swap_note", payload.value == 1);
 				break;
 			case BANK_SWAP:
+				if (!player.getConfig().WANT_CUSTOM_BANKS) return;
 				handleBankSwap(player, payload);
 				break;
 			case BANK_INSERT:
+				if (!player.getConfig().WANT_CUSTOM_BANKS) return;
 				handleBankInsert(player, payload);
 				break;
 			case INVENTORY_INSERT:
