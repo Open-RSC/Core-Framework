@@ -4,104 +4,116 @@ import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.PrayerStruct;
 
+import static com.openrsc.server.model.entity.player.Prayers.*;
+
 public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 
-	private boolean activatePrayer(Player player, int prayerID) {
-		if (!player.getPrayers().isPrayerActivated(prayerID)) {
-			if (prayerID == 11) {
-				deactivatePrayer(player, 5);
-				deactivatePrayer(player, 2);
-			} else if (prayerID == 5) {
-				deactivatePrayer(player, 2);
-				deactivatePrayer(player, 11);
-			} else if (prayerID == 2) {
-				deactivatePrayer(player, 5);
-				deactivatePrayer(player, 11);
-			} else if (prayerID == 10) {
-				deactivatePrayer(player, 4);
-				deactivatePrayer(player, 1);
-			} else if (prayerID == 4) {
-				deactivatePrayer(player, 10);
-				deactivatePrayer(player, 1);
-			} else if (prayerID == 1) {
-				deactivatePrayer(player, 10);
-				deactivatePrayer(player, 4);
-			} else if (prayerID == 9) {
-				deactivatePrayer(player, 3);
-				deactivatePrayer(player, 0);
-			} else if (prayerID == 3) {
-				deactivatePrayer(player, 9);
-				deactivatePrayer(player, 0);
-			} else if (prayerID == 0) {
-				deactivatePrayer(player, 9);
-				deactivatePrayer(player, 3);
-			} else if (prayerID == 6 || prayerID == 7) {
-				//TODO:
-			}
-			player.getPrayers().setPrayer(prayerID, true);
-			return true;
+	private void activatePrayer(final Prayers prayers, final int prayerID) {
+		if (prayers.isPrayerActivated(prayerID)) return;
+
+		switch (prayerID) {
+			case THICK_SKIN:
+				deactivatePrayer(prayers, ROCK_SKIN);
+				deactivatePrayer(prayers, STEEL_SKIN);
+				break;
+			case BURST_OF_STRENGTH:
+				deactivatePrayer(prayers, SUPERHUMAN_STRENGTH);
+				deactivatePrayer(prayers, ULTIMATE_STRENGTH);
+				break;
+			case CLARITY_OF_THOUGHT:
+				deactivatePrayer(prayers, IMPROVED_REFLEXES);
+				deactivatePrayer(prayers, INCREDIBLE_REFLEXES);
+				break;
+			case ROCK_SKIN:
+				deactivatePrayer(prayers, THICK_SKIN);
+				deactivatePrayer(prayers, STEEL_SKIN);
+				break;
+			case SUPERHUMAN_STRENGTH:
+				deactivatePrayer(prayers, BURST_OF_STRENGTH);
+				deactivatePrayer(prayers, ULTIMATE_STRENGTH);
+				break;
+			case IMPROVED_REFLEXES:
+				deactivatePrayer(prayers, CLARITY_OF_THOUGHT);
+				deactivatePrayer(prayers, INCREDIBLE_REFLEXES);
+				break;
+			case STEEL_SKIN:
+				deactivatePrayer(prayers, THICK_SKIN);
+				deactivatePrayer(prayers, ROCK_SKIN);
+				break;
+			case ULTIMATE_STRENGTH:
+				deactivatePrayer(prayers, BURST_OF_STRENGTH);
+				deactivatePrayer(prayers, SUPERHUMAN_STRENGTH);
+				break;
+			case INCREDIBLE_REFLEXES:
+				deactivatePrayer(prayers, CLARITY_OF_THOUGHT);
+				deactivatePrayer(prayers, IMPROVED_REFLEXES);
+				break;
+			case RAPID_RESTORE: // TODO
+			case RAPID_HEAL: // TODO
+			case PROTECT_ITEMS:
+			case PARALYZE_MONSTER:
+			case PROTECT_FROM_MISSILES:
+			default:
+				break;
 		}
-		return false;
+
+		prayers.setPrayer(prayerID, true);
 	}
 
-	private boolean deactivatePrayer(Player player, int prayerID) {
-		if (player.getPrayers().isPrayerActivated(prayerID)) {
-			player.getPrayers().setPrayer(prayerID, false);
-			if (prayerID == 6 || prayerID == 7) {
-				//TODO:
-			}
-			return true;
-		}
-		return false;
+	private void deactivatePrayer(final Prayers prayers, final int prayerID) {
+		if (!prayers.isPrayerActivated(prayerID)) return;
+		// TODO RAPID_RESTORE RAPID_HEAL
+		prayers.setPrayer(prayerID, false);
 	}
 
-	public void process(PrayerStruct payload, Player player) throws Exception {
-		OpcodeIn pID = payload.getOpcode();
-		int prayerID = payload.prayerID;
+	public void process(final PrayerStruct payload, final Player player) throws Exception {
+		final int prayerID = payload.prayerID;
+
+		if (prayerID < THICK_SKIN || prayerID > PROTECT_FROM_MISSILES) {
+			player.setSuspiciousPlayer(true,
+				String.format("prayerID < %d or prayerID > %d", THICK_SKIN, PROTECT_FROM_MISSILES));
+			return;
+		}
 
 		if (player.getConfig().LACKS_PRAYERS) {
-			player.getPrayers().resetPrayers();
 			player.message("World does not feature prayers!");
 			return;
 		}
 
-		if (prayerID < 0 || prayerID >= 14) {
-			player.setSuspiciousPlayer(true, "prayer id < 0 or prayer id >= 14");
-//			ActionSender.sendPrayers(player);TODO
-			return;
-		}
 		if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(2)) {
 			player.message("Prayers cannot be used during this duel!");
-//			ActionSender.sendPrayers(player);
-			return;
-		}
-		if (prayerID == 8 && player.isIronMan(IronmanMode.Ultimate.id())) {
-			player.message("Ultimate Ironmen cannot protect items.");
-			player.getPrayers().resetPrayers();
 			return;
 		}
 
-		PrayerDef prayer = player.getWorld().getServer().getEntityHandler().getPrayerDef(prayerID);
-		OpcodeIn packetOne = OpcodeIn.PRAYER_ACTIVATED;
-		OpcodeIn packetTwo = OpcodeIn.PRAYER_DEACTIVATED;
-		if (pID == packetOne) {
-			if (player.getSkills().getMaxStat(Skill.PRAYER.id()) < prayer.getReqLevel()) {
-				player.setSuspiciousPlayer(true, "max stat prayer < req level");
+		if (prayerID == PROTECT_ITEMS && player.isIronMan(IronmanMode.Ultimate.id())) {
+			player.message("Ultimate Ironmen cannot protect items.");
+			return;
+		}
+
+		final OpcodeIn opcode = payload.getOpcode();
+
+		if (opcode == OpcodeIn.PRAYER_ACTIVATED) {
+			final PrayerDef prayerDef = player.getWorld().getServer().getEntityHandler().getPrayerDef(prayerID);
+			assert prayerDef != null;
+
+			if (player.getSkills().getMaxStat(Skill.PRAYER.id()) < prayerDef.getReqLevel()) {
 				player.message("Your prayer ability is not high enough to use this prayer");
 				return;
 			}
+
 			if (player.getSkills().getLevel(Skill.PRAYER.id()) <= 0) {
-				player.getPrayers().setPrayer(prayerID, false);
 				player.message("You have run out of prayer points. Return to a church to recharge");
 				return;
 			}
-			activatePrayer(player, prayerID);
-		} else if (pID == packetTwo) {
-			deactivatePrayer(player, prayerID);
+
+			activatePrayer(player.getPrayers(), prayerID);
+		} else if (opcode == OpcodeIn.PRAYER_DEACTIVATED) {
+			deactivatePrayer(player.getPrayers(), prayerID);
 		}
 	}
 }
