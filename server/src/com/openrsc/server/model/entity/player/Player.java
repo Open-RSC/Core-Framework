@@ -1978,7 +1978,7 @@ public final class Player extends Mob {
 			}
 			if (!getConfig().LACKS_PRAYERS) {
 				prayerStatePoints = getSkills().getLevel(Skill.PRAYER.id()) * 120;
-				prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
+				prayerDrainEvent = new PrayerDrainEvent(getWorld(), this);
 				getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
 			}
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
