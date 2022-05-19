@@ -18,40 +18,40 @@ public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 
 		switch (prayerID) {
 			case THICK_SKIN:
-				deactivatePrayer(prayers, ROCK_SKIN);
-				deactivatePrayer(prayers, STEEL_SKIN);
+				deactivatePrayer(prayers, ROCK_SKIN, false);
+				deactivatePrayer(prayers, STEEL_SKIN, false);
 				break;
 			case BURST_OF_STRENGTH:
-				deactivatePrayer(prayers, SUPERHUMAN_STRENGTH);
-				deactivatePrayer(prayers, ULTIMATE_STRENGTH);
+				deactivatePrayer(prayers, SUPERHUMAN_STRENGTH, false);
+				deactivatePrayer(prayers, ULTIMATE_STRENGTH, false);
 				break;
 			case CLARITY_OF_THOUGHT:
-				deactivatePrayer(prayers, IMPROVED_REFLEXES);
-				deactivatePrayer(prayers, INCREDIBLE_REFLEXES);
+				deactivatePrayer(prayers, IMPROVED_REFLEXES, false);
+				deactivatePrayer(prayers, INCREDIBLE_REFLEXES, false);
 				break;
 			case ROCK_SKIN:
-				deactivatePrayer(prayers, THICK_SKIN);
-				deactivatePrayer(prayers, STEEL_SKIN);
+				deactivatePrayer(prayers, THICK_SKIN, false);
+				deactivatePrayer(prayers, STEEL_SKIN, false);
 				break;
 			case SUPERHUMAN_STRENGTH:
-				deactivatePrayer(prayers, BURST_OF_STRENGTH);
-				deactivatePrayer(prayers, ULTIMATE_STRENGTH);
+				deactivatePrayer(prayers, BURST_OF_STRENGTH, false);
+				deactivatePrayer(prayers, ULTIMATE_STRENGTH, false);
 				break;
 			case IMPROVED_REFLEXES:
-				deactivatePrayer(prayers, CLARITY_OF_THOUGHT);
-				deactivatePrayer(prayers, INCREDIBLE_REFLEXES);
+				deactivatePrayer(prayers, CLARITY_OF_THOUGHT, false);
+				deactivatePrayer(prayers, INCREDIBLE_REFLEXES, false);
 				break;
 			case STEEL_SKIN:
-				deactivatePrayer(prayers, THICK_SKIN);
-				deactivatePrayer(prayers, ROCK_SKIN);
+				deactivatePrayer(prayers, THICK_SKIN, false);
+				deactivatePrayer(prayers, ROCK_SKIN, false);
 				break;
 			case ULTIMATE_STRENGTH:
-				deactivatePrayer(prayers, BURST_OF_STRENGTH);
-				deactivatePrayer(prayers, SUPERHUMAN_STRENGTH);
+				deactivatePrayer(prayers, BURST_OF_STRENGTH, false);
+				deactivatePrayer(prayers, SUPERHUMAN_STRENGTH, false);
 				break;
 			case INCREDIBLE_REFLEXES:
-				deactivatePrayer(prayers, CLARITY_OF_THOUGHT);
-				deactivatePrayer(prayers, IMPROVED_REFLEXES);
+				deactivatePrayer(prayers, CLARITY_OF_THOUGHT, false);
+				deactivatePrayer(prayers, IMPROVED_REFLEXES, false);
 				break;
 			case RAPID_RESTORE: // TODO
 			case RAPID_HEAL: // TODO
@@ -65,10 +65,10 @@ public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 		prayers.setPrayer(prayerID, true);
 	}
 
-	private void deactivatePrayer(final Prayers prayers, final int prayerID) {
+	private void deactivatePrayer(final Prayers prayers, final int prayerID, final boolean updatePlayer) {
 		if (!prayers.isPrayerActivated(prayerID)) return;
 		// TODO RAPID_RESTORE RAPID_HEAL
-		prayers.setPrayer(prayerID, false);
+		prayers.setPrayer(prayerID, false, updatePlayer);
 	}
 
 	public void process(final PrayerStruct payload, final Player player) throws Exception {
@@ -113,7 +113,7 @@ public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 
 			activatePrayer(player.getPrayers(), prayerID);
 		} else if (opcode == OpcodeIn.PRAYER_DEACTIVATED) {
-			deactivatePrayer(player.getPrayers(), prayerID);
+			deactivatePrayer(player.getPrayers(), prayerID, true);
 		}
 	}
 }

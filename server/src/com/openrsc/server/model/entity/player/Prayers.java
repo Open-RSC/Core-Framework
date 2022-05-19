@@ -24,8 +24,12 @@ public class Prayers {
 	}
 
 	public void setPrayer(final int prayerID, final boolean activated) {
+		setPrayer(prayerID, activated, true);
+	}
+
+	public void setPrayer(final int prayerID, final boolean activated, final boolean updatePlayer) {
 		activatedPrayers[prayerID] = activated;
-		ActionSender.sendPrayers(player, activatedPrayers);
+		if (updatePlayer) ActionSender.sendPrayers(player, activatedPrayers);
 	}
 
 	public void resetPrayers() {
