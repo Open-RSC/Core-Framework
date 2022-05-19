@@ -53,10 +53,11 @@ public class PrayerDrainEvent extends GameTickEvent {
 				player.getSkills().setLevel(Skill.PRAYER.id(), level, true);
 			}
 		} else {
+			// Authentic packet order as per Wireshark Dissector
 			player.setPrayerStatePoints(0);
 			player.getPrayers().resetPrayers();
-			player.getSkills().setLevel(Skill.PRAYER.id(), 0, true);
 			player.message("You have run out of prayer points. Return to a church to recharge");
+			player.getSkills().setLevel(Skill.PRAYER.id(), 0, true);
 		}
 	}
 }
