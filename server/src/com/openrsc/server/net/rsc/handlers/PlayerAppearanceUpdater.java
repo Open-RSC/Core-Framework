@@ -19,6 +19,9 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 			player.setSuspiciousPlayer(true, "player appearance packet without changing appearance");
 			return;
 		}
+
+		if (player.getLocation().inTutorialLanding()) player.getCache().remove("tutorial_appearance");
+
 		player.setChangingAppearance(false);
 		byte headRestrictions = payload.headRestrictions;
 		byte headType = payload.headType;

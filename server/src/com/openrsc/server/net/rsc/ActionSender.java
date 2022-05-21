@@ -1971,8 +1971,14 @@ public class ActionSender {
 
 				sendPlayerOnBlackHole(player);
 				sendUnlockedAppearances(player);
+
+				final boolean playerInTutorialLanding = player.getLocation().inTutorialLanding();
+
 				if (player.getLastLogin() == 0L) {
+					if (playerInTutorialLanding) player.getCache().store("tutorial_appearance", false);
+
 					sendAppearanceScreen(player);
+
 					if (!player.getConfig().USES_CLASSES) {
 						if (player.getConfig().WANT_OPENPK_POINTS) {
 							for (Item item : player.getWorld().getServer().getConstants().OPENPK_STARTER_ITEMS) {
@@ -2012,16 +2018,10 @@ public class ActionSender {
 
 				sendWakeUp(player, false, true);
 
-				if (player.isMuted()) {
-					// doesn't seem authentic to have notified the player that they are muted after login
-					/*player.message("You have been " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " due to breaking a rule");
-					if (player.getMuteExpires() != -1) {
-						player.message("This mute will remain for a further " + DataConversions.formatTimeString(player.getMinutesMuteLeft()));
+				if (playerInTutorialLanding) {
+					if (!player.isChangingAppearance() && player.getCache().hasKey("tutorial_appearance")) {
+						sendAppearanceScreen(player);
 					}
-					player.message("To prevent further mutes please read the rules");*/
-				}
-
-				if (player.getLocation().inTutorialLanding()) {
 					sendBox(player, "@gre@Welcome to the " + player.getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
