@@ -36,7 +36,7 @@ public class MagicalPoolCustom implements OpLocTrigger {
 				}
 				int option = multi(player, "Edgeville", "Varrock", "Lumbridge",
 					"Castle (dangerous)", "Graveyard (dangerous)", "Hobgoblins (dangerous)", "Altar (dangerous)",
-					"Dragon Maze (dangerous)", "Mage Arena (dangerous)", "Rune rocks (dangerous)", "Red dragons (dangerous)", "Further underground mage arena");
+					"Dragon Maze (dangerous)", "Mage Arena (dangerous)", "Rune rocks (dangerous)", "Red dragons (dangerous)", "Seers", "Further underground mage arena");
 
 				if (option == 0) {
 					player.teleport(215, 438);
@@ -60,9 +60,10 @@ public class MagicalPoolCustom implements OpLocTrigger {
 					player.teleport(264, 148);
 				} else if (option == 10) {
 					player.teleport(143, 173);
-				} else if (option == 11) {
-					//TODO for OpenPK: we may not want the mage_arena cache check.
-					if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
+				} else if (option == 10) {
+					player.teleport(505, 456);
+				}else if (option == 11) {
+					if (!player.getConfig().WANT_OPENPK_POINTS && player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
 						teleport(player, 471, 3385);
 						player.message("you are teleported further under ground");
 					} else {
