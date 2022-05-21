@@ -32,18 +32,27 @@ public class WalkingQueue {
 			Player currentPlayer = mob.isPlayer() ? (Player)mob : null;
 
 			// Only track finished walking status of players.
-			if (currentPlayer != null) {
+			if (currentPlayer != null && !currentPlayer.isBusy()) {
 				Point targetTile = currentPlayer.getLastTileClicked();
 
 				if (targetTile != null) {
-					Point targetTileLocation = Point.location(targetTile.getX(), targetTile.getY());
-					Region region = currentPlayer.getWorld().getRegionManager().getRegion(targetTileLocation);
+					Region region = currentPlayer.getWorld().getRegionManager().getRegion(targetTile);
 
 					// Target would be the other player currentPlayer clicked on.
 					Player target = region.getPlayer(targetTile.getX(), targetTile.getY(), currentPlayer, false);
 
-					// Face the other player. This will have no effect if player_blocking config is disabled.
-					if (target != null) currentPlayer.face(target);
+					if (target != null && target != currentPlayer) {
+						// Is current player within 1 tile of target?
+						boolean targetWithinOneTile = currentPlayer.withinRange(targetTile, 1);
+
+						// Face the other player. This will have no effect if player_blocking config is disabled.
+						if (targetWithinOneTile) {
+							currentPlayer.face(target);
+						}
+					}
+					
+					// Reset lastTileClicked so the player doesn't re-face the last player they clicked on.
+					currentPlayer.setLastTileClicked(null);
 				}
 			}
 		}

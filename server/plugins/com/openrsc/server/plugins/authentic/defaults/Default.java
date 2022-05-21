@@ -219,6 +219,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onTakeObj(Player player, GroundItem i) {
+		player.setLastTileClicked(null);
 		player.groundItemTake(i);
 	}
 
@@ -254,6 +255,7 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public void onAttackNpc(Player player, Npc affectedmob) {
+		player.setLastTileClicked(null);
 		player.startCombat(affectedmob);
 		if (config().WANT_PARTIES) {
 			if (player.getParty() != null) {
