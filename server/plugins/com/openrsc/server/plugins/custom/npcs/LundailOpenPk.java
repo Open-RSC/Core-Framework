@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.minigames.mage_arena;
+package com.openrsc.server.plugins.custom.npcs;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
@@ -12,11 +12,11 @@ import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Lundail extends AbstractShop {
+public final class LundailOpenPk extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 6000, 190, 60, 10, new Item(ItemId.AIR_RUNE.id(),
-		100), new Item(ItemId.FIRE_RUNE.id(), 100), new Item(ItemId.WATER_RUNE.id(), 100), new Item(ItemId.EARTH_RUNE.id(),
-		100), new Item(ItemId.MIND_RUNE.id(), 100), new Item(ItemId.BODY_RUNE.id(), 100));
+		500), new Item(ItemId.FIRE_RUNE.id(), 500), new Item(ItemId.WATER_RUNE.id(), 500), new Item(ItemId.EARTH_RUNE.id(),
+		500), new Item(ItemId.MIND_RUNE.id(), 500), new Item(ItemId.BODY_RUNE.id(), 500), new Item(ItemId.CHAOS_RUNE.id(), 500), new Item(ItemId.NATURE_RUNE.id(), 500), new Item(ItemId.DEATH_RUNE.id(), 500), new Item(ItemId.BLOOD_RUNE.id(), 500));
 
 	@Override
 	public void onTalkNpc(Player player, final Npc n) {
@@ -48,7 +48,7 @@ public final class Lundail extends AbstractShop {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return !player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.LUNDAIL.id();
+		return player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.LUNDAIL.id();
 	}
 
 	@Override
