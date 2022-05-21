@@ -60,9 +60,9 @@ public class MagicalPoolCustom implements OpLocTrigger {
 					player.teleport(264, 148);
 				} else if (option == 10) {
 					player.teleport(143, 173);
-				} else if (option == 10) {
+				} else if (option == 11) {
 					player.teleport(505, 456);
-				}else if (option == 11) {
+				}else if (option == 12) {
 					if (!player.getConfig().WANT_OPENPK_POINTS && player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 2) {
 						teleport(player, 471, 3385);
 						player.message("you are teleported further under ground");
