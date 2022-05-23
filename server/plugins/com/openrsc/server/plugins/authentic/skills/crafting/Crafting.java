@@ -790,7 +790,7 @@ public class Crafting implements UseInvTrigger,
 			case SAPPHIRE_NECKLACE:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut sapphire to make a sapphire necklace");
 				return;
-			case SAPPHIRE_AMULET:
+			case UNSTRUNG_SAPPHIRE_AMULET:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut sapphire to make a sapphire amulet");
 				return;
 			case SAPPHIRE_CROWN:
@@ -802,7 +802,7 @@ public class Crafting implements UseInvTrigger,
 			case EMERALD_NECKLACE:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut Emerald to make a Emerald necklace");
 				return;
-			case EMERALD_AMULET:
+			case UNSTRUNG_EMERALD_AMULET:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut Emerald to make a Emerald amulet");
 				return;
 			case EMERALD_CROWN:
@@ -814,7 +814,7 @@ public class Crafting implements UseInvTrigger,
 			case RUBY_NECKLACE:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut ruby to make a ruby necklace");
 				return;
-			case RUBY_AMULET:
+			case UNSTRUNG_RUBY_AMULET:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut ruby to make a ruby amulet");
 				return;
 			case RUBY_CROWN:
@@ -826,7 +826,7 @@ public class Crafting implements UseInvTrigger,
 			case DIAMOND_NECKLACE:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut diamond to make a diamond necklace");
 				return;
-			case DIAMOND_AMULET:
+			case UNSTRUNG_DIAMOND_AMULET:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut diamond to make a diamond amulet");
 				return;
 			case DIAMOND_CROWN:
@@ -838,7 +838,7 @@ public class Crafting implements UseInvTrigger,
 			case DRAGONSTONE_NECKLACE:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a cut dragonstone to make a dragonstone necklace");
 				return;
-			case DRAGONSTONE_AMULET:
+			case UNSTRUNG_DRAGONSTONE_AMULET:
 				player.playerServerMessage(MessageType.QUEST, "You do not have a dragonstone to make a dragonstone amulet");
 				return;
 			case DRAGONSTONE_CROWN:
