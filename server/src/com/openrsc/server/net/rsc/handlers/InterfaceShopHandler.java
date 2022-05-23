@@ -160,10 +160,9 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 				player.getCarriedItems().getInventory().add(new Item(catalogID, 1));
 			}
 
-			// TODO: See if removing this breaks stuff, as it currently allows for a dupe
-			// Items that have basePrice of 0 will not deplete from the store when bought.
-			if (totalMoneySpent > 0) {
+			if (totalBought > 0)
 				shop.removeShopItem(new Item(catalogID, totalBought));
+			if (totalMoneySpent > 0) {
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
 				if (expectedMoneySpent != totalMoneySpent) {
 					boolean isRetroPrice = player.getWorld().getServer().getConfig().USES_RETRO_STOCK_SENSITIVITY;
