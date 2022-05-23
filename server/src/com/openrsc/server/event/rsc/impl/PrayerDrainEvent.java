@@ -13,7 +13,7 @@ public class PrayerDrainEvent extends GameTickEvent {
 	private final Player player;
 
 	public PrayerDrainEvent(final World world, final Player player) {
-		super(world, player, 1, "Prayer Drain Event", DuplicationStrategy.ONE_PER_MOB);
+		super(world, player, 1, "Prayer Drain Event", DuplicationStrategy.ALLOW_MULTIPLE);
 		this.player = player;
 	}
 
