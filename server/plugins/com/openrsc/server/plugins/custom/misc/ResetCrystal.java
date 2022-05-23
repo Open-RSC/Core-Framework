@@ -2,7 +2,6 @@ package com.openrsc.server.plugins.custom.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
-import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -42,28 +41,12 @@ public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger 
 		}
 	}
 
-	private static void resetScenery(Player player, GameObject gameObject) {
-		Point objectCoordinates = Point.location(gameObject.getLoc().getX(), gameObject.getLoc().getY());
-		final int initialObjectID = player.getWorld().getSceneryLoc(objectCoordinates);
-		if (initialObjectID != gameObject.getID()) {
-			if (initialObjectID != -1) {
-				// world object from initial json
-				final GameObject replaceObj = new GameObject(gameObject.getWorld(), gameObject.getLocation(), initialObjectID, gameObject.getDirection(), gameObject.getType());
-				changeloc(gameObject, replaceObj);
-			} else {
-				// dynamic stuck object
-				// unregister
-				player.getWorld().unregisterGameObject(gameObject);
-			}
-		}
-	}
-
 	@Override
 	public void onUseLoc(Player player, GameObject gameObject, Item item) {
 		player.playerServerMessage(MessageType.QUEST, "Scenery id: " + gameObject.getID());
 		int opt = multi(player, "Reset scenery", "Cancel");
 		if (opt == 0) {
-			resetScenery(player, gameObject);
+			player.resetScenery(gameObject);
 			player.message("The scenery was reset");
 		}
 	}
@@ -119,7 +102,7 @@ public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger 
 				GameObject obj = iter.next();
 				if (obj.getType() == 0) {
 					// only for scenery
-					resetScenery(player, obj);
+					player.resetScenery(obj);
 				}
 			}
 			player.message("Sceneries around view area were reset");

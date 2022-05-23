@@ -4,6 +4,8 @@ import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -547,6 +549,7 @@ public final class PlayerModerator implements CommandTrigger {
 				updateAppearanceToNpc(affectedPlayer, COW, pos);
 				break;
 			case "sheep":
+			case "chomp":
 			case "bheep":
 				updateAppearanceToNpc(affectedPlayer, SHEEP, pos); // I think the only NPC without fighting animations
 				break;
@@ -687,6 +690,12 @@ public final class PlayerModerator implements CommandTrigger {
 			case "egg":
 				updateAppearanceToNpc(affectedPlayer, EGG_MORPH, pos);
 				break;
+			case "logg":
+				updateAppearanceToScenery(affectedPlayer, 8); // pile of logs
+				break;
+			case "kenix":
+				updateAppearanceToScenery(affectedPlayer, 407); // scary tree
+				break;
 
 			case "disable":
 			case "none":
@@ -738,6 +747,26 @@ public final class PlayerModerator implements CommandTrigger {
 		affectedPlayer.getUpdateFlags().setAppearanceChanged(true);
 	}
 
+	private void updateAppearanceToScenery(Player targetedPlayer, int sceneryId) {
+		// match permission level of ::robject
+		if (!targetedPlayer.isDev()) return;
+
+		// ::norender
+		for (int i = 0; i < 12; i++) {
+			targetedPlayer.updateWornItems(i, 0);
+		}
+
+		// set sceneryId for use when moving
+		targetedPlayer.setSceneryMorph(sceneryId);
+
+		// register scenery @ standing location (since targeted player has not moved yet)
+		final GameObject existingObject = targetedPlayer.getViewArea().getGameObject(targetedPlayer.getLocation());
+		if (existingObject == null || existingObject.getType() == 0) {
+			final GameObject newObject = new GameObject(targetedPlayer.getWorld(), targetedPlayer.getLocation(), sceneryId, 0, 0);
+			targetedPlayer.getWorld().registerGameObject(newObject);
+		}
+	}
+
 	private void updateAppearanceToNpc(Player player, AppearanceId appearanceId, int wieldPosition) {
 		if (wieldPosition == SLOT_ANY) {
 			mes("Don't know where to wield it, sorry");
@@ -751,6 +780,7 @@ public final class PlayerModerator implements CommandTrigger {
 			mes("Your client doesn't know about that NPC.");
 			return;
 		}
+		player.resetSceneryMorph();
 		if (wieldPosition == SLOT_NPC) {
 			for (int pos = 0; pos < 12; pos++) {
 				if (pos != SLOT_WEAPON) {
@@ -799,6 +829,7 @@ public final class PlayerModerator implements CommandTrigger {
 	private void restoreHumanity(Player player) {
 		speakTongues(player, 0);
 		player.exitMorph();
+		player.resetSceneryMorph();
 	}
 
 	private void restoreHumanity(Player player, String[] args) {

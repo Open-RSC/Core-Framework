@@ -80,7 +80,9 @@ public final class WorldPopulator {
 					object.direction, object.type);
 
 				getWorld().registerGameObject(obj);
-				getWorld().addSceneryLoc(obj.getLocation(), obj.getID());
+				if (obj.getType() == 0) { // no wall objects allowed
+					getWorld().addSceneryLoc(obj.getLocation(), obj.getID());
+				}
 				countOBJ++;
 			}
 			LOGGER.info("Loaded {}", box(countOBJ) + " Objects.");

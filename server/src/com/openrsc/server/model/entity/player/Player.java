@@ -57,6 +57,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.openrsc.server.plugins.Functions.changeloc;
 import static com.openrsc.server.plugins.Functions.inArray;
 
 /**
@@ -137,6 +138,7 @@ public final class Player extends Mob {
 	public PrerenderedSleepword queuedSleepword = null;
 	public Player queuedSleepwordSender = null;
 	private int saveAttempts = 0;
+	private int sceneryMorph = -1;
 
 	public int desertHeatCounter = Integer.MIN_VALUE;
 	private boolean desertHeatMessaged = false;
@@ -2722,8 +2724,21 @@ public final class Player extends Mob {
 				setTeleporting(true);
 		}
 
+		if (sceneryMorph >= 0) {
+			doSceneryMorphWalk(point);
+		}
+
 		super.setLocation(point, teleported);
 
+	}
+
+	private void doSceneryMorphWalk(Point point) {
+		final GameObject morphObject = getViewArea().getGameObject(getLocation());
+		if (morphObject != null) {
+			resetScenery(morphObject);
+		}
+		final GameObject newObject = new GameObject(getWorld(), point, sceneryMorph, 0, 0);
+		getWorld().registerGameObject(newObject);
 	}
 
 	public void produceUnderAttack() {
@@ -4139,5 +4154,34 @@ public final class Player extends Mob {
 		}
 
 		return null;
+	}
+
+	public void setSceneryMorph(int id) {
+		this.sceneryMorph = id;
+		if (id < 0) { // leaving morph
+			final GameObject existingObject = getViewArea().getGameObject(getLocation());
+			if (existingObject != null && existingObject.getType() != 1) {
+				resetScenery(existingObject);
+			}
+		}
+	}
+	public void resetSceneryMorph() {
+		setSceneryMorph(-1);
+	}
+
+	public void resetScenery(GameObject gameObject) {
+		Point objectCoordinates = Point.location(gameObject.getLoc().getX(), gameObject.getLoc().getY());
+		final int initialObjectID = gameObject.getWorld().getSceneryLoc(objectCoordinates);
+		if (initialObjectID != gameObject.getID()) {
+			if (initialObjectID != -1) {
+				// world object from initial json
+				final GameObject replaceObj = new GameObject(gameObject.getWorld(), gameObject.getLocation(), initialObjectID, gameObject.getDirection(), gameObject.getType());
+				changeloc(gameObject, replaceObj);
+			} else {
+				// dynamic stuck object
+				// unregister
+				gameObject.getWorld().unregisterGameObject(gameObject);
+			}
+		}
 	}
 }

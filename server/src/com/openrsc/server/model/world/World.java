@@ -804,6 +804,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
 				}
 			}
+			player.resetSceneryMorph();
 			player.logout();
 			LOGGER.info("Unregistered " + player.getUsername() + " from player list.");
 
