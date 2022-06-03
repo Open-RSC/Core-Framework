@@ -67,6 +67,9 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("createobject") || command.equalsIgnoreCase("cobject") || command.equalsIgnoreCase("addobject") || command.equalsIgnoreCase("aobject") || command.equalsIgnoreCase("createscenery") || command.equalsIgnoreCase("cscenery") || command.equalsIgnoreCase("addscenery") || command.equalsIgnoreCase("ascenery")) {
 			createObject(player, command, args);
 		}
+		else if (command.equalsIgnoreCase("createwallobject") || command.equalsIgnoreCase("cwallobject") || command.equalsIgnoreCase("addwallobject") || command.equalsIgnoreCase("awallobject") || command.equalsIgnoreCase("createboundary") || command.equalsIgnoreCase("cboundary") || command.equalsIgnoreCase("addboundary") || command.equalsIgnoreCase("aboundary")) {
+			createWallObject(player, command, args);
+		}
 		else if (command.equalsIgnoreCase("rotateobject") || command.equalsIgnoreCase("rotatescenery")) {
 			rotateObject(player, command, args);
 		}
@@ -119,6 +122,107 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("getappearance")) {
 			dumpAppearance(player, args);
 		}
+		else if (command.equalsIgnoreCase("boundarydemo")) {
+			showBoundaries(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("scenerydemo")) {
+			showScenery(player, command, args);
+		}
+	}
+
+	private void showBoundaries(Player player, String command, String[] args) {
+		int boundariesInARow = player.getClientLimitations().maxBoundaryId;
+		if (args.length >= 1) {
+			try {
+				int candidateBoundariesInARow = Integer.parseInt(args[0]);
+				if (candidateBoundariesInARow > 0) {
+					boundariesInARow = candidateBoundariesInARow;
+				}
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (boundaries in a row) (limit) (spacing)");
+				return;
+			}
+		}
+
+		int limit = player.getClientLimitations().maxBoundaryId;
+		if (args.length >= 2) {
+			try {
+				int candidateLimit = Integer.parseInt(args[1]);
+				limit = Math.min(candidateLimit, player.getClientLimitations().maxBoundaryId);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (boundaries in a row) (limit) (spacing)");
+				return;
+			}
+		}
+
+		int spacing = 2;
+		if (args.length >= 3) {
+			try {
+				int candidateSpacing = Integer.parseInt(args[2]);
+				if (candidateSpacing > 0) {
+					spacing = candidateSpacing;
+				}
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (boundaries in a row) (limit) (spacing)");
+				return;
+			}
+		}
+
+		int id = 0;
+		for (int y = player.getY(); id < limit; y += spacing) {
+			for (int x = player.getX(); x < boundariesInARow + player.getX() && id < limit; x++) {
+				final GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id++, 0, 1);
+				player.getWorld().registerGameObject(newObject);
+			}
+		}
+	}
+
+	private void showScenery(Player player, String command, String[] args) {
+		int sceneryInARow = player.getClientLimitations().maxSceneryId;
+		if (args.length >= 1) {
+			try {
+				int candidateBoundariesInARow = Integer.parseInt(args[0]);
+				if (candidateBoundariesInARow > 0) {
+					sceneryInARow = candidateBoundariesInARow;
+				}
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (scenery in a row) (limit) (spacing)");
+				return;
+			}
+		}
+
+		int limit = player.getClientLimitations().maxSceneryId;
+		if (args.length >= 2) {
+			try {
+				int candidateLimit = Integer.parseInt(args[1]);
+				limit = Math.min(candidateLimit, player.getClientLimitations().maxSceneryId);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (scenery in a row) (limit) (spacing)");
+				return;
+			}
+		}
+
+		int spacing = 2;
+		if (args.length >= 3) {
+			try {
+				int candidateSpacing = Integer.parseInt(args[2]);
+				if (candidateSpacing > 0) {
+					spacing = candidateSpacing;
+				}
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (scenery in a row) (limit) (spacing)");
+				return;
+			}
+		}
+
+		int id = 0;
+		for (int y = player.getY(); id < limit; y += spacing) {
+			for (int x = player.getX(); x < (sceneryInARow * spacing) + player.getX() && id < limit; x += spacing) {
+				final GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id++, 0, 0);
+				player.getWorld().registerGameObject(newObject);
+			}
+		}
+
 	}
 
 	private void dumpAppearance(Player player, String[] args) {
@@ -267,6 +371,78 @@ public final class Development implements CommandTrigger {
 
 		player.getWorld().registerGameObject(newObject);
 		player.message(messagePrefix + "Added scenery: " + newObject.getGameObjectDef().getName() + " with ID " + newObject.getID() + " at " + newObject.getLocation());
+	}
+
+	private void createWallObject(Player player, String command, String[] args) {
+		if (args.length < 1 || args.length == 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
+			return;
+		}
+
+		int id = -1;
+		try {
+			id = Integer.parseInt(args[0]);
+		}
+		catch(NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
+			return;
+		}
+
+		int x = -1;
+		int y = -1;
+		if(args.length >= 3) {
+			try {
+				x = Integer.parseInt(args[1]);
+				y = Integer.parseInt(args[2]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
+				return;
+			}
+		}
+		else {
+			x = player.getX();
+			y = player.getY();
+		}
+
+		int dir = 0;
+		if (args.length >= 4) {
+			try {
+				dir = Integer.parseInt(args[3]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
+				return;
+			}
+		}
+
+		if(!player.getWorld().withinWorld(x, y))
+		{
+			player.message(messagePrefix + "Invalid coordinates");
+			return;
+		}
+
+
+		Point objectLoc = Point.location(x, y);
+		final GameObject object = player.getViewArea().getGameObject(objectLoc);
+
+		if (object != null && object.getType() == 1) {
+			player.message("There is already a boundary in that spot: " + object.getGameObjectDef().getName());
+			return;
+		}
+
+		/* TODO: check boundary id is within bounds properly per server & not per client
+		if (player.getWorld().getServer().getEntityHandler().getGameObjectDef(id) == null) {
+			player.message(messagePrefix + "Invalid scenery id");
+			return;
+		}*/
+		if (id > player.getClientLimitations().maxBoundaryId) {
+			player.message(messagePrefix + "Invalid boundary id");
+			return;
+		}
+
+		final GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id, dir, 1);
+
+		player.getWorld().registerGameObject(newObject);
+		player.message(messagePrefix + "Added boundary: " + newObject.getGameObjectDef().getName() + " with ID " + newObject.getID() + " at " + newObject.getLocation());
 	}
 
 	private void removeObject(Player player, String command, String[] args) {
