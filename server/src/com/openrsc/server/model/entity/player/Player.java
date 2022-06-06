@@ -2094,7 +2094,7 @@ public final class Player extends Mob {
 		getSettings().getAttackedBy().clear();
 		getCache().store("last_death", System.currentTimeMillis());
 
-		final Player player = mob.isPlayer() ? (Player) mob : null;
+		final Player player = mob instanceof Player ? (Player) mob : null;
 
 		if (player != null) {
 			player.message(String.format("You have defeated %s!", getUsername()));
