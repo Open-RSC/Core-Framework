@@ -4166,7 +4166,8 @@ public final class Player extends Mob {
 		}
 	}
 	public void resetSceneryMorph() {
-		setSceneryMorph(-1);
+		if (this.sceneryMorph >= 0)
+			setSceneryMorph(-1);
 	}
 
 	public void resetScenery(GameObject gameObject) {
