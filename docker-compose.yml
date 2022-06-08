@@ -11,16 +11,17 @@ services:
       '--wait_timeout=360000'
     ]
     environment:
-      - MYSQL_DATABASE=mysql
-      - MYSQL_ROOT_USER=${MARIADB_ROOT_USER}
-      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - MYSQL_ALLOW_EMPTY_PASSWORD=no
-      - MYSQL_USER=${MARIADB_USER}
-      - MYSQL_PASSWORD=${MARIADB_PASS}
+      - MARIADB_DATABASE=mysql
+      - MARIADB_ROOT_USER=${MARIADB_ROOT_USER}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_ALLOW_EMPTY_PASSWORD=no
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_PASSWORD=${MARIADB_PASS}
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
       - ./server/inc/databases:/var/lib/mysql
+      - ./server/inc/my.cnf:/etc/mysql/my.cnf:ro
       - ./server/inc/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro
 
 networks: # Required for connectivity with separate docker-compose web framework

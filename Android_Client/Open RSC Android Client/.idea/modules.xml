@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/-499533990/Android_Client.iml" filepath="$PROJECT_DIR$/.idea/modules/-499533990/Android_Client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.iml" filepath="$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/Android_Client.Open_RSC_Android_Client.unitTest.iml" />
     </modules>
   </component>
 </project>
