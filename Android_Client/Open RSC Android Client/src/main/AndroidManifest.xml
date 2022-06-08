@@ -5,7 +5,6 @@
     android:versionName="25">
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.INTERNET_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -41,7 +40,6 @@
         <activity
             android:name="com.openrsc.android.updater.ApplicationUpdater"
             android:configChanges="orientation"
-            android:label="OpenRSC"
             android:exported="true"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -53,12 +51,10 @@
         <activity
             android:name="com.openrsc.android.updater.CacheUpdater"
             android:configChanges="orientation"
-            android:label="OpenRSC"
             android:screenOrientation="fullSensor" />
         <activity
             android:name="com.openrsc.client.android.GameActivity"
             android:configChanges="orientation"
-            android:label="OpenRSC"
             android:largeHeap="true"
             android:screenOrientation="sensorLandscape" />
     </application>
