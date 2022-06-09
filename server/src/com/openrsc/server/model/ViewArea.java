@@ -52,8 +52,6 @@ public class ViewArea {
 	}
 
 	/**
-	 * Experimental - to handle Doors on same X and Y as GameObjects.
-	 *
 	 * @param location
 	 * @return FACT: RSC uses direction for wall objects, so that it doesn't collapse.
 	 */

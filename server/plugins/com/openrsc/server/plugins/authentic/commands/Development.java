@@ -374,8 +374,8 @@ public final class Development implements CommandTrigger {
 	}
 
 	private void createWallObject(Player player, String command, String[] args) {
-		if (args.length < 1 || args.length == 2) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
+		if (args.length < 1 || args.length == 3) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (dir) (x) (y)");
 			return;
 		}
 
@@ -384,34 +384,34 @@ public final class Development implements CommandTrigger {
 			id = Integer.parseInt(args[0]);
 		}
 		catch(NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (dir) (x) (y)");
 			return;
+		}
+
+		int dir = 0;
+		if (args.length >= 4) {
+			try {
+				dir = Integer.parseInt(args[1]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (dir) (x) (y)");
+				return;
+			}
 		}
 
 		int x = -1;
 		int y = -1;
-		if(args.length >= 3) {
+		if(args.length >= 4) {
 			try {
-				x = Integer.parseInt(args[1]);
-				y = Integer.parseInt(args[2]);
+				x = Integer.parseInt(args[2]);
+				y = Integer.parseInt(args[3]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (dir) (x) (y)");
 				return;
 			}
 		}
 		else {
 			x = player.getX();
 			y = player.getY();
-		}
-
-		int dir = 0;
-		if (args.length >= 4) {
-			try {
-				dir = Integer.parseInt(args[3]);
-			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y) (dir)");
-				return;
-			}
 		}
 
 		if(!player.getWorld().withinWorld(x, y))
