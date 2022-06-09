@@ -389,7 +389,7 @@ public final class Development implements CommandTrigger {
 		}
 
 		int dir = 0;
-		if (args.length >= 4) {
+		if (args.length >= 2) {
 			try {
 				dir = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
