@@ -2970,7 +2970,6 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			|| npc.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || npc.getID() == NpcId.MERCENARY_JAILDOOR.id();
 		final boolean isMercCaptain = npc.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1;
 
-		/* TODO: Check for authenticity before uncommenting
 		// Check if we're already in combat. If we are, then we can mage.
 		if (player.inCombat()) {
 			// Make sure that we're casting on the same NPC we're fighting
@@ -2986,7 +2985,6 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				return false;
 			}
 		}
-		*/
 
 		return questStage && (isMerc || isMercCaptain);
 	}
