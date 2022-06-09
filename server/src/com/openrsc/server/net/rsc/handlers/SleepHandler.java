@@ -35,17 +35,22 @@ public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeI
 				return;
 			}
 
-			PrerenderedSleepword curSleepword;
+			String correctWord;
+			boolean knowCorrectWord = true;
+			PrerenderedSleepword curSleepword = null;
 			if (null != player.queuedSleepword) {
 				curSleepword = player.queuedSleepword;
 			} else {
-				curSleepword = CaptchaGenerator.prerenderedSleepwords.get(player.getPrerenderedSleepwordIndex());
+				if (CaptchaGenerator.usingPrerenderedSleepwords) {
+					curSleepword = CaptchaGenerator.prerenderedSleepwords.get(player.getPrerenderedSleepwordIndex());
+				} else {
+					// server failed to load prerendered sleepwords.
+					// word is "asleep", but we won't check that.
+					knowCorrectWord = false;
+				}
 			}
 
-			String correctWord;
-			boolean knowCorrectWord = true;
-
-			if (CaptchaGenerator.usingPrerenderedSleepwords || (null != player.queuedSleepword && CaptchaGenerator.usingPrerenderedSleepwordsSpecial)) {
+			if (knowCorrectWord && (CaptchaGenerator.usingPrerenderedSleepwords || (null != player.queuedSleepword && CaptchaGenerator.usingPrerenderedSleepwordsSpecial))) {
 			    knowCorrectWord = curSleepword.knowTheCorrectWord;
 			    if (knowCorrectWord) {
 			        correctWord = curSleepword.correctWord;
