@@ -187,7 +187,7 @@ public final class Event implements CommandTrigger {
 		else if(command.equalsIgnoreCase("currentstat") ||command.equalsIgnoreCase("currentstats") || command.equalsIgnoreCase("setcurrentstat") || command.equalsIgnoreCase("setcurrentstats") || command.equalsIgnoreCase("curstat") ||command.equalsIgnoreCase("curstats") || command.equalsIgnoreCase("setcurstat") || command.equalsIgnoreCase("setcurstats")) {
 			changeCurrentStat(player, command, args);
 		}
-		else if (command.equalsIgnoreCase("possess") || command.equalsIgnoreCase("pos") || command.equalsIgnoreCase("possessnpc") || command.equalsIgnoreCase("pnpc") || command.equalsIgnoreCase("posnpc") || command.equalsIgnoreCase("pr") || command.equalsIgnoreCase("possessrandom")) {
+		else if (command.equalsIgnoreCase("possess") || command.equalsIgnoreCase("pos") || command.equalsIgnoreCase("possessnpc") || command.equalsIgnoreCase("pnpc") || command.equalsIgnoreCase("posnpc") || command.equalsIgnoreCase("pr") || command.equalsIgnoreCase("possessrandom") || command.equalsIgnoreCase("possessnext") || command.equalsIgnoreCase("pn")) {
 			possessMob(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("npctalk") || command.equalsIgnoreCase("npcsay")) {
@@ -533,6 +533,36 @@ public final class Event implements CommandTrigger {
 					player.message(messagePrefix + "Could not find player to possess.");
 					return;
 				}
+			} else if (command.equalsIgnoreCase("possessnext") || command.equalsIgnoreCase("pn")) {
+					int preferredPid = -1;
+					if (args.length > 0) {
+						try {
+							preferredPid = Integer.parseInt(args[0]);
+						} catch (NumberFormatException e) {
+							player.message(badSyntaxPrefix + command.toUpperCase() + " (preferred player pid)");
+							return;
+						}
+					}
+
+					if (preferredPid < 0) {
+						if (player.getPossessing() instanceof Player) {
+							preferredPid = player.getPossessing().getIndex() + 1;
+						} else if (player.getPossessing() instanceof Npc) {
+							player.message(messagePrefix + "Not supported to go to next npc.");
+							player.message(messagePrefix + "Please free your soul from this monster, then try again.");
+							return;
+						} else {
+							// not currently possessing anything
+							preferredPid = 0;
+						}
+					}
+
+					targetPlayer = player.getWorld().getNextPlayer(preferredPid, player.getIndex());
+
+					if (targetPlayer == null || targetPlayer.getUsername().equals(player.getUsername())) {
+						player.message(messagePrefix + "Could not find player to possess.");
+						return;
+					}
 			} else {
 				if (1 > args.length) {
 					player.message(badSyntaxPrefix + command.toUpperCase() + " [player name]");

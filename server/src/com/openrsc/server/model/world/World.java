@@ -314,6 +314,22 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		}
 		return null;
 	}
+	/**
+	 * Gets the player at or above the PID requested
+	 * @return
+	 */
+	public Player getNextPlayer(final int pid, final int excludePid) {
+		if(!players.isEmpty()) {
+			List<Integer> indices = new ArrayList<>(players.indices());
+			for (int pidSearch = pid; pidSearch < pid + getServer().getConfig().MAX_PLAYERS; pidSearch++) {
+				int pidSearchMod = pidSearch % getServer().getConfig().MAX_PLAYERS;
+				if (indices.contains(pidSearchMod) && pidSearchMod != excludePid) {
+					return players.get(pidSearchMod);
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Finds a specific quest by ID
