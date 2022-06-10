@@ -181,10 +181,11 @@ public class Smithing implements UseLocTrigger {
 			delay(2);
 			mes("You have repaired the Dragon Square Shield.");
 			delay(2);
-			player.getCarriedItems().remove(new Item(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id()));
-			player.getCarriedItems().remove(new Item(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()));
-			player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id()));
-			player.incExp(Skill.SMITHING.id(), 300, true);
+			if (player.getCarriedItems().remove(new Item(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id()),
+				new Item(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()))) {
+				player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id()));
+				player.incExp(Skill.SMITHING.id(), 300, true);
+			}
 		}
 	}
 

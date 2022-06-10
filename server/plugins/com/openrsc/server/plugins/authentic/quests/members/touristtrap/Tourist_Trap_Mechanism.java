@@ -228,11 +228,11 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			delay(2);
 			mes("Following the plans is tricky, but you persevere.");
 			delay(2);
-			player.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10));
+			if (player.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10)) == -1) return;
 			if (protoDartFletchSuccessful(player.getSkills().getLevel(Skill.FLETCHING.id()))) {
 				mes("You succesfully attach the feathers to the dart tip.");
 				delay(2);
-				player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_DART_TIP.id()));
+				if (player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_DART_TIP.id())) == -1) return;
 				player.getCarriedItems().getInventory().add(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 				//kosher: dependent on fletching level!
 				player.incExp(Skill.FLETCHING.id(), getMaxLevel(player, Skill.FLETCHING.id()) * 50, true);
