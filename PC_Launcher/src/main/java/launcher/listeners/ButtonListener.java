@@ -3,6 +3,7 @@ package launcher.listeners;
 import launcher.Fancy.MainWindow;
 import launcher.Gameupdater.Updater;
 import launcher.Launcher;
+import launcher.Main;
 import launcher.Settings;
 import launcher.Utils.ClientLauncher;
 import launcher.Utils.Defaults;
@@ -186,7 +187,7 @@ public class ButtonListener implements ActionListener {
 			case "delete": {
 				// Deletes all cache files except for .txt files and .wav files
 
-				File folder = new File(Defaults._DEFAULT_CONFIG_DIR);
+				File folder = new File(Main.configFileLocation);
 				File[] fList = folder.listFiles();
 				assert fList != null;
 				for (File file : fList) {
@@ -196,7 +197,7 @@ public class ButtonListener implements ActionListener {
 					}
 				}
 
-				File video = new File(Defaults._DEFAULT_CONFIG_DIR + "/video");
+				File video = new File(Main.configFileLocation + "/video");
 				File[] vList = video.listFiles();
 				assert vList != null;
 				for (File file : vList) {
@@ -209,7 +210,7 @@ public class ButtonListener implements ActionListener {
 					}
 				}
 
-				File spritepacks = new File(Defaults._DEFAULT_CONFIG_DIR + "/video/spritepacks");
+				File spritepacks = new File(Main.configFileLocation + "/video/spritepacks");
 				File[] sList = spritepacks.listFiles();
 				assert sList != null;
 				for (File file : sList) {
@@ -234,7 +235,7 @@ public class ButtonListener implements ActionListener {
 				settingsFrame.showFrame();
 				return;
 			}
-			
+
 			case "advanced_settings_button": {
 				if (null != settingsFrame)
 					settingsFrame.setVisible(false);

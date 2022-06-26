@@ -1,5 +1,6 @@
 package launcher.elements;
 
+import launcher.Main;
 import launcher.Utils.Defaults;
 import launcher.listeners.CheckComboListener;
 
@@ -98,10 +99,10 @@ public class CheckCombo extends JComboBox implements ListCellRenderer {
 		store[] stores = null;
 
 		try {
-			File configFile = new File(Defaults._DEFAULT_CONFIG_DIR, "config.txt");
+			File configFile = new File(Main.configFileLocation, "config.txt");
 			configFile.createNewFile();
 
-			File spDir = new File(Defaults.SPRITEPACK_DIR);
+			File spDir = new File(Main.SPRITEPACK_DIR);
 			File[] spritePacks = spDir.listFiles(File::isFile);
 
 			if (spritePacks.length > 0) {

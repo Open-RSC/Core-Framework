@@ -1,5 +1,6 @@
 package launcher.Gameupdater;
 
+import launcher.Main;
 import launcher.Utils.Defaults;
 import launcher.Utils.Logger;
 
@@ -78,7 +79,7 @@ public class Downloader implements Runnable {
 	}
 
 	private void download(List<File> fileList) {
-		Thread t = new Thread(new Downloader(Defaults._DEFAULT_CONFIG_DIR, fileList));
+		Thread t = new Thread(new Downloader(Main.configFileLocation, fileList));
 		t.start();
 	}
 

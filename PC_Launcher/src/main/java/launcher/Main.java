@@ -3,12 +3,16 @@ package launcher;
 import launcher.Utils.Defaults;
 import launcher.Utils.Utils;
 
+import java.io.File;
+
 public class Main {
 
-    public static void main(final String[] args) {
+	// DEFAULT FOLDERS
+	public static String configFileLocation = "Cache";
+	public static String SPRITEPACK_DIR = configFileLocation + File.separator + "video" + File.separator + "spritepacks";
 
-        // Config file default
-        String configFileLocation = Defaults._DEFAULT_CONFIG_DIR;
+
+	public static void main(final String[] args) {
 
         // Get args from the command line if any
         if (args.length > 0) {
@@ -27,6 +31,7 @@ public class Main {
                     // Check if the provided arg is a valid path
                     if (Utils.isValidPath(args[1])) { // Valid path
                         configFileLocation = Utils.getCanonicalPath(args[1]);
+						SPRITEPACK_DIR = configFileLocation + File.separator + "video" + File.separator + "spritepacks";
                     } else { // Invalid path
                         System.out.println("Error: please provide a valid path.\n" +
                                 "Usage: java -jar OpenRSC.jar -d /path/to/cache/folder");

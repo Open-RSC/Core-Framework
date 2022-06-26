@@ -1,5 +1,6 @@
 package launcher.Utils;
 
+import launcher.Main;
 import launcher.popup.SavedIndicatorThread;
 
 import javax.swing.*;
@@ -37,7 +38,7 @@ public class Utils {
         try {
             return checkFile.getCanonicalPath();
         } catch (Exception error) { // If error, fallback to the default location
-            return Defaults._DEFAULT_CONFIG_DIR;
+            return Main.configFileLocation;
         }
     }
 

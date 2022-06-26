@@ -2,6 +2,7 @@ package launcher.Utils;
 
 import launcher.Gameupdater.Downloader;
 import launcher.Gameupdater.Updater;
+import launcher.Main;
 import launcher.Settings;
 import launcher.elements.ClientSettingsCard;
 import launcher.popup.PopupFrame;
@@ -236,36 +237,36 @@ public class ClientLauncher {
 		}
 
 		// Deletes the client.properties file that may persist unwanted settings between different games
-		File f = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "client.properties");
+		File f = new File(Main.configFileLocation + File.separator + "client.properties");
 		f.delete();
 
 		// Update the sprite pack config file
-		File configFile = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "config.txt");
+		File configFile = new File(Main.configFileLocation + File.separator + "config.txt");
 		configFile.delete();
 
-		f = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator
+		f = new File(Main.configFileLocation + File.separator
 			+ Defaults._CLIENT_FILENAME + ".jar");
 		Utils.execCmd(new String[]{"java", "-jar", f.getAbsolutePath()}, false);
 	}
 
 	public static void launchRSCPlus() {
-		File rscplusJar = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "rscplus" + File.separator + "rscplus.jar");
+		File rscplusJar = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "rscplus" + File.separator + "rscplus.jar");
 		Utils.execCmd(new String[]{"java", "-jar", rscplusJar.getAbsolutePath()}, rscplusJar.getParentFile());
 	}
 
 	public static void launchRSCTimes() {
-		File rsctimesJar = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "rsctimes" + File.separator + "rsctimes.jar");
+		File rsctimesJar = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "rsctimes" + File.separator + "rsctimes.jar");
 		Utils.execCmd(new String[]{"java", "-jar", rsctimesJar.getAbsolutePath()}, rsctimesJar.getParentFile());
 	}
 
 	public static void launchFleaCircus() {
-		File fleaCircusDir = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "fleacircus");
+		File fleaCircusDir = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "fleacircus");
 		Utils.execCmd(new String[]{"java", "-cp", fleaCircusDir.getAbsolutePath(), "fleas"}, fleaCircusDir);
 	}
 
 	public static void launchAPOS() {
-		File aposbotJar = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "apos" + File.separator + "APOS-master" + File.separator + "bot.jar");
-		File aposDir = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "apos" + File.separator + "APOS-master");
+		File aposbotJar = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "apos" + File.separator + "APOS-master" + File.separator + "bot.jar");
+		File aposDir = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "apos" + File.separator + "APOS-master");
 
 		// Compile all java script files within the Scripts folder
 		try {
@@ -280,12 +281,12 @@ public class ClientLauncher {
 
 	public static void launchWinRune(String ip, String port, String version) {
 		final String rsaKey = "7112866275597968156550007489163685737528267584779959617759901583041864787078477876689003422509099353805015177703670715380710894892460637136582066351659813";
-		File winruneJar = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "winrune" + File.separator + "WinRune-master" + File.separator + "rune.jar");
+		File winruneJar = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "winrune" + File.separator + "WinRune-master" + File.separator + "rune.jar");
 		Utils.execCmd(new String[]{"java", "-jar", winruneJar.getAbsolutePath(), "members=true", "address=" + ip, "port=" + port, "version=" + version, "rsaExponent=65537", "rsaModulus=" + rsaKey}, winruneJar.getParentFile());
 	}
 
 	public static void launchIdleRSC() {
-		File idlerscJar = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "idlersc" + File.separator + "IdleRSC-master" + File.separator + "IdleRSC.jar");
+		File idlerscJar = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "idlersc" + File.separator + "IdleRSC-master" + File.separator + "IdleRSC.jar");
 		Utils.execCmd(new String[]{"java", "-jar", idlerscJar.getAbsolutePath()}, idlerscJar.getParentFile());
 	}
 

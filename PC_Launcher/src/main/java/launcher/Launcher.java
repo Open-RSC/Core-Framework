@@ -115,7 +115,7 @@ public class Launcher extends Component {
 		frame.build();
 
         // Fetch OpenRSC client jar and cache updates; also init progress bar
-        updater = new Updater(Defaults._DEFAULT_CONFIG_DIR, Defaults._CURRENT_VERSION.toString());
+        updater = new Updater(Main.configFileLocation, Defaults._CURRENT_VERSION.toString());
         updater.updateOpenRSCClient();
     }
 
