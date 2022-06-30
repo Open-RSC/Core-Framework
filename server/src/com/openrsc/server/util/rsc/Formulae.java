@@ -313,14 +313,10 @@ public final class Formulae {
 	 * Decide if we fall off the obstacle or not
 	 */
 	// TODO: This should be moved to the appropriate plugin class.
-	public static boolean failCalculation(Player player, int skill, int reqLevel) {
-		int levelDiff = player.getSkills().getMaxStat(skill) - reqLevel;
-		if (levelDiff < 0) {
-			return false;
-		}
-		if (levelDiff >= 20) {
-			return true;
-		}
+	public static boolean failCalculation(final Player player, final int skill, final int reqLevel) {
+		final int levelDiff = player.getSkills().getLevel(skill) - reqLevel;
+		if (levelDiff < 0) return false;
+		if (levelDiff >= 20) return true;
 		return DataConversions.random(0, levelDiff + 1) != 0;
 	}
 
