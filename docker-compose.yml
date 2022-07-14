@@ -18,7 +18,7 @@ services:
       - MARIADB_USER=${MARIADB_USER}
       - MARIADB_PASSWORD=${MARIADB_PASS}
     ports:
-      - "127.0.0.1:3306:3306"
+      - "0.0.0.0:3306:3306"
     volumes:
       - ./server/inc/databases:/var/lib/mysql
       - ./server/inc/my.cnf:/etc/mysql/my.cnf:ro
