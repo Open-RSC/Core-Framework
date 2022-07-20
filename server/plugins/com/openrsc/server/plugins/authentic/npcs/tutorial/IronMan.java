@@ -38,75 +38,85 @@ public class IronMan implements
 	}
 
 	@Override
-	public void onTalkNpc(Player player, Npc n) {
-		if (!config().SPAWN_IRON_MAN_NPCS) return;
+	public void onTalkNpc(final Player player, final Npc npc) {
+		if (!player.getConfig().SPAWN_IRON_MAN_NPCS) {
+			player.setSuspiciousPlayer(true, "trying to talk to ironman npc when config is disabled.");
+			return;
+		}
 
-		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
-			if (player.getAttribute("ironman_delete", false)) {
-				if (player.getCache().hasKey("bank_pin")) {
-					mes(n, "Enter your Bank PIN to downgrade your Iron Man status.");
-					delay(2);
+		if (player.getAttribute("ironman_delete", false)) { // Change mode/status
+			player.setAttribute("ironman_delete", false);
 
-					if (!validatebankpin(player, n)) {
-						ActionSender.sendBox(player, "Incorrect bank pin", false);
-						player.setAttribute("ironman_delete", false);
-						ActionSender.sendIronManInterface(player);
-						return;
-					}
-					player.setAttribute("ironman_delete", false);
-					player.message("You have correctly entered your PIN");
-					int id = player.getAttribute("ironman_mode");
-					if (id != -1) {
-						player.setIronMan(id);
-					}
-					player.message("You have downgraded your ironman status");
+			if (player.getCache().hasKey("bank_pin")) {
+				mes(npc, "Enter your Bank PIN to downgrade your Iron Man status.");
+				delay(2);
+				if (!validatebankpin(player, npc)) {
+					ActionSender.sendIronManInterface(player);
+					return;
+				}
+			}
+
+			final int mode = player.getAttribute("ironman_mode");
+			if (mode == -1) return;
+			player.setIronMan(mode);
+			player.message("You have downgraded your Iron Man status.");
+			ActionSender.sendIronManMode(player);
+			ActionSender.sendIronManInterface(player);
+			return;
+		}
+
+		if (player.getAttribute("ironman_pin", false)) { // Change deactivation status
+			player.setAttribute("ironman_pin", false);
+
+			mes(npc, "You'll need to set a Bank PIN for that.");
+			delay(2);
+
+			final int menu = multi(player,
+				"Okay, let me set a PIN.", // 0
+				"No, I don't want a Bank PIN." // 1
+			);
+
+			switch (menu) {
+				case 0:
+					if (!setbankpin(player, npc)) return;
+					player.setIronManRestriction(0);
 					ActionSender.sendIronManMode(player);
 					ActionSender.sendIronManInterface(player);
-				}
-				return;
-			} else if (player.getAttribute("ironman_pin", false)) {
-				mes(n, "You'll need to set a Bank PIN for that.");
-				delay(2);
-				int menu = multi(player,
-					"Okay, let me set a PIN.",
-					"No, I don't want a Bank PIN.");
-				if (menu != -1) {
-					if (menu == 0) {
-						if (!player.getCache().hasKey("bank_pin")) {
-							if(setbankpin(player, n)) {
-								player.setIronManRestriction(0);
-								ActionSender.sendIronManMode(player);
-								ActionSender.sendIronManInterface(player);
-							}
+					break;
+				case 1:
+					ActionSender.sendIronManInterface(player);
+					break;
+				default:
+					break;
+			}
+			return;
+		}
 
-							player.setAttribute("ironman_pin", false);
-						}
-					} else if (menu == 1) {
-						ActionSender.sendIronManInterface(player);
-						player.setAttribute("ironman_pin", false);
-					}
-				} else {
-					player.setAttribute("ironman_pin", false);
-				}
-				return;
-			}
-			if (player.isIronMan(IronmanMode.Ironman.id())) {
-				npcsay(player, n, "Hail, Iron Man!");
-			} else if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				npcsay(player, n, "Hail, Ultimate Iron Man!");
-			} else if (player.isIronMan(IronmanMode.Hardcore.id())) {
-				npcsay(player, n, "Hail, Hardcore Iron Man!");
-			} else {
-				npcsay(player, n, "Hello, " + player.getUsername() + ". We're the Iron Man tutors.");
-			}
-			npcsay(player, n, "What can we do for you?");
-			int menu = multi(player, n,
-				"Tell me about Iron Men.",
-				"I'd like to " + (player.getLocation().onTutorialIsland() ? "change" : "review") + " my Iron Man mode.",
-				"Have you any armour for me, please?",
-				"I'm fine, thanks.");
-			if (menu == 0) {
-				npcsay(player, n, "When you play as an Iron Man, you do everything",
+		final String greeting;
+
+		if (player.isIronMan(IronmanMode.Ironman.id())) {
+			greeting = "Hail, Iron Man!";
+		} else if (player.isIronMan(IronmanMode.Ultimate.id())) {
+			greeting = "Hail, Ultimate Iron Man!";
+		} else if (player.isIronMan(IronmanMode.Hardcore.id())) {
+			greeting = "Hail, Hardcore Iron Man!";
+		} else {
+			greeting = String.format("Hello, %s. We're the Iron Man tutors.", player.getUsername());
+		}
+
+		npcsay(player, npc, greeting);
+		npcsay(player, npc, "What can we do for you?");
+
+		final int menu = multi(player, npc,
+			"Tell me about Iron Men.", // 0
+			"I'd like to " + (player.getLocation().onTutorialIsland() ? "change" : "review") + " my Iron Man mode.", // 1
+			"Have you any armour for me, please?", // 2
+			"I'm fine, thanks." // 3
+		);
+
+		switch (menu) {
+			case 0:
+				npcsay(player, npc, "When you play as an Iron Man, you do everything",
 					"for yourself. You don't trade with other players, or take",
 					"their items, or accept their help.",
 					"As an Iron Man, you choose to have these restrictions",
@@ -133,11 +143,15 @@ public class IronMan implements
 					"So we will let Hardcore Iron Men or Ultimate Iron Men",
 					"downgrade to a standard Iron Men,",
 					"and we'll let either Iron Man types of Iron Man become normal players.");
-			} else if (menu == 1) {
+				break;
+			case 1:
 				ActionSender.sendIronManInterface(player);
-			} else if (menu == 2) {
-				armourOption(player, n);
-			}
+				break;
+			case 2:
+				armourOption(player, npc);
+				break;
+			default:
+				break;
 		}
 	}
 

@@ -1,9 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skill;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -22,8 +19,6 @@ import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.OptionsStruct;
 import com.openrsc.server.util.rsc.DataConversions;
-
-import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
 
 public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, OpcodeIn> {
 	private static String[] badWords = {
@@ -130,119 +125,113 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 		ActionSender.sendInventory(player);
 	}
 
-	private void handleIronmanMode(Player player, OptionsStruct payload) {
-		int secondary = payload.value;
-		if (secondary == 0) {
-			int mode = payload.value2;
+	private void handleIronmanMode(final Player player, final OptionsStruct payload) {
+		final int value = payload.value;
+
+		if (value == 0) { // Change mode/status
+			final int mode = payload.value2;
+
 			if (mode < 0 || mode > 3) {
-				player.setSuspiciousPlayer(true, "mode < 0 or mode > 3");
+				player.setSuspiciousPlayer(true, "trying to set invalid ironman mode: " + mode);
 				return;
 			}
-			if (mode > -1) {
-				if (mode == IronmanMode.Ironman.id()) {
-					if (!player.getLocation().onTutorialIsland() && (player.getIronMan() <= IronmanMode.None.id() || player.getIronMan() > IronmanMode.Transfer.id())) {
+
+			final int currentMode = player.getIronMan();
+
+			if (mode == currentMode) return;
+
+			if (player.getLocation().onTutorialIsland()) {
+				player.setIronMan(mode);
+				ActionSender.sendIronManMode(player);
+				return;
+			}
+
+			switch (mode) {
+				case 0: // None
+				case 1: // Regular
+					if (mode == 1 && currentMode <= IronmanMode.None.id() || currentMode > IronmanMode.Transfer.id()) {
 						player.message("You cannot become an Iron Man after leaving Tutorial Island.");
 						return;
 					}
-					if (player.getIronMan() == IronmanMode.Ironman.id()) {
+
+					if (player.getIronManRestriction() != 0) {
+						player.message("Your Iron Man status is permanent and cannot be changed.");
 						return;
 					}
-					if (!player.getLocation().onTutorialIsland()
-						&& (player.getIronMan() == IronmanMode.Ultimate.id() || player.getIronMan() == IronmanMode.Hardcore.id())) {
-						if (player.getIronManRestriction() == 0) {
-							if (player.getCache().hasKey("bank_pin")) {
-								Npc npc = ifnearvisnpc(player, 11, 799, 800, 801);
-								if (npc != null) {
-									ActionSender.sendHideIronManInterface(player);
-									player.setAttribute("ironman_delete", true);
-									player.setAttribute("ironman_mode", mode);
-									npc.initializeTalkScript(player);
-								} else {
-									player.message("The Iron Men are currently busy");
-								}
-							}
-						} else {
-							player.message("Your account is set to permanent - you cannot remove your status");
-						}
+
+					Npc ironManNpc = null;
+
+					for (final Npc npc : player.getViewArea().getNpcsInView()) {
+						final int id = npc.getID();
+						if (id < NpcId.IRONMAN.id() || id > NpcId.HARDCORE_IRONMAN.id() || npc.isBusy()) continue;
+						ironManNpc = npc;
+						break;
+					}
+
+					ActionSender.sendHideIronManInterface(player);
+
+					if (ironManNpc == null) {
+						player.message("The Iron Men are currently busy. Please try again.");
 						return;
 					}
-					player.setIronMan(IronmanMode.Ironman.id());
-				} else if (mode == IronmanMode.Ultimate.id()) {
-					if (!player.getLocation().onTutorialIsland() && player.getIronMan() != IronmanMode.Ultimate.id()) {
-						player.message("You cannot become an Ultimate Iron Man after leaving Tutorial Island.");
-						return;
-					}
-					if (player.getIronMan() == IronmanMode.Ultimate.id()) {
-						return;
-					}
-					player.setIronMan(IronmanMode.Ultimate.id());
-				} else if (mode == IronmanMode.Hardcore.id()) {
-					if (!player.getLocation().onTutorialIsland() && player.getIronMan() != IronmanMode.Hardcore.id()) {
-						player.message("You cannot become a Hardcore Iron Man after leaving Tutorial Island.");
-						return;
-					}
-					if (player.getIronMan() == IronmanMode.Hardcore.id()) {
-						return;
-					}
-					player.setIronMan(IronmanMode.Hardcore.id());
-				} else {
-					if (player.getIronMan() == IronmanMode.None.id()) {
-						return;
-					}
-					if (!player.getLocation().onTutorialIsland()
-						&& (player.getIronMan() == IronmanMode.Ironman.id() || player.getIronMan() == IronmanMode.Ultimate.id()
-						|| player.getIronMan() == IronmanMode.Hardcore.id())) {
-						if (player.getIronManRestriction() == 0) {
-							if (player.getCache().hasKey("bank_pin")) {
-								Npc npc = ifnearvisnpc(player, 11, 799, 800, 801);
-								if (npc != null) {
-									ActionSender.sendHideIronManInterface(player);
-									player.setAttribute("ironman_delete", true);
-									player.setAttribute("ironman_mode", mode);
-									npc.initializeTalkScript(player);
-								} else {
-									player.message("The Iron Men are currently busy");
-								}
-							}
-						} else {
-							player.message("Your account is set to permanent - you cannot remove your status");
-						}
-						return;
-					}
-					player.setIronMan(IronmanMode.None.id());
-				}
-				ActionSender.sendIronManMode(player);
+
+					player.setAttribute("ironman_delete", true);
+					player.setAttribute("ironman_mode", mode);
+
+					ironManNpc.initializeTalkScript(player);
+					break;
+				case 2: // Ultimate
+					player.message("You cannot become an Ultimate Iron Man after leaving Tutorial Island.");
+					break;
+				case 3: // Hardcore
+					player.message("You cannot become a Hardcore Iron Man after leaving Tutorial Island.");
+					break;
 			}
-		} else if (secondary == 1) {
-			int setting = payload.value2;
+		} else if (value == 1) { // Change deactivation setting
+			final int setting = payload.value2;
+
 			if (setting < 0 || setting > 1) {
-				player.setSuspiciousPlayer(true, "setting < 0 or setting > 1");
+				player.setSuspiciousPlayer(true, "trying to set invalid ironman deactivation setting: " + setting);
 				return;
 			}
+
 			if (!player.getLocation().onTutorialIsland()) {
-				player.message("You cannot change this setting now that you have completed the Tutorial.");
+				player.message("You cannot change this setting after leaving Tutorial Island.");
 				return;
 			}
-			if (setting > -1) {
-				if (player.getIronMan() == IronmanMode.None.id()) {
+
+			if (player.getIronMan() == IronmanMode.None.id()) {
+				player.message("Select an Iron Man mode before changing this setting.");
+				return;
+			}
+
+			if (setting == 0) { // bank pin
+				if (player.getCache().hasKey("bank_pin")) {
+					player.setIronManRestriction(0);
+					ActionSender.sendIronManMode(player);
 					return;
 				}
-				if (setting == 0) {
-					if (!player.getCache().hasKey("bank_pin")) {
-						Npc npc = ifnearvisnpc(player, 11, 799, 800, 801);
-						if (npc != null) {
-							ActionSender.sendHideIronManInterface(player);
-							player.setAttribute("ironman_pin", true);
-							npc.initializeTalkScript(player);
-						} else {
-							player.message("The Iron Men are currently busy");
-						}
-					} else {
-						player.setIronManRestriction(0);
-					}
-				} else {
-					player.setIronManRestriction(1);
+
+				Npc ironManNpc = null;
+
+				for (final Npc npc : player.getViewArea().getNpcsInView()) {
+					final int id = npc.getID();
+					if (id < NpcId.IRONMAN.id() || id > NpcId.HARDCORE_IRONMAN.id() || npc.isBusy()) continue;
+					ironManNpc = npc;
+					break;
 				}
+
+				ActionSender.sendHideIronManInterface(player);
+
+				if (ironManNpc == null) {
+					player.message("The Iron Men are currently busy. Please try again.");
+					return;
+				}
+
+				player.setAttribute("ironman_pin", true);
+				ironManNpc.initializeTalkScript(player);
+			} else { // permanent
+				player.setIronManRestriction(1);
 				ActionSender.sendIronManMode(player);
 			}
 		}
