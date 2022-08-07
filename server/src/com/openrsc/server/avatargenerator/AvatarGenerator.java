@@ -717,7 +717,7 @@ public final class AvatarGenerator {
 					img.setRGB(i % Constants.AVATAR_WIDTH, i / Constants.AVATAR_WIDTH, pixels[i] | 0xFF000000);
 				}
 			}
-			ImageIO.write(img, "png", new File(getWorld().getServer().getConfig().AVATAR_DIR + playerID + ".png"));
+			ImageIO.write(img, "png", new File(getWorld().getServer().getConfig().AVATAR_DIR + getWorld().getServer().getConfig().DB_NAME + "+" + playerID + ".png"));
 		}
 		/// A helper function for rendering
 		private void drawPlayer(int x, int y, int scaleX, int scaleY, int unknown) {
