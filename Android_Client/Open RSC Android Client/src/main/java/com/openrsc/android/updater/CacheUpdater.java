@@ -148,9 +148,9 @@ public class CacheUpdater extends Activity {
 			String ip;
 			if (isIp(serverUrl)) {
 				ip = serverUrl;
-			} else { // Attempt to get the IPv4 address of the hostname.
+			} else { // Attempt to get the IP address of the hostname.
 				try {
-					Inet4Address address = (Inet4Address) InetAddress.getByName(new URL(serverUrl).getHost());
+					InetAddress address = InetAddress.getByName(new URL(serverUrl).getHost());
 					ip = address.getHostAddress();
 					System.out.println(ip);
 
