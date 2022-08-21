@@ -9,9 +9,14 @@ To do so, open Terminal, copy and paste the following, and then press enter:
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-Now copy and paste the following in Terminal and press enter:
+You need install Java, to to it, copy and paste the following in Terminal and press enter:
 ```
-brew install adoptopenjdk/openjdk
+brew tap AdoptOpenJDK/openjdk && brew install adoptopenjdk8
+```
+
+You need istall Apache Ant too, copy and paste the following in Terminal and press enter:
+```
+brew install ant
 ```
 
 ## Step 2
