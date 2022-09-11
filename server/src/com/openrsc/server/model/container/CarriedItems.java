@@ -107,8 +107,8 @@ public class CarriedItems {
 			}
 		}
 
-		// If we don't find it in the inventory, attempt to get it from equipment.
-		if (toRemove != null) {
+		// If we don't find it in the inventory with required amount, attempt to get it from equipment.
+		if (toRemove != null && getInventory().countId(toRemove.getCatalogId(), Optional.of(toRemove.getNoted())) >= item.getAmount()) {
 			return getInventory().remove(item, updateClient);
 		}
 		else {

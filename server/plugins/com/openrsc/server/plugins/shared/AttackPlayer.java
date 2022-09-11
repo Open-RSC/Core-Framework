@@ -10,7 +10,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class AttackPlayer {
 	public static boolean attackPrevented(Player player, Player affectedMob) {
 		boolean prevented = false;
-		if (affectedMob.getLocation().isInBank(player.getConfig().BASED_MAP_DATA)) {
+		if (config().USES_PK_MODE && affectedMob.getLocation().isInBank(player.getConfig().BASED_MAP_DATA)) {
 			player.message("You cannot attack other players inside the bank");
 			prevented = true;
 		}

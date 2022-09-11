@@ -1570,13 +1570,13 @@ public final class Player extends Mob {
 	public void incQuestExp(final int i, final int amount, final boolean useFatigue) {
 		int appliedAmount = amount;
 		if (!isOneXp())
-			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
+			appliedAmount = (int) Math.round(getExperienceMultiplier(i) * amount);
 		if (isExperienceFrozen()) {
 			ActionSender.sendMessage(this, "You passed on " + appliedAmount / 4 + " " +
 				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
 			return;
 		}
-		incExp(i, appliedAmount, useFatigue, true);
+		incExp(i, amount, useFatigue, true);
 	}
 
 	/**

@@ -316,12 +316,16 @@ public class Inventory {
 							new UnequipRequest(player, inventoryItem, UnequipRequest.RequestType.FROM_INVENTORY, false)
 						);
 
+					amountToRemove -= inventoryItem.getAmount();
+
 					// Update the Server Bank
 					iterator.remove();
 
 					// Update the client
 					if (sendInventory)
 						ActionSender.sendRemoveItem(player, index);
+
+					continueRemoval = amountToRemove > 0;
 				}
 
 				if (!continueRemoval) return inventoryItem.getItemId();
@@ -454,7 +458,15 @@ public class Inventory {
 			deathItemsMap.put(key, value);
 		}
 
-		deathItemsMap.values().forEach(deathItemsList::addAll);
+		deathItemsMap.values().forEach((list) -> {
+			list.sort((c1, c2) -> {
+				if (c1.getCatalogId() != c2.getCatalogId()) {
+					return c1.getCatalogId() - c2.getCatalogId();
+				}
+				return c1.getAmount() - c2.getAmount();
+			});
+			deathItemsList.addAll(list);
+		});
 		deathItemsMap.clear();
 
 		final ListIterator<Item> iterator = deathItemsList.listIterator();
