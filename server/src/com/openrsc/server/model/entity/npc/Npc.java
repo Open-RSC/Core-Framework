@@ -25,6 +25,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MathUtil;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,15 +68,15 @@ public class Npc extends Mob {
 	/**
 	 * Holds players that did damage with combat
 	 */
-	private Map<UUID, Integer> combatDamagers = new HashMap<UUID, Integer>();
+	private Map<UUID, Pair<Integer, Long>> combatDamagers = new HashMap<UUID, Pair<Integer,Long>>();
 	/**
 	 * Holds players that did damage with mage
 	 */
-	private Map<UUID, Integer> mageDamagers = new HashMap<UUID, Integer>();
+	private Map<UUID, Pair<Integer, Long>> mageDamagers = new HashMap<UUID, Pair<Integer,Long>>();
 	/**
 	 * Holds players that did damage with range
 	 */
-	private Map<UUID, Integer> rangeDamagers = new HashMap<UUID, Integer>();
+	private Map<UUID, Pair<Integer, Long>> rangeDamagers = new HashMap<UUID, Pair<Integer,Long>>();
 
 	public Npc(final World world, final int id, final int x, final int y) {
 		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -129,9 +130,9 @@ public class Npc extends Mob {
 	 */
 	public void addCombatDamage(final Player mob, final int damage) {
 		if (combatDamagers.containsKey(mob.getUUID())) {
-			combatDamagers.put(mob.getUUID(), combatDamagers.get(mob.getUUID()) + damage);
+			combatDamagers.put(mob.getUUID(), Pair.of(combatDamagers.get(mob.getUUID()).getLeft() + damage, mob.getUsernameHash()));
 		} else {
-			combatDamagers.put(mob.getUUID(), damage);
+			combatDamagers.put(mob.getUUID(), Pair.of(damage, mob.getUsernameHash()));
 		}
 	}
 
@@ -141,11 +142,11 @@ public class Npc extends Mob {
 	 * @param mob    mob dealing damage
 	 * @param damage current attack's damage
 	 */
-	public void addMageDamage(final Mob mob, final int damage) {
+	public void addMageDamage(final Player mob, final int damage) {
 		if (mageDamagers.containsKey(mob.getUUID())) {
-			mageDamagers.put(mob.getUUID(), mageDamagers.get(mob.getUUID()) + damage);
+			mageDamagers.put(mob.getUUID(), Pair.of(mageDamagers.get(mob.getUUID()).getLeft() + damage, mob.getUsernameHash()));
 		} else {
-			mageDamagers.put(mob.getUUID(), damage);
+			mageDamagers.put(mob.getUUID(), Pair.of(damage, mob.getUsernameHash()));
 		}
 	}
 
@@ -155,11 +156,11 @@ public class Npc extends Mob {
 	 * @param mob    mob dealing damage
 	 * @param damage current attack's damage
 	 */
-	public void addRangeDamage(final Mob mob, final int damage) {
+	public void addRangeDamage(final Player mob, final int damage) {
 		if (rangeDamagers.containsKey(mob.getUUID())) {
-			rangeDamagers.put(mob.getUUID(), rangeDamagers.get(mob.getUUID()) + damage);
+			rangeDamagers.put(mob.getUUID(), Pair.of(rangeDamagers.get(mob.getUUID()).getLeft() + damage, mob.getUsernameHash()));
 		} else {
-			rangeDamagers.put(mob.getUUID(), damage);
+			rangeDamagers.put(mob.getUUID(), Pair.of(damage, mob.getUsernameHash()));
 		}
 	}
 
@@ -179,14 +180,14 @@ public class Npc extends Mob {
 	 * Combat damage done by Mob ID
 	 *
 	 * @param ID uuid of mob
-	 * @return int
+	 * @return Pair
 	 */
-	private int getCombatDamageDoneBy(final UUID ID) {
+	private Pair<Integer, Long> getCombatDamageInfoBy(final UUID ID) {
 		if (!combatDamagers.containsKey(ID)) {
-			return 0;
+			return Pair.of(0, 0L);
 		}
-		int dmgDone = combatDamagers.get(ID);
-		return Math.min(dmgDone, this.getDef().getHits());
+		int dmgDone = combatDamagers.get(ID).getLeft();
+		return Pair.of(Math.min(dmgDone, this.getDef().getHits()), combatDamagers.get(ID).getRight());
 	}
 
 	/**
@@ -214,14 +215,14 @@ public class Npc extends Mob {
 	 * Mage damage done by Mob ID
 	 *
 	 * @param ID uuid of mob
-	 * @return int
+	 * @return Pair
 	 */
-	private int getMageDamageDoneBy(final UUID ID) {
+	private Pair<Integer, Long> getMageDamageInfoBy(final UUID ID) {
 		if (!mageDamagers.containsKey(ID)) {
-			return 0;
+			return Pair.of(0, 0L);
 		}
-		int dmgDone = mageDamagers.get(ID);
-		return Math.min(dmgDone, this.getDef().getHits());
+		int dmgDone = mageDamagers.get(ID).getLeft();
+		return Pair.of(Math.min(dmgDone, this.getDef().getHits()), mageDamagers.get(ID).getRight());
 	}
 
 	/**
@@ -237,14 +238,14 @@ public class Npc extends Mob {
 	 * Range damage done by Mob ID
 	 *
 	 * @param ID uuid of mob
-	 * @return int
+	 * @return Pair
 	 */
-	private int getRangeDamageDoneBy(final UUID ID) {
+	private Pair<Integer, Long> getRangeDamageInfoBy(final UUID ID) {
 		if (!rangeDamagers.containsKey(ID)) {
-			return 0;
+			return Pair.of(0, 0L);
 		}
-		int dmgDone = rangeDamagers.get(ID);
-		return Math.min(dmgDone, this.getDef().getHits());
+		int dmgDone = rangeDamagers.get(ID).getLeft();
+		return Pair.of(Math.min(dmgDone, this.getDef().getHits()), rangeDamagers.get(ID).getRight());
 	}
 
 	/**
@@ -313,10 +314,13 @@ public class Npc extends Mob {
 			}
 		}
 
-		UUID ownerId = handleXpDistribution(mob);
-		owner = getWorld().getPlayerByUUID(ownerId);
+		Pair<UUID, Long> ownerInfo = handleXpDistribution(mob);
+		owner = getWorld().getPlayerByUUID(ownerInfo.getLeft());
 
 		if (owner == null) {
+			Player killOwner = new Player(getWorld(), ownerInfo.getRight());
+			/** Item Drops **/
+			dropItems(killOwner);
 			deathListeners.clear();
 			remove();
 			return;
@@ -583,9 +587,10 @@ public class Npc extends Mob {
 	 * @param attacker the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
 	 */
-	private UUID handleXpDistribution(final Mob attacker) {
+	private Pair<UUID, Long> handleXpDistribution(final Mob attacker) {
 		final int totalCombatXP = Formulae.combatExperience(this);
 		UUID UUIDWithMostDamage = attacker.getUUID();
+		Long hashWithMostDamage = attacker instanceof Player ? ((Player)attacker).getUsernameHash() : 0;
 		int currentHighestDamage = 0;
 
 		if (this.getWorld().getServer().getConfig().WANTS_KILL_STEALING && attacker.isPlayer()) {
@@ -616,7 +621,8 @@ public class Npc extends Mob {
 				lastAttacker.incExp(skillsDist, totalCombatXP, true);
 			} else if (type == KillType.RANGED) {
 				int maxTotalXP = totalCombatXP * 4;
-				int damageDoneByPlayer = getRangeDamageDoneBy(lastAttacker.getUUID());
+				Pair<Integer, Long> damageInfoByPlayer = getRangeDamageInfoBy(lastAttacker.getUUID());
+				int damageDoneByPlayer = damageInfoByPlayer.getLeft();
 				int alreadyGivenXp = this.getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT ? 16 * damageDoneByPlayer / 3 : 0;
 				int remainderXP = maxTotalXP - alreadyGivenXp;
 				if (remainderXP > 0) {
@@ -625,15 +631,17 @@ public class Npc extends Mob {
 				}
 			} // for MAGIC is of type per spell
 
-			return lastAttacker.getUUID();
+			return Pair.of(lastAttacker.getUUID(), lastAttacker.getUsernameHash());
 		}
 
 		// Melee damagers
 		for (UUID ID : getCombatDamagers()) {
-			final int damageDoneByPlayer = getCombatDamageDoneBy(ID);
+			final Pair<Integer, Long> damageInfoByPlayer = getCombatDamageInfoBy(ID);
+			final int damageDoneByPlayer = damageInfoByPlayer.getLeft();
 
 			if (damageDoneByPlayer > currentHighestDamage) {
 				UUIDWithMostDamage = ID;
+				hashWithMostDamage = damageInfoByPlayer.getRight();
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
@@ -666,9 +674,11 @@ public class Npc extends Mob {
 
 		// Ranged damagers
 		for (UUID ID : getRangeDamagers()) {
-			int damageDoneByPlayer = getRangeDamageDoneBy(ID);
+			Pair<Integer, Long> damageInfoByPlayer = getRangeDamageInfoBy(ID);
+			int damageDoneByPlayer = damageInfoByPlayer.getLeft();
 			if (damageDoneByPlayer > currentHighestDamage) {
 				UUIDWithMostDamage = ID;
+				hashWithMostDamage = damageInfoByPlayer.getRight();
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
@@ -686,14 +696,16 @@ public class Npc extends Mob {
 
 		// Magic damagers
 		for (UUID ID : getMageDamagers()) {
-			int dmgDoneByPlayer = getMageDamageDoneBy(ID);
+			Pair<Integer, Long> damageInfoByPlayer = getMageDamageInfoBy(ID);
+			int dmgDoneByPlayer = damageInfoByPlayer.getLeft();
 
 			if (dmgDoneByPlayer > currentHighestDamage) {
 				UUIDWithMostDamage = ID;
+				hashWithMostDamage = damageInfoByPlayer.getRight();
 				currentHighestDamage = dmgDoneByPlayer;
 			}
 		}
-		return UUIDWithMostDamage;
+		return Pair.of(UUIDWithMostDamage, hashWithMostDamage);
 	}
 
 	public void initializeTalkScript(final Player player) {

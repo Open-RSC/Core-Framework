@@ -15,12 +15,7 @@ import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.plugins.AbstractRegistrar;
-import com.openrsc.server.plugins.AbstractShop;
-import com.openrsc.server.plugins.DefaultHandler;
-import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.PluginInterruptedException;
-import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.*;
 import com.openrsc.server.plugins.io.PluginJarLoader;
 import com.openrsc.server.util.NamedThreadFactory;
 import org.apache.commons.lang3.ClassUtils;
@@ -30,20 +25,12 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.openrsc.server.plugins.Functions.delay;
 import static org.apache.logging.log4j.util.Unbox.box;
 
 public final class PluginHandler implements IPluginHandler {
@@ -288,7 +275,18 @@ public final class PluginHandler implements IPluginHandler {
 
                 final PluginTickEvent e = new PluginTickEvent(server.getWorld(), player, pluginName, walkToAction, task);
 
+                boolean hasEvent = server.getGameEventHandler().has(e);
                 server.getGameEventHandler().add(e);
+                // On Jagex Original Clients there was no immediate menu cancels when clicking out of menu
+				// In codebase since plugintick events are blocked until the release of a menu option of the event
+				// we replay back a new event since the old one would just be finishing
+                if (player != null && player.canceledMenuHandler && hasEvent) {
+					player.canceledMenuHandler = false;
+                	server.getGameEventHandler().submit(() -> {
+						delay();
+						server.getGameEventHandler().add(e);
+					}, "replay event post cancel menu");
+				}
             } catch (final NoSuchMethodException ex) {
                 LOGGER.info(ex.getMessage());
                 LOGGER.info(simpleName + ".on" + triggerName + " : " + Arrays.deepToString(data));

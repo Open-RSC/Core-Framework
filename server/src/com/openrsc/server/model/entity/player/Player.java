@@ -12,6 +12,7 @@ import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
+import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -143,6 +144,8 @@ public final class Player extends Mob {
 	public int desertHeatCounter = Integer.MIN_VALUE;
 	private boolean desertHeatMessaged = false;
 	public GameTickEvent desertHeatEvent = null;
+
+	public boolean canceledMenuHandler = false;
 
 	private Point lastTileClicked = null;
 
@@ -410,6 +413,32 @@ public final class Player extends Mob {
 		setBusy(true);
 
 		carriedItems.set(new CarriedItems(this));
+		trade = new Trade(this);
+		duel = new Duel(this);
+		playerSettings = new PlayerSettings(this);
+		social = new Social(this);
+		prayers = new Prayers(this);
+		this.uuid = new UUID(0, usernameHash);
+	}
+
+	/**
+	 *
+	 * Constructs a Player with given hash
+	 *
+	 * @param world
+	 * @param hash
+	 */
+	public Player(final World world, final long hash) {
+		super(world, EntityType.PLAYER);
+
+		password = "";
+		usernameHash = hash;
+		username = DataConversions.hashToUsername(usernameHash);
+		sessionStart = System.currentTimeMillis();
+
+		carriedItems.set(new CarriedItems(this));
+		this.getCarriedItems().setEquipment(new Equipment(this));
+		this.getCarriedItems().setInventory(new Inventory(this, new PlayerInventory[0]));
 		trade = new Trade(this);
 		duel = new Duel(this);
 		playerSettings = new PlayerSettings(this);
@@ -2477,6 +2506,7 @@ public final class Player extends Mob {
 
 	public void cancelMenuHandler() {
 		if (menuHandler != null) {
+			canceledMenuHandler = true;
 			resetMenuHandler(false);
 			setBusy(false);
 		}

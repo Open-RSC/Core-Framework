@@ -151,6 +151,10 @@ public class GameEventHandler {
 		return eventStore.add(event);
 	}
 
+	public boolean has(final GameTickEvent event) {
+		return eventStore.eventIsContained(event);
+	}
+
 	public final String buildProfilingDebugInformation(final boolean forInGame) {
 		int countAllEvents = 0;
 		long durationAllEvents = 0;

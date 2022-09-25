@@ -68,6 +68,11 @@ class GameTickEventStore {
         }
     }
 
+    public boolean eventIsContained(GameTickEvent event) {
+		final GameTickKey eventKey = getKey(event);
+		return events.containsKey(eventKey);
+	}
+
     public void remove(GameTickEvent event) {
         synchronized (LOCK) {
             final GameTickKey eventKey = getKey(event);
