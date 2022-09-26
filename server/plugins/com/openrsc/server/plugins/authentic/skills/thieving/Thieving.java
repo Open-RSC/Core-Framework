@@ -125,8 +125,9 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		player.getCarriedItems().getInventory().add(selectedLoot);
 		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef(player.getWorld()).getName().toLowerCase();
 		player.message("You steal a " + stall.getLootPrefix() + loot);
+		int stallXp = player.getConfig().WANT_CORRECTED_SKILLING_XP && stall.equals(Stall.GEMS_STALL) ? 640 : stall.getXp();
 
-		player.incExp(Skill.THIEVING.id(), stall.getXp(), true);
+		player.incExp(Skill.THIEVING.id(), stallXp, true);
 
 		if (stall.equals(Stall.BAKERS_STALL)) { // Cake
 			player.getCache().put("cakeStolen", Instant.now().getEpochSecond());
@@ -817,7 +818,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			piece_of, new LootItem(ItemId.SILVER.id(), 1, 100)),
 		SPICES_STALL(65, 324, NpcId.SPICE_MERCHANT.id(), 80000,
 			"pot of ", new LootItem(ItemId.SPICE.id(), 1, 100)),
-		GEMS_STALL(75, 640, NpcId.GEM_MERCHANT.id(), 180000,
+		GEMS_STALL(75, 64, NpcId.GEM_MERCHANT.id(), 180000,
 			"", new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 65),
 			new LootItem(ItemId.UNCUT_EMERALD.id(), 1, 20),
 			new LootItem(ItemId.UNCUT_RUBY.id(), 1, 10),

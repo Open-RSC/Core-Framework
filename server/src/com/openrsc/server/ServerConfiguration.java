@@ -287,6 +287,7 @@ public class ServerConfiguration {
 	public boolean SHUFFLE_PID_ORDER;
 	public int SHUFFLE_PID_ORDER_INTERVAL;
 	public int SPELL_RANGE_DISTANCE;
+	public boolean WANT_CORRECTED_SKILLING_XP;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -409,6 +410,7 @@ public class ServerConfiguration {
 		SHUFFLE_PID_ORDER = tryReadBool("shuffle_pid_order").orElse(true);
 		SHUFFLE_PID_ORDER_INTERVAL = tryReadInt("shuffle_pid_order_interval").orElse(500);
 		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);
+		WANT_CORRECTED_SKILLING_XP = tryReadBool("want_corrected_skilling_xp").orElse(false);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
