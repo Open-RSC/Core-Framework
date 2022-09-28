@@ -496,9 +496,9 @@ public class WorldLoader {
 				File archiveFile;
 				if (config.MEMBER_WORLD) {
 					if (config.WANT_CUSTOM_LANDSCAPE) {
-						archiveFile = new File("./conf/server/data/Custom_P2PLandscape.orsc");
+						archiveFile = new File("./conf/server/data/Custom_Landscape.orsc");
 					} else {
-						archiveFile = new File("./conf/server/data/Authentic_P2PLandscape.orsc"); // Members landscape
+						archiveFile = new File("./conf/server/data/Authentic_Landscape.orsc"); // Members landscape
 					}
 				} else {
 					archiveFile = new File("./conf/server/data/F2PLandscape.orsc"); // Free landscape

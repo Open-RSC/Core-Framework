@@ -190,6 +190,7 @@ public final class WorldPopulator {
 				if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
 					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS || getWorld().getServer().getConfig().DEATH_ISLAND) {
 						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/BoundaryLocsCustomQuest.json", type);
+						//loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/BoundaryLocsExpansion.json", type);
 					}
 				}
 				return;
@@ -216,6 +217,7 @@ public final class WorldPopulator {
 					}
 					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsCustomQuest.json", type);
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsExpansion.json", type);
 					}
 					if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
 						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsMiceToMeetYou.json", type);
@@ -252,6 +254,7 @@ public final class WorldPopulator {
 					}
 					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 						loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsCustomQuest.json");
+						//loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsExpansion.json");
 						// If the Ester's Bunnies event isn't active, move all the bunnies to the top floor of Ester's house.
 						if (!getWorld().getServer().getConfig().ESTERS_BUNNIES_EVENT) {
 							for (NPCLoc loc : npclocs) {
@@ -282,6 +285,7 @@ public final class WorldPopulator {
 					}
 					if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 						loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsCustomQuest.json");
+						//loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsExpansion.json");
 					}
 				}
 
@@ -323,6 +327,7 @@ public final class WorldPopulator {
 				}
 				npclocs.add(loc);
 			}
+			LOGGER.info("Loaded " + locDefs.length() + " npc locations from " + filename);
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -350,6 +355,7 @@ public final class WorldPopulator {
 				}
 				itemlocs.add(loc);
 			}
+			LOGGER.info("Loaded " + locDefs.length() + " grounditem locations from " + filename);
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -375,6 +381,7 @@ public final class WorldPopulator {
 				}
 				gameobjlocs.add(loc);
 			}
+			LOGGER.info("Loaded " + locDefs.length() + " scenery locations from " + filename);
 		}
 		catch (Exception e) {
 			LOGGER.error(e);

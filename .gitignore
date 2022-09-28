@@ -139,3 +139,10 @@ server/create_db_error.log
 
 .idea/sqldialects.xml
 server/conf/server/data/specialsleepwords/
+
+Client_Base/Cache/video/BoundaryLocsExpansion.json
+Client_Base/Cache/video/GroundItemsExpansion.json
+Client_Base/Cache/video/NpcLocsExpansion.json
+Client_Base/Cache/video/SceneryLocsExpansion.json
+
+Backups/*.zip

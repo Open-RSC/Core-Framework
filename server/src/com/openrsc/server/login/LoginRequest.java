@@ -217,12 +217,12 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			}
 
 			final long banExpires = playerData.banned;
-			if (banExpires == -1 && !isAdmin) {
+			if (banExpires == -1) {
 				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
 			}
 
 			final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
-			if (timeBanLeft >= 1 && !isAdmin) {
+			if (timeBanLeft >= 1) {
 				LOGGER.debug(getIpAddress() + " denied for being *actually* temp banned...!");
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}

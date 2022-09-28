@@ -154,6 +154,7 @@ public final class EntityHandler {
 		LOGGER.info("Loading npc definitions...");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
+		//loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsExpansion.json");
 		patchNpcs();
 		customNpcConditions();
 		LOGGER.info("Loaded " + npcs.size() + " total npc definitions");
@@ -163,6 +164,7 @@ public final class EntityHandler {
 		LOGGER.info("Loading item definitions...");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefs.json");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefsCustom.json");
+		//loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefsExpansion.json");
 		patchItems();
 		customItemConditions();
 		LOGGER.info("Loaded " + items.size() + " item definitions");
@@ -199,7 +201,7 @@ public final class EntityHandler {
 		objectRunecraft = (HashMap<Integer, ObjectRunecraftDef>) getPersistenceManager().load(getPath("defs/extras/ObjectRunecraft.xml"));
 		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load(getPath("defs/extras/ObjectFishing.xml"));
 		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load(getPath("defs/extras/ObjectHarvesting.xml"));
-		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load(getPath("locs/extras/ObjectTelePoints.xml"));
+		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load(getPath("defs/extras/ObjectTelePoints.xml"));
 		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load(getPath("defs/extras/NpcCerters.xml"));
 
 		for (int fishSpot : objectFishing.keySet()) {
