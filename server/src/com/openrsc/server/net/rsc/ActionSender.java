@@ -607,12 +607,12 @@ public class ActionSender {
 			customOptions.add(player.getGlobalBlock());
 			customOptions.add(player.getClanInviteSetting() ? 0 : 1);
 			customOptions.add(player.getVolumeFunction());
-			customOptions.add(player.getSwipeToRotate() ? 1 : 0);
-			customOptions.add(player.getSwipeToScroll() ? 1 : 0);
+			customOptions.add(player.getSwipeToRotateMode());
+			customOptions.add(player.getSwipeToScrollMode());
 			customOptions.add(player.getLongPressDelay());
 			customOptions.add(player.getFontSize());
 			customOptions.add(player.getHoldAndChoose() ? 1 : 0);
-			customOptions.add(player.getSwipeToZoom() ? 1 : 0);
+			customOptions.add(player.getSwipeToZoomMode());
 			customOptions.add(player.getLastZoom());
 			customOptions.add(player.getBatchProgressBar() ? 1 : 0);
 			customOptions.add(player.getExperienceDrops() ? 1 : 0);

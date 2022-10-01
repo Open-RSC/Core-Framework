@@ -237,8 +237,9 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 
 				if (mudclient.showUiTab == 0) {
 					if (!mudclient.isInFirstPersonView() && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
-						if (osConfig.C_SWIPE_TO_ZOOM) {
-							int newZoom = C_LAST_ZOOM + distanceY;
+						if (osConfig.C_SWIPE_TO_ZOOM_MODE != 0) {
+							int dir = osConfig.C_SWIPE_TO_ZOOM_MODE == 2 ? -1 : 1;
+							int newZoom = C_LAST_ZOOM + dir * distanceY;
 							// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
 							if (newZoom >= 0 && newZoom <= 255) {
 								C_LAST_ZOOM = newZoom;
@@ -254,12 +255,16 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 						if (mudclient.cameraPitch < 768 && mudclient.cameraPitch > 512)
 							mudclient.cameraPitch = 768;
 					}
-					if (osConfig.C_SWIPE_TO_ROTATE) {
+					if (osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
+						int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
 						float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth());
-						mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
+						mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
 					}
 				} else {
-					mudclient.runScroll(distanceY);
+					if (osConfig.C_SWIPE_TO_SCROLL_MODE != 0) {
+						int dir = osConfig.C_SWIPE_TO_SCROLL_MODE == 2 ? -1 : 1;
+						mudclient.runScroll(dir * distanceY);
+					}
 				}
 
 				// To make the mouse move:

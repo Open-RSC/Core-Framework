@@ -2085,12 +2085,12 @@ public class PacketHandler {
 		mc.setSettingsBlockGlobal(packetsIncoming.getUnsignedByte()); // 9
 		mc.setClanInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1); // 11
 		mc.setVolumeFunction(packetsIncoming.getUnsignedByte()); // 16
-		mc.setSwipeToRotate(packetsIncoming.getUnsignedByte() == 1); // 17
-		mc.setSwipeToScroll(packetsIncoming.getUnsignedByte() == 1); // 18
+		mc.setSwipeToRotateMode(packetsIncoming.getUnsignedByte()); // 17
+		mc.setSwipeToScrollMode(packetsIncoming.getUnsignedByte()); // 18
 		mc.setLongPressDelay(packetsIncoming.getUnsignedByte()); // 19
 		mc.setFontSize(packetsIncoming.getUnsignedByte()); // 20
 		mc.setHoldAndChoose(packetsIncoming.getUnsignedByte() == 1); // 21
-		mc.setSwipeToZoom(packetsIncoming.getUnsignedByte() == 1); // 22
+		mc.setSwipeToZoomMode(packetsIncoming.getUnsignedByte()); // 22
 		mc.setLastZoom(packetsIncoming.getUnsignedByte()); // 23
 		mc.setOptionBatchProgressBar(packetsIncoming.getUnsignedByte() == 1); // 24
 		mc.setOptionExperienceDrops(packetsIncoming.getUnsignedByte() == 1); // 25

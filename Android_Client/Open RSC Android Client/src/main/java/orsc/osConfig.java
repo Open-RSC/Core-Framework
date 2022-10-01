@@ -12,9 +12,9 @@ public class osConfig {
 	public static boolean C_HOLD_AND_CHOOSE = true;
 	public static int C_LONG_PRESS_TIMER = 5; // default hold timer setting
 	public static int C_MENU_SIZE = 3; // default font choice
-	public static boolean C_SWIPE_TO_SCROLL = true;
-	public static boolean C_SWIPE_TO_ROTATE = true;
-	public static boolean C_SWIPE_TO_ZOOM = true;
+	public static boolean C_SWIPE_TO_SCROLL_MODE = 1; // default to normal
+	public static boolean C_SWIPE_TO_ROTATE_MODE = 1; // default to normal
+	public static boolean C_SWIPE_TO_ZOOM_MODE = 1; // default to normal
 	public static int C_VOLUME_FUNCTION = 0; // default as rotate
 	public static boolean C_ANDROID_INV_TOGGLE = false;
 	public static int C_LAST_ZOOM = 75;

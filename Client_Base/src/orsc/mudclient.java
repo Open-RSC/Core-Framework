@@ -656,6 +656,7 @@ public final class mudclient implements Runnable {
 	private Panel menuNewUser;
 	private int menuNewUserUsername;
 	private int menuNewUserPassword;
+	private int menuNewUserConfirmPassword;
 	private int menuNewUserEmail;
 	private int menuNewUserStatus;
 	private int menuNewUserStatus2;
@@ -2167,16 +2168,24 @@ public final class mudclient implements Runnable {
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 38, "@whi@Password must be at least between 4 and 20 characters long", 1, false);
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 27, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
-				menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 1, 420, 34);
-				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 6, "Choose a Password (You will require this to login)", 4, false);
-				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 7, 200, 20, 40, 4, true, false);
+				menuNewUser.addButtonBackground(halfGameWidth() - 106 - 6, halfGameHeight() - 1, 208, 34);
+				menuNewUser.addCenteredText(halfGameWidth() - 106 - 6, halfGameHeight() - 6, "Choose a Password", 4, false);
+				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth() - 106 - 6, halfGameHeight() + 7, 100, 20, 40, 4, true, false);
+
+				menuNewUser.addButtonBackground(halfGameWidth() + 106 - 6, halfGameHeight() - 1, 208, 34);
+				menuNewUser.addCenteredText(halfGameWidth() + 106 - 6, halfGameHeight() - 6, "Confirm Password", 4, false);
+				menuNewUserConfirmPassword = menuNewUser.addCenteredTextEntry(halfGameWidth() + 106 - 6, halfGameHeight() + 7, 100, 20, 40, 4, true, false);
 			} else { // leaves space for the email box below
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 64, "@whi@Password must be at least between 4 and 20 characters long", 1, false);
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 53, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
-				menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 28, 420, 34);
-				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 37, "Choose a Password (You will require this to login)", 4, false);
-				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() - 20, 200, 20, 40, 4, true, false);
+				menuNewUser.addButtonBackground(halfGameWidth() - 106 - 6, halfGameHeight() - 28, 208, 34);
+				menuNewUser.addCenteredText(halfGameWidth() - 106 - 6, halfGameHeight() - 37, "Choose a Password", 4, false);
+				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth() - 106 - 6, halfGameHeight() - 20, 100, 20, 40, 4, true, false);
+
+				menuNewUser.addButtonBackground(halfGameWidth() + 106 - 6, halfGameHeight() - 28, 208, 34);
+				menuNewUser.addCenteredText(halfGameWidth() + 106 - 6, halfGameHeight() - 37, "Confirm Password", 4, false);
+				menuNewUserConfirmPassword = menuNewUser.addCenteredTextEntry(halfGameWidth() + 106 - 6, halfGameHeight() - 20, 100, 20, 40, 4, true, false);
 			}
 
 			if (wantEmail()) {
@@ -9632,30 +9641,39 @@ public final class mudclient implements Runnable {
 		}
 
 		// swipe to scroll
-		if (!osConfig.C_SWIPE_TO_SCROLL) {
+		if (osConfig.C_SWIPE_TO_SCROLL_MODE == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Scroll - @red@Off", 3, null, null);
-		} else {
+				"@whi@Swipe to Scroll - @red@Unset", 3, null, null);
+		} else if (osConfig.C_SWIPE_TO_SCROLL_MODE == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Scroll - @gre@On", 3, null, null);
+				"@whi@Swipe to Scroll - @yel@Normal", 3, null, null);
+		} else if (osConfig.C_SWIPE_TO_SCROLL_MODE == 2) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Swipe to Scroll - @gre@Invert", 3, null, null);
 		}
 
 		// swipe to zoom
-		if (!osConfig.C_SWIPE_TO_ZOOM) {
+		if (osConfig.C_SWIPE_TO_ZOOM_MODE == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Zoom - @red@Off", 4, null, null);
-		} else {
+				"@whi@Swipe to Zoom - @red@Unset", 4, null, null);
+		} else if (osConfig.C_SWIPE_TO_ZOOM_MODE == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Zoom - @gre@On", 4, null, null);
+				"@whi@Swipe to Zoom - @yel@Normal", 4, null, null);
+		} else if (osConfig.C_SWIPE_TO_ZOOM_MODE == 2) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Swipe to Zoom - @gre@Invert", 4, null, null);
 		}
 
 		// swipe to rotate
-		if (!osConfig.C_SWIPE_TO_ROTATE) {
+		if (osConfig.C_SWIPE_TO_ROTATE_MODE == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Rotate - @red@Off", 5, null, null);
-		} else {
+				"@whi@Swipe to Rotate - @red@Unset", 5, null, null);
+		} else if (osConfig.C_SWIPE_TO_ROTATE_MODE == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Rotate - @gre@On", 5, null, null);
+				"@whi@Swipe to Rotate - @yel@Normal", 5, null, null);
+		} else if (osConfig.C_SWIPE_TO_ROTATE_MODE == 2) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Swipe to Rotate - @gre@Invert", 5, null, null);
 		}
 
 		// volume to rotate
@@ -10146,28 +10164,28 @@ public final class mudclient implements Runnable {
 
 		// swipe scroll control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
-			osConfig.C_SWIPE_TO_SCROLL = !osConfig.C_SWIPE_TO_SCROLL;
+			osConfig.C_SWIPE_TO_SCROLL_MODE = ++osConfig.C_SWIPE_TO_SCROLL_MODE%3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(18);
-			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_SCROLL ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_SCROLL_MODE);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// swipe camera zoom control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
-			osConfig.C_SWIPE_TO_ZOOM = !osConfig.C_SWIPE_TO_ZOOM;
+			osConfig.C_SWIPE_TO_ZOOM_MODE = ++osConfig.C_SWIPE_TO_ZOOM_MODE%3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(22);
-			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_ZOOM ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_ZOOM_MODE);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
 		// swipe camera rotation control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
-			osConfig.C_SWIPE_TO_ROTATE = !osConfig.C_SWIPE_TO_ROTATE;
+			osConfig.C_SWIPE_TO_ROTATE_MODE = ++osConfig.C_SWIPE_TO_ROTATE_MODE%3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(17);
-			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_SWIPE_TO_ROTATE_MODE);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -12079,6 +12097,10 @@ public final class mudclient implements Runnable {
 						menuNewUser.setFocus(menuNewUserPassword);
 					}
 					if (menuNewUser.isClicked(menuNewUserPassword)) {
+						enterPressed = false;
+						menuNewUser.setFocus(menuNewUserConfirmPassword);
+					}
+					if (menuNewUser.isClicked(menuNewUserConfirmPassword)) {
 						if (wantEmail()) {
 							enterPressed = false;
 							menuNewUser.setFocus(menuNewUserEmail);
@@ -12096,6 +12118,8 @@ public final class mudclient implements Runnable {
 								&& menuNewUser.getControlText(menuNewUserUsername).length() == 0
 								|| menuNewUser.getControlText(menuNewUserPassword) != null
 								&& menuNewUser.getControlText(menuNewUserPassword).length() == 0
+								|| menuNewUser.getControlText(menuNewUserConfirmPassword) != null
+								&& menuNewUser.getControlText(menuNewUserConfirmPassword).length() == 0
 								|| menuNewUser.getControlText(menuNewUserEmail) != null
 								&& menuNewUser.getControlText(menuNewUserEmail).length() == 0) {
 								menuNewUser.setText(menuNewUserStatus, "Please fill in all requested");
@@ -12106,7 +12130,9 @@ public final class mudclient implements Runnable {
 							if (menuNewUser.getControlText(menuNewUserUsername) != null
 								&& menuNewUser.getControlText(menuNewUserUsername).length() == 0
 								|| menuNewUser.getControlText(menuNewUserPassword) != null
-								&& menuNewUser.getControlText(menuNewUserPassword).length() == 0) {
+								&& menuNewUser.getControlText(menuNewUserPassword).length() == 0
+								|| menuNewUser.getControlText(menuNewUserConfirmPassword) != null
+								&& menuNewUser.getControlText(menuNewUserConfirmPassword).length() == 0) {
 								menuNewUser.setText(menuNewUserStatus, "Please fill in all requested");
 								menuNewUser.setText(menuNewUserStatus2, "information to continue!");
 								return;
@@ -12118,9 +12144,10 @@ public final class mudclient implements Runnable {
 
 						String username = menuNewUser.getControlText(menuNewUserUsername);
 						String password = menuNewUser.getControlText(menuNewUserPassword);
+						String confirm = menuNewUser.getControlText(menuNewUserConfirmPassword);
 						String email = menuNewUser.getControlText(menuNewUserEmail);
 
-						sendRegister(username, password, email);
+						sendRegister(username, password, confirm, email);
 					}
 				} else if (this.loginScreenNumber == 2) {
 					this.panelLogin.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
@@ -12371,12 +12398,13 @@ public final class mudclient implements Runnable {
 		}
 	}
 
-	private void sendRegister(String user, String pass, String email) {
+	private void sendRegister(String user, String pass, String confirm, String email) {
 		this.m_Zb = 1500;
 		username = user;
 		user = DataOperations.addCharacters(user, 20);
 		password = pass;
 		pass = DataOperations.addCharacters(pass, 20);
+		confirm = DataOperations.addCharacters(confirm, 20);
 
 		if (user.trim().length() == 0) {
 			showLoginScreenStatus("Please fill in all requested", "information to continue!");
@@ -12388,6 +12416,10 @@ public final class mudclient implements Runnable {
 		}
 		if (user.trim().length() > 12) {
 			showLoginScreenStatus("Username is too long, please use", "username with length of 2-12");
+			return;
+		}
+		if (!pass.trim().equalsIgnoreCase(confirm.trim())) {
+			showLoginScreenStatus("The two passwords entered are not", "the same as each other!");
 			return;
 		}
 		if (pass.trim().length() < 4) {
@@ -17503,17 +17535,16 @@ public final class mudclient implements Runnable {
 		osConfig.C_VOLUME_FUNCTION = b;
 	}
 
-	public void setSwipeToRotate(boolean b) {
-		osConfig.C_SWIPE_TO_ROTATE = b;
+	public void setSwipeToRotateMode(int b) {
+		osConfig.C_SWIPE_TO_ROTATE_MODE = b;
 	}
 
-	public void setSwipeToScroll
-		(boolean b) {
-		osConfig.C_SWIPE_TO_SCROLL = b;
+	public void setSwipeToScrollMode(int b) {
+		osConfig.C_SWIPE_TO_SCROLL_MODE = b;
 	}
 
-	public void setSwipeToZoom(boolean b) {
-		osConfig.C_SWIPE_TO_ZOOM = b;
+	public void setSwipeToZoomMode(int b) {
+		osConfig.C_SWIPE_TO_ZOOM_MODE = b;
 	}
 
 	public void setLongPressDelay(int i) {

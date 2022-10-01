@@ -2995,25 +2995,25 @@ public final class Player extends Mob {
 		return 0;
 	}
 
-	public Boolean getSwipeToRotate() {
-		if (getCache().hasKey("setting_swipe_rotate")) {
-			return getCache().getBoolean("setting_swipe_rotate");
+	public int getSwipeToRotateMode() {
+		if (getCache().hasKey("setting_swipe_rotate_mode")) {
+			return getCache().getInt("setting_swipe_rotate_mode");
 		}
-		return true;
+		return 1;
 	}
 
-	public Boolean getSwipeToScroll() {
-		if (getCache().hasKey("setting_swipe_scroll")) {
-			return getCache().getBoolean("setting_swipe_scroll");
+	public int getSwipeToScrollMode() {
+		if (getCache().hasKey("setting_swipe_scroll_mode")) {
+			return getCache().getInt("setting_swipe_scroll_mode");
 		}
-		return true;
+		return 1;
 	}
 
-	public Boolean getSwipeToZoom() {
-		if (getCache().hasKey("setting_swipe_zoom")) {
-			return getCache().getBoolean("setting_swipe_zoom");
+	public int getSwipeToZoomMode() {
+		if (getCache().hasKey("setting_swipe_zoom_mode")) {
+			return getCache().getInt("setting_swipe_zoom_mode");
 		}
-		return true;
+		return 1;
 	}
 
 	public Boolean getBatchProgressBar() {
