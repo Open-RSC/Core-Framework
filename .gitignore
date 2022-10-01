@@ -100,7 +100,9 @@ gameserver.log
 
 local.properties
 
-server/logs/
+server/logs/*.gz
+server/logs/*.log
+server/logs/pcaps/*.gz
 
 Client_Base/Open_RSC_Client.jar
 Client_Base/Cache/credentials.txt
