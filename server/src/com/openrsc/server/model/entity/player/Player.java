@@ -3145,6 +3145,17 @@ public final class Player extends Mob {
 		}
 	}
 
+	public Boolean getHideUndergroundFlicker() {
+		if (getWorld().getServer().getConfig().SHOW_ROOF_TOGGLE) {
+			if (getCache().hasKey("setting_showunderground_flicker")) {
+				return getCache().getBoolean("setting_showunderground_flicker");
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public int getGroundItemsToggle() {
 		if (getWorld().getServer().getConfig().GROUND_ITEM_TOGGLE) {
 			if (getCache().hasKey("setting_ground_items")) {

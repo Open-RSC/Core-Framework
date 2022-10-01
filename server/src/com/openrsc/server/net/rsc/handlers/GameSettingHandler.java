@@ -84,6 +84,8 @@ public final class GameSettingHandler implements PayloadProcessor<GameSettingStr
 				player.getCache().store("setting_hide_login_box", value == 1);
 			} else if (idx == 41) {
 				player.getCache().store("setting_block_global_friend", value == 1);
+			} else if (idx == 42) {
+				player.getCache().store("setting_showunderground_flicker", value == 1);
 			}
 			return;
 		}

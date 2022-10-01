@@ -40,6 +40,7 @@ public class Config {
 	public static boolean C_BATCH_PROGRESS_BAR = false;
 	public static boolean C_HIDE_ROOFS = false;
 	public static boolean C_HIDE_FOG = false;
+	public static boolean C_HIDE_UNDERGROUND_FLICKER = false;
 	public static int C_SHOW_GROUND_ITEMS = 0;
 	public static boolean C_MESSAGE_TAB_SWITCH = false;
 	public static boolean C_NAME_CLAN_TAG_OVERLAY = false;
@@ -109,6 +110,7 @@ public class Config {
 	public static boolean S_EXPERIENCE_DROPS_TOGGLE = false;
 	public static boolean S_ITEMS_ON_DEATH_MENU = false;
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
+	public static boolean S_SHOW_UNDERGROUND_FLICKER_TOGGLE = false;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
 	public static boolean S_WANT_GLOBAL_FRIEND = false;
 	public static boolean S_WANT_HIDE_IP = false;

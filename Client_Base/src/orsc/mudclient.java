@@ -264,7 +264,7 @@ public final class mudclient implements Runnable {
 			|| S_FOG_TOGGLE || S_GROUND_ITEM_TOGGLE
 			|| S_AUTO_MESSAGE_SWITCH_TOGGLE || S_BATCH_PROGRESSION
 			|| S_SIDE_MENU_TOGGLE || S_INVENTORY_COUNT_TOGGLE
-			|| S_MENU_COMBAT_STYLE_TOGGLE
+			|| S_MENU_COMBAT_STYLE_TOGGLE || S_SHOW_UNDERGROUND_FLICKER_TOGGLE
 			|| S_FIGHTMODE_SELECTOR_TOGGLE || S_SHOW_ROOF_TOGGLE
 			|| S_EXPERIENCE_COUNTER_TOGGLE || S_WANT_GLOBAL_CHAT
 			|| S_EXPERIENCE_DROPS_TOGGLE || S_ITEMS_ON_DEATH_MENU
@@ -5103,10 +5103,12 @@ public final class mudclient implements Runnable {
 					this.getSurface().interlace = false;
 					this.getSurface().blackScreen(true);
 					this.getSurface().interlace = this.interlace;
-					if (this.lastHeightOffset == 3) {
-						centerX = 40 + (int) (3.0D * Math.random());
-						centerZ = (int) (7.0D * Math.random()) + 40;
-						this.scene.setFrustum(-50, centerZ, 0, -50, centerX, -10);
+					if (!C_HIDE_UNDERGROUND_FLICKER) {
+						if (this.lastHeightOffset == 3) {
+							centerX = 40 + (int) (3.0D * Math.random());
+							centerZ = (int) (7.0D * Math.random()) + 40;
+							this.scene.setFrustum(-50, centerZ, 0, -50, centerX, -10);
+						}
 					}
 
 					this.characterBubbleCount = 0;
@@ -9434,6 +9436,17 @@ public final class mudclient implements Runnable {
 			}
 		}
 
+		// underground lighting flicker toggle
+		if (S_SHOW_UNDERGROUND_FLICKER_TOGGLE) {
+			if (!C_HIDE_UNDERGROUND_FLICKER) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Hide Underground Flicker - @red@Off", 42, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Hide Underground Flicker - @gre@On", 42, null, null);
+			}
+		}
+
 		// ground items
 		if (S_GROUND_ITEM_TOGGLE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
@@ -9763,7 +9776,7 @@ public final class mudclient implements Runnable {
 			}
 		}
 
-		// hide roofs toggle - byte index 5
+		// hide roofs toggle - byte index 26
 		if (settingIndex == 26 && this.mouseButtonClick == 1 && S_SHOW_ROOF_TOGGLE) {
 			C_HIDE_ROOFS = !C_HIDE_ROOFS;
 			this.packetHandler.getClientStream().newPacket(111);
@@ -9773,13 +9786,23 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// fog toggle - byte index 6
+		// fog toggle - byte index 27
 		if (settingIndex == 27 && this.mouseButtonClick == 1 && S_FOG_TOGGLE) {
 			C_HIDE_FOG = !C_HIDE_FOG;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(27);
 			boolean setting = C_HIDE_FOG;
 			this.packetHandler.getClientStream().bufferBits.putByte(setting ? 1 : 0);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+
+		// hide underground flicker toggle - byte index 42
+		if (settingIndex == 42 && this.mouseButtonClick == 1 && S_SHOW_UNDERGROUND_FLICKER_TOGGLE) {
+			C_HIDE_UNDERGROUND_FLICKER = !C_HIDE_UNDERGROUND_FLICKER;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().bufferBits.putByte(42);
+			boolean optionHideUndergroundFlicker = C_HIDE_UNDERGROUND_FLICKER;
+			this.packetHandler.getClientStream().bufferBits.putByte(optionHideUndergroundFlicker ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -17585,6 +17608,10 @@ public final class mudclient implements Runnable {
 
 	public void setOptionHideRoofs(boolean b) {
 		C_HIDE_ROOFS = b;
+	}
+
+	public void setOptionHideUndergroundFlicker(boolean b) {
+		C_HIDE_UNDERGROUND_FLICKER = b;
 	}
 
 	public void setOptionHideFog(boolean b) {

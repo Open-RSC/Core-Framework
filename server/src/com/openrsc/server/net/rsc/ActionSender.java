@@ -632,6 +632,7 @@ public class ActionSender {
 			customOptions.add(player.getCustomUI() ? 1 : 0);
 			customOptions.add(player.getHideLoginBox() ? 1 : 0);
 			customOptions.add(player.getBlockGlobalFriend() ? 1 : 0);
+			customOptions.add(player.getHideUndergroundFlicker() ? 1 : 0);
 		}
 		struct.customOptions = customOptions;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_GAME_SETTINGS, struct, player);
@@ -720,6 +721,10 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().FEATURES_SLEEP + " 77");
 			LOGGER.info(server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR + " 78");
 			LOGGER.info(server.getConfig().WANT_CERT_AS_NOTES + " 79");
+			LOGGER.info(server.getConfig().WANT_OPENPK_POINTS + " 80");
+			LOGGER.info(server.getConfig().OPENPK_POINTS_TO_GP_RATIO + " 81");
+			LOGGER.info(server.getConfig().WANT_OPENPK_PRESETS + " 82");
+			LOGGER.info(server.getConfig().SHOW_UNDERGROUND_FLICKER_TOGGLE + " 83");
 		}
 		Packet p = prepareServerConfigs(server);
 		// ConnectionAttachment attachment = new ConnectionAttachment();
@@ -828,6 +833,7 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().WANT_OPENPK_POINTS ? 1 : 0)); // 80
 		configs.add((byte) (server.getConfig().OPENPK_POINTS_TO_GP_RATIO)); // 81
 		configs.add((byte) (server.getConfig().WANT_OPENPK_PRESETS ? 1 : 0)); // 82
+		configs.add((byte) (server.getConfig().SHOW_UNDERGROUND_FLICKER_TOGGLE ? 1 : 0)); // 83
 
 		struct.configs = configs;
 		struct.setOpcode(OpcodeOut.SEND_SERVER_CONFIGS);

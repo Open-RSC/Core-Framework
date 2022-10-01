@@ -613,6 +613,61 @@ public final class AvatarGenerator {
 		animations.add(new AnimationDef("crossbow", "equipment", 16711748, 0, true, false, 0)); //471 - dragon crossbow
 		animations.add(new AnimationDef("longbow", "equipment", 16711748, 0, false, false, 0)); //472 - dragon longbow
 
+		// Easter 2021
+		animations.add(new AnimationDef("bunny", "npc", 16777215, 0, true, false, 0)); //472
+		animations.add(new AnimationDef("duck", "npc", 16777215, 0, true, false, 0));//473
+		animations.add(new AnimationDef("bunnymorph", "npc", 16777215, 0, true, false, 0));//474
+		animations.add(new AnimationDef("eggmorph", "npc", 16777215, 0, true, false, 0));//475
+
+		// Scimitar Animation
+		animations.add(new AnimationDef("scimitar", "equipment", 16737817, 0, true, false, 0)); // 476 Bronze Scimitar
+		animations.add(new AnimationDef("scimitar", "equipment", 15654365, 0, true, false, 0)); // 477 Iron Scimitar
+		animations.add(new AnimationDef("scimitar", "equipment", 15658734, 0, true, false, 0)); // 478 Steel Scimitar
+		animations.add(new AnimationDef("scimitar", "equipment", 3158064, 0, true, false, 0)); // 479 Black Scimitar
+		animations.add(new AnimationDef("scimitar", "equipment", 10072780, 0, true, false, 0)); // 480 Mithril Scimitar
+		animations.add(new AnimationDef("scimitar", "equipment", 11717785, 0, true, false, 0)); // 481 Adamantite Scimitar
+		animations.add(new AnimationDef("scimitar", "equipment", 65535, 0, true, false, 0)); // 482 Rune Scimitar
+
+		// Halloween 2021
+		animations.add(new AnimationDef("deathmask", "equipment", 0, 0, true, false, 0)); // 483 death mask
+
+		// Christmas 2021
+		animations.add(new AnimationDef("yoyo", "equipment", 0, 0, true, false, 0)); // 484 yoyo in hand
+		animations.add(new AnimationDef("yoyo_anim_1", "equipment", 0, 0, true, false, 0)); // 485 yoyo up-down 1
+		animations.add(new AnimationDef("yoyo_anim_2", "equipment", 0, 0, true, false, 0)); // 486 yoyo up-down 2
+		animations.add(new AnimationDef("yoyo_anim_3", "equipment", 0, 0, true, false, 0)); // 487 yoyo up-down 3
+		animations.add(new AnimationDef("yoyo_anim_4", "equipment", 0, 0, true, false, 0)); // 488 yoyo up-down 4
+		animations.add(new AnimationDef("yoyo_anim_crazy_1", "equipment", 0, 0, true, false, 0)); // 489 yoyo crazy 1'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_2", "equipment", 0, 0, true, false, 0)); // 490 yoyo crazy 2'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_3", "equipment", 0, 0, true, false, 0)); // 491 yoyo crazy 3'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_4", "equipment", 0, 0, true, false, 0)); // 492 yoyo crazy 4'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_5", "equipment", 0, 0, true, false, 0)); // 493 yoyo crazy 5'oclock
+		// for 6'oclock, just use yoyo_anim_4
+		animations.add(new AnimationDef("yoyo_anim_crazy_7", "equipment", 0, 0, true, false, 0)); // 494 yoyo crazy 7'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_8", "equipment", 0, 0, true, false, 0)); // 495 yoyo crazy 8'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_9", "equipment", 0, 0, true, false, 0)); // 496 yoyo crazy 9'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_10", "equipment", 0, 0, true, false, 0)); // 497 yoyo crazy 10'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_11", "equipment", 0, 0, true, false, 0)); // 498 yoyo crazy 11'oclock
+		animations.add(new AnimationDef("yoyo_anim_crazy_12", "equipment", 0, 0, true, false, 0)); // 499 yoyo crazy 12'oclock
+
+		// Easter 2022 aka Peeling the Onion
+		animations.add(new AnimationDef("ogreears", "equipment", 0xb5ff1d, 0, true, false, 0)); // 500 ogre ears
+		animations.add(new AnimationDef("leathervest", "equipment", 0, 0, true, false, 0)); // 501 leather vest
+
+		//Crowns
+		//Gold
+		animations.add(new AnimationDef("crown", "equipment", 16763980,0, true, false, 0));//502
+		//Sapphire
+		animations.add(new AnimationDef("crown", "equipment", 19711, 0, true, false, 0)); //503
+		//Emerald
+		animations.add(new AnimationDef("crown", "equipment", 3394611,0, true, false, 0)); //504
+		//Ruby
+		animations.add(new AnimationDef("crown", "equipment", 16724736,0, true, false, 0)); //505
+		//Diamond
+		animations.add(new AnimationDef("crown", "equipment", 16184564,0, true, false, 0)); //506
+		//Dragonstone
+		animations.add(new AnimationDef("crown", "equipment", 12255487,0, true, false, 0)); //507
+
 		LOGGER.info("Unpacking sprite archive");
 		File workspaceFile = new File("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Custom_Sprites.osar");
 		if (workspaceFile.exists()) {

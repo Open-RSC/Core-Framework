@@ -100,6 +100,7 @@ public class ServerConfiguration {
 	public boolean EXPERIENCE_DROPS_TOGGLE;
 	public boolean ITEMS_ON_DEATH_MENU;
 	public boolean SHOW_ROOF_TOGGLE;
+	public boolean SHOW_UNDERGROUND_FLICKER_TOGGLE;
 	public boolean WANT_HIDE_IP;
 	public boolean WANT_REMEMBER;
 	public boolean SHOW_TUTORIAL_SKIP_OPTION;
@@ -423,6 +424,7 @@ public class ServerConfiguration {
 		EXPERIENCE_DROPS_TOGGLE = tryReadBool("experience_drops_toggle").orElse(false);
 		ITEMS_ON_DEATH_MENU = tryReadBool("items_on_death_menu").orElse(false);
 		SHOW_ROOF_TOGGLE = tryReadBool("show_roof_toggle").orElse(false);
+		SHOW_UNDERGROUND_FLICKER_TOGGLE = tryReadBool("show_underground_flicker_toggle").orElse(false);
 		WANT_SKILL_MENUS = tryReadBool("want_skill_menus").orElse(false);
 		WANT_QUEST_MENUS = tryReadBool("want_quest_menus").orElse(false);
 		WANT_QUEST_STARTED_INDICATOR = tryReadBool("want_quest_started_indicator").orElse(false);

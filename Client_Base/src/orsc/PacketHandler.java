@@ -931,7 +931,7 @@ public class PacketHandler {
 		int groundItemToggle, autoMessageSwitchToggle, batchProgression;
 		int sideMenuToggle, inventoryCountToggle, zoomViewToggle;
 		int menuCombatStyleToggle, fightmodeSelectorToggle, experienceCounterToggle;
-		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, wantHideIp, wantRemember;
+		int experienceDropsToggle, itemsOnDeathMenu, showRoofToggle, showUndergroundFlickerToggle, wantHideIp, wantRemember;
 		int wantGlobalChat, wantSkillMenus, wantQuestMenus, wantQuestStartedIndicator, maxWalkingSpeed;
 		int wantExperienceElixirs, wantKeyboardShortcuts, wantMembers, displayLogoSprite;
 		int wantCustomBanks, wantBankPins, wantBankNotes, wantCertDeposit, customFiremaking;
@@ -1028,6 +1028,7 @@ public class PacketHandler {
 			wantOpenPkPoints = this.getClientStream().getUnsignedByte(); // 80
 			openPkPointsToGpRatio = this.getClientStream().getUnsignedByte(); // 81
 			wantOpenPkPresets = this.getClientStream().getUnsignedByte(); // 82
+			showUndergroundFlickerToggle = this.getClientStream().getUnsignedByte(); // 83
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1111,6 +1112,7 @@ public class PacketHandler {
 			wantOpenPkPoints = packetsIncoming.getUnsignedByte(); // 80
 			openPkPointsToGpRatio = packetsIncoming.getUnsignedByte(); // 81
 			wantOpenPkPresets = packetsIncoming.getUnsignedByte(); // 82
+			showUndergroundFlickerToggle = packetsIncoming.getUnsignedByte(); // 83
 		}
 
 		if (Config.DEBUG) {
@@ -1196,7 +1198,8 @@ public class PacketHandler {
 					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
 					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
 					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio + // 81
-					"\nS_WANT_OPENPK_PRESETS " + wantOpenPkPresets // 82
+					"\nS_WANT_OPENPK_PRESETS " + wantOpenPkPresets + // 82
+					"\nS_SHOW_UNDERGROUND_FLICKER_TOGGLE " + showUndergroundFlickerToggle // 83
 			);
 		}
 
@@ -1286,6 +1289,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_OPENPK_POINTS", wantOpenPkPoints == 1 ? "true" : "false"); // 80
 		props.setProperty("S_OPENPK_POINTS_TO_GP_RATIO", String.valueOf(openPkPointsToGpRatio)); // 81
 		props.setProperty("S_WANT_OPENPK_PRESETS", wantOpenPkPresets == 1 ? "true" : "false"); // 82
+		props.setProperty("S_SHOW_UNDERGROUND_FLICKER_TOGGLE", showUndergroundFlickerToggle == 1 ? "true" : "false"); // 83
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1294,7 +1298,7 @@ public class PacketHandler {
 				|| Config.S_FOG_TOGGLE || Config.S_GROUND_ITEM_TOGGLE
 				|| Config.S_AUTO_MESSAGE_SWITCH_TOGGLE || Config.S_BATCH_PROGRESSION
 				|| Config.S_SIDE_MENU_TOGGLE || Config.S_INVENTORY_COUNT_TOGGLE
-				|| Config.S_MENU_COMBAT_STYLE_TOGGLE
+				|| Config.S_MENU_COMBAT_STYLE_TOGGLE || Config.S_SHOW_UNDERGROUND_FLICKER_TOGGLE
 				|| Config.S_FIGHTMODE_SELECTOR_TOGGLE || Config.S_SHOW_ROOF_TOGGLE
 				|| Config.S_EXPERIENCE_COUNTER_TOGGLE || Config.S_WANT_GLOBAL_CHAT
 				|| Config.S_EXPERIENCE_DROPS_TOGGLE || Config.S_ITEMS_ON_DEATH_MENU
@@ -2110,6 +2114,7 @@ public class PacketHandler {
 		mc.setCustomUI(packetsIncoming.getUnsignedByte() == 1); //39
 		mc.setHideLoginBox(packetsIncoming.getUnsignedByte() == 1); // 40
 		mc.setBlockGlobalFriend(packetsIncoming.getUnsignedByte() == 1); // 41
+		mc.setOptionHideUndergroundFlicker(packetsIncoming.getUnsignedByte() == 1); // 42
 	}
 
 	private void togglePrayer(int length) {
