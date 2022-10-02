@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import orsc.Config;
 import orsc.enumerations.MessageTab;
 import orsc.enumerations.MessageType;
@@ -187,11 +190,16 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 			}
 		}
 
+		int key = event.getUnicodeChar();
+		String chars = event.getCharacters();
+		checkSpecialKeys(key, chars);
+
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            int key = event.getUnicodeChar();
             if (keyCode == KeyEvent.KEYCODE_DEL) {
                 key = 8;
             }
+
+            checkSpecialKeys(key, chars);
 
             boolean hitInputFilter = false;
 
@@ -232,6 +240,78 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
         }
         return false;
     }
+
+    public void checkSpecialKeys(int keyCode, String chars) {
+		if (keyCode == KeyEvent.KEYCODE_F1 || (chars != null && chars.equalsIgnoreCase("¹"))) {
+			mudclient.interlace = !mudclient.interlace;
+		}
+
+		if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || (chars != null && chars.equalsIgnoreCase("←"))) {
+			mudclient.keyLeft = true;
+			new Timer().schedule(new TimerTask() {
+				// debounce to avoid infinite rotation
+				@Override
+				public void run() {
+					mudclient.keyLeft = false;
+				}
+			}, 100);
+		}
+
+		if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || (chars != null && chars.equalsIgnoreCase("→"))) {
+			mudclient.keyRight = true;
+			new Timer().schedule(new TimerTask() {
+				// debounce to avoid infinite rotation
+				@Override
+				public void run() {
+					mudclient.keyRight = false;
+				}
+			}, 100);
+		}
+
+		if (keyCode == KeyEvent.KEYCODE_DPAD_UP || (chars != null && chars.equalsIgnoreCase("↑"))) {
+			mudclient.keyUp = true;
+			new Timer().schedule(new TimerTask() {
+				// debounce to avoid infinite zooming
+				@Override
+				public void run() {
+					mudclient.keyUp = false;
+				}
+			}, 100);
+		}
+
+		if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || (chars != null && chars.equalsIgnoreCase("↓"))) {
+			mudclient.keyDown = true;
+			new Timer().schedule(new TimerTask() {
+				// debounce to avoid infinite zooming
+				@Override
+				public void run() {
+					mudclient.keyDown = false;
+				}
+			}, 100);
+		}
+
+		if (keyCode == KeyEvent.KEYCODE_PAGE_UP) {
+			mudclient.pageUp = true;
+			new Timer().schedule(new TimerTask() {
+				// debounce to avoid infinite scrolling
+				@Override
+				public void run() {
+					mudclient.pageUp = false;
+				}
+			}, 100);
+		}
+
+		if (keyCode == KeyEvent.KEYCODE_PAGE_DOWN) {
+			mudclient.pageDown = true;
+			new Timer().schedule(new TimerTask() {
+				// debounce to avoid infinite scrolling
+				@Override
+				public void run() {
+					mudclient.pageDown = false;
+				}
+			}, 100);
+		}
+	}
 
     public boolean onTouch(View v, MotionEvent e) {
         mudclient.mouseX = (int) (e.getX() / (getWidth() / (float) mudclient.getGameWidth()));
