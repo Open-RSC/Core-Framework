@@ -83,38 +83,45 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
         lastScrollOrRotate = System.currentTimeMillis();
 
+		boolean touchedMessagePanelArea = getHeight() - Math.max(e2.getY(), e1.getY()) <= 130;
+
+		boolean scrollableMessagePanel = mudclient.hasScroll(mudclient.messageTabSelected) && touchedMessagePanelArea;
+		boolean mayBeScrollable = mudclient.showUiTab != 0;
+		boolean zoomable = (!scrollableMessagePanel && !mayBeScrollable) || osConfig.C_SWIPE_TO_SCROLL_MODE == 0;
+
         // Disables zoom while visible
         if (Config.S_SPAWN_AUCTION_NPCS && mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.skillGuideInterface.isVisible()
                 || Config.S_WANT_QUEST_MENUS && mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.party.getPartyInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
                 || mudclient.ironmanInterface.isVisible() || mudclient.achievementInterface.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.doSkillInterface.isVisible()
-                || Config.S_ITEMS_ON_DEATH_MENU && mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible() || mudclient.messageTabSelected != MessageTab.ALL)
+                || Config.S_ITEMS_ON_DEATH_MENU && mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible())
             return false;
 
-        if (mudclient.showUiTab == 0) {
-            if (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) {
-                if (osConfig.C_SWIPE_TO_ZOOM) {
-                    int zoomDistance = (int) (-distanceY * 5);
-                    int newZoom = osConfig.C_LAST_ZOOM + zoomDistance;
-                    // Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
-                    if (newZoom >= 0 && newZoom <= 255) {
-                        osConfig.C_LAST_ZOOM = newZoom;
-                    }
-                }
-            } else if (mudclient.cameraAllowPitchModification) {
-                mudclient.cameraPitch = (mudclient.cameraPitch + (int) (-distanceY * 10)) & 1023;
-            }
+		if (zoomable && (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
+			if (osConfig.C_SWIPE_TO_ZOOM_MODE != 0) {
+				int dir = osConfig.C_SWIPE_TO_ZOOM_MODE == 2 ? -1 : 1;
+				int zoomDistance = (int) (-distanceY * 5);
+				int newZoom = osConfig.C_LAST_ZOOM + dir * zoomDistance;
+				// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
+				if (newZoom >= 0 && newZoom <= 255) {
+					osConfig.C_LAST_ZOOM = newZoom;
+				}
+			}
+		} else if (mudclient.cameraAllowPitchModification) {
+			mudclient.cameraPitch = (mudclient.cameraPitch + (int) (-distanceY * 10)) & 1023;
+		}
 
-            if (osConfig.C_SWIPE_TO_ROTATE) {
-                float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
-                        * 0.5F;
-                mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (clientDist));
-            }
-
-            return true;
-        } else if (osConfig.C_SWIPE_TO_SCROLL) {
-            mudclient.runScroll((int) distanceY);
-            return true;
-        }
+		if (osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
+			int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
+			float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
+				* 0.5F;
+			mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
+		}
+		if (!zoomable) {
+			if (osConfig.C_SWIPE_TO_SCROLL_MODE != 0) {
+				int dir = osConfig.C_SWIPE_TO_SCROLL_MODE == 2 ? -1 : 1;
+				mudclient.runScroll((int) (dir * distanceY));
+			}
+		}
 
         return true;
     }

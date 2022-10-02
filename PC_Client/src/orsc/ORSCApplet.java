@@ -234,33 +234,37 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (mudclient.mouseLastProcessedX != 0 && mudclient.mouseLastProcessedY != 0) {
 				int distanceX = (mudclient.mouseX - mudclient.mouseLastProcessedX)/2;
 				int distanceY = (mudclient.mouseY - mudclient.mouseLastProcessedY)/2;
+				boolean touchedMessagePanelArea = mudclient.getGameHeight() - Math.max(mudclient.mouseY, mudclient.mouseLastProcessedY) <= 66;
 
-				if (mudclient.showUiTab == 0) {
-					if (!mudclient.isInFirstPersonView() && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
-						if (osConfig.C_SWIPE_TO_ZOOM_MODE != 0) {
-							int dir = osConfig.C_SWIPE_TO_ZOOM_MODE == 2 ? -1 : 1;
-							int newZoom = C_LAST_ZOOM + dir * distanceY;
-							// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
-							if (newZoom >= 0 && newZoom <= 255) {
-								C_LAST_ZOOM = newZoom;
-							}
+				boolean scrollableMessagePanel = mudclient.hasScroll(mudclient.messageTabSelected) && touchedMessagePanelArea;
+				boolean mayBeScrollable = mudclient.showUiTab != 0;
+				boolean zoomable = (!scrollableMessagePanel && !mayBeScrollable) || osConfig.C_SWIPE_TO_SCROLL_MODE == 0;
+
+				if (!mudclient.isInFirstPersonView() && zoomable && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
+					if (osConfig.C_SWIPE_TO_ZOOM_MODE != 0) {
+						int dir = osConfig.C_SWIPE_TO_ZOOM_MODE == 2 ? -1 : 1;
+						int newZoom = C_LAST_ZOOM + dir * distanceY;
+						// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
+						if (newZoom >= 0 && newZoom <= 255) {
+							C_LAST_ZOOM = newZoom;
 						}
-					} else if (mudclient.isInFirstPersonView() && mudclient.cameraAllowPitchModification) {
-						mudclient.cameraPitch = (mudclient.cameraPitch + (-distanceY * 2)) & 1023;
-
-						// Limit on the half circled where everything is right side up
-						if (mudclient.cameraPitch > 256 && mudclient.cameraPitch <= 512)
-							mudclient.cameraPitch = 256;
-
-						if (mudclient.cameraPitch < 768 && mudclient.cameraPitch > 512)
-							mudclient.cameraPitch = 768;
 					}
-					if (osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
-						int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
-						float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth());
-						mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
-					}
-				} else {
+				} else if (mudclient.isInFirstPersonView() && mudclient.cameraAllowPitchModification) {
+					mudclient.cameraPitch = (mudclient.cameraPitch + (-distanceY * 2)) & 1023;
+
+					// Limit on the half circled where everything is right side up
+					if (mudclient.cameraPitch > 256 && mudclient.cameraPitch <= 512)
+						mudclient.cameraPitch = 256;
+
+					if (mudclient.cameraPitch < 768 && mudclient.cameraPitch > 512)
+						mudclient.cameraPitch = 768;
+				}
+				if (osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
+					int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
+					float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth());
+					mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
+				}
+				if (!zoomable) {
 					if (osConfig.C_SWIPE_TO_SCROLL_MODE != 0) {
 						int dir = osConfig.C_SWIPE_TO_SCROLL_MODE == 2 ? -1 : 1;
 						mudclient.runScroll(dir * distanceY);

@@ -15093,7 +15093,7 @@ public final class mudclient implements Runnable {
 				}
 
 				if (type == MessageType.CHAT && this.messageTabSelected != MessageTab.CHAT) {
-					this.messageTabActivity_Chat = 100;
+					this.messageTabActivity_Chat = 200;
 				}
 
 				if (type == MessageType.QUEST && this.messageTabSelected != MessageTab.QUEST) {
@@ -15139,8 +15139,8 @@ public final class mudclient implements Runnable {
 			String msg = colour + StringUtil.formatMessage(message, sender, type, colour);
 
 			if (type == MessageType.CHAT) {
-				this.panelMessageTabs.addToList(msg, this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat]
-					- 4 == this.panelMessageTabs.controlScrollAmount[this.panelMessageChat], crownID, sender, formerName, this.panelMessageChat);
+				this.panelMessageTabs.addToList(msg, this.panelMessageTabs.controlScrollAmount[this.panelMessageChat] == this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat]
+					- 4, crownID, sender, formerName, this.panelMessageChat);
 			}
 
 			if (type == MessageType.QUEST) {
@@ -15171,6 +15171,21 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var12, "client.BD(" + crownEnabled + ',' + (sender != null ? "{...}" : "null")
 				+ ',' + "dummy" + ',' + (message != null ? "{...}" : "null") + ',' + type + ',' + crownID + ','
 				+ (formerName != null ? "{...}" : "null") + ',' + ')');
+		}
+	}
+
+	public boolean hasScroll(MessageTab messageTab) {
+		switch(messageTab) {
+			case CHAT:
+				return this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat] > 4;
+			case QUEST:
+				return this.panelMessageTabs.controlListCurrentSize[this.panelMessageQuest] > 4;
+			case PRIVATE:
+				return this.panelMessageTabs.controlListCurrentSize[this.panelMessagePrivate] > 4;
+			case CLAN:
+				return this.panelMessageTabs.controlListCurrentSize[this.panelMessageClan] > 4;
+			default:
+				return false;
 		}
 	}
 
