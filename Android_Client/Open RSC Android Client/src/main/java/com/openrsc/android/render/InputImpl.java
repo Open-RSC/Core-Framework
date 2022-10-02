@@ -91,9 +91,10 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
 		boolean scrollableMessagePanel = mudclient.hasScroll(mudclient.messageTabSelected) && touchedMessagePanelArea;
 		boolean mayBeScrollable = mudclient.showUiTab != 0;
+		boolean verticalSwipe = Math.abs(e2.getY() - e1.getY()) >= 70; // some threshold to discard zoom when wanting to rotate only
 		boolean zoomable = (!scrollableMessagePanel && !mayBeScrollable) || osConfig.C_SWIPE_TO_SCROLL_MODE == 0;
 
-        // Disables swipe functionsgit  while visible
+        // Disables swipe functions while visible
         if (Config.S_SPAWN_AUCTION_NPCS && mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.skillGuideInterface.isVisible()
 				|| mudclient.isShowDialogBank()
                 || Config.S_WANT_QUEST_MENUS && mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.party.getPartyInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
@@ -101,7 +102,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                 || Config.S_ITEMS_ON_DEATH_MENU && mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible())
             return false;
 
-		if (zoomable && (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
+		if (verticalSwipe && zoomable && (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
 			if (osConfig.C_SWIPE_TO_ZOOM_MODE != 0) {
 				int dir = osConfig.C_SWIPE_TO_ZOOM_MODE == 2 ? -1 : 1;
 				int zoomDistance = (int) (-distanceY * 5);
