@@ -13,6 +13,7 @@ import android.view.View.OnTouchListener;
 
 import orsc.Config;
 import orsc.enumerations.MessageTab;
+import orsc.enumerations.MessageType;
 import orsc.graphics.two.Fonts;
 import orsc.mudclient;
 import orsc.osConfig;
@@ -111,10 +112,22 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 		}
 
 		if (osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
-			int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
-			float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
-				* 0.5F;
-			mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
+			// camera set to auto does not like manual like rotation
+			if (!mudclient.getOptionCameraModeAuto()) {
+				int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
+				float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth())
+					* 0.5F;
+				mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
+			} else {
+				// swipe to right gives negative distanceX, to left positive
+				int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
+				boolean toLeft = dir * distanceX > 0;
+				if (toLeft) {
+					mudclient.keyLeft = true;
+				} else {
+					mudclient.keyRight = true;
+				}
+			}
 		}
 		if (!zoomable) {
 			if (osConfig.C_SWIPE_TO_SCROLL_MODE != 0) {

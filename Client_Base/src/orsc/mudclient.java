@@ -15848,6 +15848,10 @@ public final class mudclient implements Runnable {
 		this.optionCameraModeAuto = auto;
 	}
 
+	public boolean getOptionCameraModeAuto() {
+		return this.optionCameraModeAuto;
+	}
+
 	public void setOptionMouseButtonOne(boolean button) {
 		this.optionMouseButtonOne = button;
 	}

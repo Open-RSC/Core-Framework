@@ -260,9 +260,21 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 						mudclient.cameraPitch = 768;
 				}
 				if (osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
-					int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
-					float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth());
-					mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
+					// camera set to auto does not like manual like rotation
+					if (!mudclient.getOptionCameraModeAuto()) {
+						int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
+						float clientDist = distanceX / (getWidth() / (float) mudclient.getGameWidth());
+						mudclient.cameraRotation = (255 & mudclient.cameraRotation + (int) (dir * clientDist));
+					} else {
+						// swipe to left gives negative distanceX, to left negative
+						int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
+						boolean toLeft = dir * distanceX < 0;
+						if (toLeft) {
+							mudclient.keyLeft = true;
+						} else {
+							mudclient.keyRight = true;
+						}
+					}
 				}
 				if (!zoomable) {
 					if (osConfig.C_SWIPE_TO_SCROLL_MODE != 0) {
