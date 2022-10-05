@@ -42,10 +42,10 @@ android {
     sourceSets {
         main.java.srcDirs += ['src/main/java', 'src/main/../../../../Client_Base/src']
     }
-    buildToolsVersion '32.0.0'
+    buildToolsVersion '31.0.0'
     dependenciesInfo {
-        includeInApk false
-        includeInBundle false
+        includeInApk true
+        includeInBundle true
     }
     namespace 'com.openrsc.client'
     applicationVariants.all { variant ->
