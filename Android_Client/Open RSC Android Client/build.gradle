@@ -47,6 +47,7 @@ android {
         includeInApk false
         includeInBundle false
     }
+    namespace 'com.openrsc.client'
     applicationVariants.all { variant ->
         variant.outputs.all {
             outputFileName = "openrsc.apk"
