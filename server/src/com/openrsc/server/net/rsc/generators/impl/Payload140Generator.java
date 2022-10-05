@@ -49,7 +49,7 @@ public class Payload140Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_TRADE_OTHER_ACCEPTED, 235);
 		put(OpcodeOut.SEND_SHOP_OPEN, 234);
 		put(OpcodeOut.SEND_SHOP_CLOSE, 233);
-		put(OpcodeOut.SEND_OPEN_DETAILS, 232); // replaced SEND_REMOVE_WORLD_PLAYER
+		// 232 SEND_OPEN_DETAILS not present yet // replaced SEND_REMOVE_WORLD_PLAYER
 		// 231 SEND_REMOVE_WORLD_NPC gone
 		// 230 RUNESCAPE_UPDATED gone
 		put(OpcodeOut.SEND_TRADE_ACCEPTED, 229);

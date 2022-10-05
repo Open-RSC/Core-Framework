@@ -64,6 +64,8 @@ public class ActionSender {
 			generator = new Payload177Generator();
 		} else if (player.isUsing140CompatibleClient()) {
 			generator = new Payload140Generator();
+		} else if (player.isUsing115CompatibleClient()) {
+			generator = new Payload115Generator();
 		} else {
 			generator = new PayloadCustomGenerator();
 		}

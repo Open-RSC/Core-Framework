@@ -33,7 +33,7 @@ public class RegisterLoginResponse {
 			}
 		}
 
-		if (clientversion >= 177) {
+		if (clientversion >= 93) {
 			if (registering && responseCode == REGISTER_SUCCESSFUL) {
 				return REGISTER_SUCCESSFUL;
 			}

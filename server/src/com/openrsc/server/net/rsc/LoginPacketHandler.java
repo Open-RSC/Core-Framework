@@ -229,7 +229,9 @@ public class LoginPacketHandler {
 						// login block with initial ISAAC
 						// TODO
 					} else if (clientVersion.get() >= 93) {
-						short referId = packet.readShort();
+						if (clientVersion.get() > 135) {
+							short referId = packet.readShort();
+						}
 						long userHash = packet.readLong();
 						final String username = DataConversions.hashToUsername(userHash);
 
@@ -561,7 +563,9 @@ public class LoginPacketHandler {
 						} else if (clientVersion <= 177) {
 							long userHash = packet.readLong();
 							final String username = DataConversions.hashToUsername(userHash);
-							int referId = packet.readShort();
+							if (clientVersion > 135) {
+								short referId = packet.readShort();
+							}
 
 							// Get encrypted block
 							// password is always 20 characters long, with spaces at the end.

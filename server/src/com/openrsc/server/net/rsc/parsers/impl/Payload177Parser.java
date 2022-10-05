@@ -229,6 +229,7 @@ public class Payload177Parser implements PayloadParser<OpcodeIn> {
             // OpcodeIn.SKIP_TUTORIAL; DNE
 
 			case 0: // 625
+			case 19: // 712
 				opcode = OpcodeIn.LOGIN;
 				break;
 			case 2: // 129

@@ -2351,6 +2351,8 @@ public final class Player extends Mob {
 								parser = new Payload177Parser();
 							} else if (isUsing140CompatibleClient()) {
 								parser = new Payload140Parser();
+							} else if (isUsing115CompatibleClient()) {
+								parser = new Payload115Parser();
 							} else {
 								parser = new PayloadCustomParser();
 							}
@@ -3717,6 +3719,10 @@ public final class Player extends Mob {
 	public boolean isUsing39CompatibleClient() { return this.clientVersion == 39 || this.clientVersion == 40; }
 
 	public boolean isUsing69CompatibleClient() { return this.clientVersion == 69; }
+
+	public boolean isUsing115CompatibleClient() {
+		return this.clientVersion == 115;
+	}
 
 	public boolean isUsing140CompatibleClient() {
 		return this.clientVersion == 140;

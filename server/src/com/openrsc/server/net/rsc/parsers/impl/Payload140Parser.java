@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.parsers.impl;
 
+import com.openrsc.server.constants.Classes;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
@@ -184,7 +185,7 @@ public class Payload140Parser implements PayloadParser<OpcodeIn> {
 				opcode = OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST;
 				break;
 			case 233: // 235
-				opcode = OpcodeIn.PLAYER_DECLINED_TRADE; // or duel
+				opcode = OpcodeIn.PLAYER_DECLINED_TRADE;
 				break;
 			case 234: // 500
 				opcode = OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER;
@@ -210,7 +211,7 @@ public class Payload140Parser implements PayloadParser<OpcodeIn> {
 			case 31: // 777
 				opcode = OpcodeIn.PRIVACY_SETTINGS_CHANGED;
 				break;
-			case 51: // 277
+			case 10: // 277
 				opcode = OpcodeIn.REPORT_ABUSE;
 				break;
 			case 207: // 886
@@ -229,6 +230,7 @@ public class Payload140Parser implements PayloadParser<OpcodeIn> {
             // OpcodeIn.SKIP_TUTORIAL; DNE
 
 			case 0: // 625
+			case 19: //relogin
 				opcode = OpcodeIn.LOGIN;
 				break;
 			case 2: // 129
@@ -243,18 +245,18 @@ public class Payload140Parser implements PayloadParser<OpcodeIn> {
 			case 197: // 882
 				opcode = OpcodeIn.CHANGE_RECOVERY_REQUEST;
 				break;
-			case 247: // 888
-				opcode = OpcodeIn.CHANGE_DETAILS_REQUEST;
-				break;
+			//case 247: // 888
+				//opcode = OpcodeIn.CHANGE_DETAILS_REQUEST; did not exist yet
+				//break;
 			case 25: // 551
 				opcode = OpcodeIn.CHANGE_PASS;
 				break;
 			case 208: // 457
 				opcode = OpcodeIn.SET_RECOVERY;
 				break;
-			case 253: // 155
-				opcode = OpcodeIn.SET_DETAILS;
-				break;
+			//case 253: // 155
+				//opcode = OpcodeIn.SET_DETAILS; did not exist yet
+				//break;
 			case 196: // 651
 				opcode = OpcodeIn.CANCEL_RECOVERY_REQUEST;
 				break;
@@ -295,6 +297,26 @@ public class Payload140Parser implements PayloadParser<OpcodeIn> {
 				pl.topColour = packet.readByte();
 				pl.trouserColour = packet.readByte();
 				pl.skinColour = packet.readByte();
+				Classes characterClass = null;
+				int classIndex = packet.readByte();
+				switch (classIndex) {
+					case 0:
+						characterClass = Classes.ADVENTURER;
+						break;
+					case 1:
+						characterClass = Classes.WARRIOR;
+						break;
+					case 2:
+						characterClass = Classes.WIZARD;
+						break;
+					case 3:
+						characterClass = Classes.RANGER;
+						break;
+					case 4:
+						characterClass = Classes.MINER;
+						break;
+				}
+				pl.chosenClass = characterClass;
 				result = pl;
 				break;
 
@@ -655,7 +677,7 @@ public class Payload140Parser implements PayloadParser<OpcodeIn> {
 			case REPORT_ABUSE:
 				ReportStruct r = new ReportStruct();
 				r.targetPlayerName = DataConversions.hashToUsername(packet.readLong());
-				r.reason = (byte)(packet.readByte() | 64); // adds 64 to separate from 204+ reasons
+				r.reason = 0; // reason was not supplied
 				r.suggestsOrMutes = 0;
 				result = r;
 				break;

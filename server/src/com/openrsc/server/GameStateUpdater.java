@@ -130,6 +130,13 @@ public final class GameStateUpdater {
 		}
 	}
 
+	private int safeNPCIndex(final Player player, final int npcIndex) {
+		if (!player.isUsingCustomClient()) {
+			return npcIndex % player.getClientLimitations().maxServerId;
+		}
+		return npcIndex;
+	}
+
 	protected void updateNpcs(final Player playerToUpdate) {
 		MobsUpdateStruct struct = new MobsUpdateStruct();
 		ClearMobsStruct clearStruct = new ClearMobsStruct();
@@ -224,13 +231,15 @@ public final class GameStateUpdater {
 					continue; // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 away
 
 				final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
+				boolean forClient115 = playerToUpdate.isUsing115CompatibleClient();
 				boolean forClient140 = playerToUpdate.isUsing140CompatibleClient();
-				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getIndex(), forClient140 ? 11 : 12));
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(safeNPCIndex(playerToUpdate, newNPC.getIndex()), forClient115 || forClient140 ? 11 : 12));
 				boolean forAuthentic = !playerToUpdate.isUsingCustomClient();
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getSprite(), 4));
-				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getID(), forClient140 ? 9 : 10));
+				int numBits = forClient115 ? 8 : (forClient140 ? 9 : 10);
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getID(), numBits));
 
 				playerToUpdate.getLocalNpcs().add(newNPC);
 			}
@@ -343,7 +352,7 @@ public final class GameStateUpdater {
 		} else {
 			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
 
-			if (playerToUpdate.isUsing140CompatibleClient() || playerToUpdate.isUsing69CompatibleClient()) {
+			if (playerToUpdate.isUsing140CompatibleClient() || playerToUpdate.isUsing115CompatibleClient() || playerToUpdate.isUsing69CompatibleClient()) {
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getX(), 10));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getY(), 12));
 			} else {
@@ -400,7 +409,8 @@ public final class GameStateUpdater {
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getSprite(), 4));
-					if (playerToUpdate.isUsing177CompatibleClient() || playerToUpdate.isUsing140CompatibleClient() || playerToUpdate.isUsing69CompatibleClient()) {
+					if (playerToUpdate.isUsing177CompatibleClient() || playerToUpdate.isUsing140CompatibleClient()
+						|| playerToUpdate.isUsing115CompatibleClient() || playerToUpdate.isUsing69CompatibleClient()) {
 						mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.isKnownPlayer(otherPlayer.getIndex()) ? 1 : 0, 1));
 					}
 
@@ -472,13 +482,13 @@ public final class GameStateUpdater {
 
 			ChatMessage chatMessage;
 			while ((chatMessage = npcMessagesNeedingDisplayed.poll()) != null) {
-				updates.add((short) chatMessage.getSender().getIndex());
+				updates.add((short) safeNPCIndex(player, chatMessage.getSender().getIndex()));
 				updates.add((byte) 1);
 				updates.add((short) (chatMessage.getRecipient() == null ? -1 : chatMessage.getRecipient().getIndex()));
 				if (isRetroClient(player)) {
 					updates.add((byte) chatMessage.getMessageString().length());
 					updates.add(chatMessage.getMessageString());
-				} else if (player.isUsing177CompatibleClient()) {
+				} else if (player.isUsing177CompatibleClient() || player.isUsing115CompatibleClient()) {
 					updates.add(new RSCString(chatMessage.getMessageString()));
 				} else if (player.isUsing233CompatibleClient()) {
 					updates.add(new RSCString(chatMessage.getMessageString()));
@@ -488,7 +498,7 @@ public final class GameStateUpdater {
 			}
 			Damage npcNeedingHitsUpdate;
 			while ((npcNeedingHitsUpdate = npcsNeedingHitsUpdate.poll()) != null) {
-				updates.add((short) npcNeedingHitsUpdate.getIndex());
+				updates.add((short) safeNPCIndex(player, npcNeedingHitsUpdate.getIndex()));
 				updates.add((byte) 2);
 				updates.add((byte) npcNeedingHitsUpdate.getDamage());
 				updates.add((byte) npcNeedingHitsUpdate.getCurHits());
@@ -567,7 +577,7 @@ public final class GameStateUpdater {
 				if (
 					!(
 						// is a client that echos their own local chat messages
-						player.isUsing177CompatibleClient() &&
+						(player.isUsing177CompatibleClient() || player.isUsing115CompatibleClient()) &&
 							// is public chat & not quest/private message
 							(chatMessage.getRecipient() == null || chatMessage.getRecipient().isPlayer()) &&
 							// chat sender is chat receiver
@@ -648,7 +658,8 @@ public final class GameStateUpdater {
 				AppearanceUpdateStruct altStruct = new AppearanceUpdateStruct(); // for early mudclient, appearance update was sent appart;
 				boolean isRetroClient = player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient();
 				boolean isCustomClient = player.isUsingCustomClient();
-				boolean is177Compat = player.isUsing177CompatibleClient() || player.isUsing140CompatibleClient() || player.isUsing69CompatibleClient();
+				boolean is177Compat = player.isUsing177CompatibleClient() || player.isUsing140CompatibleClient()
+					|| player.isUsing115CompatibleClient() || player.isUsing69CompatibleClient();
 
 				List<Object> updatesMain = new ArrayList<>();
 				List<Object> updatesAlt = new ArrayList<>();

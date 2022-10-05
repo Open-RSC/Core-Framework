@@ -8,7 +8,7 @@ public class ClientLimitations {
 	public int maxAnimationId, maxItemId, maxNpcId, maxSceneryId, maxPrayerId, maxSpellId,
 		maxSkillId, maxRoofId, maxTextureId, maxTileId, maxBoundaryId, maxTeleBubbleId,
 		maxProjectileSprite, maxSkinColor, maxHairColor, maxClothingColor, maxQuestId,
-		maxDialogueOptions, maxBankItems;
+		maxDialogueOptions, maxBankItems, maxServerId;
 	public String mapHash;
 	int supportsModSprites = NO_SUPPORT;
 	int numberOfSounds = NO_SUPPORT;
@@ -55,6 +55,7 @@ public class ClientLimitations {
 			maxDialogueOptions = 5;
 			maxBankItems = 0; // item bank not implemented until client 72 on 2001-07-26
 			mapHash = "14";
+			maxServerId = 1000;
 		}
 
 		else if (clientVersion == 69) {
@@ -79,6 +80,31 @@ public class ClientLimitations {
 			maxDialogueOptions = 5;
 			maxBankItems = 0; // item bank not implemented until client 72 on 2001-07-26
 			mapHash = "20";
+		}
+
+		else if (clientVersion == 115) {
+			// TODO: correct these
+			maxAnimationId = 122;
+			maxItemId = 581;
+			maxNpcId = 249;
+			maxSceneryId = 260;
+			maxPrayerId = 13; // already added all prayers by now
+			maxSkillId = 15;
+			maxSpellId = 8;
+			maxRoofId = 2;
+			maxTextureId = 31;
+			maxTileId = 10;
+			maxBoundaryId = 73;
+			maxTeleBubbleId = -1; // not implemented until client 119 on 2002-01-24
+			maxProjectileSprite = 2;
+			maxSkinColor = 4;
+			maxHairColor = 9;
+			maxClothingColor = 14;
+			maxQuestId = 16; // 17 quests existed
+			maxDialogueOptions = 5;
+			maxBankItems = 48;
+			mapHash = "27";
+			maxServerId = 1500;
 		}
 
 		else if (clientVersion >= 177 && clientVersion <= 235) {
@@ -108,6 +134,7 @@ public class ClientLimitations {
 			maxDialogueOptions = 5;
 			maxBankItems = 48 * 4;
 			numberOfSounds = AUTHENTIC_SOUNDS_ONLY;
+			maxServerId = 5000;
 		}
 
 		if (clientVersion == 140) {
@@ -132,6 +159,7 @@ public class ClientLimitations {
 			maxDialogueOptions = 5;
 			maxBankItems = 48 * 2;
 			numberOfSounds = AUTHENTIC_SOUNDS_ONLY;
+			maxServerId = 2500;
 		}
 
 		if (clientVersion >= 72) {
