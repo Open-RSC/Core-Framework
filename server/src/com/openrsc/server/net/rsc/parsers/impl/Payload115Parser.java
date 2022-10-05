@@ -343,7 +343,7 @@ public class Payload115Parser implements PayloadParser<OpcodeIn> {
 			case SHOP_SELL:
 				ShopStruct s1 = new ShopStruct();
 				s1.catalogID = packet.readShort();
-				s1.stockAmount = packet.readInt();
+				s1.stockAmount = packet.readShort();
 				s1.amount = 1;
 				result = s1;
 				break;
