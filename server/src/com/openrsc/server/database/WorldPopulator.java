@@ -55,6 +55,11 @@ public final class WorldPopulator {
 				authenticBoundaryFile = "/defs/locs/BoundaryLocs14.json";
 				authenticGroundItemsFile = "/defs/locs/GroundItems14.json";
 				authenticMobFile = "/defs/locs/NpcLocs14.json";
+			} else if (getWorld().getServer().getConfig().BASED_MAP_DATA == 27) {
+				authenticSceneryFile = "/defs/locs/SceneryLocs27.json";
+				authenticBoundaryFile = "/defs/locs/BoundaryLocs27.json";
+				authenticGroundItemsFile = "/defs/locs/GroundItems27.json";
+				authenticMobFile = "/defs/locs/NpcLocs27.json";
 			} else {
 				authenticSceneryFile = "/defs/locs/SceneryLocs.json";
 				authenticBoundaryFile = "/defs/locs/BoundaryLocs.json";
