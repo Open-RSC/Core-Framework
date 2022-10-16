@@ -9,7 +9,7 @@ To do so, open Terminal, copy and paste the following, and then press enter:
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-You need install Java, to to it, copy and paste the following in Terminal and press enter:
+You need install Java, to do it, copy and paste the following in Terminal and press enter:
 ```
 brew tap AdoptOpenJDK/openjdk && brew install adoptopenjdk8
 ```
