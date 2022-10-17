@@ -56,7 +56,7 @@ public class GameActivity extends Activity implements ClientPort {
 
         setInputImpl(new InputImpl(mudclient, gameView));
 
-		Utils.context = getApplicationContext();
+		//Utils.context = getApplicationContext();
 
 		// Hide the bars and stuff
 		updateHideUi();

@@ -5403,14 +5403,14 @@ public final class mudclient implements Runnable {
 							uiX += uiWidth + 15;
 							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
 							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
-							this.getSurface().drawString("@whi@PK", uiX + 25, uiY + 20, 0xffffff, 1);
+							this.getSurface().drawString("@whi@Wiki", uiX + 18, uiY + 20, 0xffffff, 1);
 							if (this.mouseButtonClick != 0) {
 								if (this.mouseX >= uiX && this.mouseX <= uiX + uiWidth && this.mouseY >= uiY && this.mouseY <= uiY + uiHeight) {
 									this.mouseButtonClick = 0;
-									this.panelMessageTabs.setText(this.panelMessageEntry, "::p ");
+									this.panelMessageTabs.setText(this.panelMessageEntry, "::wiki ");
 								}
 							}
-							if (S_WANT_CLANS) {
+							/*if (S_WANT_CLANS) {
 								uiX += uiWidth + 15;
 								this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0x659CDE, 160);
 								this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
@@ -5431,7 +5431,7 @@ public final class mudclient implements Runnable {
 									this.mouseButtonClick = 0;
 									this.panelMessageTabs.setText(this.panelMessageEntry, "::onlinelist");
 								}
-							}
+							}*/
 							/*uiX += uiWidth + 15;
 							this.getSurface().drawBoxAlpha(uiX, uiY, uiWidth, uiHeight, 0xff0000, 160);
 							this.getSurface().drawBoxBorder(uiX, uiWidth, uiY, uiHeight, 0);
