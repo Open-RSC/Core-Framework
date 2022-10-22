@@ -1,10 +1,5 @@
 package com.openrsc.interfaces.misc.party;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.enumerations.MenuItemAction;
@@ -14,6 +9,11 @@ import orsc.graphics.gui.Panel;
 import orsc.graphics.gui.SocialLists;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 
 public final class PartyInterface {
 	public int partyGUIScroll;
@@ -200,7 +200,7 @@ public final class PartyInterface {
 					@Override
 					void handle() {
 						menuY = mc.mouseY - 7;
-						menuX = mc.mouseX - x / 2;
+						menuX = mc.mouseX - 10;
 						menu_visible = true;
 						rightClickMenu.recalculateSize(0);
 						rightClickMenu.addCharacterItem_WithID(0,
@@ -294,6 +294,7 @@ public final class PartyInterface {
 				drawButton(graphics, x + 3 + (mc.party.isPartyLeader() ? 256 : 128), y + 18, (mc.party.isPartyLeader() ? 146 : 146), 22, "Party Stats / Challenges", false, new ButtonHandler() {
 					@Override
 					void handle() {
+						// not yet implemented...
 						setVisible(false);
 					}
 				});

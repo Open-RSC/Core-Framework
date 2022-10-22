@@ -188,7 +188,7 @@ public final class ClanInterface {
 					@Override
 					void handle() {
 						menuY = mc.mouseY - 7;
-						menuX = mc.mouseX - x / 2;
+						menuX = mc.mouseX - 10;
 						menu_visible = true;
 						rightClickMenu.recalculateSize(0);
 						rightClickMenu.addCharacterItem_WithID(0,
@@ -274,6 +274,7 @@ public final class ClanInterface {
 				drawButton(graphics, x + 3 + (mc.clan.isClanLeader() ? 256 : 128), y + 18, (mc.clan.isClanLeader() ? 146 : 146), 22, "Clan Stats / Challenges", false, new ButtonHandler() {
 					@Override
 					void handle() {
+						// not yet implemented...
 						setVisible(false);
 					}
 				});
