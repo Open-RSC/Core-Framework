@@ -160,7 +160,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (hitInputFilter && mudclient.inputTextCurrent.length() < 20)
 				mudclient.inputTextCurrent = mudclient.inputTextCurrent + keyChar;
 
-			if (hitInputFilter && mudclient.chatMessageInput.length() < 80)
+			if (hitInputFilter && mudclient.chatMessageInput.length() < 80 && !mudclient.getIsSleeping())
 				mudclient.chatMessageInput = mudclient.chatMessageInput + keyChar;
 
 			// Backspace
