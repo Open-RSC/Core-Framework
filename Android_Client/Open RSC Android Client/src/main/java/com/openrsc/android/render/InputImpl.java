@@ -94,15 +94,14 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 		boolean verticalSwipe = Math.abs(e2.getY() - e1.getY()) >= 70; // some threshold to discard zoom when wanting to rotate only
 		boolean zoomable = (!scrollableMessagePanel && !mayBeScrollable) || osConfig.C_SWIPE_TO_SCROLL_MODE == 0;
 
-        // Disables swipe functions while visible
-        if (Config.S_SPAWN_AUCTION_NPCS && mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.skillGuideInterface.isVisible()
-				|| mudclient.isShowDialogBank()
+        // Disables zoom functions while visible
+        boolean inScrollable = (Config.S_SPAWN_AUCTION_NPCS && mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.skillGuideInterface.isVisible()
                 || Config.S_WANT_QUEST_MENUS && mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.party.getPartyInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
                 || mudclient.ironmanInterface.isVisible() || mudclient.achievementInterface.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.doSkillInterface.isVisible()
                 || Config.S_ITEMS_ON_DEATH_MENU && mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible())
-            return false;
+                || mudclient.isShowDialogBank();
 
-		if (verticalSwipe && zoomable && (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
+		if (verticalSwipe && !inScrollable && zoomable && (Config.S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
 			if (osConfig.C_SWIPE_TO_ZOOM_MODE != 0) {
 				int dir = osConfig.C_SWIPE_TO_ZOOM_MODE == 2 ? -1 : 1;
 				int zoomDistance = (int) (-distanceY * 5);
@@ -112,11 +111,11 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 					osConfig.C_LAST_ZOOM = newZoom;
 				}
 			}
-		} else if (mudclient.cameraAllowPitchModification) {
+		} else if (!inScrollable && mudclient.cameraAllowPitchModification) {
 			mudclient.cameraPitch = (mudclient.cameraPitch + (int) (-distanceY * 10)) & 1023;
 		}
 
-		if (osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
+		if (!inScrollable && osConfig.C_SWIPE_TO_ROTATE_MODE != 0) {
 			// camera set to auto does not like manual like rotation
 			if (!mudclient.getOptionCameraModeAuto()) {
 				int dir = osConfig.C_SWIPE_TO_ROTATE_MODE == 2 ? -1 : 1;
@@ -134,7 +133,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 				}
 			}
 		}
-		if (!zoomable) {
+		if (inScrollable || !zoomable) {
 			if (osConfig.C_SWIPE_TO_SCROLL_MODE != 0) {
 				int dir = osConfig.C_SWIPE_TO_SCROLL_MODE == 2 ? -1 : 1;
 				mudclient.runScroll((int) (dir * distanceY));

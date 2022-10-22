@@ -1,7 +1,6 @@
 package orsc;
 
 import com.openrsc.client.model.Sprite;
-import orsc.enumerations.MessageTab;
 import orsc.graphics.two.Fonts;
 import orsc.multiclient.ClientPort;
 import orsc.util.GenUtil;
@@ -14,8 +13,8 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.ByteArrayInputStream;
 
-import static orsc.Config.*;
-import static orsc.osConfig.*;
+import static orsc.Config.S_ZOOM_VIEW_TOGGLE;
+import static orsc.osConfig.C_LAST_ZOOM;
 
 public class ORSCApplet extends Applet implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener, ComponentListener,
 	ImageObserver, ImageProducer, ClientPort {
@@ -376,17 +375,22 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	@Override
 	public final synchronized void mouseWheelMoved(MouseWheelEvent e) {
 		updateControlShiftState(e);
-		mudclient.runScroll(e.getWheelRotation());
+
+		boolean touchedMessagePanelArea = getHeight() - e.getY() <= 75;
+
+		boolean scrollableMessagePanel = mudclient.hasScroll(mudclient.messageTabSelected) && touchedMessagePanelArea;
+		boolean mayBeScrollable = mudclient.showUiTab != 0;
+		boolean zoomable = !scrollableMessagePanel && !mayBeScrollable;
+
 
 		// Disables zoom while visible
-		if (Config.S_SPAWN_AUCTION_NPCS && mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.skillGuideInterface.isVisible()
+		boolean inScrollable = (Config.S_SPAWN_AUCTION_NPCS && mudclient.auctionHouse.isVisible() || mudclient.onlineList.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.skillGuideInterface.isVisible()
 			|| Config.S_WANT_QUEST_MENUS && mudclient.questGuideInterface.isVisible() || mudclient.clan.getClanInterface().isVisible() || mudclient.experienceConfigInterface.isVisible()
 			|| mudclient.ironmanInterface.isVisible() || mudclient.achievementInterface.isVisible() || Config.S_WANT_SKILL_MENUS && mudclient.doSkillInterface.isVisible()
-			|| Config.S_ITEMS_ON_DEATH_MENU && mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible() || mudclient.messageTabSelected != MessageTab.ALL
-			|| mudclient.isShowDialogBank())
-			return;
+			|| Config.S_ITEMS_ON_DEATH_MENU && mudclient.lostOnDeathInterface.isVisible() || mudclient.territorySignupInterface.isVisible()
+			|| mudclient.isShowDialogBank());
 
-		if (mudclient.showUiTab == 0 && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
+		if (!inScrollable && zoomable && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff())) {
 			e.consume();
 			final int zoomIncrement = 10;
 			int zoomAmount = e.getWheelRotation() * zoomIncrement;
@@ -395,6 +399,11 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (newZoom >= 0 && newZoom <= 255) {
 				C_LAST_ZOOM = newZoom;
 			}
+		}
+
+		if (inScrollable || !zoomable) {
+			e.consume();
+			mudclient.runScroll(e.getWheelRotation());
 		}
 	}
 
