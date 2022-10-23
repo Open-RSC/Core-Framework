@@ -290,6 +290,8 @@ public class ServerConfiguration {
 	public int SPELL_RANGE_DISTANCE;
 	public boolean WANT_CORRECTED_SKILLING_XP;
 
+	public boolean DISABLE_MINIMAP_ROTATION;
+
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
 			"An established connection was aborted by the software in your host machine");
@@ -436,6 +438,7 @@ public class ServerConfiguration {
 		LENIENT_CONTACT_DETAILS = tryReadBool("lenient_contact_details").orElse(false);
 		CHAR_NAME_CAN_CONTAIN_MOD = tryReadBool("char_name_can_contain_mod").orElse(false);
 		CHAR_NAME_CAN_EQUAL_GLOBAL = tryReadBool("char_name_can_equal_global").orElse(false);
+		DISABLE_MINIMAP_ROTATION = tryReadBool("disable_minimap_rotation").orElse(true);
 
 		// Retro features
 		GATHER_TOOL_ON_SCENERY = tryReadBool("gather_tool_on_scenery").orElse(false);

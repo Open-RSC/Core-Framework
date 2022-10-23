@@ -145,6 +145,7 @@ public class Config {
 	public static boolean S_WANT_OPENPK_POINTS = false;
 	public static int S_OPENPK_POINTS_TO_GP_RATIO = 1;
 	public static boolean S_WANT_OPENPK_PRESETS = false;
+	public static boolean S_DISABLE_MINIMAP_ROTATION = true;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

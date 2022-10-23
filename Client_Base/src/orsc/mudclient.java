@@ -13496,8 +13496,10 @@ public final class mudclient implements Runnable {
 			if (this.showUiTab == 0 && this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= 3
 				&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < 35) {
 				this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
-				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
-				this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
+				if (!Config.S_DISABLE_MINIMAP_ROTATION) {
+					this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
+					this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
+				}
 			}
 
 			if (this.showUiTab == 0 && this.getSurface().width2 - 101 <= this.mouseX && this.mouseY >= 3
@@ -13528,8 +13530,10 @@ public final class mudclient implements Runnable {
 			if (this.showUiTab != 0 && this.showUiTab != Config.MINIMAP_AND_COMPASS_TAB && this.getSurface().width2 - 68 <= this.mouseX
 				&& this.mouseY >= 3 && this.getSurface().width2 - 33 - 3 > this.mouseX && this.mouseY < 26) {
 				this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
-				this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11; // random rotation of the minimap as anti-bot?
-				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
+				if (!Config.S_DISABLE_MINIMAP_ROTATION) {
+					this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11; // random rotation of the minimap as anti-bot?
+					this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
+				}
 			}
 
 			if (this.showUiTab != 0 && this.mouseX >= this.getSurface().width2 - 66 - 35 && this.mouseY >= 3
@@ -13602,8 +13606,10 @@ public final class mudclient implements Runnable {
 			if (this.mouseX >= this.getSurface().width2 - 35 - 33 && this.mouseY >= minY
 				&& this.getSurface().width2 - 3 - 33 > this.mouseX && this.mouseY < maxY) {
 				drawMinimap = !drawMinimap;
-				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
-				this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
+				if (!Config.S_DISABLE_MINIMAP_ROTATION) {
+					this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6; // random rotation of the minimap as anti-bot?
+					this.minimapRandom_2 = (int) (Math.random() * 23.0D) - 11;
+				}
 				return true;
 			}
 
@@ -13646,8 +13652,10 @@ public final class mudclient implements Runnable {
 					this.showUiTab = 0;
 				else
 					this.showUiTab = Config.MINIMAP_AND_COMPASS_TAB;
-				this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11; // random rotation of the minimap as anti-bot?
-				this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
+				if (!Config.S_DISABLE_MINIMAP_ROTATION) {
+					this.minimapRandom_2 = (int) (23.0D * Math.random()) - 11; // random rotation of the minimap as anti-bot?
+					this.minimapRandom_1 = (int) (13.0D * Math.random()) - 6;
+				}
 				return true;
 			}*/
 

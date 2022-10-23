@@ -942,6 +942,7 @@ public class PacketHandler {
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
 		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio, wantOpenPkPresets;
+		int disableMinimapRotation;
 
 		String logoSpriteID;
 
@@ -1029,6 +1030,7 @@ public class PacketHandler {
 			openPkPointsToGpRatio = this.getClientStream().getUnsignedByte(); // 81
 			wantOpenPkPresets = this.getClientStream().getUnsignedByte(); // 82
 			showUndergroundFlickerToggle = this.getClientStream().getUnsignedByte(); // 83
+			disableMinimapRotation = this.getClientStream().getUnsignedByte(); // 84
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1113,6 +1115,7 @@ public class PacketHandler {
 			openPkPointsToGpRatio = packetsIncoming.getUnsignedByte(); // 81
 			wantOpenPkPresets = packetsIncoming.getUnsignedByte(); // 82
 			showUndergroundFlickerToggle = packetsIncoming.getUnsignedByte(); // 83
+			disableMinimapRotation = packetsIncoming.getUnsignedByte(); // 84
 		}
 
 		if (Config.DEBUG) {
@@ -1199,7 +1202,8 @@ public class PacketHandler {
 					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
 					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio + // 81
 					"\nS_WANT_OPENPK_PRESETS " + wantOpenPkPresets + // 82
-					"\nS_SHOW_UNDERGROUND_FLICKER_TOGGLE " + showUndergroundFlickerToggle // 83
+					"\nS_SHOW_UNDERGROUND_FLICKER_TOGGLE " + showUndergroundFlickerToggle + // 83
+					"\nS_DISABLE_MINIMAP_ROTATION " + disableMinimapRotation // 84
 			);
 		}
 
@@ -1290,6 +1294,7 @@ public class PacketHandler {
 		props.setProperty("S_OPENPK_POINTS_TO_GP_RATIO", String.valueOf(openPkPointsToGpRatio)); // 81
 		props.setProperty("S_WANT_OPENPK_PRESETS", wantOpenPkPresets == 1 ? "true" : "false"); // 82
 		props.setProperty("S_SHOW_UNDERGROUND_FLICKER_TOGGLE", showUndergroundFlickerToggle == 1 ? "true" : "false"); // 83
+		props.setProperty("S_DISABLE_MINIMAP_ROTATION", disableMinimapRotation == 1 ? "true" : "false"); // 84
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
