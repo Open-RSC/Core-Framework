@@ -5065,10 +5065,12 @@ public final class mudclient implements Runnable {
 					if (C_SHOW_GROUND_ITEMS != 1) {
 
 						for (centerX = 0; centerX < this.groundItemCount; ++centerX) {
-							if (C_SHOW_GROUND_ITEMS == 3
-								&& (this.groundItemID[centerX] == 20 || this.groundItemID[centerX] == 814 || this.groundItemID[centerX] == 413 || this.groundItemID[centerX] == 604))
+							if (C_SHOW_GROUND_ITEMS == 4 && (this.groundItemID[centerX] == 181)) {
 								continue;
-							else if (C_SHOW_GROUND_ITEMS == 2 && (this.groundItemID[centerX] != 20 && this.groundItemID[centerX] != 814 && this.groundItemID[centerX] != 413 && this.groundItemID[centerX] != 604)) {
+							} else if (C_SHOW_GROUND_ITEMS == 3
+								&& (this.groundItemID[centerX] == 20 || this.groundItemID[centerX] == 814 || this.groundItemID[centerX] == 413 || this.groundItemID[centerX] == 604)) {
+								continue;
+							} else if (C_SHOW_GROUND_ITEMS == 2 && (this.groundItemID[centerX] != 20 && this.groundItemID[centerX] != 814 && this.groundItemID[centerX] != 413 && this.groundItemID[centerX] != 604)) {
 								continue;
 							}
 							centerZ = this.groundItemX[centerX] * this.tileSize + 64;
@@ -9452,7 +9454,8 @@ public final class mudclient implements Runnable {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Ground Items - " + (C_SHOW_GROUND_ITEMS == 0 ? "@gre@Show ALL"
 					: C_SHOW_GROUND_ITEMS == 1 ? "@red@Hide ALL"
-					: C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones" : "@ora@No Bones"), 8, null, null);
+					: C_SHOW_GROUND_ITEMS == 2 ? "@gr1@Only Bones"
+					: C_SHOW_GROUND_ITEMS == 3 ? "@ora@No Bones" : "@or1@No Ashes"), 8, null, null);
 		}
 
 		// auto message switch
@@ -9808,9 +9811,7 @@ public final class mudclient implements Runnable {
 
 		// ground items toggle - byte index 28
 		if (settingIndex == 8 && this.mouseButtonClick == 1 && S_GROUND_ITEM_TOGGLE) {
-			C_SHOW_GROUND_ITEMS++;
-			if (C_SHOW_GROUND_ITEMS == 4)
-				C_SHOW_GROUND_ITEMS = 0;
+			C_SHOW_GROUND_ITEMS = ++C_SHOW_GROUND_ITEMS%5;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(28);
 			this.packetHandler.getClientStream().bufferBits.putByte(C_SHOW_GROUND_ITEMS);
@@ -13872,35 +13873,32 @@ public final class mudclient implements Runnable {
 		//Load & apply sprite packs
 		File configFile = new File(clientPort.getCacheLocation(), "config.txt");
 		if (configFile.exists()) {
-			if (configFile.exists()) {
-				ArrayList<String> activePacks = new ArrayList<>();
-				try {
-					BufferedReader br = new BufferedReader(new FileReader(configFile));
-					String line;
-					while ((line = br.readLine()) != null) {
-						String[] packageName = line.split(":");
-						if (Integer.parseInt(packageName[1]) == 1)
-							activePacks.add(packageName[0]);
-					}
-					br.close();
-					File packFolder = new File(clientPort.getCacheLocation(), "video" + File.separator + "spritepacks");
-					Unpacker unpacker = new Unpacker();
-					Workspace workspace;
-					for (String filename : activePacks) {
-						File pack = new File(packFolder, filename + ".osar");
-						workspace = unpacker.unpackArchive(pack);
-						for (Subspace subspace : workspace.getSubspaces()) {
-							Map<String, orsc.graphics.two.SpriteArchive.Entry> entries = getSurface().spriteTree.get(subspace.getName());
-							for (orsc.graphics.two.SpriteArchive.Entry entry : subspace.getEntryList()) {
-								entries.put(entry.getID(), entry);
-							}
+			ArrayList<String> activePacks = new ArrayList<>();
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(configFile));
+				String line;
+				while ((line = br.readLine()) != null) {
+					String[] packageName = line.split(":");
+					if (Integer.parseInt(packageName[1]) == 1)
+						activePacks.add(packageName[0]);
+				}
+				br.close();
+				File packFolder = new File(clientPort.getCacheLocation(), "video" + File.separator + "spritepacks");
+				Unpacker unpacker = new Unpacker();
+				Workspace workspace;
+				for (String filename : activePacks) {
+					File pack = new File(packFolder, filename + ".osar");
+					workspace = unpacker.unpackArchive(pack);
+					for (Subspace subspace : workspace.getSubspaces()) {
+						Map<String, orsc.graphics.two.SpriteArchive.Entry> entries = getSurface().spriteTree.get(subspace.getName());
+						for (orsc.graphics.two.SpriteArchive.Entry entry : subspace.getEntryList()) {
+							entries.put(entry.getID(), entry);
 						}
 					}
-				} catch (IOException a) {
-					a.printStackTrace();
 				}
+			} catch (IOException a) {
+				a.printStackTrace();
 			}
-
 		}
 	}
 
