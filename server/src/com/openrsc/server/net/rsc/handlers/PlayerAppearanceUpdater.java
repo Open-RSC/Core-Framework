@@ -20,7 +20,9 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 			return;
 		}
 
-		if (player.getLocation().inTutorialLanding()) player.getCache().remove("tutorial_appearance");
+		boolean tutorialAppearance = player.getCache().hasKey("tutorial_appearance");
+		if (tutorialAppearance)
+			player.getCache().remove("tutorial_appearance");
 
 		player.setChangingAppearance(false);
 		byte headRestrictions = payload.headRestrictions;
@@ -89,7 +91,7 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 			}
 		}
 
-		if (player.getLastLogin() == 0L) {
+		if (player.getLastLogin() == 0L || tutorialAppearance) {
 			if (player.getConfig().USES_CLASSES) {
 				new PlayerClass(player, payload.chosenClass).init();
 				player.getWorld().getServer().getPlayerService().savePlayerMaxStats(player);

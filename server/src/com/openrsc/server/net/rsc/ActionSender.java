@@ -1985,7 +1985,7 @@ public class ActionSender {
 				final boolean playerInTutorialLanding = player.getLocation().inTutorialLanding();
 
 				if (player.getLastLogin() == 0L) {
-					if (playerInTutorialLanding) player.getCache().store("tutorial_appearance", false);
+					player.getCache().store("tutorial_appearance", false);
 
 					sendAppearanceScreen(player);
 
@@ -2028,10 +2028,10 @@ public class ActionSender {
 
 				sendWakeUp(player, false, true);
 
+				if (!player.isChangingAppearance() && player.getCache().hasKey("tutorial_appearance")) {
+					sendAppearanceScreen(player);
+				}
 				if (playerInTutorialLanding) {
-					if (!player.isChangingAppearance() && player.getCache().hasKey("tutorial_appearance")) {
-						sendAppearanceScreen(player);
-					}
 					sendBox(player, "@gre@Welcome to the " + player.getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
