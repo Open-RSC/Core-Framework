@@ -36,7 +36,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	public void onTalkNpc(Player player, final Npc npc) {
 		if (npc.getID() == NpcId.GNOME_BANKER.id()) {
 			say(player, npc, "hello");
-			npcsay(player, npc, "good day to you sir");
+			npcsay(player, npc, player.getText("BankersGnomeBankerGoodDay"));
 		} else {
 			npcsay(player, npc, "Good day" + (npc.getID() == NpcId.JUNGLE_BANKER.id() ? " Bwana" : "") + ", how may I help you?");
 		}

@@ -337,7 +337,12 @@ public class GraphicsController {
 			return sprites[animation.getNumber() + offset];
 		}
 
-		return spriteTree.get(animation.category).get(animation.name).getFrames()[offset].getSprite();
+		try {
+			Sprite theSprite = spriteTree.get(animation.category).get(animation.name).getFrames()[offset].getSprite();
+			return theSprite == null ? Sprite.getUnknownSprite(18, 18) : theSprite;
+		} catch (NullPointerException ignored) {
+			return Sprite.getUnknownSprite(18, 18);
+		}
 	}
 
 	public Sprite spriteSelect(SpriteDef sprite) {

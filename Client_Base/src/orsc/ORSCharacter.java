@@ -49,28 +49,40 @@ public final class ORSCharacter {
 	public int groupID = Group.DEFAULT_GROUP;
 	ORSCharacterDirection direction = ORSCharacterDirection.NORTH;
 
+	// from com.openrsc.server.model.entity.player.Group.java
+
+	private static final int OWNER = 0;
+	private static final int ADMIN = 1;
+	private static final int SUPER_MOD = 2;
+	private static final int MOD = 3;
+	private static final int DEV = 5;
+	private static final int EVENT = 7;
+	private static final int PLAYER_MOD = 8;
+	private static final int TESTER = 9;
+	private static final int USER = 10;
+
 	public boolean isSuperMod() {
-		return groupID == 2 || isAdmin();
+		return groupID == SUPER_MOD || isAdmin();
 	}
 
 	public boolean isMod() {
-		return groupID == 3 || isSuperMod();
+		return groupID == MOD || isSuperMod();
 	}
 
 	public boolean isDev() {
-		return groupID == 8 || isAdmin();
+		return groupID == TESTER || groupID == DEV || isAdmin();
 	}
 
 	private boolean isEvent() {
-		return groupID == 9 || isMod() || isDev();
+		return groupID == EVENT || isMod() || isDev();
 	}
 
 	public boolean isOwner() {
-		return groupID == 0;
+		return groupID == OWNER;
 	}
 
 	public boolean isAdmin() {
-		return groupID == 1 || isOwner();
+		return groupID == ADMIN || isOwner();
 	}
 
 	public boolean isStaff() {
