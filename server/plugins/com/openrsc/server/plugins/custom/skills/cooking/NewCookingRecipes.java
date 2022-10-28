@@ -91,11 +91,30 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		// Pumpkin Pie
+		// Pumpkin Pie & White Pumpkin Pie
 		if (item1.getCatalogId() == ItemId.PIE_SHELL.id() || item2.getCatalogId() == ItemId.PIE_SHELL.id()) {
 			if (item1.getCatalogId() == ItemId.WHITE_PUMPKIN.id() || item2.getCatalogId() == ItemId.WHITE_PUMPKIN.id()) {
-				player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong colour...");
-				// TODO: could add a "white pumpkin pie" that heals less
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 50) {
+					player.message("You need level 50 cooking to do this");
+					return;
+				}
+				if (player.getCarriedItems().hasCatalogID(ItemId.EGG.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.MILK.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.WHITE_PUMPKIN.id()) &&
+					player.getCarriedItems().hasCatalogID(ItemId.PIE_SHELL.id())) {
+					if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.WHITE_PUMPKIN.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.PIE_SHELL.id())) > -1) {
+						player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_WHITE_PUMPKIN_PIE.id()));
+						player.playerServerMessage(MessageType.QUEST, "You mix the milk, egg, and white pumpkin together into your pie shell");
+					}
+				} else {
+					if (!player.getCarriedItems().hasCatalogID(ItemId.EGG.id()))  // Egg
+						player.playerServerMessage(MessageType.QUEST, "I also need an egg to make a white pumpkin pie");
+					else if (!player.getCarriedItems().hasCatalogID(ItemId.MILK.id()))  // Milk
+						player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a white pumpkin pie");
+				}
 				return;
 			}
 			if (item1.getCatalogId() == ItemId.EGG.id() || item2.getCatalogId() == ItemId.EGG.id() ||
@@ -123,8 +142,18 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 						player.playerServerMessage(MessageType.QUEST, "I also need some milk to make a pumpkin pie");
 					else if (!player.getCarriedItems().hasCatalogID(ItemId.PUMPKIN.id())) { // Pumpkin
 						if (player.getCarriedItems().hasCatalogID(ItemId.WHITE_PUMPKIN.id())) {
-							player.playerServerMessage(MessageType.QUEST, "If I used that kind of pumpkin it'd come out the wrong colour...");
-							// TODO: could add a "white pumpkin pie" that heals less
+							if (player.getCarriedItems().hasCatalogID(ItemId.EGG.id()) &&
+								player.getCarriedItems().hasCatalogID(ItemId.MILK.id()) &&
+								player.getCarriedItems().hasCatalogID(ItemId.WHITE_PUMPKIN.id()) &&
+								player.getCarriedItems().hasCatalogID(ItemId.PIE_SHELL.id())) {
+								if (player.getCarriedItems().remove(new Item(ItemId.EGG.id())) > -1
+									&& player.getCarriedItems().remove(new Item(ItemId.MILK.id())) > -1
+									&& player.getCarriedItems().remove(new Item(ItemId.WHITE_PUMPKIN.id())) > -1
+									&& player.getCarriedItems().remove(new Item(ItemId.PIE_SHELL.id())) > -1) {
+									player.getCarriedItems().getInventory().add(new Item(ItemId.UNCOOKED_WHITE_PUMPKIN_PIE.id()));
+									player.playerServerMessage(MessageType.QUEST, "You mix the milk, egg, and white pumpkin together into your pie shell");
+								}
+							}
 						} else {
 							player.playerServerMessage(MessageType.QUEST, "I also need a pumpkin to make a pumpkin pie");
 						}

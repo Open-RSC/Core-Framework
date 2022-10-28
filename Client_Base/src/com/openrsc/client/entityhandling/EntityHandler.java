@@ -3931,9 +3931,9 @@ public class EntityHandler {
 		items.add(new ItemDef("Uncooked pumpkin pie", "I need to cook this first", "", 1, 112, "items:uncookedpumpkinpie", false, false, 0, 16633518, false, false, true, 1489));
 		items.add(new ItemDef("Pumpkin pie", "A festive autumn pie. It's rare to have a pie this nice.", "eat", 30, 112, "items:pumpkinpie", false, false, 0, 11168819, false, false, true, 1490));
 		items.add(new ItemDef("Half a pumpkin pie", "A festive autumn pie. It's rare to have a pie this nice.", "eat", 10, 113, "items:halfpumpkinpie", false, false, 0, 11168819, false, false, true, 1491));
-		items.add(new ItemDef("Uncooked white pumpkin pie", "I need to cook this first", "", 1, 112, "items:112", false, false, 0, 16633518, false, false, true, 1492));
-		items.add(new ItemDef("White pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 30, 112, "items:112", false, false, 0, 11168819, false, false, true, 1493));
-		items.add(new ItemDef("Half a white pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 10, 113, "items:113", false, false, 0, 11168819, false, false, true, 1494));
+		items.add(new ItemDef("Uncooked white pumpkin pie", "I need to cook this first", "", 1, 112, "items:uncookedwhitepumpkinpie", false, false, 0, 16633518, false, false, true, 1492));
+		items.add(new ItemDef("White pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 30, 112, "items:whitepumpkinpie", false, false, 0, 11168819, false, false, true, 1493));
+		items.add(new ItemDef("Half a white pumpkin pie", "A festive autumn pie. It's weird that it's white.", "eat", 10, 113, "items:halfwhitepumpkinpie", false, false, 0, 11168819, false, false, true, 1494));
 		items.add(new ItemDef("Eak the Mouse", "A cute mouse", "Talk", 1, 112, "items:eakthemouse", false, false, 0, 16633518, false, true, false, 1495));
 
 		// Christmas 2021
@@ -3946,6 +3946,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Soft Yellowgreen Clay", "I hope this colour doesn't get on my clothes", "Shape", 2, 105, "items:yellowgreenclay", false, false, 0, 0xFFFFFF, false, true, false, 1500));
 		items.add(new ItemDef("Ogre recipes", "Just like grandma used to make", "read", 1, 234, "items:234", false, false, 0, 0, false, true, false, 1501));
 
+		// Crowns
 		items.add(new ItemDef("Crown mould", "Used to make gold crowns", "", 5, 594, "items:594", false, false, 0, 0, false, false, true, 1502));
 		items.add(new ItemDef("Gold Crown", "I wonder what an enchantment would do on this valuable", "", 550, 545, "items:545", false, true, 32, 16763980, false, false, true, 1503));
 		items.add(new ItemDef("Sapphire Crown", "I wonder what an enchantment would do on this valuable", "", 1200, 545, "items:545", false, true, 32, 19711, false, false, true, 1504));
@@ -3959,6 +3960,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Crown of the items", "It brings forth an item on the ground when skilling", "Check,Break", 3825, 545, "items:545", false, true, 32, 0, false, false, true, 1512));
 		items.add(new ItemDef("Crown of the herbalist", "It gives me a sense to be one with herbs", "Check,Break,Configure", 19125, 545, "items:545", false, true, 32, 12255487, true, false, true, 1513));
 		items.add(new ItemDef("Crown of the occult", "It gives me a sense to be one with bones", "Check,Break,Configure", 19125, 545, "items:545", false, true, 32, 12255487, true, false, true, 1514));
+
+		// Halloween 2022
+		items.add(new ItemDef("halloween mask", "aaaarrrghhh ... i'm a monster", "", 15, 284, "items:284", false, true, 32, 16711935, false, false, true, 1515));
+		items.add(new ItemDef("Cape of Inclusion", "A colourful cape made from many different pieces of cloth.", "", 3, -1, "items:pridecape", false, true, 2048, 0xFFFFFF, false, false, true, 1516));
+		items.add(new ItemDef("halloween mask", "aaaarrrghhh ... i'm a monster", "", 15, 284, "items:284", false, true, 32, 4, false, false, true, 1517));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4620,6 +4626,11 @@ public class EntityHandler {
 			animations.add(new AnimationDef("crown", "equipment", 16184564,0, true, false, 0)); //506
 			//Dragonstone
 			animations.add(new AnimationDef("crown", "equipment", 12255487,0, true, false, 0)); //507
+
+			// Halloween 2022
+			animations.add(new AnimationDef("halloweenmask", "equipment", 16711935, 0, true, false, 0)); // 508
+			animations.add(new AnimationDef("pridecape", "equipment", 0, 0, true, false, 0)); // 509
+			animations.add(new AnimationDef("halloweenmask", "equipment", 4, 0, true, false, 0)); // 510
 		}
 	}
 

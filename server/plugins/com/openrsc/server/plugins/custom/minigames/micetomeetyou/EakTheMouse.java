@@ -551,6 +551,16 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 				delay(3);
 				mes("Eak the Mouse: This is actually really good stuff!");
 				break;
+			case WHITE_PUMPKIN_PIE:
+			case HALF_A_WHITE_PUMPKIN_PIE:
+				mes("Eak jumps into the pie");
+				delay(3);
+				mes("and eats a little bit");
+				delay(3);
+				mes("Eak the Mouse: It's just as tasty as orange pumpkin pie");
+				delay(3);
+				mes("Eak the Mouse: but a bit less appetizing looking...!!");
+				break;
 			default:
 				mes("Eak the Mouse: wow thanks, but i have no idea what to do with this.");
 		}

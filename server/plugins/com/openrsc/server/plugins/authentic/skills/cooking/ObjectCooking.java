@@ -318,6 +318,7 @@ public class ObjectCooking implements UseLocTrigger {
 			ItemId.UNCOOKED_MEAT_PIE.id(), // Meat Pie
 			ItemId.UNCOOKED_REDBERRY_PIE.id(), // Redberry Pie
 			ItemId.UNCOOKED_PUMPKIN_PIE.id(), // Pumpkin Pie (custom)
+			ItemId.UNCOOKED_WHITE_PUMPKIN_PIE.id(), // White Pumpkin Pie (custom)
 			ItemId.UNCOOKED_PIZZA.id(), // Pizza
 			ItemId.UNCOOKED_CAKE.id(), // Cake
 			ItemId.UNCOOKED_PITTA_BREAD.id(), // Pitta Bread

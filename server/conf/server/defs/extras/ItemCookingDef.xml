@@ -368,4 +368,13 @@
             <requiredLvl>50</requiredLvl>
         </ItemCookingDef>
     </entry>
+    <entry>
+        <int>1492</int>
+        <ItemCookingDef>
+            <exp>120</exp>
+            <cookedId>1493</cookedId>
+            <burnedId>260</burnedId>
+            <requiredLvl>50</requiredLvl>
+        </ItemCookingDef>
+    </entry>
 </map>

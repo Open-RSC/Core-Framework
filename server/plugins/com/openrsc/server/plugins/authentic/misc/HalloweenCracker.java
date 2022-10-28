@@ -17,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 
-	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 44, 44, 44, 30, 30};
+	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 26, 26, 26, 27, 27, 30, 30};
 	private static final int[] holidayIds = {
 		ItemId.WHITE_UNICORN_MASK.id(),
 		ItemId.BLOOD_UNICORN_MASK.id(),
@@ -32,6 +32,8 @@ public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 		ItemId.GREEN_HALLOWEEN_MASK.id(),
 		ItemId.RED_HALLOWEEN_MASK.id(),
 		ItemId.BLUE_HALLOWEEN_MASK.id(),
+		ItemId.BLACK_HALLOWEEN_MASK.id(),
+		ItemId.PINK_HALLOWEEN_MASK.id(),
 
 		ItemId.FOX_MASK.id(),
 		ItemId.PESTILENCE_MASK.id(),

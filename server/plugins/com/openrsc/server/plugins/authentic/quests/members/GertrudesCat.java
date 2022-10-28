@@ -243,7 +243,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n,
 						"ohh..., well, in that case i might be able to help",
 						"fluffs followed me to my secret play area..",
-						"i haven't seen him since");
+						"i haven't seen him since"); // NOTE: misgendered fluffs; she's usually referred to as female.
 					say(player, n, "and where is this play area?");
 					npcsay(player, n, "if i told you that, it wouldn't be a secret");
 					int first = multi(player, n, false, //do not send over

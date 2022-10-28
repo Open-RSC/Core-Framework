@@ -192,18 +192,27 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 			if (player.getCache().hasKey("halloween_mask_voucher")) {
 				npcsay(player, n, "Hey! thanks for coming to see me");
 				npcsay(player, n,"Someone came and left some mask samples in my store");
+				int allocatedMasks = player.getCache().getInt("halloween_mask_voucher");
+				int spacesRequired = allocatedMasks * (player.getConfig().WANT_CUSTOM_SPRITES ? 5 : 3);
+				if (player.getCarriedItems().getInventory().getFreeSlots() < spacesRequired) {
+					npcsay(player, n, "There's a lot of them though");
+					npcsay(player, n, "come back when you can carry at least " + spacesRequired + " masks");
+					return true;
+				}
 				npcsay(player, n,"They wanted me to sell them but honestly");
 				npcsay(player, n,"They're really niche and not that great quality");
 				npcsay(player, n,"You can have them if you want");
-				// TODO: may want to check inventory space and tell player to come back later. It's a lot of items that could be dropped on the ground.
-				int allocatedMasks = player.getCache().getInt("halloween_mask_voucher");
 				player.getCache().remove("halloween_mask_voucher");
 				give(player, ItemId.RED_HALLOWEEN_MASK.id(), allocatedMasks);
 				give(player, ItemId.GREEN_HALLOWEEN_MASK.id(), allocatedMasks);
 				give(player, ItemId.BLUE_HALLOWEEN_MASK.id(), allocatedMasks);
+				if (player.getConfig().WANT_CUSTOM_SPRITES) {
+					give(player, ItemId.PINK_HALLOWEEN_MASK.id(), allocatedMasks);
+					give(player, ItemId.BLACK_HALLOWEEN_MASK.id(), allocatedMasks);
+				}
 				player.getCache().store("redeemed_halloween_masks", allocatedMasks);
 				npcsay(player, n,"They also left a message");
-				npcsay(player, n,"@cya@\"Come check out RSC Cabbage and Coleslaw\""); // TODO: location of quest start
+				npcsay(player, n,"@cya@\"Speak to the Witch in Rimmington on RSC Cabbage and Coleslaw\"");
 				npcsay(player, n,"@cya@\"for a special custom Holiday Quest!\"");
 				player.playerServerMessage(MessageType.QUEST, "@or2@Happy Halloween!");
 				return true;
