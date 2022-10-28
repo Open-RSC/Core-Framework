@@ -342,7 +342,7 @@ public final class EntityHandler {
 			}
 		}
 		if (getServer().getConfig().WANT_RUNECRAFT) {
-			npcs.get(NpcId.AUBURY.id()).setCommand1("Teleport");
+			npcs.get(NpcId.AUBURY.id()).setCommand1("Teleport/Trade"); //moves position depending on rune mysteries completion
 		}
 		// these although couldn't be pickpocket by client the command was allowed server side
 		npcs.get(NpcId.GUARD_KHAZARD.id()).setCommand1("pickpocket");
