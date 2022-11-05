@@ -68,7 +68,7 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 						if (player.getQolOptOut()) {
 							if (wantsNotes) {
 								player.playerServerMessage(MessageType.QUEST, "Sorry, but you may not withdraw bank notes, as your account is opted out of QoL features.");
-								player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+								player.playerServerMessage(MessageType.QUEST, "Consider using an original RSC client so that you don't see the option.");
 								wantsNotes = false;
 							}
 						}

@@ -91,7 +91,7 @@ public final class AuburysRunes extends AbstractShop {
 				ActionSender.showShop(player, shop);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "Right click trading is a QoL feature which you are opted out of.");
-				player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+				player.playerServerMessage(MessageType.QUEST, "Consider using an original RSC client so that you don't see the option.");
 			}
 		} else {
 			RuneMysteries.auburyDialog(player, n);
@@ -103,6 +103,6 @@ public final class AuburysRunes extends AbstractShop {
 		boolean runecraft = player.getConfig().WANT_RUNECRAFT &&
 			command.toLowerCase().contains("teleport");
 		boolean trade = command.equalsIgnoreCase("Trade");
-		return n.getID() == NpcId.AUBURY.id() && (runecraft || trade);
+		return !player.getConfig().WANT_OPENPK_POINTS && n.getID() == NpcId.AUBURY.id() && (runecraft || trade);
 	}
 }

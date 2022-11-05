@@ -108,7 +108,7 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 
 	@Override
 	public boolean blockOpNpc(Player player, Npc npc, String command) {
-		return (npc.getID() == 803 &&
+		return (npc.getID() == NpcId.SEDRIDOR.id() &&
 			player.getConfig().WANT_RUNECRAFT &&
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
 			command.equalsIgnoreCase("teleport"));

@@ -106,7 +106,7 @@ public final class Gardener extends AbstractShop {
 				ActionSender.showShop(player, shop);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "Right click trading is a QoL feature which you are opted out of.");
-				player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+				player.playerServerMessage(MessageType.QUEST, "Consider using an original RSC client so that you don't see the option.");
 			}
 		}
 	}

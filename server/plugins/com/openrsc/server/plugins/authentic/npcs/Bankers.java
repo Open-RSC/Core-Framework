@@ -159,7 +159,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 					quickFeature(n, player, false);
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "Right click banking is a QoL feature which you are opted out of.");
-					player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+					player.playerServerMessage(MessageType.QUEST, "Consider using an original RSC client so that you don't see the option.");
 				}
 			} else if (command.equalsIgnoreCase("Collect") && config().SPAWN_AUCTION_NPCS) {
 				quickFeature(n, player, true);
