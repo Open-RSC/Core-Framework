@@ -25,7 +25,7 @@ public class Config {
 	private static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
 	private static final boolean CACHE_APPEND_VERSION = false;
 	private static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-	public static String F_CACHE_DIR = "";
+	public static String F_CACHE_DIR = "."; // The client is run from the launcher from the same directory as the cache
 
 	public static final int INVENTORY_TAB = 1;
 	public static final int MINIMAP_AND_COMPASS_TAB = 2;
@@ -161,9 +161,9 @@ public class Config {
 				}
 			} else {
 				if (CACHE_APPEND_VERSION) {
-					F_CACHE_DIR = "Cache" + "_v" + CACHE_VERSION;
+					F_CACHE_DIR = "_v" + CACHE_VERSION;
 				} else {
-					F_CACHE_DIR = "Cache";
+					F_CACHE_DIR = ".";
 				}
 			}
 		} else {

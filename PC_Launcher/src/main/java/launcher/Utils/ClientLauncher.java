@@ -219,14 +219,16 @@ public class ClientLauncher {
 			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 			outputWriter.write(ip);
 			outputWriter.close();
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+      Logger.Error("Error setting ip.txt: " + e.getMessage());
 		}
 		try {
 			fileout = new FileOutputStream(Main.configFileLocation + File.separator + "port.txt");
 			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 			outputWriter.write(port);
 			outputWriter.close();
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+      Logger.Error("Error setting port.txt: " + e.getMessage());
 		}
 	}
 
@@ -244,9 +246,9 @@ public class ClientLauncher {
 		File configFile = new File(Main.configFileLocation + File.separator + "config.txt");
 		configFile.delete();
 
-		f = new File(Main.configFileLocation + File.separator
+		File openRscClientJar = new File(Main.configFileLocation + File.separator
 			+ Defaults._CLIENT_FILENAME + ".jar");
-		Utils.execCmd(new String[]{"java", "-jar", f.getAbsolutePath()}, false);
+		Utils.execCmd(new String[]{"java", "-jar", openRscClientJar.getAbsolutePath()}, openRscClientJar.getParentFile());
 	}
 
 	public static void launchRSCPlus() {
