@@ -215,14 +215,14 @@ public class ClientLauncher {
 		// Sets the IP and port
 		FileOutputStream fileout;
 		try {
-			fileout = new FileOutputStream("Cache" + File.separator + "ip.txt");
+			fileout = new FileOutputStream(Main.configFileLocation + File.separator + "ip.txt");
 			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 			outputWriter.write(ip);
 			outputWriter.close();
 		} catch (Exception ignored) {
 		}
 		try {
-			fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
+			fileout = new FileOutputStream(Main.configFileLocation + File.separator + "port.txt");
 			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 			outputWriter.write(port);
 			outputWriter.close();
