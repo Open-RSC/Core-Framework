@@ -23,9 +23,8 @@ public class Config {
 	public static boolean MEMBER_WORLD = false;
 	public static boolean DISPLAY_LOGO_SPRITE = false;
 	private static final boolean CUSTOM_CACHE_DIR_ENABLED = false;
-	private static final boolean CACHE_APPEND_VERSION = false;
 	private static final String CUSTOM_CACHE_DIR = System.getProperty("user.home") + File.separator + "OpenRSC";
-	public static String F_CACHE_DIR = "."; // The client is run from the launcher from the same directory as the cache
+	public static String F_CACHE_DIR = "";
 
 	public static final int INVENTORY_TAB = 1;
 	public static final int MINIMAP_AND_COMPASS_TAB = 2;
@@ -154,17 +153,20 @@ public class Config {
 	static void initConfig() {
 		if (!F_ANDROID_BUILD) {
 			if (CUSTOM_CACHE_DIR_ENABLED) {
-				if (CACHE_APPEND_VERSION) {
-					F_CACHE_DIR = CUSTOM_CACHE_DIR + "_v" + CACHE_VERSION;
-				} else {
-					F_CACHE_DIR = CUSTOM_CACHE_DIR;
-				}
+				F_CACHE_DIR = CUSTOM_CACHE_DIR;
 			} else {
-				if (CACHE_APPEND_VERSION) {
-					F_CACHE_DIR = "_v" + CACHE_VERSION;
-				} else {
-					F_CACHE_DIR = ".";
-				}
+				F_CACHE_DIR = "Cache";
+				System.out.println("Set Cache dir to " + F_CACHE_DIR);
+        // Check if F_CACHE_DIR exists, if not, set it to "." (current directory)
+        File f = new File(F_CACHE_DIR);
+        if (!f.exists()) {
+          System.out.println("Could not find cache at " + F_CACHE_DIR + ", using current directory instead.");
+          F_CACHE_DIR = ".";
+          f = new File(F_CACHE_DIR);
+          if (!f.exists()) {
+            System.out.println("Could not find cache at current directory either. Game will crash.");
+          }
+        }
 			}
 		} else {
 			return;
