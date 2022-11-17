@@ -1,5 +1,6 @@
 package launcher.Gameupdater;
 
+import launcher.Gameupdater.Downloader;
 import launcher.Utils.ClientLauncher;
 import launcher.Utils.Defaults;
 import launcher.Utils.Logger;
@@ -153,67 +154,85 @@ public class Updater {
 	}
 
 	private static void downloadOrUpdate(File _GAME_PATH, String _FILE_NAME, String _URL, Double _EXTRA_VERSION) {
-		// If the folder does not exist, download, extract, and launch.
-		if (!_GAME_PATH.exists() || !_GAME_PATH.isDirectory()) {
-			if (_GAME_PATH.getParentFile() != null) {
-				try {
-					Files.createDirectories(_GAME_PATH.toPath());
-				} catch (IOException e) {
-					Logger.Warn("Could not make required directories, trying with alternative method");
-					_GAME_PATH.mkdirs();
-					e.printStackTrace();
-				}
-			}
-			try {
-				URLConnection connection = new URL(_URL).openConnection();
-				String description = getDescription(new File(_FILE_NAME));
-				int fileSize = connection.getContentLength();
-				try (BufferedInputStream inputStream = new BufferedInputStream(new URL(_URL).openStream());
-					 FileOutputStream fileOS = new FileOutputStream(_GAME_PATH + File.separator + _FILE_NAME)) {
-					byte[] data = new byte[1024];
-					int byteContent;
-					int totalRead = 0;
-					while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
-						totalRead += byteContent;
-						fileOS.write(data, 0, byteContent);
-						ProgressBar.setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
-					}
-				} catch (Exception error) {
-					error.printStackTrace();
-				}
-			} catch (Exception error) {
-				error.printStackTrace();
-			}
-			unZipUpdate(_GAME_PATH + File.separator + _FILE_NAME, String.valueOf(_GAME_PATH));
-		}
+    Downloader.currently_updating = true;
+		ProgressBar.initProgressBar();
+		ProgressBar.setDownloadProgress("Checking for updates", 100.0f);
+    // Start a thread to download the file to prevent the GUI from freezing
+    Thread thread = new Thread(() -> {
+      try {
+        // If the folder does not exist, download, extract, and launch.
+        if (!_GAME_PATH.exists() || !_GAME_PATH.isDirectory()) {
+		      ProgressBar.setDownloadProgress("Creating directories", 0.0f);
+          if (_GAME_PATH.getParentFile() != null) {
+            try {
+              Files.createDirectories(_GAME_PATH.toPath());
+            } catch (IOException e) {
+              Logger.Warn("Could not make required directories, trying with alternative method");
+              _GAME_PATH.mkdirs();
+              e.printStackTrace();
+            }
+          }
+          try {
+            ProgressBar.setDownloadProgress("Connecting to server...", 50.0f);
+            URLConnection connection = new URL(_URL).openConnection();
+            String description = getDescription(new File(_FILE_NAME));
+            int fileSize = connection.getContentLength();
+            try (BufferedInputStream inputStream = new BufferedInputStream(new URL(_URL).openStream());
+              FileOutputStream fileOS = new FileOutputStream(_GAME_PATH + File.separator + _FILE_NAME)) {
+              byte[] data = new byte[1024];
+              int byteContent;
+              int totalRead = 0;
+              while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+                totalRead += byteContent;
+                fileOS.write(data, 0, byteContent);
+                float percent = (float) (totalRead / fileSize) * 100;
+                ProgressBar.setDownloadProgress(description, percent);
+              }
+            } catch (Exception error) {
+              error.printStackTrace();
+            }
+          } catch (Exception error) {
+            error.printStackTrace();
+          }
+          unZipUpdate(_GAME_PATH + File.separator + _FILE_NAME, String.valueOf(_GAME_PATH));
+        }
 
-		// If the folder already exists, check if there is an updated version. If so, download latest, extract, and launch.
-		if (_GAME_PATH.exists() || _GAME_PATH.isDirectory()) {
-			double latestVersion = fetchLatestExtrasVersionNumber(_EXTRA_VERSION);
-			if (Defaults._CURRENT_VERSION < latestVersion) {
-				try {
-					URLConnection connection = new URL(_URL).openConnection();
-					String description = getDescription(new File(_FILE_NAME));
-					int fileSize = connection.getContentLength();
-					try (BufferedInputStream inputStream = new BufferedInputStream(new URL(_URL).openStream());
-						 FileOutputStream fileOS = new FileOutputStream(_GAME_PATH + File.separator + _FILE_NAME)) {
-						byte[] data = new byte[1024];
-						int byteContent;
-						int totalRead = 0;
-						while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
-							totalRead += byteContent;
-							fileOS.write(data, 0, byteContent);
-							ProgressBar.setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
-						}
-					} catch (Exception error) {
-						error.printStackTrace();
-					}
-				} catch (Exception error) {
-					error.printStackTrace();
-				}
-				unZipUpdate(_GAME_PATH + File.separator + _FILE_NAME, String.valueOf(_GAME_PATH));
-			}
-		}
+        // If the folder already exists, check if there is an updated version. If so, download latest, extract, and launch.
+        if (_GAME_PATH.exists() || _GAME_PATH.isDirectory()) {
+          double latestVersion = fetchLatestExtrasVersionNumber(_EXTRA_VERSION);
+          if (Defaults._CURRENT_VERSION < latestVersion) {
+            try {
+              URLConnection connection = new URL(_URL).openConnection();
+              String description = getDescription(new File(_FILE_NAME));
+              int fileSize = connection.getContentLength();
+              try (BufferedInputStream inputStream = new BufferedInputStream(new URL(_URL).openStream());
+                FileOutputStream fileOS = new FileOutputStream(_GAME_PATH + File.separator + _FILE_NAME)) {
+                byte[] data = new byte[1024];
+                int byteContent;
+                int totalRead = 0;
+                while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+                  totalRead += byteContent;
+                  fileOS.write(data, 0, byteContent);
+                  float percent = (float) (totalRead / fileSize) * 100;
+                  ProgressBar.setDownloadProgress(description, percent);
+                }
+              } catch (Exception error) {
+                error.printStackTrace();
+              }
+            } catch (Exception error) {
+              error.printStackTrace();
+            }
+            unZipUpdate(_GAME_PATH + File.separator + _FILE_NAME, String.valueOf(_GAME_PATH));
+          }
+        }
+        ProgressBar.setDownloadProgress("Done", 100.0f);
+      } catch (Exception error) {
+        error.printStackTrace();
+      } finally {
+        Downloader.currently_updating = false;
+      }
+    });
+    thread.start();
 	}
 
 	private static void unZipUpdate(String pathToUpdateZip, String destinationPath) {
@@ -222,10 +241,13 @@ public class Updater {
 		try {
 			ZipInputStream inZip = new ZipInputStream(new FileInputStream(pathToUpdateZip));
 			ZipEntry inZipEntry = inZip.getNextEntry();
+      int unzipCount = 0;
 			while (inZipEntry != null) {
+        unzipCount += 1;
 				String fileName = inZipEntry.getName();
 				File unZippedFile = new File(destinationPath + File.separator + fileName);
 				Logger.Info("Unzipping: " + unZippedFile.getAbsoluteFile());
+		    ProgressBar.setDownloadProgress("Unzipping: " + unZippedFile.getName(), unzipCount * 5);
 				if (inZipEntry.isDirectory()) {
 					unZippedFile.mkdirs();
 				} else {

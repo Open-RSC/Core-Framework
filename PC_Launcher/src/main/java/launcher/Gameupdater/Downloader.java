@@ -118,17 +118,18 @@ public class Downloader implements Runnable {
 
 			// File metadata
 			String description = getDescription(file);
-			int fileSize = connection.getContentLength();
+			long fileSize = connection.getContentLength();
 
 			try (BufferedInputStream inputStream = new BufferedInputStream(new URL(completeFileUrl).openStream());
 				 FileOutputStream fileOS = new FileOutputStream(this._GAMEFOLDER + File.separator + filename)) {
 				byte[] data = new byte[1024];
 				int byteContent;
-				int totalRead = 0;
+				double totalRead = 0;
 				while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
 					totalRead += byteContent;
 					fileOS.write(data, 0, byteContent);
-					ProgressBar.setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
+          float percent = (float) (totalRead / fileSize) * 100;
+					ProgressBar.setDownloadProgress(description, percent);
 				}
 			} catch (UnknownHostException uhe) {
 				offline_start = true;

@@ -32,6 +32,7 @@ public class ProgressBar {
 	}
 
 	public static void setDownloadProgress(String status, float percent) {
+    if (percent >= 100) percent = 100;
 		if (percent >= 90) BAR.setForeground(new Color(0, 128, 0));
 		else if (percent >= 80 && percent < 90) BAR.setForeground(new Color(91, 153, 0));
 		else if (percent >= 70 && percent < 80) BAR.setForeground(new Color(130, 153, 0));

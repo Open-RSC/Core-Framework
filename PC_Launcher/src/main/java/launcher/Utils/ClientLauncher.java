@@ -12,8 +12,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import javax.swing.JOptionPane;
+
 public class ClientLauncher {
 	public static void launchClientForServer(String serverName) {
+    if (Downloader.currently_updating) {
+      JOptionPane.showMessageDialog(null, "Currently updating the client, please wait!");
+      return;
+    }
 		switch (serverName) {
 			case "preservation": {
 				String ip = "game.openrsc.com";
@@ -233,11 +239,6 @@ public class ClientLauncher {
 	}
 
 	private static void launchOpenRSCClient() {
-		if (Downloader.currently_updating) {
-			Logger.Info("Currently updating the client, please wait!"); // TODO: popup an error
-			return;
-		}
-
 		// Deletes the client.properties file that may persist unwanted settings between different games
 		File f = new File(Main.configFileLocation + File.separator + "client.properties");
 		f.delete();
