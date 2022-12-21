@@ -86,7 +86,12 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 			player.setFollowing(affectedMob, 0, false);
-			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1, false, ActionType.ATTACK) {
+
+			int radius = 1;
+			if (affectedMob.isPlayer()) {
+				 radius = player.getConfig().CATCHING_DISTANCE;
+			}
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false, ActionType.ATTACK) {
 				public void executeInternal() {
 					getPlayer().resetFollowing();
 

@@ -285,6 +285,7 @@ public class ServerConfiguration {
 	public boolean SANTA_GIVES_PRESENTS;
 	public boolean USES_RETRO_STOCK_SENSITIVITY;
 	public boolean PIDLESS_CATCHING;
+	public int CATCHING_DISTANCE;
 	public boolean SHUFFLE_PID_ORDER;
 	public int SHUFFLE_PID_ORDER_INTERVAL;
 	public int SPELL_RANGE_DISTANCE;
@@ -410,6 +411,7 @@ public class ServerConfiguration {
 		SANTA_GIVES_PRESENTS = tryReadBool("santa_gives_presents").orElse(false);
 		USES_RETRO_STOCK_SENSITIVITY = tryReadBool("uses_retro_stock_sensitivity").orElse(false);
 		PIDLESS_CATCHING = tryReadBool("pidless_catching").orElse(false);
+		CATCHING_DISTANCE = tryReadInt("catching_distance").orElse(1);
 		SHUFFLE_PID_ORDER = tryReadBool("shuffle_pid_order").orElse(true);
 		SHUFFLE_PID_ORDER_INTERVAL = tryReadInt("shuffle_pid_order_interval").orElse(500);
 		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);
