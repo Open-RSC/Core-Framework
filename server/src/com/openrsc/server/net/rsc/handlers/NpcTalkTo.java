@@ -55,6 +55,7 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 				n.resetPath();
 				n.resetRange();
 
+				// NPCs on the same tile as you will walk somewhere else.
 				if (getPlayer().getLocation().equals(n.getLocation())) {
 					for (int x = -1; x <= 1; ++x) {
 						for (int y = -1; y <= 1; ++y) {

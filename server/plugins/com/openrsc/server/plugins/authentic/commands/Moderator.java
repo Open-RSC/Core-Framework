@@ -5,6 +5,7 @@ import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.RSCPacketFilter;
@@ -71,6 +72,49 @@ public final class Moderator implements CommandTrigger {
 			forceSleep(player, command, args);
 		} else if (command.toLowerCase().startsWith("defineslot")) {
 			defineSlot(player, command, args);
+		} else if (command.toLowerCase().startsWith("tpnpc")) {
+			tpNpc(player, command, args);
+		}
+	}
+
+	private void tpNpc(Player player, String command, String[] args) {
+		// teleportation of a monster
+		if (args.length < 1 || args.length == 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id] (x) (y)");
+			return;
+		}
+
+		int npcInstanceId;
+		try {
+			npcInstanceId = Integer.parseInt(args[0]);
+		} catch (NumberFormatException e) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id] (x) (y)");
+			return;
+		}
+
+		Npc targetNpc = player.getWorld().getNpc(npcInstanceId);
+		if (targetNpc == null) {
+			player.message(messagePrefix + "Couldn't find that npc.");
+		} else {
+			int targetX = player.getX();
+			int targetY = player.getY();
+			if (args.length > 1) {
+				try {
+					targetX = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id] (x) (y)");
+					return;
+				}
+				try {
+					targetY = Integer.parseInt(args[2]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id] (x) (y)");
+					return;
+				}
+
+			}
+			targetNpc.teleport(targetX, targetY);
+			player.message(messagePrefix + "The " + targetNpc.getDef().getName() + " has been teleported to (" + targetX + ", " + targetY + ")");
 		}
 	}
 

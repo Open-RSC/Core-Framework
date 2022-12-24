@@ -233,9 +233,6 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				player.getCache().remove("santas_hat_voucher");
 				give(player, ItemId.SANTAS_HAT.id(), allocatedSantasHats);
 				player.getCache().store("redeemed_santas_hats", allocatedSantasHats);
-				npcsay(player, n,"They also left a message");
-				npcsay(player, n,"@cya@\"Come check out RSC Cabbage and Coleslaw\""); // TODO: location of quest start
-				npcsay(player, n,"@cya@\"for a special custom Holiday Quest!\"");
 				player.playerServerMessage(MessageType.QUEST, "@red@M@whi@e@gre@r@whi@r@red@y @red@C@whi@h@gre@r@whi@i@red@s@whi@t@gre@m@whi@a@red@s@whi@!"); // "Merry Christmas!"
 				return true;
 			}

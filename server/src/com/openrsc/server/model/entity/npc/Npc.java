@@ -847,6 +847,7 @@ public class Npc extends Mob {
 		final int radius = 8;
 		final int newX = DataConversions.random(Math.max(minP.getX(), currX - radius), Math.min(maxP.getX(), currX + radius));
 		final int newY = DataConversions.random(Math.max(minP.getY(), currY - radius), Math.min(maxP.getY(), currY + radius));
+		// gnome agility course
 		if (Point.location(newX, newY).inBounds(680, 491, 696, 511)) {
 			return Point.location(currX, currY);
 		}
@@ -861,4 +862,7 @@ public class Npc extends Mob {
 		this.npcBehavior = npcBehavior;
 	}
 
+    public void walkToRespawn() {
+		walkToEntityAStar(loc.startX, loc.startY);
+    }
 }

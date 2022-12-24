@@ -70,6 +70,12 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				return;
 			}
 
+			// bankers outside of bank should not allow you to open bank.
+			if (!npc.getLocation().isInBank(config().BASED_MAP_DATA)) {
+				npc.walkToRespawn(); // not known to be authentic.
+				return;
+			}
+
 			if(validatebankpin(player, npc)) {
 				if (npc.getID() == NpcId.GNOME_BANKER.id()) {
 					npcsay(player, npc, player.getText("BankersGnomeBankerAbsolutely"));
