@@ -505,6 +505,7 @@ public class Point {
 			|| (inBounds(280, 564, 286, 573) && mapData >= 27) // Falador East
 			|| inBounds(328, 549, 334, 557) // Falador West
 			|| inBounds(714, 1399, 718, 1403) // Grand Tree Second Floor
+			|| inBounds(508, 2421, 517, 2423) // Legend's Guild
 			|| inBounds(451, 3376, 457, 3380) // Mage Arena
 			|| inBounds(498, 447, 504, 453) // Seer's Village
 			|| inBounds(59, 731, 59, 731) // Shantay Pass (1 square)
