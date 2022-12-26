@@ -34,11 +34,11 @@ public class LinkOpener implements Runnable {
 				if (Utils.isMacOS()) {
 					// not sure, but maybe some version of Mac OS isn't supported by Desktop
 					Logger.Info("Opening \"" + url + "\".");
-					Utils.execCmd(new String[] {"open", url}, false);
+					Utils.execCmd(new String[] {"open", url}, Utils.getWorkingDirectoryFile(), false);
 				} else {
 					if (hasXdgOpen) {
 						Logger.Info("Using xdg-open to open url \"" + url + "\".");
-						Utils.execCmd(new String[] {"xdg-open", url}, false);
+						Utils.execCmd(new String[] {"xdg-open", url}, Utils.getWorkingDirectoryFile(), false);
 					} else {
 						Logger.Warn("Please install xdg-open to reliably open URLs on your system.");
 					}

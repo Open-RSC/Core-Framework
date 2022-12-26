@@ -42,14 +42,18 @@ public class Utils {
         }
     }
 
+    public static File getWorkingDirectoryFile() {
+        return new File(System.getProperty("user.dir"));
+    }
+
     // Some code from the original launcher
     public static ImageIcon getImage(final String name) {
         return new ImageIcon(Utils.class.getResource("/data/images/" + name));
     }
 
     public static void openWebpage(final String url) {
-		Thread t = new Thread(new LinkOpener(url));
-		t.start();
+      Thread t = new Thread(new LinkOpener(url));
+      t.start();
     }
 
     public static Font getFont(final String fontName, final int type, final float size) {
@@ -75,17 +79,17 @@ public class Utils {
         return Utils.df.format(new Date());
     }
 
-	public static void execCmd(String[] cmdArray, boolean needsOutput) {
-    	CmdRunner cmdRunner = new CmdRunner(cmdArray, true);
-    	if (needsOutput) {
-    		outputCommandRunning = true;
-			lastCommandOutput = null;
-		}
-		Thread t = new Thread(cmdRunner);
-		t.start();
-	}
 	public static void execCmd(String[] cmdArray, File workingDirectory) {
-		Thread t = new Thread(new CmdRunner(cmdArray, workingDirectory));
+    execCmd(cmdArray, workingDirectory, false);
+  }
+
+	public static void execCmd(String[] cmdArray, File workingDirectory, boolean needsOutput) {
+    Logger.Error("second line");
+    if (needsOutput) {
+      outputCommandRunning = true;
+      lastCommandOutput = null;
+		}
+		Thread t = new Thread(new CmdRunner(cmdArray, workingDirectory, needsOutput));
 		t.start();
 	}
 
@@ -102,7 +106,7 @@ public class Utils {
 		try {
 			// "whereis" is part of the util-linux package,
 			// It is included in pretty much all unix-like operating systems; i.e. safe to use.
-			execCmd(new String[] {"whereis", "-b", binaryName}, true);
+			execCmd(new String[] {"whereis", "-b", binaryName}, getWorkingDirectoryFile(), true);
 
 			while (outputCommandRunning) {}
 			final String whereis = lastCommandOutput

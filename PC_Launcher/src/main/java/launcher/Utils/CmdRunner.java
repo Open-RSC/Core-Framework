@@ -8,25 +8,17 @@ public class CmdRunner implements Runnable {
 	boolean needsOutput = false;
 	public String output = "";
 
-	public CmdRunner(String[] cmdArray) {
-		this.cmdArray = cmdArray;
-	}
-
-	public CmdRunner(String[] cmdArray, boolean needsOutput) {
-		this.cmdArray = cmdArray;
-		this.needsOutput = needsOutput;
-	}
-
-	public CmdRunner(String[] cmdArray, File workingDirectory) {
+	public CmdRunner(String[] cmdArray, File workingDirectory, boolean needsOutput) {
 		this.cmdArray = cmdArray;
 		this.workingDirectory = workingDirectory;
+		this.needsOutput = needsOutput;
 	}
 
 	@Override
 	public void run() {
 		try {
       // Check if workingDirectory exists
-      if (workingDirectory == null || !workingDirectory.exists()) {
+      if (!workingDirectory.exists()) {
         Logger.Error("Working directory does not exist: [" + workingDirectory.getAbsolutePath() + "]. Not launching command.");
         return;
       }
