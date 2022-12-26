@@ -45,9 +45,13 @@ public class LaunchButton extends JButton implements MouseListener {
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
+    // Move the button down a bit when pressed
+    this.setLocation(this.getX(), this.getY() + 1);
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
+    // Move the button back up when released
+    this.setLocation(this.getX(), this.getY() - 1);
 	}
 }

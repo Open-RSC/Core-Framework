@@ -569,10 +569,28 @@ public class MainWindow extends JFrame {
 			public void mouseClicked(MouseEvent e) {}
 
 			@Override
-			public void mousePressed(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {
+        // Move the button down a bit when clicked
+        primary.setLocation(primary.getX(), primary.getY() + 1);
+        if (null != secondary) {
+          secondary.setLocation(secondary.getX(), secondary.getY() + 1);
+        }
+        if (null != ternary) {
+          ternary.setLocation(ternary.getX(), ternary.getY() + 1);
+        }
+      }
 
 			@Override
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {
+        // Move the button back up when released
+        primary.setLocation(primary.getX(), primary.getY() - 1);
+        if (null != secondary) {
+          secondary.setLocation(secondary.getX(), secondary.getY() - 1);
+        }
+        if (null != ternary) {
+          ternary.setLocation(ternary.getX(), ternary.getY() - 1);
+        }
+      }
 
 			@Override
 			public void mouseEntered(MouseEvent e) {

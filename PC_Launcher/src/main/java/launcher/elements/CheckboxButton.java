@@ -45,9 +45,13 @@ public class CheckboxButton extends JCheckBox implements MouseListener {
 
 	@Override
 	public void mousePressed(final MouseEvent arg0) {
+    // Move the button down when pressed
+    this.setLocation(this.getX(), this.getY() + 1);
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent arg0) {
+    // Move the button up when released
+    this.setLocation(this.getX(), this.getY() - 1);
 	}
 }

@@ -46,9 +46,11 @@ public class LinkButton extends JButton implements MouseListener {
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
+    this.setLocation(this.getX(), this.getY() + 1);
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent e) {
+    this.setLocation(this.getX(), this.getY() - 1);
 	}
 }

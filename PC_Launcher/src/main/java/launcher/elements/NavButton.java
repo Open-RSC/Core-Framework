@@ -45,9 +45,11 @@ public class NavButton extends JButton implements MouseListener {
 
 	@Override
 	public void mousePressed(final MouseEvent arg0) {
+    this.setLocation(this.getX(), this.getY() + 1);
 	}
 
 	@Override
 	public void mouseReleased(final MouseEvent arg0) {
+    this.setLocation(this.getX(), this.getY() - 1);
 	}
 }
