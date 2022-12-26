@@ -8,7 +8,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class PositionListener implements MouseListener, MouseMotionListener {
-	private static Point initialClick;
+  private static final int TOP_BAR_HEIGHT = 70; // The height you can click to move the window
+	private static Point initialTopLeft;
+  private static Point initialClick;
 	private MainWindow frame;
 
 	public PositionListener(final MainWindow frame) {
@@ -29,8 +31,9 @@ public class PositionListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(final MouseEvent e) {
-		initialClick = e.getPoint();
-		this.frame.getComponentAt(initialClick);
+    // Get the initial position of the window from the top left corner
+    initialTopLeft = this.frame.getLocationOnScreen();
+    initialClick = new Point(e.getLocationOnScreen());
 	}
 
 	@Override
@@ -39,17 +42,13 @@ public class PositionListener implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(final MouseEvent e) {
-		final int iX = initialClick.x;
-		final int iY = initialClick.y;
-		if (iX >= 0 && iX <= this.frame.getWidth() && iY >= 0 && iY <= 70) {
-			final int thisX = this.frame.getLocation().x;
-			final int thisY = this.frame.getLocation().y;
-			final int xMoved = (thisX + e.getX()) - (thisX + initialClick.x);
-			final int yMoved = (thisY + e.getY()) - (thisY + initialClick.y);
-			final int X = thisX + xMoved;
-			final int Y = thisY + yMoved;
-			this.frame.setLocation(X, Y);
-		}
+    if (initialClick.y > initialTopLeft.y + TOP_BAR_HEIGHT) {
+      return;
+    }
+    // Keep the window in the same position relative to the mouse
+    Point mouseOffset = new Point(e.getLocationOnScreen());
+    mouseOffset.translate(-initialClick.x, -initialClick.y);
+    this.frame.setLocation(initialTopLeft.x + mouseOffset.x, initialTopLeft.y + mouseOffset.y);
 	}
 
 	@Override
