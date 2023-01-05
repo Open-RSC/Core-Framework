@@ -22,7 +22,11 @@ public class Launcher extends Component {
         // Add progress bar
         m_progressBar = new JProgressBar();
 
-        if (Settings.firstRun) {
+        if (Main.disabledUpdate) {
+            Settings.autoUpdate = false;
+            Settings.saveSettings();
+        }
+        else if (Settings.firstRun) {
             int response =
                     JOptionPane.showConfirmDialog(
                             this,

@@ -7,51 +7,60 @@ import java.io.File;
 
 public class Main {
 
-	// DEFAULT FOLDERS
-	public static String configFileLocation = "Cache";
-	public static String SPRITEPACK_DIR = configFileLocation + File.separator + "video" + File.separator + "spritepacks";
+  // DEFAULT FOLDERS
+  public static String configFileLocation = "Cache";
+  public static String SPRITEPACK_DIR = configFileLocation + File.separator + "video" + File.separator + "spritepacks";
+  public static boolean disabledUpdate = false;
 
+  public static void main(final String[] args) {
 
-	public static void main(final String[] args) {
+    handleArgs(args);
 
-        // Get args from the command line if any
-        if (args.length > 0) {
-            // Help modifier
-            if (args[0].contains("-h") || args[0].contains("--help")) {
-                System.out.println("Help for the RSC launcher:\n" +
-                        "	--help, -h displays this help message\n" +
-                        "	--dir, -d changes the cache directory location\n" +
-                        "Example:\n" +
-                        "java -jar OpenRSC.jar -d /home/foo/.local/openrsc");
-                return;
-            } else if (args[0].contains("-d") || args[0].contains("--dir")) { // Change cache directory modifier
-                // Check if there is a second arg (path)
-                if (args.length > 1) {
+    Launcher mainLauncher = new Launcher();
+    mainLauncher.initializeLauncher();
 
-                    // Check if the provided arg is a valid path
-                    if (Utils.isValidPath(args[1])) { // Valid path
-                        configFileLocation = Utils.getCanonicalPath(args[1]);
-						SPRITEPACK_DIR = configFileLocation + File.separator + "video" + File.separator + "spritepacks";
-                    } else { // Invalid path
-                        System.out.println("Error: please provide a valid path.\n" +
-                                "Usage: java -jar OpenRSC.jar -d /path/to/cache/folder");
-                        return;
-                    }
-                } else { // No path specified
-                    System.out.println("Error: no path specified.\n" +
-                            "Usage: java -jar OpenRSC.jar -d /path/to/cache/folder");
-                    return;
-                }
-            } else { // Unrecognized modifier
-                System.out.println("Unrecognized modifier.\n" +
-                        "Use -h for help.");
-                return;
-            }
+  }
+
+  public static void handleArgs(final String[] args) {
+    String helpMessage = "Help for the RSC launcher:\n" +
+        "	--help, -h displays this help message\n" +
+        "	--dir [loc], -d [loc] changes the cache directory location\n" +
+        "	--no-update, -n Disables Launcher autoupdate feature and prompt\n" +
+        "Example:\n" +
+        "java -jar OpenRSC.jar -d /home/foo/.local/openrsc";
+
+    int argIndex = 0;
+    while (argIndex < args.length) {
+      String arg = args[argIndex];
+      if (arg.equals("--help") || arg.equals("-h")) {
+        System.out.println(helpMessage);
+        System.exit(0);
+      } else if (arg.equals("--dir") || arg.equals("-d")) {
+        if (argIndex + 1 < args.length) {
+          String path = args[argIndex + 1];
+          if (Utils.isValidPath(path)) {
+            configFileLocation = Utils.getCanonicalPath(path);
+            SPRITEPACK_DIR = configFileLocation + File.separator + "video" + File.separator + "spritepacks";
+            argIndex += 2;
+          } else {
+            System.out.println("Error: please provide a valid path.\n" +
+                "Usage: java -jar OpenRSC.jar -d /path/to/cache/folder");
+            System.exit(1);
+          }
+        } else {
+          System.out.println("Error: no path specified.\n" +
+              "Usage: java -jar OpenRSC.jar -d /path/to/cache/folder");
+          System.exit(1);
         }
-
-        Launcher mainLauncher = new Launcher();
-        mainLauncher.initializeLauncher();
-
+      } else if (arg.equals("--no-update") || arg.equals("-n")) {
+        disabledUpdate = true;
+        argIndex++;
+      } else {
+        System.out.println("Unrecognized modifier.\n" +
+            "Use -h for help.");
+        System.exit(1);
+      }
     }
+  }
 
 }
