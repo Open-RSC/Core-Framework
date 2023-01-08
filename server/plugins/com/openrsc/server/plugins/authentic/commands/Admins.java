@@ -2593,6 +2593,7 @@ public final class Admins implements CommandTrigger {
 	private void winterHolidayEvent(Player player, String command, String[] args) {
 		if (!config().WANT_CUSTOM_SPRITES) return;
 		GameObjectLoc[] locs = new GameObjectLoc[]{
+			// Lumbridge
 			new GameObjectLoc(1238, new Point(127, 648), 1, 0),
 			new GameObjectLoc(1238, new Point(123, 656), 2, 0),
 			new GameObjectLoc(1238, new Point(126, 656), 2, 0),
@@ -2600,6 +2601,8 @@ public final class Admins implements CommandTrigger {
 			new GameObjectLoc(1238, new Point(123, 660), 2, 0),
 			new GameObjectLoc(1238, new Point(127, 664), 0, 0),
 			new GameObjectLoc(1238, new Point(122, 664), 0, 0),
+
+			// Varrock
 			new GameObjectLoc(1238, new Point(122, 502), 0, 0),
 			new GameObjectLoc(1238, new Point(135, 505), 0, 0),
 			new GameObjectLoc(1238, new Point(133, 512), 0, 0),
@@ -2607,10 +2610,20 @@ public final class Admins implements CommandTrigger {
 			new GameObjectLoc(1238, new Point(126, 482), 0, 0),
 			new GameObjectLoc(1238, new Point(136, 482), 0, 0),
 			new GameObjectLoc(1238, new Point(131, 484), 0, 0),
+
+			// Falador
 			new GameObjectLoc(1238, new Point(317, 541), 0, 0),
 			new GameObjectLoc(1238, new Point(317, 538), 0, 0),
 			new GameObjectLoc(1238, new Point(310, 541), 0, 0),
-			new GameObjectLoc(1238, new Point(310, 538), 0, 0)
+			new GameObjectLoc(1238, new Point(310, 538), 0, 0),
+
+			// Seers
+			new GameObjectLoc(1238, new Point(498, 462), 0, 0),
+			new GameObjectLoc(1238, new Point(493, 462), 0, 0),
+			new GameObjectLoc(1238, new Point(488, 467), 0, 0),
+			new GameObjectLoc(1238, new Point(502, 467), 0, 0),
+			new GameObjectLoc(1238, new Point(497, 441), 0, 0),
+
 		};
 
 		final GameObject existingObject = player.getViewArea().getGameObject(locs[0].getLocation());
