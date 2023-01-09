@@ -356,18 +356,8 @@ public class Eating implements OpInvTrigger {
 
 	private void handleTastyKebab(Player player, Item item) {
 		thinkbubble(item);
-		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "It heals some health");
-		// restores up to 19
-		int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 19;
-		if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
-			newStat = player.getSkills().getMaxStat(Skill.HITS.id());
-		}
-		player.getSkills().setLevel(Skill.HITS.id(), newStat, sendUpdate);
-		if (!sendUpdate) {
-			player.getSkills().sendUpdateAll();
-		}
 		switch(DataConversions.random(0,2)) {
 			case 0:
 				say(player, null, "Yummmmm!");
