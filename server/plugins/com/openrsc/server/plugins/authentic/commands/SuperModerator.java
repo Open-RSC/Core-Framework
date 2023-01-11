@@ -65,10 +65,6 @@ public final class SuperModerator implements CommandTrigger {
 			jailPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("release")) {
 			releasePlayer(player, command, args);
-		} else if (command.equalsIgnoreCase("ban")) {
-			banPlayer(player, command, args);
-		} else if (command.equalsIgnoreCase("unban")) {
-			unbanPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("viewipbans")) {
 			queryIPBans(player, command, args);
 		} else if (command.equalsIgnoreCase("ipban")) {
@@ -456,66 +452,6 @@ public final class SuperModerator implements CommandTrigger {
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been released from jail to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
 		}
-	}
-
-	private void unbanPlayer(Player player, String command, String[] args) {
-		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
-			return;
-		}
-		banPlayer(player, command, new String[]{ args[0], "0" });
-	}
-
-	private void banPlayer(Player player, String command, String[] args) {
-		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unban]");
-			return;
-		}
-
-		final long userToBan = DataConversions.usernameToHash(args[0]);
-		final String usernameToBan = DataConversions.hashToUsername(userToBan);
-		final Player targetPlayer = player.getWorld().getPlayer(userToBan);
-
-		if (targetPlayer == player) {
-			player.message(messagePrefix + "You can't ban or unban yourself");
-			return;
-		}
-
-		int time;
-		if (args.length >= 2) {
-			try {
-				time = Integer.parseInt(args[1]);
-			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] (time in minutes, -1 for permanent, 0 to unban)");
-				return;
-			}
-		} else {
-			time = player.isAdmin() ? -1 : 60;
-		}
-
-		if (time == 0 && !player.isAdmin()) {
-			player.message(messagePrefix + "You are not allowed to unban users.");
-			return;
-		}
-
-		if (time == -1 && !player.isAdmin()) {
-			player.message(messagePrefix + "You are not allowed to permanently ban users.");
-			return;
-		}
-
-		if (time > 1440 && !player.isAdmin()) {
-			player.message(messagePrefix + "You are not allowed to ban for more than a day.");
-			return;
-		}
-
-		if (targetPlayer != null) {
-			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
-				return;
-			}
-		}
-
-		player.message(messagePrefix + player.getWorld().getServer().getDatabase().banPlayer(usernameToBan, player, time));
 	}
 
 	private void queryIPBans(Player player, String command, String[] args) {

@@ -161,12 +161,8 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 			targetPlayer.getCache().store("global_mute", -1);
 		} else {
-			if (!player.isMod() && minutes > 60) {
-				player.message(messagePrefix + "You are not allowed to mute that user for more than an hour.");
-				return;
-			}
-			if (!player.isSuperMod() && minutes > 120) {
-				player.message(messagePrefix + "You are not allowed to mute that user for more than 2 hours.");
+			if (!player.isMod() && minutes > 10080) {
+				player.message(messagePrefix + "You are not allowed to mute that user for more than a week (10,080 minutes).");
 				return;
 			}
 			player.message(messagePrefix + "You have given " + targetPlayer.getUsername() + " a " + minutes + " minute mute from ::g chat.");
@@ -247,7 +243,7 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 
 		if (minutes == 0) {
-			if (!player.isSuperMod()) {
+			if (!player.isMod()) {
 				player.message(messagePrefix + "You are not allowed to unmute users.");
 			} else {
 				player.message("You have lifted the mute of " + targetPlayer.getUsername() + ".");
@@ -273,12 +269,8 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 			targetPlayer.setMuteExpires(-1);
 		} else {
-			if (!player.isMod() && minutes > 60) {
-				player.message(messagePrefix + "You are not allowed to mute that user for more than an hour.");
-				return;
-			}
-			if (!player.isSuperMod() && minutes > 120) {
-				player.message(messagePrefix + "You are not allowed to mute that user for more than 2 hours.");
+			if (!player.isMod() && minutes > 10080) {
+				player.message(messagePrefix + "You are not allowed to mute that user for more than a week (10,080 minutes).");
 				return;
 			}
 			player.message("You have given " + targetPlayer.getUsername() + " a " + minutes + " minute mute.");

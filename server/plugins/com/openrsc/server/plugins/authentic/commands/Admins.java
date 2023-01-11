@@ -1742,6 +1742,12 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void spawnNpcWorldwide(Player player, String command, String[] args) {
+		if (!player.getConfig().WANT_CUSTOM_SPRITES) {
+			player.message("no fun allowed...!!");
+			player.message("It's really important to communicate that we aim for authenticity.");
+			player.message("Worldwide NPC events tell newcomers that we are a private server.");
+			return;
+		}
 		if (args.length < 2) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] [amount] (duration_minutes)");
 			return;
@@ -1932,6 +1938,12 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void startNpcEvent(Player player, String command, String[] args) {
+		if (!player.getConfig().WANT_CUSTOM_SPRITES) {
+			player.message("no fun allowed...!!");
+			player.message("It's really important to communicate that we aim for authenticity.");
+			player.message("NPC events tell newcomers that we are a private server.");
+			return;
+		}
 		if (args.length < 3) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [npc_amount] [item_id] (item_amount) (duration)");
 			return;
@@ -1969,6 +1981,12 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void startChickenEvent(Player player, String command, String[] args) {
+		if (!player.getConfig().WANT_CUSTOM_SPRITES) {
+			player.message("no fun allowed...!!");
+			player.message("It's really important to communicate that we aim for authenticity.");
+			player.message("The chicken event tells newcomers that we are a private server.");
+			return;
+		}
 		int hours;
 		if (args.length >= 1) {
 			try {
