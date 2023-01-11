@@ -189,7 +189,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 		return (!player.isUsingCustomClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
 			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK
 				&& !item.getDef(player.getWorld()).getName().toLowerCase().endsWith("cracker"))
-			|| (item.getDef(player.getWorld()).getName().toLowerCase().contains("key"));
+			|| (inArray(npc.getID(), BANKERS) && item.getDef(player.getWorld()).getName().toLowerCase().contains("key"));
 	}
 
 	@Override
