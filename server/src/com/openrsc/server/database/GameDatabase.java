@@ -272,6 +272,8 @@ public abstract class GameDatabase {
 
 	public abstract int addItemToPlayer(Item item);
 
+	public abstract void queryUpdatePlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException;
+
 	// Database Management
 	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
 
@@ -1033,6 +1035,20 @@ public abstract class GameDatabase {
 
 	public void inventoryRemove(final int playerDatabaseId, final Item item) throws GameDatabaseException {
 		queryInventoryRemove(playerDatabaseId, item);
+	}
+
+	/**
+	 * Updates the player's mute value in the cache
+	 * @param playerId The ID of the player being muted
+	 * @param time The duration of the mute in minutes
+	 * @param muteType 0 = Regular mute, 1 = Global Chat mute
+	 * @throws GameDatabaseException
+	 */
+	public void updatePlayerMute(final int playerId, long duration, final int muteType) throws GameDatabaseException {
+		if (duration != -1 && duration != 0) {
+			duration = System.currentTimeMillis() + (duration * 60000L);
+		}
+		queryUpdatePlayerMute(playerId, duration, muteType);
 	}
 
 	protected void queryInventoryAdd(final Player player, final Item item, int slot) throws GameDatabaseException {

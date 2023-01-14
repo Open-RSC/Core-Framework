@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
@@ -71,6 +72,68 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 	}
 
+	private void mute(final Player player, final Player targetPlayer, final int targetPlayerId,
+					  final String targetPlayerUsername, final int duration, final boolean notify,
+					  final String reason, final int muteType) {
+		final String muteText = muteType == 0 ? " " : " global chat ";
+		final String minuteText = duration == -1 ? "permanent" : duration + " minute";
+
+		// Player offline mute
+		if (targetPlayer == null) {
+			try {
+				player.getWorld().getServer().getDatabase().updatePlayerMute(targetPlayerId, duration, muteType);
+			} catch (GameDatabaseException ex) {
+				player.message(messagePrefix + "A database error has occurred.");
+				LOGGER.catching(ex);
+				return;
+			}
+		} else {
+			if (duration == 0) {
+				// Handle unmute
+				if (!player.isInvisibleTo(targetPlayer)) {
+					targetPlayer.message("Your " + muteText + "mute has been lifted. Happy Classic Scaping!");
+				}
+
+				if (muteType == 0) {
+					targetPlayer.setMuteExpires(System.currentTimeMillis());
+				} else {
+					targetPlayer.setGlobalMuteExpires(System.currentTimeMillis());
+				}
+			} else {
+				// Handle muting
+				if (!player.isInvisibleTo(targetPlayer)) {
+					targetPlayer.message(messagePrefix + "You have received a " + minuteText + muteText + "mute.");
+				}
+
+				final long endTime = duration == -1 ? -1 : System.currentTimeMillis() + (duration * 60000L);
+				if (muteType == 0) {
+					targetPlayer.setMuteExpires(endTime);
+				} else {
+					targetPlayer.setGlobalMuteExpires(endTime);
+				}
+				targetPlayer.setMuteNotify(notify);
+			}
+		}
+
+		// Message the muter and log
+		if (duration == 0) {
+			// Unmute
+			player.message(messagePrefix + "You have lifted the" + muteText + "mute of " + targetPlayerUsername + ".");
+
+			player.getWorld().getServer().getGameLogger().addQuery(
+				new StaffLog(player, 0, targetPlayer, targetPlayerUsername
+					+ " had their " + muteText + "mute lifted."));
+		} else {
+			// Mute
+			player.message(messagePrefix + "You have given " + targetPlayerUsername + " a " + minuteText + muteText + "mute.");
+
+			player.getWorld().getServer().getGameLogger().addQuery(
+				new StaffLog(player, 0, targetPlayer, targetPlayerUsername
+					+ " was given a " + minuteText + muteText + "mute."
+					+ (!reason.equals("") ? "Reason: " + reason : "")));
+		}
+	}
+
 	private void unmutePlayerGlobal(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
@@ -86,16 +149,35 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
-		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		final Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		int targetPlayerId = -1;
+		String targetPlayerUsername = "";
 
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
-
-		if (targetPlayer == player) {
-			player.message(messagePrefix + "You can't mute or unmute yourself");
-			return;
+		if (targetPlayer != null) {
+			targetPlayerId = targetPlayer.getID();
+			targetPlayerUsername = targetPlayer.getUsername();
+			if (targetPlayer == player) {
+				player.message(messagePrefix + "You can't mute or unmute yourself");
+				return;
+			}
+			if (!targetPlayer.isDefaultUser() && player.getGroupID() >= targetPlayer.getGroupID()) {
+				player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
+				return;
+			}
+		} else {
+			// Get the targetPlayer's player ID since they aren't logged in
+			targetPlayerUsername = args[0].replace('.',' ');
+			try {
+				targetPlayerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerUsername);
+				if (targetPlayerId == -1) {
+					player.message(messagePrefix + "The player you have specified does not exist");
+					return;
+				}
+			} catch (GameDatabaseException ex) {
+				player.message(messagePrefix + "A database error has occurred.");
+				LOGGER.catching(ex);
+				return;
+			}
 		}
 
 		int minutes = -1;
@@ -109,6 +191,22 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 		} else {
 			minutes = player.isSuperMod() ? -1 : player.isMod() ? 60 : 15;
+		}
+
+		if (!player.isSuperMod()) {
+			if (minutes == 0) {
+				player.message(messagePrefix + "You are not allowed to unmute users.");
+				return;
+			}
+			if (minutes == -1) {
+				player.message(messagePrefix + "You are not allowed to mute indefinitely.");
+				return;
+			}
+		}
+
+		if (!player.isMod() && minutes > 10080) {
+			player.message(messagePrefix + "You are not allowed to mute that user for more than a week (10,080 minutes).");
+			return;
 		}
 
 		boolean notify;
@@ -129,54 +227,7 @@ public final class PlayerModerator implements CommandTrigger {
 			reason = "";
 		}
 
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
-			return;
-		}
-
-		if (minutes == 0) {
-			if (!player.isSuperMod()) {
-				player.message(messagePrefix + "You are not allowed to unmute users.");
-			} else {
-				player.message("You have lifted the mute of " + targetPlayer.getUsername() + ".");
-				if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-					targetPlayer.message("Your mute has been lifted. Happy RSC scaping.");
-				}
-				targetPlayer.setMuteExpires(System.currentTimeMillis());
-				player.getWorld().getServer().getGameLogger().addQuery(
-					new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
-						+ " was unmuted for the (::g) chat."));
-			}
-			return;
-		}
-
-		if (minutes == -1) {
-			if (!player.isSuperMod()) {
-				player.message(messagePrefix + "You are not allowed to mute indefinitely.");
-				return;
-			}
-			player.message(messagePrefix + "You have given " + targetPlayer.getUsername() + " a permanent mute from ::g chat.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-				targetPlayer.message(messagePrefix + "You have received a permanent mute from (::g) chat.");
-			}
-			targetPlayer.getCache().store("global_mute", -1);
-		} else {
-			if (!player.isMod() && minutes > 10080) {
-				player.message(messagePrefix + "You are not allowed to mute that user for more than a week (10,080 minutes).");
-				return;
-			}
-			player.message(messagePrefix + "You have given " + targetPlayer.getUsername() + " a " + minutes + " minute mute from ::g chat.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-				targetPlayer.message(messagePrefix + "You have received a " + minutes + " minute mute in (::g) chat.");
-			}
-			targetPlayer.getCache().store("global_mute", (System.currentTimeMillis() + (minutes * 60000)));
-		}
-		targetPlayer.setMuteNotify(notify);
-		player.getWorld().getServer().getGameLogger().addQuery(
-			new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
-				+ " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for "
-				+ minutes + " minutes") + " in (::g) chat. "
-				+ (!reason.equals("") ? "Reason: " + reason : "")));
+		mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, notify, reason, 1);
 	}
 
 	private void unmutePlayer(Player player, String command, String[] args) {
@@ -194,16 +245,35 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
-		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		final Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		int targetPlayerId = -1;
+		String targetPlayerUsername = "";
 
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
-
-		if (targetPlayer == player) {
-			player.message(messagePrefix + "You can't mute or unmute yourself");
-			return;
+		if (targetPlayer != null) {
+			targetPlayerId = targetPlayer.getID();
+			targetPlayerUsername = targetPlayer.getUsername();
+			if (targetPlayer == player) {
+				player.message(messagePrefix + "You can't mute or unmute yourself");
+				return;
+			}
+			if (!targetPlayer.isDefaultUser() && player.getGroupID() >= targetPlayer.getGroupID()) {
+				player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
+				return;
+			}
+		} else {
+			// Get the targetPlayer's player ID since they aren't logged in
+			targetPlayerUsername = args[0].replace('.',' ');
+			try {
+				targetPlayerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerUsername);
+				if (targetPlayerId == -1) {
+					player.message(messagePrefix + "The player you have specified does not exist");
+					return;
+				}
+			} catch (GameDatabaseException ex) {
+				player.message(messagePrefix + "A database error has occurred.");
+				LOGGER.catching(ex);
+				return;
+			}
 		}
 
 		int minutes = -1;
@@ -217,6 +287,22 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 		} else {
 			minutes = player.isSuperMod() ? -1 : player.isMod() ? 60 : 15;
+		}
+
+		if (!player.isSuperMod()) {
+			if (minutes == 0) {
+				player.message(messagePrefix + "You are not allowed to unmute users.");
+				return;
+			}
+			if (minutes == -1) {
+				player.message(messagePrefix + "You are not allowed to mute indefinitely.");
+				return;
+			}
+		}
+
+		if (!player.isMod() && minutes > 10080) {
+			player.message(messagePrefix + "You are not allowed to mute that user for more than a week (10,080 minutes).");
+			return;
 		}
 
 		boolean notify;
@@ -237,53 +323,7 @@ public final class PlayerModerator implements CommandTrigger {
 			reason = "";
 		}
 
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
-			return;
-		}
-
-		if (minutes == 0) {
-			if (!player.isMod()) {
-				player.message(messagePrefix + "You are not allowed to unmute users.");
-			} else {
-				player.message("You have lifted the mute of " + targetPlayer.getUsername() + ".");
-				if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-					targetPlayer.message("Your mute has been lifted. Happy RSC scaping.");
-				}
-				targetPlayer.setMuteExpires(System.currentTimeMillis());
-				player.getWorld().getServer().getGameLogger().addQuery(
-					new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
-						+ " was unmuted."));
-			}
-			return;
-		}
-
-		if (minutes == -1) {
-			if (!player.isSuperMod()) {
-				player.message(messagePrefix + "You are not allowed to mute indefinitely.");
-				return;
-			}
-			player.message("You have given " + targetPlayer.getUsername() + " a permanent mute.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-				targetPlayer.message("You have received a permanent mute. Appeal is available on Discord.");
-			}
-			targetPlayer.setMuteExpires(-1);
-		} else {
-			if (!player.isMod() && minutes > 10080) {
-				player.message(messagePrefix + "You are not allowed to mute that user for more than a week (10,080 minutes).");
-				return;
-			}
-			player.message("You have given " + targetPlayer.getUsername() + " a " + minutes + " minute mute.");
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-				targetPlayer.message("You have received a " + minutes + " minute mute. Appeal is available on Discord.");
-			}
-			targetPlayer.setMuteExpires((System.currentTimeMillis() + (minutes * 60000)));
-		}
-		targetPlayer.setMuteNotify(notify);
-		player.getWorld().getServer().getGameLogger().addQuery(
-			new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
-				+ " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes") + ". "
-				+ (!reason.equals("") ? "Reason: " + reason : "")));
+		mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, notify, reason, 0);
 	}
 
 	private void showPlayerAlertBox(Player player, String command, String[] args) {

@@ -1293,6 +1293,10 @@ public final class Player extends Mob {
 		getCache().store("global_mute", l);
 	}
 
+	public void setGlobalMuteExpires(final long l) {
+		getCache().store("global_mute", l);
+	}
+
 	public void setMuteNotify(final boolean n) {
 		getCache().store("mute_notify", n);
 	}

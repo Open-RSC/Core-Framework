@@ -2437,6 +2437,24 @@ public class MySqlGameDatabase extends JDBCDatabase {
 		return Item.ITEM_ID_UNASSIGNED;
 	}
 
+	@Override
+	public void queryUpdatePlayerMute(int playerId, long time, int muteType) throws GameDatabaseException {
+		try (
+			final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().updateMute)) {
+			statement.setLong(1, time);
+			if (muteType == 0) {
+				statement.setString(2, "mute_expires");
+			} else {
+				statement.setString(2, "global_mute");
+			}
+			statement.setInt(3, playerId);
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+	}
+
 	public int assignItemID(final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			int itemId = itemCreate(item);
