@@ -367,9 +367,9 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 			return;
 		}
-		if (player.getCache().hasKey("global_mute") && (player.getCache().getLong("global_mute") - System.currentTimeMillis() > 0 || player.getCache().getLong("global_mute") == -1) && command.equals("g")) {
-			long globalMuteDelay = player.getCache().getLong("global_mute");
-			player.message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((player.getCache().getLong("global_mute") - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from the ::g chat.");
+		if (player.isGlobalMuted() && command.equals("g")) {
+			final long globalMuteDelay = player.getCache().getLong("global_mute");
+			player.message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from global chat.");
 			return;
 		}
 		long sayDelay = 0;

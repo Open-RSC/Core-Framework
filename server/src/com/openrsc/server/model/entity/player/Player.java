@@ -2043,12 +2043,21 @@ public final class Player extends Mob {
 	}
 
 	public boolean isMuted() {
-		if (getMuteExpires() == 0)
+		final long muteExpires = getMuteExpires();
+		if (muteExpires == 0)
 			return false;
-		if (getMuteExpires() == -1)
+		if (muteExpires == -1)
 			return true;
 
-		return getMuteExpires() - System.currentTimeMillis() > 0;
+		return muteExpires - System.currentTimeMillis() > 0;
+	}
+
+	public boolean isGlobalMuted() {
+		if (getCache().hasKey("global_mute")) {
+			final long globalMute = getCache().getLong("global_mute");
+			return globalMute - System.currentTimeMillis() > 0 || globalMute == -1;
+		}
+		return false;
 	}
 
 	public boolean isRanging() {
