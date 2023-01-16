@@ -127,6 +127,7 @@ Admin Commands
   - Usage: `::massnpc [id] [amount] (duration_minutes)`
   - Spawn the specified amount of the specified NPCs for the specified amount of time.
   - If no duration is supplied, then 10 minutes is used.
+  - Functionality is restricted on non-custom worlds.
 - npckills
   - Usage: `::npckills [name]`
   - Shows kill counts for name.
@@ -146,11 +147,13 @@ Admin Commands
   - If no item amount is supplied, then 1 is used.
   - If no duration is specified, then 10 minutes is used.
   - NOTE that this only happens one time immediately and is not an HourlyNpcLootEvent.
+  - Functionality is restricted on non-custom worlds.
 - chickenevent
   - Usage: `::chickenevent (hours) (chicken_amount) (item_amount) (chicken_lifetime)`
   - Starts an hourly chicken holiday event.
   - Behaves like npcevent, but this is run every hour on the hour for the specified number of hours.
   - The NPC is chickens and the loot is coins.
+  - Functionality is restricted on non-custom worlds.
 - stopnpcevent
   - Usage: `::stopnpcevent`
   - Alias: `::cancelnpcevent`
@@ -351,12 +354,8 @@ Super/Senior Moderator Commands
   - Usage: `::ipcount (name)`
   - Shows the number of players connected with the same IP address as the specified player.
   - If no player is specified, then the current player's information is shown.
-- ban
-  - Usage: `::ban [name] [time in minutes, -1 for permanent, 0 to unban]`
-  - Bans the specified player.
-  - You can not ban a staff member of equal or greater rank.
 - renameplayer
-  - Usage: '::renameplayer [old_name] [new_name]'
+  - Usage: `::renameplayer [old_name] [new_name]`
   - Renames a specified player. Please note that ALL underscores will be replaced with spaces
   - Also note that renaming a player will mess up anyone's friend list that has them added, so it's best to only use this command to rename Mod players.
 ------------------------
@@ -371,6 +370,10 @@ Moderator Commands
   - Usage: `::inventory (player) (want catalog ids)`
   - Shows inventory information about the specified player.
   - If no player is specified, then it show inventory info about the current player.
+- ban
+  - Usage: `::ban [name] [time in minutes, -1 for permanent, 0 to unban]`
+  - Bans the specified player.
+  - You can not ban a staff member of equal or greater rank.
 - bank
   - Usage: `::bank (player) (want box) (want catalog ids)`
   - Shows bank information for the specified player.
@@ -532,8 +535,6 @@ Player Moderator Commands
 - gmute
   - Usage: `::gmute [name] (time in minutes, -1 or exclude for permanent)`
   - Mutes the specified player from global chat.
-  - Moderators are only allowed to mute for up to 2 hours.
-  - Player Moderators are only allowed to mute for up to 1 hour.
   - You can not mute a staff member of equal or greater rank.
 - ungmute
   - Usage: `::ungmute [name]`
@@ -541,8 +542,6 @@ Player Moderator Commands
   - You can not unmute a staff member of equal or greater rank.
 - mute
   - Usage: `::mute [name] (time in minutes, -1 or exclude for permanent)`
-  - Moderators are only allowed to mute for up to 2 hours.
-  - Player Moderators are only allowed to mute for up to 1 hour.
   - Mutes the specified player from both in game and global chat.
   - You can not mute a staff member of equal or greater rank.
 - unmute
@@ -587,7 +586,7 @@ Regular Player Commands
   - Usage: `::gang`
   - Shows which gang you are in: Black Arm, Phoneix, or none.
 - c
-  - Usage: `::c [message]
+  - Usage: `::c [message]`
   - Send message to clan chat.
   - Clans must be enabled to use this command.
   - You must be in a clan to use this command.
@@ -694,3 +693,19 @@ Regular Player Commands
 - certoptoutconfirm
   - Usage: `::certoptoutconfirm`
   - Confirms permanent opt out of being able to use item certs.
+- maxplayersperip
+  - Usage: `::maxplayersperip`
+  - Alias: `::mppi`
+  - Shows the maximum amount of multilogged accounts a single ip address is allowed
+- globalprivate
+  - Usage `::globalprivate`
+  - Alias: `::gp`
+  - Switches Global Chat to output in the Private history tab.
+- globalquest
+  - Usage `::globalquest`
+  - Alias: `::gq`
+  - Switches Global Chat to output in the Quest history tab (default).
+- setglobalmessagecolor
+  - Usage `::setglobalmessagecolor (colorcode)]`
+  - Example: `::setglobalmessagecolor @dre@`
+  - If run with no parameter, resets the color to default.
