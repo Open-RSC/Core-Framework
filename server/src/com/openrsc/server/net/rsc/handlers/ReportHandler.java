@@ -60,8 +60,12 @@ public final class ReportHandler implements PayloadProcessor<ReportStruct, Opcod
 		}
 
 		player.message("Thank-you, your abuse report has been received.");
-		LOGGER.info(player.getUsername() + " reported " + playerName + " for \"" + Constants.reportReasons.getOrDefault((int)reason, "Unknown Reason") + "\"");
-		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, playerName, reason, suggestsOrMutes != 0, player.isMod()));
+		String reportMessage = player.getUsername() + " reported " + playerName + " for \"" + Constants.reportReasons.getOrDefault((int)reason, "Unknown Reason") + "\"";
+		LOGGER.info(reportMessage);
+
+		GameReport gameReport = new GameReport(player, playerName, reason, suggestsOrMutes != 0, player.isMod());
+		player.getWorld().getServer().getGameLogger().addQuery(gameReport);
+		player.getWorld().getServer().getDiscordService().reportSendToDiscord(gameReport, player.getWorld().getServer().getName());
 		player.setLastReport();
 
 		if (suggestsOrMutes != 0 && player.isMod()) {

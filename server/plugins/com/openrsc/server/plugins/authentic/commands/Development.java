@@ -83,7 +83,7 @@ public final class Development implements CommandTrigger {
 			currentCoordinates(player, args);
 		}
 		else if (command.equalsIgnoreCase("serverstats")) {
-			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
+			serverStats(player, args);
 		}
 		else if (command.equalsIgnoreCase("error")) {
 			// used to verify logging of errors/stdout
@@ -128,6 +128,16 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("scenerydemo")) {
 			showScenery(player, command, args);
 		}
+	}
+
+	private void serverStats(Player player, String[] args) {
+		if (player.getConfig().WANT_DISCORD_MONITORING_UPDATES) {
+			player.getWorld().getServer().getDiscordService().monitoringSendServerBehind(
+				"Profiling information requested by **" + player.getUsername() + "** for world **" + player.getWorld().getServer().getName() + "**:\n\n" +
+				player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(false)
+				, false);
+		}
+		ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
 	}
 
 	private void showBoundaries(Player player, String command, String[] args) {

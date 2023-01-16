@@ -12,12 +12,12 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 public final class GameReport extends Query {
-	private final String reported;
-	private final Player reporterPlayer;
-	private final byte reason;
-	private final StringBuilder chatlog = new StringBuilder();
-	private int reported_x, reported_y;
-	private boolean suggestsOrMutes, triedApplyAction;
+	public final String reported;
+	public final Player reporterPlayer;
+	public final byte reason;
+	public final StringBuilder chatlog = new StringBuilder();
+	public int reported_x, reported_y;
+	public boolean suggestsOrMutes, triedApplyAction;
 
 	public GameReport(Player reporter, String reported, byte reason, boolean suggestsOrMutes, boolean triedApplyAction) {
 		super("INSERT INTO `" + reporter.getConfig().DB_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");

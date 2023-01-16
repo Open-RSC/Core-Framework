@@ -1,8 +1,10 @@
 package com.openrsc.server.net;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.GameReport;
 import com.openrsc.server.database.struct.DiscordWatchlist;
 import com.openrsc.server.database.struct.PlayerExperience;
 import com.openrsc.server.external.ItemDefinition;
@@ -27,9 +29,7 @@ import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 
 import javax.security.auth.login.LoginException;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -47,6 +47,7 @@ public class DiscordService implements Runnable{
 
 	private final Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
+	private final Queue<String> reportAbuseRequests = new ConcurrentLinkedQueue<String>();
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private long monitoringLastUpdate = 0;
@@ -448,6 +449,38 @@ public class DiscordService implements Runnable{
 		}
 	}
 
+	public void reportSendToDiscord(GameReport gameReport, String serverName) {
+		if(getServer().getConfig().WANT_DISCORD_REPORT_ABUSE_UPDATES) {
+			StringBuilder reportMessage = new StringBuilder("**=== ");
+			reportMessage.append(serverName);
+			reportMessage.append(" ===**\n");
+			reportMessage.append("Unix time: ");
+			String unixTimestamp = String.format("%d", (System.currentTimeMillis() / 1000));
+			reportMessage.append(unixTimestamp);
+			reportMessage.append("\n\n**");
+			reportMessage.append(gameReport.reporterPlayer.getUsername());
+			reportMessage.append("** reported **");
+			reportMessage.append(gameReport.reported);
+			reportMessage.append("** for *\"");
+			reportMessage.append(Constants.reportReasons.getOrDefault((int)gameReport.reason, "Unknown Reason"));
+			reportMessage.append("\"*");
+
+			if (gameReport.chatlog.toString().length() > 0) {
+				reportMessage.append("\n\n**Chatlog Evidence:**\n");
+				reportMessage.append(gameReport.chatlog.toString());
+			} else {
+				if (gameReport.suggestsOrMutes) {
+					reportMessage.append("\n");
+				}
+			}
+
+			if (gameReport.suggestsOrMutes) {
+				reportMessage.append("\n**The user was muted for this offense!**");
+			}
+			reportAbuseRequests.add(reportMessage.toString());
+		}
+	}
+
 	private static void sendToDiscord(final String webhookUrl, final String message) throws Exception {
 		final StringBuilder sb = new StringBuilder();
 		JsonUtils.quoteAsString(message, sb);
@@ -458,8 +491,10 @@ public class DiscordService implements Runnable{
 
 		final URLConnection con = url.openConnection();
 		final HttpURLConnection http = (HttpURLConnection) con;
+		con.addRequestProperty("User-Agent", "openrsc");
 		http.setRequestMethod("POST");
 		http.setDoOutput(true);
+		http.setUseCaches(false);
 
 		final byte[] out = jsonPostBody.getBytes(StandardCharsets.UTF_8);
 		final int length = out.length;
@@ -471,6 +506,18 @@ public class DiscordService implements Runnable{
 			try (OutputStream os = http.getOutputStream()) {
 				os.write(out);
 			}
+			/* Debugging code, read response from discord
+			System.out.println(http.getResponseMessage());
+			BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream()));
+			String line = "";
+			while (line != null) {
+				line = br.readLine();
+				if (line != null) {
+					System.out.println(line);
+				}
+			}
+			*/
+
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
@@ -507,6 +554,9 @@ public class DiscordService implements Runnable{
 
 				while ((message = monitoringRequests.poll()) != null) {
 					sendToDiscord(getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
+				}
+				while ((message = reportAbuseRequests.poll()) != null) {
+					sendToDiscord(getServer().getConfig().DISCORD_REPORT_ABUSE_WEBHOOK_URL, message);
 				}
 			} catch (final Exception e) {
 				LOGGER.catching(e);
@@ -549,6 +599,7 @@ public class DiscordService implements Runnable{
 	private void clearRequests() {
 		monitoringRequests.clear();
 		auctionRequests.clear();
+		reportAbuseRequests.clear();
 	}
 
 	public final boolean isRunning() {

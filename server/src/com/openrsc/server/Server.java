@@ -248,7 +248,8 @@ public class Server implements Runnable {
 		final boolean wantDiscordBot = getConfig().WANT_DISCORD_BOT;
 		final boolean wantDiscordAuctionUpdates = getConfig().WANT_DISCORD_AUCTION_UPDATES;
 		final boolean wantDiscordMonitoringUpdates = getConfig().WANT_DISCORD_MONITORING_UPDATES;
-		discordService = wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates ? new DiscordService(this) : null;
+		final boolean wantDiscordReportAbuseUpdates = getConfig().WANT_DISCORD_REPORT_ABUSE_UPDATES;
+		discordService = wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates || wantDiscordReportAbuseUpdates ? new DiscordService(this) : null;
 		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
 		gameEventHandler = new GameEventHandler(this);
@@ -668,7 +669,7 @@ public class Server implements Runnable {
 
 		LOGGER.warn(message);
 		if (getWorld().getServer().getDiscordService() != null) {
-			getWorld().getServer().getDiscordService().monitoringSendServerBehind(message, showEventData);
+			getWorld().getServer().getDiscordService().monitoringSendServerBehind("**=== " + getWorld().getServer().getName() + "===**\n" + message, showEventData);
 		}
 	}
 
