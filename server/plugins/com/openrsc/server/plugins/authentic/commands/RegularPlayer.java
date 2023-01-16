@@ -151,6 +151,44 @@ public final class RegularPlayer implements CommandTrigger {
 			tellPidlessCatching(player);
 		} else if (command.equalsIgnoreCase("maxplayersperip") || command.equalsIgnoreCase("mppi")) {
 			queryMaxPlayersPerIp(player);
+		} else if (command.equalsIgnoreCase("setglobalmessagecolor")) {
+			setGlobalMessageColor(player, args);
+		} else if (command.equalsIgnoreCase("globalquest") || command.equalsIgnoreCase("gq")) {
+			setGlobalOutput(player, MessageType.QUEST);
+		} else if (command.equalsIgnoreCase("globalprivate") || command.equalsIgnoreCase("gp")) {
+			setGlobalOutput(player, MessageType.PRIVATE_RECIEVE);
+		}
+	}
+
+	private void setGlobalOutput(Player player, MessageType questOrPrivate) {
+		if (questOrPrivate.equals(MessageType.QUEST)) {
+			if (player.getCache().hasKey("private_message_global")) {
+				player.getCache().remove("private_message_global");
+				player.message("@cya@Global messages now are received on the @whi@Quest history@cya@ tab.");
+			} else {
+				player.message("@cya@Global messages were already received on the @whi@Quest history@cya@ tab.");
+				player.message("@cya@Type @whi@::gp@cya@ to change this.");
+			}
+		} else if (questOrPrivate.equals(MessageType.PRIVATE_RECIEVE)) {
+			if (!player.getCache().hasKey("private_message_global")) {
+				player.getCache().store("private_message_global", true);
+				player.message("@cya@Global messages now are received on the @whi@Private history@cya@ tab.");
+			} else {
+				player.message("@cya@Global messages were already received on the @whi@Private history@cya@ tab.");
+				player.message("@cya@Type @whi@::gq@cya@ to change this.");
+			}
+		}
+	}
+
+	private void setGlobalMessageColor(Player player, String[] args) {
+		if (args.length >= 1) {
+			player.getCache().store("global_message_color", args[0]);
+			player.message("@cya@Global message color set to " + args[0] + "This color.");
+		} else {
+			if (player.getCache().hasKey("global_message_color")) {
+				player.getCache().remove("global_message_color");
+				player.message("@cya@Global message color reset.");
+			}
 		}
 	}
 

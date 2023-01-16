@@ -511,7 +511,7 @@ public class Point {
 			|| inBounds(59, 731, 59, 731) // Shantay Pass (1 square)
 			|| inBounds(399, 848, 404, 854) // Shilo Village
 			|| inBounds(196, 746, 203, 754) // Tutorial Island
-			|| inBounds(712, 1450, 716, 1454) // Tree Gnome Stronghold (south, near spinning wheel)
+			|| inBounds(712, 1440, 716, 1464) // Tree Gnome Stronghold (south, near spinning wheel)
 			|| (inBounds(98, 510, 106, 515) && mapData >= 24) // Varrock East
 			|| inBounds(147, 498, 153, 506) // Varrock West
 			|| inBounds(585, 750, 590, 758) // Yanille

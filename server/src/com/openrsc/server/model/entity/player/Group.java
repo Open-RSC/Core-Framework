@@ -31,6 +31,26 @@ public class Group {
 		GROUP_NAMES.put(USER, "User");
 	}
 
+	public static String getGlobalMessageName(int groupID) {
+		switch (groupID) {
+			case OWNER:
+			case ADMIN:
+				return "Admin";
+			case SUPER_MOD:
+			case MOD:
+				return "Mod";
+			case DEV:
+			case EVENT:
+				return "Event";
+			case PLAYER_MOD:
+				return "Pmod";
+			case TESTER:
+			case USER:
+			default:
+				return "";
+		}
+	}
+
 	public static String getNameColour(World world, int groupID) {
 		if (!world.getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY)
 			return "";
