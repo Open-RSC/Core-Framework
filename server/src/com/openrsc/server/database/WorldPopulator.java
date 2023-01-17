@@ -130,7 +130,7 @@ public final class WorldPopulator {
 				// // }
 
 				// Don't load rats if the Mice to Meet You Event is active
-				if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT
+				if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT && getWorld().getServer().getConfig().WANT_MICE_TO_MEET_YOU_NO_RATS
 					&& (n.getId() == NpcId.RAT_LVL8.id()
 					|| n.getId() == NpcId.RAT_WITCHES_POTION.id()
 					|| n.getId() == NpcId.RAT_LVL13.id()

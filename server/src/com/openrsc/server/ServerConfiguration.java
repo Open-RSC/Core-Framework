@@ -243,6 +243,7 @@ public class ServerConfiguration {
 	public boolean ESTERS_BUNNIES_EVENT = false;
 	public boolean ESTERS_BUNNIES_STINGY_DUCK = false;
 	public boolean MICE_TO_MEET_YOU_EVENT = false;
+	public boolean WANT_MICE_TO_MEET_YOU_NO_RATS = false;
 	public boolean DEATH_ISLAND = false;
 	public int BASED_MAP_DATA = 64;
 	public int BASED_CONFIG_DATA = 85;
@@ -614,6 +615,7 @@ public class ServerConfiguration {
 		ESTERS_BUNNIES_EVENT = tryReadBool("esters_bunnies").orElse(false);
 		ESTERS_BUNNIES_STINGY_DUCK = tryReadBool("esters_bunnies_stingy_duck").orElse(false);
 		MICE_TO_MEET_YOU_EVENT = tryReadBool("mice_to_meet_you").orElse(false);
+		WANT_MICE_TO_MEET_YOU_NO_RATS = tryReadBool("mice_to_meet_you_no_rats").orElse(false);
 		DEATH_ISLAND = tryReadBool("death_island").orElse(false);
 
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
