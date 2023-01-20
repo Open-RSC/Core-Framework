@@ -8,6 +8,7 @@ import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.event.rsc.impl.projectile.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.projectile.ProjectileEvent;
+import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemSmeltingDef;
 import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
@@ -1720,8 +1721,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						int max = (int)getPlayer().getWorld().getServer().getConstants().getSpellDamages().getSpellDamage(spellEnum, entityType, SpellDamages.MagicType.MODERNMAGIC);
 
+						// If the player is wearing chaos gauntlets and casts a bolt spell, they get +1 damage
+						final boolean gauntletBonus = getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id())
+							&& getPlayer().getCache().getInt("famcrest_gauntlets") == Gauntlets.CHAOS.id();
+
 						if (getPlayer().getMagicPoints() > 30
-							|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
+							|| (gauntletBonus && spell.getName().contains("bolt")))
 							max += 1;
 
 						int damage = CombatFormula.calculateMagicDamage(max + 1) - 1;

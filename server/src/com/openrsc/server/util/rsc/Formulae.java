@@ -170,8 +170,9 @@ public final class Formulae {
 	public static boolean burnFood(Player player, int foodId, int cookingLevel) {
 		//gauntlets of cooking effective on lobsters, swordfish and shark
 		//chef: Wearing them means you will burn your lobsters, swordfish and shark less
-		int bonusLevel = player.getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id()) ?
-			(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
+		final boolean gauntletBonus = player.getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id())
+			&& player.getCache().getInt("famcrest_gauntlets") == Gauntlets.COOKING.id();
+		int bonusLevel = gauntletBonus ? (foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
 				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
 		int effectiveLevel = cookingLevel + bonusLevel;
 		int levelReq = player.getWorld().getServer().getEntityHandler().getItemCookingDef(foodId).getReqLevel();

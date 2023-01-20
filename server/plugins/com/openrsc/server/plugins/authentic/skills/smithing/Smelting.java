@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.SkillCapes;
+import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.CarriedItems;
@@ -356,7 +357,9 @@ public class Smelting implements UseLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You retrieve a bar of " + barName);
 
 				/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
-				if (ci.getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
+				final boolean gauntletBonus = ci.getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_GOLDSMITHING.id())
+					&& player.getCache().getInt("famcrest_gauntlets") == Gauntlets.GOLDSMITHING.id();
+				if (gauntletBonus && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
 					player.incExp(Skill.SMITHING.id(), smelt.getXp() + 45, true);
 				} else {
 					player.incExp(Skill.SMITHING.id(), smelt.getXp(), true);
