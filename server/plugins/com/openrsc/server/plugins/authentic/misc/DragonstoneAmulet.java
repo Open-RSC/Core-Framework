@@ -29,8 +29,19 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	public void onOpInv(final Player player, final Integer invIndex, final Item item, final String command) {
 		if (item.getCatalogId() != ItemId.CHARGED_DRAGONSTONE_AMULET.id()) return;
 
+		int chargesRemaining = -1;
+
 		player.message("You rub the amulet");
 		delay();
+		if (config().IMPROVED_ITEM_OBJECT_NAMES) {
+			if (!player.getCache().hasKey("charged_ds_amulet")) {
+				chargesRemaining = 4;
+			} else {
+				chargesRemaining = 4 - player.getCache().getInt("charged_ds_amulet");
+			}
+			mes("Your amulet has " + chargesRemaining + (chargesRemaining == 1 ? " charge" : " charges") + " remaining.");
+			delay();
+		}
 		player.message("Where would you like to teleport to?");
 
 		final String[] menuOptions = new String[]{"Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere"};
@@ -91,6 +102,20 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				break;
 			default:
 				assert false : "DragonstoneAmulet menu option out of range: " + menuOption;
+		}
+
+		if (config().IMPROVED_ITEM_OBJECT_NAMES) {
+			chargesRemaining--;
+			mes("You rub your amulet and teleport to " + menuOptions[menuOption]);
+			delay();
+			if (chargesRemaining > 1) {
+				mes("Your amulet now has " + chargesRemaining + " charges remaining");
+			} else if (chargesRemaining == 1) {
+				mes("Your amulet now has 1 charge remaining");
+			} else {
+				mes("You feel the power leave your amulet as it reverts to its uncharged state.");
+			}
+			delay();
 		}
 
 		if (!player.getCache().hasKey("charged_ds_amulet")) {
