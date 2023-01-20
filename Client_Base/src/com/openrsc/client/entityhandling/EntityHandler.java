@@ -3966,6 +3966,22 @@ public class EntityHandler {
 		items.add(new ItemDef("Cape of Inclusion", "A colourful cape made from many different pieces of cloth.", "", 3, -1, "items:pridecape", false, true, 2048, 0xFFFFFF, false, false, true, 1516));
 		items.add(new ItemDef("halloween mask", "aaaarrrghhh ... i'm a monster", "", 15, 284, "items:284", false, true, 32, 4, false, false, true, 1517));
 
+		// Rest of the skillcapes
+		items.add(new ItemDef("Agility cape", "The cape worn by the most agile", "", 99000, -1, "items:479", false, true, 2048, 0, false, false, false, 1518));
+		items.add(new ItemDef("Defense cape", "The cape worn by the most formidable", "", 99000, -1, "items:483", false, true, 2048, 0, false, false, false, 1519));
+		items.add(new ItemDef("Firemaking cape", "The cape worn by pyro enthusiasts", "", 99000, -1, "items:484", false, true, 2048, 0, false, false, false, 1520));
+		items.add(new ItemDef("Herblaw cape", "The cape worn by master herblawists", "", 99000, -1, "items:487", false, true, 2048, 0, false, false, false, 1521));
+		items.add(new ItemDef("Hits cape", "The cape worn by the most sturdy", "", 99000, -1, "items:488", false, true, 2048, 0, false, false, false, 1522));
+		items.add(new ItemDef("Prayer cape", "The cape worn by the most pious", "", 99000, -1, "items:491", false, true, 2048, 0, false, false, false, 1523));
+		items.add(new ItemDef("Ranged cape", "The cape worn by the best archers", "", 99000, -1, "items:493", false, true, 2048, 0, false, false, false, 1524));
+		items.add(new ItemDef("Woodcutting cape", "The cape worn by the best loggers", "", 99000, -1, "items:497", false, true, 2048, 0, false, false, false, 1525));
+		items.add(new ItemDef("Harvesting cape", "The cape worn by agronomists", "", 99000, -1, "items:549", false, true, 2048, 0, false, false, false, 1526));
+		items.add(new ItemDef("Runecraft cape", "The cape worn by masters of rune lore", "", 99000, -1, "items:550", false, true, 2048, 0, false, false, false, 1527));
+		items.add(new ItemDef("Quest cape", "The cape worn by the most seasoned adventurers", "", 99000, -1, "items:492", false, true, 2048, 0, false, false, false, 1528));
+		// We don't have a sprite for this cape, but I want to reserve the ID.
+		items.add(new ItemDef("Max cape", "The cape worn by ???", "", 99000, -1, "items:485", false, true, 2048, 0, false, false, false, 1529));
+
+
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
 		items.get(435).spriteLocation = "items:588";
@@ -4631,6 +4647,21 @@ public class EntityHandler {
 			animations.add(new AnimationDef("halloweenmask", "equipment", 16711935, 0, true, false, 0)); // 508
 			animations.add(new AnimationDef("pridecape", "equipment", 0, 0, true, false, 0)); // 509
 			animations.add(new AnimationDef("halloweenmask", "equipment", 4, 0, true, false, 0)); // 510
+
+			// Rest of the skillcapes
+			animations.add(new AnimationDef("agilitycape", "equipment", 0, 0, true, false, 0)); //511
+			animations.add(new AnimationDef("defensecape", "equipment", 0, 0, true, false, 0)); //512
+			animations.add(new AnimationDef("firemakingcape", "equipment", 0, 0, true, false, 0)); //513
+			animations.add(new AnimationDef("herblawcape", "equipment", 0, 0, true, false, 0)); //514
+			animations.add(new AnimationDef("hitscape", "equipment", 0, 0, true, false, 0)); //515
+			animations.add(new AnimationDef("prayercape", "equipment", 0, 0, true, false, 0)); //516
+			animations.add(new AnimationDef("rangingcape", "equipment", 0, 0, true, false, 0)); //517
+			animations.add(new AnimationDef("woodcuttingcape", "equipment", 0, 0, true, false, 0)); //518
+			animations.add(new AnimationDef("harvestingcape", "equipment", 0, 0, true, false, 0)); //519
+			animations.add(new AnimationDef("runecraftingcape", "equipment", 0, 0, true, false, 0)); //520
+			animations.add(new AnimationDef("questcape", "equipment", 0, 0, true, false, 0)); //521
+			// There isn't an animation for the max cape yet, but I wanted to reserve the ID.
+			animations.add(new AnimationDef("fishingcape", "equipment", 0, 0, true, false, 0)); //522
 		}
 	}
 
