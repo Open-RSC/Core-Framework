@@ -231,9 +231,19 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 									}
 								}
 							}
+							synchronized(affectedPlayer.getCarriedItems().getInventory().getItems()) {
+								for (Item item : affectedPlayer.getCarriedItems().getInventory().getItems()) {
+									if (item.isWielded()) {
+										affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
+									}
+								}
+							}
 							ActionSender.sendSound(player, "click");
 							ActionSender.sendInventory(player);
 							ActionSender.sendEquipmentStats(player);
+							ActionSender.sendSound(affectedPlayer, "click");
+							ActionSender.sendInventory(affectedPlayer);
+							ActionSender.sendEquipmentStats(affectedPlayer);
 						}
 					}
 
