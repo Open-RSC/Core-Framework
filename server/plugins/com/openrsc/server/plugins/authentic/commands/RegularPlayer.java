@@ -399,38 +399,8 @@ public final class RegularPlayer implements CommandTrigger {
 
 	private void sendMessageGlobal(Player player, String command, String[] args) {
 		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
-		if (player.isMuted()) {
-			if (player.getMuteNotify()) {
-				player.message(messagePrefix + "You are muted, you cannot send messages");
-			}
-			return;
-		}
-		if (player.isGlobalMuted() && command.equals("g")) {
-			final long globalMuteDelay = player.getCache().getLong("global_mute");
-			player.message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from global chat.");
-			return;
-		}
-		long sayDelay = 0;
-		if (player.getCache().hasKey("say_delay")) {
-			sayDelay = player.getCache().getLong("say_delay");
-		}
 
-		long waitTime = config().GLOBAL_MESSAGE_COOLDOWN;
-
-		if (player.isMod()) {
-			waitTime = 0;
-		}
-
-		if (System.currentTimeMillis() - sayDelay < waitTime) {
-			player.message(messagePrefix + "You can only use this command every " + (waitTime / 1000) + " seconds");
-			return;
-		}
-
-		if (player.getLocation().onTutorialIsland() && !player.isMod()) {
-			return;
-		}
-
-		player.getCache().store("say_delay", System.currentTimeMillis());
+		if (!player.isElligibleToGlobalChat()) return;
 
 		StringBuilder newStr = new StringBuilder();
 		for (String arg : args) {

@@ -59,6 +59,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.changeloc;
+import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.Functions.inArray;
 
 /**
@@ -4244,5 +4245,48 @@ public final class Player extends Mob {
 				gameObject.getWorld().unregisterGameObject(gameObject);
 			}
 		}
+	}
+
+	public boolean isElligibleToGlobalChat() {
+		final String messagePrefix = config().MESSAGE_PREFIX;
+		if (isMuted()) {
+			if (getMuteNotify()) {
+				message(messagePrefix + "You are muted, you cannot send messages");
+			}
+			return false;
+		}
+		if (isGlobalMuted() && equals("g")) {
+			final long globalMuteDelay = getCache().getLong("global_mute");
+			message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from global chat.");
+			return false;
+		}
+		long sayDelay = 0;
+		if (getCache().hasKey("say_delay")) {
+			sayDelay = getCache().getLong("say_delay");
+		}
+
+		long waitTime = config().GLOBAL_MESSAGE_COOLDOWN;
+
+		if (isMod()) {
+			waitTime = 0;
+		}
+
+		if (System.currentTimeMillis() - sayDelay < waitTime) {
+			message(messagePrefix + "You can only send a message to global every " + (waitTime / 1000) + " seconds");
+			return false;
+		}
+
+		if (getTotalLevel() < config().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ) {
+			message(messagePrefix + "You can only send a message to global chat if you have at least " + config().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ + " total level.");
+			return false;
+		}
+
+		if (getLocation().onTutorialIsland() && !isMod()) {
+			message("@cya@Once you finish the tutorial, this lets you send messages to everyone on the server");
+			return false;
+		}
+
+		getCache().store("say_delay", System.currentTimeMillis());
+		return true;
 	}
 }

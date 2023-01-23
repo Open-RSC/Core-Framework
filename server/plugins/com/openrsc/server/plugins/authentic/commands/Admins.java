@@ -238,6 +238,10 @@ public final class Admins implements CommandTrigger {
 			shufflePid(player, command, args);
 		} else if (command.equalsIgnoreCase("setpidshuffleinterval")) {
 			setPidShufflingSchedule(player, command, args);
+		} else if (command.equalsIgnoreCase("setglobalcooldown")) {
+			setGlobalCooldown(player, command, args);
+		} else if (command.equalsIgnoreCase("setgloballevelreq")) {
+			setGlobalLevelReq(player, command, args);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
@@ -287,6 +291,32 @@ public final class Admins implements CommandTrigger {
 		}
 		player.getConfig().MAX_PLAYERS_PER_IP = newMaxPlayers;
 		player.message("set player.getConfig().MAX_PLAYERS_PER_IP to " + player.getConfig().MAX_PLAYERS_PER_IP);
+	}
+
+	private void setGlobalCooldown(Player player, String command, String[] args) {
+		int newMaxPlayers = 10;
+		try {
+			newMaxPlayers = Integer.parseInt(args[0]);
+		} catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+			player.message("give a number please.");
+			return;
+		}
+		player.getConfig().GLOBAL_MESSAGE_COOLDOWN = newMaxPlayers;
+		player.message("set player.getConfig().GLOBAL_MESSAGE_COOLDOWN to " + player.getConfig().GLOBAL_MESSAGE_COOLDOWN);
+
+	}
+
+	private void setGlobalLevelReq(Player player, String command, String[] args) {
+		int newMaxPlayers = 10;
+		try {
+			newMaxPlayers = Integer.parseInt(args[0]);
+		} catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {
+			player.message("give a number please.");
+			return;
+		}
+		player.getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ = newMaxPlayers;
+		player.message("set player.getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ to " + player.getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ);
+
 	}
 
 	private void setMaxConnectionsPerSecond(Player player, String command, String[] args) {

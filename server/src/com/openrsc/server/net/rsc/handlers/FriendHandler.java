@@ -150,13 +150,9 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 
 			if ((friendName.toLowerCase().startsWith("global$") || friendName.equalsIgnoreCase("global"))
 				&& player.getConfig().WANT_GLOBAL_FRIEND) {
-				// Block global chat if global muted
-				if (player.isGlobalMuted()) {
-					final long globalMuteDelay = player.getCache().getLong("global_mute");
-					player.message("You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from the global chat.");
-					return;
+				if (player.isElligibleToGlobalChat()) {
+					player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 				}
-				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}
 			else {
 				player.addPrivateMessage(new PrivateMessage(player, message, friend));

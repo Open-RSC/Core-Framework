@@ -107,6 +107,7 @@ public class ServerConfiguration {
 	public boolean WANT_GLOBAL_CHAT;
 	public boolean WANT_GLOBAL_FRIEND;
 	public int GLOBAL_MESSAGE_COOLDOWN;
+	public int GLOBAL_MESSAGE_TOTAL_LEVEL_REQ;
 	public boolean WANT_SKILL_MENUS;
 	public boolean WANT_QUEST_MENUS;
 	public boolean WANT_EXPERIENCE_ELIXIRS;
@@ -382,6 +383,7 @@ public class ServerConfiguration {
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
 		IS_LOCALHOST_RESTRICTED = tryReadBool("is_localhost_restricted").orElse(true);
 		GLOBAL_MESSAGE_COOLDOWN = tryReadInt("global_message_cooldown").orElse(0);
+		GLOBAL_MESSAGE_TOTAL_LEVEL_REQ = tryReadInt("global_message_total_level_req").orElse(0);
 		int CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
 		int CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
 		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);
