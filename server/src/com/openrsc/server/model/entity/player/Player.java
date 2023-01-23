@@ -4248,14 +4248,14 @@ public final class Player extends Mob {
 	}
 
 	public boolean isElligibleToGlobalChat() {
-		final String messagePrefix = config().MESSAGE_PREFIX;
+		final String messagePrefix = getConfig().MESSAGE_PREFIX;
 		if (isMuted()) {
 			if (getMuteNotify()) {
 				message(messagePrefix + "You are muted, you cannot send messages");
 			}
 			return false;
 		}
-		if (isGlobalMuted() && equals("g")) {
+		if (isGlobalMuted()) {
 			final long globalMuteDelay = getCache().getLong("global_mute");
 			message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from global chat.");
 			return false;
@@ -4265,7 +4265,7 @@ public final class Player extends Mob {
 			sayDelay = getCache().getLong("say_delay");
 		}
 
-		long waitTime = config().GLOBAL_MESSAGE_COOLDOWN;
+		long waitTime = getConfig().GLOBAL_MESSAGE_COOLDOWN;
 
 		if (isMod()) {
 			waitTime = 0;
@@ -4276,8 +4276,8 @@ public final class Player extends Mob {
 			return false;
 		}
 
-		if (getTotalLevel() < config().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ) {
-			message(messagePrefix + "You can only send a message to global chat if you have at least " + config().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ + " total level.");
+		if (getTotalLevel() < getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ) {
+			message(messagePrefix + "You can only send a message to global chat if you have at least " + getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ + " total level.");
 			return false;
 		}
 
