@@ -809,7 +809,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("King Scorpion", "Wow scorpions shouldn't grow that big", "", 40, 38, 30, 39, true, sprites, 0, 0, 0, 0, 543, 312, 7, 7, 45, i++));
 		sprites = new int[]{6, 1, 2, -1, 48, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Pirate", "A vicious pirate", "", 35, 25, 20, 30, true, sprites, 1, 15658615, 14483456, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, 512};
+		} else {
+			sprites = new int[]{19, 34, 43, -1, 49, -1, -1, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Sir Vyvin", "One of the white knights of Falador", "", 55, 60, 52, 58, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{7, 1, 2, -1, 116, -1, 84, 90, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Monk of Zamorak", "An evil cleric", "", 28, 32, 30, 28, true, sprites, 16761440, 65535, 255, 15392466, 145, 220, 6, 6, 5, i++));
@@ -1781,7 +1785,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Gnome child", "hello little gnome", "pickpocket", 3, 3, 3, 3, true, sprites, 1, 16711884, 255, 36864, 80, 100, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, 116, 116, 69, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Gulluck", "He sells weapons", shopOption, 10, 11, 11, 11, false, sprites, 1, 3158064, 3158064, 36864, 100, 150, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, 511};
+		} else {
+			sprites = new int[]{6, 1, 2, -1, 109, 70, 45, -1, 46, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Gunnjorn", "Not civilised looking", "", 18, 15, 14, 18, false, sprites, 16768384, 8409120, 8409120, 15523536, 160, 230, 6, 6, 5, i++));
 		sprites = new int[]{137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Zadimus", "Ghostly Visage of the dead Zadimus", "", 0, 0, 0, 0, false, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));

@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.RuneScript;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -82,8 +83,13 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	private void vyvinDialogue(final Player player, final Npc n) {
 		say(player, n, "Hello");
 		npcsay(player, n, "Greetings traveller");
-		int option = multi(player, n, "Do you have anything to trade?",
-			"Why are there so many knights in this city?");
+		ArrayList<String> options = new ArrayList<String>();
+		options.add("Do you have anything to trade?");
+		options.add("Why are there so many knights in this city?");
+		if (config().WANT_CUSTOM_SPRITES) {
+			options.add("I wanted to ask you about your cape");
+		}
+		int option = multi(player, n, options.toArray(new String[0]));
 		if (option == 0) {
 			npcsay(player, n, "No I'm sorry");
 		} else if (option == 1) {
@@ -91,6 +97,27 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				"We are the most powerfull order of knights in the land",
 				"We are helping the king Vallance rule the kingdom",
 				"As he is getting old and tired");
+		} else if (option == 2) {
+			npcsay(player, n, "This is the cape of defense",
+				"Given to knights who are exceptional at surviving");
+			if (player.getSkills().getMaxStat(Skill.DEFENSE.id()) >= 99) {
+				npcsay(player, n, "You look like someone who is quite formidable",
+					"I can sell you your own defense cape for 99,000 gold coins");
+				if (multi(player, n, "Yes please", "no thankyou") == 0) {
+					if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+						mes("You hand the gold to Sir Vyvin");
+						delay(3);
+						if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
+							mes("He presents you with your own Defense cape");
+							delay(3);
+							give(player, ItemId.DEFENSE_CAPE.id(), 1);
+							npcsay(player, n, "May this cape protect you against the fiercest foes");
+						}
+					} else {
+						npcsay(player, n, "Apologies, friend", "It looks like you aren't carrying enough coins");
+					}
+				}
+			}
 		}
 	}
 

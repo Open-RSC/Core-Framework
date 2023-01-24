@@ -13,8 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Random;
 
-import static com.openrsc.server.constants.ItemId.ATTACK_CAPE;
-import static com.openrsc.server.constants.ItemId.STRENGTH_CAPE;
+import static com.openrsc.server.constants.ItemId.*;
 
 public class CombatFormula {
 	/**
@@ -181,6 +180,13 @@ public class CombatFormula {
 		if (source instanceof Player && victim instanceof Player) {
 			// TODO: hopefully temp until this file contains more accurate pvp
 			return PVPCombatFormula.calcFightHit(source, victim);
+		} else if (victim instanceof Player) {
+			// Defense skillcape
+			if (SkillCapes.shouldActivate((Player)victim, DEFENSE_CAPE)) {
+				damage = damage / 2;
+
+				((Player) victim).message("@blu@Your Defense cape has absorbed some incoming damage");
+			}
 		} else if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){
 				isHit = calculateMeleeAccuracy(source, victim);
@@ -189,7 +195,7 @@ public class CombatFormula {
 				((Player) source).message("@red@Your Attack cape has prevented a zero hit");
 
 			final double maximum = getMeleeDamage(source);
-			if (damage >= maximum - (maximum * 0.5) && SkillCapes.shouldActivate((Player) source, STRENGTH_CAPE, isHit)) {
+			if (damage >= (maximum * 0.5) && SkillCapes.shouldActivate((Player) source, STRENGTH_CAPE, isHit)) {
 				damage += (maximum*0.2);
 				((Player) source).message("@ora@Your Strength cape has granted you a critical hit");
 			}

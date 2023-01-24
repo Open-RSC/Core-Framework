@@ -60,6 +60,10 @@ public class DragonFireBreath implements OnCombatStartScript {
 				reduction -= 0.6;
 				player.playerServerMessage(MessageType.QUEST, "Your kite shield prevents some of the damage from the flames");
 			}
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DEFENSE_CAPE.id())) {
+				reduction -= 0.25;
+				player.playerServerMessage(MessageType.QUEST, "@blu@Your Defense cape prevents some of the damage from the flames");
+			}
 			reduction = Math.round(reduction * 100.0) / 100.0;
 			maxHit = (int) Math.ceil(maxHit * reduction);
 			double critValue = 0.25; // value for which changes maxHit mechanic
