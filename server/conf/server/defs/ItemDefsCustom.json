@@ -5248,7 +5248,7 @@
             "id": 1518,
             "name": "Agility cape",
             "description": "The cape worn by the most agile",
-            "command": "",
+            "command": "Teleport",
             "isFemaleOnly": 0,
             "isMembersOnly": 0,
             "isStackable": 0,

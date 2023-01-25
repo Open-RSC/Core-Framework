@@ -604,7 +604,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("and attempt to cross the stones...");
 				delay(4);
 				success = DataConversions.random(1, 100);
-				if (success > 10) {
+				if (success > 10 || wearingSkillcape(player)) {
 					teleport(player, 397, 502);
 					player.message("you make it to the shore of Catherby");
 					player.incExp(Skill.AGILITY.id(), 60, true);
@@ -641,7 +641,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("and attempt to cross the stones...");
 				delay(4);
 				success = DataConversions.random(1, 100);
-				if (success > 10) {
+				if (success > 10 || wearingSkillcape(player)) {
 					teleport(player, 395, 502);
 					player.message("you make it to the shore of Taverly");
 					player.incExp(Skill.AGILITY.id(), 60, true);
@@ -681,7 +681,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.face(274, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
-				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skill.AGILITY.id()) - 48, false, 58, 26)) {
+				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skill.AGILITY.id()) - 48, false, 58, 26)
+					|| wearingSkillcape(player)) {
 					player.teleport(278, 3015);
 					delay(3);
 					player.teleport(276, 3015);
@@ -717,7 +718,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.face(272, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
-				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skill.AGILITY.id()) - 48, false, 58, 26)) {
+				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skill.AGILITY.id()) - 48, false, 58, 26)
+					|| wearingSkillcape(player)) {
 					player.teleport(272, 3015);
 					player.face(280, 3015);
 					delay(3);
@@ -741,11 +743,17 @@ public class AgilityShortcuts implements OpLocTrigger,
 		}
 	}
 
+	boolean wearingSkillcape(final Player player) {
+		return player.getCarriedItems().getEquipment().hasEquipped(ItemId.AGILITY_CAPE.id());
+	}
+
 	boolean succeed(Player player, int req) {
+		if (wearingSkillcape(player)) return true;
 		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skill.AGILITY.id()), false, req + 30);
 	}
 
 	boolean succeed(Player player, int req, int lvlStopFail) {
+		if (wearingSkillcape(player)) return true;
 		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skill.AGILITY.id()), true, lvlStopFail);
 	}
 

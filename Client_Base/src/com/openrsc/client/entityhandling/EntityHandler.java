@@ -3975,7 +3975,7 @@ public class EntityHandler {
 		items.add(new ItemDef("halloween mask", "aaaarrrghhh ... i'm a monster", "", 15, 284, "items:284", false, true, 32, 4, false, false, true, 1517));
 
 		// Rest of the skillcapes
-		items.add(new ItemDef("Agility cape", "The cape worn by the most agile", "", 99000, -1, "items:479", false, true, 2048, 0, false, false, false, 1518));
+		items.add(new ItemDef("Agility cape", "The cape worn by the most agile", "Teleport", 99000, -1, "items:479", false, true, 2048, 0, false, false, false, 1518));
 		items.add(new ItemDef("Defense cape", "The cape worn by the most formidable", "", 99000, -1, "items:483", false, true, 2048, 0, false, false, false, 1519));
 		items.add(new ItemDef("Firemaking cape", "The cape worn by pyro enthusiasts", "", 99000, -1, "items:484", false, true, 2048, 0, false, false, false, 1520));
 		items.add(new ItemDef("Herblaw cape", "The cape worn by master herblawists", "", 99000, -1, "items:487", false, true, 2048, 0, false, false, false, 1521));
