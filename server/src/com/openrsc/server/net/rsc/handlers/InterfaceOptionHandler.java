@@ -19,8 +19,15 @@ import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.OptionsStruct;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, OpcodeIn> {
+
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 	private static String[] badWords = {
 		"fuck", "ass", "bitch", "admin", "mod", "dev", "developer", "nigger", "niger",
 		"whore", "pussy", "porn", "penis", "chink", "faggot", "cunt", "clit", "cock"};
@@ -959,12 +966,15 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			player.message("You do not have enough points");
 			return false;
 		}
-		if(points > Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) {
+		if((points > Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) || (player.getSkills().getExperience(stat) + points > Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2])) {
 			player.message("You cannot increase your exp that much");
 			return false;
 		}
 		//Additional check for exp beyond the maximum exp for a stat, may not be necessary but nice to have.
-		if(player.getSkills().getExperience(stat) == Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) {
+		if(player.getSkills().getExperience(stat) >= Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) {
+			if (player.getSkills().getExperience(stat) > Skills.originalCurveExperienceArray[player.getConfig().PLAYER_LEVEL_LIMIT - 2]) {
+				LOGGER.warn("Player " + player.getUsername() + " has exp higher than the exp cap for stat " + stat + " , this shouldn't be possible...");
+			}
 			player.message("You have reached the maximum exp for that stat");
 			return false;
 		}
