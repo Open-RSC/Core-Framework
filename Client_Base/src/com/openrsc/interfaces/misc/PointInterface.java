@@ -18,7 +18,7 @@ public final class PointInterface {
 	public Panel experienceConfig;
 	public int experienceConfigScroll;
 	public boolean selectSkillMenu = false;
-	int width = 400, height = 280;
+	int width = 400, height = 325;
 	private boolean visible = false;
 	private mudclient mc;
 	private int panelColour, textColour, bordColour, lineColour;
@@ -43,8 +43,6 @@ public final class PointInterface {
 	}
 
 	public void onRender(GraphicsController graphics) {
-		if (!Config.S_WANT_OPENPK_PRESETS)
-			height = 249;
 		reposition();
 
 		drawExperienceConfig();
@@ -68,25 +66,27 @@ public final class PointInterface {
 
 		mc.getSurface().drawBoxAlpha(x, y, width, height, pColour, 90);
 		mc.getSurface().drawBoxBorder(x, width, y, height, bordColour);
-		this.drawString("Stat ", x + 10, y + 30, 3, textColour);
-		mc.getSurface().drawLineVert(x + 62, y, width, 35);
-		mc.getSurface().drawLineVert(x + 93, y, width, 35);
-		mc.getSurface().drawLineVert(x + 225, y, width, 35);
-		mc.getSurface().drawLineVert(x + 295, y, width, 35);
-		this.drawString("Lv ", x + 69, y + 30, 3, textColour);
-		this.drawString("Points to advance ", x + 97, y + 30, 3, textColour);
-		this.drawString("Total Exp", x + 230, y + 30, 3, textColour);
-		this.drawString("+/- Levels", x + 300, y + 30, 3, textColour);
-		mc.getSurface().drawLineHoriz(x, y + 35, width, lineColour);
-		mc.getSurface().drawLineHoriz(x, y + 219, width, lineColour);
-		mc.getSurface().drawLineHoriz(x, y + 248, width, lineColour);
+		this.drawString("Stat ", x + 10, y + 24, 3, textColour);
+		mc.getSurface().drawLineVert(x + 62, y, width, 29);
+		mc.getSurface().drawLineVert(x + 93, y, width, 29);
+		mc.getSurface().drawLineVert(x + 225, y, width, 29);
+		mc.getSurface().drawLineVert(x + 295, y, width, 29);
+		this.drawString("Lv ", x + 69, y + 25, 3, textColour);
+		this.drawString("Points to advance ", x + 97, y + 25, 3, textColour);
+		this.drawString("Total Exp", x + 230, y + 24, 3, textColour);
+		this.drawString("+/- Levels", x + 300, y + 24, 3, textColour);
+		mc.getSurface().drawLineHoriz(x, y + 29, width, lineColour);
+		mc.getSurface().drawLineHoriz(x, y + (Config.S_WANT_OPENPK_PRESETS ? 259 : 262), width, lineColour);
+		if (Config.S_WANT_OPENPK_PRESETS) {
+			mc.getSurface().drawLineHoriz(x, y + 293, width, lineColour);
+		}
 		int nextLevelExpA = mc.getExperienceArray()[ATTACK];
 		nextLevelExpA = mc.getExperienceArray()[mc.getPlayerStatBase(ATTACK) - 1];
 		int nL0 = nextLevelExpA - mc.getPlayerExperience(ATTACK);
-		this.drawString("Attack: ", x + 10, y + 60, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(ATTACK), x + 231, y + 60, 3, textColour);
-		this.drawString("               " + mc.getPlayerStatBase(ATTACK) + "     " + nL0 + "", x + 10, y + 60, 3, textColour);
-		this.drawButton(x + 170, y + 45, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawString("Attack: ", x + 10, y + 48, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(ATTACK), x + 231, y + 48, 3, textColour);
+		this.drawString("               " + mc.getPlayerStatBase(ATTACK) + "     " + nL0 + "", x + 10, y + 48, 3, textColour);
+		this.drawButton(x + 170, y + 33, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(ATTACK);
@@ -94,7 +94,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
-		this.drawButton(x + 200, y + 45, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 200, y + 33, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(ATTACK);
@@ -102,7 +102,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
-		this.drawButton(x + 300, y + 45, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawButton(x + 300, y + 33, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(ATTACK);
@@ -110,7 +110,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 325, y + 45, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 325, y + 33, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(ATTACK);
@@ -118,7 +118,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 300, y + 75, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawButton(x + 300, y + 73, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(DEFENSE);
@@ -126,7 +126,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 325, y + 75, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 325, y + 73, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(DEFENSE);
@@ -134,7 +134,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 300, y + 105, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawButton(x + 300, y + 113, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(STRENGTH);
@@ -142,7 +142,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 325, y + 105, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 325, y + 113, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(STRENGTH);
@@ -150,7 +150,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 300, y + 135, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawButton(x + 300, y + 153, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(RANGED);
@@ -158,7 +158,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 325, y + 135, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 325, y + 153, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(RANGED);
@@ -166,7 +166,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 300, y + 165, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawButton(x + 300, y + 193, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(PRAYER);
@@ -174,7 +174,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 325, y + 165, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 325, y + 193, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(PRAYER);
@@ -182,7 +182,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 300, y + 195, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawButton(x + 300, y + 233, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(MAGIC);
@@ -190,7 +190,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
-		this.drawButton(x + 325, y + 195, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 325, y + 233, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(MAGIC);
@@ -199,20 +199,20 @@ public final class PointInterface {
 			}
 		});
 
-		this.drawCloseButton(x + 368, y + 6, 24, 24, "X", 5, new ButtonHandler() {
+		this.drawCloseButton(x + 368, y + 3, 24, 24, "X", 5, new ButtonHandler() {
 			@Override
 			void handle() {
 				setVisible(false);
 			}
 		});
 		if (Config.S_WANT_OPENPK_PRESETS) {
-			this.drawCloseButton(x + 265, y + 252, 82, 24, "Save Preset", 3, new ButtonHandler() {
+			this.drawCloseButton(x + 265, y + 265, 82, 24, "Save Preset", 3, new ButtonHandler() {
 				@Override
 				void handle() {
 					mc.showItemModX(InputXPrompt.savePreset, InputXAction.SAVEPRESET_X, true);
 				}
 			});
-			this.drawCloseButton(x + 5, y + 252, 45, 24, "1", 3, new ButtonHandler() {
+			this.drawCloseButton(x + 5, y + 265, 45, 24, "1", 3, new ButtonHandler() {
 				@Override
 				void handle() {
 					try {
@@ -225,7 +225,7 @@ public final class PointInterface {
 					}
 				}
 			});
-			this.drawCloseButton(x + 55, y + 252, 45, 24, "2", 3, new ButtonHandler() {
+			this.drawCloseButton(x + 55, y + 265, 45, 24, "2", 3, new ButtonHandler() {
 				@Override
 				void handle() {
 					try {
@@ -238,7 +238,7 @@ public final class PointInterface {
 					}
 				}
 			});
-			this.drawCloseButton(x + 105, y + 252, 45, 24, "3", 3, new ButtonHandler() {
+			this.drawCloseButton(x + 105, y + 265, 45, 24, "3", 3, new ButtonHandler() {
 				@Override
 				void handle() {
 					try {
@@ -251,7 +251,7 @@ public final class PointInterface {
 					}
 				}
 			});
-			this.drawCloseButton(x + 155, y + 252, 45, 24, "4", 3, new ButtonHandler() {
+			this.drawCloseButton(x + 155, y + 265, 45, 24, "4", 3, new ButtonHandler() {
 				@Override
 				void handle() {
 					try {
@@ -264,7 +264,7 @@ public final class PointInterface {
 					}
 				}
 			});
-			this.drawCloseButton(x + 205, y + 252, 45, 24, "5", 3, new ButtonHandler() {
+			this.drawCloseButton(x + 205, y + 265, 45, 24, "5", 3, new ButtonHandler() {
 				@Override
 				void handle() {
 					try {
@@ -283,10 +283,10 @@ public final class PointInterface {
 		int nextLevelExpD = mc.getExperienceArray()[DEFENSE];
 		nextLevelExpD = mc.getExperienceArray()[mc.getPlayerStatBase(DEFENSE) - 1];
 		int nL1 = nextLevelExpD - mc.getPlayerExperience(DEFENSE);
-		this.drawString("Defense: ", x + 10, y + 90, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(DEFENSE), x + 231, y + 90, 3, textColour);
-		this.drawString("               " + mc.getPlayerStatBase(DEFENSE) + "     " + nL1 + "", x + 10, y + 90, 3, textColour);
-		this.drawButton(x + 170, y + 75, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawString("Defense: ", x + 10, y + 88, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(DEFENSE), x + 231, y + 88, 3, textColour);
+		this.drawString("               " + mc.getPlayerStatBase(DEFENSE) + "     " + nL1 + "", x + 10, y + 88, 3, textColour);
+		this.drawButton(x + 170, y + 73, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(DEFENSE);
@@ -294,7 +294,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
-		this.drawButton(x + 200, y + 75, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 200, y + 73, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(DEFENSE);
@@ -305,10 +305,10 @@ public final class PointInterface {
 		int nextLevelExpS = mc.getExperienceArray()[STRENGTH];
 		nextLevelExpS = mc.getExperienceArray()[mc.getPlayerStatBase(STRENGTH) - 1];
 		int nL2 = nextLevelExpS - mc.getPlayerExperience(STRENGTH);
-		this.drawString("Strength: ", x + 10, y + 120, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(STRENGTH), x + 231, y + 120, 3, textColour);
-		this.drawString("               " + mc.getPlayerStatBase(STRENGTH) + "     " + nL2 + "", x + 10, y + 120, 3, textColour);
-		this.drawButton(x + 200, y + 105, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawString("Strength: ", x + 10, y + 128, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(STRENGTH), x + 231, y + 128, 3, textColour);
+		this.drawString("               " + mc.getPlayerStatBase(STRENGTH) + "     " + nL2 + "", x + 10, y + 128, 3, textColour);
+		this.drawButton(x + 200, y + 113, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(STRENGTH);
@@ -316,7 +316,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
-		this.drawButton(x + 170, y + 105, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawButton(x + 170, y + 113, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(STRENGTH);
@@ -325,13 +325,13 @@ public final class PointInterface {
 			}
 		});
 
-		this.drawString("Ranged:", x + 10, y + 150, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(RANGED), x + 231, y + 150, 3, textColour);
+		this.drawString("Ranged:", x + 10, y + 168, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(RANGED), x + 231, y + 168, 3, textColour);
 		int nextLevelExpR = mc.getExperienceArray()[RANGED];
 		nextLevelExpR = mc.getExperienceArray()[mc.getPlayerStatBase(RANGED) - 1];
 		int nL3 = nextLevelExpR - mc.getPlayerExperience(RANGED);
-		this.drawString("               " + mc.getPlayerStatBase(RANGED) + "     " + nL3 + "", x + 10, y + 150, 3, textColour);
-		this.drawButton(x + 170, y + 135, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawString("               " + mc.getPlayerStatBase(RANGED) + "     " + nL3 + "", x + 10, y + 168, 3, textColour);
+		this.drawButton(x + 170, y + 153, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(RANGED);
@@ -339,7 +339,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
-		this.drawButton(x + 200, y + 135, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 200, y + 153, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(RANGED);
@@ -348,15 +348,13 @@ public final class PointInterface {
 			}
 		});
 
-		//this.drawString("HP: ", x + 275, y + 180, 3, textColour);
-		//this.drawString("" + mc.getPlayerStatBase(3), x + 300, y + 180, 3, textColour);
-		this.drawString("Prayer: ", x + 10, y + 180, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(PRAYER), x + 231, y + 180, 3, textColour);
+		this.drawString("Prayer: ", x + 10, y + 208, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(PRAYER), x + 231, y + 208, 3, textColour);
 		int nextLevelExpP = mc.getExperienceArray()[PRAYER];
 		nextLevelExpP = mc.getExperienceArray()[mc.getPlayerStatBase(PRAYER) - 1];
 		int nL4 = nextLevelExpP - mc.getPlayerExperience(PRAYER);
-		this.drawString("               " + mc.getPlayerStatBase(PRAYER) + "     " + nL4 + "", x + 10, y + 180, 3, textColour);
-		this.drawButton(x + 170, y + 165, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawString("               " + mc.getPlayerStatBase(PRAYER) + "     " + nL4 + "", x + 10, y + 208, 3, textColour);
+		this.drawButton(x + 170, y + 193, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(PRAYER);
@@ -364,7 +362,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
-		this.drawButton(x + 200, y + 165, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 200, y + 193, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(PRAYER);
@@ -373,13 +371,13 @@ public final class PointInterface {
 			}
 		});
 
-		this.drawString("Magic: ", x + 10, y + 210, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(6), x + 231, y + 210, 3, textColour);
+		this.drawString("Magic: ", x + 10, y + 248, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(6), x + 231, y + 248, 3, textColour);
 		int nextLevelExpM = mc.getExperienceArray()[6];
 		nextLevelExpM = mc.getExperienceArray()[mc.getPlayerStatBase(6) - 1];
 		int nL5 = nextLevelExpM - mc.getPlayerExperience(6);
-		this.drawString("               " + mc.getPlayerStatBase(6) + "     " + nL5 + "", x + 10, y + 210, 3, textColour);
-		this.drawButton(x + 170, y + 195, 20, 20, "@red@-", 6, false, new ButtonHandler() {
+		this.drawString("               " + mc.getPlayerStatBase(6) + "     " + nL5 + "", x + 10, y + 248, 3, textColour);
+		this.drawButton(x + 170, y + 233, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(MAGIC);
@@ -387,7 +385,7 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
-		this.drawButton(x + 200, y + 195, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
+		this.drawButton(x + 200, y + 233, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				mc.setPointsSkillId(MAGIC);
@@ -395,9 +393,9 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
-		this.drawString("HP: " + mc.getPlayerStatBase(HITS), x + 10, y + 240, 3, textColour);
-		this.drawString("Points: " + mc.getPoints(), x + 232, y + 240, 3, textColour);
-		this.drawString("Combat Level: " + mc.getLocalPlayer().level, x + 70, y + 240, 3, textColour);
+		this.drawString("HP: " + mc.getPlayerStatBase(HITS), x + 10, y + (Config.S_WANT_OPENPK_PRESETS ? 315 : 298), 3, textColour);
+		this.drawString("Points: " + mc.getPoints(), x + 232, y + (Config.S_WANT_OPENPK_PRESETS ? 315 : 298), 3, textColour);
+		this.drawString("Combat Level: " + mc.getLocalPlayer().level, x + 70, y + (Config.S_WANT_OPENPK_PRESETS ? 315 : 298), 3, textColour);
 
 		if (selectSkillMenu)
 			mc.getSurface().drawBoxAlpha(x, y, width, height, 0, 192);
