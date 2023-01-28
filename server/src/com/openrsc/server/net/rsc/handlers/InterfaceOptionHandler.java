@@ -886,8 +886,13 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.message("You cannot do that whilst fighting");
 					return;
 				}
-				if(player.getOpenPkPoints() < amount28 * player.getConfig().OPENPK_POINTS_TO_GP_RATIO){
-					player.message("You do not have enough points");
+				if ((((long) amount28) * player.getConfig().OPENPK_POINTS_TO_GP_RATIO) > Integer.MAX_VALUE) {
+					amount28 = Integer.MAX_VALUE / player.getConfig().OPENPK_POINTS_TO_GP_RATIO;
+					player.message("You can't convert that many points at once!");
+					player.message("Your converted points has been adjusted to " + amount28);
+				}
+				if(player.getOpenPkPoints() < ((long) amount28) * player.getConfig().OPENPK_POINTS_TO_GP_RATIO){
+					player.message("You do not have enough points!");
 					return;
 				}
 				Item item = new Item(ItemId.COINS.id(), amount28);
@@ -900,7 +905,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.getConfig().GAME_TICK * 145);
 					player.message("You don't have room to hold the gp. It falls to the ground!");
 				}
-				player.subtractOpenPkPoints(amount28 * player.getConfig().OPENPK_POINTS_TO_GP_RATIO);
+				player.subtractOpenPkPoints(((long) amount28) * player.getConfig().OPENPK_POINTS_TO_GP_RATIO);
 				ActionSender.sendPoints(player);
 			break;
 		}
@@ -950,7 +955,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			player.message("You must be out of combat for 10 seconds before changing stats");
 			return false;
 		}
-		if(player.getOpenPkPoints() < points){
+		if(player.getOpenPkPoints() < (points / 4)){
 			player.message("You do not have enough points");
 			return false;
 		}
