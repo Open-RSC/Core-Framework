@@ -481,7 +481,7 @@ public class ServerConfiguration {
 		CAN_OFFER_UNTRADEABLES = tryReadBool("can_offer_untradeables").orElse(false);
 		CAN_PROSPECT_FAIL = tryReadBool("can_prospect_fail").orElse(false);
 		LACKS_GOLD_SMITHING = tryReadBool("lacks_gold_smithing").orElse(false);
-		NPC_AGGRO_DONT_CHECK_LEVEL = tryReadBool("NPC_AGGRO_DONT_CHECK_LEVEL").orElse(false);
+		NPC_AGGRO_DONT_CHECK_LEVEL = tryReadBool("npc_aggro_dont_check_level").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);
