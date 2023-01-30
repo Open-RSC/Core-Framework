@@ -911,66 +911,6 @@ public final class Player extends Mob {
 		this.setUnregisterRequest(new UnregisterRequest(force, reason));
 	}
 
-	private void setUnregisterRequest(UnregisterRequest unregisterRequest) {
-		this.unregisterRequest = unregisterRequest;
-	}
-
-	private void unsetUnregisterRequest() {
-		this.unregisterRequest = null;
-	}
-
-	private boolean hasUnregisterRequest() {
-		return this.unregisterRequest != null;
-	}
-
-	/**
-	 * Actually unregisters this player instance from the server
-	 */
-	private void executeUnregisterRequest() {
-		if (!hasUnregisterRequest()) {
-			return;
-		}
-
-		boolean force = unregisterRequest.isForced();
-		String reason = unregisterRequest.getReason();
-		this.unsetUnregisterRequest();
-
-		if (force || canLogout()) {
-			updateTotalPlayed();
-			if (isSkulled())
-				updateSkullRemaining();
-			if (isCharged())
-				updateChargeRemaining();
-			if (getConfig().WANT_OPENPK_POINTS) {
-				getCache().store("openpk_points", getOpenPkPoints());
-			}
-			getCache().store("last_spell_cast", lastSpellCast);
-			if (null != queuedSleepword) {
-				try {
-					queuedSleepwordSender.playerServerMessage(MessageType.QUEST, getUsername() + " logged out!!");
-				} catch (Exception ex) {} // moderator may have logged out as well
-			}
-			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
-			this.setUnregistering(true);
-		} else {
-			if (unregisterEvent != null) {
-				return;
-			}
-			final long startDestroy = System.currentTimeMillis();
-			unregisterEvent = new DelayedEvent(getWorld(), this, 500, "Unregister Player") {
-				@Override
-				public void run() {
-					if (getOwner().canLogout() || (!(getOwner().inCombat() && getOwner().getDuel().isDuelActive())
-						&& System.currentTimeMillis() - startDestroy > 60000)) {
-						getOwner().unregister(true, reason);
-					}
-					running = false;
-				}
-			};
-			getWorld().getServer().getGameEventHandler().add(unregisterEvent);
-		}
-	}
-
 	public void updateTotalPlayed() {
 		if (cache.hasKey("total_played")) {
 			long oldTotal = cache.getLong("total_played");
@@ -999,6 +939,26 @@ public final class Player extends Mob {
 			cache.remove("charge_remaining");
 		} else if (getChargeTime() - System.currentTimeMillis() > 0) {
 			cache.store("charge_remaining", (getChargeTime() - System.currentTimeMillis()));
+		}
+	}
+
+	public void updateCacheTimersForLogout() {
+		updateTotalPlayed();
+		if (isSkulled())
+			updateSkullRemaining();
+		if (isCharged())
+			updateChargeRemaining();
+		if (getConfig().WANT_OPENPK_POINTS) {
+			getCache().store("openpk_points", getOpenPkPoints());
+		}
+		getCache().store("last_spell_cast", lastSpellCast);
+	}
+
+	public void alertQueuedSleepwordCancelledByLogout() {
+		if (null != queuedSleepword) {
+			try {
+				queuedSleepwordSender.playerServerMessage(MessageType.QUEST, getUsername() + " logged out!!");
+			} catch (Exception ex) {} // moderator may have logged out as well
 		}
 	}
 
@@ -2362,7 +2322,10 @@ public final class Player extends Mob {
 	public void processLogout() {
 		// any time that `Player.unregister(force, reason)` was called throughout a tick,
 		// now is the time to process the logic for if they are allowed to log out.
-		executeUnregisterRequest();
+		if (hasUnregisterRequest()) {
+			getUnregisterRequest().executeUnregisterRequest(this);
+			unsetUnregisterRequest();
+		}
 
 		// Check isLoggedIn() because we don't want to unregister more than once
 		if (this.isUnregistering() && this.isLoggedIn()) {
@@ -4323,5 +4286,29 @@ public final class Player extends Mob {
 
 		getCache().store("say_delay", System.currentTimeMillis());
 		return true;
+	}
+
+	public UnregisterRequest getUnregisterRequest() {
+		return this.unregisterRequest;
+	}
+
+	public DelayedEvent getUnregisterEvent() {
+		return unregisterEvent;
+	}
+
+	public void setUnregisterEvent(DelayedEvent unregisterEvent) {
+		this.unregisterEvent = unregisterEvent;
+	}
+
+	public void setUnregisterRequest(UnregisterRequest unregisterRequest) {
+		this.unregisterRequest = unregisterRequest;
+	}
+
+	public void unsetUnregisterRequest() {
+		this.unregisterRequest = null;
+	}
+
+	public boolean hasUnregisterRequest() {
+		return this.unregisterRequest != null;
 	}
 }
