@@ -13,6 +13,10 @@ import com.openrsc.server.util.rsc.PrerenderedSleepword;
 public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeIn> {
 
 	public void process(SleepStruct payload, Player player) throws Exception {
+		if (!player.isSleeping()) {
+			return;
+		}
+		
 		String sleepWord;
 		if (player.isUsing233CompatibleClient()) {
 			int sleepDelay = payload.sleepDelay; // TODO: use this somehow
@@ -31,10 +35,6 @@ public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeI
 					}
 				});
 		} else {
-			if (!player.isSleeping()) {
-				return;
-			}
-
 			String correctWord;
 			boolean knowCorrectWord = true;
 			PrerenderedSleepword curSleepword = null;
