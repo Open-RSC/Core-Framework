@@ -354,7 +354,7 @@ public class NpcBehavior {
 	private boolean aggressiveCheck(Mob target) {
 		boolean bothInWilderness = (target.getLocation().inWilderness() && npc.getLocation().inWilderness());
 		boolean levelMeetsStandard = target.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1);
-		return npc.getDef().isAggressive() && (levelMeetsStandard || bothInWilderness);
+		return npc.getDef().isAggressive() && (levelMeetsStandard || bothInWilderness || npc.getConfig().NPC_AGGRO_DONT_CHECK_LEVEL);
 	}
 
 	// We return false if the player cannot be aggro'd.
