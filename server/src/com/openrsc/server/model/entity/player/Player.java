@@ -908,7 +908,7 @@ public final class Player extends Mob {
 			return;
 		}
 
-		this.setUnregisterRequest(new UnregisterRequest(force, reason));
+		this.setUnregisterRequest(new UnregisterRequest(this, force, reason));
 	}
 
 	public void updateTotalPlayed() {
@@ -2323,7 +2323,7 @@ public final class Player extends Mob {
 		// any time that `Player.unregister(force, reason)` was called throughout a tick,
 		// now is the time to process the logic for if they are allowed to log out.
 		if (hasUnregisterRequest()) {
-			getUnregisterRequest().executeUnregisterRequest(this);
+			getUnregisterRequest().executeUnregisterRequest();
 			unsetUnregisterRequest();
 		}
 

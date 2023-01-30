@@ -13,12 +13,14 @@ public class UnregisterRequest {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 
-	private boolean force;
-	private String reason;
+	private final boolean force;
+	private final String reason;
+	private final Player player;
 
-	public UnregisterRequest(boolean force, String reason) {
+	public UnregisterRequest(final Player player, boolean force, String reason) {
 		this.force = force;
 		this.reason = reason;
+		this.player = player;
 	}
 
 	public boolean isForced() {
@@ -29,10 +31,14 @@ public class UnregisterRequest {
 		return reason;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
+
 	/**
 	 * Actually unregisters the player instance from the server
 	 */
-	public void executeUnregisterRequest(Player player) {
+	public void executeUnregisterRequest() {
 		if (force || player.canLogout()) {
 			player.updateCacheTimersForLogout();
 			player.alertQueuedSleepwordCancelledByLogout();
