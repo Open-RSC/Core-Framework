@@ -1354,6 +1354,11 @@ public final class GameStateUpdater {
 	 */
 	public final long movePlayer(final Player player) {
 		return getServer().bench(() -> {
+
+			if (player.isUnregistering() && player.isLoggedIn()) {
+				return;
+			}
+
 			// Only do the walking tick here if the Players' walking tick matches the game tick
 			if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
 				player.updatePosition();
