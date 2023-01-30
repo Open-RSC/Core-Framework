@@ -10,7 +10,6 @@ import com.openrsc.server.util.rsc.MessageType;
 public class LogoutRequest implements PayloadProcessor<NoPayloadStruct, OpcodeIn> {
 	public void process(NoPayloadStruct payload, Player player) throws Exception {
 		if (player.canLogout()) {
-			ActionSender.sendLogout(player);
 			player.unregister(false, "Player requested log out");
 		} else {
 			ActionSender.sendCantLogout(player);

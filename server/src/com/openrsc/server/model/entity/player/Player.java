@@ -59,7 +59,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.changeloc;
-import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.Functions.inArray;
 
 /**
@@ -357,6 +356,12 @@ public final class Player extends Mob {
 	 */
 	private boolean changingDetails = false;
 	private boolean[] unlockedSkinColours;
+
+	/**
+	 * Holds information related to an unregistration (log-out) request event, to be processed end-of-tick.
+	 */
+	private UnregisterRequest unregisterRequest = null;
+
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -893,15 +898,43 @@ public final class Player extends Mob {
 	}
 
 	/**
-	 * Unregisters this player instance from the server
+	 * Sets a request to unregister this player instance from the server at the end of the tick.
 	 *
 	 * @param force  - if false wait until combat is over
 	 * @param reason - reason why the player was unregistered.
 	 */
 	public void unregister(final boolean force, final String reason) {
-		if (this.isUnregistering()) {
+		if (this.isUnregistering() || this.hasUnregisterRequest()) {
 			return;
 		}
+
+		this.setUnregisterRequest(new UnregisterRequest(force, reason));
+	}
+
+	private void setUnregisterRequest(UnregisterRequest unregisterRequest) {
+		this.unregisterRequest = unregisterRequest;
+	}
+
+	private void unsetUnregisterRequest() {
+		this.unregisterRequest = null;
+	}
+
+	private boolean hasUnregisterRequest() {
+		return this.unregisterRequest != null;
+	}
+
+	/**
+	 * Actually unregisters this player instance from the server
+	 */
+	private void executeUnregisterRequest() {
+		if (!hasUnregisterRequest()) {
+			return;
+		}
+
+		boolean force = unregisterRequest.isForced();
+		String reason = unregisterRequest.getReason();
+		this.unsetUnregisterRequest();
+
 		if (force || canLogout()) {
 			updateTotalPlayed();
 			if (isSkulled())
@@ -2316,8 +2349,6 @@ public final class Player extends Mob {
 
 	public void processTick() {
 		getWorld().getServer().incrementLastIncomingPacketsDuration(processIncomingPackets());
-		// commented out to test if regression was caused
-		// processLogout(this);
 		getWorld().getServer().incrementLastExecuteWalkToActionsDuration(
 			getWorld().getServer().getGameUpdater().executeWalkToActions(this));
 		getWorld().getServer().incrementLastEventsDuration(
@@ -2328,10 +2359,14 @@ public final class Player extends Mob {
 			getWorld().getServer().getGameUpdater().processMessageQueue(this));
 	}
 
-	private void processLogout(Player player) {
+	public void processLogout() {
+		// any time that `Player.unregister(force, reason)` was called throughout a tick,
+		// now is the time to process the logic for if they are allowed to log out.
+		executeUnregisterRequest();
+
 		// Check isLoggedIn() because we don't want to unregister more than once
-		if (player.isUnregistering() && player.isLoggedIn()) {
-			getWorld().unregisterPlayer(player);
+		if (this.isUnregistering() && this.isLoggedIn()) {
+			this.getWorld().unregisterPlayer(this);
 		}
 	}
 
