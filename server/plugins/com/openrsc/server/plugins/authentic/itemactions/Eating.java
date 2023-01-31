@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.itemactions;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
@@ -222,7 +223,7 @@ public class Eating implements OpInvTrigger {
 			if (heals) {
 				int baseHeal = item.eatingHeals(player.getWorld());
 				int extraHeal = item.canLevelDependentHeal(player.getWorld()) ? player.getSkills().getMaxStat(Skill.COOKING.id()) / 15 : 0;
-				int newHp = player.getSkills().getLevel(Skill.HITS.id()) + baseHeal + extraHeal;
+				int newHp = player.getSkills().getLevel(Skill.HITS.id()) + baseHeal + extraHeal + hitsCapeHeal(player);
 				if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
 					newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 				}
@@ -461,5 +462,22 @@ public class Eating implements OpInvTrigger {
 		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY_UNUSED.id()
 			|| id == ItemId.SEAWEED_SOUP.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
+	}
+
+	private int hitsCapeHeal(final Player player) {
+		int skillcapeHeal = SkillCapes.shouldActivateInt(player, ItemId.HITS_CAPE);
+		switch (skillcapeHeal) {
+			case 3:
+				player.playerServerMessage(MessageType.QUEST, "@lre@Your Hits cape allows you to gain a lot more nourishment from the food");
+				return 3;
+			case 2:
+				player.playerServerMessage(MessageType.QUEST, "@lre@Your Hits cape allows you to gain some more nourishment from the food");
+				return 2;
+			case 1:
+				player.playerServerMessage(MessageType.QUEST, "@lre@Your Hits cape allows you to gain a little more nourishment from the food");
+				return 1;
+			default:
+				return 0;
+		}
 	}
 }

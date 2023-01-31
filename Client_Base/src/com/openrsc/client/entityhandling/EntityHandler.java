@@ -1464,7 +1464,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("4th plague sheep", "The sheep has the plague", "", 0, 0, 3, 0, false, sprites, 0, 0, 0, 0, 170, 124, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Farmer brumty", "He looks after livestock in this area", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, 385};
+		} else {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
+		}
 		npcs.add(new NPCDef("Doctor orbon", "A local doctor", "", 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Councillor Halgrive", "A town counceller", "", 20, 20, 20, 20, false, sprites, 16777215, 255, 255, 15523536, 160, 220, 6, 6, 5, i++));

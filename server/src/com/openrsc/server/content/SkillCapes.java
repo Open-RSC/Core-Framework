@@ -55,7 +55,10 @@ public class SkillCapes {
 			return -1;
 
 		switch (cape) {
+			case HITS_CAPE:
+				return hitsCape();
 		}
+
 		return -1;
 	}
 
@@ -125,6 +128,19 @@ public class SkillCapes {
 			return true;
 		}
 		return false;
+	}
+
+	private static int hitsCape() {
+		final int rand = rand1to100();
+		if (rand > 75) {
+			return 3;
+		} else if (rand > 50) {
+			return 2;
+		} else if (rand > 25) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 	private static int rand1to100() {
