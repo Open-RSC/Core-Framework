@@ -285,6 +285,8 @@ public class ServerConfiguration {
 	public boolean CAN_PROSPECT_FAIL;
 	public boolean LACKS_GOLD_SMITHING;
 	public boolean NPC_AGGRO_DONT_CHECK_LEVEL;
+	public boolean CANT_DYE_CAPES;
+
 	public boolean OSRS_COMBAT_MELEE;
 	public boolean OSRS_COMBAT_RANGED;
 	public boolean SANTA_GIVES_PRESENTS;
@@ -482,6 +484,7 @@ public class ServerConfiguration {
 		CAN_PROSPECT_FAIL = tryReadBool("can_prospect_fail").orElse(false);
 		LACKS_GOLD_SMITHING = tryReadBool("lacks_gold_smithing").orElse(false);
 		NPC_AGGRO_DONT_CHECK_LEVEL = tryReadBool("npc_aggro_dont_check_level").orElse(false);
+		CANT_DYE_CAPES = tryReadBool("cant_dye_capes").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

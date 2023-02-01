@@ -313,13 +313,16 @@ public class InvUseOnItem implements UseInvTrigger {
 		else if (compareItemsIds(item1, item2, ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id(), ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()))
 			return true;
 
-		if ((Arrays.stream(capes).anyMatch(c -> item1.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item2.getCatalogId() == d)) ||
-			(Arrays.stream(capes).anyMatch(c -> item2.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d))) {
-			boolean isDyeFirst = Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d);
-			int dyeId = isDyeFirst ? item1.getCatalogId() : item2.getCatalogId();
-			int dyeIndex = ArrayUtils.indexOf(dye, dyeId);
-			return player.getWorld().canYield(new Item(newCapes[dyeIndex]));
+		if(!player.getWorld().getServer().getConfig().CANT_DYE_CAPES) {
+			if ((Arrays.stream(capes).anyMatch(c -> item1.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item2.getCatalogId() == d)) ||
+				(Arrays.stream(capes).anyMatch(c -> item2.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d))) {
+				boolean isDyeFirst = Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d);
+				int dyeId = isDyeFirst ? item1.getCatalogId() : item2.getCatalogId();
+				int dyeIndex = ArrayUtils.indexOf(dye, dyeId);
+				return player.getWorld().canYield(new Item(newCapes[dyeIndex]));
+			}
 		}
+
 		return false;
 	}
 }
