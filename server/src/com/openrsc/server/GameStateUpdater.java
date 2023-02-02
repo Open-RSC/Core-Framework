@@ -119,7 +119,8 @@ public final class GameStateUpdater {
 			} else if (player.hasMoved()) {
 				player.setWarnedToMove(false);
 			}
-		} else if (curTime - player.getLastMoved() >= timeoutLimit && !player.isMod()) {
+		} else if (timeoutLimit > 0 && !player.isMod() &&
+				(curTime - player.getLastMoved()) >= timeoutLimit) {
 			if (player.isSleeping()) {
 				player.setSleeping(false);
 				ActionSender.sendWakeUp(player, false, false);
