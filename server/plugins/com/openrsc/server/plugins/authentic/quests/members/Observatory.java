@@ -601,6 +601,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 					} else if (telescop == 1) {
 						npcsay(player, professor, "This is the revealed sky",
 							"The constellation you saw was");
+						constellationNameAndReward(player, professor);
 						player.sendQuestComplete(Quests.OBSERVATORY_QUEST);
 						npcsay(player, professor, "By Saradomin's earlobes!",
 							"You must be a friend of the gods indeed");
@@ -621,7 +622,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void giveOptionalReward(Player player, Npc n, Skill skill) {
-		final XPReward origXpReward = Arrays.stream(Quest.OBSERVATORY_QUEST.reward().getXpRewards()).filter(x -> x.getSkill().equals(Skills.NONE)).toArray(XPReward[]::new)[0];
+		final XPReward origXpReward = Arrays.stream(Quest.OBSERVATORY_QUEST.reward().getXpRewards()).filter(x -> !x.getSkill().equals(Skills.CRAFTING)).toArray(XPReward[]::new)[0];
 		XPReward xpReward = origXpReward.copyTo(skill);
 		incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 	}
