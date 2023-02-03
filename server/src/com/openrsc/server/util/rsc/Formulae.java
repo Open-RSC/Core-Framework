@@ -258,7 +258,8 @@ public final class Formulae {
 		if (mob.isNpc() && !mob.getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT) {
 			return 0;
 		} else {
-			int totalXP = 16 * damageMade;
+			int constrainedDmg = Math.min(mob.getSkills().getLevel(Skill.HITS.id()), damageMade);
+			int totalXP = 16 * constrainedDmg;
 			int baseXP = totalXP / 3;
 			int remainder = totalXP % 12;
 			int sendXP;

@@ -135,7 +135,7 @@ public class RangeEvent extends GameTickEvent {
 
 		final int damage = RangeUtils.doRangedDamage(player, weaponId, ammoId, target);
 
-		if (target.isPlayer() && damage > 0) {
+		if ((target.isPlayer() || getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT) && damage > 0) {
 			player.incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
 		}
 

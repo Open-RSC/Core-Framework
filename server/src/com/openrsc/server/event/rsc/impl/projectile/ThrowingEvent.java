@@ -161,7 +161,7 @@ public class ThrowingEvent extends GameTickEvent {
 		int damage = RangeUtils.doRangedDamage(player, throwingID, throwingID, target);
 
 		RangeUtils.applyDragonFireBreath(player, target, deliveredFirstProjectile);
-		if(target.isPlayer() && damage > 0) {
+		if((target.isPlayer() || getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT) && damage > 0) {
 			player.incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
 		}
 
