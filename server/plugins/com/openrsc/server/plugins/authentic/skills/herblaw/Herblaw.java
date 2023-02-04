@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.skills.herblaw;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.ItemHerbDef;
 import com.openrsc.server.external.ItemHerbSecond;
 import com.openrsc.server.external.ItemUnIdentHerbDef;
@@ -467,11 +468,17 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		);
 		if (vial == null || herb == null) return;
 
-		ci.remove(vial);
-		ci.remove(herb);
-		player.playSound("mix");
+		final String herbName = herb.getDef(player.getWorld()).getName();
+
 		player.playerServerMessage(MessageType.QUEST,
-			"You put the " + herb.getDef(player.getWorld()).getName() + " into the vial of water");
+			"You put the " + herbName + " into the vial of water");
+		player.playSound("mix");
+		ci.remove(vial);
+		if (SkillCapes.shouldActivate(player, ItemId.HERBLAW_CAPE)) {
+			mes("@gr2@Your Herblaw cape activates, saving your " + herbName);
+		} else {
+			ci.remove(herb);
+		}
 		ci.getInventory().add(new Item(herbDef.getPotionId()));
 		delay(2);
 
@@ -554,11 +561,19 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		if (bubbleItem.get() != null) {
 			thinkbubble(bubbleItem.get());
 		}
-		player.playSound("mix");
-		player.playerServerMessage(MessageType.QUEST, "You mix the " + second.getDef(player.getWorld()).getName()
+
+		final String secondName = second.getDef(player.getWorld()).getName();
+		player.playerServerMessage(MessageType.QUEST, "You mix the " + secondName
 			+ " into your potion");
-		carriedItems.remove(second);
+		player.playSound("mix");
 		carriedItems.remove(unfinished);
+
+		if (SkillCapes.shouldActivate(player, ItemId.HERBLAW_CAPE)) {
+			mes("@gr2@Your Herblaw cape activates, saving your " + secondName);
+		} else {
+			carriedItems.remove(second);
+		}
+
 		carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
 		player.incExp(Skill.HERBLAW.id(), def.getExp(), true);
 		delay(2);
@@ -664,12 +679,19 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		if (unfinished == null || secondary == null) return;
 		if (secondary.getAmount() < requiredSecondaries) return;
 
-		player.playSound("mix");
-		player.playerServerMessage(MessageType.QUEST, "You mix the " + secondary.getDef(player.getWorld()).getName()
+		final String secondaryName = secondary.getDef(player.getWorld()).getName();
+
+		player.playerServerMessage(MessageType.QUEST, "You mix the " + secondaryName
 			+ " into your potion");
+		player.playSound("mix");
 		player.getCarriedItems().remove(unfinished);
-		// Have to do this because fish oil is stacked
-		player.getCarriedItems().remove(new Item(secondaryId, requiredSecondaries));
+
+		if (SkillCapes.shouldActivate(player, ItemId.HERBLAW_CAPE)) {
+			mes("@gr2@Your Herblaw cape activates, saving your " + secondaryName);
+		} else {
+			// Have to do this because fish oil is stacked
+			player.getCarriedItems().remove(new Item(secondaryId, requiredSecondaries));
+		}
 		player.getCarriedItems().getInventory().add(new Item(resultId));
 
 		player.incExp(Skill.HERBLAW.id(), xp, true);

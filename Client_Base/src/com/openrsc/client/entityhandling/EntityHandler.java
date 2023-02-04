@@ -953,7 +953,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Blue Dragon", "A mother dragon", "", 105, 105, 105, 105, true, sprites, 0, 0, 0, 0, 452, 326, 10, 7, 70, i++));
 		sprites = new int[]{146, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Baby Blue Dragon", "Young but still dangerous", "", 50, 50, 50, 50, true, sprites, 0, 0, 0, 0, 226, 163, 10, 7, 30, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, 514};
+		} else {
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Kaqemeex", "A wise druid", "", 28, 32, 30, 28, false, sprites, 14540253, 65535, 255, 15392466, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 85, 86, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Sanfew", "An old druid", "", 28, 32, 30, 28, false, sprites, 16777215, 65535, 255, 15392466, 145, 220, 6, 6, 5, i++));

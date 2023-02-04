@@ -42,6 +42,8 @@ public class SkillCapes {
 				return smithingCape();
 			case DEFENSE_CAPE:
 				return defenseCape();
+			case HERBLAW_CAPE:
+				return herblawCape();
 		}
 
 		return false;
@@ -117,6 +119,14 @@ public class SkillCapes {
 	private static boolean defenseCape() {
 		final int hitChance = 35;
 		if (rand1to100() <= hitChance) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean herblawCape() {
+		final int saveChance = 10;
+		if (rand1to100() <= saveChance) {
 			return true;
 		}
 		return false;
