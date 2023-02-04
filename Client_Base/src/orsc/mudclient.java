@@ -17382,6 +17382,9 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Bows");
 			skillGuideChosenTabs.add("Crossbows");
 			skillGuideChosenTabs.add("Thrown");
+			if (S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Prayer")) {
 			skillGuideChosenTabs.add("Prayers");
 			skillGuideChosenTabs.add("Other");
@@ -17416,6 +17419,9 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Firemaking")) {
 			skillGuideChosenTabs.add("Burning");
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Crafting")) {
 			skillGuideChosenTabs.add("Leather");
 			skillGuideChosenTabs.add("Pottery");
@@ -17441,9 +17447,15 @@ public final class mudclient implements Runnable {
 		} else if (skillGuideChosen.equalsIgnoreCase("Herblaw")) {
 			skillGuideChosenTabs.add("Herbs");
 			skillGuideChosenTabs.add("Potions");
+			if (S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Agility")) {
 			skillGuideChosenTabs.add("Courses");
 			skillGuideChosenTabs.add("Shortcuts");
+			if (S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Thieving")) {
 			skillGuideChosenTabs.add("Pickpocket");
 			skillGuideChosenTabs.add("Stalls");
@@ -17462,6 +17474,9 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Fruits");
 			skillGuideChosenTabs.add("Bushes");
 			skillGuideChosenTabs.add("Herbs");
+			if (S_WANT_CUSTOM_SPRITES) {
+				skillGuideChosenTabs.add("Other");
+			}
 		}
 	}
 

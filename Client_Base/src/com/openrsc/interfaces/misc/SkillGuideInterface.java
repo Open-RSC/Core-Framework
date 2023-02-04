@@ -266,6 +266,9 @@ public final class SkillGuideInterface {
 			skillMenuEntries.add(new SkillMenuItem(131, "30", "Adamantite"));
 			skillMenuEntries.add(new SkillMenuItem(404, "40", "Rune"));
 			skillMenuEntries.add(new SkillMenuItem(1278, "60", "Dragon"));
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillMenuEntries.add(new SkillMenuItem(1519, "99", "Defense Cape"));
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Strength")) {
 			skillMenuEntries.add(new SkillMenuItem(90, "", "Strength raises your max hit with melee"));
@@ -393,9 +396,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(210, "", "Kebab - ???"));
 				skillMenuEntries.add(new SkillMenuItem(923, "", "Ugthanki Kebab - ???"));
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1463, "", "Seaweed Soup - Heals 26"));
-				/*if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2319, "99", "Cape"));
-				}*/
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1522, "99", "Hits Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Ranged")) {
@@ -423,6 +426,10 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1068, "20", "Mithril darts & spears"));
 				skillMenuEntries.add(new SkillMenuItem(1069, "30", "Adamant darts & spears"));
 				skillMenuEntries.add(new SkillMenuItem(1070, "40", "Rune darts & spears"));
+			} else if (curTab == 3) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1524, "99", "Ranged Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Prayer")) {
@@ -443,6 +450,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(44, "40", "Protect from missiles - 100% protection from ranged attacks"));
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(388, "31", "Monastery"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1523, "99", "Prayer Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Magic")) {
@@ -592,6 +602,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(405, "1", "All axes"));
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(88, "", "Woodcutting Guild (Coming soon)"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1525, "99", "Woodcutting Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Fletching")) {
@@ -663,13 +676,19 @@ public final class SkillGuideInterface {
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Firemaking")) {
-			skillMenuEntries.add(new SkillMenuItem(14, "1", "Normal logs"));
-			if (Config.S_CUSTOM_FIREMAKING) {
-				skillMenuEntries.add(new SkillMenuItem(632, "15", "Oak logs"));
-				skillMenuEntries.add(new SkillMenuItem(633, "30", "Willow logs"));
-				skillMenuEntries.add(new SkillMenuItem(634, "45", "Maple logs"));
-				skillMenuEntries.add(new SkillMenuItem(635, "60", "Yew logs"));
-				skillMenuEntries.add(new SkillMenuItem(636, "75", "Magic logs"));
+			if (curTab == 0) {
+				skillMenuEntries.add(new SkillMenuItem(14, "1", "Normal logs"));
+				if (Config.S_CUSTOM_FIREMAKING) {
+					skillMenuEntries.add(new SkillMenuItem(632, "15", "Oak logs"));
+					skillMenuEntries.add(new SkillMenuItem(633, "30", "Willow logs"));
+					skillMenuEntries.add(new SkillMenuItem(634, "45", "Maple logs"));
+					skillMenuEntries.add(new SkillMenuItem(635, "60", "Yew logs"));
+					skillMenuEntries.add(new SkillMenuItem(636, "75", "Magic logs"));
+				}
+			} else if (curTab == 1) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1520, "99", "Firemaking Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Crafting")) {
@@ -953,6 +972,10 @@ public final class SkillGuideInterface {
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1471, "81", "Potion of Saradomin - Torstol & sliced dragonfruit"));
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1474, "83", "Super ranging potion - Ranging potion & half coconut"));
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1477, "85", "Super magic potion - Magic potion & half coconut"));
+			} else if (curTab == 2) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1521, "99", "Herblaw Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Agility")) {
@@ -990,6 +1013,10 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(410, "67", "Yanille Agility Dungeon pile of rubble"));
 				skillMenuEntries.add(new SkillMenuItem(410, "67", "Lava Maze stepping stones"));
 				skillMenuEntries.add(new SkillMenuItem(410, "70", "Taverly Dungeon pipe crawl"));
+			} else if (curTab == 2) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1518, "99", "Agility Cape"));
+				}
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Thieving")) {
@@ -1159,6 +1186,10 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(469, "61", "Snape Grass"));
 				skillMenuEntries.add(new SkillMenuItem(442, "67", "Herb - Cadantine (chance)"));
 				skillMenuEntries.add(new SkillMenuItem(443, "79", "Herb - Dwarf Weed (chance)"));
+			} else if (curTab == 4) {
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1526, "99", "Harvesting Cape"));
+				}
 			}
 		}
 	}
