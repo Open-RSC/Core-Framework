@@ -5173,7 +5173,7 @@
             "magicBonus": 0,
             "prayerBonus": 0,
             "basePrice": 19125,
-            "isNoteable": 1,
+            "isNoteable": 1
         },
         {
             "id": 1515,
@@ -5378,7 +5378,7 @@
             "weaponAimBonus": 0,
             "weaponPowerBonus": 0,
             "magicBonus": 0,
-            "prayerBonus": 0,
+            "prayerBonus": 4,
             "basePrice": 99000,
             "isNoteable": 0
         },

@@ -2,6 +2,8 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
@@ -51,6 +53,10 @@ public class Bones implements OpInvTrigger {
 			giveBonesExperience(player, item);
 		}
 
+		if (SkillCapes.shouldActivate(player, ItemId.PRAYER_CAPE)) {
+			prayerCape(player, item);
+		}
+
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
@@ -95,6 +101,35 @@ public class Bones implements OpInvTrigger {
 			for (int praySkillId : prayerSkillIds) {
 				player.incExp(praySkillId, skillXP / factor, true);
 			}
+		}
+	}
+
+	private void prayerCape(final Player player, final Item bone) {
+		final int currentPrayerLevel = player.getSkills().getLevel(Skill.PRAYER.id());
+		final int maxPrayerLevel = player.getSkills().getMaxStat(Skill.PRAYER.id());
+		if (currentPrayerLevel >= maxPrayerLevel) return;
+
+		int pointsToRestore = 0;
+		switch (ItemId.getById(bone.getCatalogId())) {
+			case BONES:
+			case BAT_BONES:
+				pointsToRestore = 2;
+				break;
+			case BIG_BONES:
+				pointsToRestore = 5;
+				break;
+			case DRAGON_BONES:
+				pointsToRestore = 10;
+				break;
+		}
+
+		if (pointsToRestore > 0) {
+			mes("@yel@Your prayer cape activates, restoring " + pointsToRestore + " prayer points!");
+			int newPrayer = currentPrayerLevel + pointsToRestore;
+			if (newPrayer > maxPrayerLevel) {
+				newPrayer = maxPrayerLevel;
+			}
+			player.getSkills().setLevel(Skill.PRAYER.id(), newPrayer, true);
 		}
 	}
 }

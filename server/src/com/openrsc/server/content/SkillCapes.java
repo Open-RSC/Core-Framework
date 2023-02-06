@@ -44,6 +44,8 @@ public class SkillCapes {
 				return defenseCape();
 			case HERBLAW_CAPE:
 				return herblawCape();
+			case PRAYER_CAPE:
+				return prayerCape();
 		}
 
 		return false;
@@ -127,6 +129,14 @@ public class SkillCapes {
 	private static boolean herblawCape() {
 		final int saveChance = 10;
 		if (rand1to100() <= saveChance) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean prayerCape() {
+		final int pointsChance = 50;
+		if (rand1to100() <= pointsChance) {
 			return true;
 		}
 		return false;

@@ -889,7 +889,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Abbot Langley", "A Peaceful monk", "", 12, 13, 15, 12, false, sprites, 16761440, 65535, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Thordur", "He runs a a tourist attraction", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 9465888, 15523536, 121, 176, 6, 6, 5, i++));
-		sprites = new int[]{7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, 516};
+		} else {
+			sprites = new int[]{7, 1, 2, -1, -1, -1, 83, 87, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Brother Jered", "human", "", 12, 13, 15, 12, false, sprites, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, i++));
 		sprites = new int[]{123, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Rat", "Overgrown vermin", "", 16, 12, 10, 15, true, sprites, 0, 0, 0, 0, 346, 136, 7, 7, 45, i++));
