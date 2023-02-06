@@ -71,9 +71,8 @@ public class DwarfCannon
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.DWARF_COMMANDER.id() || n.getID() == NpcId.DWARF_CANNON_ENGINEER.id() || n.getID() == NpcId.DWARF_NEAR_COMMANDER.id()
-			|| n.getID() == NpcId.GRAMAT.id() || n.getID() == NpcId.DWARVEN_SMITHY.id() || n.getID() == NpcId.DWARVEN_YOUTH.id();
+	public boolean blockTalkNpc(Player player, Npc npc) {
+		return npc.getID() == NpcId.DWARF_COMMANDER.id() || npc.getID() == NpcId.DWARF_CANNON_ENGINEER.id() || npc.getID() == NpcId.DWARF_NEAR_COMMANDER.id();
 	}
 
 	@Override
@@ -462,6 +461,7 @@ public class DwarfCannon
 					break;
 			}
 		} else if (n.getID() == NpcId.DWARF_NEAR_COMMANDER.id()) {
+			// TODO Audit replays to find where this guy should spawn. There isn't currently a spawn for this guy
 			int selected = DataConversions.getRandom().nextInt(2);
 
 			say(player, n, "hello\"");
@@ -475,97 +475,6 @@ public class DwarfCannon
 				npcsay(player, n, "next goblin i catch sneeking around's..",
 					"..gonna be hung on my wall, little green..");
 				say(player, n, "yep..they can be troublesome");
-			}
-		} else if (n.getID() == NpcId.GRAMAT.id()) {
-			int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
-			switch (stage) {
-				case -1:
-					npcsay(player, n, "what is a dwarf to do", "my son has ignored my warnings", "now he is in danger");
-					if (player.getQuestStage(Quests.DWARF_CANNON) == -1) {
-						npcsay(player, n, ".." + player.getUsername() + "!",
-							"maybe you could help us again",
-							"my son has wandered into our new construction zone",
-							"could you see to his safe return");
-						say(player, n, "where should I look for him");
-						npcsay(player, n, "just inside the mines there is a ladder",
-							"he's somewhere down there");
-						player.getCache().set("miniquest_dwarf_youth_rescue", 0);
-					}
-					break;
-				case 0:
-					npcsay(player, n, "please hurry", "my son is in danger");
-					break;
-				case 1:
-					npcsay(player, n, "my son told me how you helped him",
-						"i'm eternally grateful",
-						"he said you have his teddy");
-					if (player.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY.id())) {
-						say(player, n, "i do, and i fixed it");
-						player.message("You hand over the teddy");
-						player.getCache().set("miniquest_dwarf_youth_rescue", 2);
-						player.getCarriedItems().remove(new Item(ItemId.TEDDY.id()));
-						npcsay(player, n, "yet again you've proven a friend to us",
-							"i will talk to our best smithy",
-							"he works at the new lava forge deep underground",
-							"as our ally you will have access to its power",
-							"please take this and read it");
-						player.message("Gramat hands you a note");
-						give(player, ItemId.DWARF_SMITHY_NOTE.id(), 1);
-						npcsay(player, n, "if you follow the steps on the note",
-							"you will be rewarded in combat");
-						player.message("You have completed the dwarf youth rescue miniquest!");
-					} else {
-						say(player, n, "i do, but it's damaged",
-							"let me repair it first");
-						npcsay(player, n, "he loves that teddy",
-							"and i love him",
-							"sew it with some needle and thread",
-							"then return to me");
-					}
-					break;
-				case 2:
-					npcsay(player, n, "thank you for rescuing my son",
-						"you are a hero among us dwarves");
-					break;
-			}
-		} else if (n.getID() == NpcId.DWARVEN_SMITHY.id()) {
-			int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
-			if (stage == 2) {
-				npcsay(player, n, "oi " + player.getUsername(),
-					"Gramat told me about you",
-					"this forge is yours to use",
-					"it's hot enough to melt the strongest of metals",
-					"dragon long swords smelt to one bar",
-					"dragon axes smelt to two");
-			} else
-				npcsay(player, n, "this is our reason for digging",
-					"it's the latest in dwarven technology",
-					"this furnace uses the intense heat of lava",
-					"our enemies will suffer from its forgings");
-		} else if (n.getID() == NpcId.DWARVEN_YOUTH.id()) {
-			int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
-			if (stage < 1) {
-				if (player.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_HEAD.id())
-					&& player.getCarriedItems().getInventory().hasInInventory(ItemId.TEDDY_BOTTOM.id())) {
-					npcsay(player, n, "have you found teddy?");
-					say(player, n, "well.. yes?");
-					npcsay(player, n, "teddy! i'm so happy!",
-						"let me see him!");
-					say(player, n, "it's too dangerous here",
-						"let's go back first");
-					npcsay(player, n, "ok. i have extra runes",
-						"please give teddy to my father");
-					player.teleport(271, 3339, true);
-					say(player, null, "i'd better repair this",
-						"i bet i could sew it",
-						"with a needle and some thread");
-					player.getCache().set("miniquest_dwarf_youth_rescue",1);
-				} else {
-					npcsay(player, n, "please help me",
-						"i want to return to father",
-						"but I've lost my teddy",
-						"i can't leave him behind");
-				}
 			}
 		}
 	}

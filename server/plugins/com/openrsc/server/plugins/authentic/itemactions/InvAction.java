@@ -31,8 +31,7 @@ public class InvAction implements OpInvTrigger {
 			ItemId.DIGSITE_SCROLL.id(), ItemId.ASTROLOGY_BOOK.id(), ItemId.STONE_TABLET.id(),
 			ItemId.OYSTER.id(), ItemId.SCRUMPLED_PIECE_OF_PAPER.id(), ItemId.NULODIONS_NOTES.id(), ItemId.OLD_JOURNAL.id(),
 			ItemId.BURNTPIE.id(), ItemId.BURNT_STEW.id(), ItemId.BURNT_CURRY.id(),
-			ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.SPADE.id(),
-			ItemId.DWARF_SMITHY_NOTE.id());
+			ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id(), ItemId.SPADE.id());
 	}
 
 	@Override
@@ -137,8 +136,6 @@ public class InvAction implements OpInvTrigger {
 		}
 		else if (id == ItemId.NULODIONS_NOTES.id()) {
 			handleNulodionsNotes(player);
-		} else if (id == ItemId.DWARF_SMITHY_NOTE.id()) {
-			handleDwarfSmithyNote(player);
 		}
 		else if (id == ItemId.OLD_JOURNAL.id()) {
 			handleOldJournal(player);
