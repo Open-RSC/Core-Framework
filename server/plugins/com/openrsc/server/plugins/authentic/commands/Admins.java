@@ -34,7 +34,6 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
-import com.openrsc.server.util.PidShuffler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -101,8 +100,6 @@ public final class Admins implements CommandTrigger {
 			stopHolidayDrop(player);
 		} else if (command.equalsIgnoreCase("cabbagehalloweendrop")) {
 			cabbageHalloweenDrop(player, command, args);
-		} else if (command.equalsIgnoreCase("npckills")) {
-			npcKills(player, args);
 		} else if (command.equalsIgnoreCase("restart")) {
 			serverRestart(player, args);
 		} else if (command.equalsIgnoreCase("gi") || command.equalsIgnoreCase("gitem") || command.equalsIgnoreCase("grounditem")) {
@@ -206,8 +203,6 @@ public final class Admins implements CommandTrigger {
 			npcRangedPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("ip")) {
 			playerQueryIP(player, args);
-		} else if (command.equalsIgnoreCase("appearance") || command.equalsIgnoreCase("changeappearance")) {
-			sendAppearanceScreen(player, args);
 		} else if (command.equalsIgnoreCase("yoptin")) {
 			sendYoptinScreen(player, args);
 		} else if (command.equalsIgnoreCase("spawnnpc")) {
@@ -234,15 +229,26 @@ public final class Admins implements CommandTrigger {
 			setMaxConnectionsPerSecond(player, command, args);
 		} else if (command.equalsIgnoreCase("stockgroup")) {
 			spawnStockGroupInventory(player, command, args, false);
-		} else if (command.equalsIgnoreCase("shufflepid") || command.equalsIgnoreCase("pidshuffle")) {
-			shufflePid(player, command, args);
 		} else if (command.equalsIgnoreCase("setpidshuffleinterval")) {
 			setPidShufflingSchedule(player, command, args);
+		} else if (command.equalsIgnoreCase("unhash")) {
+			player.message(DataConversions.hashToUsername(Long.parseLong(args[0])));
+		}  else if (command.equalsIgnoreCase("hash")) {
+			player.message(String.format("%d",DataConversions.usernameToHash(args[0])));
 		} else if (command.equalsIgnoreCase("setglobalcooldown")) {
 			setGlobalCooldown(player, command, args);
 		} else if (command.equalsIgnoreCase("setgloballevelreq")) {
 			setGlobalLevelReq(player, command, args);
+		} else if (command.equalsIgnoreCase("xpstat") || command.equalsIgnoreCase("xpstats") || command.equalsIgnoreCase("setxpstat") || command.equalsIgnoreCase("setxpstats")
+			|| command.equalsIgnoreCase("setxp")) {
+			changeStatXP(player, command, args);
+		} else if (command.equalsIgnoreCase("stat") || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("setstat") || command.equalsIgnoreCase("setstats")) {
+			changeMaxStat(player, command, args);
+		} else if (command.equalsIgnoreCase("reloadworld") || command.equalsIgnoreCase("reloadland")) {
+			player.getWorld().getWorldLoader().loadWorld();
+			player.message(messagePrefix + "World Reloaded");
 		}
+
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
 		} */
@@ -259,26 +265,6 @@ public final class Admins implements CommandTrigger {
 			}
 		}
 		player.message(badSyntaxPrefix + command.toUpperCase() + " [Number of ticks between shuffles]");
-	}
-
-	private void shufflePid(Player player, String command, String[] args) {
-		if (args.length == 0) {
-			player.getConfig().SHUFFLE_PID_ORDER = true;
-			PidShuffler.shuffle();
-			player.message("PID @ran@sHuffLeD");
-		}
-		if (args.length == 1) {
-			if (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("yes") || args[0].equals("1") || args[0].equalsIgnoreCase("true")) {
-				player.getConfig().SHUFFLE_PID_ORDER = true;
-				player.message("PID shuffling enabled");
-			} else if (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("no") || args[0].equals("0") || args[0].equalsIgnoreCase("false")) {
-				player.getConfig().SHUFFLE_PID_ORDER = false;
-				player.message("PID shuffling disabled");
-			} else {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " (on/off)");
-				return;
-			}
-		}
 	}
 
 	private void setMaxPlayersPerIp(Player player, String command, String[] args) {
@@ -473,15 +459,6 @@ public final class Admins implements CommandTrigger {
 			player.message(messagePrefix + "Stopping holiday drop!");
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Stopped holiday drop"));
 		}
-	}
-
-	private void npcKills(Player player, String[] args) {
-		Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
-		player.message(targetPlayer.getNpcKills() + "");
 	}
 
 	private void fakeCrystalChest(Player player, String[] args) {
@@ -2540,24 +2517,6 @@ public final class Admins implements CommandTrigger {
 		player.message(messagePrefix + targetPlayer.getUsername() + " IP address: " + targetPlayer.getCurrentIP());
 	}
 
-	private void sendAppearanceScreen(Player player, String[] args) {
-		Player targetPlayer = args.length > 0 ?
-			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
-			player;
-
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
-
-		player.message(messagePrefix + targetPlayer.getUsername() + " has been sent the change appearance screen");
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
-			targetPlayer.message(messagePrefix + "A staff member has sent you the change appearance screen");
-		}
-		targetPlayer.setChangingAppearance(true);
-		ActionSender.sendAppearanceScreen(targetPlayer);
-	}
-
 	private void sendYoptinScreen(Player player, String[] args) {
 		Player targetPlayer = args.length > 0 ?
 			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
@@ -2849,4 +2808,331 @@ public final class Admins implements CommandTrigger {
 	public GameEventHandler getGameEventHandler(Player player) {
 		return player.getWorld().getServer().getGameEventHandler();
 	}
+
+	private void changeStatXP(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+			return;
+		}
+
+		String statName;
+		boolean shouldZero = false;
+		int experience;
+		int stat;
+		Player otherPlayer;
+
+		try {
+			if(args.length == 1) {
+				if (Long.parseLong(args[0]) < 0) shouldZero = true;
+				experience = (int)Long.parseLong(args[0]);
+				stat = -1;
+				statName = "";
+			}
+			else {
+				if (Long.parseLong(args[0]) < 0) shouldZero = true;
+				experience = (int)Long.parseLong(args[0]);
+				try {
+					stat = Integer.parseInt(args[1]);
+				}
+				catch (NumberFormatException ex) {
+					stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[1].toLowerCase());
+
+					if(stat == -1) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				try {
+					statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
+				}
+				catch (IndexOutOfBoundsException ex) {
+					player.message(messagePrefix + "Invalid stat");
+					return;
+				}
+			}
+
+			otherPlayer = player;
+		}
+		catch(NumberFormatException ex) {
+			otherPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+				return;
+			}
+			else if(args.length == 2) {
+				try {
+					if (Long.parseLong(args[1]) < 0) shouldZero = true;
+					experience = (int)Long.parseLong(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+					return;
+				}
+				stat = -1;
+				statName = "";
+			}
+			else {
+				try {
+					if (Long.parseLong(args[1]) < 0) shouldZero = true;
+					experience = (int)Long.parseLong(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
+					return;
+				}
+
+				try {
+					stat = Integer.parseInt(args[2]);
+				}
+				catch (NumberFormatException e) {
+					stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[2].toLowerCase());
+
+					if(stat == -1) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				try {
+					statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
+				}
+				catch (IndexOutOfBoundsException e) {
+					player.message(messagePrefix + "Invalid stat");
+					return;
+				}
+			}
+		}
+
+		if (otherPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if(!player.isAdmin() && otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+			player.message(messagePrefix + "You can not modify other players' stats.");
+			return;
+		}
+
+		if(!otherPlayer.isDefaultUser() && otherPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= otherPlayer.getGroupID()) {
+			player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
+			return;
+		}
+
+		if(shouldZero)
+			experience = 0;
+		if(player.getWorld().getServer().getConfig().WANT_EXPERIENCE_CAP &&
+			Integer.toUnsignedLong(experience) >= Integer.toUnsignedLong(otherPlayer.getWorld().getServer().getConfig().EXPERIENCE_LIMIT))
+			experience = otherPlayer.getWorld().getServer().getConfig().EXPERIENCE_LIMIT;
+		String experienceSt = Integer.toUnsignedString(experience);
+		if(stat != -1) {
+			otherPlayer.getSkills().setExperience(stat, experience);
+			if (stat == Skill.PRAYER.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			}
+
+			otherPlayer.checkEquipment();
+			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s " + statName + " to experience " + experienceSt);
+			otherPlayer.getSkills().sendUpdateAll();
+			if(player.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(otherPlayer)) {
+				otherPlayer.message(messagePrefix + "Your " + statName + " has been set to experience " + experienceSt + " by a staff member");
+				otherPlayer.getSkills().sendUpdateAll();
+			}
+		}
+		else {
+			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
+				otherPlayer.getSkills().setExperience(i, experience);
+			}
+			if (Skill.PRAYER.id() != Skill.NONE.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			}
+
+			otherPlayer.checkEquipment();
+			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to experience " + experienceSt);
+			otherPlayer.getSkills().sendUpdateAll();
+			if(player.getParty() != null){
+				player.getParty().sendParty();
+			}
+			if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+				if(otherPlayer.getParty() != null){
+					otherPlayer.getParty().sendParty();
+				}
+				if (!player.isInvisibleTo(otherPlayer))
+					otherPlayer.message(messagePrefix + "All of your stats have been set to experience " + experienceSt + " by a staff member");
+				otherPlayer.getSkills().sendUpdateAll();
+			}
+		}
+	}
+
+	private void changeMaxStat(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [level] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] [stat] OR");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [level] [stat]");
+			return;
+		}
+
+		String statName;
+		int level;
+		int stat;
+		Player otherPlayer;
+
+		try {
+			if(args.length == 1) {
+				level = Integer.parseInt(args[0]);
+				stat = -1;
+				statName = "";
+			}
+			else {
+				level = Integer.parseInt(args[0]);
+				try {
+					stat = Integer.parseInt(args[1]);
+				}
+				catch (NumberFormatException ex) {
+					stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[1].toLowerCase());
+
+					if(stat == -1) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				try {
+					statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
+				}
+				catch (IndexOutOfBoundsException ex) {
+					player.message(messagePrefix + "Invalid stat");
+					return;
+				}
+			}
+
+			otherPlayer = player;
+		}
+		catch(NumberFormatException ex) {
+			otherPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+
+			if (args.length < 2) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] OR ");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [level] OR ");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] [stat] OR");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [level] [stat]");
+				return;
+			}
+			else if(args.length == 2) {
+				try {
+					level = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [level] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] [stat] OR");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [level] [stat]");
+					return;
+				}
+				stat = -1;
+				statName = "";
+			}
+			else {
+				try {
+					level = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [level] OR ");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [level] [stat] OR");
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [level] [stat]");
+					return;
+				}
+
+				try {
+					stat = Integer.parseInt(args[2]);
+				}
+				catch (NumberFormatException e) {
+					stat = player.getWorld().getServer().getConstants().getSkills().getSkillIndex(args[2].toLowerCase());
+
+					if(stat == -1) {
+						player.message(messagePrefix + "Invalid stat");
+						return;
+					}
+				}
+
+				try {
+					statName = player.getWorld().getServer().getConstants().getSkills().getSkillName(stat);
+				}
+				catch (IndexOutOfBoundsException e) {
+					player.message(messagePrefix + "Invalid stat");
+					return;
+				}
+			}
+		}
+
+		if (otherPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if(!player.isAdmin() && otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+			player.message(messagePrefix + "You can not modify other players' stats.");
+			return;
+		}
+
+		if(!otherPlayer.isDefaultUser() && otherPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= otherPlayer.getGroupID()) {
+			player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
+			return;
+		}
+
+		if(level < 1)
+			level = 1;
+		if(level > config().PLAYER_LEVEL_LIMIT)
+			level = config().PLAYER_LEVEL_LIMIT;
+
+		if(stat != -1) {
+			otherPlayer.getSkills().setLevelTo(stat, level);
+			if (stat == Skill.PRAYER.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			}
+
+			otherPlayer.checkEquipment();
+			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s " + statName + " to level " + level);
+			otherPlayer.getSkills().sendUpdateAll();
+			if(player.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(otherPlayer)) {
+				otherPlayer.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
+				otherPlayer.getSkills().sendUpdateAll();
+			}
+		}
+		else {
+			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
+				otherPlayer.getSkills().setLevelTo(i, level);
+			}
+			if (Skill.PRAYER.id() != Skill.NONE.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
+			}
+
+			otherPlayer.checkEquipment();
+			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to level " + level);
+			otherPlayer.getSkills().sendUpdateAll();
+			if(player.getParty() != null){
+				player.getParty().sendParty();
+			}
+			if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+				if(otherPlayer.getParty() != null){
+					otherPlayer.getParty().sendParty();
+				}
+				if (!player.isInvisibleTo(otherPlayer))
+					otherPlayer.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
+				otherPlayer.getSkills().sendUpdateAll();
+			}
+		}
+	}
+
 }

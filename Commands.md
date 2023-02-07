@@ -128,9 +128,6 @@ Admin Commands
   - Spawn the specified amount of the specified NPCs for the specified amount of time.
   - If no duration is supplied, then 10 minutes is used.
   - Functionality is restricted on non-custom worlds.
-- npckills
-  - Usage: `::npckills [name]`
-  - Shows kill counts for name.
 - playertalk
   - Usage: `::playertalk [name] [msg]`
   - Causes the specified player to say the specified message to all players in the area.
@@ -189,10 +186,6 @@ Admin Commands
   - Usage: `::ip (name)`
   - Shows the IP address of the specified player.
   - If no player is specified, then the current player's IP is shown.
-- appearance
-  - Usage: `::appearance (player)`
-  - Shows the appearance change screen to the specified player.
-  - If no player is specified, then it shows the appearance change screen to the current player.
 - spawnnpc
   - Usage: `::spawnnpc [id] (radius) (time in minutes)`
   - Spawns the specified NPC with the specified walking radius for the specified amount of time.
@@ -234,6 +227,44 @@ Admin Commands
 - givetools
   - Usage: `::givetools`
   - Gives you rune pick, rune axe, harpoon, and sleeping bag, if you don't already have the item.
+- setstats
+  - Usage: `::setstats [player] [level]` to set all of the specified player's stats to the specified level.
+  - Usage: `::setstats [player]` to set all of your stats to the specified level
+  - Usage: `::setstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
+  - Usage: `::setstats [level] [stat]` to set your specified stat to the specified level
+  - Alias: `::stats` or `::stat` or `::setstat` or `::setstats`
+  - Set the specified stats of the specified player to the specified level.
+  - Accepts name or stat id of the specified stat.
+  - If no player is specified, then the current player is targeted.
+  - If no stat is specified, then all stats are modified.
+- setxpstats
+  - Usage: `::setxpstats [player] [experience]` to set all of the specified player's stats to the specified experience.
+  - Usage: `::setxpstats [player]` to set all of your stats to the specified experience
+  - Usage: `::setxpstats [player] [experience] [stat]` to set the specified player's specified stat to the specified experience.
+  - Usage: `::setxpstats [experience] [stat]` to set your specified stat to the specified experience
+  - Alias: `::xpstats` or `::xpstat` or `::setxpstat` or `::setxpstats` or `::setxp`
+  - Set the specified current stats of the specified player to the specified experience.
+  - Accepts name or stat id of the specified stat.
+  - If no player is specified, then the current player is targeted.
+  - If no stat is specified, then all stats are modified.
+- reloadworld
+  - Usage: `::reloadworld`
+  - Alias: `::reloadland`
+  - Reloads landscape.
+- hash
+  - Usage: `::hash [username]`
+  - Converts username into a username "hash", for development purposes.
+- unhash
+  - Usage: `::unhash [long number]`
+  - Converts username "hash" into username, for development purposes.
+- setglobalcooldown
+  - Usage: `::setglobalcooldown [time in milliseconds]`
+  - Example: `::setglobalcooldown 20000` sets cooldown to 20 seconds.
+  - Sets the minimum amount of time a user must wait before sending another message to global chat.
+- setgloballevelreq
+  - Usage: `::setgloballevelreq [total level required to chat]`
+  - Example: `::setgloballevelreq 150` sets total level requirement to 150.
+  - Sets the minimum amount of total levels a user must have in order to participate in global chat.
 ------------------------
 Developer Commands
 ------------------------
@@ -299,11 +330,6 @@ Super/Senior Moderator Commands
   - Alias: `::scache` or `::storecache`
   - Sets a cache value for the specified player.
   - If no player is specified, then the current player's cache is modified.
-- getcache
-  - Usage: `::getcache (name) [cache_key]`
-  - Alias: `::gcache` or `::checkcache`
-  - Display the cache contents for the specified player.
-  - If no player is specified, then the current player's cache is modified.
 - deletecache
   - Usage: `::getcache (name) [cache_key]`
   - Alias: `::dcache` or `::removecache` or `::rcache`
@@ -318,46 +344,13 @@ Super/Senior Moderator Commands
   - Usage: `::setquest [player] [questId]`
   - Alias: `::questcom`
   - Sets the specified quest to completed for the specified player.
-- quest
-  - Usage: `::quest  [player] [questId]`
-  - Alias: `::getquest` or `::checkquest`
-  - Display the quest stage for the specified user for the specified quest.
 - reloaddrops
   - Usage: `::reloaddrops`
   - Reloads NPC drop tables.
-- reloadworld
-  - Usage: `::reloadworld`
-  - Alias: `::reloadland`
-  - Reloads landscape.
-- summonall
-  - Usage: `::summonall (width) (height)`
-  - Summons all currently logged in players to the current player.
-  - Clears any previous summon flag.
-  - Width and height define a rectangle that the summon players will be placed into.
-  - If width and height is not supplied then all players are summoned to the same square as the current player.
-- returnall
-  - Usage: `::returnall`
-  - Returns all non-staff members who have been summoned.
-- fatigue
-  - Usage: `::fatigue [player] (percentage)`
-  - Sets fatigue of the specified player to the specified percentage.
-  - If no percentage is specified, then 100 is used.
-- jail
-  - Usage: `::jail [name]`
-  - Puts the specified player in Runescape Jail.
-  - You can not jail a player who has already been jailed.
-  - You can not jail a staff member.
-- release
-  - Usage: `::release [name]`
-  - Releases the specified player from Runescape Jail to the location they were before being jailed.
 - ipcount
   - Usage: `::ipcount (name)`
   - Shows the number of players connected with the same IP address as the specified player.
   - If no player is specified, then the current player's information is shown.
-- renameplayer
-  - Usage: `::renameplayer [old_name] [new_name]`
-  - Renames a specified player. Please note that ALL underscores will be replaced with spaces
-  - Also note that renaming a player will mess up anyone's friend list that has them added, so it's best to only use this command to rename Mod players.
 ------------------------
 Moderator Commands
 ------------------------
@@ -417,6 +410,63 @@ Moderator Commands
 - wilderness
   - Usage: `::wilderness`
   - Shows how many players are in the wilderness and where they are.
+- appearance
+  - Usage: `::appearance (player)`
+  - Shows the appearance change screen to the specified player.
+  - If no player is specified, then it shows the appearance change screen to the current player.
+  - If the user is not an administrator, can only set appearance for players up to total level 150
+- summonall
+  - Usage: `::summonall (width) (height)`
+  - Summons all currently logged in players to the current player.
+  - Clears any previous summon flag.
+  - Width and height define a rectangle that the summon players will be placed into.
+  - If width and height is not supplied then all players are summoned to the same square as the current player.
+  - Limited by the `summon_all_player_limit` config setting, default 15. 
+- returnall
+  - Usage: `::returnall`
+  - Returns all non-staff members who have been summoned.
+- fatigue
+  - Usage: `::fatigue [player] (percentage)`
+  - Sets fatigue of the specified player to the specified percentage.
+  - If no percentage is specified, then 100 is used.
+- jail
+  - Usage: `::jail [name]`
+  - Puts the specified player in RuneScape Jail, upstairs of Al Kharid palace.
+  - You can not jail a player who has already been jailed.
+  - You can not jail a staff member.
+- release
+  - Usage: `::release [name]`
+  - Releases the specified player from RuneScape Jail to the location they were before being jailed.
+- getcache
+  - Usage: `::getcache (name) [cache_key]`
+  - Alias: `::gcache` or `::checkcache`
+  - Display the cache contents for the specified player.
+  - If no player is specified, then the current player's cache is checked.
+- quest
+  - Usage: `::quest  [player] [questId]`
+  - Alias: `::getquest` or `::checkquest`
+  - Display the quest stage for the specified user for the specified quest.
+- renameplayer
+  - Usage: `::renameplayer [current name] [new name] [inappropriate (yes/no)] [reason]`
+  - Alias: `::renameuser`
+  - Renames a specified player. Please note that ALL underscores will be replaced with spaces
+  - For "Inappropriate", you may type "1" for yes or "0" for no as well.
+  - Reason must be specified.
+  - Cannot use this command to rename players that have not logged in in the past 2 weeks unless it is an inappropriate name.
+- badname
+  - Usage: `::badname [unacceptable username] [reason]`
+  - Alias: `::offensivename` or `inappropriatename`
+  - Unlike `::renameplayer`, this command chooses a random name to replace the offensive name with.
+  - Users who have been renamed with this command will be able to log in with their old username.
+- freename
+  - Usage: `::freename [username to free]`
+  - Alias: `::releasename` or `::freeusername`
+  - If the player is determined to be inactive, their username will be randomly reassigned so that the name is free again.
+  - Users who have been renamed with this command will be able to log in with their old username, should they return.
+- removeformername
+  - Usage: `::removeformername [username to remove former name from]`
+  - Hides the former name of the user. Useful if it contained sensitive information such as their real last name.
+  - Record of the former name remains in the database, but is no longer shown to players.
 ------------------------
 Event Commands
 ------------------------
@@ -474,9 +524,6 @@ Event Commands
   - Causes the specified NPC to say the specified message to all players in the area.
   - Can use `::possessnpc` & then just chat normally for longer conversations
   - Alias: `::npcsay`
-- check
-  - Usage: `::check (player)`
-  - Shows all of the characters that were created by the same IP address.
 - togglepartyhall
   - Usage: `::togglepartyhall (time_in_minutes)`
   - Alias: `::seers` or `::toggleseers` or `::partyhall`
@@ -499,16 +546,6 @@ Event Commands
   - Only users of the rank Admin or above may change a player's rank.
   - You may never change a players rank to be equal to or greater than your own.
   - If no player is specified, then the current player is targeted.
-- setstats
-  - Usage: `::setstats [player] [level]` to set all of the specified player's stats to the specified level.
-  - Usage: `::setstats [player]` to set all of your stats to the specified level
-  - Usage: `::setstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
-  - Usage: `::setstats [level] [stat]` to set your specified stat to the specified level
-  - Alias: `::stats` or `::stat` or `::setstat` or `::setstats`
-  - Set the specified stats of the specified player to the specified level.
-  - Accepts name or stat id of the specified stat.
-  - If no player is specified, then the current player is targeted.
-  - If no stat is specified, then all stats are modified.
 - setcurrentstats
   - Usage: `::setcurrentstats [player] [level]` to set all of the specified player's stats to the specified level.
   - Usage: `::setcurrentstats [player]` to set all of your stats to the specified level
@@ -519,16 +556,14 @@ Event Commands
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
   - If no stat is specified, then all stats are modified.
-- setxpstats
-  - Usage: `::setxpstats [player] [experience]` to set all of the specified player's stats to the specified experience.
-  - Usage: `::setxpstats [player]` to set all of your stats to the specified experience
-  - Usage: `::setxpstats [player] [experience] [stat]` to set the specified player's specified stat to the specified experience.
-  - Usage: `::setxpstats [experience] [stat]` to set your specified stat to the specified experience
-  - Alias: `::xpstats` or `::xpstat` or `::setxpstat` or `::setxpstats` or `::setxp`
-  - Set the specified current stats of the specified player to the specified experience.
-  - Accepts name or stat id of the specified stat.
-  - If no player is specified, then the current player is targeted.
-  - If no stat is specified, then all stats are modified.
+- npckills
+  - Usage: `::npckills [name]`
+  - Shows kill counts for name.
+- shufflepid
+  - Usage: `::shufflepid [on/off]`
+  - Alias: `::pidshuffle`
+  - Changes the order that players are processed in. If an administrator runs this command, PID_SHUFFLING on the server can be toggled.
+  - Useful for drop parties, so that the same player doesn't get all the loot.
 ------------------------
 Player Moderator Commands
 ------------------------
@@ -579,6 +614,10 @@ Player Moderator Commands
 - speakTongues
   - Usage: `::speaktongues`
   - Translates player chat messages to random characters while enabled
+- check
+  - Usage: `::check (player)`
+  - Shows all of the characters that were created by the same IP address.
+  - Administrator accounts are able to actually see the IP address.
 ------------------------
 Regular Player Commands
 ------------------------
@@ -640,6 +679,7 @@ Regular Player Commands
 - uniqueonline
   - Usage: `::uniqueonline`
   - Shows the number of players with a unique IP address currently online.
+  - Assumes that local ip addresses are "web client" users, as is currently the case on our live server.
 - onlinelist
   - Usage: `::onlinelist`
   - Shows a list of online players.

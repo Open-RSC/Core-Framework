@@ -4,6 +4,7 @@ import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.database.struct.LinkedPlayer;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -16,6 +17,9 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.openrsc.server.constants.AppearanceId.*;
 import static com.openrsc.server.plugins.Functions.*;
@@ -69,6 +73,88 @@ public final class PlayerModerator implements CommandTrigger {
 			} else {
 				becomeNpc(player, args);
 			}
+		} else if (command.equalsIgnoreCase("check")) {
+			queryPlayerAlternateCharacters(player, command, args);
+		}
+	}
+
+	private void queryPlayerAlternateCharacters(Player player, String command, String[] args) {
+		if(args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player]");
+			return;
+		}
+
+		String targetUsername	= args[0];
+		Player target			= player.getWorld().getPlayer(DataConversions.usernameToHash(targetUsername));
+
+		String currentIp = null;
+		if (target == null) {
+			try {
+				currentIp = player.getWorld().getServer().getDatabase().playerLoginIp(targetUsername);
+
+				if(currentIp == null) {
+					player.message(messagePrefix + "No character named '" + targetUsername + "' is online or was found in the database.");
+					return;
+				}
+			} catch (final GameDatabaseException e) {
+				LOGGER.catching(e);
+				player.message(messagePrefix + "A Database error has occurred! " + e.getMessage());
+				return;
+			}
+		} else {
+			currentIp = target.getCurrentIP();
+		}
+
+		try {
+			final LinkedPlayer[] linkedPlayers = player.getWorld().getServer().getDatabase().linkedPlayers(currentIp);
+
+			// Check if any of the found users have a group less than the player who is running this command
+			boolean authorized = true;
+			for (final LinkedPlayer linkedPlayer : linkedPlayers) {
+				if(linkedPlayer.groupId < player.getGroupID())
+				{
+					authorized = false;
+					break;
+				}
+			}
+
+			List<String> names = new ArrayList<>();
+			for (final LinkedPlayer linkedPlayer : linkedPlayers) {
+				String dbUsername	= linkedPlayer.username;
+				// Only display usernames if the player running the action has a better rank or if the username is the one being targeted
+				if(authorized || dbUsername.toLowerCase().trim().equals(targetUsername.toLowerCase().trim()))
+					names.add(dbUsername);
+			}
+			StringBuilder builder = new StringBuilder("@red@")
+				.append(targetUsername.toUpperCase());
+			if (target != null) {
+				builder.append(" (" + target.getX() + "," + target.getY() + ")");
+			}
+			builder.append(" @whi@currently has ")
+				.append(names.size() > 0 ? "@gre@" : "@red@")
+				.append(names.size())
+				.append(" @whi@registered characters.");
+
+			if(player.isAdmin())
+				builder.append(" %IP Address: " + currentIp);
+
+			if (names.size() > 0) {
+				builder.append(" % % They are: ");
+			}
+			for (int i = 0; i < names.size(); i++) {
+
+				builder.append("@yel@").append(player.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
+					? "@gre@" : "@red@").append(names.get(i));
+
+				if (i != names.size() - 1) {
+					builder.append("@whi@, ");
+				}
+			}
+
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 18, target));
+			ActionSender.sendBox(player, builder.toString(), names.size() > 10);
+		} catch (final GameDatabaseException ex) {
+			player.message(messagePrefix + "A MySQL error has occured! " + ex.getMessage());
 		}
 	}
 
@@ -286,18 +372,12 @@ public final class PlayerModerator implements CommandTrigger {
 				return;
 			}
 		} else {
-			minutes = player.isSuperMod() ? -1 : player.isMod() ? 60 : 15;
+			minutes = 60;
 		}
 
-		if (!player.isSuperMod()) {
-			if (minutes == 0) {
-				player.message(messagePrefix + "You are not allowed to unmute users.");
-				return;
-			}
-			if (minutes == -1) {
-				player.message(messagePrefix + "You are not allowed to mute indefinitely.");
-				return;
-			}
+		if (!player.isMod() && minutes == -1) {
+			player.message(messagePrefix + "You are not allowed to mute indefinitely.");
+			return;
 		}
 
 		if (!player.isMod() && minutes > 10080) {

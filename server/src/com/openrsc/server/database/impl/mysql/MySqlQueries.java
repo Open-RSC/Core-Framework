@@ -10,24 +10,25 @@ public class MySqlQueries {
 	public String updateExperience, updateStats, updateMaxStats, updateMaxStat, updateExpCapped, playerExpCapped, playerExp, playerCurExp, playerMaxExp;
 	public final String createPlayer, recentlyRegistered, initMaxStats, initStats, initExp, initExpCapped;
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
-	public final String playerExists, playerGroupId, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
+	public final String playerExists, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
 	public final String max_itemStatus, save_ItemCreate, save_ItemUpdate, save_ItemPurge; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
 	public final String save_DeleteBank, save_DeleteBankPresets, save_BankAdd, save_BankRemove, save_BankPresetAdd, save_BankPresetRemove;
 	public final String save_DeleteInv, save_InventoryAdd, save_InventoryRemove, save_DeleteEquip, save_EquipmentAdd, save_EquipmentRemove, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
 	public final String save_Password, save_PreviousPasswords, previousPassword, achievements, rewards, tasks;
-	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, playerChangeRecoveryInfo, playerRecoveryInfo, newPlayerRecoveryInfo, newPlayerChangeRecoveryInfo, playerRecoveryAttempt, userToId, idToUser, initializeOnlineUsers;
+	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, playerChangeRecoveryInfo, playerRecoveryInfo, newPlayerRecoveryInfo, newPlayerChangeRecoveryInfo, playerRecoveryAttempt;
+	public final String playerLoginDataByFormerName, userToId, usernameToProperUsername, idToUser, initializeOnlineUsers;
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate, playerLastRecoveryTryId, cancelRecoveryChangeRequest;
 	public final String contactDetails, newContactDetails, updateContactDetails;
-	public final String dropLogSelect, dropLogInsert, dropLogUpdate, renamePlayer, banPlayer, unbanPlayer;
+	public final String dropLogSelect, dropLogInsert, dropLogUpdate, renamePlayer, renamePlayerUpdateFriendsList, renamePlayerUpdateIgnoresList, banPlayer, unbanPlayer;
 	public final String addNpcSpawn, removeNpcSpawn, addObjectSpawn, removeObjectSpawn, addItemSpawn, removeItemSpawn;
 	public final String objects, npcLocs, groundItems, inUseItemIds;
 	public final String clans, clanMembers, newClan, saveClanMember, deleteClan, deleteClanMembers, updateClan, updateClanMember;
 	public final String expiredAuction, collectibleItems, collectItem, newAuction, cancelAuction, auctionCount, playerAuctionCount, auctionItem, auctionItems, auctionSellOut, updateAuction;
 	public final String discordIdToPlayerId, playerIdFromPairToken, pairDiscord, deleteTokenFromCache, watchlist, watchlists, updateWatchlist, deleteWatchlist;
-	public final String checkTableExists, checkColumnExists, checkColumnType, addColumn, modifyColumn;
 	public final String save_IronMan, updateMute;
+	public final String selectFriendNameUsername, fixFriendNameCapitalization, insertFormerName, insertLoginAttempt, playerGetFormerNameInvoluntaryChange;
 	private final Server server;
 
 	public final Server getServer() {
@@ -85,18 +86,18 @@ public class MySqlQueries {
 		initExp = "INSERT INTO `" + PREFIX + "experience` (`playerID`) VALUES (?)";
 		initExpCapped = "INSERT INTO `" + PREFIX + "capped_experience` (`playerID`) VALUES (?)";
 
-		save_AddFriends = "INSERT INTO `" + PREFIX + "friends`(`playerID`, `friend`, `friendName`) VALUES(?, ?, ?)";
+		save_AddFriends = "INSERT INTO `" + PREFIX + "friends`(`playerID`, `friend`, `friendName`, `friendFormerName`) VALUES(?, ?, ?, ?)";
 		save_DeleteFriends = "DELETE FROM `" + PREFIX + "friends` WHERE `playerID` = ?";
-		save_AddIgnored = "INSERT INTO `" + PREFIX + "ignores`(`playerID`, `ignore`) VALUES(?, ?)";
+		save_AddIgnored = "INSERT INTO `" + PREFIX + "ignores`(`playerID`, `ignore`, `ignoreFormer`) VALUES(?, ?, ?)";
 		save_DeleteIgnored = "DELETE FROM `" + PREFIX + "ignores` WHERE `playerID` = ?";
 		playerExists = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
-		playerGroupId = "SELECT `group_id` FROM `" + PREFIX + "players` WHERE `id` = ?";
+		usernameToProperUsername = "SELECT username, former_name, group_id FROM `" + PREFIX + "players` WHERE `username` = ?";
 		playerInvItems = "SELECT i.*,i2.* FROM `" + PREFIX + "invitems` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE i.`playerID`=? ORDER BY `slot` ASC";
 		playerEquipped = "SELECT i.`itemID`,i2.* FROM `" + PREFIX + "equipped` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE i.`playerID`=?";
 		playerBankItems = "SELECT i.`itemID`,i2.* FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE i.`playerID`=? ORDER BY `slot` ASC";
 		playerBankPresets = "SELECT `slot`, `inventory`, `equipment` FROM `" + PREFIX + "bankpresets` WHERE `playerID`=?";
-		playerFriends = "SELECT `friend` FROM `" + PREFIX + "friends` WHERE `playerID`=?";
-		playerIgnored = "SELECT `ignore` FROM `" + PREFIX + "ignores` WHERE `playerID`=?";
+		playerFriends = "SELECT `friend`, `friendName`, `friendFormerName` FROM `" + PREFIX + "friends` WHERE `playerID`=?";
+		playerIgnored = "SELECT `ignore`, `ignoreFormer` FROM `" + PREFIX + "ignores` WHERE `playerID`=?";
 		playerQuests = "SELECT `id`, `stage` FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 		playerAchievements = "SELECT `id`, `status` FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
 		playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
@@ -135,6 +136,7 @@ public class MySqlQueries {
 		rewards = "SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + PREFIX + "achievement_reward` WHERE `achievement_id` = ?";
 		tasks = "SELECT `type`, `do_id`, `do_amount` FROM `" + PREFIX + "achievement_task` WHERE `achievement_id` = ?";
 		playerLoginData = "SELECT `id`, `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username` like ?";
+		playerLoginDataByFormerName = "SELECT `username`, `id`, `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `former_name` like ?";
 		playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, " +
 			"`question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, " +
 			"`ip_set` FROM `" + PREFIX + "player_change_recovery` WHERE `playerID`=?";
@@ -158,7 +160,9 @@ public class MySqlQueries {
 		dropLogSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
 		dropLogInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
 		dropLogUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
-		renamePlayer = "UPDATE `" + PREFIX + "players` SET `username` = ? WHERE `id` = ?";
+		renamePlayer = "UPDATE `" + PREFIX + "players` SET `username` = ?, `former_name` = ? WHERE `id` = ?";
+		renamePlayerUpdateFriendsList = "UPDATE `" + PREFIX + "friends` SET `friendName` = ?, `friendFormerName` = ?, `friend` = ? WHERE `friendName` = ?";
+		renamePlayerUpdateIgnoresList = "UPDATE `" + PREFIX + "ignores` SET `ignore` = ?, `ignoreFormer` = ? WHERE `ignore` = ?";
 		banPlayer = "UPDATE `" + PREFIX + "players` SET `banned`=?, offences = offences + 1 WHERE `username` LIKE ?";
 		unbanPlayer = "UPDATE `" + PREFIX + "players` SET `banned`= 0 WHERE `username` LIKE ?";
 		initializeOnlineUsers = "UPDATE `" + PREFIX + "players` SET `online`='0' WHERE online='1'";
@@ -210,11 +214,12 @@ public class MySqlQueries {
 		updateWatchlist = "UPDATE `" + PREFIX + "player_cache` SET `value`=? WHERE `key`=`watchlist_?`";
 		deleteWatchlist = "DELETE FROM `" + PREFIX + "player_cache` WHERE `key`=`watchlist_?`";
 
-		checkTableExists = "SELECT COUNT(*) > 0 AS exist FROM (SELECT `TABLE_NAME` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` LIKE '" + NAME + "' AND `TABLE_NAME` LIKE " + PREFIX + "?) AS tableCountRowCountYes";
-		checkColumnExists = "SELECT COUNT(*) AS exist FROM (SELECT `COLUMN_NAME` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` LIKE '" + NAME + "' AND `TABLE_NAME` LIKE " + PREFIX + "? AND `COLUMN_NAME` LIKE ?) AS columnCountRowCountYes";
-		checkColumnType = "SELECT `COLUMN_TYPE` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` LIKE '" + NAME + "' AND `TABLE_NAME` LIKE " + PREFIX + "? AND `COLUMN_NAME` LIKE ?";
-		addColumn = "ALTER TABLE `" + NAME + "`.`" + PREFIX + "%s` ADD %s %s";
-		modifyColumn = "ALTER TABLE `" + NAME + "`.`" + PREFIX + "%s` MODIFY %s %s";
+		selectFriendNameUsername = "SELECT DISTINCT friendName, username FROM `" + PREFIX + "friends` INNER JOIN `" + PREFIX + "players` ON `" + PREFIX + "players`.username LIKE friendName";
+		fixFriendNameCapitalization = "UPDATE `" + PREFIX + "friends` SET `friendName`=? WHERE friendName LIKE ?";
+		insertFormerName = "INSERT INTO `" + PREFIX + "former_names`  (`playerId`, `formerName`, `changeType`, `time`, `whoChanged`, `reason`) VALUES (?, ?, ?, ?, ?, ?)";
+
+		insertLoginAttempt = "INSERT INTO `" + PREFIX + "logins`(`playerID`, `ip`, `time`, `clientVersion`, `nonce`) VALUES(?, ?, ?, ?, ?)";
+		playerGetFormerNameInvoluntaryChange = "SELECT username, changeType from `" + PREFIX + "former_names` INNER JOIN `" + PREFIX + "players` ON playerId=id WHERE formerName LIKE ? AND (changeType LIKE 1 OR changeType LIKE 3) ORDER BY time DESC LIMIT 1";
 
 		//unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 		//teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";

@@ -101,7 +101,7 @@ public class PayloadValidator {
 		put(OpcodeOut.SEND_OPEN_DETAILS, NoPayloadStruct.class); // part of rsc era protocol
 		put(OpcodeOut.SEND_UPDATE_PLAYERS, AppearanceUpdateStruct.class);
 		put(OpcodeOut.SEND_UPDATE_PLAYERS_RETRO, AppearanceUpdateStruct.class); // retro rsc
-		put(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, NoPayloadStruct.class); // TODO: revise not implemented
+		put(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, IgnoreListStruct.class);
 		put(OpcodeOut.SEND_GAME_SETTINGS, GameSettingsStruct.class);
 		put(OpcodeOut.SEND_SLEEP_FATIGUE, FatigueStruct.class);
 		put(OpcodeOut.SEND_OPTIONS_MENU_OPEN, MenuOptionStruct.class);

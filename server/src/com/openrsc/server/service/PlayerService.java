@@ -99,7 +99,10 @@ public class PlayerService implements IPlayerService {
                 savePlayerSocial(player);
             });
             if (realSuccess) {
-            	player.resetSaveAttempts();
+                if (null != player.getUsernameChangePending()) {
+			        player.getUsernameChangePending().doChangeUsername();
+                }
+                player.resetSaveAttempts();
 			}
             return realSuccess;
         } catch (final Exception ex) {
@@ -159,6 +162,7 @@ public class PlayerService implements IPlayerService {
         player.setDatabaseID(playerData.playerId);
         player.setGroupID(playerData.groupId);
         player.setUsername(playerData.username);
+        player.setFormerName(playerData.former_name);
         player.setTotalLevel(playerData.totalLevel);
         /*if (player.isUsingCustomClient()) {
             player.setCombatStyle((byte) playerData.combatStyle);

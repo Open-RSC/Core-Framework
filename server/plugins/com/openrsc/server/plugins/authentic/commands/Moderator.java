@@ -2,6 +2,9 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.database.struct.PlayerData;
+import com.openrsc.server.database.struct.PlayerFriend;
+import com.openrsc.server.database.struct.UsernameChangeType;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -11,6 +14,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.RSCPacketFilter;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.RandomUsername;
+import com.openrsc.server.util.UsernameChange;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -18,10 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.openrsc.server.plugins.Functions.config;
@@ -32,6 +34,8 @@ public final class Moderator implements CommandTrigger {
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
+
+	private final static int SECONDS_IN_A_MONTH = 2629722; // about 30 days and 10 hours, 1/12th of a year.
 
 	public boolean blockCommand(Player player, String command, String[] args) {
 		return player.isMod();
@@ -78,7 +82,291 @@ public final class Moderator implements CommandTrigger {
 			banPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("unban")) {
 			unbanPlayer(player, command, args);
+		} else if (command.equalsIgnoreCase("renameplayer") || command.equalsIgnoreCase("renameuser")) {
+			renamePlayer(player, command, args, false);
+		} else if (command.equalsIgnoreCase("offensivename") || command.equalsIgnoreCase("inappropriatename") || command.equalsIgnoreCase("badname")) {
+			badName(player, command, args);
+		} else if (command.equalsIgnoreCase("releasename") || command.equalsIgnoreCase("freeusername") || command.equalsIgnoreCase("freename")) {
+			freeName(player, command, args);
+		} else if (command.equalsIgnoreCase("quest") || command.equalsIgnoreCase("getquest") || command.equalsIgnoreCase("checkquest")) {
+			checkQuest(player, command, args);
+		} else if (command.equalsIgnoreCase("getcache") || command.equalsIgnoreCase("gcache") || command.equalsIgnoreCase("checkcache")) {
+			checkCache(player, command, args);
+		} else if (command.equalsIgnoreCase("fatigue")) {
+			setFatigue(player, command, args);
+		} else if (command.equalsIgnoreCase("removeFormerName")) {
+			removeFormerName(player, command, args);
+		} else if (command.equalsIgnoreCase("appearance") || command.equalsIgnoreCase("changeappearance")) {
+			sendAppearanceScreen(player, args);
+		} else if (command.equalsIgnoreCase("summonall")) {
+			summonAllPlayers(player, command, args);
+		} else if (command.equalsIgnoreCase("returnall")) {
+			returnAllPlayers(player, command, args);
+		}  else if (command.equalsIgnoreCase("jail")) {
+			jailPlayer(player, command, args);
+		} else if (command.equalsIgnoreCase("release")) {
+			releasePlayer(player, command, args);
 		}
+	}
+
+	public static void freeName(Player player, String command, String[] args) {
+		if (args.length != 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [UsernameToFree]");
+			player.message("(underscores will become spaces)");
+			return;
+		}
+
+		String desirableUsername = args[0].replaceAll("_", " ");
+
+		// Check the database to see if the username is actually in use by different player.
+		PlayerData usernamesPlayerData = player.getWorld().getServer().getDatabase().queryLoadPlayerData(desirableUsername);
+		if (usernamesPlayerData == null) {
+			player.message("The name \"" + desirableUsername + "\" is already not in use!");
+			return;
+		}
+
+		if (usernameIsConsideredAbandoned(player, desirableUsername, usernamesPlayerData)) {
+			String releasedUserPlaceholderName = RandomUsername.getRandomUnusedUsername(player.getWorld().getServer());
+
+			new UsernameChange (
+				player, // command user
+				player.getWorld().getServer(), // server
+				usernamesPlayerData.playerId, // database id
+				usernamesPlayerData.former_name, // formerFormerName
+				usernamesPlayerData.username, // formerName
+				releasedUserPlaceholderName, // newName
+				UsernameChangeType.RELEASED, // usernameChangeType
+				String.format("Had been logged out for %d days.", ((System.currentTimeMillis() / 1000) - usernamesPlayerData.loginDate)/ 86400) // reason
+			).doChangeUsername();
+		} else {
+			player.message("That name is not currently eligible for release.");
+		}
+	}
+
+	public static void removeFormerName(Player player, String command, String[] args) {
+		if (args.length != 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Username To Remove Former Name from]");
+			player.message("(underscores will become spaces)");
+			return;
+		}
+
+		String playerToRemoveFormerNameFrom = args[0].replaceAll("_", " ");
+
+		// Check the database to see if the username is actually in use by different player.
+		PlayerData usernamesPlayerData = player.getWorld().getServer().getDatabase().queryLoadPlayerData(playerToRemoveFormerNameFrom);
+		if (usernamesPlayerData == null) {
+			player.message("Could not find that account.");
+			return;
+		}
+
+		new UsernameChange (
+			player, // command user
+			player.getWorld().getServer(), // server
+			usernamesPlayerData.playerId, // database id
+			usernamesPlayerData.former_name, // formerFormerName
+			usernamesPlayerData.username, // formerName
+			usernamesPlayerData.username, // newName
+			UsernameChangeType.REMOVE_FORMER_NAME, // usernameChangeType
+			String.format("Removing former name: " + usernamesPlayerData.former_name) // reason
+		).doChangeUsername();
+		player.message("... And they had their former name removed!");
+	}
+
+	private static boolean usernameIsConsideredAbandoned(Player player, String username, PlayerData usernamesPlayerData) {
+		if (usernamesPlayerData == null) {
+			usernamesPlayerData = player.getWorld().getServer().getDatabase().queryLoadPlayerData(username);
+		}
+
+		// pmods / mods / admins, can't be considered abandoned.
+		if (usernamesPlayerData.groupId != Group.USER) {
+			return false;
+		}
+		if (usernamesPlayerData.username.startsWith("Mod ")) {
+			return false;
+		}
+
+		long secondsSinceLastLogin = (System.currentTimeMillis() / 1000) - usernamesPlayerData.loginDate;
+
+		// We will hold any name for 3 months.
+		int abandonedTimeThreshold = SECONDS_IN_A_MONTH * 3;
+
+		// time to "inactive" scales with player's investment in the server.
+		if (usernamesPlayerData.totalLevel >= 1000) {
+			// players that reach at least 1000 total can never have their names automatically released.
+			return false;
+		} else if (usernamesPlayerData.totalLevel >= 850) {
+			// 5 years
+			abandonedTimeThreshold = SECONDS_IN_A_MONTH * 12 * 5;
+		} else if (usernamesPlayerData.totalLevel >= 675) {
+			// 4 years
+			abandonedTimeThreshold = SECONDS_IN_A_MONTH * 12 * 4;
+		} else if (usernamesPlayerData.totalLevel >= 500) {
+			// 3 years
+			abandonedTimeThreshold = SECONDS_IN_A_MONTH * 12 * 3;
+		} else if (usernamesPlayerData.totalLevel >= 300) {
+			// 2 years
+			abandonedTimeThreshold = SECONDS_IN_A_MONTH * 12 * 2;
+		} else if (usernamesPlayerData.totalLevel >= 100) {
+			// 1 year
+			abandonedTimeThreshold = SECONDS_IN_A_MONTH * 12;
+		} else if (usernamesPlayerData.totalLevel >= 50) {
+			// 6 months
+			abandonedTimeThreshold = SECONDS_IN_A_MONTH * 6;
+		}
+
+		return secondsSinceLastLogin > abandonedTimeThreshold;
+	}
+
+	public static void badName(Player player, String command, String[] args) {
+		// Make sure we have received all arguments
+		if (args.length < 2) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Offensive username] [Reason]");
+			player.message("(underscores will become spaces)");
+			return;
+		}
+
+		String[] constructedArgs = new String[args.length + 2];
+
+		constructedArgs[0] = args[0]; // oldName
+		constructedArgs[1] = RandomUsername.getRandomUnusedUsername(player.getWorld().getServer()); // newName
+		constructedArgs[2] = "1"; // inappropriate
+		for (int i = 3; i < args.length + 2; i++) { // reason
+			constructedArgs[i] = args[i - 2];
+		}
+
+		renamePlayer(player, command, constructedArgs, true);
+	}
+
+	public static void renamePlayer(Player player, String command, String[] args, boolean calledFromBadName) {
+		// Make sure we have received all arguments
+		if (args.length < 4) {
+			if (calledFromBadName) {
+				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Offensive username] [Reason]");
+				player.message("(underscores will become spaces)");
+			} else {
+				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [CurrentName] [NewName] [Inappropriate (yes/no)] [Reason]");
+				player.message("(underscores will become spaces)");
+			}
+			return;
+		}
+
+		// parse args
+		String targetPlayerUsername = args[0].replaceAll("_", " ");
+		String newUsername = args[1].replaceAll("_", " ");
+		boolean inappropriate = false;
+		try {
+			inappropriate = DataConversions.parseBoolean(args[2]);
+		} catch (NumberFormatException ex) {
+			if (calledFromBadName) {
+				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Offensive username] [Reason]");
+				player.message("(underscores will become spaces)");
+			} else {
+				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [CurrentName] [NewName] [Inappropriate (yes/no)] [Reason]");
+				player.message("(underscores will become spaces)");
+			}
+			return;
+		}
+		StringBuilder reasonBuilder = new StringBuilder();
+		for (int i = 3; i < args.length; i++) {
+			reasonBuilder.append(args[i]).append(" ");
+		}
+
+		// Check the database to see if the new name is already in use by different player.
+		// Allow a player to be renamed to a different capitalization of the same name.
+		PlayerFriend properUsername = player.getWorld().getServer().getDatabase().getProperUsernameCapitalization(newUsername);
+		if (properUsername != null && !properUsername.playerName.equalsIgnoreCase(targetPlayerUsername)) {
+			player.message("The name \"" + newUsername + "\" is already in use.");
+			return;
+		}
+
+		// determine changeType
+		UsernameChangeType changeType = UsernameChangeType.VOLUNTARY;
+		if (inappropriate) {
+			// moderator has flagged as inappropriate
+			changeType = UsernameChangeType.INAPPROPRIATE;
+		} else {
+			// new username is the same as the old, capitalization change
+			if (newUsername.equalsIgnoreCase(targetPlayerUsername)) {
+				changeType = UsernameChangeType.CAPITALIZATION;
+			}
+		}
+
+		// Get the player whose name we are going to change.
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		if (targetPlayer != null) {
+			// online player rename
+			targetPlayer.setUsernameChangePending(
+				new UsernameChange(player, player.getWorld().getServer(), targetPlayer.getDatabaseID(), targetPlayer.getFormerName(), targetPlayer.getUsername(), newUsername, changeType, reasonBuilder.toString())
+			);
+
+			player.message("@whi@Player @cya@" + args[0] + "@whi@ will be renamed to @cya@" + newUsername + "@whi@ next login.");
+			if (changeType == UsernameChangeType.INAPPROPRIATE) {
+				targetPlayer.message("@whi@Your username was deemed inappropriate by a moderator.");
+				targetPlayer.message("@whi@Your account will be renamed to @cya@" + newUsername + "@whi@ next login.");
+				targetPlayer.message("@whi@Use your new account name, @mag@" + newUsername + "@whi@ to log in.");
+			} else {
+				targetPlayer.message("@whi@You will be renamed from @cya@" + args[0] + "@whi@ to @cya@" + newUsername + "@whi@ next login!");
+				targetPlayer.message("@whi@Use your new account name, @mag@" + newUsername + "@whi@ to log in.");
+			}
+			return;
+		} else {
+			// offline player rename
+			try {
+				// determine if this rename is likely intended to just Free the name
+				long loginDate = player.getWorld().getServer().getDatabase().queryLoadPlayerData(targetPlayerUsername).loginDate;
+				long secondsSinceLastLogin = (System.currentTimeMillis() / 1000) - loginDate;
+				if (changeType != UsernameChangeType.INAPPROPRIATE && secondsSinceLastLogin > (SECONDS_IN_A_MONTH / 2)) {
+					player.message("The name \"" + targetPlayerUsername + "\" belongs to a user that has not logged in in the past 2 weeks.");
+					player.message("@whi@To release a stagnant username for re-use, it is necessary to use the @mag@::releasename@whi@ command.");
+					return;
+				}
+
+				final int targetPlayerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerUsername);
+				PlayerFriend oldUsernameProperSpelling = player.getWorld().getServer().getDatabase().getProperUsernameCapitalization(targetPlayerUsername);
+
+				new UsernameChange(
+					player, // command user
+					player.getWorld().getServer(), // server
+					targetPlayerId, // database id
+					oldUsernameProperSpelling.formerName, // formerFormerName
+					oldUsernameProperSpelling.playerName, // formerName
+					newUsername, // newName
+					changeType, // usernameChangeTypeID
+					reasonBuilder.toString() // reason
+				).doChangeUsername();
+
+				player.message(targetPlayerUsername + " has been renamed to " + newUsername + ".");
+
+			} catch (GameDatabaseException ex) {
+				player.message("A database error has occurred.");
+				LOGGER.catching(ex);
+			}
+		}
+	}
+
+
+	private void checkQuest(Player player, String command, String[] args) {
+		if (args.length < 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [questId]");
+			return;
+		}
+
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		int quest;
+		try {
+			quest = Integer.parseInt(args[1]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [questId]");
+			return;
+		}
+
+		player.message(messagePrefix + targetPlayer.getUsername() + " has stage " + targetPlayer.getQuestStage(quest) + " for quest " + quest);
 	}
 
 	private void tpNpc(Player player, String command, String[] args) {
@@ -193,8 +481,8 @@ public final class Moderator implements CommandTrigger {
 			player.message(messagePrefix + "Invalid name or player is not online");
 			return;
 		}
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not summon a staff member of equal or greater rank.");
+		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() > targetPlayer.getGroupID()) {
+			player.message(messagePrefix + "You can not summon a staff member of greater rank.");
 			return;
 		}
 		if (player.getLocation().inWilderness() && !player.isSuperMod()) {
@@ -560,7 +848,6 @@ public final class Moderator implements CommandTrigger {
 		player.message(messagePrefix + " " + targetPlayer.getUsername() + " was put to sleep. Zzzzzz");
 	}
 
-
 	private void unbanPlayer(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
@@ -568,6 +855,7 @@ public final class Moderator implements CommandTrigger {
 		}
 		banPlayer(player, command, new String[]{ args[0], "0" });
 	}
+
 	private void banPlayer(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unban]");
@@ -618,5 +906,229 @@ public final class Moderator implements CommandTrigger {
 		}
 
 		player.message(messagePrefix + player.getWorld().getServer().getDatabase().banPlayer(usernameToBan, player, time));
+	}
+
+	private void checkCache(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (name) [cache_key]");
+			return;
+		}
+
+		int keyArg = args.length >= 2 ? 1 : 0;
+
+		Player targetPlayer = args.length >= 2 ?
+			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
+			player;
+
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if (!targetPlayer.getCache().hasKey(args[keyArg])) {
+			player.message(messagePrefix + targetPlayer.getUsername() + " does not have the cache key " + args[keyArg] + " set");
+			return;
+		}
+
+		player.message(messagePrefix + targetPlayer.getUsername() + " has value " + targetPlayer.getCache().getCacheMap().get(args[keyArg]).toString() + " for cache key " + args[keyArg]);
+	}
+
+	private void setFatigue(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] (percentage)");
+			return;
+		}
+
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
+			player.message(messagePrefix + "You can not fatigue a staff member of equal or greater rank.");
+			return;
+		}
+
+		int fatigue;
+		try {
+			fatigue = args.length > 1 ? Integer.parseInt(args[1]) : 100;
+		} catch (NumberFormatException e) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [amount]");
+			return;
+		}
+
+		if (fatigue < 0)
+			fatigue = 0;
+		if (fatigue > 100)
+			fatigue = 100;
+		targetPlayer.setFatigue(fatigue * 1500);
+
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+			targetPlayer.message(messagePrefix + "Your fatigue has been set to " + ((targetPlayer.getFatigue() / 25) * 100 / 1500) + "% by a staff member");
+		}
+		player.message(messagePrefix + targetPlayer.getUsername() + "'s fatigue has been set to " + ((targetPlayer.getFatigue() / 25) * 100 / 1500 / 4) + "%");
+		player.getWorld().getServer().getGameLogger().addQuery(
+			new StaffLog(player, 12, targetPlayer, targetPlayer.getUsername() + "'s fatigue percentage was set to " + fatigue + "% by " + player.getUsername()));
+	}
+
+	private void sendAppearanceScreen(Player player, String[] args) {
+		Player targetPlayer = args.length > 0 ?
+			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
+			player;
+
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if (targetPlayer.getTotalLevel() > 150 && !player.isAdmin()) {
+			player.message(messagePrefix + "You must be an admin to help players over total level 150 change appearance.");
+			return;
+		}
+
+		player.message(messagePrefix + targetPlayer.getUsername() + " has been sent the change appearance screen");
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+			targetPlayer.message(messagePrefix + "A staff member has sent you the change appearance screen");
+		}
+		targetPlayer.setChangingAppearance(true);
+		ActionSender.sendAppearanceScreen(targetPlayer);
+	}
+
+	private void summonAllPlayers(Player player, String command, String[] args) {
+		int playersOnline = 0;
+		for (Player onlinePlayers : player.getWorld().getPlayers()) {
+			++playersOnline;
+		}
+		if (playersOnline > player.getConfig().SUMMON_ALL_PLAYER_LIMIT) {
+			player.message("There's actually a lot of people online.");
+			player.message("Probably you should not summon everyone.");
+			return;
+		}
+
+		if (args.length == 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (width) (height)");
+			return;
+		}
+
+		if (args.length == 0) {
+			for (Player playerToSummon : player.getWorld().getPlayers()) {
+				if (playerToSummon == null)
+					continue;
+
+				if (!playerToSummon.isDefaultUser() && !playerToSummon.isPlayerMod())
+					continue;
+
+				playerToSummon.summon(player);
+				playerToSummon.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+			}
+		} else if (args.length >= 2) {
+			int width;
+			int height;
+			try {
+				width = Integer.parseInt(args[0]);
+				height = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " (width) (height)");
+				return;
+			}
+			Random rand = DataConversions.getRandom();
+			for (Player playerToSummon : player.getWorld().getPlayers()) {
+				if (playerToSummon != player) {
+					int x = rand.nextInt(width);
+					int y = rand.nextInt(height);
+					boolean XModifier = rand.nextInt(2) == 0;
+					boolean YModifier = rand.nextInt(2) == 0;
+					if (XModifier)
+						x = -x;
+					if (YModifier)
+						y = -y;
+
+					Point summonLocation = new Point(x, y);
+
+					playerToSummon.summon(summonLocation);
+					playerToSummon.message(messagePrefix + "You have been summoned by " + player.getStaffName());
+				}
+			}
+		}
+
+		player.message(messagePrefix + "You have summoned all players to " + player.getLocation());
+		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has summoned all players to " + player.getLocation()));
+	}
+
+	private void returnAllPlayers(Player player, String command, String[] args) {
+		for (Player playerToSummon : player.getWorld().getPlayers()) {
+			if (playerToSummon == null)
+				continue;
+
+			if (!playerToSummon.isDefaultUser() && !playerToSummon.isPlayerMod())
+				continue;
+
+			playerToSummon.returnFromSummon();
+			playerToSummon.message(messagePrefix + "You have been returned by " + player.getStaffName());
+		}
+		player.message(messagePrefix + "All players who have been summoned were returned");
+	}
+
+	private void jailPlayer(Player player, String command, String[] args) {
+		if (args.length != 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
+			return;
+		}
+
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if (targetPlayer.isJailed()) {
+			player.message(messagePrefix + "You can not jail a player who has already been jailed.");
+			return;
+		}
+
+		if (targetPlayer.hasElevatedPriveledges()) {
+			player.message(messagePrefix + "You can not jail a staff member.");
+			return;
+		}
+
+		Point originalLocation = targetPlayer.jail();
+		player.getWorld().getServer().getGameLogger().addQuery(
+			new StaffLog(player, 5, player.getUsername() + " has summoned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
+		player.message(messagePrefix + "You have jailed " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+			targetPlayer.message(messagePrefix + "You have been jailed to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+		}
+	}
+
+	private void releasePlayer(Player player, String command, String[] args) {
+		Player targetPlayer = args.length > 0 ?
+			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
+			player;
+
+		if (targetPlayer == null) {
+			player.message(messagePrefix + "Invalid name or player is not online");
+			return;
+		}
+
+		if (targetPlayer.hasElevatedPriveledges()) {
+			player.message(messagePrefix + "You can not release a staff member.");
+			return;
+		}
+
+		if (!targetPlayer.isJailed()) {
+			player.message(messagePrefix + targetPlayer.getUsername() + " has not been jailed.");
+			return;
+		}
+
+		Point originalLocation = targetPlayer.releaseFromJail();
+		player.getWorld().getServer().getGameLogger().addQuery(
+			new StaffLog(player, 5, player.getUsername() + " has returned " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation));
+		player.message(messagePrefix + "You have released " + targetPlayer.getUsername() + " from jail to " + targetPlayer.getLocation() + " from " + originalLocation);
+		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+			targetPlayer.message(messagePrefix + "You have been released from jail to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+		}
 	}
 }

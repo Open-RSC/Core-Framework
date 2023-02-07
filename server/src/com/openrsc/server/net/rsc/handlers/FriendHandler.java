@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.database.struct.PlayerFriend;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PrivateMessage;
@@ -18,159 +19,180 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 	private final int MEMBERS_MAX_FRIENDS = 200;
 
 	public void process(FriendStruct payload, Player player) throws Exception {
-		OpcodeIn pID = payload.getOpcode();
-
 		String friendName = payload.player;
-		long friend = DataConversions.usernameToHash(friendName);
+		long friendHash = DataConversions.usernameToHash(friendName);
 
-		OpcodeIn packetOne = OpcodeIn.SOCIAL_ADD_FRIEND;
-		OpcodeIn packetTwo = OpcodeIn.SOCIAL_REMOVE_FRIEND;
-		OpcodeIn packetThree = OpcodeIn.SOCIAL_ADD_IGNORE;
-		OpcodeIn packetFour = OpcodeIn.SOCIAL_REMOVE_IGNORE;
-		OpcodeIn packetFive = OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE;
-		OpcodeIn packetSix = OpcodeIn.SOCIAL_ADD_DELAYED_IGNORE;
+		Player affectedPlayer = player.getWorld().getPlayer(friendHash);
 
-		Player affectedPlayer = player.getWorld().getPlayer(friend);
-		if (pID == packetOne) { // Add friend
-			if (friendName.equalsIgnoreCase("")) return;
+		switch (payload.getOpcode()) {
+			case SOCIAL_ADD_FRIEND: {
+				if (friendName.equalsIgnoreCase("")) return;
 
-			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
-				: MAX_FRIENDS;
-			if (player.getSocial().friendCount() >= maxFriends) {
-				player.message("Friend list is full");
-				ActionSender.sendFriendList(player);
-				return;
-			}
-
-			if (friendName.equalsIgnoreCase("Global$") ||
-				(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
-				player.getSocial().addGlobalFriend(player);
-				return;
-			}
-
-			if (friend > 0L) {
-				try {
-					int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(friend));
-
-					if (!player.getWorld().getServer().getDatabase().playerExists(friendId)) {
-						// only able to add those that exist!
-						player.message("Unable to add friend - unknown player.");
-						ActionSender.sendFriendList(player);
-						return;
-					}
-				} catch (Exception e) { }
-			}
-
-			player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
-			ActionSender.sendFriendUpdate(player, friend);
-			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
-				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
-					== PlayerSettings.BlockingMode.All.id();
-				boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
-					== PlayerSettings.BlockingMode.None.id();
-				if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
-					ActionSender.sendFriendUpdate(player, friend);
-				} else if (blockNone && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-					ActionSender.sendFriendUpdate(player, friend);
+				int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+					: MAX_FRIENDS;
+				if (player.getSocial().friendCount() >= maxFriends) {
+					player.message("Friend list is full");
+					ActionSender.sendFriendList(player);
+					return;
 				}
-			}
-		} else if (pID == packetTwo) { // Remove friend
-			if (friendName.equalsIgnoreCase("Global$") ||
-				(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
-				player.getSocial().removeGlobalFriend(player);
-				return;
-			}
 
-			player.getSocial().removeFriend(friend);
-			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
-				boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
-					== PlayerSettings.BlockingMode.All.id();
-				if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
+				if (friendName.equalsIgnoreCase("Global$") ||
+					(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
+					player.getSocial().addGlobalFriend(player);
+					return;
 				}
-			}
-		} else if (pID == packetThree) { // Add ignore
-			if (friendName.equalsIgnoreCase("")) return;
-			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
-				: MAX_FRIENDS;
-			if (player.getSocial().ignoreCount() >= maxFriends) {
-				player.message("Ignore list full");
-				ActionSender.sendIgnoreList(player);
-				return;
-			}
 
-			if (friend > 0L) {
-				try {
-					int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(friend));
+				PlayerFriend friendProperUsername = null;
 
-					if (!player.getWorld().getServer().getDatabase().playerExists(friendId)) {
-						// only able to add those that exist!
-						player.message("Unable to add name - unknown player.");
-						ActionSender.sendIgnoreList(player);
-						return;
-					}
+				if (friendHash > 0L) {
+					try {
+						friendProperUsername = player.getWorld().getServer().getDatabase().getProperUsernameCapitalization(friendName);
 
-					int staffGroup = player.getWorld().getServer().getDatabase().playerGroup(friendId);
-					if (staffGroup >= 0 && staffGroup <= 3) {
-						player.message("Staff may not be added to ignore list");
-						ActionSender.sendIgnoreList(player);
-						return;
+						if (friendProperUsername == null) {
+							// only able to add those that exist!
+							player.message("Unable to add friend - unknown player.");
+							ActionSender.sendFriendList(player);
+							return;
+						}
+					} catch (Exception e) {
 					}
-				} catch (Exception e) { }
-			}
-			player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
-			ActionSender.sendIgnoreList(player);
-		} else if (pID == packetFour) { // Remove ignore
-			player.getSocial().removeIgnore(friend);
-		} else if (pID == packetFive) { // Send PM
-			if (player.getLocation().onTutorialIsland()) {
-				player.message("@cya@Once you finish the tutorial, this lets you send messages to your friends");
-				return;
-			}
-			Player friendPlayer = player.getWorld().getPlayer(friend);
-			if (player.isMuted() && (friendPlayer == null || !friendPlayer.hasElevatedPriveledges())) {
-				if (player.getMuteNotify()) {
-					player.message("You have been " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " due to breaking a rule");
-					if (player.getMuteExpires() != -1) {
-						player.message("This mute will remain for a further " + DataConversions.formatTimeString(player.getMinutesMuteLeft()));
-					}
-					player.message("To prevent further mutes please read the rules");
 				}
-				return;
-			}
 
-			String message = payload.message;
-			if (!player.speakTongues) {
-				message = DataConversions.upperCaseAllFirst(
-					DataConversions.stripBadCharacters(message));
-			} else {
-				message = DataConversions.speakTongues(message);
-			}
-
-			if ((friendName.toLowerCase().startsWith("global$") || friendName.equalsIgnoreCase("global"))
-				&& player.getConfig().WANT_GLOBAL_FRIEND) {
-				if (player.isElligibleToGlobalChat()) {
-					player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
+				if (friendProperUsername == null) {
+					return;
 				}
+
+				player.getSocial().addFriend(friendHash, 0, friendProperUsername.playerName, friendProperUsername.formerName);
+				ActionSender.sendFriendUpdate(player, friendHash, friendProperUsername.playerName, friendProperUsername.formerName);
+				if (affectedPlayer != null && affectedPlayer.loggedIn()) {
+					boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
+						== PlayerSettings.BlockingMode.All.id();
+					boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
+						== PlayerSettings.BlockingMode.None.id();
+					if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), friendProperUsername.playerName, friendProperUsername.formerName);
+						ActionSender.sendFriendUpdate(player, friendHash, friendProperUsername.playerName, friendProperUsername.formerName);
+					} else if (blockNone && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+						ActionSender.sendFriendUpdate(player, friendHash, friendProperUsername.playerName, friendProperUsername.formerName);
+					}
+				}
+				break;
 			}
-			else {
-				player.addPrivateMessage(new PrivateMessage(player, message, friend));
+			case SOCIAL_REMOVE_FRIEND: {
+				if (friendName.equalsIgnoreCase("Global$") ||
+					(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
+					player.getSocial().removeGlobalFriend(player);
+					return;
+				}
+
+				player.getSocial().removeFriend(friendHash);
+				if (affectedPlayer != null && affectedPlayer.loggedIn()) {
+					boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
+						== PlayerSettings.BlockingMode.All.id();
+					if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+						String exFriendProperUsername = affectedPlayer.getSocial().getFriendListNames().get(player.getUsernameHash());
+						String exFriendFormerUsername = affectedPlayer.getSocial().getFriendListFormerNames().get(player.getUsernameHash());
+						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), exFriendProperUsername, exFriendFormerUsername);
+					}
+				}
+				break;
 			}
-		} else if (pID == packetSix) {
-			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS : MAX_FRIENDS;
-			if (player.getSocial().ignoreCount() >= maxFriends) {
-				player.message("Ignore list full");
-				return;
-			}
-			player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
-			ActionSender.sendIgnoreList(player);
-			player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, 150000, "Delayed ignore") {
-				public void run() {
-					player.getSocial().removeIgnore(friend);
+			case SOCIAL_ADD_IGNORE: {
+				if (friendName.equalsIgnoreCase("")) return;
+				int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+					: MAX_FRIENDS;
+				if (player.getSocial().ignoreCount() >= maxFriends) {
+					player.message("Ignore list full");
 					ActionSender.sendIgnoreList(player);
+					return;
 				}
-			});
+
+				PlayerFriend enemyProperUsername = null;
+
+				if (friendHash > 0L) {
+					try {
+						enemyProperUsername = player.getWorld().getServer().getDatabase().getProperUsernameCapitalization(friendName);
+
+						if (enemyProperUsername == null) {
+							// only able to add those that exist!
+							player.message("Unable to add name - unknown player.");
+							ActionSender.sendIgnoreList(player);
+							return;
+						}
+
+						int staffGroup = enemyProperUsername.groupId;
+						if (staffGroup >= 0 && staffGroup <= 3) {
+							player.message("Staff may not be added to ignore list");
+							ActionSender.sendIgnoreList(player);
+							return;
+						}
+					} catch (Exception e) {
+					}
+				}
+
+				if (enemyProperUsername == null) {
+					return;
+				}
+
+				player.getSocial().addIgnore(friendHash, DataConversions.usernameToHash(enemyProperUsername.formerName));
+				ActionSender.sendIgnoreList(player);
+				break;
+			}
+			case SOCIAL_REMOVE_IGNORE: {
+				player.getSocial().removeIgnore(friendHash);
+				break;
+			}
+			case SOCIAL_SEND_PRIVATE_MESSAGE: {
+				if (player.getLocation().onTutorialIsland()) {
+					player.message("@cya@Once you finish the tutorial, this lets you send messages to your friends");
+					return;
+				}
+				Player friendPlayer = player.getWorld().getPlayer(friendHash);
+				if (player.isMuted() && (friendPlayer == null || !friendPlayer.hasElevatedPriveledges())) {
+					if (player.getMuteNotify()) {
+						player.message("You have been " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " due to breaking a rule");
+						if (player.getMuteExpires() != -1) {
+							player.message("This mute will remain for a further " + DataConversions.formatTimeString(player.getMinutesMuteLeft()));
+						}
+						player.message("To prevent further mutes please read the rules");
+					}
+					return;
+				}
+
+				String message = payload.message;
+				if (!player.speakTongues) {
+					message = DataConversions.upperCaseAllFirst(
+						DataConversions.stripBadCharacters(message));
+				} else {
+					message = DataConversions.speakTongues(message);
+				}
+
+				if ((friendName.toLowerCase().startsWith("global$") || friendName.equalsIgnoreCase("global"))
+					&& player.getConfig().WANT_GLOBAL_FRIEND) {
+					if (player.isElligibleToGlobalChat()) {
+						player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
+					}
+				} else {
+					player.addPrivateMessage(new PrivateMessage(player, message, friendHash));
+				}
+				break;
+			}
+			case SOCIAL_ADD_DELAYED_IGNORE: {
+				int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS : MAX_FRIENDS;
+				if (player.getSocial().ignoreCount() >= maxFriends) {
+					player.message("Ignore list full");
+					return;
+				}
+				player.getSocial().addIgnore(friendHash, 0);
+				ActionSender.sendIgnoreList(player);
+				player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, 150000, "Delayed ignore") {
+					public void run() {
+						player.getSocial().removeIgnore(friendHash);
+						ActionSender.sendIgnoreList(player);
+					}
+				});
+				break;
+			}
 		}
 	}
 }
