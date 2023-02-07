@@ -43,6 +43,7 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.triggers.CatGrowthTrigger;
 import com.openrsc.server.plugins.triggers.DropObjTrigger;
 import com.openrsc.server.plugins.triggers.WineFermentTrigger;
+import com.openrsc.server.util.UsernameChange;
 import com.openrsc.server.util.languages.PreferredLanguage;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -333,6 +334,14 @@ public final class Player extends Mob {
 	 * The player's username
 	 */
 	private String username;
+	/**
+	 * The player's most recent former username
+	 */
+	private String formerName;
+	/**
+	 * Details about the player's pending username change, will be saved to database on logout
+	 */
+	private UsernameChange usernameChangePending = null;
 	/**
 	 * The player's username hash
 	 */
@@ -1522,8 +1531,16 @@ public final class Player extends Mob {
 		return username;
 	}
 
+	public String getFormerName() {
+		return formerName;
+	}
+
 	public void setUsername(final String username) {
 		this.username = username;
+	}
+
+	public void setFormerName(final String formerName) {
+		this.formerName = formerName;
 	}
 
 	public long getUsernameHash() {
@@ -4245,6 +4262,14 @@ public final class Player extends Mob {
 		}
 	}
 
+	public void setUsernameChangePending(UsernameChange usernameChangePending) {
+		this.usernameChangePending = usernameChangePending;
+	}
+
+	public UsernameChange getUsernameChangePending() {
+		return this.usernameChangePending;
+	}
+
 	public boolean isElligibleToGlobalChat() {
 		final String messagePrefix = getConfig().MESSAGE_PREFIX;
 		if (isMuted()) {
@@ -4265,7 +4290,7 @@ public final class Player extends Mob {
 
 		long waitTime = getConfig().GLOBAL_MESSAGE_COOLDOWN;
 
-		if (isMod()) {
+		if (isPlayerMod()) {
 			waitTime = 0;
 		}
 

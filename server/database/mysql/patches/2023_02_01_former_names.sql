@@ -1,0 +1,26 @@
+CREATE TABLE `_PREFIX_former_names` (
+	`dbid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`playerId` INT UNSIGNED NULL DEFAULT NULL,
+	`formerName` VARCHAR(13) NOT NULL DEFAULT '0',
+	`changeType` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+	`time` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+  `whoChanged` VARCHAR(12) NOT NULL DEFAULT '0',
+  `reason` VARCHAR(120) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`dbid`)
+)
+COLLATE='utf8_general_ci'
+;
+
+ALTER TABLE `_PREFIX_players`
+	ADD COLUMN `former_name` VARCHAR(13) NOT NULL DEFAULT '' AFTER `username`;
+
+ALTER TABLE `_PREFIX_friends`
+	ADD COLUMN `friendFormerName` VARCHAR(13) NOT NULL DEFAULT '' AFTER `friendName`;
+
+ALTER TABLE `_PREFIX_ignores`
+	ADD COLUMN `ignoreFormer` BIGINT(19) UNSIGNED NOT NULL DEFAULT '0' AFTER `ignore`,
+	ADD INDEX `ignoreFormer` (`ignoreFormer`);
+
+ALTER TABLE `_PREFIX_logins`
+    ADD COLUMN `nonce` VARCHAR(96) NULL DEFAULT NULL AFTER `clientVersion`,
+    ADD UNIQUE INDEX `nonce` (`nonce`);

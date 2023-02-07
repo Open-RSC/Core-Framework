@@ -22,11 +22,13 @@ package com.openrsc.server.login;
 public class LoginInfo {
     public String username;
     public int keys[];
+    public int nonces[];
     public boolean reconnecting;
 
     public LoginInfo() {
         username = "";
         keys = new int[4];
+        nonces = new int [12];
         reconnecting = false;
     }
 }

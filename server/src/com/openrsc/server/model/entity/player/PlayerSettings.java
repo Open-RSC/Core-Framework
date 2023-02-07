@@ -57,7 +57,7 @@ public class PlayerSettings {
 			for (Player pl : player.getWorld().getPlayers()) {
 				if (pl.getSocial().isFriendsWith(player.getUsernameHash())
 					&& pl.getIndex() != player.getIndex()) {
-					ActionSender.sendFriendUpdate(pl, player.getUsernameHash());
+					ActionSender.sendFriendUpdate(pl, player.getUsernameHash(), player.getUsername(), player.getFormerName());
 				}
 			}
 		} else if (i == 4) {

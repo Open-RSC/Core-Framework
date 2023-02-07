@@ -83,7 +83,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_DUEL_CLOSE, 225);
 		put(OpcodeOut.SEND_OPEN_DETAILS, 232); // part of rsc era protocol
 		put(OpcodeOut.SEND_UPDATE_PLAYERS, 234);
-		put(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, 237); // TODO: implement name changes
+		put(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, 237);
 		put(OpcodeOut.SEND_GAME_SETTINGS, 240);
 		put(OpcodeOut.SEND_SLEEP_FATIGUE, 244);
 		put(OpcodeOut.SEND_OPTIONS_MENU_OPEN, 245);
@@ -112,7 +112,6 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 			switch (payload.getOpcode()) {
 				// not currently implemented
 				case SEND_28_BYTES_UNUSED:
-				case SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE:
 					break;
 
 				// no payload opcodes
@@ -407,6 +406,15 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) fr.onlineStatus);
 					if (!fr.worldName.equals(""))
 						builder.writeZeroQuotedString(fr.worldName);
+					break;
+
+				case SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE:
+					IgnoreListStruct uil = (IgnoreListStruct) payload;
+					builder.writeZeroQuotedString(uil.name[0]);
+					builder.writeZeroQuotedString(uil.name[0]);
+					builder.writeZeroQuotedString(uil.formerName[0]);
+					builder.writeZeroQuotedString(uil.formerName[0]);
+					builder.writeByte((byte)(uil.updateExisting ? 1 : 0));
 					break;
 
 				case SEND_IGNORE_LIST:

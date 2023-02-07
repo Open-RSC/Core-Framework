@@ -8,4 +8,5 @@ public class IgnoreListStruct extends AbstractStruct<OpcodeOut> {
 	public int listSize;
 	public String[] name;
 	public String[] formerName;
+	public boolean updateExisting;
 }

@@ -138,7 +138,6 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 			switch (payload.getOpcode()) {
 				// not currently implemented
 				case SEND_28_BYTES_UNUSED:
-				case SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE:
 					break;
 
 				// no payload opcodes
@@ -537,9 +536,18 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					for (int i = 0; i < ignoreSize; i++) {
 						builder.writeString(il.name[i]);
 						builder.writeString(il.name[i]);
-						builder.writeString(il.name[i]); // TODO: check if can be former name
-						builder.writeString(il.name[i]);
+						builder.writeString(il.formerName[i]);
+						builder.writeString(il.formerName[i]);
 					}
+					break;
+
+				case SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE:
+					IgnoreListStruct uil = (IgnoreListStruct) payload;
+					builder.writeString(uil.name[0]);
+					builder.writeString(uil.name[0]);
+					builder.writeString(uil.formerName[0]);
+					builder.writeString(uil.formerName[0]);
+					builder.writeByte((byte)(uil.updateExisting ? 1 : 0));
 					break;
 
 				case SEND_INVENTORY:

@@ -7,6 +7,7 @@ import com.openrsc.server.content.achievement.AchievementReward;
 import com.openrsc.server.content.achievement.AchievementTask;
 import com.openrsc.server.content.market.CollectibleItem;
 import com.openrsc.server.content.market.MarketItem;
+import com.openrsc.server.database.impl.mysql.queries.logging.LoginLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
@@ -62,13 +63,13 @@ public abstract class GameDatabase {
 
 	protected abstract boolean queryPlayerExists(String username) throws GameDatabaseException;
 
-	protected abstract int queryPlayerGroup(int playerId) throws GameDatabaseException;
+	protected abstract PlayerFriend queryGetProperUsernameCapitalization(String username) throws GameDatabaseException;
 
 	protected abstract int queryPlayerIdFromUsername(String username) throws GameDatabaseException;
 
 	protected abstract String queryUsernameFromPlayerId(final int playerId) throws GameDatabaseException;
 
-	protected abstract void queryRenamePlayer(final int playerId, final String newName) throws GameDatabaseException;
+	protected abstract void queryRenamePlayer(final int playerId, final String oldOldName, final String oldName, final String newName, final int changeType) throws GameDatabaseException;
 
 	protected abstract String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException;
 
@@ -83,6 +84,10 @@ public abstract class GameDatabase {
 	public abstract void queryAddDropLog(ItemDrop drop) throws GameDatabaseException;
 
 	public abstract PlayerLoginData queryPlayerLoginData(String username) throws GameDatabaseException;
+
+	public abstract PlayerLoginData queryPlayerLoginDataByFormerName(String formerUsername) throws GameDatabaseException;
+
+	public abstract InvoluntaryChangeDetails queryFormerNameInvoluntaryChange(String attemptedUsername) throws GameDatabaseException;
 
 	public abstract PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException;
 
@@ -115,6 +120,10 @@ public abstract class GameDatabase {
 	public abstract void queryInitializeExpCapped(int playerId) throws GameDatabaseException;
 
 	public abstract PlayerData queryLoadPlayerData(Player player) throws GameDatabaseException;
+
+	public abstract PlayerData queryLoadPlayerData(String username) throws GameDatabaseException;
+
+	public abstract boolean queryInsertLoginAttempt(LoginLog loginLog) throws GameDatabaseException;
 
 	public abstract PlayerInventory[] queryLoadPlayerInvItems(int playerDatabaseId) throws GameDatabaseException;
 
@@ -274,18 +283,10 @@ public abstract class GameDatabase {
 
 	public abstract void queryUpdatePlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException;
 
+	public abstract void queryInsertFormerName(final int playerId, final String formerName, final String whoChanged, final int changeType, final String reason) throws GameDatabaseException;
+
 	// Database Management
-	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
-
-	protected abstract String queryColumnType(final String table, final String column) throws GameDatabaseException;
-
-	protected abstract void queryAddColumn(final String table, final String newColumn, final String dataType) throws GameDatabaseException;
-
-	protected abstract void queryModifyColumn(final String table, final String modifiedColumn, final String dataType) throws GameDatabaseException;
-
-	protected abstract void queryRawStatement(String statementString) throws GameDatabaseException;
-
-	protected abstract boolean queryTableExists(final String table) throws GameDatabaseException;
+	public abstract int queryFixCapitalizationFriendsList() throws GameDatabaseException;
 
 	public void open() {
 		synchronized (open) {
@@ -390,8 +391,8 @@ public abstract class GameDatabase {
 		return queryPlayerExists(username);
 	}
 
-	public int playerGroup(int playerId) throws GameDatabaseException {
-		return queryPlayerGroup(playerId);
+	public PlayerFriend getProperUsernameCapitalization(final String username) throws GameDatabaseException {
+		return queryGetProperUsernameCapitalization(username);
 	}
 
 	public int playerIdFromUsername(final String username) throws GameDatabaseException {
@@ -434,8 +435,8 @@ public abstract class GameDatabase {
 		queryDeleteItemSpawn(loc);
 	}
 
-	public void renamePlayer(final int playerId, final String newName) throws GameDatabaseException {
-		queryRenamePlayer(playerId, newName);
+	public void renamePlayer(final int playerId, final String oldOldName, final String oldName, final String newName, final int changeType) throws GameDatabaseException {
+		queryRenamePlayer(playerId, oldOldName, oldName, newName, changeType);
 	}
 
 	public String banPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) {
@@ -460,6 +461,10 @@ public abstract class GameDatabase {
 
 	public PlayerLoginData getPlayerLoginData(final String username) throws GameDatabaseException {
 		return queryPlayerLoginData(username);
+	}
+
+	public PlayerLoginData getPlayerLoginDataByFormerName(final String formerUsername) throws GameDatabaseException {
+		return queryPlayerLoginDataByFormerName(formerUsername);
 	}
 
 	public NpcLocation[] getNpcLocs() throws GameDatabaseException {
@@ -901,6 +906,8 @@ public abstract class GameDatabase {
 		for (final Map.Entry<Long, Integer> entry : entrySet) {
 			PlayerFriend friend = new PlayerFriend();
 			friend.playerHash = entry.getKey();
+			friend.playerName = player.getSocial().getFriendListNames().get(friend.playerHash);
+			friend.formerName = player.getSocial().getFriendListFormerNames().get(friend.playerHash);
 			list.add(friend);
 		}
 
@@ -915,7 +922,8 @@ public abstract class GameDatabase {
 
 		for (int i = 0; i < ignoreSize; i++) {
 			ignores[i] = new PlayerIgnore();
-			ignores[i].playerHash = player.getSocial().getIgnoreList().get(i);
+			ignores[i].ignoredUsernameHash = player.getSocial().getIgnoreList().get(i);
+			ignores[i].ignoredFormerUsernameHash = player.getSocial().getIgnoreListFormerNames().get(ignores[i].ignoredUsernameHash);
 		}
 
 		querySavePlayerIgnored(player.getDatabaseID(), ignores);
@@ -1040,7 +1048,7 @@ public abstract class GameDatabase {
 	/**
 	 * Updates the player's mute value in the cache
 	 * @param playerId The ID of the player being muted
-	 * @param time The duration of the mute in minutes
+	 * @param duration The duration of the mute in minutes
 	 * @param muteType 0 = Regular mute, 1 = Global Chat mute
 	 * @throws GameDatabaseException
 	 */
@@ -1075,28 +1083,8 @@ public abstract class GameDatabase {
 		queryBankRemove(player.getDatabaseID(), item);
 	}
 
-	public boolean columnExists(String table, String column) throws GameDatabaseException {
-		return queryColumnExists(table, column);
-	}
-
-	public String columnType(String table, String column) throws GameDatabaseException {
-		return queryColumnType(table, column);
-	}
-
-	public void addColumn(String table, String newColumn, String dataType) throws GameDatabaseException {
-		queryAddColumn(table, newColumn, dataType);
-	}
-
-	public void modifyColumn(String table, String modifiedColumn, String dataType) throws GameDatabaseException {
-		queryModifyColumn(table, modifiedColumn, dataType);
-	}
-
-	public boolean tableExists(String table) throws GameDatabaseException {
-		return queryTableExists(table);
-	}
-
-	public void addTable(String tableStatement) throws GameDatabaseException {
-		queryRawStatement(tableStatement);
+	public void insertFormerName(final int playerId, final String formerName, final String whoChanged, final int changeType, final String reason) throws GameDatabaseException {
+		queryInsertFormerName(playerId, formerName, whoChanged, changeType, reason);
 	}
 
 }

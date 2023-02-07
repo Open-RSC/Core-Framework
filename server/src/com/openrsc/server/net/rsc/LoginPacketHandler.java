@@ -165,15 +165,19 @@ public class LoginPacketHandler {
 							LOGGER.info("error parsing password in login block");
 							e.printStackTrace();
 						}
-						// TODO: there are ignored nonces at the end of the login block.
-						// If we cared about the cryptographic security gained by checking that those nonces haven't been used before,
-						// we would want that logic here.
+
+						for (int i = 0; i < 5; i++) {
+							loginInfo.nonces[i] = bytesToInt(loginBlock[38 + i * 4], loginBlock[39 + i * 4], loginBlock[40 + i * 4], loginBlock[41 + i * 4]);
+						}
+						loginInfo.nonces[5] = bytesToInt((byte)0, loginBlock[58], loginBlock[59], loginBlock[60]);
 
 						// Decrypt XTEA block
 						int xteaLength = packet.readUnsignedShort();
 						byte[] xteaBlock = Crypto.decryptXTEA(packet.readBytes(xteaLength), 0, xteaLength, loginInfo.keys);
 
-						// TODO: there are also ignored nonces at the beginning of the xtea block
+						for (int i = 0; i < 5; i++) {
+							loginInfo.nonces[i + 6] = bytesToInt(loginBlock[i * 4], loginBlock[1 + i * 4], loginBlock[2 + i * 4], loginBlock[3 + i * 4]);
+						}
 
 						String username = "";
 						try {
@@ -185,7 +189,7 @@ public class LoginPacketHandler {
 
 						ClientLimitations cl = new ClientLimitations(clientVersion.get());
 
-						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN) {
+						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN, loginInfo.nonces) {
 							@Override
 							public void loginValidated(int response) {
 								loginResponse = response;
@@ -277,7 +281,7 @@ public class LoginPacketHandler {
 
 						if (!errored) {
 							ClientLimitations cl = new ClientLimitations(clientVersion.get());
-							final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN) {
+							final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN, null) {
 								@Override
 								public void loginValidated(int response) {
 									loginResponse = response;
@@ -346,7 +350,7 @@ public class LoginPacketHandler {
 
 						ClientLimitations cl = new ClientLimitations(clientVersion.get());
 
-						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN) {
+						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN, null) {
 							@Override
 							public void loginValidated(int response) {
 								loginResponse = response;
@@ -426,7 +430,7 @@ public class LoginPacketHandler {
 						cl.isAndroidClient = (packet.readUnsignedByte() & 0xFF) != 0;
 					}
 
-					final LoginRequest request = new LoginRequest(server, channel, username, password, false, clientVersion, opcode == OpcodeIn.RELOGIN) {
+					final LoginRequest request = new LoginRequest(server, channel, username, password, false, clientVersion, opcode == OpcodeIn.RELOGIN, null) {
 						@Override
 						public void loginValidated(int response) {
 							loginResponse = response;

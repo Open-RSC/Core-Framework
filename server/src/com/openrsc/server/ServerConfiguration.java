@@ -297,6 +297,7 @@ public class ServerConfiguration {
 	public int SHUFFLE_PID_ORDER_INTERVAL;
 	public int SPELL_RANGE_DISTANCE;
 	public boolean WANT_CORRECTED_SKILLING_XP;
+	public int SUMMON_ALL_PLAYER_LIMIT;
 
 	public boolean DISABLE_MINIMAP_ROTATION;
 
@@ -424,6 +425,7 @@ public class ServerConfiguration {
 		SHUFFLE_PID_ORDER_INTERVAL = tryReadInt("shuffle_pid_order_interval").orElse(500);
 		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);
 		WANT_CORRECTED_SKILLING_XP = tryReadBool("want_corrected_skilling_xp").orElse(false);
+		SUMMON_ALL_PLAYER_LIMIT = tryReadInt("summon_all_player_limit").orElse(15);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);

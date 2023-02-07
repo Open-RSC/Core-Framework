@@ -33,6 +33,7 @@ public class PlayerData {
 	public int bodySprite;
 	public boolean male;
 	public String username;
+	public String former_name;
 	public String pass;
 	public String salt;
 	public long banned;

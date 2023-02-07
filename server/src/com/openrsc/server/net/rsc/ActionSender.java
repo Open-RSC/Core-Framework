@@ -8,6 +8,7 @@ import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.content.party.PartyPlayer;
+import com.openrsc.server.database.struct.UsernameChangeType;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
@@ -520,7 +521,7 @@ public class ActionSender {
 				}
 
 				struct.name[i] = username;
-				struct.formerName[i] = "";
+				struct.formerName[i] = player.getSocial().getFriendListFormerNames().getOrDefault(usernameHash, "");
 				struct.onlineStatus[i] = onlineStatus;
 				i++;
 			}
@@ -530,7 +531,11 @@ public class ActionSender {
 				int iteratorIndex = 0;
 				for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
 					if (iteratorIndex == currentFriend) {
-						sendFriendUpdate(player, entry.getKey());
+						sendFriendUpdate(player,
+							entry.getKey(),
+							player.getSocial().getFriendListNames().get(entry.getKey()),
+							player.getSocial().getFriendListFormerNames().getOrDefault(entry.getKey(), "")
+						);
 						break;
 					}
 					iteratorIndex++;
@@ -557,13 +562,16 @@ public class ActionSender {
 	/**
 	 * Updates a friends login status
 	 * @param player - Our player
-	 * @param usernameHash - the friend player
+	 * @param usernameHash - the friend player's usernamehash
+	 * @param username - the friend player's username (with proper capitalization)
 	 */
-	public static void sendFriendUpdate(Player player, long usernameHash) {
+	public static void sendFriendUpdate(Player player, long usernameHash, String username, String formerName) {
+		sendFriendUpdate(player, usernameHash, username, false, formerName);
+	}
+	public static void sendFriendUpdate(Player player, long usernameHash, String username, boolean nameChangeEvent, String formerName) {
 		FriendUpdateStruct struct = new FriendUpdateStruct();
 		int onlineStatus = 0;
 		struct.worldNumber = 0;
-		String username = DataConversions.hashToUsername(usernameHash);
 
 		if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
 			if (player.getBlockGlobalFriend()) return;
@@ -586,8 +594,8 @@ public class ActionSender {
 		}
 
 		struct.name = username;
-		struct.formerName = ""; // TODO: Allow name changes to fill this variable.
-		struct.onlineStatus = onlineStatus;
+		struct.formerName = formerName.equalsIgnoreCase(username) ? "" : formerName;
+		struct.onlineStatus = nameChangeEvent ? onlineStatus | 1 : onlineStatus;
 		struct.worldName = (onlineStatus & 4) != 0 ? "OpenRSC" : "";
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_FRIEND_UPDATE, struct, player);
 	}
@@ -845,6 +853,35 @@ public class ActionSender {
 	}
 
 	/**
+	 * Updates the friends list of a player who is online when someone they like changes their name
+	 */
+	public static void updateFriendListBecauseNameChange(Player playerToUpdate, String oldFriendName, String newFriendName) {
+		ActionSender.sendFriendUpdate(playerToUpdate, DataConversions.usernameToHash(newFriendName), newFriendName, true, oldFriendName);
+		if (playerToUpdate.getClientVersion() < 233) {
+			// clients without support for name changes will be confused by the addition of a random person to their friends list.
+			playerToUpdate.message("@whi@Your friend @red@\"" + oldFriendName + "\"@whi@ was renamed to @cya@\"" + newFriendName + "\"");
+		}
+	}
+
+
+	/**
+	 * Updates the ignore list of a player who is online when someone they hate changes their name
+	 */
+	public static void sendUpdateIgnoreBecauseOfNameChange(Player player, String username, String formerName, boolean updateExisting) {
+		IgnoreListStruct struct = new IgnoreListStruct();
+		struct.name = new String[1];
+		struct.formerName = new String[1];
+		struct.name[0] = username;
+		struct.formerName[0] = formerName;
+		struct.updateExisting = updateExisting;
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, struct, player);
+		if (player.getClientVersion() < 233) {
+			// clients without support for name changes will be confused by the addition of a random person to their ignore list.
+			player.message("@red@\"" + formerName + "\"@whi@ on your ignore list was renamed to @red@\"" + username + "\"");
+		}
+	}
+
+	/**
 	 * Sends the whole ignore list
 	 */
 	public static void sendIgnoreList(Player player) {
@@ -857,7 +894,10 @@ public class ActionSender {
 		for (long usernameHash : player.getSocial().getIgnoreList()) {
 			String username = DataConversions.hashToUsername(usernameHash);
 			struct.name[i] = username;
-			struct.formerName[i] = "";
+			struct.formerName[i] = DataConversions.hashToUsername(player.getSocial().getIgnoreListFormerNames().get(usernameHash));
+			if (struct.formerName[i].equalsIgnoreCase(struct.name[i])) {
+				struct.formerName[i] = "";
+			}
 			i++;
 		}
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_IGNORE_LIST, struct, player);
@@ -2065,6 +2105,19 @@ public class ActionSender {
 			}
 		} catch (Throwable e) {
 			LOGGER.catching(e);
+		}
+	}
+
+	public static void sendReleasedNameExplanation(Player player, UsernameChangeType changeType) {
+		if (changeType == UsernameChangeType.RELEASED) {
+			player.playerServerMessage(MessageType.QUEST, "@cya@Your account was deemed inactive and the name claimed by someone else.");
+			player.playerServerMessage(MessageType.QUEST, "@cya@Your username is now @ora@" + player.getUsername() + "@cya@ but can be changed with @mag@::rename");
+			player.playerServerMessage(MessageType.QUEST, "@cya@Log in with your new username to stop receiving this message.");
+		}
+		if (changeType == UsernameChangeType.INAPPROPRIATE) {
+			player.playerServerMessage(MessageType.QUEST, "@cya@Your account name was deemed inappropriate and has been changed.");
+			player.playerServerMessage(MessageType.QUEST, "@cya@Your username is now @ora@" + player.getUsername() + "@cya@ but can be changed with @mag@::rename");
+			player.playerServerMessage(MessageType.QUEST, "@cya@Log in with your new username to stop receiving this message.");
 		}
 	}
 

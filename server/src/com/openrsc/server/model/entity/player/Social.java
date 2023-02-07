@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.database.struct.PlayerFriend;
 import com.openrsc.server.database.struct.PlayerIgnore;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
@@ -18,25 +19,33 @@ public class Social {
 	 * Map of players on players friend list
 	 */
 	private TreeMap<Long, Integer> friendList = new TreeMap<Long, Integer>();
+	private TreeMap<Long, String> friendListNames = new TreeMap<Long, String>();
+	private TreeMap<Long, String> friendListFormerNames = new TreeMap<Long, String>();
 	/**
 	 * List of usernameHash's of players on players ignore list
 	 */
 	private ArrayList<Long> ignoreList = new ArrayList<Long>();
+	private TreeMap<Long, Long> ignoreListFormerNames = new TreeMap<Long, Long>();
 
 	public Social(Player player) {
 		this.player = player;
 	}
 
-	public void addFriend(long id, int world, String friendName) {
+	public void addFriend(long id, int world, String friendName, String friendFormerName) {
 		friendList.put(id, world);
+		friendListNames.put(id, friendName);
+		friendListFormerNames.put(id, friendFormerName);
 	}
 
-	public void addIgnore(long id, int i, String friendName) {
+	public void addIgnore(long id, long formerId) {
 		ignoreList.add(id);
+		ignoreListFormerNames.put(id, formerId);
 	}
 
 	public void removeFriend(long id) {
 		friendList.remove(id);
+		friendListNames.remove(id);
+		friendListFormerNames.remove(id);
 	}
 
 	public void removeIgnore(long id) {
@@ -59,12 +68,24 @@ public class Social {
 		return friendList;
 	}
 
+	public TreeMap<Long, String> getFriendListNames() {
+		return friendListNames;
+	}
+
+	public TreeMap<Long, String> getFriendListFormerNames() {
+		return friendListFormerNames;
+	}
+
 	public void setFriendList(TreeMap<Long, Integer> friendList) {
 		this.friendList = friendList;
 	}
 
 	public ArrayList<Long> getIgnoreList() {
 		return ignoreList;
+	}
+
+	public TreeMap<Long, Long> getIgnoreListFormerNames() {
+		return ignoreListFormerNames;
 	}
 
 	public void setIgnoreList(ArrayList<Long> ignoreList) {
@@ -82,15 +103,19 @@ public class Social {
 	public void addFriends(final PlayerFriend friends[]) {
 		for (PlayerFriend l : friends) {
 			friendList.put(l.playerHash, 0);
+			friendListNames.put(l.playerHash, l.playerName);
+			friendListFormerNames.put(l.playerHash, l.formerName);
 		}
 		if (player.getConfig().WANT_GLOBAL_FRIEND) {
 			friendList.put(Long.MIN_VALUE, 0);
+			friendListNames.put(Long.MIN_VALUE, "Global$");
 		}
 	}
 
 	public void addIgnore(final PlayerIgnore ignores[]) {
 		for (PlayerIgnore l : ignores) {
-			ignoreList.add(l.playerHash);
+			ignoreList.add(l.ignoredUsernameHash);
+			ignoreListFormerNames.put(l.ignoredUsernameHash, l.ignoredFormerUsernameHash);
 		}
 	}
 
@@ -102,7 +127,7 @@ public class Social {
 		if (friendList.containsKey(player.getUsernameHash())
 			&& (blockNone
 			|| (player.getSocial().isFriendsWith(this.player.getUsernameHash())) && !blockAll)) {
-			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash());
+			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash(), player.getUsername(), player.getFormerName());
 		} else if (!this.player.getSocial().isFriendsWith(player.getUsernameHash()) && this.player.getUsernameHash() != player.getUsernameHash() && player.getHideOnline() != 1) {
 			// this.player.message("@cya@" + player.getUsername() + " has logged in");
 		}
@@ -110,7 +135,7 @@ public class Social {
 
 	public void alertOfLogout(Player player) {
 		if (friendList.containsKey(player.getUsernameHash())) {
-			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash());
+			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash(), player.getUsername(), player.getFormerName());
 		}
 	}
 
@@ -120,7 +145,7 @@ public class Social {
 			player.playerServerMessage(MessageType.QUEST, "@whi@You will now be able to see & participate in Global chat features!");
 
 			// Long.MIN_VALUE is the usernameHash of the global friend
-			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE, "Global$", "");
 		}
 	}
 
@@ -131,7 +156,7 @@ public class Social {
 			player.playerServerMessage(MessageType.QUEST, "@whi@Add @gre@Global$@whi@ as a friend if this was a mistake.");
 
 			// Long.MIN_VALUE is the usernameHash of the global friend
-			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE, "Global$", "");
 		}
 	}
 
@@ -153,7 +178,7 @@ public class Social {
 			player.getCache().store("setting_block_global_friend", !currentSetting);
 
 			// Long.MIN_VALUE is the usernameHash of the global friend
-			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE, "Global$", "");
 		}
 	}
 }

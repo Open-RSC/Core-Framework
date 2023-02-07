@@ -1,6 +1,7 @@
 package com.openrsc.server.database.patches;
 
 import com.openrsc.server.database.DatabaseType;
+import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.JDBCDatabase;
 import com.openrsc.server.database.JDBCDatabaseConnection;
 import com.openrsc.server.database.impl.mysql.ScriptRunner;
@@ -30,8 +31,10 @@ public class JDBCPatchApplier extends PatchApplier {
     private final DatabaseType databaseType;
     private final PatchApplierQueries queries;
     private final String tablePrefix;
+    private final GameDatabase gameDatabase;
 
     public JDBCPatchApplier(JDBCDatabase connection, String tablePrefix) {
+    	this.gameDatabase = connection;
         this.connection = connection.getConnection();
         this.databaseType = this.connection.getDatabaseType();
         QueriesManager queriesManager = QueriesManager.getInstance(
@@ -52,13 +55,22 @@ public class JDBCPatchApplier extends PatchApplier {
             );
             PreparedStatement statement = connection.prepareStatement(markPatchExecutedQuery);
             statement.executeUpdate();
+            executePostPatchScripts(fileName);
         } catch (SQLException ex) {
             LOGGER.error("Failed to mark " + fileName + " as executed...");
             LOGGER.catching(ex);
         }
     }
 
-    @Override
+	private void executePostPatchScripts(String fileName) {
+		if (fileName.equals("2023_02_01_former_names.sql")) {
+			LOGGER.info("Fixing capitalization of friends in Friend Lists...");
+			int fixedCount = gameDatabase.queryFixCapitalizationFriendsList();
+			LOGGER.info("Fixed the capitalization of " + fixedCount + " unique friends in Friend Lists");
+		}
+	}
+
+	@Override
     protected Collection<String> getExecutedPatches() {
         try {
             ResultSet resultSet = connection.executeQuery(queries.PATCHES_GET_EXECUTED.get());
