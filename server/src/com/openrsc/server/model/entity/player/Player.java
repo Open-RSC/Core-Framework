@@ -4299,7 +4299,7 @@ public final class Player extends Mob {
 			return false;
 		}
 
-		if (getTotalLevel() < getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ) {
+		if (getTotalLevel() < getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ && !isPlayerMod()) {
 			message(messagePrefix + "You can only send a message to global chat if you have at least " + getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ + " total level.");
 			return false;
 		}
