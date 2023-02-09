@@ -322,7 +322,13 @@ public class ScriptContext {
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
-			oldNpc.setBusy(false);
+			if(getContextPlayer().getMultiEndedEarly()) {
+				//We don't set the busy state here, since it'd conflict with the new person the NPC is talking to. However, we do want to reset the check back to false.
+				getContextPlayer().setMultiEndedEarly(false);
+			}
+			else {
+				oldNpc.setBusy(false);
+			}
 		}
 
 		unlock();

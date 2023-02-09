@@ -283,9 +283,9 @@ public class RuneScript {
 
 		LOGGER.info("enter multi, " + PluginTask.getContextPluginTask().getDescriptor() + " tick " + PluginTask.getContextPluginTask().getWorld().getServer().getCurrentTick());
 		final long start = System.currentTimeMillis();
-		if (npc.getMultiTimeout() != -1) {
-			npc.setMultiTimeout(start);
-		}
+		npc.setMultiTimeout(start);
+		//We'll clear this on each new multi. Other players need to talk to the NPC again if they want to steal it!
+		npc.setPlayerWantsNpc(false);
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
@@ -299,6 +299,12 @@ public class RuneScript {
 		ActionSender.sendMenu(player, options);
 
 		while (!player.checkUnderAttack()) {
+			//If we get to this point and the multi timeout is higher than our start or is -1, someone has changed it! We should kill the multi if it hasn't been killed by other means.
+			if (npc.getMultiTimeout() == -1 || npc.getMultiTimeout() > start) {
+				player.resetMenuHandler();
+				return -1;
+			}
+
 			if (player.getOption() != -1) {
 				if (npc != null && options[player.getOption()] != null) {
 					if (sendToClient)

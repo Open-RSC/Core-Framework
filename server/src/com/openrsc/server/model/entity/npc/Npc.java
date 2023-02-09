@@ -77,10 +77,22 @@ public class Npc extends Mob {
 	 * Holds players that did damage with range
 	 */
 	private Map<UUID, Pair<Integer, Long>> rangeDamagers = new HashMap<UUID, Pair<Integer,Long>>();
+
+	/**
+	 * The player object that is actively talking to us.
+	 */
+	private Player playerBeingTalkedTo;
+
 	/**
 	 * Tracking for timing out the multi menu if another player attempts to talk to an NPC locked in dialog
 	 */
 	private long multiTimeout = -1;
+
+	/**
+	 * Another player wants to access the NPC, and can't access it right now.
+	 */
+	private boolean playerWantsNpc = false;
+
 
 	public Npc(final World world, final int id, final int x, final int y) {
 		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -726,6 +738,14 @@ public class Npc extends Mob {
 		this.multiTimeout = currentTimeMillis;
 	}
 
+	public void setPlayerBeingTalkedTo(Player player) {
+		this.playerBeingTalkedTo = player;
+	}
+
+	public void setPlayerWantsNpc(boolean wantsNpc) {
+		this.playerWantsNpc = wantsNpc;
+	}
+
 	public void remove() {
 		this.killed = true;
 		double respawnMult = getConfig().NPC_RESPAWN_MULTIPLIER;
@@ -876,4 +896,13 @@ public class Npc extends Mob {
 	public long getMultiTimeout() {
 		return multiTimeout;
 	}
+
+	public Player getPlayerBeingTalkedTo() {
+		return playerBeingTalkedTo;
+	}
+
+	public boolean getPlayerWantsNpc() {
+		return playerWantsNpc;
+	}
+
 }

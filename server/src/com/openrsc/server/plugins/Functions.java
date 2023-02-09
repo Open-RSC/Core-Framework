@@ -325,10 +325,11 @@ public class Functions {
 
 	public static int multi(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
 		LOGGER.info("enter multi, " + PluginTask.getContextPluginTask().getDescriptor() + " tick " + PluginTask.getContextPluginTask().getWorld().getServer().getCurrentTick());
+
 		final long start = System.currentTimeMillis();
-		if (npc.getMultiTimeout() != -1) {
-			npc.setMultiTimeout(start);
-		}
+		npc.setMultiTimeout(start);
+		//We'll clear this on each new multi. Other players need to talk to the NPC again if they want to steal it!
+		npc.setPlayerWantsNpc(false);
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
@@ -343,6 +344,12 @@ public class Functions {
 		ActionSender.sendMenu(player, options);
 
 		while (!player.checkUnderAttack()) {
+			//If we get to this point and the multi timeout is higher than our start or is -1, someone has changed it! We should kill the multi if it hasn't been killed by other means.
+			if (npc.getMultiTimeout() == -1 || npc.getMultiTimeout() > start) {
+				player.resetMenuHandler();
+				return -1;
+			}
+
 			if (player.getOption() != -1) {
 				if (npc != null && options[player.getOption()] != null) {
 					if (sendToClient)
@@ -364,10 +371,9 @@ public class Functions {
 		final long currentTime = System.currentTimeMillis();
 		final int tick = player.getConfig().GAME_TICK;
 		final boolean hasBeenFiveMinutes = currentTime - start > normalizeTicks(500, tick) * (long)tick;
-		final boolean multiHasTimedOut = npc.getMultiTimeout() != -1 && currentTime - npc.getMultiTimeout() >= 20000L;
 
 		return (hasBeenFiveMinutes ||
-			multiHasTimedOut ||
+			(npc.getPlayerWantsNpc() && System.currentTimeMillis() - start >= 20000L) ||
 			player.getMenuHandler() == null);
 	}
 

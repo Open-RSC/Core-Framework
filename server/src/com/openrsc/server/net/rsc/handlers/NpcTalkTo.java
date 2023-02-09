@@ -48,12 +48,24 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 				getPlayer().resetAll();
 
 				if (npc.isBusy() || System.currentTimeMillis() - npc.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
-					if (npc.getMultiTimeout() == -1) {
-						npc.setMultiTimeout(System.currentTimeMillis());
+					if (npc.getPlayerBeingTalkedTo() != null && npc.getPlayerBeingTalkedTo().getMenuHandler() != null && npc.getMultiTimeout() != -1 && System.currentTimeMillis() - npc.getMultiTimeout() >= 20000L) {
+						npc.getPlayerBeingTalkedTo().setMultiEndedEarly(true);
+						npc.getPlayerBeingTalkedTo().resetMenuHandler();
+						npc.setPlayerBeingTalkedTo(null);
 					}
-					getPlayer().message(npc.getDef().getName() + " is busy at the moment");
-					return;
+
+					else {
+						//Flag it so the talking player can kill their own dialogue when the time comes, even if this player doesn't come back.
+						npc.setPlayerWantsNpc(true);
+						getPlayer().message(npc.getDef().getName() + " is busy at the moment");
+						return;
+					}
+
 				}
+
+				npc.setPlayerBeingTalkedTo(getPlayer());
+				npc.setMultiTimeout(-1);
+				npc.setPlayerWantsNpc(false);
 
 				npc.resetPath();
 				npc.resetRange();
@@ -73,8 +85,6 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 						}
 					}
 				}
-
-				npc.setMultiTimeout(-1);
 
 				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), npc});
 				if (!getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD

@@ -371,6 +371,11 @@ public final class Player extends Mob {
 	 */
 	private UnregisterRequest unregisterRequest = null;
 
+	/**
+	 * Did the player have a multi menu end early in dialogue by forcefully having their multi menu closed by another player?
+	 */
+	private boolean multiEndedEarly = false;
+
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -4336,4 +4341,13 @@ public final class Player extends Mob {
 	public boolean hasUnregisterRequest() {
 		return this.unregisterRequest != null;
 	}
+
+	public boolean getMultiEndedEarly() {
+		return multiEndedEarly;
+	}
+
+	public void setMultiEndedEarly(boolean endedEarly) {
+		this.multiEndedEarly = endedEarly;
+	}
+
 }
