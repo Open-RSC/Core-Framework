@@ -48,7 +48,9 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 				getPlayer().resetAll();
 
 				if (npc.isBusy() || System.currentTimeMillis() - npc.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
-					npc.setMultiTimeout(System.currentTimeMillis());
+					if (npc.getMultiTimeout() == -1) {
+						npc.setMultiTimeout(System.currentTimeMillis());
+					}
 					getPlayer().message(npc.getDef().getName() + " is busy at the moment");
 					return;
 				}
