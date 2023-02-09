@@ -283,6 +283,9 @@ public class RuneScript {
 
 		LOGGER.info("enter multi, " + PluginTask.getContextPluginTask().getDescriptor() + " tick " + PluginTask.getContextPluginTask().getWorld().getServer().getCurrentTick());
 		final long start = System.currentTimeMillis();
+		if (npc.getMultiTimeout() != -1) {
+			npc.setMultiTimeout(start);
+		}
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
@@ -302,7 +305,7 @@ public class RuneScript {
 						say(options[player.getOption()]);
 				}
 				return player.getOption();
-			} else if (System.currentTimeMillis() - start > 500L * player.getConfig().GAME_TICK || player.getMenuHandler() == null) {
+			} else if (Functions.multiMenuNeedsCancel(start, player, npc)) {
 				player.resetMenuHandler();
 				return -1;
 			}
