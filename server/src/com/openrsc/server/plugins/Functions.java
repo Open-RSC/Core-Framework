@@ -364,7 +364,7 @@ public class Functions {
 		final long currentTime = System.currentTimeMillis();
 		final int tick = player.getConfig().GAME_TICK;
 		final boolean hasBeenFiveMinutes = currentTime - start > normalizeTicks(500, tick) * (long)tick;
-		final boolean multiHasTimedOut = npc.getMultiTimeout() != -1 && currentTime - npc.getMultiTimeout() > normalizeTicks(31, tick) * (long) tick;
+		final boolean multiHasTimedOut = npc.getMultiTimeout() != -1 && currentTime - npc.getMultiTimeout() >= 20000L;
 
 		return (hasBeenFiveMinutes ||
 			multiHasTimedOut ||

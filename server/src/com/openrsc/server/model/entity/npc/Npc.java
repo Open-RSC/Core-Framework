@@ -80,7 +80,7 @@ public class Npc extends Mob {
 	/**
 	 * Tracking for timing out the multi menu if another player attempts to talk to an NPC locked in dialog
 	 */
-	private long multiTimeout;
+	private long multiTimeout = -1;
 
 	public Npc(final World world, final int id, final int x, final int y) {
 		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
