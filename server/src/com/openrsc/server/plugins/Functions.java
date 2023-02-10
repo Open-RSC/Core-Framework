@@ -327,15 +327,15 @@ public class Functions {
 		LOGGER.info("enter multi, " + PluginTask.getContextPluginTask().getDescriptor() + " tick " + PluginTask.getContextPluginTask().getWorld().getServer().getCurrentTick());
 
 		final long start = System.currentTimeMillis();
-		npc.setMultiTimeout(start);
-		//We'll clear this on each new multi. Other players need to talk to the NPC again if they want to steal it!
-		npc.setPlayerWantsNpc(false);
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
 				return -1;
 			}
 			else {
+				npc.setMultiTimeout(start);
+				//We'll clear this on each new multi. Other players need to talk to the NPC again if they want to steal it!
+				npc.setPlayerWantsNpc(false);
 				npc.face(player);
 			}
 		}
@@ -345,7 +345,7 @@ public class Functions {
 
 		while (!player.checkUnderAttack()) {
 			//If we get to this point and the multi timeout is higher than our start or is -1, someone has changed it! We should kill the multi if it hasn't been killed by other means.
-			if (npc.getMultiTimeout() == -1 || npc.getMultiTimeout() > start) {
+			if (npc != null && (npc.getMultiTimeout() == -1 || npc.getMultiTimeout() > start)) {
 				player.resetMenuHandler();
 				return -1;
 			}
@@ -373,7 +373,7 @@ public class Functions {
 		final boolean hasBeenFiveMinutes = currentTime - start > normalizeTicks(500, tick) * (long)tick;
 
 		return (hasBeenFiveMinutes ||
-			(npc.getPlayerWantsNpc() && System.currentTimeMillis() - start >= 20000L) ||
+			(npc != null && npc.getPlayerWantsNpc() && System.currentTimeMillis() - start >= 20000L) ||
 			player.getMenuHandler() == null);
 	}
 
