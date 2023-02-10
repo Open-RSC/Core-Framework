@@ -288,6 +288,7 @@ public class RuneScript {
 				player.resetMenuHandler();
 				return -1;
 			} else {
+				npc.setPlayerBeingTalkedTo(player);
 				npc.setMultiTimeout(start);
 				//We'll clear this on each new multi. Other players need to talk to the NPC again if they want to steal it!
 				npc.setPlayerWantsNpc(false);

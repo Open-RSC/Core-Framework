@@ -327,6 +327,9 @@ public class ScriptContext {
 				getContextPlayer().setMultiEndedEarly(false);
 			}
 			else {
+				if(oldNpc.getPlayerBeingTalkedTo() == getContextPlayer()) {
+					oldNpc.setPlayerBeingTalkedTo(null);
+				}
 				oldNpc.setBusy(false);
 			}
 		}

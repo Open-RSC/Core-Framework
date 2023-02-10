@@ -63,7 +63,6 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 
 				}
 
-				npc.setPlayerBeingTalkedTo(getPlayer());
 				npc.setMultiTimeout(-1);
 				npc.setPlayerWantsNpc(false);
 
