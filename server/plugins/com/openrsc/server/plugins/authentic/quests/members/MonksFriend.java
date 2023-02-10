@@ -248,6 +248,8 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 		if (npc.getID() == NpcId.BROTHER_CEDRIC.id()) {
 			if (player.getQuestStage(getQuestId()) == 4 && item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				thinkbubble(item);
+				delay(2);
+				player.getCarriedItems().remove(item);
 				say(player, npc, "Cedric, here, drink some water");
 				npcsay(player, npc, "oh yes, my head's starting to spin",
 					"gulp...gulp");
