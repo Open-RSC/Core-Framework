@@ -46,11 +46,11 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 					return;
 				}
 				getPlayer().resetAll();
-
+				Player otherPlayer = npc.getPlayerBeingTalkedTo();
 				if (npc.isBusy() || System.currentTimeMillis() - npc.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
-					if (npc.getPlayerBeingTalkedTo() != null && npc.getPlayerBeingTalkedTo().getMenuHandler() != null && npc.getMultiTimeout() != -1 && System.currentTimeMillis() - npc.getMultiTimeout() >= 20000L) {
-						npc.getPlayerBeingTalkedTo().setMultiEndedEarly(true);
-						npc.getPlayerBeingTalkedTo().resetMenuHandler();
+					if (otherPlayer != null && otherPlayer.getMenuHandler() != null && npc.getMultiTimeout() != -1 && System.currentTimeMillis() - npc.getMultiTimeout() >= 20000L) {
+						otherPlayer.setMultiEndedEarly(true);
+						otherPlayer.resetMenuHandler();
 						npc.setPlayerBeingTalkedTo(null);
 					}
 
