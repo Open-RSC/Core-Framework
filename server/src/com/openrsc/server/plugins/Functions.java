@@ -326,6 +326,9 @@ public class Functions {
 	public static int multi(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
 		LOGGER.info("enter multi, " + PluginTask.getContextPluginTask().getDescriptor() + " tick " + PluginTask.getContextPluginTask().getWorld().getServer().getCurrentTick());
 		final long start = System.currentTimeMillis();
+		if (npc.getMultiTimeout() != -1) {
+			npc.setMultiTimeout(start);
+		}
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
@@ -346,7 +349,7 @@ public class Functions {
 						say(player, npc, options[player.getOption()]);
 				}
 				return player.getOption();
-			} else if (System.currentTimeMillis() - start > 500L * player.getConfig().GAME_TICK || player.getMenuHandler() == null) {
+			} else if (multiMenuNeedsCancel(start, player, npc)) {
 				player.resetMenuHandler();
 				return -1;
 			}
@@ -356,6 +359,18 @@ public class Functions {
 		player.releaseUnderAttack();
 		return -1;
 	}
+
+	protected static boolean multiMenuNeedsCancel(long start, Player player, Npc npc) {
+		final long currentTime = System.currentTimeMillis();
+		final int tick = player.getConfig().GAME_TICK;
+		final boolean hasBeenFiveMinutes = currentTime - start > normalizeTicks(500, tick) * (long)tick;
+		final boolean multiHasTimedOut = npc.getMultiTimeout() != -1 && currentTime - npc.getMultiTimeout() >= 20000L;
+
+		return (hasBeenFiveMinutes ||
+			multiHasTimedOut ||
+			player.getMenuHandler() == null);
+	}
+
 
 	public static void advancestat(Player player, int skillId, int baseXp, int expPerLvl) {
 		player.incExp(skillId, player.getSkills().getMaxStat(skillId) * expPerLvl + baseXp, true);
