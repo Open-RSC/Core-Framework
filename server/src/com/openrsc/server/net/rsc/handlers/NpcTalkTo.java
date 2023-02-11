@@ -31,61 +31,56 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 		}
 
 		player.resetAll();
-		final Npc npc = player.getWorld().getNpc(payload.serverIndex);
+		final Npc n = player.getWorld().getNpc(payload.serverIndex);
 
-		if (npc == null) {
+		if (n == null) {
 			return;
 		}
 
-		player.setFollowing(npc, 0, false);
-		player.setWalkToAction(new WalkToMobAction(player, npc, 1) {
+		player.setFollowing(n, 0, false);
+		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
-				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(npc)) {
+				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(n)) {
 					return;
 				}
 				getPlayer().resetAll();
 
-				if (npc.isBusy() || System.currentTimeMillis() - npc.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
-					if (npc.getMultiTimeout() == -1) {
-						npc.setMultiTimeout(System.currentTimeMillis());
-					}
-					getPlayer().message(npc.getDef().getName() + " is busy at the moment");
+				if (n.isBusy() || System.currentTimeMillis() - n.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
+					getPlayer().message(n.getDef().getName() + " is busy at the moment");
 					return;
 				}
 
-				npc.resetPath();
-				npc.resetRange();
+				n.resetPath();
+				n.resetRange();
 
 				// NPCs on the same tile as you will walk somewhere else.
-				if (getPlayer().getLocation().equals(npc.getLocation())) {
+				if (getPlayer().getLocation().equals(n.getLocation())) {
 					for (int x = -1; x <= 1; ++x) {
 						for (int y = -1; y <= 1; ++y) {
 							if (x == 0 || y == 0)
 								continue;
 							Point destination = canWalk(getPlayer().getWorld(), getPlayer().getX() - x, getPlayer().getY() - y);
-							if (destination != null && destination.inBounds(npc.getLoc().minX, npc.getLoc().minY, npc.getLoc().maxY, npc.getLoc().maxY)) {
-								npc.walk(destination.getX(), destination.getY());
-								npc.setTalkToNpcEvent(getPlayer());
+							if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
+								n.walk(destination.getX(), destination.getY());
+								n.setTalkToNpcEvent(getPlayer());
 								return;
 							}
 						}
 					}
 				}
 
-				npc.setMultiTimeout(-1);
-
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), npc});
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), n});
 				if (!getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD
-					&& getPlayer().getWorld().getServer().getEntityHandler().getNpcDef(npc.getID()).isMembers()) {
+					&& getPlayer().getWorld().getServer().getEntityHandler().getNpcDef(n.getID()).isMembers()) {
 					getPlayer().message("you must be on a members' world to do that");
 				}
 			}
 
 			private Point canWalk(World world, int x, int y) {
-				int myX = npc.getX();
-				int myY = npc.getY();
+				int myX = n.getX();
+				int myY = n.getY();
 				int newX = x;
 				int newY = y;
 				boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
@@ -134,12 +129,12 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 			private boolean checkBlocking(World world, int x, int y, int bit) {
 				TileValue t = world.getTile(x, y);
 				Point point = new Point(x, y);
-				for (Npc n : npc.getViewArea().getNpcsInView()) {
+				for (Npc n : n.getViewArea().getNpcsInView()) {
 					if (n.getLocation().equals(point)) {
 						return true;
 					}
 				}
-				for (Player areaPlayer : npc.getViewArea().getPlayersInView()) {
+				for (Player areaPlayer : n.getViewArea().getPlayersInView()) {
 					if (areaPlayer.getLocation().equals(point)) {
 						return true;
 					}

@@ -77,10 +77,6 @@ public class Npc extends Mob {
 	 * Holds players that did damage with range
 	 */
 	private Map<UUID, Pair<Integer, Long>> rangeDamagers = new HashMap<UUID, Pair<Integer,Long>>();
-	/**
-	 * Tracking for timing out the multi menu if another player attempts to talk to an NPC locked in dialog
-	 */
-	private long multiTimeout = -1;
 
 	public Npc(final World world, final int id, final int x, final int y) {
 		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -422,7 +418,7 @@ public class Npc extends Mob {
 			for (Item item : items) {
 				if (item != null) {
 					if ((getWorld().getServer().getConfig().RESTRICT_ITEM_ID >= 0 && item.getCatalogId() > getWorld().getServer().getConfig().RESTRICT_ITEM_ID)
-						|| (getWorld().getServer().getConfig().ONLY_BASIC_RUNES
+					|| (getWorld().getServer().getConfig().ONLY_BASIC_RUNES
 						&& getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName().endsWith("-Rune")
 						&& item.getCatalogId() >= ItemId.LIFE_RUNE.id())) {
 						// world does not allow drop
@@ -714,16 +710,13 @@ public class Npc extends Mob {
 
 	public void initializeTalkScript(final Player player) {
 		final Npc npc = this;
+		//p.setBusyTimer(600);
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
 				getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, player, new Object[]{player, npc});
 			}
 		});
-	}
-
-	public void setMultiTimeout(long currentTimeMillis) {
-		this.multiTimeout = currentTimeMillis;
 	}
 
 	public void remove() {
@@ -869,11 +862,7 @@ public class Npc extends Mob {
 		this.npcBehavior = npcBehavior;
 	}
 
-	public void walkToRespawn() {
+    public void walkToRespawn() {
 		walkToEntityAStar(loc.startX, loc.startY);
-	}
-
-	public long getMultiTimeout() {
-		return multiTimeout;
-	}
+    }
 }
