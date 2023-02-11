@@ -40,8 +40,12 @@ import orsc.util.Utils;
 
 import java.io.*;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static orsc.Config.*;
 import static orsc.multiclient.ClientPort.saveHideIp;
@@ -15179,10 +15183,79 @@ public final class mudclient implements Runnable {
 					- 4 == this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate], crown, sender, formerName, this.panelMessagePrivate);
 			}
 
+			logChat(sender, message, type);
+
 		} catch (RuntimeException var12) {
 			throw GenUtil.makeThrowable(var12, "client.BD(" + crownEnabled + ',' + (sender != null ? "{...}" : "null")
 				+ ',' + "dummy" + ',' + (message != null ? "{...}" : "null") + ',' + type + ',' + crownID + ','
 				+ (formerName != null ? "{...}" : "null") + ',' + ')');
+		}
+	}
+
+	private void logChat(String sender, String message, MessageType type) {
+		/* TODO: Apparently ANSI colors don't work by default on Windows machines, which is seemingly
+		    what the majority of players use.
+		    I will leave the functionality here for now, but it should be looked into if there is a way to
+		    enable them programmatically. */
+		final String ANSI_RESET = "\u001B[0m";
+		final String ANSI_BLACK = "\u001B[30m";
+		final String ANSI_RED = "\u001B[31m";
+		final String ANSI_GREEN = "\u001B[32m";
+		final String ANSI_YELLOW = "\u001B[33m";
+		final String ANSI_BLUE = "\u001B[34m";
+		final String ANSI_PURPLE = "\u001B[35m";
+		final String ANSI_CYAN = "\u001B[36m";
+		final String ANSI_WHITE = "\u001B[37m";
+
+		final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		final LocalDateTime now = LocalDateTime.now();
+		final String currentTime = dateTimeFormatter.format(now);
+
+		// Strip all the freaking color codes
+		Pattern pattern = Pattern.compile("[@][A-Za-z][A-Za-z][A-Za-z][@]");
+		Matcher matcher = pattern.matcher(message);
+		if (matcher.find()) {
+			message = matcher.replaceAll("");
+		}
+		if (sender != null) {
+			matcher = pattern.matcher(sender);
+			if (matcher.find()) {
+				sender = matcher.replaceAll("");
+			}
+		}
+
+
+		// Pick a color
+		String color = null;
+		switch (type.color) {
+			case "@yel@":
+				color = ANSI_YELLOW;
+				break;
+			case "@whi@":
+				color = ANSI_WHITE;
+				break;
+			case "@cya@":
+				color = ANSI_CYAN;
+				break;
+			default:
+				color = ANSI_RESET;
+				break;
+		}
+
+		// Handle global going to quest
+		if (type == MessageType.QUEST && message.contains("Global$")) {
+			color = ANSI_CYAN;
+		}
+
+		// Handle NPC dialog
+		if (type == MessageType.QUEST && sender != null) {
+			color = ANSI_YELLOW;
+		}
+
+		if (sender == null || sender.equals("null")) {
+			System.out.println("[" + currentTime + "] [" + type.name() + "] " + message);
+		} else {
+			System.out.println("[" + currentTime + "] [" + type.name() + "] " + sender + ": " + message);
 		}
 	}
 
