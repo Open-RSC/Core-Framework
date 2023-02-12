@@ -18,6 +18,12 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 
 	private final int MEMBERS_MAX_FRIENDS = 200;
 
+	private int actualFriendListLimit(Player player) {
+		int clientLimit = player.getClientLimitations().maxFriends;
+		int freeOrMembersLimit = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS : MAX_FRIENDS;
+		return Math.min(clientLimit, freeOrMembersLimit);
+	}
+
 	public void process(FriendStruct payload, Player player) throws Exception {
 		String friendName = payload.player;
 		long friendHash = DataConversions.usernameToHash(friendName);
@@ -28,8 +34,8 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 			case SOCIAL_ADD_FRIEND: {
 				if (friendName.equalsIgnoreCase("")) return;
 
-				int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
-					: MAX_FRIENDS;
+				int maxFriends = actualFriendListLimit(player);
+
 				if (player.getSocial().friendCount() >= maxFriends) {
 					player.message("Friend list is full");
 					ActionSender.sendFriendList(player);
@@ -99,8 +105,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 			}
 			case SOCIAL_ADD_IGNORE: {
 				if (friendName.equalsIgnoreCase("")) return;
-				int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
-					: MAX_FRIENDS;
+				int maxFriends = actualFriendListLimit(player);
 				if (player.getSocial().ignoreCount() >= maxFriends) {
 					player.message("Ignore list full");
 					ActionSender.sendIgnoreList(player);
@@ -178,7 +183,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				break;
 			}
 			case SOCIAL_ADD_DELAYED_IGNORE: {
-				int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS : MAX_FRIENDS;
+				int maxFriends = actualFriendListLimit(player);
 				if (player.getSocial().ignoreCount() >= maxFriends) {
 					player.message("Ignore list full");
 					return;
