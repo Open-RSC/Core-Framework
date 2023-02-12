@@ -46,6 +46,8 @@ public class SkillCapes {
 				return herblawCape();
 			case PRAYER_CAPE:
 				return prayerCape();
+			case WOODCUTTING_CAPE:
+				return woodcuttingCape();
 		}
 
 		return false;
@@ -137,6 +139,14 @@ public class SkillCapes {
 	private static boolean prayerCape() {
 		final int pointsChance = 50;
 		if (rand1to100() <= pointsChance) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean woodcuttingCape() {
+		final int noFellChance = 35;
+		if (rand1to100() <= noFellChance) {
 			return true;
 		}
 		return false;

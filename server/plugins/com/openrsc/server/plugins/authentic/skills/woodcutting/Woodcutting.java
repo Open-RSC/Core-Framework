@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.skills.woodcutting;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.EnchantedCrowns;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -120,7 +121,7 @@ public class Woodcutting implements OpLocTrigger, UseLocTrigger {
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
 			}
-			if (DataConversions.random(1, 100) <= def.getFell()) {
+			if (DataConversions.random(1, 100) <= def.getFell() && !woodcuttingSkillcape(player)) {
 				int stumpId;
 				if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
 					stumpId = 4; //narrow tree stump
@@ -197,5 +198,13 @@ public class Woodcutting implements OpLocTrigger, UseLocTrigger {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(obj.getID());
 		return (inArray(item.getCatalogId(), Formulae.woodcuttingAxeIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickWoodcut)
 			&& def != null && obj.getID() != 245);
+	}
+
+	private boolean woodcuttingSkillcape(final Player player) {
+		if (SkillCapes.shouldActivate(player, ItemId.WOODCUTTING_CAPE)) {
+			mes("@gre@Your woodcutting cape prevents the tree from falling");
+			return true;
+		}
+		return false;
 	}
 }

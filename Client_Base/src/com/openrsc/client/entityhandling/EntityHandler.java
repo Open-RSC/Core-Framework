@@ -523,7 +523,11 @@ public class EntityHandler {
 
 		sprites = new int[]{130, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Unicorn", "It's a unicorn", "", 21, 23, 19, 23, true, sprites, 0, 0, 0, 0, 201, 230, 6, 6, 7, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 518};
+		} else {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Bob", "An axe seller", shopOption, 2, 2, 3, 2, false, sprites, 3158064, 16711680, 16711680, 9461792, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{129, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Sheep", "A very wooly sheep", "", 0, 0, 3, 0, false, sprites, 0, 0, 0, 0, 170, 124, 6, 6, 5, i++));
