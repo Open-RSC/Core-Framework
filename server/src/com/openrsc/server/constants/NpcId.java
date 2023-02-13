@@ -821,7 +821,8 @@ public enum NpcId {
 	DEATH(817),
 	LOAN_OFFICER(818),
 	SANTA(819),
-	KRESH(820);
+	KRESH(820),
+	LILY(821);
 
 	private int npcId;
 
