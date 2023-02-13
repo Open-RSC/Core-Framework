@@ -488,12 +488,17 @@ public class ActionSender {
 		if (isRetroClient(player) || player.isUsing177CompatibleClient()) {
 			FriendListStruct struct = new FriendListStruct();
 			int listSize = player.getSocial().getFriendList().size();
+			if (player.getBlockGlobalFriend()) {
+				//We decrease the list size as to not send null data.
+				listSize--;
+			}
 			int i = 0;
 			struct.listSize = listSize;
 			struct.name = new String[listSize];
 			struct.formerName = new String[listSize];
 			struct.onlineStatus = new int[listSize];
 			struct.worldNumber = new int[listSize];
+
 			for (final Map.Entry<Long, Integer> entry : player.getSocial().getFriendList().entrySet()) {
 				long usernameHash = entry.getKey();
 				String username = DataConversions.hashToUsername(usernameHash);

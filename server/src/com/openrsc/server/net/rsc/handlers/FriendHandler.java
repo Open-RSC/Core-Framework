@@ -28,13 +28,16 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 		String friendName = payload.player;
 		long friendHash = DataConversions.usernameToHash(friendName);
 
+		int maxFriends = actualFriendListLimit(player);
+		boolean friendIsGlobal = (friendName.equalsIgnoreCase("Global$") ||
+			(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL));
+
+
 		Player affectedPlayer = player.getWorld().getPlayer(friendHash);
 
 		switch (payload.getOpcode()) {
 			case SOCIAL_ADD_FRIEND: {
 				if (friendName.equalsIgnoreCase("")) return;
-
-				int maxFriends = actualFriendListLimit(player);
 
 				if (player.getSocial().friendCount() >= maxFriends) {
 					player.message("Friend list is full");
@@ -42,8 +45,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 					return;
 				}
 
-				if (friendName.equalsIgnoreCase("Global$") ||
-					(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
+				if (friendIsGlobal) {
 					player.getSocial().addGlobalFriend(player);
 					return;
 				}
@@ -85,8 +87,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				break;
 			}
 			case SOCIAL_REMOVE_FRIEND: {
-				if (friendName.equalsIgnoreCase("Global$") ||
-					(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
+				if (friendIsGlobal) {
 					player.getSocial().removeGlobalFriend(player);
 					return;
 				}
@@ -105,7 +106,6 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 			}
 			case SOCIAL_ADD_IGNORE: {
 				if (friendName.equalsIgnoreCase("")) return;
-				int maxFriends = actualFriendListLimit(player);
 				if (player.getSocial().ignoreCount() >= maxFriends) {
 					player.message("Ignore list full");
 					ActionSender.sendIgnoreList(player);
@@ -183,7 +183,6 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				break;
 			}
 			case SOCIAL_ADD_DELAYED_IGNORE: {
-				int maxFriends = actualFriendListLimit(player);
 				if (player.getSocial().ignoreCount() >= maxFriends) {
 					player.message("Ignore list full");
 					return;

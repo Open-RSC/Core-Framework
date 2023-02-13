@@ -93,7 +93,7 @@ public class Social {
 	}
 
 	public int friendCount() {
-		return friendList.size();
+		return player.getBlockGlobalFriend() ? friendList.size() - 1 : friendList.size();
 	}
 
 	public int ignoreCount() {
