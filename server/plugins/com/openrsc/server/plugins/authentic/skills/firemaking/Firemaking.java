@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.skills.firemaking;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.model.Point;
@@ -88,11 +89,12 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 
 				// Remove logs and add fire scenery.
+				final int duration = SkillCapes.shouldActivate(player, ItemId.FIREMAKING_CAPE) ? 330 : def.getLength();
 				player.getWorld().unregisterItem(gItem);
 				final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
 				player.getWorld().registerGameObject(fire);
 				player.getWorld().getServer().getGameEventHandler().add(
-					new SingleEvent(player.getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
+					new SingleEvent(player.getWorld(), null, duration, "Light Logs Fire Removal") {
 						@Override
 						public void action() {
 							getWorld().registerItem(new GroundItem(
@@ -184,8 +186,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
 				player.getWorld().registerGameObject(fire);
 
+				final int duration = SkillCapes.shouldActivate(player, ItemId.FIREMAKING_CAPE) ? (330 * 1000) : def.getLength();
 				player.getWorld().getServer().getGameEventHandler().add(
-					new SingleEvent(player.getWorld(), null, def.getLength(), "Firemaking Logs Lit") {
+					new SingleEvent(player.getWorld(), null, duration, "Firemaking Logs Lit") {
 						@Override
 						public void action() {
 							if (fire != null) {

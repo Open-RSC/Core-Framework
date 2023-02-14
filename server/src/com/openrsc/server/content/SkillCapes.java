@@ -52,6 +52,8 @@ public class SkillCapes {
 				return rangedCape();
 			case HARVESTING_CAPE:
 				return harvestingCape();
+			case FIREMAKING_CAPE:
+				return true;
 		}
 
 		return false;

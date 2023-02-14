@@ -1166,7 +1166,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Arhein", "A merchant", shopOption, 0, 0, 3, 0, false, sprites, 3158064, 13381836, 3, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, -1, 122, -1, -1, 88, -1, -1, -1, 63};
 		npcs.add(new NPCDef("Morgan le faye", "An evil sorceress", "", 35, 25, 10, 30, false, sprites, 1, 2, 3, 15527632, 155, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, 513};
+		} else {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1};
+		}
 		npcs.add(new NPCDef("Candlemaker", "He makes and sells candles", shopOption, 15, 22, 22, 6, false, sprites, 16761440, 2, 8409120, 15523536, 155, 230, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("lady", "She has a hint of magic about her", "", 0, 0, 3, 0, false, sprites, 15921906, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
