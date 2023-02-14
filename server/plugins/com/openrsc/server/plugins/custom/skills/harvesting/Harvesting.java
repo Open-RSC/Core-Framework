@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.custom.skills.harvesting;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.EnchantedCrowns;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.ObjectHarvestingDef;
 import com.openrsc.server.model.TimePoint;
 import com.openrsc.server.model.container.Item;
@@ -263,6 +264,12 @@ public final class Harvesting implements OpLocTrigger {
 				player.getCarriedItems().getInventory().add(produce);
 				player.playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
 					: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
+
+				if (SkillCapes.shouldActivate(player, ItemId.HARVESTING_CAPE)) {
+					player.playerServerMessage(MessageType.QUEST, "@or2@Your Harvesting cape activates, yielding double produce");
+					player.getCarriedItems().getInventory().add(produce);
+				}
+
 				player.incExp(Skill.HARVESTING.id(), prodEnum.get(prodId).getXp(), true);
 
 				if (EnchantedCrowns.shouldActivate(player, ItemId.CROWN_OF_THE_ITEMS)) {
@@ -387,6 +394,12 @@ public final class Harvesting implements OpLocTrigger {
 				}
 				player.playerServerMessage(MessageType.QUEST, "You get " +
 					(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
+
+				if (SkillCapes.shouldActivate(player, ItemId.HARVESTING_CAPE)) {
+					player.playerServerMessage(MessageType.QUEST, "@or2@Your Harvesting cape activates, yielding a second " + itemName);
+					player.getCarriedItems().getInventory().add(produce);
+				}
+
 				player.incExp(Skill.HARVESTING.id(), def.getExp(), true);
 
 				if (EnchantedCrowns.shouldActivate(player, ItemId.CROWN_OF_THE_ITEMS)) {

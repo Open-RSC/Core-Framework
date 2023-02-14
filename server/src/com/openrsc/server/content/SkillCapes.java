@@ -50,6 +50,8 @@ public class SkillCapes {
 				return woodcuttingCape();
 			case RANGED_CAPE:
 				return rangedCape();
+			case HARVESTING_CAPE:
+				return harvestingCape();
 		}
 
 		return false;
@@ -157,6 +159,14 @@ public class SkillCapes {
 	private static boolean rangedCape() {
 		final int doubleShotChance = 10;
 		if (rand1to100() <= doubleShotChance) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean harvestingCape() {
+		final int doubleYieldChance = 35;
+		if (rand1to100() <= doubleYieldChance) {
 			return true;
 		}
 		return false;
