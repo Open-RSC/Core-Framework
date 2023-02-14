@@ -3,6 +3,7 @@ package com.openrsc.server.event.rsc.impl.projectile;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
@@ -20,6 +21,7 @@ import com.openrsc.server.plugins.handler.PluginHandler;
 import com.openrsc.server.plugins.triggers.PlayerRangeNpcTrigger;
 import com.openrsc.server.plugins.triggers.PlayerRangePlayerTrigger;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 public class RangeEvent extends GameTickEvent {
 	private final Player player;
@@ -145,7 +147,12 @@ public class RangeEvent extends GameTickEvent {
 
 		getOwner().setKillType(KillType.RANGED);
 		deliveredFirstProjectile = true;
-		setDelayTicks(3);
+		if (SkillCapes.shouldActivate(player, ItemId.RANGED_CAPE)) {
+			player.playerServerMessage(MessageType.QUEST, "@gre@Your Ranged cape activates, letting you shoot two arrows at once!");
+			setDelayTicks(0);
+		} else {
+			setDelayTicks(3);
+		}
 
 		ActionSender.sendSound(player, "shoot");
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), player, target, damage, 2));

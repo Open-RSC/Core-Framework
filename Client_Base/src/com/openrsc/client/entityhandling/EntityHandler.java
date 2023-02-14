@@ -645,7 +645,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("shopkeeper", "I can buy swords off him", shopOption, 0, 0, 3, 0, false, sprites, 16761440, 2, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, 82, 88, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Darkwizard", "He works evil magic", "", 15, 15, 12, 12, true, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 517};
+		} else {
+			sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("lowe", "The owner of the archery store", shopOption, 0, 0, 3, 0, false, sprites, 16761440, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Thessalia", "A young shop assistant", shopOption, 0, 0, 3, 0, false, sprites, 1, 16036851, 3, 15523536, 130, 220, 6, 6, 5, i++));

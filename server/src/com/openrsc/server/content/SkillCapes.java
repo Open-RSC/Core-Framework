@@ -48,6 +48,8 @@ public class SkillCapes {
 				return prayerCape();
 			case WOODCUTTING_CAPE:
 				return woodcuttingCape();
+			case RANGED_CAPE:
+				return rangedCape();
 		}
 
 		return false;
@@ -147,6 +149,14 @@ public class SkillCapes {
 	private static boolean woodcuttingCape() {
 		final int noFellChance = 35;
 		if (rand1to100() <= noFellChance) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean rangedCape() {
+		final int doubleShotChance = 10;
+		if (rand1to100() <= doubleShotChance) {
 			return true;
 		}
 		return false;
