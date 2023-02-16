@@ -8832,13 +8832,19 @@ public final class mudclient implements Runnable {
 									this.packetHandler.getClientStream().bufferBits.putByte(var9);
 									this.packetHandler.getClientStream().finishPacket();
 									this.prayerOn[var9] = true;
-									soundPlayer.playSoundFile("prayeron");
+
+									if (MEMBER_WORLD) {
+										soundPlayer.playSoundFile("prayeron");
+									}
 								} else {
 									this.packetHandler.getClientStream().newPacket(254);
 									this.packetHandler.getClientStream().bufferBits.putByte(var9);
 									this.packetHandler.getClientStream().finishPacket();
 									this.prayerOn[var9] = false;
-									soundPlayer.playSoundFile("prayeroff");
+
+									if (MEMBER_WORLD) {
+										soundPlayer.playSoundFile("prayeroff");
+									}
 								}
 							}
 						}

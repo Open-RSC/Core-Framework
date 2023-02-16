@@ -2125,10 +2125,10 @@ public class PacketHandler {
 	private void togglePrayer(int length) {
 		for (int i = 0; length - 1 > i; ++i) {
 			boolean enabled = packetsIncoming.getByte() == 1;
-			if (!mc.checkPrayerOn(i) && enabled) {
+			if (!mc.checkPrayerOn(i) && enabled && Config.MEMBER_WORLD) {
 				soundPlayer.playSoundFile("prayeron");
 			}
-			if (mc.checkPrayerOn(i) && !enabled) {
+			if (mc.checkPrayerOn(i) && !enabled && Config.MEMBER_WORLD) {
 				soundPlayer.playSoundFile("prayeroff");
 			}
 
