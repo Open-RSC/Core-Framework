@@ -415,10 +415,9 @@ public final class PlayerModerator implements CommandTrigger {
 				for (int i = 1; i < args.length; i++)
 					message.append(args[i]).append(" ");
 				if (targetPlayer.getClientLimitations().supportsMessageBox) {
-					ActionSender.sendBox(targetPlayer, player.getStaffName() + ":@whi@ " + message, false);
-				} else {
-					player.playerServerMessage(MessageType.QUEST, player.getStaffName() + ":@whi@ " + message);
+					ActionSender.sendBox(targetPlayer, "@yel@Alert from a Moderator:%@whi@ " + message, false);
 				}
+				targetPlayer.playerServerMessage(MessageType.QUEST, "@gre@Moderator:@whi@ " + message);
 				player.message(messagePrefix + "Alerted " + targetPlayer.getUsername());
 			} else
 				player.message(messagePrefix + "Invalid name or player is not online");
