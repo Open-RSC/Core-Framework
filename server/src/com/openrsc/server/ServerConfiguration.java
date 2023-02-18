@@ -165,6 +165,8 @@ public class ServerConfiguration {
 	public String DISCORD_AUCTION_WEBHOOK_URL;
 	public boolean WANT_DISCORD_MONITORING_UPDATES;
 	public String DISCORD_MONITORING_WEBHOOK_URL;
+	public boolean WANT_DISCORD_STAFF_COMMANDS;
+	public String DISCORD_STAFF_COMMANDS_WEBHOOK_URL;
 	public boolean WANT_DISCORD_REPORT_ABUSE_UPDATES;
 	public String DISCORD_REPORT_ABUSE_WEBHOOK_URL;
 	public boolean WANT_DISCORD_BOT;
@@ -577,9 +579,11 @@ public class ServerConfiguration {
 
 		// Discord settings
 		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
+		DISCORD_STAFF_COMMANDS_WEBHOOK_URL = tryReadString("discord_staff_commands_webhook_url").orElse("null");
 		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
 		DISCORD_REPORT_ABUSE_WEBHOOK_URL = tryReadString("discord_report_abuse_webhook_url").orElse("null");
 		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false);
+		WANT_DISCORD_STAFF_COMMANDS = tryReadBool("want_discord_staff_commands").orElse(false);
 		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false);
 		WANT_DISCORD_REPORT_ABUSE_UPDATES = tryReadBool("want_discord_report_abuse_updates").orElse(false);
 		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false);

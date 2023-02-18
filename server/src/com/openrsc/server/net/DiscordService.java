@@ -9,6 +9,7 @@ import com.openrsc.server.database.struct.DiscordWatchlist;
 import com.openrsc.server.database.struct.PlayerExperience;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
+import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.ServerAwareThreadFactory;
@@ -35,6 +36,8 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -45,6 +48,7 @@ public class DiscordService implements Runnable{
 	private static final int WATCHLIST_MAX_SIZE = 10;
 	private ScheduledExecutorService scheduledExecutor;
 
+	private final Queue<String> staffCommandRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> reportAbuseRequests = new ConcurrentLinkedQueue<String>();
@@ -426,6 +430,22 @@ public class DiscordService implements Runnable{
 		auctionSendToDiscord(cancelMessage);
 	}
 
+	public void staffCommandLog(final Player player, final String command) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+		final String commandMessage = String.format("%s %s %s %s: %s, %s used command: %s",
+				"[" + dateFormat.format(calendar.getTime()) +  "]",
+				"[" + player.getWorld().getServer().getConfig().SERVER_NAME + "]",
+				Group.getGlobalMessageName(player.getGroupID()),
+				player.getUsername(),
+				player.getCurrentIP(),
+				"[X: " + player.getX() + ", Y: " + player.getY() + "]",
+				command
+		);
+
+		staffCommandSendToDiscord(commandMessage);
+	}
+
 	public void monitoringSendServerBehind(final String message, final boolean showEventData) {
 		try {
 			monitoringSendToDiscord(message + (showEventData ? "\r\n" + getServer().getGameEventHandler().buildProfilingDebugInformation(false) : ""));
@@ -437,6 +457,11 @@ public class DiscordService implements Runnable{
 	private void auctionSendToDiscord(final String message) {
 		if(getServer().getConfig().WANT_DISCORD_AUCTION_UPDATES) {
 			auctionRequests.add(message);
+		}
+	}
+	private void staffCommandSendToDiscord(final String message) {
+		if(getServer().getConfig().WANT_DISCORD_STAFF_COMMANDS && !getServer().getConfig().DISCORD_STAFF_COMMANDS_WEBHOOK_URL.equals("null")) {
+			staffCommandRequests.add(message);
 		}
 	}
 
@@ -551,7 +576,9 @@ public class DiscordService implements Runnable{
 				while ((message = auctionRequests.poll()) != null) {
 					sendToDiscord(getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
 				}
-
+				while ((message = staffCommandRequests.poll()) != null) {
+					sendToDiscord(getServer().getConfig().DISCORD_STAFF_COMMANDS_WEBHOOK_URL, message);
+				}
 				while ((message = monitoringRequests.poll()) != null) {
 					sendToDiscord(getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
 				}
@@ -599,6 +626,7 @@ public class DiscordService implements Runnable{
 	private void clearRequests() {
 		monitoringRequests.clear();
 		auctionRequests.clear();
+		staffCommandRequests.clear();
 		reportAbuseRequests.clear();
 	}
 

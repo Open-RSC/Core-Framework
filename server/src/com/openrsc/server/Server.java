@@ -249,7 +249,8 @@ public class Server implements Runnable {
 		final boolean wantDiscordAuctionUpdates = getConfig().WANT_DISCORD_AUCTION_UPDATES;
 		final boolean wantDiscordMonitoringUpdates = getConfig().WANT_DISCORD_MONITORING_UPDATES;
 		final boolean wantDiscordReportAbuseUpdates = getConfig().WANT_DISCORD_REPORT_ABUSE_UPDATES;
-		discordService = wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates || wantDiscordReportAbuseUpdates ? new DiscordService(this) : null;
+		final boolean wantDiscordStaffCommands = getConfig().WANT_DISCORD_STAFF_COMMANDS;
+		discordService = wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates || wantDiscordReportAbuseUpdates || wantDiscordStaffCommands ? new DiscordService(this) : null;
 		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
 		gameEventHandler = new GameEventHandler(this);

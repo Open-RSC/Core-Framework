@@ -23,7 +23,12 @@ public final class CommandHandler implements PayloadProcessor<CommandStruct, Opc
 			cmd = s.substring(0, firstSpace).trim();
 			args = s.substring(firstSpace + 1).trim().split(" ");
 		}
-
+		if (player.getWorld().getServer().getDiscordService() != null) {
+			String[] ignoredCommands = { "gang", "c", "clanaccept", "partyaccept", "claninvite", "clankick", "gameinfo", "event", "g", "pk", "p", "online", "uniqueonline", "leaveparty", "joinclan", "shareloot", "shareexp", "onlinelist", "groups", "ranks", "time", "date", "datetime", "pair", "d", "commands", "b", "qoloptout", "qoloptoutconfirm", "certoptout", "certoptoutconfirm", "toggleglobalchat", "getholidaydrop", "checkholidaydrop", "checkholidayevent", "drop", "toggleblockchat", "toggleblockprivate", "toggleblocktrade", "toggleblockduel", "clientlimitations", "setversion", "skiptutorial", "oldtrade", "notradeconfirm", "coords", "setlanguage", "language", "togglereceipts", "getpidlesscatching", "tellpidlesscatching", "pidless", "maxplayersperip", "mppi", "setglobalmessagecolor", "globalquest", "gq", "globalprivate", "gp", "set_icon", "redhat", "rhel", "robe", "setrobe", "becomeNpc", "morph", "becomegod", "speaktongues", "restorehumanity", "resetappearance", "become", "check", "pr", "pos" };
+			if (player.isPlayerMod()) {
+				player.getWorld().getServer().getDiscordService().staffCommandLog(player, "::" + cmd + " " + String.join(" ", args));
+			}
+		}
 		player.getWorld().getServer().getPluginHandler().handlePlugin(
 				CommandTrigger.class,
 				player,
