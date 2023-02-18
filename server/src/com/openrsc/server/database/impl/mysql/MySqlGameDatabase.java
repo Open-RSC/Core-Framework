@@ -2072,6 +2072,24 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	}
 
 	@Override
+	public void queryBankRemovePartialStack(final int playerId, final Item item, final int amountToRemove) throws GameDatabaseException {
+		synchronized (itemIDList) {
+			try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().save_BankRemovePartialStack)) {
+				if (item.getAmount() - amountToRemove < 1) {
+					throw new GameDatabaseException(MySqlGameDatabase.class, "StackIsZero");
+				}
+				statement.setInt(1, item.getAmount() - amountToRemove);
+				statement.setInt(2, playerId);
+				statement.setInt(3, item.getItemId());
+				statement.executeUpdate();
+			} catch (final SQLException ex) {
+				// Convert SQLException to a general usage exception
+				throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+			}
+		}
+	}
+
+	@Override
 	public int queryPlayerIdFromToken(final String token) throws GameDatabaseException {
 		int pId = -1;
 		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().playerIdFromPairToken)) {

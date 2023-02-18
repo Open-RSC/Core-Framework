@@ -49,6 +49,7 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.rsc.DataConversions.parseBoolean;
 
 public final class Admins implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -120,6 +121,8 @@ public final class Admins implements CommandTrigger {
 			spawnItemInventory(player, command, args, false);
 		} else if (command.equalsIgnoreCase("ritem")) {
 			removeItemInventory(player, command, args);
+		} else if (command.equalsIgnoreCase("rbitem")) {
+			removeItemBank(player, command, args);
 		} else if (command.equalsIgnoreCase("swapitem")) {
 			swapItemInventory(player, command, args);
 		} else if (command.equalsIgnoreCase("certeditem") || command.equals("noteditem")) {
@@ -965,7 +968,7 @@ public final class Admins implements CommandTrigger {
 			success = true;
 		} else {
 			// player is offline
-			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ").replaceAll("_"," ");
 			List<Item> bank;
 			try {
 				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName);
@@ -991,7 +994,7 @@ public final class Admins implements CommandTrigger {
 				if (sizeAfter == 0) {
 					success = true;
 				} else {
-					player.message(messagePrefix + "Player still has " + sizeAfter + " items in their bank. Fail.");
+					player.message(messagePrefix + "Bank size changed from " + bank.size() + " unique items to " + sizeAfter + " item slots still used.");
 				}
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Database Error! (Could not verify bank wipe). Check the logs.");
@@ -1301,9 +1304,9 @@ public final class Admins implements CommandTrigger {
 		player.message(messagePrefix + "Damaged " + targetPlayer.getUsername() + " " + damage + " hits");
 	}
 
-	private void removeItemInventory(Player player, String command, String[] args) {
-		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + "  [id or ItemId name] (amount) (player)");
+	private void removeItemBank(Player player, String command, String[] args) {
+		if (args.length < 3) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + "  [id or ItemId name] [amount] [player] (alert)");
 			return;
 		}
 
@@ -1313,7 +1316,7 @@ public final class Admins implements CommandTrigger {
 		} catch (NumberFormatException ex) {
 			ItemId item = ItemId.getByName(args[0]);
 			if (item == ItemId.NOTHING) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] [amount] [player] (alert)");
 				return;
 			} else {
 				idToRemove = item.id();
@@ -1324,12 +1327,163 @@ public final class Admins implements CommandTrigger {
 		try {
 			amountToRemove = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] [amount] [player] (alert)");
 			return;
 		}
 
 		boolean success = false;
 		int removedCount = 0;
+		boolean alert = false;
+		if (args.length == 4) {
+			try {
+				alert = parseBoolean(args[3]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] [amount] [player] (alert)");
+				return;
+			}
+		}
+		String targetPlayerName = args[2];
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
+		if (targetPlayer != null) {
+			// player is online
+			synchronized (targetPlayer.getBank().getItems()) {
+				List<Item> items = targetPlayer.getBank().getItems();
+				Item curItem;
+				for (int i = items.size() - 1; i >= 0; i--) {
+					curItem = items.get(i);
+					if (curItem.getCatalogId() == idToRemove && removedCount < amountToRemove) {
+						int available = curItem.getAmount();
+						if (available > 1) {
+							int toRemove = Math.min(amountToRemove, available);
+							if (targetPlayer.getBank().remove(new Item(curItem.getCatalogId(), toRemove))) {
+								removedCount += toRemove;
+							}
+						} else {
+							if (targetPlayer.getBank().remove(curItem)) {
+								removedCount++;
+							}
+						}
+					}
+				}
+			}
+
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && alert) {
+				targetPlayer.message(messagePrefix + "Your bank has had items removed by an admin");
+			}
+			if (removedCount > 0) {
+				success = true;
+			}
+		} else {
+			// player is offline
+			List<Item> bank;
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ").replaceAll("_"," ");
+			try {
+				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+
+			// delete items
+			try {
+				int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerName);
+				if (playerId == -1) {
+					throw new GameDatabaseException(Admins.class, "Could not find player.");
+				}
+
+				for (Item curItem : bank) {
+					if (removedCount >= amountToRemove) break;
+					if (curItem.getCatalogId() == idToRemove && removedCount < amountToRemove) {
+						int available = curItem.getAmount();
+						int toRemove = Math.min(amountToRemove - removedCount, available);
+						if (available > 1) {
+							if (amountToRemove > (available - 1)) {
+								player.message(messagePrefix + "Could not remove partial stack of item from offline player.");
+								player.message(messagePrefix + "Try setting the amount to remove to " + available + " or less if you would like to continue.");
+								return;
+							}
+							player.getWorld().getServer().getDatabase().bankRemovePartialStack(playerId, curItem, toRemove);
+							removedCount += toRemove;
+						} else if (available == 1) {
+							player.getWorld().getServer().getDatabase().bankRemove(playerId, curItem);
+							removedCount += toRemove;
+						}
+					}
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
+
+			// verify success
+			try {
+				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName).size();
+				if (sizeAfter == bank.size()) {
+					success = false;
+				} else {
+					player.message(messagePrefix + "Bank size changed from " + bank.size() + " unique items to " + sizeAfter + " item slots still used.");
+				}
+				if (removedCount > 0) {
+					success = true;
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! (Could not verify bank item removal). Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
+		}
+
+		if (success) {
+			if (removedCount < amountToRemove) {
+				player.message(messagePrefix + "Successfully removed " + removedCount + "/" + amountToRemove + " " + args[0] + " from the bank of " + targetPlayerName);
+			} else {
+				player.message(messagePrefix + "Successfully removed " + removedCount + " " + args[0] + " from the bank of " + targetPlayerName);
+			}
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully removed items from bank of "+ targetPlayerName));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully removed items from bank of "+ targetPlayerName));
+		}
+	}
+
+	private void removeItemInventory(Player player, String command, String[] args) {
+		if (args.length < 3) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + "  [id or ItemId name] [amount] [player] (alert)");
+			return;
+		}
+
+		int idToRemove;
+		try {
+			idToRemove = Integer.parseInt(args[0]);
+		} catch (NumberFormatException ex) {
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] [amount] [player] (alert)");
+				return;
+			} else {
+				idToRemove = item.id();
+			}
+		}
+
+		int amountToRemove;
+		try {
+			amountToRemove = Integer.parseInt(args[1]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] [amount] [player] (alert)");
+			return;
+		}
+
+		boolean success = false;
+		int removedCount = 0;
+		boolean alert = false;
+		if (args.length == 4) {
+			try {
+				alert = parseBoolean(args[3]);
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] [amount] [player] (alert)");
+				return;
+			}
+		}
 
 		String targetPlayerName = args[2];
 		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
@@ -1384,7 +1538,7 @@ public final class Admins implements CommandTrigger {
 				}
 			}
 
-			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash() && alert) {
 				targetPlayer.message(messagePrefix + "Your inventory has had items removed by an admin");
 			}
 
@@ -1392,7 +1546,7 @@ public final class Admins implements CommandTrigger {
 		} else {
 			// player is offline
 			List<Item> inventory;
-			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ").replaceAll("_"," ");
 			try {
 				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName);
 			} catch (GameDatabaseException e) {
@@ -1501,7 +1655,7 @@ public final class Admins implements CommandTrigger {
 		} else {
 			// player is offline
 			List<Item> inventory;
-			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ").replaceAll("_"," ");
 			try {
 				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName);
 			} catch (GameDatabaseException e) {
@@ -2146,7 +2300,7 @@ public final class Admins implements CommandTrigger {
 		boolean toggle;
 		if (args.length > 1) {
 			try {
-				freezeXp = DataConversions.parseBoolean(args[1]);
+				freezeXp = parseBoolean(args[1]);
 				toggle = false;
 			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + command.toUpperCase() + " [player] (boolean)");

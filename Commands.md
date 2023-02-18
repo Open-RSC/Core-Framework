@@ -65,10 +65,12 @@ Admin Commands
   - If no player is specified, then it spawns the item to the current player.
   - For non-stackable items, only up to 30 may be spawned at one time.
 - ritem
-  - Usage: `::ritem [id or ItemId name] (amount) (player)"`
+  - Usage: `::ritem [id or ItemId name] [amount] [player] (alert)"`
   - Removes an item for the specified player.
-  - If no amount is specified, then 1 is used.
-  - If no player is specified, then it spawns the item to the current player.
+  - Partial stacks of items can be removed by amount parameter
+- rbitem
+  - Usage: `::rbitem [id or ItemId name] (amount) (player) (alert)"`
+  - Removes a bank item for the specified player.
   - Partial stacks of items can be removed by amount parameter
 - swapitem
   - Usage: `::swapitem [Inventory Slot # OR ItemId name] [Item Id OR ItemID name] [player]`

@@ -258,6 +258,8 @@ public abstract class GameDatabase {
 
 	public abstract void queryBankRemove(int playerId, Item item) throws GameDatabaseException;
 
+	public abstract void queryBankRemovePartialStack(int playerId, Item item, int amountToRemove) throws GameDatabaseException;
+
 	// Discord service queries
 	public abstract int queryPlayerIdFromToken(final String token) throws GameDatabaseException;
 
@@ -1043,6 +1045,14 @@ public abstract class GameDatabase {
 
 	public void inventoryRemove(final int playerDatabaseId, final Item item) throws GameDatabaseException {
 		queryInventoryRemove(playerDatabaseId, item);
+	}
+
+	public void bankRemove(final int playerDatabaseId, final Item item) throws GameDatabaseException {
+		queryBankRemove(playerDatabaseId, item);
+	}
+
+	public void bankRemovePartialStack(final int playerDatabaseId, final Item item, int amountToRemove) throws GameDatabaseException {
+		queryBankRemovePartialStack(playerDatabaseId, item, amountToRemove);
 	}
 
 	/**
