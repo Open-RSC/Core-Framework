@@ -11,7 +11,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.authentic.misc.Cannon;
 import com.openrsc.server.plugins.shared.constants.Quest;
@@ -28,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DwarfCannon
+public class DwarfCannon extends AbstractShop
 	implements QuestInterface, TakeObjTrigger,
 	TalkNpcTrigger, OpBoundTrigger,
 	OpLocTrigger {
@@ -53,8 +55,18 @@ public class DwarfCannon
 	}
 
 	@Override
+	public Shop[] getShops(World world) {
+		return new Shop[]{shop};
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 
 	@Override
