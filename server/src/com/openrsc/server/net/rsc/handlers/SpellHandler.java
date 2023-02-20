@@ -12,6 +12,7 @@ import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemSmeltingDef;
 import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.ActionType;
@@ -1551,7 +1552,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 						Npc n = (Npc) affectedMob;
-						if (!n.getAttribute("isUndead", false)) {
+						String npcName = n.getDef().getName().toLowerCase();
+						boolean isCrumbleTarget = npcName.contains("skeleton") || npcName.contains("zombie") || npcName.contains("ghost");
+						if (!isCrumbleTarget) {
 							getPlayer().playerServerMessage(MessageType.QUEST, "This spell can only be used on skeletons, zombies and ghosts");
 							return;
 						}

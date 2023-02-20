@@ -59,7 +59,7 @@ public final class Constants {
 	//public final int[][] SPELLS = {{1, 1}, {5, 2}, {9, 3}, {13, 4}, {17, 5}, {23, 5}, {29, 6}, {35, 6}, {41, 7}, {47, 7}, {53, 8}, {59, 8}, {62, 9}, {65, 9}, {70, 10}, {75, 10}};
 
 	/**
-	 * ID's of all Undead-type of NPC's. (Used for crumble undead & sounds)
+	 * ID's of all Undead-type of NPC's. (Used for undead sounds)
 	 */
 	public static final int[] UNDEAD_NPCS = {15, 53, 80, 178, 664, 41, 52, 68, 180, 214, 319, 40, 45, 46, 50, 179, 195, 516, 542};
 	/**
