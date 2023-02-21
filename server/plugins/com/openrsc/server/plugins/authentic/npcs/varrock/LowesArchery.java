@@ -52,7 +52,7 @@ public final class LowesArchery extends AbstractShop {
 		options.add("No, I prefer to bash things close up");
 
 		if (Functions.config().WANT_CUSTOM_SPRITES) {
-			options.add("I'd actually like to see what you're wear-ing!");
+			options.add("I'd actually like to see what you're ware-ing!");
 		}
 
 		int option = multi(false, options.toArray(new String[0]));
@@ -63,8 +63,8 @@ public final class LowesArchery extends AbstractShop {
 			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
 			say("No, I prefer to bash things close up");
-		} else if (option == 2) {
-			say("I'd actually like to see what you're wear-ing!");
+		} else if (Functions.config().WANT_CUSTOM_SPRITES && option == 2) {
+			say("I'd actually like to see what you're ware-ing!");
 			npcsay("Haha good one",
 				"This is my Ranged cape",
 				"I've seen other skilled individuals with similar-looking capes",

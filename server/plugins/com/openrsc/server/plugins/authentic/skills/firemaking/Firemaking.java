@@ -89,7 +89,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 
 				// Remove logs and add fire scenery.
-				final int duration = SkillCapes.shouldActivate(player, ItemId.FIREMAKING_CAPE) ? 330 : def.getLength();
+				final int duration = SkillCapes.shouldActivate(player, ItemId.FIREMAKING_CAPE) ? def.getLength() * 2 : def.getLength();
 				player.getWorld().unregisterItem(gItem);
 				final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
 				player.getWorld().registerGameObject(fire);

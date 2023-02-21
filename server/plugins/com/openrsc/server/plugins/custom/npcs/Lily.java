@@ -21,7 +21,7 @@ public class Lily implements TalkNpcTrigger {
         ArrayList<String> options = new ArrayList<String>();
         options.add("What are you doing here?");
         options.add("Could you tell me about harvesting?");
-        if (player.getSkills().getMaxStat(Skill.HARVESTING.id()) >= 99) {
+        if (Functions.config().WANT_CUSTOM_SPRITES) { // This should always be true if harvesting is active
             options.add("I like your cape!");
         }
 
@@ -49,7 +49,7 @@ public class Lily implements TalkNpcTrigger {
 					case 0:
 						npcsay("I'm so excited that you want to get started with harvesting!",
 							"You can get started right away!",
-							"See that potato allotment over there?",
+							"See these potatoes here?",
 							"Just click on it to start harvesting some yummy potatoes!",
 							"After a while, you'll get good enough to start harvesting other things!");
 						if (Functions.config().WANT_SKILL_MENUS) {
@@ -84,30 +84,35 @@ public class Lily implements TalkNpcTrigger {
             	npcsay("Aren't you a sweetheart!",
 					"This is my Harvesting cape!",
 					"I make them for adventurers that have shown a big interest in harvesting!",
-					"I'd love to make you one!",
-					"I'd give it to you for free, but the materials can be kind of expensive",
-					"So I will have to ask for 99,000 coins in return",
-					"Would you like a cape?");
-            	if (multi("I'd love one!", "No thankyou") == 0) {
-            		if (ifheld(ItemId.COINS.id(), 99000)) {
-            			mes("You give 99,000 coins to Lily");
-            			remove(ItemId.COINS.id(), 99000);
-            			delay(3);
-            			mes("Lily gives you a Harvesting cape");
-            			give(ItemId.HARVESTING_CAPE.id(), 1);
-            			delay(3);
-            			npcsay("I made this cape extra special for you!",
-							"In fact, if you harvest while wearing this cape...",
-							"...you will have a chance of receiving double the yield!",
-							"I hope you have a wonderful day!");
-            			mes("Lily waves goodbye");
-            			delay(3);
-					} else {
-            			say("But I don't have enough coins right now");
-            			npcsay("That's okay!",
-							"You can come back anytime!",
-							"I'll be here!");
+					"I'd love to make you one!");
+            	if (player.getSkills().getMaxStat(Skill.HARVESTING.id()) >= 99) {
+					npcsay("I'd give it to you for free, but the materials can be kind of expensive",
+						"So I will have to ask for 99,000 coins in return",
+						"Would you like a cape?");
+					if (multi("I'd love one!", "No thankyou") == 0) {
+						if (ifheld(ItemId.COINS.id(), 99000)) {
+							mes("You give 99,000 coins to Lily");
+							remove(ItemId.COINS.id(), 99000);
+							delay(3);
+							mes("Lily gives you a Harvesting cape");
+							give(ItemId.HARVESTING_CAPE.id(), 1);
+							delay(3);
+							npcsay("I made this cape extra special for you!",
+								"In fact, if you harvest while wearing this cape...",
+								"...you will have a chance of receiving double the yield!",
+								"I hope you have a wonderful day!");
+							mes("Lily waves goodbye");
+							delay(3);
+						} else {
+							say("But I don't have enough coins right now");
+							npcsay("That's okay!",
+								"You can come back anytime!",
+								"I'll be here!");
+						}
 					}
+				} else {
+            		npcsay("Just keep working at Harvesting!",
+						"One day you'll get there!");
 				}
                 break;
         }

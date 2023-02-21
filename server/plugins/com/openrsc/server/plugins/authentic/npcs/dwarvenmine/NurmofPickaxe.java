@@ -68,7 +68,7 @@ public final class NurmofPickaxe extends AbstractShop {
 			npcsay(player, n, "Of course they are",
 				"My pickaxes are made of higher grade metal than your ordinary bronze pickaxes",
 				"Allowing you to have multiple swings at a rock until you get the ore from it");
-		} else if (option == 3) {
+		} else if (config().WANT_CUSTOM_SPRITES && option == 3) {
 			if (getMaxLevel(player, Skill.MINING.id()) >= 99) {
 				npcsay(player, n, "it's clear you are a miner",
 					"i can offer you cape",

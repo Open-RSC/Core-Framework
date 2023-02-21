@@ -469,13 +469,13 @@ public class Eating implements OpInvTrigger {
 		switch (skillcapeHeal) {
 			case 3:
 				player.playerServerMessage(MessageType.QUEST, "@lre@Your Hits cape allows you to gain a lot more nourishment from the food");
-				return 3;
+				return 6;
 			case 2:
 				player.playerServerMessage(MessageType.QUEST, "@lre@Your Hits cape allows you to gain some more nourishment from the food");
-				return 2;
+				return 4;
 			case 1:
 				player.playerServerMessage(MessageType.QUEST, "@lre@Your Hits cape allows you to gain a little more nourishment from the food");
-				return 1;
+				return 2;
 			default:
 				return 0;
 		}

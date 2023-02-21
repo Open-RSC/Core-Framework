@@ -5294,7 +5294,7 @@
             "id": 1520,
             "name": "Firemaking cape",
             "description": "The cape worn by pyro enthusiasts",
-            "command": "",
+            "command": "Combust",
             "isFemaleOnly": 0,
             "isMembersOnly": 0,
             "isStackable": 0,

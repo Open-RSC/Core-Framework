@@ -137,7 +137,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 		} else if (m == 1) {
 			say("ok I'll be careful");
 			npcsay("you do that traveller");
-		} else if (m == 2) {
+		} else if (config().WANT_CUSTOM_SPRITES && m == 2) {
 			say("can you tell me about your cape?");
 			hitsCape(player, npc);
 		}

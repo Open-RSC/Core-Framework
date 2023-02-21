@@ -113,13 +113,13 @@ public class Bones implements OpInvTrigger {
 		switch (ItemId.getById(bone.getCatalogId())) {
 			case BONES:
 			case BAT_BONES:
-				pointsToRestore = 2;
+				pointsToRestore = 1;
 				break;
 			case BIG_BONES:
-				pointsToRestore = 5;
+				pointsToRestore = 2;
 				break;
 			case DRAGON_BONES:
-				pointsToRestore = 10;
+				pointsToRestore = 4;
 				break;
 		}
 

@@ -5,6 +5,7 @@ import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -181,11 +182,19 @@ public class CombatFormula {
 			// TODO: hopefully temp until this file contains more accurate pvp
 			return PVPCombatFormula.calcFightHit(source, victim);
 		} else if (victim instanceof Player) {
-			// Defense skillcape
-			if (SkillCapes.shouldActivate((Player)victim, DEFENSE_CAPE)) {
-				damage = damage / 2;
+			// Track the damage dealt to the player
+			Player playerVictim = (Player)victim;
+			if (isHit) {
+				int damageToPlayer = damage;
+				int blockedDamage = 0;
 
-				((Player) victim).message("@blu@Your Defense cape has absorbed some incoming damage");
+				// Defense skillcape
+				if (SkillCapes.shouldActivate((Player) victim, DEFENSE_CAPE)) {
+					damage /= 2;
+					blockedDamage = damage;
+				}
+
+				playerVictim.setDamageFromNpc((Npc) source, damageToPlayer, blockedDamage);
 			}
 		} else if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){

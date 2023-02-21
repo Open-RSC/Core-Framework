@@ -143,7 +143,7 @@ public class SkillCapes {
 	}
 
 	private static boolean prayerCape() {
-		final int pointsChance = 50;
+		final int pointsChance = 100;
 		if (rand1to100() <= pointsChance) {
 			return true;
 		}
@@ -167,7 +167,7 @@ public class SkillCapes {
 	}
 
 	private static boolean harvestingCape() {
-		final int doubleYieldChance = 35;
+		final int doubleYieldChance = 20;
 		if (rand1to100() <= doubleYieldChance) {
 			return true;
 		}
@@ -184,11 +184,11 @@ public class SkillCapes {
 
 	private static int hitsCape() {
 		final int rand = rand1to100();
-		if (rand > 75) {
+		if (rand >= 75) {
 			return 3;
-		} else if (rand > 50) {
+		} else if (rand >= 50) {
 			return 2;
-		} else if (rand > 25) {
+		} else if (rand >= 25) {
 			return 1;
 		} else {
 			return 0;

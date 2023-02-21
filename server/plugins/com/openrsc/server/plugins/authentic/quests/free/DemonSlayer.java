@@ -189,7 +189,7 @@ public class DemonSlayer implements QuestInterface,
 				captainRovinDialogue(player, n, CaptainRovin.KING);
 			} else {
 				if (choice != -1 && choices.get(choice).equalsIgnoreCase("Attack Skillcape")) {
-					if (getMaxLevel(player, Skill.ATTACK.id()) >= 99) {
+					if (config().WANT_CUSTOM_SPRITES && getMaxLevel(player, Skill.ATTACK.id()) >= 99) {
 						npcsay(player, n, "I see you too are a master of attack",
 							"You are worthy to wield the Attack Skillcape",
 							"The cost is 99,000 coins");

@@ -72,7 +72,7 @@ public class CandleMakerShop extends AbstractShop {
 		options.add("No thankyou");
 
 		String optionCape = "No but I am interested in your cape";
-		if (Functions.config().WANT_CUSTOM_SPRITES && player.getSkills().getMaxStat(Skill.FIREMAKING.id()) >= 99) {
+		if (Functions.config().WANT_CUSTOM_SPRITES) {
 			options.add(optionCape);
 		}
 
@@ -91,23 +91,25 @@ public class CandleMakerShop extends AbstractShop {
 		} else if (options.get(option).equalsIgnoreCase(optionYes)) {
 			player.setAccessingShop(shop);
 			ActionSender.showShop(player, shop);
-		} else if (options.get(option).equalsIgnoreCase(optionCape)) {
+		} else if (Functions.config().WANT_CUSTOM_SPRITES && options.get(option).equalsIgnoreCase(optionCape)) {
 			npcsay("This is a Firemaking cape",
-				"It helps you light fires that stay burning for a very long time",
-				"Would you like one?",
-				"Only 99,000 coins");
-			if (multi("Yes please", "No thankyou") == 0) {
-				if (ifheld(ItemId.COINS.id(), 99000)) {
-					remove(ItemId.COINS.id(), 99000);
-					give(ItemId.FIREMAKING_CAPE.id(), 1);
-					mes("You exchange your coins for a Firemaking cape");
-					delay(3);
-					say("Thank you!");
-					npcsay("You're welcome",
-						"Come back if you need any candles");
-				} else {
-					say("I'll come back later though",
-						"I don't have enough coins right now");
+				"It helps you light fires that stay burning for a very long time");
+			if (player.getSkills().getMaxStat(Skill.FIREMAKING.id()) >= 99) {
+				npcsay("Would you like one?",
+					"Only 99,000 coins");
+				if (multi("Yes please", "No thankyou") == 0) {
+					if (ifheld(ItemId.COINS.id(), 99000)) {
+						remove(ItemId.COINS.id(), 99000);
+						give(ItemId.FIREMAKING_CAPE.id(), 1);
+						mes("You exchange your coins for a Firemaking cape");
+						delay(3);
+						say("Thank you!");
+						npcsay("You're welcome",
+							"Come back if you need any candles");
+					} else {
+						say("I'll come back later though",
+							"I don't have enough coins right now");
+					}
 				}
 			}
 		}

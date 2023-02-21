@@ -332,7 +332,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 							mes("Merlin's crystal and dragon slayer\"");
 							delay(3);
 						}
-					} else if (opt == 2) {
+					} else if (canBuyCape(player) && opt == 2) {
 						skillcape(player, n);
 					}
 					break;
@@ -376,7 +376,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 						} else if (opt2 == 2) {
 							say(player, n, "Any hints on getting the eel?");
 							npcsay(player, n, "Maybe go and find someone who knows a lot about fishing?");
-						} else if (choices.get(opt2).equalsIgnoreCase(capeDialog)) {
+						} else if (canBuyCape(player) && choices.get(opt2).equalsIgnoreCase(capeDialog)) {
 							say(player, n, capeDialog);
 							skillcape(player, n);
 						}

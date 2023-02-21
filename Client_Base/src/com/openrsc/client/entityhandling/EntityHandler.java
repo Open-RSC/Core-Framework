@@ -4003,7 +4003,7 @@ public class EntityHandler {
 		// Rest of the skillcapes
 		items.add(new ItemDef("Agility cape", "The cape worn by the most agile", "Teleport", 99000, -1, "items:479", false, true, 2048, 0, false, false, false, 1518));
 		items.add(new ItemDef("Defense cape", "The cape worn by the most formidable", "", 99000, -1, "items:483", false, true, 2048, 0, false, false, false, 1519));
-		items.add(new ItemDef("Firemaking cape", "The cape worn by pyro enthusiasts", "", 99000, -1, "items:484", false, true, 2048, 0, false, false, false, 1520));
+		items.add(new ItemDef("Firemaking cape", "The cape worn by pyro enthusiasts", "Combust", 99000, -1, "items:484", false, true, 2048, 0, false, false, false, 1520));
 		items.add(new ItemDef("Herblaw cape", "The cape worn by master herblawists", "", 99000, -1, "items:487", false, true, 2048, 0, false, false, false, 1521));
 		items.add(new ItemDef("Hits cape", "The cape worn by the most sturdy", "", 99000, -1, "items:488", false, true, 2048, 0, false, false, false, 1522));
 		items.add(new ItemDef("Prayer cape", "The cape worn by the most pious", "", 99000, -1, "items:491", false, true, 2048, 0, false, false, false, 1523));

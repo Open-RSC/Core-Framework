@@ -50,8 +50,11 @@ import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 import com.openrsc.server.util.rsc.PrerenderedSleepword;
 import io.netty.channel.Channel;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.util.*;
@@ -376,6 +379,11 @@ public final class Player extends Mob {
 	 */
 	private boolean multiEndedEarly = false;
 
+	/**
+	 * Holds the damage received by a given mob
+	 * Also holds the damage absorbed by the defense cape
+	 */
+	private Map<UUID, Pair<Integer, Integer>> damageFromNpc = new HashMap<UUID, Pair<Integer, Integer>>();
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -4350,4 +4358,22 @@ public final class Player extends Mob {
 		this.multiEndedEarly = endedEarly;
 	}
 
+	public void setDamageFromNpc(Npc npc, int damage, int blockedDamage) {
+		UUID uuid = npc.getUUID();
+		if (damageFromNpc.containsKey(uuid)) {
+			int oldDamage = damageFromNpc.get(uuid).getLeft();
+			int oldBlockedDamage = damageFromNpc.get(uuid).getRight();
+			damageFromNpc.put(uuid, Pair.of(oldDamage + damage, oldBlockedDamage + blockedDamage));
+		} else {
+			damageFromNpc.put(uuid, Pair.of(damage, blockedDamage));
+		}
+	}
+
+	public Pair<Integer, Integer> getDamageFromNpc(Npc npc) {
+		return damageFromNpc.get(npc.getUUID());
+	}
+
+	public void removeDamageFromNpc(Npc npc) {
+		damageFromNpc.remove(npc.getUUID());
+	}
 }

@@ -59,7 +59,7 @@ public class BrotherJered implements TalkNpcTrigger, UseNpcTrigger {
 			}
 		} else if (option == 1) {
 			npcsay("Yes praise he who brings life to this world");
-		} else if (option == 2) {
+		} else if (config().WANT_CUSTOM_SPRITES && option == 2) {
 			prayerCape(player, npc);
 		}
 	}
@@ -90,8 +90,8 @@ public class BrotherJered implements TalkNpcTrigger, UseNpcTrigger {
 
 	public void prayerCape(final Player player, final Npc npc) {
 		npcsay("Ah yes",
-			"This cape was blessed by Saradomin",
-			"And has been handed down to members of his monastery for generations");
+			"This cape shows devotion to Saradomin",
+			"It is customarily given to those who are truly committed");
 
 		if (player.getSkills().getMaxStat(Skill.PRAYER.id()) < 99) return;
 

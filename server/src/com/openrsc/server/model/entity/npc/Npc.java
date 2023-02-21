@@ -330,6 +330,17 @@ public class Npc extends Mob {
 			}
 		}
 
+		// Defense skillcape message
+		Pair<Integer, Integer> npcDamageInfo = owner.getDamageFromNpc(this);
+		if (npcDamageInfo != null) {
+			if (getConfig().WANT_CUSTOM_SPRITES && owner.getCarriedItems().getEquipment().hasEquipped(ItemId.DEFENSE_CAPE.id())) {
+				int totalDamage = npcDamageInfo.getLeft();
+				int totalBlockedDamage = npcDamageInfo.getRight();
+				int percentBlocked = (int) ((double) totalBlockedDamage / (double) totalDamage * 100.0);
+				owner.playerServerMessage(MessageType.QUEST, "@bl2@Your defense cape prevented " + percentBlocked + "% of the damage");
+			}
+		}
+
 		Pair<UUID, Long> ownerInfo = handleXpDistribution(mob);
 		owner = getWorld().getPlayerByUUID(ownerInfo.getLeft());
 
@@ -685,6 +696,8 @@ public class Npc extends Mob {
 				}
 				skillsDist[Skill.HITS.id()] = 1;
 				player.incExp(skillsDist, totalXP, true);
+
+				player.removeDamageFromNpc(this);
 			}
 		}
 

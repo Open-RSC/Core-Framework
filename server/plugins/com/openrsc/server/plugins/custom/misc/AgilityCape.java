@@ -36,7 +36,7 @@ public class AgilityCape implements OpInvTrigger {
 		if (canTeleport(player)) {
 			mes("You turn on the spot");
 			delay(3);
-			if (ifrandom(1)) {
+			if (ifrandom(2)) {
 				mes("And trip!");
 				player.damage(1);
 				say("ouch");

@@ -97,13 +97,15 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				"We are the most powerfull order of knights in the land",
 				"We are helping the king Vallance rule the kingdom",
 				"As he is getting old and tired");
-		} else if (option == 2) {
+		} else if (config().WANT_CUSTOM_SPRITES && option == 2) {
 			npcsay(player, n, "This is the cape of defense",
 				"Given to knights who are exceptional at surviving");
 			if (player.getSkills().getMaxStat(Skill.DEFENSE.id()) >= 99) {
 				npcsay(player, n, "You look like someone who is quite formidable",
 					"I can sell you your own defense cape for 99,000 gold coins");
-				if (multi(player, n, "Yes please", "no thankyou") == 0) {
+
+				int choice = multi(player, n, "Yes please", "no thankyou");
+				if (choice == 0) {
 					if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
 						mes("You hand the gold to Sir Vyvin");
 						delay(3);
@@ -116,7 +118,13 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					} else {
 						npcsay(player, n, "Apologies, friend", "It looks like you aren't carrying enough coins");
 					}
-				}
+				} else if (choice == -1) return;
+			}
+			// This will play at the end of all dialog trees
+			if (player.getQuestStage(Quest.THE_KNIGHTS_SWORD.id()) == -1) {
+				npcsay(player, n, "Now if you'll excuse me",
+					"I must get back to looking for my father's portrait",
+					"I swear I left it in this cupboard...");
 			}
 		}
 	}

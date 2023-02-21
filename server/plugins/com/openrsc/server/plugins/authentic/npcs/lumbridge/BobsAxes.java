@@ -65,6 +65,7 @@ public final class BobsAxes extends AbstractShop {
 				ActionSender.showShop(player, shop);
 				break;
 			case 2:
+				if (!Functions.config().WANT_CUSTOM_SPRITES) break;
 				npcsay("Get yer own!");
 				if (player.getSkills().getMaxStat(Skill.WOODCUTTING.id()) >= 99) {
 					say("I'm trying to!");
