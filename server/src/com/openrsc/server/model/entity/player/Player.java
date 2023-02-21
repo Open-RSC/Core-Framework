@@ -2192,6 +2192,23 @@ public final class Player extends Mob {
 				incDeaths();
 				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, String.format("has PKed %s", getUsername())));
 			}
+
+			// Defense skillcape message
+			if (getConfig().WANT_CUSTOM_SPRITES && player.getCarriedItems().getEquipment().hasEquipped(ItemId.DEFENSE_CAPE.id())) {
+				int totalDamage = player.getTrackedDamage(this);
+				int totalBlockedDamage = player.getTrackedBlockedDamage(this);
+				if (totalBlockedDamage > 0) {
+					int percentBlocked = (int) ((double) totalBlockedDamage / (double) totalDamage * 100.0);
+					player.playerServerMessage(MessageType.QUEST, "@bl2@Your defense cape prevented " + percentBlocked + "% of the damage");
+				}
+			}
+
+			// Reset the tracked damage for anyone who was attacked by this player
+			for (Player curPlayer : getWorld().getPlayers()) {
+				if (curPlayer.getTrackedDamage(this) != -1) {
+					curPlayer.resetTrackedDamageAndBlockedDamage(this);
+				}
+			}
 		}
 
 		// Drops to world if player is null

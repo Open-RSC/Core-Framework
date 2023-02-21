@@ -181,7 +181,7 @@ public class CombatFormula {
 		if (source instanceof Player && victim instanceof Player) {
 			// TODO: hopefully temp until this file contains more accurate pvp
 			return PVPCombatFormula.calcFightHit(source, victim);
-		} else if (source instanceof Npc && victim instanceof Player) {
+		} else if (victim instanceof Player) {
 			// Track the damage dealt to the player
 			Player playerVictim = (Player)victim;
 			if (isHit) {

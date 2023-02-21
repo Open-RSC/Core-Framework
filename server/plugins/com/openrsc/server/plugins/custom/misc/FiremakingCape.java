@@ -27,8 +27,6 @@ public class FiremakingCape implements OpInvTrigger {
 			return;
 		}
 
-		thinkbubble();
-
 		// Light fire
 		mes("You concentrate the power of the sun to create a fire");
 
