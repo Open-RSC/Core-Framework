@@ -78,7 +78,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 					boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
 						== PlayerSettings.BlockingMode.None.id();
 					if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
-						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), friendProperUsername.playerName, friendProperUsername.formerName);
+						ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash(), player.getUsername(), player.getFormerName());
 						ActionSender.sendFriendUpdate(player, friendHash, friendProperUsername.playerName, friendProperUsername.formerName);
 					} else if (blockNone && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
 						ActionSender.sendFriendUpdate(player, friendHash, friendProperUsername.playerName, friendProperUsername.formerName);

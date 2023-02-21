@@ -1311,7 +1311,7 @@ public final class GameStateUpdater {
 						== PlayerSettings.BlockingMode.All.id();
 					boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
 						== PlayerSettings.BlockingMode.None.id();
-					if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
+					if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash()) && !player.isPlayerMod()) {
 						player.message("Unable to send message - player not on your friendlist.");
 					} else if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
 						&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
