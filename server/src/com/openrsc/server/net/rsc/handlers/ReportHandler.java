@@ -32,13 +32,21 @@ public final class ReportHandler implements PayloadProcessor<ReportStruct, Opcod
 		// botting or bug exploiting; "other" or impersonating jagex staff
 		if (reason != 4 && reason != 6 && reason != 8 + 64 && reason != 6 + 64) {
 			Iterator<Snapshot> i = player.getWorld().getSnapshots().iterator();
+			boolean foundPlayer = false;
 			if (i.hasNext()) {
-				Snapshot s = i.next();
-				if (!s.getOwner().equalsIgnoreCase(playerName)) {
-					player.message("For that rule you can only report players who have spoken or traded recently.");
-					return;
+				while (i.hasNext()) {
+					Snapshot s = i.next();
+					if (System.currentTimeMillis() - s.getTimestamp() > 60000) {
+						player.message("For that rule you can only report players who have spoken or traded recently.");
+						return;
+					}
+					if (s.getOwner().equalsIgnoreCase(playerName)) {
+						foundPlayer = true;
+						break; // player reported was found to have spoken.
+					}
 				}
-				if (System.currentTimeMillis() - s.getTimestamp() > 60000) {
+				// needed in case there is not a message in the queue older than 1 minute and user wasn't found.
+				if (!foundPlayer) {
 					player.message("For that rule you can only report players who have spoken or traded recently.");
 					return;
 				}

@@ -6,6 +6,7 @@ import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PrivateMessage;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
+import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
@@ -176,9 +177,11 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 					&& player.getConfig().WANT_GLOBAL_FRIEND) {
 					if (player.isElligibleToGlobalChat()) {
 						player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
+						player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + message));
 					}
 				} else {
 					player.addPrivateMessage(new PrivateMessage(player, message, friendHash));
+					player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Private) " + message));
 				}
 				break;
 			}
