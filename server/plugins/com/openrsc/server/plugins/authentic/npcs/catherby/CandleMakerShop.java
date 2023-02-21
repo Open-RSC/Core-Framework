@@ -93,7 +93,7 @@ public class CandleMakerShop extends AbstractShop {
 			ActionSender.showShop(player, shop);
 		} else if (Functions.config().WANT_CUSTOM_SPRITES && options.get(option).equalsIgnoreCase(optionCape)) {
 			npcsay("This is a Firemaking cape",
-				"It helps you light fires that stay burning for a very long time");
+				"It helps me light fires that stay burning for a very long time");
 			if (player.getSkills().getMaxStat(Skill.FIREMAKING.id()) >= 99) {
 				npcsay("Would you like one?",
 					"Only 99,000 coins");

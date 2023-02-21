@@ -181,7 +181,7 @@ public class CombatFormula {
 		if (source instanceof Player && victim instanceof Player) {
 			// TODO: hopefully temp until this file contains more accurate pvp
 			return PVPCombatFormula.calcFightHit(source, victim);
-		} else if (victim instanceof Player) {
+		} else if (source instanceof Npc && victim instanceof Player) {
 			// Track the damage dealt to the player
 			Player playerVictim = (Player)victim;
 			if (isHit) {
@@ -194,7 +194,7 @@ public class CombatFormula {
 					blockedDamage = damage;
 				}
 
-				playerVictim.setDamageFromNpc((Npc) source, damageToPlayer, blockedDamage);
+				playerVictim.updateDamageAndBlockedDamageTracking(source, damageToPlayer, blockedDamage);
 			}
 		} else if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){

@@ -53,8 +53,6 @@ import io.netty.channel.Channel;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.util.*;
@@ -4358,8 +4356,8 @@ public final class Player extends Mob {
 		this.multiEndedEarly = endedEarly;
 	}
 
-	public void setDamageFromNpc(Npc npc, int damage, int blockedDamage) {
-		UUID uuid = npc.getUUID();
+	public void updateDamageAndBlockedDamageTracking(Mob mob, int damage, int blockedDamage) {
+		UUID uuid = mob.getUUID();
 		if (damageFromNpc.containsKey(uuid)) {
 			int oldDamage = damageFromNpc.get(uuid).getLeft();
 			int oldBlockedDamage = damageFromNpc.get(uuid).getRight();
@@ -4369,11 +4367,21 @@ public final class Player extends Mob {
 		}
 	}
 
-	public Pair<Integer, Integer> getDamageFromNpc(Npc npc) {
-		return damageFromNpc.get(npc.getUUID());
+	public int getTrackedDamage(Mob damageInflictingMob) {
+		if (damageFromNpc.containsKey(damageInflictingMob.getUUID())) {
+			return damageFromNpc.get(damageInflictingMob.getUUID()).getLeft();
+		}
+		return -1;
 	}
 
-	public void removeDamageFromNpc(Npc npc) {
-		damageFromNpc.remove(npc.getUUID());
+	public int getTrackedBlockedDamage(Mob damageInflictingMob) {
+		if (damageFromNpc.containsKey(damageInflictingMob.getUUID())) {
+			return damageFromNpc.get(damageInflictingMob.getUUID()).getRight();
+		}
+		return -1;
+	}
+
+	public void resetTrackedDamageAndBlockedDamage(Mob damageInflictingMob) {
+		damageFromNpc.remove(damageInflictingMob.getUUID());
 	}
 }
