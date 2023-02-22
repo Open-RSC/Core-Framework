@@ -433,12 +433,11 @@ public class DiscordService implements Runnable{
 	public void staffCommandLog(final Player player, final String command) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
-		final String commandMessage = String.format("%s %s %s %s: %s, %s used command: %s",
+		final String commandMessage = String.format("%s %s %s %s: %s used command: %s",
 				"[" + dateFormat.format(calendar.getTime()) +  "]",
 				"[" + player.getWorld().getServer().getConfig().SERVER_NAME + "]",
 				Group.getGlobalMessageName(player.getGroupID()),
 				player.getUsername(),
-				player.getCurrentIP(),
 				"[X: " + player.getX() + ", Y: " + player.getY() + "]",
 				command
 		);
