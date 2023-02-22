@@ -381,7 +381,7 @@ public final class Player extends Mob {
 	 * Holds the damage received by a given mob
 	 * Also holds the damage absorbed by the defense cape
 	 */
-	private Map<UUID, Pair<Integer, Integer>> damageFromNpc = new HashMap<UUID, Pair<Integer, Integer>>();
+	private Map<UUID, Pair<Integer, Integer>> trackedDamageFromMob = new HashMap<UUID, Pair<Integer, Integer>>();
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -2198,8 +2198,7 @@ public final class Player extends Mob {
 				int totalDamage = player.getTrackedDamage(this);
 				int totalBlockedDamage = player.getTrackedBlockedDamage(this);
 				if (totalBlockedDamage > 0) {
-					int percentBlocked = (int) ((double) totalBlockedDamage / (double) totalDamage * 100.0);
-					player.playerServerMessage(MessageType.QUEST, "@bl2@Your defense cape prevented " + percentBlocked + "% of the damage");
+					player.playerServerMessage(MessageType.QUEST, "@dcy@Your defense cape blocked " + totalBlockedDamage + " damage!");
 				}
 			}
 
@@ -4375,30 +4374,30 @@ public final class Player extends Mob {
 
 	public void updateDamageAndBlockedDamageTracking(Mob mob, int damage, int blockedDamage) {
 		UUID uuid = mob.getUUID();
-		if (damageFromNpc.containsKey(uuid)) {
-			int oldDamage = damageFromNpc.get(uuid).getLeft();
-			int oldBlockedDamage = damageFromNpc.get(uuid).getRight();
-			damageFromNpc.put(uuid, Pair.of(oldDamage + damage, oldBlockedDamage + blockedDamage));
+		if (trackedDamageFromMob.containsKey(uuid)) {
+			int oldDamage = trackedDamageFromMob.get(uuid).getLeft();
+			int oldBlockedDamage = trackedDamageFromMob.get(uuid).getRight();
+			trackedDamageFromMob.put(uuid, Pair.of(oldDamage + damage, oldBlockedDamage + blockedDamage));
 		} else {
-			damageFromNpc.put(uuid, Pair.of(damage, blockedDamage));
+			trackedDamageFromMob.put(uuid, Pair.of(damage, blockedDamage));
 		}
 	}
 
 	public int getTrackedDamage(Mob damageInflictingMob) {
-		if (damageFromNpc.containsKey(damageInflictingMob.getUUID())) {
-			return damageFromNpc.get(damageInflictingMob.getUUID()).getLeft();
+		if (trackedDamageFromMob.containsKey(damageInflictingMob.getUUID())) {
+			return trackedDamageFromMob.get(damageInflictingMob.getUUID()).getLeft();
 		}
 		return -1;
 	}
 
 	public int getTrackedBlockedDamage(Mob damageInflictingMob) {
-		if (damageFromNpc.containsKey(damageInflictingMob.getUUID())) {
-			return damageFromNpc.get(damageInflictingMob.getUUID()).getRight();
+		if (trackedDamageFromMob.containsKey(damageInflictingMob.getUUID())) {
+			return trackedDamageFromMob.get(damageInflictingMob.getUUID()).getRight();
 		}
 		return -1;
 	}
 
 	public void resetTrackedDamageAndBlockedDamage(Mob damageInflictingMob) {
-		damageFromNpc.remove(damageInflictingMob.getUUID());
+		trackedDamageFromMob.remove(damageInflictingMob.getUUID());
 	}
 }

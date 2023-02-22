@@ -335,8 +335,7 @@ public class Npc extends Mob {
 			int totalDamage = owner.getTrackedDamage(this);
 			int totalBlockedDamage = owner.getTrackedBlockedDamage(this);
 			if (totalBlockedDamage > 0) {
-				int percentBlocked = (int) ((double) totalBlockedDamage / (double) totalDamage * 100.0);
-				owner.playerServerMessage(MessageType.QUEST, "@bl2@Your defense cape prevented " + percentBlocked + "% of the damage");
+				owner.playerServerMessage(MessageType.QUEST, "@dcy@Your defense cape blocked " + totalBlockedDamage + " damage!");
 			}
 		}
 

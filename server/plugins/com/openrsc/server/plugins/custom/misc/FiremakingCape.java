@@ -6,6 +6,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -26,6 +27,8 @@ public class FiremakingCape implements OpInvTrigger {
 			mes("Without direct sunlight, your cape is unable to harness enough energy to start a fire");
 			return;
 		}
+
+		Functions.thinkbubble(item);
 
 		// Light fire
 		mes("You concentrate the power of the sun to create a fire");
