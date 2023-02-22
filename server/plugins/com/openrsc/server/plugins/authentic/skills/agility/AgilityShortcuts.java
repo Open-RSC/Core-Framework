@@ -402,6 +402,14 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.incExp(Skill.AGILITY.id(), 30, true);
 				break;
 			case GREW_ISLAND_ROPE_ATTACHED:
+				if (player.getX() == 664 && player.getY() == 755) {
+					player.message("You can't reach the tree from here"); // not known authentic message
+					return;
+				}
+				if (player.getFatigue() >= player.MAX_FATIGUE) {
+					player.message("You are too tired to swing on the rope");
+					return;
+				}
 				if (getCurrentLevel(player, Skill.AGILITY.id()) < 30) {
 					player.message("You need an agility level of 30 to attempt to swing across the stream");
 					return;
