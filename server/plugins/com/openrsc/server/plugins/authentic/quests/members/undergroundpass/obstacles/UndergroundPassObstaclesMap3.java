@@ -195,10 +195,14 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 									ActionSender.sendTeleBubble(getOwner(), blastPosition.getX(), blastPosition.getY(), true);
 									if (getOwner().getLocation().withinRange(blastPosition, 1)) {
 										/* Blast hit */
-										getOwner().damage((int)Math.floor(getCurrentLevel(getOwner(), Skill.HITS.id())/10.0) + 4 + DataConversions.random(-1,1));
-										getOwner().teleport(795, 3469); // insert the coords
-										getOwner().getUpdateFlags().setChatMessage(new ChatMessage(getOwner(), "aarrgh"));
-										getOwner().message("you're blasted back to the door");
+										int ibanDmg = (int)Math.floor(getCurrentLevel(getOwner(), Skill.HITS.id())/10.0) + 4 + DataConversions.random(-1,1);
+										boolean willDie = ibanDmg >= getCurrentLevel(getOwner(), Skill.HITS.id());
+										getOwner().damage(ibanDmg);
+										if(!willDie) {
+											getOwner().teleport(795, 3469); // insert the coords
+											getOwner().getUpdateFlags().setChatMessage(new ChatMessage(getOwner(), "aarrgh"));
+											getOwner().message("you're blasted back to the door");
+										}
 									}
 								}
 							}
