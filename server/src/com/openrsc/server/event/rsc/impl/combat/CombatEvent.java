@@ -249,7 +249,6 @@ public class CombatEvent extends GameTickEvent {
 	public void resetCombat() {
 		if (running) {
 			if (defenderMob != null) {
-				int delayedAggro = 0;
 				if (defenderMob.isPlayer()) {
 					Player player = (Player) defenderMob;
 					player.resetAll();
@@ -275,7 +274,6 @@ public class CombatEvent extends GameTickEvent {
 				}
 			}
 			if (attackerMob != null) {
-				int delayedAggro = 0;
 				if (attackerMob.isPlayer()) {
 					Player player = (Player) attackerMob;
 					player.resetAll();
