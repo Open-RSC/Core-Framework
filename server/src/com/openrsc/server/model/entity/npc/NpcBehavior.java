@@ -61,6 +61,7 @@ public class NpcBehavior {
 	}
 
 	public void tick() {
+		int factor = (int)Math.ceil(640.0 / npc.getConfig().GAME_TICK);
 		if (state == State.ROAM) {
 			handleRoam();
 		} else if (state == State.AGGRO) {
@@ -70,7 +71,12 @@ public class NpcBehavior {
 		} else if (state == State.TACKLE) {
 			handleTackle();
 		} else if (state == State.RETREAT || state == State.TACKLE_RETREAT) {
-			if (npc.finishedPath()) setRoaming();
+			//NPCs only stop "retreating" after ~10 seconds authentically, even if their path is finished.
+			//We can also cast and range at retreating enemies without them responding, so we need to clear that so they respond appropriately.
+			if (npc.finishedPath() && checkCombatTimer(npc.getCombatTimer(), 15 * factor)) {
+				npc.setLastCombatState(CombatState.WAITING);
+				setRoaming();
+			}
 		}
 	}
 

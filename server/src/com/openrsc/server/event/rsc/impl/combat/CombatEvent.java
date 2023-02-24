@@ -253,10 +253,6 @@ public class CombatEvent extends GameTickEvent {
 				if (defenderMob.isPlayer()) {
 					Player player = (Player) defenderMob;
 					player.resetAll();
-				} else {
-					if (attackerMob.getCombatState() == CombatState.RUNNING) {
-						delayedAggro = 17000; // 17 + 3 second aggro timer for npcs running
-					}
 				}
 
 				defenderMob.setBusy(false);
@@ -264,7 +260,7 @@ public class CombatEvent extends GameTickEvent {
 				defenderMob.setCombatEvent(null);
 				defenderMob.setHitsMade(0);
 				defenderMob.setSprite(4);
-				defenderMob.setCombatTimer(delayedAggro);
+				defenderMob.setCombatTimer();
 				defenderMob.face(defenderMob.getX(), defenderMob.getY() - 1);
 				if(defenderMob.isPlayer()){
 					Player p1;
@@ -283,10 +279,6 @@ public class CombatEvent extends GameTickEvent {
 				if (attackerMob.isPlayer()) {
 					Player player = (Player) attackerMob;
 					player.resetAll();
-				} else {
-					if (attackerMob.getCombatState() == CombatState.RUNNING) {
-						delayedAggro = 17000; // 17 + 3 second timer for npcs running
-					}
 				}
 
 				attackerMob.setBusy(false);
@@ -294,7 +286,7 @@ public class CombatEvent extends GameTickEvent {
 				attackerMob.setCombatEvent(null);
 				attackerMob.setHitsMade(0);
 				attackerMob.setSprite(4);
-				attackerMob.setCombatTimer(delayedAggro);
+				attackerMob.setCombatTimer();
 				attackerMob.face(attackerMob.getX(), attackerMob.getY() - 1);
 				if(attackerMob.isPlayer()){
 					Player p2;

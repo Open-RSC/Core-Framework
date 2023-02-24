@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
+import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 
@@ -168,7 +169,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				Npc npc = (Npc) opponent;
 				Player player = (Player) caster;
-				if (!npc.isChasing() && !npc.inCombat() && this.shouldChase) {
+				if (!npc.isChasing() && !npc.inCombat() && npc.getCombatState() != CombatState.RUNNING && this.shouldChase) {
 					npc.setChasing(player);
 				}
 			}
