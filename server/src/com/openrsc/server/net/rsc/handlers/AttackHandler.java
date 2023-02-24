@@ -23,7 +23,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 		OpcodeIn pID = payload.getOpcode();
 
 		if (player.inCombat()) {
-			player.message("You are already busy fighting");
+			player.message("You are already busy fighting!");
 			player.resetPath();
 			return;
 		}
