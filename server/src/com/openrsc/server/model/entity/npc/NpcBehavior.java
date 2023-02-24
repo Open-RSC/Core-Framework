@@ -36,9 +36,11 @@ public class NpcBehavior {
 
 	private boolean draynorManorSkeleton;
 	private boolean blackKnightsFortress;
+	private int tickFactor;
 
 	NpcBehavior(final Npc npc) {
 		this.npc = npc;
+		this.tickFactor = (int)Math.ceil(640.0 / npc.getConfig().GAME_TICK);
 		this.blackKnightsFortress = npc.getLoc().startX() > 274 && npc.getLoc().startX() < 283
 			&& npc.getLoc().startY() > 432 && npc.getLoc().startY() < 441;
 		this.draynorManorSkeleton = npc.getID() == NpcId.SKELETON_LVL21.id()
@@ -61,7 +63,6 @@ public class NpcBehavior {
 	}
 
 	public void tick() {
-		int factor = (int)Math.ceil(640.0 / npc.getConfig().GAME_TICK);
 		if (state == State.ROAM) {
 			handleRoam();
 		} else if (state == State.AGGRO) {
@@ -73,7 +74,7 @@ public class NpcBehavior {
 		} else if (state == State.RETREAT || state == State.TACKLE_RETREAT) {
 			//NPCs only stop "retreating" after ~10 seconds authentically, even if their path is finished.
 			//We can also cast and range at retreating enemies without them responding, so we need to clear that so they respond appropriately.
-			if (npc.finishedPath() && checkCombatTimer(npc.getCombatTimer(), 15 * factor)) {
+			if (npc.finishedPath() && checkCombatTimer(npc.getCombatTimer(), 15 * tickFactor)) {
 				npc.setLastCombatState(CombatState.WAITING);
 				setRoaming();
 			}
@@ -100,7 +101,7 @@ public class NpcBehavior {
 		}
 
 		// Check if NPC will aggro
-		if (checkCombatTimer(npc.getCombatTimer(), 5)) {
+		if (checkCombatTimer(npc.getCombatTimer(), 5 * tickFactor)) {
 			if ((npc.getDef().isAggressive() && !draynorManorSkeleton) || npc.getLocation().inWilderness() || (blackKnightsFortress)) {
 
 				// We loop through all players in view.
@@ -114,8 +115,7 @@ public class NpcBehavior {
 					}
 
 					// Remove the opponent if the player has not been engaged in > 10 seconds
-					int factor = (int)Math.ceil(640.0 / npc.getConfig().GAME_TICK);
-					if (npc.getLastOpponent() == player && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 15 * factor)) {
+					if (npc.getLastOpponent() == player && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 15 * tickFactor)) {
 						npc.setLastOpponent(null);
 						setRoaming();
 					}
@@ -154,7 +154,7 @@ public class NpcBehavior {
 
 		// If NPC has not moved and is out of combat
 		// and is finished its previous path.
-		if (checkCombatTimer(lastMovement, 5) && checkCombatTimer(npc.getCombatTimer(), 5) && npc.finishedPath()) {
+		if (checkCombatTimer(lastMovement, 5 * tickFactor) && checkCombatTimer(npc.getCombatTimer(), 5 * tickFactor) && npc.finishedPath()) {
 			lastMovement = System.currentTimeMillis();
 			int rand = DataConversions.random(0, 1);
 
@@ -198,7 +198,7 @@ public class NpcBehavior {
 
 		// If target is not waiting for "run away" timer, send them chasing
 		lastMovement = System.currentTimeMillis();
-		int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : (int)Math.ceil(640.0 / target.getConfig().GAME_TICK);
+		int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 * tickFactor : (int)Math.ceil(640.0 / target.getConfig().GAME_TICK);
 		if (checkCombatTimer(target.getCombatTimer(), numTicks)) {
 			if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
 				npc.walkToEntityAStar(target.getX(), target.getY());
@@ -230,6 +230,7 @@ public class NpcBehavior {
 			setRoaming();
 		}
 
+		/* Now handled in CombatEvent to let enemies retreat on their turn authentically.
 		// Current NPC is in combat
 		else if (npc.inCombat()) {
 			target = npc.getOpponent();
@@ -239,11 +240,15 @@ public class NpcBehavior {
 				&& npc.getOpponent().getHitsMade() >= 3) {
 				retreat();
 			}
+
+
 		}
+
+		*/
 
 		// This case happens when the npc had a target that has
 		// ran away. It will only change its state after 5 ticks.
-		else if (!npc.inCombat() && checkCombatTimer(npc.getCombatTimer(), 5)) {
+		else if (!npc.inCombat() && checkCombatTimer(npc.getCombatTimer(), 5 * tickFactor)) {
 			npc.setExecutedAggroScript(false);
 
 			// If there is a valid target and NPC is aggressive, set AGGRO and target.
@@ -453,7 +458,7 @@ public class NpcBehavior {
 		state = State.COMBAT;
 	}
 
-	private boolean shouldRetreat(final Npc npc) {
+	public boolean shouldRetreat(final Npc npc) {
 		if (!npc.getConfig().NPC_DONT_RETREAT) {
 			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
 				return npc.getSkills().getLevel(Skill.HITS.id()) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());

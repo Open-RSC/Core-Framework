@@ -10,6 +10,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcBehavior;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.entity.update.Damage;
@@ -115,6 +116,12 @@ public class CombatEvent extends GameTickEvent {
 				target.setPoisonDamage(60);
 				target.startPoisonEvent();
 				((Player) hitter).message("@gr3@You @gr2@have @gr1@poisioned @gr2@the " + ((Npc) target).getDef().name + "!");
+			}
+
+			if (hitter.isNpc() && ((Npc)hitter).getBehavior().shouldRetreat(((Npc)hitter)) && target.getHitsMade() >= 3) {
+				//Authentically, retreating enemies retreat on their turn but before they do damage.
+				((Npc)hitter).getBehavior().retreat();
+				return;
 			}
 
 			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
