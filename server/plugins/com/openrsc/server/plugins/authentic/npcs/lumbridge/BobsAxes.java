@@ -60,7 +60,7 @@ public final class BobsAxes extends AbstractShop {
 				npcsay("Get yer own!");
 				break;
 			case 1:
-				npcsay(  "Yes, I buy and sell axes, take your pick! (or axe)");
+				npcsay("Yes, I buy and sell axes, take your pick! (or axe)");
 				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);
 				break;

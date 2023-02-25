@@ -331,13 +331,11 @@ public class Npc extends Mob {
 		}
 
 		// Defense skillcape message
-		if (getConfig().WANT_CUSTOM_SPRITES && owner.getCarriedItems().getEquipment().hasEquipped(ItemId.DEFENSE_CAPE.id())) {
-			int totalDamage = owner.getTrackedDamage(this);
-			int totalBlockedDamage = owner.getTrackedBlockedDamage(this);
-			if (totalBlockedDamage > 0) {
-				owner.playerServerMessage(MessageType.QUEST, "@dcy@Your defense cape blocked " + totalBlockedDamage + " damage!");
-			}
+		int totalBlockedDamage = owner.getTrackedBlockedDamage(this);
+		if (totalBlockedDamage > 0) {
+			owner.playerServerMessage(MessageType.QUEST, "@dcy@Your defense cape blocked " + totalBlockedDamage + " damage!");
 		}
+
 
 		Pair<UUID, Long> ownerInfo = handleXpDistribution(mob);
 		owner = getWorld().getPlayerByUUID(ownerInfo.getLeft());

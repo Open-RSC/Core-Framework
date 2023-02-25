@@ -2194,13 +2194,11 @@ public final class Player extends Mob {
 			}
 
 			// Defense skillcape message
-			if (getConfig().WANT_CUSTOM_SPRITES && player.getCarriedItems().getEquipment().hasEquipped(ItemId.DEFENSE_CAPE.id())) {
-				int totalDamage = player.getTrackedDamage(this);
-				int totalBlockedDamage = player.getTrackedBlockedDamage(this);
-				if (totalBlockedDamage > 0) {
-					player.playerServerMessage(MessageType.QUEST, "@dcy@Your defense cape blocked " + totalBlockedDamage + " damage!");
-				}
+			int totalBlockedDamage = player.getTrackedBlockedDamage(this);
+			if (totalBlockedDamage > 0) {
+				player.playerServerMessage(MessageType.QUEST, "@dcy@Your defense cape blocked " + totalBlockedDamage + " damage!");
 			}
+
 
 			// Reset the tracked damage for anyone who was attacked by this player
 			for (Player curPlayer : getWorld().getPlayers()) {
