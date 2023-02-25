@@ -1450,12 +1450,11 @@ public class DoorAction {
 				members = true;
 				break;
 
-			case 508: // Lesser Cage Gate
-				members = false;
+			case 508: // Members Gate near King Black Dragon ladder (285, 185)
+				members = true;
 				break;
 
-			case 319:
-				// Members Gate near King Black Dragon ladder (285, 185)
+			case 319: // Members Gate near Lava Maze Dungeon ladder (243, 178)
 				members = true;
 				break;
 
