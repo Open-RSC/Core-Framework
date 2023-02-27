@@ -19,6 +19,7 @@ import com.openrsc.server.plugins.authentic.quests.members.touristtrap.Tourist_T
 import com.openrsc.server.plugins.authentic.skills.fishing.Fishing;
 import com.openrsc.server.plugins.authentic.skills.woodcutting.Woodcutting;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.MessageFilter;
 import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -128,6 +129,71 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("scenerydemo")) {
 			showScenery(player, command, args);
 		}
+		else if (command.equalsIgnoreCase("filtertest")) {
+			filterTest(player, command, args, true);
+		}
+	}
+
+	private void filterTest(Player player, String command, String[] args, boolean production) {
+		if (production) {
+			player.message("disabled on production; recompile with production bool false to test");
+			return;
+		}
+		if (!MessageFilter.badwordsContains("ass")) {
+			MessageFilter.addBadWord("ass");
+		}
+		if (!MessageFilter.badwordsContains("clown")) {
+			MessageFilter.addBadWord("clown");
+		}
+		if (!MessageFilter.badwordsContains("suck")) {
+			MessageFilter.addBadWord("suck");
+		}
+		if (!MessageFilter.badwordsContains("hell")) {
+			MessageFilter.addBadWord("hell");
+		}
+		if (!MessageFilter.badwordsContains("cow")) {
+			MessageFilter.addBadWord("cow");
+		}
+
+		if (!MessageFilter.goodwordsContains("class")) {
+			MessageFilter.addGoodWord("class");
+		}
+		if (!MessageFilter.goodwordsContains("sucks")) {
+			MessageFilter.addGoodWord("sucks");
+		}
+		if (!MessageFilter.goodwordsContains("hello")) {
+			MessageFilter.addGoodWord("hello");
+		}
+
+		final String[] testStrings = {
+			"Hello",
+			"Hey there Hello!",
+			"Sucks to be y0u, clown",
+			"Class clown",
+			"Runescape Classic",
+			"Runescape classic",
+			"(()vv",
+			"( ()v v",
+			"( () ___ vv",
+			"Holy (0vv",
+			"c 0 w",
+			"( 0 w",
+			"pre c 0 w cw0 co vv post",
+			"Holy hell",
+			"I am a (ow irl",
+			"H.O.L.Y. C.O.W!",
+			"H.O.L.Y. (!0!W!",
+			"cow c o w c o w c co c co w ass COW coassw hello hell clown (0w ( 0 w yeah",
+			"c@ran@ow",
+			"@ran@",
+			"@cow@",
+			"you are a @cow@",
+		};
+		for (String testString : testStrings) {
+			player.playerServerMessage(MessageType.QUEST, "@red@" + testString);
+			player.playerServerMessage(MessageType.QUEST, "@gre@" + MessageFilter.filter(player, testString, "filtertest"));
+		}
+
 	}
 
 	private void serverStats(Player player, String[] args) {

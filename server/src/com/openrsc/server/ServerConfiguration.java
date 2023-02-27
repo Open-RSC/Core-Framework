@@ -169,6 +169,8 @@ public class ServerConfiguration {
 	public String DISCORD_STAFF_COMMANDS_WEBHOOK_URL;
 	public boolean WANT_DISCORD_REPORT_ABUSE_UPDATES;
 	public String DISCORD_REPORT_ABUSE_WEBHOOK_URL;
+	public boolean WANT_DISCORD_NAUGHTY_WORDS_UPDATES;
+	public String DISCORD_NAUGHTY_WORDS_WEBHOOK_URL;
 	public boolean WANT_DISCORD_BOT;
 	public long CROSS_CHAT_CHANNEL;
 	public boolean WANT_EQUIPMENT_TAB;
@@ -300,6 +302,7 @@ public class ServerConfiguration {
 	public int SPELL_RANGE_DISTANCE;
 	public boolean WANT_CORRECTED_SKILLING_XP;
 	public int SUMMON_ALL_PLAYER_LIMIT;
+	public boolean SERVER_SIDED_WORD_FILTERING;
 
 	public boolean DISABLE_MINIMAP_ROTATION;
 
@@ -428,6 +431,7 @@ public class ServerConfiguration {
 		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);
 		WANT_CORRECTED_SKILLING_XP = tryReadBool("want_corrected_skilling_xp").orElse(false);
 		SUMMON_ALL_PLAYER_LIMIT = tryReadInt("summon_all_player_limit").orElse(15);
+		SERVER_SIDED_WORD_FILTERING = tryReadBool("server_sided_word_filtering").orElse(true);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -582,12 +586,22 @@ public class ServerConfiguration {
 		DISCORD_STAFF_COMMANDS_WEBHOOK_URL = tryReadString("discord_staff_commands_webhook_url").orElse("null");
 		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
 		DISCORD_REPORT_ABUSE_WEBHOOK_URL = tryReadString("discord_report_abuse_webhook_url").orElse("null");
-		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false);
-		WANT_DISCORD_STAFF_COMMANDS = tryReadBool("want_discord_staff_commands").orElse(false);
-		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false);
-		WANT_DISCORD_REPORT_ABUSE_UPDATES = tryReadBool("want_discord_report_abuse_updates").orElse(false);
-		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false);
+		DISCORD_NAUGHTY_WORDS_WEBHOOK_URL = tryReadString("discord_naughty_words_webhook_url").orElse("null");
 		CROSS_CHAT_CHANNEL = tryReadInt("cross_chat_channel").orElse(0);
+		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false)
+			&& !DISCORD_AUCTION_WEBHOOK_URL.equals("null");
+		WANT_DISCORD_STAFF_COMMANDS = tryReadBool("want_discord_staff_commands").orElse(false)
+			&& !DISCORD_STAFF_COMMANDS_WEBHOOK_URL.equals("null");
+		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false)
+			&& !DISCORD_MONITORING_WEBHOOK_URL.equals("null");
+		WANT_DISCORD_REPORT_ABUSE_UPDATES = tryReadBool("want_discord_report_abuse_updates").orElse(false)
+			&& !DISCORD_REPORT_ABUSE_WEBHOOK_URL.equals("null");
+		WANT_DISCORD_NAUGHTY_WORDS_UPDATES = tryReadBool("want_discord_naughty_words_updates").orElse(false)
+			&& !DISCORD_NAUGHTY_WORDS_WEBHOOK_URL.equals("null");
+		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false)
+			&& CROSS_CHAT_CHANNEL != 0;
+
+
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);

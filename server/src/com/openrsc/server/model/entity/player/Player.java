@@ -793,7 +793,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean canReport() {
-		return System.currentTimeMillis() - lastReport > 60000;
+		return isPlayerMod() || System.currentTimeMillis() - lastReport > 60000;
 	}
 
 	public boolean castTimer(boolean allowRapid) {

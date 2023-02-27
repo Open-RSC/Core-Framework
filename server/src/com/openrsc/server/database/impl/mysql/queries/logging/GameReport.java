@@ -32,6 +32,9 @@ public final class GameReport extends Query {
 		if (reportedPlayer != null) {
 			this.reported_x = reportedPlayer.getX();
 			this.reported_y = reportedPlayer.getY();
+		} else {
+			this.reported_x = -1;
+			this.reported_y = -1;
 		}
 		Iterator<Snapshot> i = reporter.getWorld().getSnapshots().descendingIterator();
 		while (i.hasNext()) {

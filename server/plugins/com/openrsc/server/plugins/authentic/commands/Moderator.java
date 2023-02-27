@@ -14,12 +14,14 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.RSCPacketFilter;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.MessageFilter;
 import com.openrsc.server.util.RandomUsername;
 import com.openrsc.server.util.UsernameChange;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -106,10 +108,143 @@ public final class Moderator implements CommandTrigger {
 			jailPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("release")) {
 			releasePlayer(player, command, args);
+		} else if (command.equalsIgnoreCase("addbadword")) {
+			addBadword(player, command, args);
+		} else if (command.equalsIgnoreCase("removebadword")) {
+			removeBadword(player, command, args);
+		} else if (command.equalsIgnoreCase("addgoodword")) {
+			addGoodword(player, command, args);
+		} else if (command.equalsIgnoreCase("removegoodword")) {
+			removeGoodword(player, command, args);
+		} else if (command.equalsIgnoreCase("syncgoodwordsbadwords") || command.equalsIgnoreCase("sgb")) {
+			reloadGoodwordBadwords(player);
 		}
 	}
 
-	public static void freeName(Player player, String command, String[] args) {
+	private void reloadGoodwordBadwords(Player player) {
+		Pair<Integer, Integer> loadedCounts = MessageFilter.loadGoodAndBadWordsFromDisk();
+		player.message("Loaded " + loadedCounts.getLeft() + " goodwords and " + loadedCounts.getRight() + " badwords from disk.");
+	}
+
+	private void addBadword(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [badword]");
+			return;
+		}
+		StringBuilder newStr = new StringBuilder();
+		for (String arg : args) {
+			newStr.append(arg).append(" ");
+		}
+		String newBadWord = newStr.toString().trim();
+		if (MessageFilter.badwordsContains(newBadWord)) {
+			player.message("@red@badwords already contains the word: @dre@" + newBadWord);
+			return;
+		}
+		if (MessageFilter.goodwordsContains(newBadWord)) {
+			player.message("@red@goodwords already contains the word: @dre@" + newBadWord);
+			return;
+		}
+		if (newBadWord.length() < 3) {
+			player.message("@red@badword must be at least 3 characters long.");
+			return;
+		}
+
+		reloadGoodwordBadwords(player);
+		if (MessageFilter.addBadWord(newBadWord)) {
+			MessageFilter.syncBadwordsToDisk();
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newBadWord, false, true);
+			player.message("@whi@Added @red@" + newBadWord + "@whi@ to the badwords list.");
+		} else {
+			player.message("@red@Not able to add @dre@" + newBadWord + "@red@ to the badwords list.");
+		}
+	}
+
+	private void removeBadword(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [old badword]");
+			return;
+		}
+		StringBuilder newStr = new StringBuilder();
+		for (String arg : args) {
+			newStr.append(arg).append(" ");
+		}
+		String oldBadWord = newStr.toString().trim();
+
+		if (!MessageFilter.badwordsContains(oldBadWord)) {
+			player.message("@red@badwords already lacked the word: @gre@" + oldBadWord);
+			return;
+		}
+
+		reloadGoodwordBadwords(player);
+		if (MessageFilter.removeBadWord(oldBadWord)) {
+			MessageFilter.syncBadwordsToDisk();
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldBadWord, false, false);
+			player.message("@whi@Removed @gre@" + oldBadWord + "@whi@ from the badwords list.");
+		} else {
+			player.message("@red@Not able to remove @gr1@" + oldBadWord + "@red@ from the badwords list.");
+		}
+	}
+
+	private void addGoodword(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [goodword]");
+			return;
+		}
+		StringBuilder newStr = new StringBuilder();
+		for (String arg : args) {
+			newStr.append(arg).append(" ");
+		}
+		String newGoodword = newStr.toString().trim();
+		if (MessageFilter.badwordsContains(newGoodword)) {
+			player.message("@red@badwords already contains the word: @dre@" + newGoodword);
+			return;
+		}
+		if (MessageFilter.goodwordsContains(newGoodword)) {
+			player.message("@red@goodwords already contains the word: @dre@" + newGoodword);
+			return;
+		}
+		if (newGoodword.length() < 3) {
+			player.message("@red@goodword must be at least 3 characters long.");
+			return;
+		}
+
+		reloadGoodwordBadwords(player);
+		if (MessageFilter.addGoodWord(newGoodword)) {
+			MessageFilter.syncGoodwordsToDisk();
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newGoodword, true, true);
+			player.message("@whi@Added @red@" + newGoodword + "@whi@ to the goodwords list.");
+		} else {
+			player.message("@red@Not able to add @dre@" + newGoodword + "@red@ to the goodwords list.");
+		}
+	}
+
+	private void removeGoodword(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [old goodword]");
+			return;
+		}
+		StringBuilder newStr = new StringBuilder();
+		for (String arg : args) {
+			newStr.append(arg).append(" ");
+		}
+		String oldGoodword = newStr.toString().trim();
+
+		if (!MessageFilter.goodwordsContains(oldGoodword)) {
+			player.message("@red@goodwords already lacked the word: @gre@" + oldGoodword);
+			return;
+		}
+
+		reloadGoodwordBadwords(player);
+		if (MessageFilter.removeGoodWord(oldGoodword)) {
+			MessageFilter.syncGoodwordsToDisk();
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldGoodword, true, false);
+			player.message("@whi@Removed @gre@" + oldGoodword + "@whi@ from the goodwords list.");
+		} else {
+			player.message("@red@Not able to remove @gr1@" + oldGoodword + "@red@ from the goodwords list.");
+		}
+	}
+
+	private static void freeName(Player player, String command, String[] args) {
 		if (args.length != 1) {
 			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [UsernameToFree]");
 			player.message("(underscores will become spaces)");
@@ -143,7 +278,7 @@ public final class Moderator implements CommandTrigger {
 		}
 	}
 
-	public static void removeFormerName(Player player, String command, String[] args) {
+	private static void removeFormerName(Player player, String command, String[] args) {
 		if (args.length != 1) {
 			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Username To Remove Former Name from]");
 			player.message("(underscores will become spaces)");

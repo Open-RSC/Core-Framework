@@ -30,6 +30,7 @@ import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
@@ -39,6 +40,7 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -51,7 +53,8 @@ public class DiscordService implements Runnable{
 	private final Queue<String> staffCommandRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
-	private final Queue<String> reportAbuseRequests = new ConcurrentLinkedQueue<String>();
+	private final Queue<DiscordEmbed> reportAbuseRequests = new ConcurrentLinkedQueue<DiscordEmbed>();
+	private final Queue<DiscordEmbed> naughtyWordsRequests = new ConcurrentLinkedQueue<DiscordEmbed>();
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private long monitoringLastUpdate = 0;
@@ -343,9 +346,14 @@ public class DiscordService implements Runnable{
 	}
 
 	public void sendMessage(final String message) {
-		final TextChannel textChannel = jda.getTextChannelById(this.server.getConfig().CROSS_CHAT_CHANNEL);
-		if (textChannel != null) {
-			textChannel.sendMessage(message).queue();
+		try {
+			final TextChannel textChannel = jda.getTextChannelById(this.server.getConfig().CROSS_CHAT_CHANNEL);
+			if (textChannel != null) {
+				textChannel.sendMessage(message).queue();
+			}
+		} catch (Exception ex) {
+			LOGGER.catching(ex);
+			LOGGER.error("Discord Bot could not send message to CROSS_CHAT_CHANNEL.");
 		}
 	}
 
@@ -430,6 +438,12 @@ public class DiscordService implements Runnable{
 		auctionSendToDiscord(cancelMessage);
 	}
 
+	private void auctionSendToDiscord(final String message) {
+		if (getServer().getConfig().WANT_DISCORD_AUCTION_UPDATES) {
+			auctionRequests.add(message);
+		}
+	}
+
 	public void staffCommandLog(final Player player, final String command) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
@@ -445,23 +459,14 @@ public class DiscordService implements Runnable{
 		staffCommandSendToDiscord(commandMessage);
 	}
 
-	public void monitoringSendServerBehind(final String message, final boolean showEventData) {
-		try {
-			monitoringSendToDiscord(message + (showEventData ? "\r\n" + getServer().getGameEventHandler().buildProfilingDebugInformation(false) : ""));
-		} catch(final Exception e) {
-			LOGGER.catching(e);
+	private void staffCommandSendToDiscord(final String message) {
+		if (getServer().getConfig().WANT_DISCORD_STAFF_COMMANDS) {
+			staffCommandRequests.add(message);
 		}
 	}
 
-	private void auctionSendToDiscord(final String message) {
-		if(getServer().getConfig().WANT_DISCORD_AUCTION_UPDATES) {
-			auctionRequests.add(message);
-		}
-	}
-	private void staffCommandSendToDiscord(final String message) {
-		if(getServer().getConfig().WANT_DISCORD_STAFF_COMMANDS && !getServer().getConfig().DISCORD_STAFF_COMMANDS_WEBHOOK_URL.equals("null")) {
-			staffCommandRequests.add(message);
-		}
+	public void monitoringSendServerBehind(final String message, final boolean showEventData) {
+		monitoringSendToDiscord(message + (showEventData ? "\r\n" + getServer().getGameEventHandler().buildProfilingDebugInformation(false) : ""));
 	}
 
 	private void monitoringSendToDiscord(final String message) {
@@ -474,35 +479,46 @@ public class DiscordService implements Runnable{
 	}
 
 	public void reportSendToDiscord(GameReport gameReport, String serverName) {
-		if(getServer().getConfig().WANT_DISCORD_REPORT_ABUSE_UPDATES) {
-			StringBuilder reportMessage = new StringBuilder("**=== ");
-			reportMessage.append(serverName);
-			reportMessage.append(" ===**\n");
-			reportMessage.append("Unix time: ");
-			String unixTimestamp = String.format("%d", (System.currentTimeMillis() / 1000));
-			reportMessage.append(unixTimestamp);
-			reportMessage.append("\n\n**");
-			reportMessage.append(gameReport.reporterPlayer.getUsername());
-			reportMessage.append("** reported **");
-			reportMessage.append(gameReport.reported);
-			reportMessage.append("** for *\"");
-			reportMessage.append(Constants.reportReasons.getOrDefault((int)gameReport.reason, "Unknown Reason"));
-			reportMessage.append("\"*");
-
-			if (gameReport.chatlog.toString().length() > 0) {
-				reportMessage.append("\n\n**Chatlog Evidence:**\n");
-				reportMessage.append(gameReport.chatlog.toString());
-			} else {
-				if (gameReport.suggestsOrMutes) {
-					reportMessage.append("\n");
-				}
-			}
-
-			if (gameReport.suggestsOrMutes) {
-				reportMessage.append("\n**The user was muted for this offense!**");
-			}
-			reportAbuseRequests.add(reportMessage.toString());
+		if(!getServer().getConfig().WANT_DISCORD_REPORT_ABUSE_UPDATES) {
+			return;
 		}
+
+		StringBuilder reportMessage = new StringBuilder("Unix time: ");
+		String unixTimestamp = String.format("%d", (System.currentTimeMillis() / 1000));
+		reportMessage.append(unixTimestamp);
+		reportMessage.append("\n\n**");
+		reportMessage.append(gameReport.reporterPlayer.getUsername());
+		reportMessage.append("** reported **");
+		reportMessage.append(gameReport.reported);
+		reportMessage.append("** for *\"");
+		reportMessage.append(Constants.reportReasons.getOrDefault((int)gameReport.reason, "Unknown Reason"));
+		reportMessage.append("\"*\n");
+
+		if (gameReport.reported_x != -1) {
+			reportMessage.append("**" + gameReport.reported + "** was at **(" + gameReport.reported_x + ", " + gameReport.reported_y + ")**");
+		} else {
+			reportMessage.append("**" + gameReport.reported + "** was offline at the time of report.");
+		}
+
+		if (gameReport.chatlog.toString().length() > 0) {
+			reportMessage.append("\n\n**===  Chatlog Evidence  ===**\n```\n");
+			reportMessage.append(gameReport.chatlog.toString());
+			reportMessage.append("\n```");
+		} else {
+			if (gameReport.suggestsOrMutes) {
+				reportMessage.append("\n");
+			}
+		}
+
+		if (gameReport.suggestsOrMutes) {
+			reportMessage.append("\n**The user was muted for this offense!**");
+		}
+		DiscordEmbed reportEmbed = new DiscordEmbed("**===  " + serverName + "  ===**",
+		"",
+		Constants.reportDiscordColours.getOrDefault((int)gameReport.reason, "0"),
+		reportMessage.toString()
+		);
+		reportAbuseRequests.add(reportEmbed);
 	}
 
 	private static void sendToDiscord(final String webhookUrl, final String message) throws Exception {
@@ -542,8 +558,49 @@ public class DiscordService implements Runnable{
 			}
 			*/
 
+		} catch (Exception e) {
+			LOGGER.error(e);
 		}
-		catch (Exception e) {
+	}
+
+	private static void sendEmbedToDiscord(final String webhookUrl, final DiscordEmbed discordEmbed) throws Exception {
+		final String jsonPostBody = String.format("{ \"content\": \"%s\", \"embeds\": [ {" +
+			" \"title\": \"%s\"," +
+			" \"color\": %s," +
+			" \"description\": \"%s\" } ] }", discordEmbed.content, discordEmbed.title, discordEmbed.color, discordEmbed.description);
+
+		final java.net.URL url = new java.net.URL(webhookUrl);
+
+		final URLConnection con = url.openConnection();
+		final HttpURLConnection http = (HttpURLConnection) con;
+		con.addRequestProperty("User-Agent", "openrsc");
+		http.setRequestMethod("POST");
+		http.setDoOutput(true);
+		http.setUseCaches(false);
+
+		final byte[] out = jsonPostBody.getBytes(StandardCharsets.UTF_8);
+		final int length = out.length;
+
+		http.setFixedLengthStreamingMode(length);
+		http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+		try {
+			http.connect();
+			try (OutputStream os = http.getOutputStream()) {
+				os.write(out);
+			}
+			/* Debugging code, read response from discord
+			System.out.println(http.getResponseMessage());
+			BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream()));
+			String line = "";
+			while (line != null) {
+				line = br.readLine();
+				if (line != null) {
+					System.out.println(line);
+				}
+			}
+			/**/
+
+		} catch (Exception e) {
 			LOGGER.error(e);
 		}
 	}
@@ -570,6 +627,7 @@ public class DiscordService implements Runnable{
 	public void run()  {
 		synchronized(running) {
 			String message = null;
+			DiscordEmbed embed = null;
 
 			try {
 				while ((message = auctionRequests.poll()) != null) {
@@ -581,8 +639,11 @@ public class DiscordService implements Runnable{
 				while ((message = monitoringRequests.poll()) != null) {
 					sendToDiscord(getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
 				}
-				while ((message = reportAbuseRequests.poll()) != null) {
-					sendToDiscord(getServer().getConfig().DISCORD_REPORT_ABUSE_WEBHOOK_URL, message);
+				while ((embed = reportAbuseRequests.poll()) != null) {
+					sendEmbedToDiscord(getServer().getConfig().DISCORD_REPORT_ABUSE_WEBHOOK_URL, embed);
+				}
+				while ((embed = naughtyWordsRequests.poll()) != null) {
+					sendEmbedToDiscord(getServer().getConfig().DISCORD_NAUGHTY_WORDS_WEBHOOK_URL, embed);
 				}
 			} catch (final Exception e) {
 				LOGGER.catching(e);
@@ -627,9 +688,104 @@ public class DiscordService implements Runnable{
 		auctionRequests.clear();
 		staffCommandRequests.clear();
 		reportAbuseRequests.clear();
+		naughtyWordsRequests.clear();
 	}
 
 	public final boolean isRunning() {
 		return running;
+	}
+
+	public void reportNaughtyWordToDiscord(Player sender, String originalMessage, String message, ArrayList<String> stringProblems, String context) {
+		if(!getServer().getConfig().WANT_DISCORD_NAUGHTY_WORDS_UPDATES) {
+			return;
+		}
+		StringBuilder mainContent = new StringBuilder();
+		mainContent.append("**");
+		mainContent.append(sender.getUsername());
+		mainContent.append("** attempted to send the following message to **");
+		mainContent.append(context);
+		if (context.equals("public chat")) {
+			mainContent.append("** near (");
+			mainContent.append(sender.getX());
+			mainContent.append(", ");
+			mainContent.append(sender.getY());
+			mainContent.append("):");
+		} else {
+			mainContent.append(":**");
+		}
+		mainContent.append("\n```\n");
+		mainContent.append(originalMessage);
+		mainContent.append("\n\n```\n**This message was sent instead:**\n```\n");
+		mainContent.append(message);
+		mainContent.append("\n\n```\n**Filtering rules triggered:**\n```\n");
+		for (String problem : stringProblems) {
+			mainContent.append(problem).append("\n");
+		}
+		mainContent.append("```");
+
+		DiscordEmbed embed = new DiscordEmbed(
+			"**===  Message by " + sender.getUsername() + " was censored on " + sender.getConfig().SERVER_NAME + "  ===**",
+			"",
+			"10949120", // same colour as the report abuse button
+			mainContent.toString()
+		);
+
+		naughtyWordsRequests.add(embed);
+	}
+
+	public void reportNaughtyWordChangedToDiscord(Player sender, String word, boolean goodWord, boolean added) {
+		if(!getServer().getConfig().WANT_DISCORD_NAUGHTY_WORDS_UPDATES) {
+			return;
+		}
+		StringBuilder mainContent = new StringBuilder();
+		mainContent.append("**");
+		mainContent.append(sender.getUsername());
+		mainContent.append("** ");
+		if (added) {
+			mainContent.append("added");
+		} else {
+			mainContent.append("removed");
+		}
+		mainContent.append(" the word **");
+		mainContent.append(word);
+		mainContent.append("** ");
+		if (added) {
+			mainContent.append("to");
+		} else {
+			mainContent.append("from");
+		}
+		if (goodWord) {
+			mainContent.append(" **goodwords.txt**");
+		} else {
+			mainContent.append(" **badwords.txt**");
+		}
+		mainContent.append("\n\nThis change was made on the **");
+		mainContent.append(sender.getWorld().getServer().getName());
+		mainContent.append("** server, but will take effect on all servers with filtering enabled either when they reboot, or if the command **::syncgoodwordsbadwords** aka **::sgb** is run.");
+
+
+		StringBuilder titleBuilder = new StringBuilder("**===  ");
+		if (goodWord) {
+			titleBuilder.append("goodword");
+		} else {
+			titleBuilder.append("badword");
+		}
+		if (added) {
+			titleBuilder.append(" added by ");
+		} else {
+			titleBuilder.append(" removed by ");
+		}
+		titleBuilder.append(sender.getUsername());
+		titleBuilder.append("   ===**");
+
+
+		DiscordEmbed embed = new DiscordEmbed(
+			titleBuilder.toString(),
+			"",
+			"1087508", // pleasant green colour, taken from RSC tree
+			mainContent.toString()
+		);
+
+		naughtyWordsRequests.add(embed);
 	}
 }

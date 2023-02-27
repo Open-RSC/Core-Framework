@@ -8,6 +8,7 @@ import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.ChatStruct;
+import com.openrsc.server.util.MessageFilter;
 import com.openrsc.server.util.rsc.DataConversions;
 
 public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn> {
@@ -29,6 +30,9 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 		}
 
 		String message = payload.message;
+
+		message = MessageFilter.filter(sender, message, "public chat");
+
 		if (!sender.speakTongues) {
 			message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(message));

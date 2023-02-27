@@ -469,6 +469,28 @@ Moderator Commands
   - Usage: `::removeformername [username to remove former name from]`
   - Hides the former name of the user. Useful if it contained sensitive information such as their real last name.
   - Record of the former name remains in the database, but is no longer shown to players.
+- addbadword
+  - Usage: `::addbadword [word or phrase to censor]`
+  - If filtering is enabled on the server, adds a word or phrase that will be replaced by asterisks.
+  - Permutations of the word will also be checked e.g. for filtered word "Cow", it would also block "C 0 @red@w".
+- removebadword
+  - Usage: `::removebadword [existing word or phrase to no longer censor]`
+  - Removes word/phrase from badwords filtering blocklist.
+- addgoodword
+  - Usage: `::addgoodword [word or phrase to NOT censor]`
+  - If filtering is enabled on the server, adds a word or phrase that will NEVER be replaced by asterisks.
+  - For example, if "Hell" is a bad word on the server, it would be desirable to add "Hello" to goodwords.
+  - Not necessary to add every single word in the english dictionary to the filter since "goodwords" are intended to be just a list of blocklist exceptions.
+  - Permutations of the goodword will not be allowlisted.
+- removegoodword
+  - Usage: `::removegoodword [existing word or phrase to no longer allow as a censor exception]`
+  - Removes word/phrase from goodwords filtering allowlist.
+- syncgoodwordsbadwords
+  - Usage: `::syncgoodwordsbadwords`
+  - Alias: `::sgb`
+  - Reloads the contents of goodwords.txt and badwords.txt from the disk.
+  - Useful if the list is edited externally while the server is running. This can happen via text editor, or if multiple Open RSC servers are running on the same computer launched from the same directory.
+  - Done automatically whenever a goodword or badword is added or removed in order to prevent data loss.
 ------------------------
 Event Commands
 ------------------------

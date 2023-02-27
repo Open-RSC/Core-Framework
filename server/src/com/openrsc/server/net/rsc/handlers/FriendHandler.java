@@ -11,6 +11,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.FriendStruct;
+import com.openrsc.server.util.MessageFilter;
 import com.openrsc.server.util.rsc.DataConversions;
 
 public final class FriendHandler implements PayloadProcessor<FriendStruct, OpcodeIn> {
@@ -166,6 +167,10 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				}
 
 				String message = payload.message;
+
+				boolean globalMessage = (friendName.toLowerCase().startsWith("global$") || friendName.equalsIgnoreCase("global")) && player.getConfig().WANT_GLOBAL_FRIEND;
+				message = MessageFilter.filter(player, message, globalMessage ? "global chat" : friendName + "'s private messages");
+
 				if (!player.speakTongues) {
 					message = DataConversions.upperCaseAllFirst(
 						DataConversions.stripBadCharacters(message));
@@ -173,8 +178,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 					message = DataConversions.speakTongues(message);
 				}
 
-				if ((friendName.toLowerCase().startsWith("global$") || friendName.equalsIgnoreCase("global"))
-					&& player.getConfig().WANT_GLOBAL_FRIEND) {
+				if (globalMessage) {
 					if (player.isElligibleToGlobalChat()) {
 						player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 						player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + message));

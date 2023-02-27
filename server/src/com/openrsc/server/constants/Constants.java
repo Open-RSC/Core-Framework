@@ -171,6 +171,35 @@ public final class Constants {
 		put (8 + 64, "Other");
 	}};
 
+	public static final Map<Integer, String> reportDiscordColours = new HashMap<Integer, String>() {{
+		// mudclient 204+ reasons
+		put(1, "5069823"); // blue "Buying or selling an account"
+		put(2, "16753433"); // yellow "Encouraging rule-breaking"
+		put(3, "16776960"); // ff0 yellow "Staff impersonation"
+		put(4, "8942042"); // purple "Macroing or use of bots"
+		put(5, "5069823"); // blue "Scamming"
+		put(6, "8942042"); // purple "Exploiting a bug"
+		put(7, "10949120"); // report abuse red "Seriously offensive language"
+		put(8, "16753433"); // yellow "Solicitation"
+		put(9, "16753433"); // yellow "Disruptive behaviour"
+		put(10, "10949120"); // report abuse red "Offensive account name"
+		put(11, "16711680"); // red "Real-life threats"
+		put(12, "1087508"); // green "Asking for or providing contact information"
+		put(13, "16711680"); // red "Breaking real-world laws"
+		put(14, "10949120"); // report abuse red "Advertising websites"
+
+		// mudclient 177 reasons
+		put (0 + 64, "1087508"); // green, "Non-vulgar insult such as 'idiot', 'noob', 'loser', etc..."
+		put (1 + 64, "10949120"); // report abuse red "Swearing, profanity, or racial abuse directed at me personally"
+		put (2 + 64, "15781888"); // yellow "I overheard the player being abusive to someone else"
+		put (3 + 64, "5069823"); // blue "Trade scam - lied about trade to steal items from me"
+		put (4 + 64, "5069823"); // blue "Asking players for their password / trying to steal accounts"
+		put (5 + 64, "5069823"); // blue "Attempting to buy/sell a RuneScape account"
+		put (6 + 64, "16776960"); // ff0 yellow Impersonating Jagex Staff
+		put (7 + 64, "10949120"); // report abuse red "Advertising scam website"
+		put (8 + 64, "0"); // black "Other"
+	}};
+
 	public static final Map<Spells, Integer> spellMap = new HashMap<Spells, Integer>() {{
 		put(Spells.WIND_STRIKE, 0);
 		put(Spells.CONFUSE, 1);

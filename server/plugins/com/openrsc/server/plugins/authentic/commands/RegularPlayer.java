@@ -16,6 +16,7 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
+import com.openrsc.server.util.MessageFilter;
 import com.openrsc.server.util.languages.PreferredLanguage;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -408,6 +409,8 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 
 		if (config().WANT_GLOBAL_CHAT) {
+			String message = MessageFilter.filter(player, newStr.toString(), "global chat");
+
 			String channelPrefix = command.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
 			int channel = command.equalsIgnoreCase("g") ? 1 : 2;
 			for (Player p : player.getWorld().getPlayers()) {
@@ -423,23 +426,26 @@ public final class RegularPlayer implements CommandTrigger {
 					String header = "";
 					if (!p.isUsingCustomClient()) {
 						ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
+							+ (channel == 1 ? "@gr2@" : "@or1@") + message, player.getIconAuthentic(), null);
 
 					} else {
 						ActionSender.sendMessage(p, player, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+							+ (channel == 1 ? "@gr2@" : "@or1@") + message, player.getIcon(), null);
 					}
 				}
 			}
+
 			if (command.equalsIgnoreCase("g")) {
-				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
-				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + message));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + message));
 			} else {
-				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
-				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + message));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + message));
 			}
 		} else if (config().WANT_GLOBAL_FRIEND && command.equalsIgnoreCase("g")) {
 			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(newStr.toString()));
+			message = MessageFilter.filter(player, message, "global chat");
+
 			player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 		}
@@ -464,7 +470,7 @@ public final class RegularPlayer implements CommandTrigger {
 
 		long waitTime = config().GAME_TICK * 2;
 
-		if (player.isMod()) {
+		if (player.isPlayerMod()) {
 			waitTime = 0;
 		}
 
@@ -488,21 +494,26 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 		newStr = new StringBuilder(newStr.toString().replace('~', ' '));
 		newStr = new StringBuilder(newStr.toString().replace('@', ' '));
+
+		String message = MessageFilter.filter(player, newStr.toString(), "send party with command " + command);
+
 		String channelPrefix = "@whi@[@or1@Party@whi@] ";
 		int channel = command.equalsIgnoreCase("p") ? 1 : 2;
 		for (Player p : player.getWorld().getPlayers()) {
 			if (p.getSocial().isIgnoring(player.getUsernameHash()))
 				continue;
 			if (p.getParty() == player.getParty()) {
-				ActionSender.sendMessage(p, player, MessageType.CLAN_CHAT, channelPrefix + "" + player.getUsername() + ": @or1@" + newStr, player.getIcon(), null);
+				ActionSender.sendMessage(p, player, MessageType.CLAN_CHAT, channelPrefix + "" + player.getUsername() + ": @or1@" + message, player.getIcon(), null);
 			}
 		}
+
+
 		if (command.equalsIgnoreCase("g")) {
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
-			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
+			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + message));
+			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + message));
 		} else {
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
-			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
+			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + message));
+			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + message));
 		}
 	}
 
@@ -887,8 +898,9 @@ public final class RegularPlayer implements CommandTrigger {
 			for (Player p : player.getWorld().getPlayers()) {
 				ActionSender.sendMessage(p, null, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0, null);
 			}
-		} else
+		} else {
 			player.message("Discord bot disabled");
+		}
 	}
 
 	private void queryCommands(Player player, int page) {
