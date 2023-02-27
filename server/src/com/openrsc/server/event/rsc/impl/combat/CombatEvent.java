@@ -17,6 +17,7 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.PidShuffler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -24,12 +25,52 @@ public class CombatEvent extends GameTickEvent {
 
 	private final Mob attackerMob, defenderMob;
 	private int roundNumber = 0;
+	boolean isPvPCombat = false;
+	boolean forceTwoTickRounds = false;
 	private int[] poisonedWeapons = {ItemId.POISONED_BRONZE_DAGGER.id(), ItemId.POISONED_IRON_DAGGER.id(), ItemId.POISONED_STEEL_DAGGER.id(), ItemId.POISONED_BLACK_DAGGER.id(), ItemId.POISONED_MITHRIL_DAGGER.id(), ItemId.POISONED_ADAMANTITE_DAGGER.id(), ItemId.POISONED_RUNE_DAGGER.id(), ItemId.POISONED_DRAGON_DAGGER.id()};
 
 	public CombatEvent(World world, Mob attacker, Mob defender) {
 		super(world, null, 0, "Combat Event", DuplicationStrategy.ONE_PER_MOB);
 		this.attackerMob = attacker;
 		this.defenderMob = defender;
+		if (attackerMob.isPlayer() && defenderMob.isPlayer()) this.isPvPCombat = true;
+
+		if (attackerMob.isNpc() && defenderMob.isPlayer()) forceTwoTickRounds = true;
+
+		if (isPvPCombat) {
+			//Dueling in RSC was always 2-2.
+			if (((Player) attackerMob).getDuel().isDueling()) {
+				forceTwoTickRounds = true;
+			} else if (attackerMob.getConfig().SHUFFLE_PID_ORDER) {
+				for (int curPid : PidShuffler.pidProcessingOrder) {
+					Player p = getWorld().getPlayer(curPid);
+					if (p == attackerMob) {
+						//Attacker has lower PID, so we go to 3-1, the default.
+						break;
+					}
+					if (p == defenderMob) {
+						//Defender has lower PID, so this combat encounter is 2-2.
+						forceTwoTickRounds = true;
+						break;
+					}
+				}
+			} else {
+				for (Player p : getWorld().getPlayers()) {
+					if (p == attackerMob) {
+						//Attacker has lower PID, so we go to 3-1, the default.
+						break;
+					}
+					if (p == defenderMob) {
+						//Defender has lower PID, so this combat encounter is 2-2.
+						forceTwoTickRounds = true;
+						break;
+					}
+				}
+			}
+		}
+
+
+
 		attacker.getWorld().getServer().getCombatScriptLoader().checkAndExecuteOnStartCombatScript(attacker, defender);
 		if (attacker.isNpc()) {
 			((Npc) attacker).setExecutedAggroScript(false);
@@ -95,16 +136,27 @@ public class CombatEvent extends GameTickEvent {
 	}
 
 	public final void run() {
-		setDelayTicks(2);
+		//In RSC combat against an NPC, the tick delay is dependent on if the defending mob is a player.
+		//If it is, then the tick delay is always 2 ticks.
+		//If it isn't, then there is a 3 tick delay after the attacker's round, and a 1 tick delay after the defender's round.
+		//In PvP combat in the Wilderness, each combat encounter is assigned 3-1 or 2-2 tick cycles. This seems to be based on PID, based on footage before Jagex implemented PID shuffling in 2016.
+		//In duels, combat was *always* 2-2.
+
+		int delayTicks = 0;
 		Mob hitter, target = null;
 
 		if (roundNumber++ % 2 == 0) {
 			hitter = attackerMob;
 			target = defenderMob;
+			delayTicks = 3;
 		} else {
 			hitter = defenderMob;
 			target = attackerMob;
+			delayTicks = 1;
 		}
+
+		if (forceTwoTickRounds) delayTicks = 2;
+		setDelayTicks(delayTicks);
 
 		if (!combatCanContinue()) {
 			hitter.setLastCombatState(CombatState.ERROR);

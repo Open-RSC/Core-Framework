@@ -749,6 +749,10 @@ public class Npc extends Mob {
 	public void remove() {
 		this.killed = true;
 		double respawnMult = getConfig().NPC_RESPAWN_MULTIPLIER;
+		/*
+		In RSC, combat events don't necessarily end instantly after the mob dies.
+		TODO: Review this further. Right now we clear the combat event immediately, which isn't authentic.
+		*/
 		resetCombatEvent();
 		this.setLastOpponent(null);
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
