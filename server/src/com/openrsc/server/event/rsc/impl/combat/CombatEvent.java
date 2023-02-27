@@ -45,24 +45,24 @@ public class CombatEvent extends GameTickEvent {
 				for (int curPid : PidShuffler.pidProcessingOrder) {
 					Player p = getWorld().getPlayer(curPid);
 					if (p == attackerMob) {
-						//Attacker has lower PID, so we go to 3-1, the default.
+						//Attacker has lower PID, so we go to 2-2.
+						forceTwoTickRounds = true;
 						break;
 					}
 					if (p == defenderMob) {
-						//Defender has lower PID, so this combat encounter is 2-2.
-						forceTwoTickRounds = true;
+						//Defender has lower PID, so this combat encounter is 3-1.
 						break;
 					}
 				}
 			} else {
 				for (Player p : getWorld().getPlayers()) {
 					if (p == attackerMob) {
-						//Attacker has lower PID, so we go to 3-1, the default.
+						//Attacker has lower PID, so we go to 2-2.
+						forceTwoTickRounds = true;
 						break;
 					}
 					if (p == defenderMob) {
-						//Defender has lower PID, so this combat encounter is 2-2.
-						forceTwoTickRounds = true;
+						//Defender has lower PID, so this combat encounter is 3-1.
 						break;
 					}
 				}
