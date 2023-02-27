@@ -29,7 +29,7 @@ public class Smelting implements UseLocTrigger {
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId())) {
-			if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
+			if (item.getCatalogId() == ItemId.STEEL_BAR.id() && player.getWorld().canYield(new Item(ItemId.MULTI_CANNON_BALL.id()))) {
 				if (player.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id())) {
 					int repeat = 1;
 					if (config().BATCH_PROGRESSION) {
