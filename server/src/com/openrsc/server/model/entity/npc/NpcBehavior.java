@@ -332,6 +332,7 @@ public class NpcBehavior {
 		}
 		npc.setLastCombatState(CombatState.RUNNING);
 		opponent.setLastCombatState(CombatState.WAITING);
+		npc.setRanAwayTimer();
 
 		npc.resetCombatEvent();
 

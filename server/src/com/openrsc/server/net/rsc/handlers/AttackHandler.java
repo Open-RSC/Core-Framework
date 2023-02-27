@@ -81,6 +81,10 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 				&& (!player.getCache().hasKey("mage_arena") || player.getCache().getInt("mage_arena") < 2)) {
 				player.message("you are not yet ready to fight the battle mages");
 				return;
+			} else if (player.getWorld().getServer().getCurrentTick() <= n.getRanAwayTimer()) {
+				//TODO: more research on this. At the very least, NPCs on the same tile as you could be attacked one tick after they retreated, but not the same tick.
+				player.resetPath();
+				return;
 			}
 		}
 

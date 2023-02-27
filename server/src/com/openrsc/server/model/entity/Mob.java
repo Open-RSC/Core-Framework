@@ -959,6 +959,10 @@ public abstract class Mob extends Entity {
 		return hasMoved;
 	}
 
+	public long getRanAwayTimer() {
+		return ranAwayTimer;
+	}
+
 	public void incHitsMade() {
 		hitsMade++;
 	}
@@ -1003,6 +1007,10 @@ public abstract class Mob extends Entity {
 
 	public void setHasMoved(boolean moved) {
 		this.hasMoved = moved;
+	}
+
+	public void setRanAwayTimer() {
+		this.ranAwayTimer = getWorld().getServer().getCurrentTick();
 	}
 
 	public void setLocation(final Point point) {
