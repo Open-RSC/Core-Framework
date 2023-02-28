@@ -283,6 +283,10 @@ public abstract class GameDatabase {
 
 	public abstract int addItemToPlayer(Item item);
 
+	public abstract long queryCheckPlayerMute(final int playerId, final int muteType) throws GameDatabaseException;
+
+	public abstract void queryInsertPlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException;
+
 	public abstract void queryUpdatePlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException;
 
 	public abstract void queryInsertFormerName(final int playerId, final String formerName, final String whoChanged, final int changeType, final String reason) throws GameDatabaseException;
@@ -1053,6 +1057,17 @@ public abstract class GameDatabase {
 
 	public void bankRemovePartialStack(final int playerDatabaseId, final Item item, int amountToRemove) throws GameDatabaseException {
 		queryBankRemovePartialStack(playerDatabaseId, item, amountToRemove);
+	}
+
+	public long checkPlayerMute(final int playerId, final int muteType) {
+		return queryCheckPlayerMute(playerId, muteType);
+	}
+
+	public void insertPlayerMute(final int playerId, long duration, final int muteType) throws GameDatabaseException {
+		if (duration != -1 && duration != 0) {
+			duration = System.currentTimeMillis() + (duration * 60000L);
+		}
+		queryInsertPlayerMute(playerId, duration, muteType);
 	}
 
 	/**

@@ -1018,7 +1018,7 @@ public final class Moderator implements CommandTrigger {
 			time = player.isAdmin() ? -1 : 60;
 		}
 
-		if (time == 0 && !player.isAdmin()) {
+		if (time == 0 && !player.isMod()) {
 			player.message(messagePrefix + "You are not allowed to unban users.");
 			return;
 		}

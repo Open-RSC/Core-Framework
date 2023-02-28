@@ -21,6 +21,7 @@ import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemStatus;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.authentic.commands.PlayerModerator;
 import com.openrsc.server.util.checked.CheckedRunnable;
 import com.openrsc.server.util.checked.CheckedSupplier;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -2518,12 +2519,52 @@ public class MySqlGameDatabase extends JDBCDatabase {
 		return Item.ITEM_ID_UNASSIGNED;
 	}
 
+	public long queryCheckPlayerMute(int playerId, int muteType) {
+		long muteExpiration = Integer.MIN_VALUE;
+		try (final PreparedStatement statement = getConnection().prepareStatement(mySqlQueries.checkMute)) {
+			if (muteType == PlayerModerator.REGULAR_MUTE) {
+				statement.setString(1, "mute_expires");
+			} else {
+				statement.setString(1, "global_mute");
+			}
+			statement.setInt(2, playerId);
+
+			try (final ResultSet resultSet = statement.executeQuery()) {
+				if (resultSet.next()) {
+					muteExpiration = resultSet.getLong(1);
+				}
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+		return muteExpiration;
+	}
+
+	@Override
+	public void queryInsertPlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException {
+		try (
+			final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().save_AddCache)) {
+			statement.setInt(1, playerId);
+			statement.setInt(2, 3); // Type
+			if (muteType == PlayerModerator.REGULAR_MUTE) { // Key
+				statement.setString(3, "mute_expires");
+			} else {
+				statement.setString(3, "global_mute");
+			}
+			statement.setLong(4, time); // Value
+			statement.executeUpdate();
+
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+	}
+
 	@Override
 	public void queryUpdatePlayerMute(int playerId, long time, int muteType) throws GameDatabaseException {
 		try (
 			final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().updateMute)) {
 			statement.setLong(1, time);
-			if (muteType == 0) {
+			if (muteType == PlayerModerator.REGULAR_MUTE) {
 				statement.setString(2, "mute_expires");
 			} else {
 				statement.setString(2, "global_mute");
