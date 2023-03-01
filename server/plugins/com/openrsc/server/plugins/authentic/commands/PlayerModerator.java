@@ -87,8 +87,8 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
-		String targetUsername	= args[0];
-		Player target			= player.getWorld().getPlayer(DataConversions.usernameToHash(targetUsername));
+		String targetUsername = args[0].replace('.', ' ');
+		Player target = player.getWorld().getPlayer(DataConversions.usernameToHash(targetUsername));
 
 		String currentIp = null;
 		if (target == null) {
