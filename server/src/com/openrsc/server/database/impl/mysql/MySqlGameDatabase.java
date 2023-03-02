@@ -21,7 +21,6 @@ import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemStatus;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.authentic.commands.PlayerModerator;
 import com.openrsc.server.util.checked.CheckedRunnable;
 import com.openrsc.server.util.checked.CheckedSupplier;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -2520,9 +2519,10 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	}
 
 	public long queryCheckPlayerMute(int playerId, int muteType) {
+		final int REGULAR_MUTE = 0;
 		long muteExpiration = Integer.MIN_VALUE;
 		try (final PreparedStatement statement = getConnection().prepareStatement(mySqlQueries.checkMute)) {
-			if (muteType == PlayerModerator.REGULAR_MUTE) {
+			if (muteType == REGULAR_MUTE) {
 				statement.setString(1, "mute_expires");
 			} else {
 				statement.setString(1, "global_mute");
@@ -2542,11 +2542,12 @@ public class MySqlGameDatabase extends JDBCDatabase {
 
 	@Override
 	public void queryInsertPlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException {
+		final int REGULAR_MUTE = 0;
 		try (
 			final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().save_AddCache)) {
 			statement.setInt(1, playerId);
 			statement.setInt(2, 3); // Type
-			if (muteType == PlayerModerator.REGULAR_MUTE) { // Key
+			if (muteType == REGULAR_MUTE) { // Key
 				statement.setString(3, "mute_expires");
 			} else {
 				statement.setString(3, "global_mute");
@@ -2561,10 +2562,11 @@ public class MySqlGameDatabase extends JDBCDatabase {
 
 	@Override
 	public void queryUpdatePlayerMute(int playerId, long time, int muteType) throws GameDatabaseException {
+		final int REGULAR_MUTE = 0;
 		try (
 			final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().updateMute)) {
 			statement.setLong(1, time);
-			if (muteType == PlayerModerator.REGULAR_MUTE) {
+			if (muteType == REGULAR_MUTE) {
 				statement.setString(2, "mute_expires");
 			} else {
 				statement.setString(2, "global_mute");
