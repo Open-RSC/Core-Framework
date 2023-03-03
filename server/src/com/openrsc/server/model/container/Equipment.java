@@ -234,6 +234,50 @@ public class Equipment {
 		if (request.item.getNoted())
 			return false;
 
+		// Turn chain tops into chain bodies and vice-versa
+		if (player.getConfig().WANT_CUSTOM_SPRITES && player.getConfig().FORM_FITTING_CHAINMAIL) {
+			int[] bodyIds = {
+				ItemId.BRONZE_CHAIN_MAIL_BODY.id(),
+				ItemId.IRON_CHAIN_MAIL_BODY.id(),
+				ItemId.STEEL_CHAIN_MAIL_BODY.id(),
+				ItemId.BLACK_CHAIN_MAIL_BODY.id(),
+				ItemId.MITHRIL_CHAIN_MAIL_BODY.id(),
+				ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(),
+				ItemId.RUNE_CHAIN_MAIL_BODY.id(),
+				ItemId.DRAGON_SCALE_MAIL.id()
+			};
+			int[] topIds = {
+				ItemId.BRONZE_CHAIN_MAIL_TOP.id(),
+				ItemId.IRON_CHAIN_MAIL_TOP.id(),
+				ItemId.STEEL_CHAIN_MAIL_TOP.id(),
+				ItemId.BLACK_CHAIN_MAIL_TOP.id(),
+				ItemId.MITHRIL_CHAIN_MAIL_TOP.id(),
+				ItemId.ADAMANTITE_CHAIN_MAIL_TOP.id(),
+				ItemId.RUNE_CHAIN_MAIL_TOP.id(),
+				ItemId.DRAGON_SCALE_MAIL_TOP.id()
+			};
+
+			Item newItem = null;
+			if (player.isMale()) {
+				for (int i = 0; i < topIds.length; ++i) {
+					if (topIds[i] == request.item.getCatalogId()) {
+						newItem = new Item(bodyIds[i]);
+					}
+				}
+			} else {
+				for (int i = 0; i < bodyIds.length; ++i) {
+					if (bodyIds[i] == request.item.getCatalogId()) {
+						newItem = new Item(topIds[i]);
+					}
+				}
+			}
+			if (newItem != null) {
+				player.getCarriedItems().remove(request.item);
+				player.getCarriedItems().getInventory().add(newItem);
+				request.item = newItem;
+			}
+		}
+
 		// Check that they are eligible to equip the item
 		if (!ableToEquip(request.item))
 			return false;

@@ -3815,7 +3815,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon bar", "it's a bar of dragon metal", "", 100000, -1, "items:79", false, false, 0, 16711748, true, false, true, 1365));
 		items.add(new ItemDef("Chipped Dragon Scale", "A piece of dragon scale", "", 50, -1, "items:546", true, false, 0, 0, true, false, false, 1366));
 		items.add(new ItemDef("Dragon Metal Chain", "Linked dragon loops", "", 2000, -1, "items:547", true, false, 0, 0, true, false, false, 1367));
-		items.add(new ItemDef("Dragon Scale Mail", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:537", false, true, 64, 15654365, false, false, true, 1368));
+		items.add(new ItemDef("Dragon Scale Mail Body", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:537", false, true, 64, 15654365, false, false, true, 1368));
 		items.add(new ItemDef("Dwarf Smithy Note", "Details how to make the Dragon Scale Mail", "read", 1, 234, "items:234", false, false, 0, 0, true, true, false, 1369));
 
 		//New leather items
@@ -4014,6 +4014,16 @@ public class EntityHandler {
 		items.add(new ItemDef("Quest cape", "The cape worn by the most seasoned adventurers", "", 99000, -1, "items:492", false, true, 2048, 0, false, false, false, 1528));
 		// We don't have a sprite for this cape, but I want to reserve the ID.
 		items.add(new ItemDef("Max cape", "The cape worn by ???", "", 99000, -1, "items:485", false, true, 2048, 0, false, false, false, 1529));
+
+		// Female chainmail tops
+		items.add(new ItemDef("Bronze Chain Mail Top", "A series of connected metal rings", "", 60, -1, "items:595", false, true, 64, 16737817, false, false, true, 1530));
+		items.add(new ItemDef("Iron Chain Mail Top", "A series of connected metal rings", "", 210, -1, "items:595", false, true, 64, 15654365, false, false, true, 1531));
+		items.add(new ItemDef("Steel Chain Mail Top", "A series of connected metal rings", "", 750, -1, "items:595", false, true, 64, 15658734, false, false, true, 1532));
+		items.add(new ItemDef("Black Chain Mail Top", "A series of connected metal rings", "", 1440, -1, "items:595", false, true, 64, 3158064, false, false, true, 1533));
+		items.add(new ItemDef("Mithril Chain Mail Top", "A series of connected metal rings", "", 1950, -1, "items:595", false, true, 64, 10072780, false, false, true, 1534));
+		items.add(new ItemDef("Adamantite Chain Mail Top", "A series of connected metal rings", "", 4800, -1, "items:595", false, true, 64, 11717785, false, false, true, 1535));
+		items.add(new ItemDef("Rune Chain Mail Top", "A series of connected metal rings", "", 50000, -1, "items:595", false, true, 64, 65535, false, false, true, 1536));
+		items.add(new ItemDef("Dragon Scale Mail Top", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:596", false, true, 64, 0x0000FF, true, false, true, 1537));
 
 
 		// Add muddy herb sprite
@@ -4696,6 +4706,16 @@ public class EntityHandler {
 			animations.add(new AnimationDef("questcape", "equipment", 0, 0, true, false, 0)); //521
 			// There isn't an animation for the max cape yet, but I wanted to reserve the ID.
 			animations.add(new AnimationDef("fishingcape", "equipment", 0, 0, true, false, 0)); //522
+
+			// Female Chain Mail Tops
+			animations.add(new AnimationDef("fchainmail", "equipment", 16737817, 0, true, false, 0));//523 bronze
+			animations.add(new AnimationDef("fchainmail", "equipment", 15654365, 0, true, false, 0));//524 iron
+			animations.add(new AnimationDef("fchainmail", "equipment", 15658734, 0, true, false, 0));//525 steel
+			animations.add(new AnimationDef("fchainmail", "equipment", 10072780, 0, true, false, 0));//526 mithril
+			animations.add(new AnimationDef("fchainmail", "equipment", 11717785, 0, true, false, 0));//527 adamant
+			animations.add(new AnimationDef("fchainmail", "equipment", 65535, 0, true, false, 0));//528 rune
+			animations.add(new AnimationDef("fchainmail", "equipment", 3158064, 0, true, false, 0));//529 black
+			animations.add(new AnimationDef("fdragonscalemail", "equipment", 0, 0, true, false, 0));//530
 		}
 	}
 
