@@ -463,7 +463,7 @@ public class Crafting implements UseInvTrigger,
 
 		if (!hasRequiredMould(player, jewelryShape)) return null;
 
-		boolean noGemUsed = false;
+		boolean gemUsed = false;
 		if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect other than Cabbage server config
 			player.playerServerMessage(MessageType.QUEST,
 				"Would you like to put a gem in the " + jewelryShape.toLowerCase() + "?");
@@ -471,7 +471,9 @@ public class Crafting implements UseInvTrigger,
 				"Yes",
 				"No"
 			};
-			noGemUsed = multi(player, options) == 1;
+			int gemUsedOption = multi(player, options);
+			if (gemUsedOption == -1) return null;
+			gemUsed = gemUsedOption == 0;
 		}
 
 		// select gem
@@ -509,7 +511,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		String gem = Gold;
-		if (!noGemUsed) {
+		if (gemUsed) {
 			player.playerServerMessage(MessageType.QUEST, "what sort of gem do you want to put in the " + jewelryShape + "?");
 			int gemMultiSelection = multi(player, options);
 			if (gemMultiSelection < 0 || gemMultiSelection > options.length)
