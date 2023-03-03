@@ -150,7 +150,7 @@ public class SheepShearer implements QuestInterface, TalkNpcTrigger {
 						for (int i = 0; i < woolCount; ++i) {
 							player.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id()));
 							mes("You give Fred a ball of wool");
-							delay();
+							delay(4);
 						}
 						if (totalWool >= 20) {
 							say(player, n, "Thats all of them");
