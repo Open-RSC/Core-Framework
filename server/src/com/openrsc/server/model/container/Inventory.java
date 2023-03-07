@@ -551,7 +551,7 @@ public class Inventory {
 
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
-		ActionSender.sendUpdatedPlayer(player);
+		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	//----------------------------------------------------------------

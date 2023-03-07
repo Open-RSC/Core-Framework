@@ -5,6 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
@@ -122,8 +123,8 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 					ActionSender.sendOpenAuctionHouse(player);
 				}
 			} else if (command.equalsIgnoreCase("Teleport")) {
-				n.face(player);
-				player.face(n);
+				NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
+				NpcInteraction.setInteractions(n, player, interaction);
 				mes(n, "Would you like to be teleport to Varrock centre for 1000 gold?");
 				delay(2);
 				int yesOrNo = multi(player, "Yes please!", "No thanks.");

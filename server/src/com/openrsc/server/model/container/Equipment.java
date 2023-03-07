@@ -218,7 +218,7 @@ public class Equipment {
 
 		if (updateClient) {
 			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
-			ActionSender.sendUpdatedPlayer(player);
+			player.getUpdateFlags().setAppearanceChanged(true);
 			ActionSender.sendInventory(player);
 		}
 		return true;
@@ -307,7 +307,7 @@ public class Equipment {
 
 		if (updateClient) {
 			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
-			ActionSender.sendUpdatedPlayer(player);
+			player.getUpdateFlags().setAppearanceChanged(true);
 		}
 		return true;
 	}

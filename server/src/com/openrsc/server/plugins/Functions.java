@@ -15,6 +15,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.ScriptContext;
 import com.openrsc.server.model.entity.update.Bubble;
@@ -147,7 +148,7 @@ public class Functions {
 		final Bubble bubble = new Bubble(player, item.getCatalogId());
 		Npc npc;
 		if ((npc = scriptContext.getInteractingNpc()) != null) {
-			npc.face(player);
+			//npc.face(player);
 			player.face(npc);
 		}
 		player.getUpdateFlags().setActionBubble(bubble);
@@ -257,11 +258,10 @@ public class Functions {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
 		npc = npc != null ? npc : scriptContext.getInteractingNpc();
-		if(npc != null) {
-			npc.face(player);
-		}
+
 		if (npc != null && !player.inCombat()) {
-			player.face(npc);
+			NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
+			NpcInteraction.setInteractions(npc, player, interaction);
 		}
 		for (final String message : messages) {
 			if (deliverMessage(player, npc, message)) return;
@@ -280,11 +280,10 @@ public class Functions {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
 		npc = npc != null ? npc : scriptContext.getInteractingNpc();
-		if(npc != null) {
-			npc.face(player);
-		}
+
 		if (npc != null && !player.inCombat()) {
-			player.face(npc);
+			NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
+			NpcInteraction.setInteractions(npc, player, interaction);
 		}
 		for (final String message : messages) {
 			if (deliverMessage(player, npc, message)) return;
@@ -299,12 +298,14 @@ public class Functions {
 					return true;
 				}
 			}
+			/*
 			if (npc != null) {
 				npc.resetPath();
 			}
 			if (!player.inCombat()) {
 				player.resetPath();
 			}
+			 */
 			player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 		}
 		return false;
@@ -333,14 +334,17 @@ public class Functions {
 				return -1;
 			}
 			else {
-				npc.setPlayerBeingTalkedTo(player);
+				if (!player.inCombat()) {
+					NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
+					NpcInteraction.setInteractions(npc, player, interaction);
+				}
 				npc.setMultiTimeout(start);
 				//We'll clear this on each new multi. Other players need to talk to the NPC again if they want to steal it!
 				npc.setPlayerWantsNpc(false);
-				npc.face(player);
+				//npc.face(player);
 			}
 		}
-		player.face(npc);
+		//player.face(npc);
 		player.setMenuHandler(new MenuOptionListener(options));
 		ActionSender.sendMenu(player, options);
 
@@ -582,16 +586,13 @@ public class Functions {
 	 */
 	public static void npcsay(final Player player, final Npc npc, final String... messages) {
 
-		// Reset the walk action on the Npc (stop them from walking).
-		if(npc != null) {
-			npc.resetPath();
-			npc.face(player);
-		}
 		if (npc != null && !player.inCombat()) {
-			player.face(npc);
+			NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
+			NpcInteraction.setInteractions(npc, player, interaction);
 		}
 
 		// Send each message with a delay between.
+
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {

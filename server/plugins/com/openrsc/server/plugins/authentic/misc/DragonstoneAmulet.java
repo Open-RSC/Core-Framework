@@ -162,7 +162,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 		}
 
 		ActionSender.sendEquipmentStats(player, itemDef.getWieldPosition());
-		ActionSender.sendUpdatedPlayer(player);
+		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
 	@Override

@@ -34,6 +34,13 @@ public class ScriptContext {
 	private volatile Boolean executionFlag;
 	private volatile Boolean stopping;
 	private volatile Boolean shouldBlockDefault;
+	private volatile Boolean shouldAffectBusy = true;
+
+	//Some plugins should not affect busy state, since they're run simultaneously with other plugins.
+	private final String[] nonBusyPlugins = new String[]{
+		"onCatGrowth"
+	};
+
 
 	// Batching related
 	private volatile Boolean interrupted;
@@ -218,12 +225,16 @@ public class ScriptContext {
 		}
 
 		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
+		if(oldNpc != null && shouldAffectBusy) {
 			oldNpc.setBusy(false);
+			if(oldNpc.getInteractingPlayer() == getContextPlayer()) {
+				oldNpc.setNpcInteraction(null);
+				oldNpc.setInteractingPlayer(null);
+			}
 		}
 
 		unlock();
-		npc.setBusy(true);
+		if (shouldAffectBusy) npc.setBusy(true);
 		this.entityInteractingIndex = npc.getIndex();
 		this.entityInteractingCoordinate = null;
 		setEntityType(EntityType.NPC);
@@ -236,8 +247,12 @@ public class ScriptContext {
 		}
 
 		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
+		if(oldNpc != null && shouldAffectBusy) {
 			oldNpc.setBusy(false);
+			if(oldNpc.getInteractingPlayer() == getContextPlayer()) {
+				oldNpc.setNpcInteraction(null);
+				oldNpc.setInteractingPlayer(null);
+			}
 		}
 
 		unlock();
@@ -253,8 +268,12 @@ public class ScriptContext {
 		}
 
 		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
+		if(oldNpc != null && shouldAffectBusy) {
 			oldNpc.setBusy(false);
+			if(oldNpc.getInteractingPlayer() == getContextPlayer()) {
+				oldNpc.setNpcInteraction(null);
+				oldNpc.setInteractingPlayer(null);
+			}
 		}
 
 		unlock();
@@ -270,8 +289,12 @@ public class ScriptContext {
 		}
 
 		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
+		if(oldNpc != null && shouldAffectBusy) {
 			oldNpc.setBusy(false);
+			if(oldNpc.getInteractingPlayer() == getContextPlayer()) {
+				oldNpc.setNpcInteraction(null);
+				oldNpc.setInteractingPlayer(null);
+			}
 		}
 
 		unlock();
@@ -287,8 +310,12 @@ public class ScriptContext {
 		}
 
 		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
+		if(oldNpc != null && shouldAffectBusy) {
 			oldNpc.setBusy(false);
+			if(oldNpc.getInteractingPlayer() == getContextPlayer()) {
+				oldNpc.setNpcInteraction(null);
+				oldNpc.setInteractingPlayer(null);
+			}
 		}
 
 		unlock();
@@ -304,8 +331,12 @@ public class ScriptContext {
 		}
 
 		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
+		if(oldNpc != null && shouldAffectBusy) {
 			oldNpc.setBusy(false);
+			if(oldNpc.getInteractingPlayer() == getContextPlayer()) {
+				oldNpc.setNpcInteraction(null);
+				oldNpc.setInteractingPlayer(null);
+			}
 		}
 
 		unlock();
@@ -316,24 +347,23 @@ public class ScriptContext {
 	}
 
 	public void setInteractingNothing() {
-		if(getContextPlayer() == null && !stopping) {
+		if (getContextPlayer() == null && !stopping) {
 			return;
 		}
 
 		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
-			if(getContextPlayer().getMultiEndedEarly()) {
+		if (oldNpc != null && shouldAffectBusy) {
+			if (getContextPlayer().getMultiEndedEarly()) {
 				//We don't set the busy state here, since it'd conflict with the new person the NPC is talking to. However, we do want to reset the check back to false.
 				getContextPlayer().setMultiEndedEarly(false);
-			}
-			else {
-				if(oldNpc.getPlayerBeingTalkedTo() == getContextPlayer()) {
-					oldNpc.setPlayerBeingTalkedTo(null);
-				}
+			} else {
 				oldNpc.setBusy(false);
+				if (oldNpc.getInteractingPlayer() == getContextPlayer()) {
+					oldNpc.setNpcInteraction(null);
+					oldNpc.setInteractingPlayer(null);
+				}
 			}
 		}
-
 		unlock();
 		this.entityInteractingIndex = null;
 		this.entityInteractingCoordinate = null;
@@ -372,10 +402,19 @@ public class ScriptContext {
 	}
 
 	public void startScript(final Action action, final Object[] scriptData) {
+		for (String p : nonBusyPlugins) {
+			if (getPluginTask().getPluginTickEvent().getPluginName().contains(p)) {
+				shouldAffectBusy = false;
+				break;
+			}
+		}
 		setCurrentAction(action);
+		Npc npc = getInteractingNpc();
 
 		if(getContextPlayer() != null) {
-			getContextPlayer().setBusy(true);
+			if (shouldAffectBusy) {
+				getContextPlayer().setBusy(true);
+			}
 			getContextPlayer().addOwnedPlugin(getPluginTask());
 		}
 
@@ -390,7 +429,11 @@ public class ScriptContext {
 
 		if(getContextPlayer() != null) {
 			getContextPlayer().removeOwnedPlugin(getPluginTask());
-			getContextPlayer().setBusy(false);
+			if (shouldAffectBusy) {
+				getContextPlayer().setBusy(false);
+				getContextPlayer().setNpcInteraction(null);
+				getContextPlayer().setInteractingNpc(null);
+			}
 		}
 
 		this.currentAction = Action.idle;

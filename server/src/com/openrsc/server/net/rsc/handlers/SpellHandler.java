@@ -21,6 +21,7 @@ import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.*;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
@@ -574,6 +575,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 	}
 
 	private boolean checkCastOnNpc(Player player, Npc affectedNpc, SpellDef spell) {
+		NpcInteraction interaction = NpcInteraction.NPC_CAST_SPELL;
 
 		// Demon Slayer
 		if (affectedNpc.getID() == NpcId.DELRITH.id()) {
@@ -612,6 +614,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				}
 			}
 		}
+
+		NpcInteraction.setInteractions(affectedNpc, player, interaction);
 
 		return player.getWorld().getServer().getPluginHandler()
 				.handlePlugin(SpellNpcTrigger.class, player, new Object[]{player, affectedNpc});

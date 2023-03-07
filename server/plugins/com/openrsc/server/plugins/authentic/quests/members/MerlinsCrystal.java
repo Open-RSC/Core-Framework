@@ -151,7 +151,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			}
 			delay();
 			npcsay(player, leFaye, "Please spare my son");
-			int option = multi(player, npc, "Tell me how to untrap Merlin and I might",
+			int option = multi(player, leFaye, "Tell me how to untrap Merlin and I might",
 				"No he deserves to die", "OK then");
 			if (option == 0) {
 				if (player.getQuestStage(this) == 2) {

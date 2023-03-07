@@ -6,10 +6,12 @@ import com.openrsc.server.constants.Spells;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SpellDef;
+import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.struct.EquipRequest;
@@ -88,6 +90,14 @@ public class Default implements DefaultHandler,
 		player.message(
 			"The " + n.getDef().getName()
 				+ " does not appear interested in talking");
+		//WalkAction to stop players from following uninterested NPCs.
+		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
+			public void executeInternal() {
+				getPlayer().resetFollowing();
+				getPlayer().resetPath();
+				getPlayer().resetAll();
+			}
+		});
 	}
 
 	@Override

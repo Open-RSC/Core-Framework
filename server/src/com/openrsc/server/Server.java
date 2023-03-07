@@ -533,6 +533,7 @@ public class Server implements Runnable {
 							resetBenchmarkDurations();
 							incrementLastEventsDuration(getGameEventHandler().processNonPlayerEvents());
 							incrementLastWorldUpdateDuration(getGameUpdater().updateWorld());
+							incrementLastProcessNpcsDuration(getGameUpdater().processNpcs());
 							if (config.SHUFFLE_PID_ORDER) {
 								for (int curPid : PidShuffler.pidProcessingOrder) {
 									Player player = getWorld().getPlayer(curPid);
@@ -551,7 +552,6 @@ public class Server implements Runnable {
 
 							incrementLastExecuteWalkToActionsDuration(getGameUpdater().executePidlessCatching());
 							incrementLastProcessMessageQueuesDuration(getWorld().processGlobalMessageQueue());
-							incrementLastProcessNpcsDuration(getGameUpdater().processNpcs());
 							for (final Player player : getWorld().getPlayers()) {
 								player.processLogout();
 							}

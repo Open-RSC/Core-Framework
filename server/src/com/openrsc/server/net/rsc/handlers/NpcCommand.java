@@ -3,6 +3,7 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
@@ -27,23 +28,20 @@ public final class NpcCommand implements PayloadProcessor<TargetMobStruct, Opcod
 		player.click = click ? 0 : 1;
 		final Npc affectedNpc = player.getWorld().getNpc(serverIndex);
 		if (affectedNpc == null) return;
-		int radius = 1;
-		if (click && player.withinRange(affectedNpc, 1)
-			&& affectedNpc.getDef().getCommand1().equalsIgnoreCase("pickpocket")) {
-			radius = 0;
-		}
 		player.setFollowing(affectedNpc, 0);
-		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, radius) {
+		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 2) {
 			public void executeInternal() {
-				getPlayer().resetFollowing();
-				getPlayer().resetPath();
+				NpcInteraction interaction = NpcInteraction.NPC_OP;
 				if (getPlayer().isBusy() || getPlayer().isRanging()
 					|| !getPlayer().canReach(affectedNpc)) {
 					return;
 				}
-				getPlayer().resetAll();
+				getPlayer().resetAll(true, false);
 				NPCDef def = affectedNpc.getDef();
 				String command = (click ? def.getCommand1() : def.getCommand2()).toLowerCase();
+
+				NpcInteraction.setInteractions(affectedNpc, getPlayer(), interaction);
+
 				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(OpNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), affectedNpc, command}, this);
 			}
 		});

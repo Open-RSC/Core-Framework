@@ -7,6 +7,7 @@ import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NPCLoc;
@@ -17,7 +18,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -78,10 +81,6 @@ public class Npc extends Mob {
 	 */
 	private Map<UUID, Pair<Integer, Long>> rangeDamagers = new HashMap<UUID, Pair<Integer,Long>>();
 
-	/**
-	 * The player object that is actively talking to us.
-	 */
-	private Player playerBeingTalkedTo;
 
 	/**
 	 * Tracking for timing out the multi menu if another player attempts to talk to an NPC locked in dialog
@@ -92,6 +91,10 @@ public class Npc extends Mob {
 	 * Another player wants to access the NPC, and can't access it right now.
 	 */
 	private boolean playerWantsNpc = false;
+
+	private NpcInteraction npcInteraction = null;
+
+	private Player interactingPlayer = null;
 
 
 	public Npc(final World world, final int id, final int x, final int y) {
@@ -738,6 +741,10 @@ public class Npc extends Mob {
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
+				NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
+				NpcInteraction.setInteractions(npc, player, interaction);
+				npc.setMultiTimeout(-1);
+				npc.setPlayerWantsNpc(false);
 				getWorld().getServer().getPluginHandler().handlePlugin(TalkNpcTrigger.class, player, new Object[]{player, npc});
 			}
 		});
@@ -747,8 +754,8 @@ public class Npc extends Mob {
 		this.multiTimeout = currentTimeMillis;
 	}
 
-	public void setPlayerBeingTalkedTo(Player player) {
-		this.playerBeingTalkedTo = player;
+	public void setInteractingPlayer(Player player) {
+		this.interactingPlayer = player;
 	}
 
 	public void setPlayerWantsNpc(boolean wantsNpc) {
@@ -758,16 +765,19 @@ public class Npc extends Mob {
 	public void remove() {
 		this.killed = true;
 		double respawnMult = getConfig().NPC_RESPAWN_MULTIPLIER;
-		/*
-		In RSC, combat events don't necessarily end instantly after the mob dies.
-		TODO: Review this further. Right now we clear the combat event immediately, which isn't authentic.
-		*/
-		resetCombatEvent();
+		Npc n = this;
+		//In RSC, the player only gets updated about combat ending the tick after the kill.
+		getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, 0, "Remove Combat Event", DuplicationStrategy.ONE_PER_MOB) {
+			@Override
+			public void run() {
+				n.resetCombatEvent();
+				running = false;
+			}
+		});
 		this.setLastOpponent(null);
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			super.remove();
 			startRespawning();
-			Npc n = this;
 			setRespawning(true);
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long) (def.respawnTime() * respawnMult * 1000), "Respawn NPC", DuplicationStrategy.ONE_PER_MOB) {
 				public void run() {
@@ -817,8 +827,118 @@ public class Npc extends Mob {
 	}
 
 	public void updatePosition() {
-		getNpcBehavior().tick();
+		NpcInteraction interaction = getNpcInteraction();
+		Player player = getInteractingPlayer();
+		if (player != null && player.getInteractingNpc() == this) {
+			switch (interaction) {
+				case NPC_TALK_TO:
+					resetPath();
+					resetRange();
+					// NPCs on the same tile as you will walk somewhere else.
+					if (player.getLocation().equals(getLocation())) {
+						for (int x = -1; x <= 1; ++x) {
+							for (int y = -1; y <= 1; ++y) {
+								if (x == 0 || y == 0)
+									continue;
+								Point destination = canWalk(player.getWorld(), player.getX() - x, player.getY() - y);
+								if (destination != null && destination.inBounds(getLoc().minX, getLoc().minY, getLoc().maxY, getLoc().maxY)) {
+									walk(destination.getX(), destination.getY());
+								}
+							}
+						}
+					}
+				case NPC_USE_ITEM:
+					face(player);
+					break;
+				default:
+					break;
+			}
+		} else {
+			getNpcBehavior().tick();
+		}
 		super.updatePosition();
+	}
+
+	private Point canWalk(World world, int x, int y) {
+		int myX = getX();
+		int myY = getY();
+		int newX = x;
+		int newY = y;
+		boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
+		if (myX > x) {
+			myXBlocked = checkBlocking(world,myX - 1, myY, 8); // Check right
+			// tiles
+			newX = myX - 1;
+		} else if (myX < x) {
+			myXBlocked = checkBlocking(world,myX + 1, myY, 2); // Check left
+			// tiles
+			newX = myX + 1;
+		}
+		if (myY > y) {
+			myYBlocked = checkBlocking(world, myX, myY - 1, 4); // Check top tiles
+			newY = myY - 1;
+		} else if (myY < y) {
+			myYBlocked = checkBlocking(world, myX, myY + 1, 1); // Check bottom
+			// tiles
+			newY = myY + 1;
+		}
+
+		if ((myXBlocked && myYBlocked) || (myXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
+			return null;
+		}
+
+		if (newX > myX) {
+			newXBlocked = checkBlocking(world, newX, newY, 2);
+		} else if (newX < myX) {
+			newXBlocked = checkBlocking(world, newX, newY, 8);
+		}
+
+		if (newY > myY) {
+			newYBlocked = checkBlocking(world, newX, newY, 1);
+		} else if (newY < myY) {
+			newYBlocked = checkBlocking(world, newX, newY, 4);
+		}
+		if ((newXBlocked && newYBlocked) || (newXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
+			return null;
+		}
+		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) {
+			return null;
+		}
+		return new Point(newX, newY);
+	}
+
+	private boolean checkBlocking(World world, int x, int y, int bit) {
+		TileValue t = world.getTile(x, y);
+		Point point = new Point(x, y);
+		for (Npc n : getViewArea().getNpcsInView()) {
+			if (n.getLocation().equals(point)) {
+				return true;
+			}
+		}
+		for (Player areaPlayer : getViewArea().getPlayersInView()) {
+			if (areaPlayer.getLocation().equals(point)) {
+				return true;
+			}
+		}
+		return isBlocking(t.traversalMask, (byte) bit);
+	}
+
+	private boolean isBlocking(int objectValue, byte bit) {
+		if ((objectValue & bit) != 0) { // There is a wall in the way
+			return true;
+		}
+		if ((objectValue & 16) != 0) { // There is a diagonal wall here:
+			// \
+			return true;
+		}
+		if ((objectValue & 32) != 0) { // There is a diagonal wall here:
+			// /
+			return true;
+		}
+		if ((objectValue & 64) != 0) { // This tile is unwalkable
+			return true;
+		}
+		return false;
 	}
 
 	public void produceUnderAttack() {
@@ -910,12 +1030,11 @@ public class Npc extends Mob {
 		return multiTimeout;
 	}
 
-	public Player getPlayerBeingTalkedTo() {
-		return playerBeingTalkedTo;
-	}
-
 	public boolean getPlayerWantsNpc() {
 		return playerWantsNpc;
 	}
 
+	public Player getInteractingPlayer() {
+		return interactingPlayer;
+	}
 }

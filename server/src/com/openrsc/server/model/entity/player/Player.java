@@ -29,6 +29,7 @@ import com.openrsc.server.model.container.*;
 import com.openrsc.server.model.entity.*;
 import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
@@ -383,6 +384,8 @@ public final class Player extends Mob {
 	 * Also holds the damage absorbed by the defense cape
 	 */
 	private Map<UUID, Pair<Integer, Integer>> trackedDamageFromMob = new HashMap<UUID, Pair<Integer, Integer>>();
+
+	private Npc interactingNpc = null;
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -2360,6 +2363,30 @@ public final class Player extends Mob {
 			getWorld().getServer().getGameUpdater().movePlayer(this));
 		getWorld().getServer().incrementLastProcessMessageQueuesDuration(
 			getWorld().getServer().getGameUpdater().processMessageQueue(this));
+	}
+
+	public void updatePosition() {
+		Npc npc = getInteractingNpc();
+		NpcInteraction interaction = getNpcInteraction();
+		super.updatePosition();
+		if (npc != null) {
+			switch (interaction) {
+				case NPC_TALK_TO:
+					if (!inCombat()) {
+						face(npc);
+					}
+				case NPC_OP:
+				case NPC_USE_ITEM:
+					if (withinRange(npc, 1) && canReach(npc) && PathValidation.checkAdjacentDistance(getWorld(), getLocation(), npc.getLocation(), true)) {
+						resetFollowing();
+						resetPath();
+					}
+					setBusy(true);
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 	public void processLogout() {
@@ -4402,5 +4429,13 @@ public final class Player extends Mob {
 
 	public boolean canBeReattacked() {
 		return this.getRanAwayTimer() + getConfig().PVP_REATTACK_TIMER <= getWorld().getServer().getCurrentTick();
+	}
+
+	public void setInteractingNpc(Npc npc) {
+		this.interactingNpc = npc;
+	}
+
+	public Npc getInteractingNpc() {
+		return this.interactingNpc;
 	}
 }

@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
@@ -1203,8 +1204,8 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							ActionSender.sendTeleBubble(pe, 580,
 								3420, true);
 						}
-						lord_hazeel.face(player);
-						player.face(lord_hazeel);
+						NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
+						NpcInteraction.setInteractions(lord_hazeel, player, interaction);
 						mes("the cult begin to chant");
 						delay(3);
 						npcsay(player, lord_hazeel, "my followers i am proud of you all",

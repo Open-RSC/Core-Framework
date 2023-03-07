@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.*;
@@ -195,9 +196,9 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
+		NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
 		if (npc.getID() == NpcId.GERTRUDE.id()) {
-			player.face(npc);
-			npc.face(player);
+			NpcInteraction.setInteractions(npc, player, interaction);
 			npcsay("AAAAAAAAAAAAAAAAAAAAAA");
 			delay(3);
 			mes("Both Gertrude and Eak are very startled");
@@ -243,8 +244,7 @@ public class EakTheMouse implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigge
 				player.getCache().store("found_friends_no_sidequest", true);
 			}
 		} else if (npc.getID() == NpcId.ESTER.id()) {
-			player.face(npc);
-			npc.face(player);
+			NpcInteraction.setInteractions(npc, player, interaction);
 			if (player.getCache().hasKey("restore_friends_sidequest")) {
 				int questState = player.getCache().getInt("restore_friends_sidequest");
 				switch (questState) {

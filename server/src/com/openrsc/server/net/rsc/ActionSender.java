@@ -2000,14 +2000,6 @@ public class ActionSender {
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_INPUT_BOX, struct, player);
 	}
 
-	public static void sendUpdatedPlayer(Player player) {
-		try {
-			player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
-		} catch (Throwable e) {
-			LOGGER.catching(e);
-		}
-	}
-
 	static void sendLogin(Player player) {
 		try {
 			if (player.getWorld().registerPlayer(player)) {

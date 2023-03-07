@@ -11,6 +11,7 @@ import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.UpdateFlags;
@@ -145,6 +146,9 @@ public abstract class Mob extends Entity {
 	 * Tiles around us that we can see
 	 */
 	private ViewArea viewArea = new ViewArea(this);
+
+	private NpcInteraction npcInteraction = null;
+
 
 	public Mob(final World world, final EntityType type) {
 		super(world, type);
@@ -381,6 +385,10 @@ public abstract class Mob extends Entity {
 	}
 
 	public void face(final Entity entity) {
+		/* Now that NPCs are processed first, face() *should not* be used in Plugins for NPCs unless you are certain that the NPC does not move.
+		This causes desyncs in clients, since they will process the changing sprite while the NPC is moving.
+		Instead, use NpcInteractions if you need the player and NPC to face each other and handle other logic in their movement processing.
+		*/
 		if (entity != null && entity.getLocation() != null) {
 			final int dir = Formulae.getDirection(this, entity.getX(), entity.getY());
 			if (dir != -1) {
@@ -688,6 +696,11 @@ public abstract class Mob extends Entity {
 			setSprite(ourSprite);
 			setOpponent(victim);
 			setCombatTimer();
+
+			NpcInteraction interaction = NpcInteraction.NPC_ATTACK;
+			if (victim.isPlayer() && this.isNpc()) {
+				npcInteraction.setInteractions(((Npc)this), ((Player)victim), interaction);
+			}
 
 			combatEvent = new CombatEvent(getWorld(), this, victim);
 			victim.setCombatEvent(combatEvent);
@@ -1144,4 +1157,13 @@ public abstract class Mob extends Entity {
 		}
 		return false;
 	}
+
+	public void setNpcInteraction(NpcInteraction interaction) {
+		this.npcInteraction = interaction;
+	}
+
+	public NpcInteraction getNpcInteraction() {
+		return npcInteraction;
+	}
+
 }
