@@ -13,6 +13,7 @@ import com.openrsc.server.model.RSCString;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
+import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -86,7 +87,7 @@ public final class GameStateUpdater {
 			}
 		} catch (final Exception e) {
 			LOGGER.catching(e);
-			player.unregister(true, "Exception while updating player " + player.getUsername());
+			player.unregister(UnregisterForcefulness.FORCED, "Exception while updating player " + player.getUsername());
 		}
 	}
 
@@ -107,7 +108,7 @@ public final class GameStateUpdater {
 		}
 
 		if (curTime - player.getLastClientActivity() >= 30000) {
-			player.unregister(false, "Client activity time-out");
+			player.unregister(UnregisterForcefulness.WAIT_UNTIL_COMBAT_ENDS, "Client activity time-out");
 		}
 
 		if (player.warnedToMove()) {
@@ -115,7 +116,7 @@ public final class GameStateUpdater {
 				player.loggedIn() &&
 				!player.hasElevatedPriveledges() &&
 				!(player.inCombat() && player.getDuel().isDuelActive())) {
-				player.unregister(true, "Movement time-out");
+				player.unregister(UnregisterForcefulness.FORCED, "Movement time-out");
 			} else if (player.hasMoved()) {
 				player.setWarnedToMove(false);
 			}

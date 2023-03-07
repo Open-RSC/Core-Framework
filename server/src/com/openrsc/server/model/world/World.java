@@ -26,6 +26,7 @@ import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
+import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -433,7 +434,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		}
 		LOGGER.info("Saving players for shutdown...");
 		for (final Player p : getPlayers()) {
-			p.unregister(true, "Server shutting down.");
+			p.unregister(UnregisterForcefulness.FORCED, "Server shutting down.");
 		}
 		LOGGER.info("Players saved");
 

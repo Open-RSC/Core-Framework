@@ -8,6 +8,7 @@ import com.openrsc.server.database.struct.UsernameChangeType;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -847,7 +848,7 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new StaffLog(player, 6, targetPlayer, targetPlayer.getUsername()
 				+ " has been kicked by " + player.getUsername()));
-		targetPlayer.unregister(true, "You have been kicked by " + player.getUsername());
+		targetPlayer.unregister(UnregisterForcefulness.FORCED, "You have been kicked by " + player.getUsername());
 
 		final String userHash = args[0];
 		DelayedEvent forceUnregister = new DelayedEvent(player.getWorld(), null, 1000, "Manual Unregister Player") {

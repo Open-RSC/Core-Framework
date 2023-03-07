@@ -27,6 +27,7 @@ import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.*;
 import com.openrsc.server.model.entity.*;
+import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
@@ -920,10 +921,10 @@ public final class Player extends Mob {
 	/**
 	 * Sets a request to unregister this player instance from the server at the end of the tick.
 	 *
-	 * @param force  - if false wait until combat is over
+	 * @param force  - UnregisterForcefulness enum. FAIL_IN_COMBAT, WAIT_UNTIL_COMBAT_ENDS, or FORCED.
 	 * @param reason - reason why the player was unregistered.
 	 */
-	public void unregister(final boolean force, final String reason) {
+	public void unregister(final UnregisterForcefulness force, final String reason) {
 		if (this.isUnregistering() || this.hasUnregisterRequest()) {
 			return;
 		}
@@ -2420,7 +2421,7 @@ public final class Player extends Mob {
 									couldProcess = false;
 								}
 								if (!couldProcess) {
-									unregister(false, "Malformed packet!");
+									unregister(UnregisterForcefulness.WAIT_UNTIL_COMBAT_ENDS, "Malformed packet!");
 								}
 							}
 						}

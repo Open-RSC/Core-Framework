@@ -17,6 +17,7 @@ import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -449,7 +450,7 @@ public abstract class GameDatabase {
 		final Player player = getServer().getWorld().getPlayer(DataConversions.usernameToHash(userNameToBan));
 
 		if (player != null) {
-			player.unregister(true, "You have been banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes"));
+			player.unregister(UnregisterForcefulness.FORCED, "You have been banned by " + bannedBy.getUsername() + " " + (bannedForMinutes == -1 ? "permanently" : " for " + bannedForMinutes + " minutes"));
 		}
 
 		if (bannedForMinutes == 0) {
