@@ -33,6 +33,9 @@ public class CombatEvent extends GameTickEvent {
 		super(world, null, 0, "Combat Event", DuplicationStrategy.ONE_PER_MOB);
 		this.attackerMob = attacker;
 		this.defenderMob = defender;
+		//Reset retreat timers so it is possible to use spells if a retreating enemy attacks someone new before their timer expires.
+		attackerMob.resetRanAwayTimer();
+		defenderMob.resetRanAwayTimer();
 		if (attackerMob.isPlayer() && defenderMob.isPlayer()) this.isPvPCombat = true;
 
 		if (attackerMob.isNpc() && defenderMob.isPlayer()) forceTwoTickRounds = true;

@@ -717,7 +717,7 @@ public abstract class Mob extends Entity {
 				}
 			}*/
 			if (!missile) {
-				if (System.currentTimeMillis() - mob.getCombatTimer() < getWorld().getServer().getConfig().GAME_TICK * 5) {
+				if (!((Player)mob).canBeReattacked()) {
 					return false;
 				}
 			}
@@ -1011,6 +1011,10 @@ public abstract class Mob extends Entity {
 
 	public void setRanAwayTimer() {
 		this.ranAwayTimer = getWorld().getServer().getCurrentTick();
+	}
+
+	public void resetRanAwayTimer() {
+		this.ranAwayTimer = 0;
 	}
 
 	public void setLocation(final Point point) {

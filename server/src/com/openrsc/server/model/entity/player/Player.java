@@ -837,7 +837,7 @@ public final class Player extends Mob {
 				}
 			}
 			if (!missile) {
-				if (System.currentTimeMillis() - mob.getCombatTimer() < getWorld().getServer().getConfig().GAME_TICK * 5) {
+				if (!((Player)mob).canBeReattacked()) {
 					return false;
 				}
 			}
@@ -4397,5 +4397,9 @@ public final class Player extends Mob {
 
 	public void resetTrackedDamageAndBlockedDamage(Mob damageInflictingMob) {
 		trackedDamageFromMob.remove(damageInflictingMob.getUUID());
+	}
+
+	public boolean canBeReattacked() {
+		return this.getRanAwayTimer() + getConfig().PVP_REATTACK_TIMER <= getWorld().getServer().getCurrentTick();
 	}
 }

@@ -32,7 +32,7 @@ public class ItemUseOnPlayer implements PayloadProcessor<ItemOnMobStruct, Opcode
 			player.message("Nothing interesting happens");
 			return;
 		}
-		if (System.currentTimeMillis() - affectedPlayer.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
+		if (!affectedPlayer.canBeReattacked()) {
 			player.resetPath();
 			return;
 		}

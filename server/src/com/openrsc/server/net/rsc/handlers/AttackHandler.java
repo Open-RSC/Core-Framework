@@ -57,8 +57,9 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 		if (affectedMob.isPlayer()) {
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
-			if (System.currentTimeMillis() - pl.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
-				if (pl.getLocation().inWilderness()) {
+			//Immune players cannot be attacked until their immunity wears off.
+			if (!pl.canBeReattacked()) {
+				if (pl.getLocation().inWilderness() || player.getConfig().USES_PK_MODE) {
 					player.resetPath();
 				}
 				return;

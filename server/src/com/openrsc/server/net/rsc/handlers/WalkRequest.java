@@ -47,10 +47,12 @@ public class WalkRequest implements PayloadProcessor<WalkStruct, OpcodeIn> {
 						Player victimPlayer = ((Player) player.getOpponent());
 						victimPlayer.message("Your opponent is retreating!");
 						ActionSender.sendSound(victimPlayer, "retreat");
+						victimPlayer.setRanAwayTimer(); //This player also needs to be immune from player attacks for a while.
 					}
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();
+					player.setRanAwayTimer();
 					ActionSender.sendSound(player, "retreat");
 
 					if (player.getConfig().WANT_PARTIES) {

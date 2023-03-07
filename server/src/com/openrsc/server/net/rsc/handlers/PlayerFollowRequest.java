@@ -26,7 +26,7 @@ public final class PlayerFollowRequest implements PayloadProcessor<TargetMobStru
 			player.resetPath();
 			return;
 		}
-		if (System.currentTimeMillis() - player.getCombatTimer() < player.getConfig().GAME_TICK * 5)
+		if (!affectedPlayer.canBeReattacked())
 			return;
 		player.resetAll();
 		player.setFollowing(affectedPlayer, 1);

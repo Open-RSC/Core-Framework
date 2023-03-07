@@ -10,19 +10,20 @@ import static com.openrsc.server.plugins.Functions.*;
 public class AttackPlayer {
 	public static boolean attackPrevented(Player player, Player affectedMob) {
 		boolean prevented = false;
-		if (config().USES_PK_MODE && affectedMob.getLocation().isInBank(player.getConfig().BASED_MAP_DATA)) {
-			player.message("You cannot attack other players inside the bank");
-			prevented = true;
-		}
+		if (player.getConfig().USES_PK_MODE) {
+			if (affectedMob.getLocation().isInBank(player.getConfig().BASED_MAP_DATA)) {
+				player.message("You cannot attack other players inside the bank");
+				prevented = true;
+			}
 
-		Npc guard = ifnearvisnpc_(player, NpcId.GUARD.id(), 3);
-		if (guard != null) {
-			guard.getUpdateFlags().setChatMessage(new ChatMessage(guard, "Hey! No fighting!", player));
-			delay(2);
-			guard.startCombat(player);
-			prevented = true;
+			Npc guard = ifnearvisnpc_(player, NpcId.GUARD.id(), 3);
+			if (guard != null) {
+				guard.getUpdateFlags().setChatMessage(new ChatMessage(guard, "Hey! No fighting!", player));
+				delay(2);
+				guard.startCombat(player);
+				prevented = true;
+			}
 		}
-
 		return prevented;
 	}
 

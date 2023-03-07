@@ -1287,16 +1287,18 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			player.resetPath();
 			return;
 		}
-		int timeToAllowAttacks = player.getConfig().GAME_TICK * 5;
+
 		if (affectedMob.isPlayer()) {
 			Player other = (Player) affectedMob;
-			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getCombatTimer() < timeToAllowAttacks) {
+			boolean isInPkZone = player.getLocation().inWilderness() || player.getConfig().USES_PK_MODE;
+			if (isInPkZone && !other.canBeReattacked()) {
 				player.resetPath();
-				// Effectively remove the attack timer from the player casted on
+				// Effectively remove the attack timer from the player casting
 				// Authentic: see ticket #2579
-				player.setCombatTimer(-timeToAllowAttacks);
+				player.resetRanAwayTimer();
+				return;
 			}
-			if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < timeToAllowAttacks) {
+			if (isInPkZone && !player.canBeReattacked()) {
 				player.resetPath();
 				// TODO: ...? should probably display a message here instead of dying silently...?
 				System.out.println("Killed pvp cast silently because they shot too fast");
