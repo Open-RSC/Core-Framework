@@ -103,13 +103,19 @@ public final class SuperModerator implements CommandTrigger {
 			return;
 		}
 
+
 		try {
-			boolean value = DataConversions.parseBoolean(args[valArg]);
-			args[valArg] = value ? "1" : "0";
-		} catch (NumberFormatException ex) {
+			int value = Integer.parseInt(args[valArg]);
+			targetPlayer.getCache().store(args[keyArg], value);
+		} catch (NumberFormatException e) {
+			try {
+				boolean value = DataConversions.parseBoolean(args[valArg]);
+				targetPlayer.getCache().store(args[keyArg], value);
+			} catch (NumberFormatException ex) {
+				targetPlayer.getCache().store(args[keyArg], args[valArg]);
+			}
 		}
 
-		targetPlayer.getCache().store(args[keyArg], args[valArg]);
 		player.message(messagePrefix + "Added " + args[keyArg] + " with value " + args[valArg] + " to " + targetPlayer.getUsername() + "'s cache");
 	}
 

@@ -15212,7 +15212,7 @@ public final class mudclient implements Runnable {
 		final String currentTime = dateTimeFormatter.format(now);
 
 		// Strip all the freaking color codes
-		Pattern pattern = Pattern.compile("[@][A-Za-z][A-Za-z][A-Za-z][@]");
+		Pattern pattern = Pattern.compile("[@][A-Za-z][A-Za-z][A-Za-z0-9][@]");
 		Matcher matcher = pattern.matcher(message);
 		if (matcher.find()) {
 			message = matcher.replaceAll("");

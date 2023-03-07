@@ -666,23 +666,19 @@ public final class DataConversions {
 	}
 
 	public static boolean parseBoolean(String str) throws NumberFormatException {
-		if (
-			str.equalsIgnoreCase("true")	||
-				str.equalsIgnoreCase("t")		||
-				str.equalsIgnoreCase("yes")		||
-				str.equalsIgnoreCase("y")		||
-				str.equalsIgnoreCase("1")
-		) {
+		if (str.equalsIgnoreCase("true")
+			|| str.equalsIgnoreCase("t")
+			|| str.equalsIgnoreCase("yes")
+			|| str.equalsIgnoreCase("y")
+			|| str.equalsIgnoreCase("1")) {
 			return true;
 		}
 
-		if (
-			str.equalsIgnoreCase("false")	||
-				str.equalsIgnoreCase("f")		||
-				str.equalsIgnoreCase("no")		||
-				str.equalsIgnoreCase("n")		||
-				str.equalsIgnoreCase("0")
-		) {
+		if (str.equalsIgnoreCase("false")
+			|| str.equalsIgnoreCase("f")
+			|| str.equalsIgnoreCase("no")
+			|| str.equalsIgnoreCase("n")
+			|| str.equalsIgnoreCase("0")) {
 			return false;
 		}
 

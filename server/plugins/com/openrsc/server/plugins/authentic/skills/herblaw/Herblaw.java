@@ -23,7 +23,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
-	private static int[] unidentifiedHerbs = {
+	private static final int[] unidentifiedHerbs = {
 		ItemId.UNIDENTIFIED_GUAM_LEAF.id(),
 		ItemId.UNIDENTIFIED_MARRENTILL.id(),
 		ItemId.UNIDENTIFIED_TARROMIN.id(),
@@ -42,10 +42,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		ItemId.UNIDENTIFIED_ROGUES_PURSE.id()
 	};
 
-	int LOW = 0;
-	int HIGH = 1;
-	HashMap<Integer, int[]> oilPerFish = new HashMap<Integer, int[]>(){{
+	final int LOW = 0;
+	final int HIGH = 1;
+	final HashMap<Integer, int[]> oilPerFish = new HashMap<Integer, int[]>(){{
 		put(ItemId.RAW_TROUT.id(), new int[]{0, 1});
+		put(ItemId.RAW_COD.id(), new int[]{1, 1});
 		put(ItemId.RAW_PIKE.id(), new int[]{1, 1});
 		put(ItemId.RAW_SALMON.id(), new int[]{1, 1});
 		put(ItemId.RAW_TUNA.id(), new int[]{1, 2});
