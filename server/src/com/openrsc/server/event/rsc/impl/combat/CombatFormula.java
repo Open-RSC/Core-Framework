@@ -412,7 +412,14 @@ public class CombatFormula {
 	 * Returns a power to associate with each arrow
 	 */
 	private static int rangedPower(final int arrowId) {
-		// Most of this is guessed and extrapolated downward from Rune items. We have good guesses on all of the Rune equipment. We also know Bronze arrows.
+		/**
+		 * Most of this is guessed and extrapolated downward from Rune items.
+		 * We have good guesses on:
+		 * - Bronze arrows
+		 * - Iron arrows
+		 * - Crossbow bolts
+		 * - all of the Rune equipment
+		 */
 		switch (ItemId.getById(arrowId)) {
 			case BRONZE_THROWING_DART:
 			case POISONED_BRONZE_THROWING_DART:
@@ -427,8 +434,6 @@ public class CombatFormula {
 			case POISONED_MITHRIL_THROWING_DART:
 			case BRONZE_ARROWS:
 			case POISON_BRONZE_ARROWS:
-			case CROSSBOW_BOLTS:
-			case POISON_CROSSBOW_BOLTS:
 				return 27;
 			case BRONZE_THROWING_KNIFE:
 			case POISONED_BRONZE_THROWING_KNIFE:
@@ -436,6 +441,8 @@ public class CombatFormula {
 			case POISON_IRON_ARROWS:
 			case ADAMANTITE_THROWING_DART:
 			case POISONED_ADAMANTITE_THROWING_DART:
+			case CROSSBOW_BOLTS:
+			case POISON_CROSSBOW_BOLTS:
 				return 31;
 			case STEEL_ARROWS:
 			case POISON_STEEL_ARROWS:
