@@ -7,7 +7,11 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public class PVPCombatFormula {
+/**
+ * This formula is tried & tested, with roots going all the way back to RSCDaemon circa 2009-ish
+ * If you have RSCDaemon v4.3, you can find DNA of this formula in Formulae.java, L643
+ */
+public class RSCDaemonPVPCombatFormula {
 	/**
 	 * Calulates what one mob should hit on another with meelee
 	 */

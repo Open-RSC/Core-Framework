@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.entity.Mob;
-import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -145,6 +144,53 @@ public class CombatFormula {
 	}
 
 	/**
+	 * Calculates an accuracy check (for melee PvP)
+	 * This is the "Stormy" PVP formula referenced as PVPCombatFormulaType.STORMY
+	 *
+	 * @param accuracy            The accuracy term
+	 * @param defence             The defence term
+	 * @return True if the attack is a hit, false if the attack is a miss
+	 */
+	private static boolean calculateAccuracyPVPStormy(final double accuracy, final double defence) {
+		final int odds;
+		final int roll = DataConversions.random(0, 255);
+		double base = 0.5D;
+
+		if (accuracy > defence) {
+			final double diff = accuracy - defence;
+			final double newAccuracy, newDefence;
+
+			if (diff < 5.0D) {
+				newAccuracy = accuracy * 1.5D;
+				newDefence = defence * 1.2D;
+			} else {
+				newAccuracy = accuracy;
+				newDefence = defence;
+			}
+			base -= ((newAccuracy - newDefence) / 20D);
+		} else {
+			final double diff = defence - accuracy;
+			final double newAccuracy, newDefence;
+
+			newAccuracy = accuracy * (1.0D + (0.075D * diff));
+			if (diff > 20.0D) {
+				newDefence = defence * 1.25D;
+			} else {
+				newDefence = defence;
+			}
+			base += ((newDefence - newAccuracy) / 20D);
+		}
+
+		if (base < 0D)
+			base = 0D;
+		else if (base > 1.0D)
+			base = 1.0D;
+
+		odds = (int)(255.0D * (1.0D - base));
+		return roll <= odds;
+	}
+
+	/**
 	 * Calculates an accuracy check
 	 *
 	 * @param source             The attacking mob.
@@ -152,6 +198,11 @@ public class CombatFormula {
 	 * @return True if the attack is a hit, false if the attack is a miss
 	 */
 	private static boolean calculateMeleeAccuracy(final Mob source, final Mob victim) {
+		if (source instanceof Player && victim instanceof Player) {
+			if (source.getWorld().getServer().getConfig().PVP_COMBAT_FORMULA_TYPE == PVPCombatFormulaType.STORMY) {
+				return calculateAccuracyPVPStormy(getMeleeAccuracy(source), getMeleeDefence(victim));
+			}
+		}
 		return calculateAccuracy(getMeleeAccuracy(source), getMeleeDefence(victim), victim.isPlayer());
 	}
 
@@ -175,13 +226,16 @@ public class CombatFormula {
 	 * @return The amount to hit.
 	 */
 	public static int doMeleeDamage(final Mob source, final Mob victim) {
+		if (source instanceof Player && victim instanceof Player) {
+			if (source.getWorld().getServer().getConfig().PVP_COMBAT_FORMULA_TYPE == PVPCombatFormulaType.RSCD) {
+				return RSCDaemonPVPCombatFormula.calcFightHit(source, victim);
+			}
+		}
+
 		boolean isHit = calculateMeleeAccuracy(source, victim);
 		boolean wasHit = isHit;
 		int damage = calculateMeleeDamage(source);
-		if (source instanceof Player && victim instanceof Player) {
-			// TODO: hopefully temp until this file contains more accurate pvp
-			return PVPCombatFormula.calcFightHit(source, victim);
-		} else if (victim instanceof Player) {
+		if (victim instanceof Player) {
 			// Track the damage dealt to the player
 			Player playerVictim = (Player)victim;
 			if (isHit) {
@@ -196,7 +250,8 @@ public class CombatFormula {
 
 				playerVictim.updateDamageAndBlockedDamageTracking(source, damageToPlayer, blockedDamage);
 			}
-		} else if (source instanceof Player) {
+		}
+		if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){
 				isHit = calculateMeleeAccuracy(source, victim);
 			}

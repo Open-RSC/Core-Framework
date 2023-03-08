@@ -2,6 +2,7 @@ package com.openrsc.server;
 
 import com.google.common.collect.ImmutableList;
 import com.openrsc.server.database.DatabaseType;
+import com.openrsc.server.event.rsc.impl.combat.PVPCombatFormulaType;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.YMLReader;
@@ -46,6 +47,7 @@ public class ServerConfiguration {
 	public int MILLISECONDS_BETWEEN_CASTS;
 	public int AGGRO_RANGE;
 	public DatabaseType DB_TYPE;
+	public PVPCombatFormulaType PVP_COMBAT_FORMULA_TYPE;
 	public String DB_HOST;
 	public String DB_NAME;
 	public String DB_USER;
@@ -431,6 +433,7 @@ public class ServerConfiguration {
 		PVM_CATCHING_DISTANCE = tryReadInt("pvm_catching_distance").orElse(2);
 		PVP_CATCHING_DISTANCE = tryReadInt("pvp_catching_distance").orElse(2);
 		PVP_REATTACK_TIMER = tryReadInt("pvp_reattack_timer").orElse(5);
+		PVP_COMBAT_FORMULA_TYPE = PVPCombatFormulaType.resolveType(tryReadString("pvp_combat_formula_type").orElse("rscd"));
 		SHUFFLE_PID_ORDER = tryReadBool("shuffle_pid_order").orElse(true);
 		SHUFFLE_PID_ORDER_INTERVAL = tryReadInt("shuffle_pid_order_interval").orElse(500);
 		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);
