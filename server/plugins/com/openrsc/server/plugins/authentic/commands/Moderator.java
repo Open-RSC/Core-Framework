@@ -16,13 +16,14 @@ import com.openrsc.server.net.RSCPacketFilter;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.MessageFilter;
+import com.openrsc.server.util.MessageFilterType;
 import com.openrsc.server.util.RandomUsername;
 import com.openrsc.server.util.UsernameChange;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -119,12 +120,83 @@ public final class Moderator implements CommandTrigger {
 			removeGoodword(player, command, args);
 		} else if (command.equalsIgnoreCase("syncgoodwordsbadwords") || command.equalsIgnoreCase("sgb")) {
 			reloadGoodwordBadwords(player);
+		} else if (command.equalsIgnoreCase("addalertword")) {
+			addAlertword(player, command, args);
+		} else if (command.equalsIgnoreCase("removealertword")) {
+			removeAlertword(player, command, args);
+		} else if (command.equalsIgnoreCase("togglespacefiltering")) {
+			toggleSpaceFiltering(player);
 		}
 	}
 
+	private void toggleSpaceFiltering(Player player) {
+		player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING = !player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING;
+		player.message("set player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING to " + player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING);
+		player.getWorld().getServer().getDiscordService().reportSpaceFilteringConfigChangeToDiscord(player);
+	}
+
 	private void reloadGoodwordBadwords(Player player) {
-		Pair<Integer, Integer> loadedCounts = MessageFilter.loadGoodAndBadWordsFromDisk();
-		player.message("Loaded " + loadedCounts.getLeft() + " goodwords and " + loadedCounts.getRight() + " badwords from disk.");
+		Triple<Integer, Integer, Integer> loadedCounts = MessageFilter.loadGoodAndBadWordsFromDisk();
+		player.message("Loaded " + loadedCounts.getLeft() + " goodwords, " + loadedCounts.getRight() + " badwords, and " + loadedCounts.getMiddle() + " alertwords from disk.");
+	}
+
+	private void addAlertword(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [alertword]");
+			return;
+		}
+		StringBuilder newStr = new StringBuilder();
+		for (String arg : args) {
+			newStr.append(arg).append(" ");
+		}
+		String newAlertword = newStr.toString().trim();
+		if (MessageFilter.badwordsContains(newAlertword)) {
+			player.message("@red@badwords already contains the word: @dre@" + newAlertword);
+			return;
+		}
+		if (MessageFilter.alertwordsContains(newAlertword)) {
+			player.message("@red@alertwords already contains the word: @dre@" + newAlertword);
+			return;
+		}
+		if (newAlertword.length() < 3) {
+			player.message("@red@alertword must be at least 3 characters long.");
+			return;
+		}
+
+		reloadGoodwordBadwords(player);
+		if (MessageFilter.addAlertWord(newAlertword)) {
+			MessageFilter.syncAlertwordsToDisk();
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newAlertword, MessageFilterType.alertword, true);
+			player.message("@whi@Added @red@" + newAlertword + "@whi@ to the alertwords list.");
+		} else {
+			player.message("@red@Not able to add @dre@" + newAlertword + "@red@ to the alertwords list.");
+		}
+	}
+
+	private void removeAlertword(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [old alertword]");
+			return;
+		}
+		StringBuilder newStr = new StringBuilder();
+		for (String arg : args) {
+			newStr.append(arg).append(" ");
+		}
+		String oldAlertword = newStr.toString().trim();
+
+		if (!MessageFilter.alertwordsContains(oldAlertword)) {
+			player.message("@red@alertwords already lacked the word: @gre@" + oldAlertword);
+			return;
+		}
+
+		reloadGoodwordBadwords(player);
+		if (MessageFilter.removeAlertWord(oldAlertword)) {
+			MessageFilter.syncAlertwordsToDisk();
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldAlertword, MessageFilterType.alertword, false);
+			player.message("@whi@Removed @gre@" + oldAlertword + "@whi@ from the alertwords list.");
+		} else {
+			player.message("@red@Not able to remove @gr1@" + oldAlertword + "@red@ from the alertwords list.");
+		}
 	}
 
 	private void addBadword(Player player, String command, String[] args) {
@@ -153,7 +225,7 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.addBadWord(newBadWord)) {
 			MessageFilter.syncBadwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newBadWord, false, true);
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newBadWord, MessageFilterType.badword, true);
 			player.message("@whi@Added @red@" + newBadWord + "@whi@ to the badwords list.");
 		} else {
 			player.message("@red@Not able to add @dre@" + newBadWord + "@red@ to the badwords list.");
@@ -179,7 +251,7 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.removeBadWord(oldBadWord)) {
 			MessageFilter.syncBadwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldBadWord, false, false);
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldBadWord, MessageFilterType.badword, false);
 			player.message("@whi@Removed @gre@" + oldBadWord + "@whi@ from the badwords list.");
 		} else {
 			player.message("@red@Not able to remove @gr1@" + oldBadWord + "@red@ from the badwords list.");
@@ -212,7 +284,7 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.addGoodWord(newGoodword)) {
 			MessageFilter.syncGoodwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newGoodword, true, true);
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newGoodword, MessageFilterType.goodword, true);
 			player.message("@whi@Added @red@" + newGoodword + "@whi@ to the goodwords list.");
 		} else {
 			player.message("@red@Not able to add @dre@" + newGoodword + "@red@ to the goodwords list.");
@@ -238,7 +310,7 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.removeGoodWord(oldGoodword)) {
 			MessageFilter.syncGoodwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldGoodword, true, false);
+			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldGoodword, MessageFilterType.goodword, false);
 			player.message("@whi@Removed @gre@" + oldGoodword + "@whi@ from the goodwords list.");
 		} else {
 			player.message("@red@Not able to remove @gr1@" + oldGoodword + "@red@ from the goodwords list.");

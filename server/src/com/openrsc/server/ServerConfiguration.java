@@ -308,6 +308,7 @@ public class ServerConfiguration {
 	public boolean WANT_CORRECTED_SKILLING_XP;
 	public int SUMMON_ALL_PLAYER_LIMIT;
 	public boolean SERVER_SIDED_WORD_FILTERING;
+	public boolean SERVER_SIDED_WORD_SPACE_FILTERING;
 
 	public boolean DISABLE_MINIMAP_ROTATION;
 
@@ -440,6 +441,7 @@ public class ServerConfiguration {
 		WANT_CORRECTED_SKILLING_XP = tryReadBool("want_corrected_skilling_xp").orElse(false);
 		SUMMON_ALL_PLAYER_LIMIT = tryReadInt("summon_all_player_limit").orElse(15);
 		SERVER_SIDED_WORD_FILTERING = tryReadBool("server_sided_word_filtering").orElse(true);
+		SERVER_SIDED_WORD_SPACE_FILTERING = tryReadBool("server_sided_word_space_filtering").orElse(false);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);

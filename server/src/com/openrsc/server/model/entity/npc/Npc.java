@@ -516,6 +516,17 @@ public class Npc extends Mob {
 		}
 	}
 
+	public static ArrayList<Item> calculateCustomKingBlackDragonDropTest(Player owner, boolean ringOfWealth) {
+		ArrayList<Item> returnMe = new ArrayList<Item>();
+		if (owner.getWorld().getNpcDrops().getKbdTableCustom().rollAccess(NpcId.KING_BLACK_DRAGON.id(), ringOfWealth)) {
+			ArrayList<Item> kbdSpecificLoot = owner.getWorld().getNpcDrops().getKbdTableCustom().rollItem(ringOfWealth, owner);
+			if (kbdSpecificLoot != null) {
+				return kbdSpecificLoot;
+			}
+		}
+		return returnMe;
+	}
+
 	private int getBonesDrop() {
 		int bones = ItemId.NOTHING.id();
 		// Big Bones

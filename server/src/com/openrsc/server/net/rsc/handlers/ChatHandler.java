@@ -31,7 +31,11 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 
 		String message = payload.message;
 
-		message = MessageFilter.filter(sender, message, "public chat");
+		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted()) && !sender.hasElevatedPriveledges();
+
+		if (!mutedChat) {
+			message = MessageFilter.filter(sender, message, "public chat");
+		}
 
 		if (!sender.speakTongues) {
 			message = DataConversions.upperCaseAllFirst(
@@ -39,8 +43,6 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 		} else {
 			message = DataConversions.speakTongues(message);
 		}
-
-		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted()) && !sender.hasElevatedPriveledges();
 
 		ChatMessage chatMessage = null;
 

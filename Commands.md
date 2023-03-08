@@ -485,12 +485,24 @@ Moderator Commands
 - removegoodword
   - Usage: `::removegoodword [existing word or phrase to no longer allow as a censor exception]`
   - Removes word/phrase from goodwords filtering allowlist.
+- addalertword
+  - Usage: `::addalertword [word or phrase to flag as interesting & report to discord]`
+  - If filtering is enabled on the server, adds a word or phrase that will not be censored, but instead merely reported to a channel in Discord
+  - For example, "Does anyone know" could be added, then server administrators would be alerted when someone is asking for general knowledge, and could help the user.
+- removealertword
+  - Usage: `::removealertword [existing word or phrase that is no longer considered interesting]`
+  - Removes word/phrase from alertwords list.
 - syncgoodwordsbadwords
   - Usage: `::syncgoodwordsbadwords`
   - Alias: `::sgb`
-  - Reloads the contents of goodwords.txt and badwords.txt from the disk.
+  - Reloads the contents of goodwords.txt, badwords.txt and alertwords.txt from the disk.
   - Useful if the list is edited externally while the server is running. This can happen via text editor, or if multiple Open RSC servers are running on the same computer launched from the same directory.
   - Done automatically whenever a goodword or badword is added or removed in order to prevent data loss.
+- togglespacefiltering
+  - Usage: `::togglespacefiltering`
+  - Toggles more aggressive badword censorship. Space filtering is the act of filtering a badword with spaces in it.
+  - For example, if "cow" is a badword on the server "c o... w" would be caught by the same badword once space filtering enabled.
+  - Using this command does not change the behaviour of the server after reboot. Space filtering is disabled in server configs by default.
 ------------------------
 Event Commands
 ------------------------
