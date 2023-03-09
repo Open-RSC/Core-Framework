@@ -2513,6 +2513,13 @@ public final class Player extends Mob {
 
 	public void resetAll(boolean resetWalkAction, boolean resetFollowing) {
 		interruptPlugins();
+		Npc npc = getInteractingNpc();
+		if (npc != null && npc.getInteractingPlayer() == this) {
+			npc.setNpcInteraction(null);
+			setNpcInteraction(null);
+			npc.setInteractingPlayer(null);
+			setInteractingNpc(null);
+		}
 		resetAllExceptTradeOrDuel(true, resetWalkAction, resetFollowing);
 		getTrade().resetAll();
 		getDuel().resetAll();
