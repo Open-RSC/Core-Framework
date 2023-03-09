@@ -778,13 +778,19 @@ public class Npc extends Mob {
 		double respawnMult = getConfig().NPC_RESPAWN_MULTIPLIER;
 		Npc n = this;
 		//In RSC, the player only gets updated about combat ending the tick after the kill.
-		getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, 0, "Remove Combat Event", DuplicationStrategy.ONE_PER_MOB) {
-			@Override
-			public void run() {
-				n.resetCombatEvent();
-				running = false;
-			}
-		});
+		//Causes issues with retro clients.
+		//TODO: Come up with a solution that works with retro clients? May not be authentic for older clients anyway.
+		if(getConfig().BASED_CONFIG_DATA > 18) {
+			getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, 0, "Remove Combat Event", DuplicationStrategy.ONE_PER_MOB) {
+				@Override
+				public void run() {
+					n.resetCombatEvent();
+					running = false;
+				}
+			});
+		} else {
+			n.resetCombatEvent();
+		}
 		this.setLastOpponent(null);
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			super.remove();
