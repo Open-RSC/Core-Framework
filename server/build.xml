@@ -103,4 +103,9 @@
         <antcall target="compile_plugins"/>
         <antcall target="runserver"/>
     </target>
+
+    <target name="compile">
+        <antcall target="compile_core"/>
+        <antcall target="compile_plugins"/>
+    </target>
 </project>
