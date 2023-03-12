@@ -1734,9 +1734,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						final boolean gauntletBonus = getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id())
 							&& getPlayer().getCache().getInt("famcrest_gauntlets") == Gauntlets.CHAOS.id();
 
-						if (getPlayer().getMagicPoints() > 30
-							|| (gauntletBonus && spell.getName().contains("bolt")))
+						if (gauntletBonus && spell.getName().contains("bolt")) {
 							max += 1;
+						}
 
 						int damage = CombatFormula.calculateMagicDamage(max + 1) - 1;
 
