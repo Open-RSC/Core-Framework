@@ -820,8 +820,17 @@ public final class Player extends Mob {
 				final Npc npc = ownedPlugin.getScriptContext().getInteractingNpc();
 				if (npc != null) {
 					npc.setBusy(false);
+					if (npc.getInteractingPlayer() == this) {
+						npc.setNpcInteraction(null);
+						npc.setInteractingPlayer(null);
+					}
+					if (getInteractingNpc() == npc) {
+						setInteractingNpc(null);
+						setNpcInteraction(null);
+					}
 				}
 			}
+			setBusy(false);
 		} catch (ConcurrentModificationException e) {
 			LOGGER.error(e);
 		}
