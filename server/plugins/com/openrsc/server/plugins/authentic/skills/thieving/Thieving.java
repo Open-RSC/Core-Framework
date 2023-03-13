@@ -425,7 +425,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				npc.setBusy(false);
 				return;
 			}
-			delay();
+			delay(2);
 			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
 		}
 		else {
