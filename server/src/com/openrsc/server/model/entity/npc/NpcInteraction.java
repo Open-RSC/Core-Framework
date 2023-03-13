@@ -8,7 +8,8 @@ public enum NpcInteraction {
 	NPC_OP,
 	NPC_USE_ITEM,
 	NPC_KILL,
-	NPC_CAST_SPELL;
+	NPC_CAST_SPELL,
+	NPC_GNOMEBALL_OP;
 
 	public static void setInteractions(Npc npc, Player player, NpcInteraction interaction) {
 		npc.setInteractingPlayer(player);

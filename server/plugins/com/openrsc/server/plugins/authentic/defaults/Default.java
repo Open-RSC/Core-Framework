@@ -6,7 +6,6 @@ import com.openrsc.server.constants.Spells;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SpellDef;
-import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -90,14 +89,6 @@ public class Default implements DefaultHandler,
 		player.message(
 			"The " + n.getDef().getName()
 				+ " does not appear interested in talking");
-		//WalkAction to stop players from following uninterested NPCs.
-		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
-			public void executeInternal() {
-				getPlayer().resetFollowing();
-				getPlayer().resetPath();
-				getPlayer().resetAll();
-			}
-		});
 	}
 
 	@Override

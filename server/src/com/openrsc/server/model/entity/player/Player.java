@@ -2369,23 +2369,31 @@ public final class Player extends Mob {
 		Npc npc = getInteractingNpc();
 		NpcInteraction interaction = getNpcInteraction();
 		super.updatePosition();
+
 		if (npc != null) {
 			switch (interaction) {
 				case NPC_TALK_TO:
+				case NPC_GNOMEBALL_OP:
+				case NPC_USE_ITEM:
 					if (!inCombat()) {
 						face(npc);
 					}
 				case NPC_OP:
-				case NPC_USE_ITEM:
-					if (withinRange(npc, 1) && canReach(npc) && PathValidation.checkAdjacentDistance(getWorld(), getLocation(), npc.getLocation(), true)) {
-						resetFollowing();
-						resetPath();
-					}
 					setBusy(true);
 					break;
 				default:
 					break;
 			}
+		}
+
+		if (isFollowing()
+			&& getEndFollowRadius() > -1
+			&& getFollowEvent().getTimesRan() > 1
+			&& withinRange(getFollowing(), getEndFollowRadius())
+			&& PathValidation.checkAdjacentDistance(getWorld(), getLocation(), getFollowing().getLocation(), true)
+			&& canReach(getFollowing())) {
+			resetFollowing();
+			resetPath();
 		}
 	}
 

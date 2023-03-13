@@ -6,6 +6,7 @@ import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
@@ -42,18 +43,18 @@ public class ItemUseOnNpc implements PayloadProcessor<ItemOnMobStruct, OpcodeIn>
 		if (affectedNpc == null || item == null) {
 			return;
 		}
-		player.setFollowing(affectedNpc, 0, false);
-		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
+		player.setFollowing(affectedNpc, 1, false, true);
+		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 2) {
 			public void executeInternal() {
-				getPlayer().resetPath();
-				getPlayer().resetFollowing();
+				NpcInteraction interaction = NpcInteraction.NPC_USE_ITEM;
 				if ((!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
 					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
 					|| affectedNpc.isBusy()) && item.getCatalogId() != ItemId.RESETCRYSTAL.id()) {
 					return;
 				}
-				getPlayer().resetAll();
-				getPlayer().face(affectedNpc);
+				getPlayer().resetAll(true, false);
+				NpcInteraction.setInteractions(affectedNpc, getPlayer(), interaction);
+
 
 				// Lazy bugfix for "notes shouldn't be able to be used on NPCs... except for the bankers!"
 				int[] BANKERS = {NpcId.BANKER.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_ALKHARID.id(),

@@ -865,6 +865,7 @@ public class Npc extends Mob {
 						}
 					}
 				case NPC_USE_ITEM:
+				case NPC_GNOMEBALL_OP:
 					face(player);
 					break;
 				default:

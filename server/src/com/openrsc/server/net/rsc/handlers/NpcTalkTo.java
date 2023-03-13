@@ -37,7 +37,7 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 			return;
 		}
 
-		player.setFollowing(npc, 1, false);
+		player.setFollowing(npc, 1, false, true);
 		player.setWalkToAction(new WalkToMobAction(player, npc, 2) {
 			public void executeInternal() {
 				NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
@@ -60,15 +60,6 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 						//Flag it so the talking player can kill their own dialogue when the time comes, even if this player doesn't come back.
 						npc.setPlayerWantsNpc(true);
 						getPlayer().message(npc.getDef().getName() + " is busy at the moment");
-						//Walk to action to let player get closer before they're reset.
-						getPlayer().setWalkToAction(new WalkToMobAction(getPlayer(), npc, 1) {
-							@Override
-							protected void executeInternal() {
-								getPlayer().resetFollowing();
-								getPlayer().resetPath();
-								getPlayer().resetAll();
-							}
-						});
 						return;
 					}
 				}

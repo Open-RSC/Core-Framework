@@ -25,6 +25,7 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	private long lastEventDuration = 0;
 	private final UUID uuid;
 	private final DuplicationStrategy duplicationStrategy;
+	private volatile int timesRan;
 
 	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, DuplicationStrategy duplicationStrategy) {
 		this.world = world;
@@ -34,6 +35,7 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		this.resetCountdown();
 		this.uuid = UUID.randomUUID();
 		this.duplicationStrategy = duplicationStrategy;
+		this.timesRan = 0;
 	}
 
 	public abstract void run();
@@ -43,6 +45,7 @@ public abstract class GameTickEvent implements Callable<Integer> {
 			tick();
 			if (shouldRun()) {
 				run();
+				timesRan++;
 				resetCountdown();
 			}
 		});
@@ -148,5 +151,9 @@ public abstract class GameTickEvent implements Callable<Integer> {
 
 	public UUID getUUID() {
 		return uuid;
+	}
+
+	public int getTimesRan() {
+		return timesRan;
 	}
 }

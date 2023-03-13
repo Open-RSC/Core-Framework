@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
@@ -148,6 +149,11 @@ public abstract class Mob extends Entity {
 	private ViewArea viewArea = new ViewArea(this);
 
 	private NpcInteraction npcInteraction = null;
+
+	/**
+	 * How many tiles away do we want to end the following event?
+	 */
+	private int endFollowRadius = -1;
 
 
 	public Mob(final World world, final EntityType type) {
@@ -412,13 +418,19 @@ public abstract class Mob extends Entity {
 	}
 
 	public void setFollowing(final Mob mob, final int radius) {
-		setFollowing(mob, radius, true);
+		setFollowing(mob, radius, true, false);
 	}
 
 	public void setFollowing(final Mob mob, final int radius, final boolean canInterrupt) {
+		setFollowing(mob, radius, canInterrupt, false);
+	}
+
+	public void setFollowing(final Mob mob, final int radius, final boolean canInterrupt, final boolean stopAtEnd) {
 		if (isFollowing()) resetFollowing();
+		if (stopAtEnd) setEndFollowRadius(radius);
 		following = mob;
 		followEvent = new GameTickEvent(getWorld(), this, 0, "Mob Following Mob", DuplicationStrategy.ONE_PER_MOB) {
+
 			public void run() {
 				if (getDelayTicks() == 0) setDelayTicks(1);
 
@@ -530,8 +542,14 @@ public abstract class Mob extends Entity {
 
 	public void resetFollowing(boolean tellLeft) {
 		following = null;
+		setEndFollowRadius(-1);
 		if (followEvent != null) {
 			followEvent.stop();
+			//Need to remove this *now*, otherwise it's too late. Can only have one follow event per mob.
+			GameEventHandler geh = getWorld().getServer().getGameEventHandler();
+			if (geh.has(followEvent)) {
+				geh.remove(followEvent);
+			}
 			followEvent = null;
 		}
 
@@ -1164,6 +1182,14 @@ public abstract class Mob extends Entity {
 
 	public NpcInteraction getNpcInteraction() {
 		return npcInteraction;
+	}
+
+	public void setEndFollowRadius(int endFollowRadius) {
+		this.endFollowRadius = endFollowRadius;
+	}
+
+	public int getEndFollowRadius() {
+		return endFollowRadius;
 	}
 
 }
