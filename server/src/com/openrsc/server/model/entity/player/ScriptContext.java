@@ -356,9 +356,7 @@ public class ScriptContext {
 			if (getContextPlayer().getMultiEndedEarly()) {
 				//We don't set the busy state here, since it'd conflict with the new person the NPC is talking to. However, we do want to reset the check back to false.
 				getContextPlayer().setMultiEndedEarly(false);
-			} else if (!interrupted) {
-				//If the plugin was interrupted, then the NPC was already set unbusy.
-				//Setting it again causes issues, so let's not do that.
+			} else {
 				oldNpc.setBusy(false);
 				if (oldNpc.getInteractingPlayer() == getContextPlayer()) {
 					oldNpc.setNpcInteraction(null);
@@ -431,9 +429,7 @@ public class ScriptContext {
 
 		if(getContextPlayer() != null) {
 			getContextPlayer().removeOwnedPlugin(getPluginTask());
-			if (shouldAffectBusy && !interrupted) {
-				//If plugin was already interrupted, we don't want to reset the busy state.
-				//This allows player to move during plugins that start before this plugin ends.
+			if (shouldAffectBusy) {
 				getContextPlayer().setBusy(false);
 				getContextPlayer().setNpcInteraction(null);
 				getContextPlayer().setInteractingNpc(null);
