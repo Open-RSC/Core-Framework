@@ -81,12 +81,7 @@ public class WalkRequest implements PayloadProcessor<WalkStruct, OpcodeIn> {
 				player.interruptPlugins();
 			}
 			return;
-		} else if (player.getWalkToAction() != null && player.getWalkToAction().shouldExecute()) {
-			//If we're about to execute a walk to action, don't accept another walk request.
-			//Since we process incoming packets first, we need to stop this now, not later.
-			return;
 		}
-
 		player.resetAll();
 		player.resetPath();
 
