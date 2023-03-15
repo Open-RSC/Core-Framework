@@ -20,14 +20,23 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 			return;
 		}
 
+		byte headRestrictions = payload.headRestrictions;
+		byte headType = payload.headType;
+		byte bodyType = payload.bodyType;
+
+		// Check to see if we've been sent a bearded lady
+		if (!player.getConfig().ALLOW_BEARDED_LADIES
+			&& (headType == 6 && bodyType == 4)) {
+			player.setSuspiciousPlayer(true, "player attempted to create a bearded lady");
+			ActionSender.sendAppearanceScreen(player);
+			return;
+		}
+
 		boolean tutorialAppearance = player.getCache().hasKey("tutorial_appearance");
 		if (tutorialAppearance)
 			player.getCache().remove("tutorial_appearance");
 
 		player.setChangingAppearance(false);
-		byte headRestrictions = payload.headRestrictions;
-		byte headType = payload.headType;
-		byte bodyType = payload.bodyType;
 
 		// This value is always "2" and is not very useful.
 		// I looked in the  v40 client deob, and the 4th byte is also always 2 there.

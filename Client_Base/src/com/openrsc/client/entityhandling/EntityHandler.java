@@ -4059,7 +4059,11 @@ public class EntityHandler {
 		animations.add(new AnimationDef("fhead1", "player", 1, 13, true, false, 0));//3
 		animations.add(new AnimationDef("fbody1", "player", 2, 10, true, false, 0));//4
 		animations.add(new AnimationDef("head2", "player", 1, 13, true, false, 0));//5
-		animations.add(new AnimationDef("head3", "player", 1, 13, true, false, 0)); //6 allow shemales.
+		if (Config.S_ALLOW_BEARDED_LADIES) {
+			animations.add(new AnimationDef("head3", "player", 1, 13, true, false, 0)); //6
+		} else {
+			animations.add(new AnimationDef("head3", "player", 1, 5, true, false, 0)); //6
+		}
 		animations.add(new AnimationDef("head4", "player", 1, 13, true, false, 0));//7
 		animations.add(new AnimationDef("chefshat", "equipment", 16777215, 0, true, false, 0));//8
 		animations.add(new AnimationDef("apron", "equipment", 16777215, 0, true, false, 0));//9

@@ -942,7 +942,7 @@ public class PacketHandler {
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
 		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio, wantOpenPkPresets;
-		int disableMinimapRotation;
+		int disableMinimapRotation, allowBeardedLadies;
 
 		String logoSpriteID;
 
@@ -1031,6 +1031,7 @@ public class PacketHandler {
 			wantOpenPkPresets = this.getClientStream().getUnsignedByte(); // 82
 			showUndergroundFlickerToggle = this.getClientStream().getUnsignedByte(); // 83
 			disableMinimapRotation = this.getClientStream().getUnsignedByte(); // 84
+			allowBeardedLadies = this.getClientStream().getUnsignedByte(); // 85
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1116,6 +1117,7 @@ public class PacketHandler {
 			wantOpenPkPresets = packetsIncoming.getUnsignedByte(); // 82
 			showUndergroundFlickerToggle = packetsIncoming.getUnsignedByte(); // 83
 			disableMinimapRotation = packetsIncoming.getUnsignedByte(); // 84
+			allowBeardedLadies = packetsIncoming.getUnsignedByte(); // 85
 		}
 
 		if (Config.DEBUG) {
@@ -1203,7 +1205,8 @@ public class PacketHandler {
 					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio + // 81
 					"\nS_WANT_OPENPK_PRESETS " + wantOpenPkPresets + // 82
 					"\nS_SHOW_UNDERGROUND_FLICKER_TOGGLE " + showUndergroundFlickerToggle + // 83
-					"\nS_DISABLE_MINIMAP_ROTATION " + disableMinimapRotation // 84
+					"\nS_DISABLE_MINIMAP_ROTATION " + disableMinimapRotation + // 84
+					"\nS_ALLOW_BEARDED_LADIES " + allowBeardedLadies // 85
 			);
 		}
 
@@ -1295,6 +1298,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_OPENPK_PRESETS", wantOpenPkPresets == 1 ? "true" : "false"); // 82
 		props.setProperty("S_SHOW_UNDERGROUND_FLICKER_TOGGLE", showUndergroundFlickerToggle == 1 ? "true" : "false"); // 83
 		props.setProperty("S_DISABLE_MINIMAP_ROTATION", disableMinimapRotation == 1 ? "true" : "false"); // 84
+		props.setProperty("S_ALLOW_BEARDED_LADIES", allowBeardedLadies == 1 ? "true" : "false"); // 85
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

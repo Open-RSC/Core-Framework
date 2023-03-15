@@ -741,6 +741,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_OPENPK_PRESETS + " 82");
 			LOGGER.info(server.getConfig().SHOW_UNDERGROUND_FLICKER_TOGGLE + " 83");
 			LOGGER.info(server.getConfig().DISABLE_MINIMAP_ROTATION + " 84");
+			LOGGER.info(server.getConfig().ALLOW_BEARDED_LADIES + " 85");
 		}
 		Packet p = prepareServerConfigs(server);
 		// ConnectionAttachment attachment = new ConnectionAttachment();
@@ -851,6 +852,7 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().WANT_OPENPK_PRESETS ? 1 : 0)); // 82
 		configs.add((byte) (server.getConfig().SHOW_UNDERGROUND_FLICKER_TOGGLE ? 1 : 0)); // 83
 		configs.add((byte) (server.getConfig().DISABLE_MINIMAP_ROTATION ? 1 : 0)); // 84
+		configs.add((byte) (server.getConfig().ALLOW_BEARDED_LADIES ? 1 : 0)); // 85
 
 		struct.configs = configs;
 		struct.setOpcode(OpcodeOut.SEND_SERVER_CONFIGS);

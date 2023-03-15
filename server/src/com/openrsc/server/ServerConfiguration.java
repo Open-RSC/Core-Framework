@@ -309,8 +309,8 @@ public class ServerConfiguration {
 	public int SUMMON_ALL_PLAYER_LIMIT;
 	public boolean SERVER_SIDED_WORD_FILTERING;
 	public boolean SERVER_SIDED_WORD_SPACE_FILTERING;
-
 	public boolean DISABLE_MINIMAP_ROTATION;
+	public boolean ALLOW_BEARDED_LADIES;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -467,6 +467,7 @@ public class ServerConfiguration {
 		CHAR_NAME_CAN_CONTAIN_MOD = tryReadBool("char_name_can_contain_mod").orElse(false);
 		CHAR_NAME_CAN_EQUAL_GLOBAL = tryReadBool("char_name_can_equal_global").orElse(false);
 		DISABLE_MINIMAP_ROTATION = tryReadBool("disable_minimap_rotation").orElse(true);
+		ALLOW_BEARDED_LADIES = tryReadBool("allow_bearded_ladies").orElse(false);
 
 		// Retro features
 		GATHER_TOOL_ON_SCENERY = tryReadBool("gather_tool_on_scenery").orElse(false);
