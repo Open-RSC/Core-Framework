@@ -60,9 +60,10 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 			player.incExp(Skill.AGILITY.id(), 20, true);
 			return;
 		}
+
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE && !inArray(obj.getID(), LEDGE)) {
+				&& player.getFatigue() >= player.MAX_FATIGUE && !inArray(obj.getID(), LEDGE, HANDHOLDS)) {
 				player.message("you are too tired to train");
 				return;
 			}
@@ -153,7 +154,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("you are too tired to train");
+				player.message("you are too tired to jump the wall");
 				return;
 			}
 		}
