@@ -461,6 +461,10 @@ public final class Moderator implements CommandTrigger {
 		// parse args
 		String targetPlayerUsername = args[0].replaceAll("_", " ");
 		String newUsername = args[1].replaceAll("_", " ");
+		if (newUsername.length() > 12) {
+			player.message("Cannot have a username with more than 12 characters.");
+			return;
+		}
 		boolean inappropriate = false;
 		try {
 			inappropriate = DataConversions.parseBoolean(args[2]);

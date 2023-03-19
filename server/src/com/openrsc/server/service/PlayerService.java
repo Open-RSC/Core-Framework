@@ -77,42 +77,47 @@ public class PlayerService implements IPlayerService {
         }
     }
 
-    @Override
-    public boolean savePlayer(final Player player) throws GameDatabaseException {
-        try {
-            if (!database.playerExists(player.getDatabaseID())) {
-                LOGGER.error("ERROR SAVING : PLAYER DOES NOT EXIST : {}", player.getUsername());
-                return player.checkAndIncrementSaveAttempts();
-            }
-            boolean realSuccess = database.atomically(() -> {
-                savePlayerBankPresets(player);
-                savePlayerInventory(player);
-                savePlayerEquipment(player);
-                savePlayerBank(player);
-                //savePlayerAchievements(player);
-                savePlayerQuests(player);
-                savePlayerCastTime(player);
-                savePlayerCache(player);
-                savePlayerNpcKills(player);
-                savePlayerData(player);
-                savePlayerSkills(player);
-                savePlayerSocial(player);
-            });
-            if (realSuccess) {
-                if (null != player.getUsernameChangePending()) {
-			        player.getUsernameChangePending().doChangeUsername();
-                }
-                player.resetSaveAttempts();
+	@Override
+	public boolean savePlayer(final Player player) throws GameDatabaseException {
+		try {
+			if (!database.playerExists(player.getDatabaseID())) {
+				LOGGER.error("ERROR SAVING : PLAYER DOES NOT EXIST : {}", player.getUsername());
+				return player.checkAndIncrementSaveAttempts();
 			}
-            return realSuccess;
-        } catch (final Exception ex) {
-            LOGGER.error(
-                    MessageFormat.format("Unable to save player to database: {}", player.getUsername()),
-                    ex
-            );
-			return player.checkAndIncrementSaveAttempts();
-        }
-    }
+			boolean realSuccess = database.atomically(() -> {
+				savePlayerBankPresets(player);
+				savePlayerInventory(player);
+				savePlayerEquipment(player);
+				savePlayerBank(player);
+				//savePlayerAchievements(player);
+				savePlayerQuests(player);
+				savePlayerCastTime(player);
+				savePlayerCache(player);
+				savePlayerNpcKills(player);
+				savePlayerData(player);
+				savePlayerSkills(player);
+				savePlayerSocial(player);
+			});
+			if (realSuccess) {
+				if (null != player.getUsernameChangePending()) {
+					player.getUsernameChangePending().doChangeUsername();
+				}
+				player.resetSaveAttempts();
+			}
+			return realSuccess;
+		} catch (final Exception ex) {
+			if (player != null) {
+				LOGGER.error(
+					MessageFormat.format("Unable to save player to database: {}", player.getUsername()),
+					ex
+				);
+				return player.checkAndIncrementSaveAttempts();
+			} else {
+				LOGGER.error("Player reference lost and failed to save.", ex);
+				return false;
+			}
+		}
+	}
 
 	@Override
 	public void savePlayerMaxStats(final Player player) throws GameDatabaseException {
