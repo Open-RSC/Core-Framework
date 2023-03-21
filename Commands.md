@@ -267,6 +267,21 @@ Admin Commands
   - Usage: `::setgloballevelreq [total level required to chat]`
   - Example: `::setgloballevelreq 150` sets total level requirement to 150.
   - Sets the minimum amount of total levels a user must have in order to participate in global chat.
+- setmaxplayersperip
+  - Usage: `::setmaxplayersperip (number)`
+  - Alias: `::smppi` 
+  - Sets the server allow a max number of players per ip
+- setmaxconnectionsperip
+  - Usage: `::setmaxconnectionsperip (number)`
+  - Alias: `::smcpi`
+  - Sets the server allow a max number of connections per ip
+- setmaxconnectionspersecond
+  - Usage: `::setmaxconnectionspersecond (number)`
+  - Alias: `::smcps` max_connections_per_second: 80
+  - Sets the server allow a max number of connections per second
+- yoptin
+  - Usage: `::yoptin (name)`
+  - Displays the client version of the optional target player. Can display in-client Yoptin dialog if using client version 61 to 75.
 ------------------------
 Developer Commands
 ------------------------
