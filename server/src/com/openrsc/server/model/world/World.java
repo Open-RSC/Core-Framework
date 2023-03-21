@@ -818,8 +818,14 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		try {
 			if (getServer().getLoginExecutor() != null) {
 				getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), false));
-				if (avatarGenerator != null) {
-					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
+				// We handle avatar generation code exceptions separately, they are not a critical part of the logout process.
+				try {
+					if (avatarGenerator != null) {
+						avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
+					}
+				} catch (final Exception e){
+					LOGGER.error("Error generating avatar: ");
+					LOGGER.catching(e);
 				}
 			}
 			player.resetSceneryMorph();
@@ -849,7 +855,6 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
-
 	}
 
 	public void unregisterQuest(final QuestInterface quest) {
