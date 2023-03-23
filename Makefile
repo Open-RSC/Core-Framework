@@ -136,6 +136,10 @@ backup-mariadb:
 	chmod -R 777 $(MYSQL_DUMPS_DIR)
 	docker exec mariadb mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --single-transaction --quick --lock-tables=false | zip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m%d-%H%M-%Z"`-${db}.zip
 
+backup-mariadb-bash:
+	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
+	$(shell ./Deployment_Scripts/backup-mariadb.sh ${MYSQL_DUMPS_DIR} ${db})
+
 # Creates a database export of the specified database and saves to the output directory specified in the .env file.  Good for utilizing as a crontab.
 # Call via "make backup-sqlite db=cabbage"
 backup-sqlite:
