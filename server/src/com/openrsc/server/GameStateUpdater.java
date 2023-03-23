@@ -584,7 +584,7 @@ public final class GameStateUpdater {
 							(chatMessage.getRecipient() == null || chatMessage.getRecipient().isPlayer()) &&
 							// chat sender is chat receiver
 							((Player)chatMessage.getSender()).getUsernameHash() == player.getUsernameHash()
-					)
+					) || player.getUpdateFlags().isPluginChatMessage().get() //Plugin induced messages should always show up.
 				)
 				{
 					chatMessagesNeedingDisplayed.add(chatMessage);

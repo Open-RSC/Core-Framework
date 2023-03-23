@@ -63,6 +63,7 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 		if (chatMessage == null) {
 			chatMessage = new ChatMessage(sender, message, mutedChat);
 			sender.getUpdateFlags().setChatMessage(chatMessage);
+			sender.getUpdateFlags().setPluginChatMessage(false);
 		}
 
 		// We do not want muted/tutorial chat to be logged

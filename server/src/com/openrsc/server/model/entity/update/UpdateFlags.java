@@ -21,6 +21,12 @@ public class UpdateFlags {
 	 * Do we need to display chat message for players around?
 	 */
 	private AtomicReference<ChatMessage> chatMessage = new AtomicReference<ChatMessage>();
+
+	/**
+	 * Is this chat message from a plugin?
+	 */
+	private AtomicBoolean pluginChatMessage = new AtomicBoolean(false);
+
 	/**
 	 * Do we need to update npc Wields for players around?
 	 */
@@ -71,6 +77,15 @@ public class UpdateFlags {
 	public void setChatMessage(ChatMessage message) {
 		this.chatMessage.set(message);
 	}
+
+	public void setPluginChatMessage(boolean pcm){
+		this.pluginChatMessage.set(pcm);
+	}
+
+	public AtomicBoolean isPluginChatMessage(){
+		return this.pluginChatMessage;
+	}
+
 	public AtomicReference<Damage> getDamage() {
 		return damage;
 	}
@@ -160,6 +175,7 @@ public class UpdateFlags {
 		hpUpdate.set(null);
 		projectile.set(null);
 		chatMessage.set(null);
+		pluginChatMessage.set(false);
 
 		appearanceChanged.set(false);
 	}
@@ -171,6 +187,7 @@ public class UpdateFlags {
 			", actionBubbleNpc=" + actionBubbleNpc +
 			", appearanceChanged=" + appearanceChanged +
 			", chatMessage=" + chatMessage +
+			", pluginChatMessage=" + pluginChatMessage +
 			", damage=" + damage +
 			", skull=" + skull +
 			", wield=" + wield +

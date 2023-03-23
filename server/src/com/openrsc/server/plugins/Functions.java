@@ -307,6 +307,7 @@ public class Functions {
 			}
 			 */
 			player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
+			player.getUpdateFlags().setPluginChatMessage(true);
 		}
 		return false;
 	}
