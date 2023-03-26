@@ -918,6 +918,7 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.JUG_OF_WATER.id(), 1, 2);
 		currentNpcDrops.addItemDrop(ItemId.BREAD.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.COOKEDMEAT.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.POTION.id(), 1, 1);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.IMP.id(), currentNpcDrops);
 
