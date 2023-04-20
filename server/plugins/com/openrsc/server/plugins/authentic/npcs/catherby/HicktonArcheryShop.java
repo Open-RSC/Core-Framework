@@ -70,7 +70,7 @@ public class HicktonArcheryShop extends AbstractShop {
 		} else if (option == 2) {
 			if (config().WANT_CUSTOM_SPRITES && getMaxLevel(player, Skill.FLETCHING.id()) >= 99) {
 				npcsay(player, n, "I see you've carved your way to the top",
-					"i can offer you cape",
+					"i can offer you a cape",
 					"made for those who excel in fletching",
 					"the cost is 99,000 coins");
 				int choice2 = multi(player, n, true, "I'll buy one", "Not at the moment");

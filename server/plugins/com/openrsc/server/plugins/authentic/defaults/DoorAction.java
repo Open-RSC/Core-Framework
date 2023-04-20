@@ -718,7 +718,8 @@ public class DoorAction {
 					}
 					delay();
 					player.message("You need a cooking level of 32 to enter");
-				} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
+				} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())
+				&& !player.getCarriedItems().getEquipment().hasEquipped(ItemId.COOKING_CAPE.id())) {
 					Npc chef = player.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcsay(player, chef, "Where's your chef's hat",

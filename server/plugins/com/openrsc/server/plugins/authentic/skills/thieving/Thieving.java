@@ -365,6 +365,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		if (SkillCapes.shouldActivate(player, THIEVING_CAPE, succeededPickpocket)) {
 			succeededPickpocket = true;
 			thinkbubble(new Item(THIEVING_CAPE.id()));
+			mes("@mag@Your Thieving cape activates, and you successfully pick the " + thievedMobString + "'s pocket");
 		}
 		if (succeededPickpocket) {
 			if (config().WANT_FATIGUE) {
