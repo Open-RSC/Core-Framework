@@ -25,7 +25,7 @@ public class NpcUseItem implements PayloadProcessor<ItemOnMobStruct, OpcodeIn> {
 		if (affectedNpc == null || item == null) {
 			return;
 		}
-		player.setFollowing(affectedNpc, 1, true, true);
+		player.setFollowing(affectedNpc, 1, false, true);
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 2) {
 			public void executeInternal() {
 				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()

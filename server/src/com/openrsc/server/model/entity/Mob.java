@@ -452,10 +452,10 @@ public abstract class Mob extends Entity {
 					}
 				} else if (finishedPath()) {
 					// We have finished the current follow path, but we need to keep walking to get to the target.
-					if (!withinRange(mob, radius)) walkToEntity(mob.getX(), mob.getY());
+					if (!withinRange(mob, radius) || !PathValidation.checkAdjacentDistance(getWorld(), getLocation(), mob.getLocation(), true)) walkToEntity(mob.getX(), mob.getY());
 				} else {
 					// We have not finished the current follow path, but we are in range!
-					if (withinRange(mob, radius)) resetPath();
+					if (withinRange(mob, radius) && PathValidation.checkAdjacentDistance(getWorld(), getLocation(), mob.getLocation(), true)) resetPath();
 				}
 			}
 		};

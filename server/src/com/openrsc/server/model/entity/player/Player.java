@@ -2375,11 +2375,7 @@ public final class Player extends Mob {
 				case NPC_TALK_TO:
 				case NPC_GNOMEBALL_OP:
 				case NPC_USE_ITEM:
-					if (!inCombat()) {
-						face(npc);
-					}
-				case NPC_OP:
-					setBusy(true);
+					if (!inCombat() && finishedPath()) face(npc);
 					break;
 				default:
 					break;
@@ -2524,10 +2520,10 @@ public final class Player extends Mob {
 		Npc npc = getInteractingNpc();
 		if (npc != null && npc.getInteractingPlayer() == this) {
 			npc.setNpcInteraction(null);
-			setNpcInteraction(null);
 			npc.setInteractingPlayer(null);
-			setInteractingNpc(null);
 		}
+		setNpcInteraction(null);
+		setInteractingNpc(null);
 		resetAllExceptTradeOrDuel(true, resetWalkAction, resetFollowing);
 		getTrade().resetAll();
 		getDuel().resetAll();

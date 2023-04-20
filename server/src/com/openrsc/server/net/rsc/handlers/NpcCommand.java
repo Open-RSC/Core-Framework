@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.npc.NpcInteraction;
@@ -30,7 +31,10 @@ public final class NpcCommand implements PayloadProcessor<TargetMobStruct, Opcod
 		if (affectedNpc == null) return;
 		NPCDef def = affectedNpc.getDef();
 		String command = (click ? def.getCommand1() : def.getCommand2()).toLowerCase();
-		int followRadius = command.equalsIgnoreCase("pickpocket") && player.withinRange(affectedNpc, 1) ? 0 : 1;
+		int followRadius = command.equalsIgnoreCase("pickpocket")
+			&& player.withinRange(affectedNpc, 1)
+			&& PathValidation.checkAdjacentDistance(player.getWorld(), player.getLocation(), affectedNpc.getLocation(), true)
+			? 0 : 1;
 		player.setFollowing(affectedNpc, followRadius, true, true);
 		//Custom behaviour causes a lot of issues with ops happening from more than 1 tile away (authentically happens from 2).
 		//Servers with these configs enabled will have them start from 0/1 tile away instead.
