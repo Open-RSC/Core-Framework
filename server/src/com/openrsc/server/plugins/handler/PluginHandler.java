@@ -276,16 +276,21 @@ public final class PluginHandler implements IPluginHandler {
                 final PluginTickEvent e = new PluginTickEvent(server.getWorld(), player, pluginName, walkToAction, task);
 
                 boolean hasEvent = server.getGameEventHandler().has(e);
-                server.getGameEventHandler().add(e);
                 // On Jagex Original Clients there was no immediate menu cancels when clicking out of menu
-				// In codebase since plugintick events are blocked until the release of a menu option of the event
-				// we replay back a new event since the old one would just be finishing
+				// Addendum circa 14th March 2023: There wasn't an extra tick delay like in the codebase prior.
+				// We just need to stop the plugin now and replace it with a new one.
                 if (player != null && player.canceledMenuHandler && hasEvent) {
 					player.canceledMenuHandler = false;
-                	server.getGameEventHandler().submit(() -> {
-						delay();
-						server.getGameEventHandler().add(e);
-					}, "replay event post cancel menu");
+					for (PluginTask plugin : player.getOwnedPlugins()) {
+						if (plugin.getScriptContext().getInteractingNpc() != null) {
+							plugin.getPluginTickEvent().stop();
+							server.getGameEventHandler().remove(plugin.getPluginTickEvent());
+							break;
+						}
+					}
+					server.getGameEventHandler().add(e);
+				} else {
+					server.getGameEventHandler().add(e);
 				}
             } catch (final NoSuchMethodException ex) {
                 LOGGER.info(ex.getMessage());

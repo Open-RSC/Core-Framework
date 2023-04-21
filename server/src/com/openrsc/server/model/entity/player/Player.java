@@ -813,6 +813,10 @@ public final class Player extends Mob {
 		return ownedPlugins.remove(plugin);
 	}
 
+	public Collection<PluginTask> getOwnedPlugins() {
+		return ownedPlugins;
+	}
+
 	public void interruptPlugins() {
 		try {
 			for (final PluginTask ownedPlugin : ownedPlugins) {
@@ -2377,6 +2381,7 @@ public final class Player extends Mob {
 				case NPC_USE_ITEM:
 					if (!inCombat() && finishedPath()) face(npc);
 					break;
+				case NPC_OP:
 				default:
 					break;
 			}

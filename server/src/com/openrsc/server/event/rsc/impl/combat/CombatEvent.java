@@ -316,7 +316,7 @@ public class CombatEvent extends GameTickEvent {
 					player.resetAll();
 				}
 
-				defenderMob.setBusy(false);
+				//defenderMob.setBusy(false);
 				defenderMob.setOpponent(null);
 				defenderMob.setCombatEvent(null);
 				defenderMob.setHitsMade(0);
@@ -341,7 +341,7 @@ public class CombatEvent extends GameTickEvent {
 					player.resetAll();
 				}
 
-				attackerMob.setBusy(false);
+				//attackerMob.setBusy(false);
 				attackerMob.setOpponent(null);
 				attackerMob.setCombatEvent(null);
 				attackerMob.setHitsMade(0);

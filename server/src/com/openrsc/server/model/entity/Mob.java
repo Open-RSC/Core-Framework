@@ -666,7 +666,7 @@ public abstract class Mob extends Entity {
 				ourSprite = 8;
 			}
 
-			victim.setBusy(true);
+			//victim.setBusy(true);
 			victim.setSprite(victimSprite);
 			victim.setOpponent(this);
 			victim.setCombatTimer();
@@ -710,7 +710,7 @@ public abstract class Mob extends Entity {
 
 			setLocation(victim.getLocation(), false);
 
-			setBusy(true);
+			//setBusy(true);
 			setSprite(ourSprite);
 			setOpponent(victim);
 			setCombatTimer();
