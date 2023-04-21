@@ -682,13 +682,19 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
 				- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy) * 4);
 
-			if (newStat < maxWeaken && spellEnum != Spells.SARADOMIN_STRIKE) {
-				player.playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + player.getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
-				return;
-			}
-			if (player.getDuel().isDuelActive() && affectedMob.isPlayer()) {
-				Player aff = (Player) affectedMob;
-				aff.message("Your " + aff.getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat) + " has been reduced by the spell!");
+			if (spellEnum != Spells.SARADOMIN_STRIKE) {
+				if (newStat < maxWeaken) {
+					final String skillName = player.getWorld().getServer().getConstants().getSkills().getSkill(affectsStat).getLongName().toLowerCase();
+					player.playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + skillName);
+					return;
+				}
+				if (affectedMob.isPlayer()) {
+					Player aff = (Player) affectedMob;
+					// Yes, it's authentic that it's spelled "defence"...
+					final String skillName = (spellEnum == Spells.CLAWS_OF_GUTHIX) ?
+						"defence" : "magic";
+					aff.message(String.format("Your %s has been reduced by the spell!", skillName));
+				}
 			}
 			affectedMob.getSkills().setLevel(affectsStat, newStat);
 		}
