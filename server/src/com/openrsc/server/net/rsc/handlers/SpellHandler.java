@@ -1506,24 +1506,34 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					case STUN:
 						double lowersBy = 0.0;
 						int affectsStat = -1;
+						final String message;
+
 						if (spellEnum == Spells.CONFUSE) {
 							lowersBy = 0.05;
 							affectsStat = Skill.ATTACK.id();
+							message = "Your attack has been reduced by a confuse spell!";
 						} else if (spellEnum == Spells.WEAKEN) {
 							lowersBy = 0.05;
 							affectsStat = Skill.STRENGTH.id();
+							message = "Your strength has been reduced by a weaken spell!";
 						} else if (spellEnum == Spells.CURSE) {
 							lowersBy = 0.05;
 							affectsStat = Skill.DEFENSE.id();
+							message = "Your defense has been reduced by a curse spell!";
 						} else if (spellEnum == Spells.VULNERABILITY) {
 							lowersBy = 0.10;
 							affectsStat = Skill.DEFENSE.id();
+							message = "Your defense has been reduced by a vulnerability spell!";
 						} else if (spellEnum == Spells.ENFEEBLE) {
 							lowersBy = 0.10;
 							affectsStat = Skill.STRENGTH.id();
+							message = "Your strength has been reduced by an enfeeble spell!";
 						} else if (spellEnum == Spells.STUN) {
 							lowersBy = 0.10;
 							affectsStat = Skill.ATTACK.id();
+							message = "Your attack has been reduced by a stun spell!";
+						} else {
+							message = "Undefined spell";
 						}
 
 						/* How much to lower the stat */
@@ -1534,7 +1544,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
 							- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
 						if (newStat < maxWeaken) {
-							getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + getPlayer().getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
+							final String skillName = getPlayer().getWorld().getServer().getConstants().getSkills().getSkill(affectsStat).getLongName().toLowerCase();
+							getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + skillName);
 							return;
 						}
 						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
@@ -1546,7 +1557,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							public void doSpell() {
 								affectedMob.getSkills().setLevel(stat, newStat);
 								if (affectedMob.isPlayer()) {
-									((Player) affectedMob).message("You have been weakened");
+									((Player) affectedMob).message(message);
 								}
 							}
 						});
