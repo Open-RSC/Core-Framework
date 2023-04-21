@@ -381,12 +381,6 @@ public class NpcBehavior {
 		boolean lastLogin = isPlayer && checkCombatTimer(((Player)target).getLastLogin(), 5);
 
 		int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : (int)(Math.ceil(640.0 / target.getConfig().GAME_TICK) - 1);
-		WalkToAction action = null;
-		boolean hasWalkMobAction = isPlayer && ((action = ((Player)target).getWalkToAction()) != null)
-			&& action instanceof WalkToMobAction;
-
-		boolean playerIsAttacking = hasWalkMobAction && ((WalkToMobAction) action).getActionType() == ActionType.ATTACK
-			&& ((WalkToMobAction) action).getMob().getUUID().equals(npc.getUUID());
 
 		boolean targetCombatTimeoutExceeded = checkCombatTimer(target.getCombatTimer(), numTicks);
 
@@ -399,7 +393,6 @@ public class NpcBehavior {
 			&& !impervious
 			&& !outOfBounds
 			&& !targetInCombat
-			&& !playerIsAttacking
 			&& lastLogin
 			&& targetCombatTimeoutExceeded;
 	}
