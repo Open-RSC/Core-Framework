@@ -373,13 +373,22 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void useNormalPotion(Player player, final Item item, final int affectedStat, final int percentageIncrease, final int modifier, final int newItem, final int left, final boolean sendUpdate) {
+
+		final String skillName;
+
+		if (affectedStat == Skill.RANGED.id()) {
+			skillName = "ranging";
+		} else {
+			skillName = player.getWorld().getServer().getConstants().getSkills().getSkillName(affectedStat).toLowerCase();
+		}
+
 		if (player.getConfig().WAIT_TO_REBOOST && !isNormalLevel(player, affectedStat)) {
-			player.playerServerMessage(MessageType.QUEST, "You already have boosted " + player.getWorld().getServer().getConstants().getSkills().getSkillName(affectedStat));
+			player.playerServerMessage(MessageType.QUEST, "You already have boosted " + skillName);
 			return;
 		}
 
 		if (player.getCarriedItems().remove(item) == -1) return;
-		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
+		player.message(String.format("You drink some of your %s potion", skillName));
 
 		applyPotionEffect(player, item, affectedStat, percentageIncrease, modifier, newItem, left, sendUpdate);
 
