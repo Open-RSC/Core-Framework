@@ -12,6 +12,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The class used to initialise and set user status on Discord.
+ */
 public class Discord {
 
 	public static DiscordEventHandlers discord;
@@ -26,6 +29,11 @@ public class Discord {
 	private static ScheduledFuture scheduled;
 	private static String lastUpdate = "Open source RSC MMO";
 
+	/**
+	 * Write whether or not Discord is currently in use. This prevents race conditions when multiple clients are
+	 * initialised at the same time.
+	 * @param inuse Status to set.
+	 */
 	public static void setInUse(final boolean inuse) {
 		try {
 			Files.write(Paths.get(Config.F_CACHE_DIR + File.separator + "discord_inuse.txt"), (inuse ? "1" : "0").getBytes());
@@ -33,6 +41,10 @@ public class Discord {
 		}
 	}
 
+	/**
+	 * Get lockfile status.
+	 * @return True if Discord is already initialised.
+	 */
 	public static boolean getInUse() {
 		try {
 			final String read = Files.readAllLines(Paths.get(Config.F_CACHE_DIR + File.separator + "discord_inuse.txt")).get(0);
@@ -43,6 +55,9 @@ public class Discord {
 		return false;
 	}
 
+	/**
+	 * Task to check for Discord presence.
+	 */
 	static class PresenceCheck implements Runnable {
 		public void run() {
 			// discord natives not in use and have not started discord
@@ -70,6 +85,9 @@ public class Discord {
 		}
 	}
 
+	/**
+	 * Initialize an instance of Discord.
+	 */
 	public static void InitalizeDiscord() {
 		// users may (likely) have multiple instances of the game open at once
 		// so we have to run a timer task to only have one initialized at a time
@@ -79,6 +97,9 @@ public class Discord {
 		scheduled = scheduledExecutorService.scheduleAtFixedRate(presenceTask, 0L, 15L, TimeUnit.SECONDS);
 	}
 
+	/**
+	 * Task to update Discord status.
+	 */
 	static class DiscordUpdate implements Runnable {
 		public void run() {
 			DiscordRPC.discordRunCallbacks();
@@ -91,6 +112,10 @@ public class Discord {
 		}
 	}
 
+	/**
+	 * Set status message on Discord.
+	 * @param update Message content.
+	 */
 	public static void setLastUpdate(String update) {
 		lastUpdate = update;
 	}
