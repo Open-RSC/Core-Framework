@@ -95,7 +95,24 @@ public class CombatFormula {
 	 * @return The randomized value.
 	 */
 	public static int calculateGodSpellDamage(final Player source) {
-		return calculateDamage(source.isCharged() ? 25 : 18);
+		int[] godCapes = new int[] {
+			ZAMORAK_CAPE.id(),
+			SARADOMIN_CAPE.id(),
+			GUTHIX_CAPE.id()
+		};
+
+		//Authentically, players only receive Charge benefit if they have a god cape equipped.
+		boolean hasCapeEquipped = false;
+		for (int capeId : godCapes) {
+			if (source.getCarriedItems().getEquipment().hasEquipped(capeId)) {
+				hasCapeEquipped = true;
+				break;
+			}
+		}
+		boolean hasChargeBenefit = source.isCharged() && hasCapeEquipped;
+		int godSpellMax = hasChargeBenefit ? 25 : 18;
+
+		return calculateDamage(godSpellMax + 1) - 1; //This is so magic can do 0 damage.
 	}
 
 	/**
@@ -106,7 +123,7 @@ public class CombatFormula {
 	public static int calculateIbanSpellDamage() {
 		// TODO: Remove this code and roll it into calculateMagicDamage
 		// Source for max damage: http://web.archive.org/web/20041226185618/http://www.rsinn.com/forum/showthread.php?t=2469
-		return calculateDamage(15);
+		return calculateDamage(15 + 1) - 1;
 	}
 
 	/**
