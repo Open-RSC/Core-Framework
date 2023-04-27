@@ -142,8 +142,6 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		if (player.getQuestStage(this) > 0) {
 			if (npc.getCombatEvent() != null) {
 				npc.getCombatEvent().resetCombat();
-				//Need to reset busy, since ending combat sets unbusy.
-				player.setBusy(true);
 			}
 			// from replay should do full heal
 			npc.getSkills().setLevel(Skill.HITS.id(), npc.getDef().hits);
