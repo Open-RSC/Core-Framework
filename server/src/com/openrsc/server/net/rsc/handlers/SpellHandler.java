@@ -1454,7 +1454,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
-						if (affectedMob.inCombat() && affectedMob.getHitsMade() < 2) {
+						if (affectedMob.inCombat() && affectedMob.getOpponent().getHitsMade() < 3) {
 							getPlayer().message("Your opponent can't retreat during the first 3 rounds of combat");
 							return;
 						}
@@ -1465,9 +1465,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 								// https://www.tip.it/runescape/times/view/615-forever-runescape-part-1
 								// https://web.archive.org/web/20010410193705/http://www.geocities.com/ngrunescape/magic.html
 								if (affectedMob.inCombat()) {
-									affectedMob.getOpponent().resetCombatEvent();
-									affectedMob.resetCombatEvent();
-									getPlayer().message("Your opponent is retreating");
+									((Npc)affectedMob).getBehavior().retreat();
+									//This sends the message to the caster, which may not be the player in combat. Probably not correct?
+									//retreat() already sends the message to the actual opponent.
+									//getPlayer().message("Your opponent is retreating");
 								}
 							}
 						});
