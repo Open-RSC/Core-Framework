@@ -28,12 +28,12 @@ public class Settings {
 	public static boolean undecoratedWindow = true; // "true" means don't draw normal window chrome
 	public static boolean undecoratedWindowSave = undecoratedWindow;
 	public static int logVerbosity = 3;
-	public static String preferredClientPreservation = WINRUNE;
+	public static String preferredClientPreservation = RSCPLUS;
 	public static String preferredClientCabbage = OPENRSC;
-	public static String preferredClient2001scape = MUD38;
+	public static String preferredClient2001scape = RSCTIMES;
 	public static String preferredClientKale; // TODO: define name when it is known
 	public static String preferredClientOpenpk = OPENRSC;
-	public static String preferredClientUranium = WINRUNE;
+	public static String preferredClientUranium = RSCPLUS;
 	public static String preferredClientColeslaw = IDLERSC;
 
 	// props keys

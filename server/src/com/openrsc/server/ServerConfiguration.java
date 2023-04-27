@@ -69,6 +69,7 @@ public class ServerConfiguration {
 	public int MAX_CONNECTIONS_PER_SECOND;
 	public int MAX_PACKETS_PER_SECOND;
 	public int MAX_LOGINS_PER_SECOND;
+	public int MAX_LOGINS_PER_SERVER_PER_TICK;
 	public int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES;
 	public int NETWORK_FLOOD_IP_BAN_MINUTES;
 	public boolean WANT_PCAP_LOGGING;
@@ -373,6 +374,7 @@ public class ServerConfiguration {
 		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
 		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(100);
 		MAX_LOGINS_PER_SECOND = tryReadInt("max_logins_per_second").orElse(2);
+		MAX_LOGINS_PER_SERVER_PER_TICK = tryReadInt("max_logins_per_server_per_tick").orElse(5);
 		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = tryReadInt("max_password_guesses_per_five_minutes").orElse(10);
 		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(5);
 		int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = tryReadInt("suspicious_player_ip_ban_minutes").orElse(60);

@@ -84,7 +84,6 @@ public class Utils {
   }
 
 	public static void execCmd(String[] cmdArray, File workingDirectory, boolean needsOutput) {
-    Logger.Error("second line");
     if (needsOutput) {
       outputCommandRunning = true;
       lastCommandOutput = null;

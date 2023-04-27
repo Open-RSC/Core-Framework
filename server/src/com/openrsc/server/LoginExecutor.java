@@ -26,6 +26,8 @@ public class LoginExecutor implements Runnable {
 	private volatile Boolean running;
 
 	private final Server server;
+
+	private int requestsProcessedThisTick = 0;
 	public final Server getServer() {
 		return server;
 	}
@@ -50,8 +52,9 @@ public class LoginExecutor implements Runnable {
 				// Save requests should be run BEFORE logout requests or else we get duplication glitch because a user can login before they've saved, but after they've logged out.
 				// See Player.logout, save requests are added first before removal so we are good.
 				LoginExecutorProcess request;
-				while ((request = requests.poll()) != null) {
+				while (requestsProcessedThisTick < server.getConfig().MAX_LOGINS_PER_SERVER_PER_TICK && (request = requests.poll()) != null) {
 					request.process();
+					++requestsProcessedThisTick;
 				}
 			} catch (final Throwable e) {
 				LOGGER.catching(e);
@@ -117,5 +120,9 @@ public class LoginExecutor implements Runnable {
 
 	public final boolean isRunning() {
 		return running;
+	}
+
+	public void resetRequestsThisTick() {
+		requestsProcessedThisTick = 0;
 	}
 }

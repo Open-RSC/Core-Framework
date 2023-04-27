@@ -575,6 +575,9 @@ public class Server implements Runnable {
 					// Set us to be in the next tick.
 					advanceTicks(1);
 
+					// allow more players to login now that a tick has been processed
+					getWorld().getServer().getLoginExecutor().resetRequestsThisTick();
+
 					// Clear out the outgoing and incoming packet processing time frames
 					incomingTimePerPacketOpcode.clear();
 					incomingCountPerPacketOpcode.clear();
