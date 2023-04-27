@@ -15,6 +15,7 @@ import com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs.Leg
 import com.openrsc.server.plugins.authentic.skills.mining.Mining;
 import com.openrsc.server.plugins.authentic.skills.thieving.Thieving;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
+public class LegendsQuestGameObjects implements TakeObjTrigger, OpLocTrigger, UseLocTrigger {
 
 	// Objects
 	private static final int LEGENDS_CUPBOARD = 1149;
@@ -63,6 +64,50 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 	private static final int CRAFTED_TOTEM_POLE = 1111;
 	private final int[] REFILLABLE = {1188, 1266, 21, 140, 341, 465};
 	private final int[] REFILLED = {1189, 1267, 50, 141, 342, 464};
+
+	@Override
+	public boolean blockTakeObj(Player player, GroundItem i) {
+		int groundItemId = i.getID();
+		int groundItemX = i.getX();
+		int groundItemY = i.getY();
+		return (groundItemId == ItemId.OPAL.id() && groundItemX == 471 && groundItemY == 3722)
+			|| (groundItemId == ItemId.EMERALD.id() && groundItemX == 474 && groundItemY == 3730)
+			|| (groundItemId == ItemId.RUBY.id() && groundItemX == 471 && groundItemY == 3734)
+			|| (groundItemId == ItemId.DIAMOND.id() && groundItemX == 466 && groundItemY == 3739)
+			|| (groundItemId == ItemId.SAPPHIRE.id() && groundItemX == 460 && groundItemY == 3737)
+			|| (groundItemId == ItemId.RED_TOPAZ.id() && groundItemX == 464 && groundItemY == 3730)
+			|| (groundItemId == ItemId.JADE.id() && groundItemX == 469 && groundItemY == 3728);
+	}
+
+	@Override
+	public void onTakeObj(Player player, GroundItem i) {
+		int[] gemArray = new int[] {
+			ItemId.OPAL.id(),
+			ItemId.EMERALD.id(),
+			ItemId.RUBY.id(),
+			ItemId.DIAMOND.id(),
+			ItemId.SAPPHIRE.id(),
+			ItemId.RED_TOPAZ.id(),
+			ItemId.JADE.id()
+		};
+		int attachMode = 0;
+		int thisGemId = i.getID();
+
+		for (int gemId : gemArray) {
+			attachMode++;
+			if (thisGemId == gemId) {
+				break;
+			}
+		}
+		//Player should only be able to take the gem when they first attach it. Unknown if there was a response in other circumstances... for now, nothing.
+		if (player.getCache().hasKey("legends_attach_" + attachMode) && player.getCache().getInt("legends_attach_" + attachMode) == 1) {
+			//Per replay: /Logg/Tylerbeg/07-27-2018 00.48.17 almost got booking of binding
+			mes("You take the " + i.getDef().getName() + ".");
+			player.getWorld().unregisterItem(i);
+			give(player, thisGemId, 1);
+			player.getCache().remove("legends_attach_" + attachMode);
+		}
+	}
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
@@ -228,44 +273,57 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			mes("@gre@'Ordered in stature to retrieve what's mine.'");
 			delay();
 			String gem = "";
+			int gemId = -1;
 			boolean attached = false;
+			int attachMode = -1;
 			// opal
 			if (obj.getX() == 471 && obj.getY() == 3722) {
 				gem = "Opal";
-				attached = player.getCache().hasKey("legends_attach_1");
+				gemId = ItemId.OPAL.id();
+				attachMode = 1;
 			}
 			// emerald
 			else if (obj.getX() == 474 && obj.getY() == 3730) {
 				gem = "Emerald";
-				attached = player.getCache().hasKey("legends_attach_2");
+				gemId = ItemId.EMERALD.id();
+				attachMode = 2;
 			}
 			// ruby
 			else if (obj.getX() == 471 && obj.getY() == 3734) {
 				gem = "Ruby";
-				attached = player.getCache().hasKey("legends_attach_3");
+				gemId = ItemId.RUBY.id();
+				attachMode = 3;
 			}
 			// diamond
 			else if (obj.getX() == 466 && obj.getY() == 3739) {
 				gem = "Diamond";
-				attached = player.getCache().hasKey("legends_attach_4");
+				gemId = ItemId.DIAMOND.id();
+				attachMode = 4;
 			}
 			// sapphire
 			else if (obj.getX() == 460 && obj.getY() == 3737) {
 				gem = "Sapphire";
-				attached = player.getCache().hasKey("legends_attach_5");
+				gemId = ItemId.SAPPHIRE.id();
+				attachMode = 5;
 			}
 			// red topaz
 			else if (obj.getX() == 464 && obj.getY() == 3730) {
 				gem = "Topaz";
-				attached = player.getCache().hasKey("legends_attach_6");
+				gemId = ItemId.RED_TOPAZ.id();
+				attachMode = 6;
 			}
 			// jade
 			else if (obj.getX() == 469 && obj.getY() == 3728) {
 				gem = "Jade";
-				attached = player.getCache().hasKey("legends_attach_7");
+				gemId = ItemId.JADE.id();
+				attachMode = 7;
 			}
+			attached = player.getCache().hasKey("legends_attach_" + attachMode);
 
 			if (!gem.equals("") && attached) {
+				//Set this to 2 so the gem cannot be taken at this point.
+				player.getCache().set("legends_attach_" + attachMode, 2);
+				if (gemId > -1) createGroundItemDelayedRemove(new GroundItem(player.getWorld(), gemId, obj.getX(), obj.getY(), 1, player), config().GAME_TICK * 8);
 				mes("A barely visible " + gem + " becomes clear again, spinning above the rock.");
 				delay(2);
 				mes("And then fades again...");
@@ -1013,11 +1071,15 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					} else if (item.getCatalogId() == ItemId.JADE.id() && obj.getX() == 469 && obj.getY() == 3728) { // JADE ROCK
 						attachmentMode = 7;
 					}
+
+					int prevAttachMode = attachmentMode; //Not sure why this is set to -1 again?
 					if (player.getCache().hasKey("legends_attach_" + attachmentMode)) {
 						alreadyAttached = true;
 						attachmentMode = -1;
 					}
 					if (alreadyAttached) {
+						//Set this to 2 so the gem cannot be retrieved at this point.
+						player.getCache().set("legends_attach_" + prevAttachMode, 2);
 						player.message("You have already placed an " + item.getDef(player.getWorld()).getName() + " above this rock.");
 						createGroundItemDelayedRemove(new GroundItem(player.getWorld(), item.getCatalogId(), obj.getX(), obj.getY(), 1, player), config().GAME_TICK * 8);
 						mes("A barely visible " + item.getDef(player.getWorld()).getName() + " becomes clear again, spinning above the rock.");
@@ -1030,7 +1092,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 							player.message("The " + item.getDef(player.getWorld()).getName() + " glows and starts spinning as it hovers above the rock.");
 							createGroundItemDelayedRemove(new GroundItem(player.getWorld(), item.getCatalogId(), obj.getX(), obj.getY(), 1, player), config().GAME_TICK * 8);
 							if (!player.getCache().hasKey("legends_attach_" + attachmentMode)) {
-								player.getCache().store("legends_attach_" + attachmentMode, true);
+								player.getCache().set("legends_attach_" + attachmentMode, 1);
 							}
 							if (player.getCache().hasKey("legends_attach_1")
 								&& player.getCache().hasKey("legends_attach_2")

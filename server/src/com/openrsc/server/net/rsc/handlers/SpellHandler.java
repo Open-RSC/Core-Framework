@@ -1181,6 +1181,24 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						for (int item : ungrabbableArr) {
 							ungrabbables.add(item);
 						}
+
+						int groundItemId = affectedItem.getID();
+						int groundItemX = affectedItem.getX();
+						int groundItemY = affectedItem.getY();
+
+						//Carved rock gems should not be able to be telegrabbed, per Shasta.
+						boolean isLegendsQuestGem = (groundItemId == ItemId.OPAL.id() && groundItemX == 471 && groundItemY == 3722)
+							|| (groundItemId == ItemId.EMERALD.id() && groundItemX == 474 && groundItemY == 3730)
+							|| (groundItemId == ItemId.RUBY.id() && groundItemX == 471 && groundItemY == 3734)
+							|| (groundItemId == ItemId.DIAMOND.id() && groundItemX == 466 && groundItemY == 3739)
+							|| (groundItemId == ItemId.SAPPHIRE.id() && groundItemX == 460 && groundItemY == 3737)
+							|| (groundItemId == ItemId.RED_TOPAZ.id() && groundItemX == 464 && groundItemY == 3730)
+							|| (groundItemId == ItemId.JADE.id() && groundItemX == 469 && groundItemY == 3728);
+
+						if (isLegendsQuestGem) {
+							return;
+						}
+
 						if (affectedItem.getID() == ItemId.PRESENT.id()) {
 							return;
 						} else if (ungrabbables.contains(affectedItem.getID())) { // list of ungrabbable items sharing this message
