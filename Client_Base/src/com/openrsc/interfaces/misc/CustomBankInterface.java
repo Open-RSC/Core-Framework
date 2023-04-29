@@ -45,6 +45,7 @@ public final class CustomBankInterface extends BankInterface {
 	private int x, y;
 	private int[] bankItemSelector = {0, 0, 40, 80, 120, 160, 200};
 	private BankTabShow bankTabShow = BankTabShow.FIRST_ITEM_IN_TAB;
+	private long totalWealth;
 
 	public CustomBankInterface(mudclient mc) {
 		super(mc);
@@ -107,7 +108,8 @@ public final class CustomBankInterface extends BankInterface {
 		mc.getSurface().drawBoxAlpha(x, y + 21, width, 309, colour, 160);
 		mc.getSurface().drawBoxBorder(x, width, y, 331, 0x000000);
 
-		drawString("The Bank of " + Config.SERVER_NAME, x + 196, y + 15, 1, 0xFFFFFF);
+		int wealthLength = String.valueOf(totalWealth).length();
+		drawString("Total wealth: " + this.totalWealth + " gp", x + (196 - (4 * wealthLength)), y + 15, 1, 0xFFFF00);
 
 		int j3 = 0xFFFFFF;
 		if (mc.getMouseX() > x + 415 && mc.getMouseY() >= y && mc.getMouseX() < x + width && mc.getMouseY() < y + 12 + 9) {
@@ -1423,6 +1425,26 @@ public final class CustomBankInterface extends BankInterface {
 						y + 21 + mc.equipIconYLocations[i] + 11, 0xFFFF00, 1);
 			}
 		}
+	}
+
+	/**
+	 * Calculate the value of the player's tradeable items
+	 */
+	public void calculateWealth() {
+		long totalWealth = 0;
+		for (BankItem item : bankItems) {
+			// Get the item's definition
+			ItemDef itemDef = item.getItem().getItemDef();
+			int amount = item.getItem().getAmount();
+
+			if (itemDef == null) continue;
+
+			if (!itemDef.untradeable) {
+				totalWealth += (itemDef.getBasePrice() * amount);
+			}
+		}
+
+		this.totalWealth = totalWealth;
 	}
 
 	public static class Preset {

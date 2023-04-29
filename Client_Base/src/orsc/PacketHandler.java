@@ -2173,6 +2173,10 @@ public class PacketHandler {
 			mc.getBank().addBank(slot, packetsIncoming.getShort(), packetsIncoming.get32());
 		}
 
+		if (Config.S_WANT_CUSTOM_BANKS) {
+			mc.getBank().calculateWealth();
+		}
+
 		// Discord update
 		Discord.setLastUpdate("Banking");
 	}
@@ -2271,6 +2275,9 @@ public class PacketHandler {
 		int item = packetsIncoming.getShort();
 		int itemCount = packetsIncoming.get32();
 		mc.getBank().updateBank(slot, item, itemCount);
+		if (Config.S_WANT_CUSTOM_BANKS) {
+			mc.getBank().calculateWealth();
+		}
 	}
 
 	private void updateExperience() {
