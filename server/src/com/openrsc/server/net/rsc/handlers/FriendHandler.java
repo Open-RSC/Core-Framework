@@ -31,6 +31,8 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 		long friendHash = DataConversions.usernameToHash(friendName);
 
 		int maxFriends = actualFriendListLimit(player);
+		int maxIgnore = player.getClientLimitations().maxIgnore;
+
 		boolean friendIsGlobal = (friendName.equalsIgnoreCase("Global$") ||
 			(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL));
 
@@ -108,7 +110,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 			}
 			case SOCIAL_ADD_IGNORE: {
 				if (friendName.equalsIgnoreCase("")) return;
-				if (player.getSocial().ignoreCount() >= maxFriends) {
+				if (player.getSocial().ignoreCount() >= maxIgnore) {
 					player.message("Ignore list full");
 					ActionSender.sendIgnoreList(player);
 					return;
@@ -190,7 +192,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				break;
 			}
 			case SOCIAL_ADD_DELAYED_IGNORE: {
-				if (player.getSocial().ignoreCount() >= maxFriends) {
+				if (player.getSocial().ignoreCount() >= maxIgnore) {
 					player.message("Ignore list full");
 					return;
 				}

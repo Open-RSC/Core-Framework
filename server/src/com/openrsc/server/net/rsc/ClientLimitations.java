@@ -8,7 +8,7 @@ public class ClientLimitations {
 	public int maxAnimationId, maxItemId, maxNpcId, maxSceneryId, maxPrayerId, maxSpellId,
 		maxSkillId, maxRoofId, maxTextureId, maxTileId, maxBoundaryId, maxTeleBubbleId,
 		maxProjectileSprite, maxSkinColor, maxHairColor, maxClothingColor, maxQuestId,
-		maxDialogueOptions, maxBankItems, maxServerId, maxFriends;
+		maxDialogueOptions, maxBankItems, maxServerId, maxFriends, maxIgnore;
 	public String mapHash;
 	int supportsModSprites = NO_SUPPORT;
 	int numberOfSounds = NO_SUPPORT;
@@ -30,6 +30,7 @@ public class ClientLimitations {
 
 	public void setKnownLimitations(int clientVersion) {
 		maxFriends = 50;
+		maxIgnore = 50;
 		if (clientVersion >= 38 && clientVersion <= 40) {
 			maxAnimationId = 115;
 			maxItemId = 306;
@@ -196,9 +197,11 @@ public class ClientLimitations {
 		if (clientVersion >= 185) {
 			supportsSystemUpdateTimer = true;
 		}
-		if (clientVersion >= 205) {
-			// guessed
+		if (clientVersion >= 196) {
 			maxFriends = 200;
+		}
+		if (clientVersion >= 200) {
+			maxIgnore = 100;
 		}
 	}
 
