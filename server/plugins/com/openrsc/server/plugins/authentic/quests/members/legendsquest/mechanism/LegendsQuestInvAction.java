@@ -26,12 +26,37 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 			ItemId.SCRIBBLED_NOTES.id(), ItemId.SCRAWLED_NOTES.id(), ItemId.SCATCHED_NOTES.id(),
 			ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), ItemId.SHAMANS_TOME.id(), ItemId.BOOKING_OF_BINDING.id(),
 			ItemId.YOMMI_TREE_SEED.id(), ItemId.GERMINATED_YOMMI_TREE_SEED.id(),
-			ItemId.A_RED_CRYSTAL.id(), ItemId.HOLY_FORCE_SPELL.id(), ItemId.GILDED_TOTEM_POLE.id());
+			ItemId.A_RED_CRYSTAL.id(), ItemId.HOLY_FORCE_SPELL.id(),
+			ItemId.GILDED_TOTEM_POLE.id(), ItemId.GUJUO_POTION.id());
 	}
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if (item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
+		if (item.getCatalogId() == ItemId.GUJUO_POTION.id()) {
+			player.message("Are you sure you want to drink this?");
+			int drink = multi(player,
+				"Yes, I'm sure...",
+				"No, I've had second thoughts...");
+			if (drink == 0) {
+				if (player.getCarriedItems().remove(new Item(ItemId.GUJUO_POTION.id())) == -1) return;
+				player.message("You drink the potion...");
+				give(player, ItemId.EMPTY_VIAL.id(), 1);
+				if (!player.getCache().hasKey("gujuo_potion")) {
+					player.getCache().store("gujuo_potion", true);
+				}
+				say(player, null, "Mmmm.....");
+				delay(2);
+				player.message("It tastes sort of strange...like fried oranges...");
+				say(player, null, ".....!.....");
+				delay(2);
+				player.message("You feel somehow different...");
+				delay(2);
+				say(player, null, "Let's just hope that this isn't a placibo!");
+			} else if (drink == 1) {
+				player.message("You decide against drinking the potion...");
+			}
+		}
+		else if (item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
 			mes("This totem pole is utterly awe inspiring.");
 			delay(2);
 			mes("Perhaps you should show it to Radimus Erkle...");

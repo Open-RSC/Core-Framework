@@ -96,14 +96,10 @@ public class DragonFireBreath implements OnCombatStartScript {
 			}
 			player.damage(fireDamage);
 
-			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			//reduce ranged level (case for KBD if engaging with melee or ranging)
 			if (dragon.getID() == NpcId.KING_BLACK_DRAGON.id() && (player.isRanging() || attacker.isPlayer())) {
 				int newLevel = getCurrentLevel(player, Skill.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(player);
-				player.getSkills().setLevel(Skill.RANGED.id(), newLevel, sendUpdate);
-				if (!sendUpdate) {
-					player.getSkills().sendUpdateAll();
-				}
+				player.getSkills().setLevel(Skill.RANGED.id(), newLevel, true, false);
 			}
 		}
 	}

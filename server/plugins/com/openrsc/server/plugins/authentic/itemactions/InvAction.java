@@ -593,29 +593,11 @@ public class InvAction implements OpInvTrigger {
 		mes("You eat the Jangerberries");
 		delay(3);
 		if (player.getCarriedItems().remove(new Item(ItemId.JANGERBERRIES.id())) == -1) return;
-		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
-		int attack = player.getSkills().getMaxStat(Skill.ATTACK.id()) + 2;
-		int strength = player.getSkills().getMaxStat(Skill.STRENGTH.id()) + 1;
-		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
-			player.getSkills().setLevel(Skill.HITS.id(), player.getSkills().getLevel(Skill.HITS.id()) + 2, sendUpdate);
-		}
-		if (player.getSkills().getLevel(Skill.PRAYER.id()) < player.getSkills().getMaxStat(Skill.PRAYER.id())) {
-			player.getSkills().setLevel(Skill.PRAYER.id(), player.getSkills().getLevel(Skill.PRAYER.id()) + 1, sendUpdate);
-		}
-		if (player.getSkills().getLevel(Skill.DEFENSE.id()) < 1) {
-			player.getSkills().setLevel(Skill.DEFENSE.id(), 0, sendUpdate);
-		} else {
-			player.getSkills().setLevel(Skill.DEFENSE.id(), player.getSkills().getLevel(Skill.DEFENSE.id()) - 1, sendUpdate);
-		}
-		if (player.getSkills().getLevel(Skill.ATTACK.id()) < attack) {
-			player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) + 1, sendUpdate);
-		}
-		if (player.getSkills().getLevel(Skill.STRENGTH.id()) < strength) {
-			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 1, sendUpdate);
-		}
-		if (!sendUpdate) {
-			player.getSkills().sendUpdateAll();
-		}
+		addstat(player, Skill.ATTACK.id(), 2, 0);
+		substat(player, Skill.DEFENSE.id(), 1, 0);
+		addstat(player, Skill.STRENGTH.id(), 1, 0);
+		healstat(player, Skill.HITS.id(), 2, 0);
+		healstat(player, Skill.PRAYER.id(), 1, 0);
 		player.message("They taste very bitter");
 	}
 

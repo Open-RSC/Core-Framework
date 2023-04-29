@@ -389,6 +389,72 @@ public class Functions {
 	}
 
 	/**
+	 * Temporarily adds constant+(current*percent)/100 to the player's specified stat.
+	 * @param statId The ID of the skill to be changed
+	 * @param constant Constant number for addition
+	 * @param percent Percentage of current skill level to add
+	 */
+	public static void addstat(final Player player, final int statId, final int constant, final int percent) {
+		final int maxStat = player.getSkills().getMaxStat(statId);
+		final int currentLevel = player.getSkills().getLevel(statId);
+		final int maxBoost = maxStat + constant + (int)((maxStat * percent) / 100.0);
+		int newLevel = currentLevel + constant + (int)((currentLevel * percent) / 100.0);
+		if (newLevel > maxBoost)
+			newLevel = maxBoost;
+		player.getSkills().setLevel(statId, newLevel, true, false);
+	}
+
+	/**
+	 * Temporarily subtracts constant+(current*percent)/100 from the player's specified stat.
+	 * @param statId The ID of the skill to be changed
+	 * @param constant Constant number for addition
+	 * @param percent Percentage of current skill level to add
+	 */
+	public static void substat(final Player player, final int statId, final int constant, final int percent) {
+		final int currentLevel = player.getSkills().getLevel(statId);
+		final int damage = constant + (int)((currentLevel * percent) / 100.0);
+		if (statId == Skill.HITS.id()) {
+			// We don't know whether the runescript function would have
+			// created a damage splat, but we know that the potion of zamorak
+			// does and is implemented with runescript.
+			player.damage(damage);
+			return;
+		}
+		final int newLevel = currentLevel - damage;
+		player.getSkills().setLevel(statId, newLevel, true, false);
+	}
+
+	/**
+	 * Temporarily adds constant+(current*percent)/100 to the player's specified stat.
+	 * Will not take the player's stat above the normal level.
+	 * @param statId The ID of the skill to be changed
+	 * @param constant Constant number for addition
+	 * @param percent Percentage of current skill level to add
+	 */
+	public static void healstat(final Player player, final int statId, final int constant, final int percent) {
+		final int currentLevel = player.getSkills().getLevel(statId);
+		final int newLevel = currentLevel + constant + (int)((currentLevel * percent) / 100.0);
+		player.getSkills().setLevel(statId,
+			Math.min(newLevel, player.getSkills().getMaxStat(statId)), true, false);
+	}
+
+	/**
+	 * Returns true if the mob's stat is temporarily raised.
+	 * @param statId The ID of the skill
+	 */
+	public static boolean isstatup(Mob mob, int statId) {
+		return mob.getSkills().getLevel(statId) > mob.getSkills().getMaxStat(statId);
+	}
+
+	/**
+	 * Returns true if the mob's stat is temporarily lowered.
+	 * @param statId The ID of the skill
+	 */
+	public static boolean isstatdown(Mob mob, int statId) {
+		return mob.getSkills().getLevel(statId) < mob.getSkills().getMaxStat(statId);
+	}
+
+	/**
 	 * Creates a new ground item
 	 *
 	 * @param id
@@ -1314,8 +1380,7 @@ public class Functions {
 	}
 
 	public static void setCurrentLevel(Player player, int skill, int level) {
-		player.getSkills().setLevel(skill, level);
-		ActionSender.sendStat(player, skill);
+		player.getSkills().setLevel(skill, level, true, false);
 	}
 
 	public static void displayTeleportBubble(Player player, int x, int y, boolean teleGrab) {

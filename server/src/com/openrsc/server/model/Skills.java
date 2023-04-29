@@ -428,4 +428,14 @@ public class Skills {
 	public Mob getMob() {
 		return mob;
 	}
+
+	public Skill[] getMagicSkills() {
+		return mob.getConfig().DIVIDED_GOOD_EVIL ?
+			new Skill[] { Skill.GOODMAGIC, Skill.EVILMAGIC } : new Skill[] { Skill.MAGIC };
+	}
+
+	public Skill[] getPrayerSkills() {
+		return mob.getConfig().DIVIDED_GOOD_EVIL ?
+			new Skill[] { Skill.PRAYGOOD, Skill.PRAYEVIL } : new Skill[] { Skill.PRAYER };
+	}
 }

@@ -438,9 +438,7 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
-		player.getSkills().setLevel(statId, newLevel);
+		Functions.addstat(player, statId, constant, percent);
 	}
 
 	/**
@@ -455,9 +453,7 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel - (int)(constant + (currentLevel * percent) / 100.0);
-		player.getSkills().setLevel(statId, newLevel);
+		Functions.substat(player, statId, constant, percent);
 	}
 
 	/**
@@ -473,10 +469,7 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
-		player.getSkills().setLevel(statId,
-			Math.min(newLevel, player.getSkills().getMaxStat(statId)));
+		Functions.healstat(player, statId, constant, percent);
 	}
 
 	/**
@@ -490,7 +483,7 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		final boolean isStatUp = player.getSkills().getLevel(statId) > player.getSkills().getMaxStat(statId);
+		final boolean isStatUp = Functions.isstatup(player, statId);
 		scriptContext.setExecutionFlag(isStatUp);
 		return isStatUp;
 	}
@@ -506,7 +499,7 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		final boolean isStatDown = player.getSkills().getLevel(statId) < player.getSkills().getMaxStat(statId);
+		final boolean isStatDown = Functions.isstatdown(player, statId);
 		scriptContext.setExecutionFlag(isStatDown);
 		return isStatDown;
 	}
