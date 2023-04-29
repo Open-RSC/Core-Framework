@@ -35,8 +35,13 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 				"These items will now have appeared in your inventory",
 				"You can access them by selecting the bag icon in the menu bar",
 				"which can be found in the top right hand corner of the screen",
-				"To wield your weapon and shield left click on them within your inventory",
-				"their box will go red to show you are wearing them");
+				"To wield your weapon and shield left click on them within your inventory");
+			if (config().WANT_EQUIPMENT_TAB) {
+				npcsay(player, n, "they will then be added to your equipment tab",
+					"which you can view by clicking the Equipment button at the bottom of the inventory");
+			} else {
+				npcsay(player, n, "their box will go red to show you are wearing them");
+			}
 			player.message("When you have done this speak to the combat instructor again");
 			player.getCache().set("tutorial", 16);
 		} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 16) {
@@ -63,8 +68,13 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 				npcsay(player, n, "You need to wield your equipment",
 						"You can access it by selecting the bag icon",
 						"which can be found in the top right hand corner of the screen",
-						"To wield your weapon and shield left click on them",
-						"their boxs will go red to show you are wearing them");
+						"To wield your weapon and shield left click on them");
+				if (config().WANT_EQUIPMENT_TAB) {
+					npcsay(player, n, "they will then be added to your equipment tab",
+						"which you can view by clicking the Equipment button at the bottom of the inventory");
+				} else {
+					npcsay(player, n, "their boxs will go red to show you are wearing them");
+				}
 				player.message("When you have done this speak to the combat instructor again");
 			}
 		} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") >= 20) {

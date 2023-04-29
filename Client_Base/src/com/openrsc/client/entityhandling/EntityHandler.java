@@ -2303,6 +2303,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Kresh", "He's kind of like an onion", "", 123, 123, 123, 123, false, sprites, 0, 0xFFFFFF, 0x802415, 0xb5ff1d, 160, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 1, 2, -1, -1, -1, -1, -1, 46, -1, 10, 519};
 		npcs.add(new NPCDef("Lily", "She has a green thumb", "", 1, 1, 10, 1, false, sprites, 0xEEBB70, 0x006600, 0x663300, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Peter Skippin", "Shut up, Meg", "", 20, 20, 20, 20, false, sprites, 11167296, 0xFFFFFF, 0x014E00, 15523536, 145, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael

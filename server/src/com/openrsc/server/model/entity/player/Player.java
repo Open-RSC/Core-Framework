@@ -2159,6 +2159,16 @@ public final class Player extends Mob {
 		ActionSender.sendSound(this, "death");
 		ActionSender.sendDied(this);
 
+		// Cabbage tutorial skip
+		if (this.getLocation().onTutorialIsland()
+			&& (mob.isNpc() && mob.getID() == NpcId.PETER_SKIPPIN.id())) {
+			killed = false;
+			resetCombatEvent();
+			setLastOpponent(null);
+			skipTutorial();
+			return;
+		}
+
 		// Seems to never be set
 		final ProjectileEvent projectileEvent = getAttribute("projectile");
 		if (projectileEvent != null) projectileEvent.setCanceled(true);

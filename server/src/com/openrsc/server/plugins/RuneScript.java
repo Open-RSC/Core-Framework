@@ -1374,7 +1374,7 @@ public class RuneScript {
 		final Npc npc = scriptContext.getInteractingNpc();
 		if (npc == null) return;
 
-		npc.setChasing(player);
+		npc.startCombat(player);
 	}
 
 	/**

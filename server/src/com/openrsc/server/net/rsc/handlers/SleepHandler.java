@@ -16,7 +16,7 @@ public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeI
 		if (!player.isSleeping()) {
 			return;
 		}
-		
+
 		String sleepWord;
 		if (player.isUsing233CompatibleClient()) {
 			int sleepDelay = payload.sleepDelay; // TODO: use this somehow
@@ -112,7 +112,6 @@ public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeI
 	}
 
 	private void handleExpToggle(Player player) {
-		if (player.getLocation().onTutorialIsland()) return;
 		player.toggleFreezeXp();
 		ActionSender.sendExperienceToggle(player);
 		if (player.isExperienceFrozen())
