@@ -294,6 +294,7 @@ public class ServerConfiguration {
 	public boolean LACKS_GOLD_SMITHING;
 	public boolean NPC_AGGRO_DONT_CHECK_LEVEL;
 	public boolean CANT_DYE_CAPES;
+	public boolean RETRO_RANGED_DAMAGE;
 
 	public boolean OSRS_COMBAT_MELEE;
 	public boolean OSRS_COMBAT_RANGED;
@@ -506,6 +507,7 @@ public class ServerConfiguration {
 		LACKS_GOLD_SMITHING = tryReadBool("lacks_gold_smithing").orElse(false);
 		NPC_AGGRO_DONT_CHECK_LEVEL = tryReadBool("npc_aggro_dont_check_level").orElse(false);
 		CANT_DYE_CAPES = tryReadBool("cant_dye_capes").orElse(false);
+		RETRO_RANGED_DAMAGE = tryReadBool("retro_ranged_damage").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);
