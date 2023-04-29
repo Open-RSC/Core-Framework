@@ -601,7 +601,6 @@ public final class SkillGuideInterface {
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(405, "1", "All axes"));
 			} else if (curTab == 2) {
-				skillMenuEntries.add(new SkillMenuItem(88, "", "Woodcutting Guild (Coming soon)"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1525, "99", "Woodcutting Cape"));
 				}
@@ -791,6 +790,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(108, "7", "Bronze Full Helms - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(1076, "7", "Bronze Throwing Knives - 1 Bar makes 2"));
 				skillMenuEntries.add(new SkillMenuItem(124, "8", "Bronze Square Shields - 2 Bars"));
+				skillMenuEntries.add(new SkillMenuItem(1418, "9", "Bronze Chaim Mail Legs - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(205, "10", "Bronze Battleaxes - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(113, "11", "Bronze Chainbodies - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(128, "12", "Bronze Kiteshields - 3 Bars"));
@@ -811,6 +811,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(6, "22", "Iron Full Helms - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(1075, "22", "Iron Throwing Knives - 1 Bar makes 2"));
 				skillMenuEntries.add(new SkillMenuItem(3, "23", "Iron Square Shields - 2 Bars"));
+				skillMenuEntries.add(new SkillMenuItem(1419, "23", "Iron Chain Mail Legs - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(89, "25", "Iron Battleaxes - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(7, "26", "Iron Chainbodies - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(2, "27", "Iron Kiteshields - 3 Bars"));
@@ -833,6 +834,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(109, "37", "Steel Full Helms - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(1077, "37", "Steel Throwing Knives - 1 Bar makes 2"));
 				skillMenuEntries.add(new SkillMenuItem(125, "38", "Steel Square Shields - 2 Bars"));
+				skillMenuEntries.add(new SkillMenuItem(1420, "39", "Steel Chain Mail Legs - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(90, "40", "Steel Battleaxes - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(114, "41", "Steel Chainbodies - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(129, "42", "Steel Kiteshields - 3 Bars"));
@@ -853,6 +855,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(110, "57", "Mithril Full Helms - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(1078, "57", "Mithril Throwing Knives - 1 Bar makes 2"));
 				skillMenuEntries.add(new SkillMenuItem(126, "58", "Mithril Square Shields - 2 Bars"));
+				skillMenuEntries.add(new SkillMenuItem(1421, "59", "Mithril Chain Mail Legs - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(91, "60", "Mithril Battleaxes - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(115, "61", "Mithril Chainbodies - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(130, "62", "Mithril Kiteshields - 3 Bars"));
@@ -869,10 +872,11 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1066, "74", "Adamantite Dart Tips - 1 Bar makes 7"));
 				skillMenuEntries.add(new SkillMenuItem(86, "75", "Adamant Scimitars - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(673, "75", "Adamant Arrowheads - 1 Bar makes 10"));
-				skillMenuEntries.add(new SkillMenuItem(71, "76", "Adamant Longswords - 2 Bars"));
+				skillMenuEntries.add(new SkillMenuItem(74, "76", "Adamant Longswords - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(111, "77", "Adamant Full Helms - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(1079, "77", "Adamant Throwing Knives - 1 Bar makes 2"));
 				skillMenuEntries.add(new SkillMenuItem(127, "78", "Adamant Square Shields - 2 Bars"));
+				skillMenuEntries.add(new SkillMenuItem(1422, "79", "Adamant Chain Mail Legs - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(92, "80", "Adamant Battleaxes - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(116, "81", "Adamant Chainbodies - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(131, "82", "Adamant Kiteshields - 3 Bars"));
@@ -893,6 +897,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(112, "92", "Rune Full Helms - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(1080, "92", "Rune Throwing Knives - 1 Bar makes 2"));
 				skillMenuEntries.add(new SkillMenuItem(403, "93", "Rune Square Shields - 2 Bars"));
+				skillMenuEntries.add(new SkillMenuItem(1423, "94", "Rune Chain Mail Legs - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(93, "95", "Rune Battleaxes - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(400, "96", "Rune Chainbodies - 3 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(404, "97", "Rune Kiteshields - 3 Bars"));

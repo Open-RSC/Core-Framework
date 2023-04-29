@@ -1227,41 +1227,23 @@ public class DoorAction {
 				player.message("and walk through");
 				return;
 
-			case 356: // McGrouber's Wood / Woodcutting Guild Gate (560, 472)
+			case 356: // McGrouber's Wood (560, 472)
 				if (obj.getX() != 560 || obj.getY() != 472) {
 					return;
 				}
 				if (player.getY() <= 472) {
-					if (config().WANT_WOODCUTTING_GUILD) {
-						doGate(player, obj);
-					} else { // deny exit if not woodcut guild
-						player.playerServerMessage(MessageType.QUEST, "the gate is locked");
-					}
+					player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 				} else {
-					if (config().WANT_WOODCUTTING_GUILD) {
-						if (getCurrentLevel(player, Skill.WOODCUTTING.id()) < 70) {
-							final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
-								468, 472);
-							if (forester != null) {
-								npcsay(player, forester, "Hello only the top woodcutters are allowed in here");
-							}
-							delay(2);
-							player.message("You need a woodcutting level of 70 to enter");
-						} else {
-							doGate(player, obj);
-						}
-					} else { // Deny Entry
-						final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
-							468, 472);
-						if (forester != null) {
-							npcsay(player, forester, "Hey you can't come through here", "This is private land");
-							delay(2);
-							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
-						} else {
-							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
-							delay(2);
-							player.playerServerMessage(MessageType.QUEST, "the gate is locked");
-						}
+					// 8 is the authentic radius for ifnearvisnpc, however this could have used ifnearnpc which has a radius of 16
+					final Npc forester = ifnearvisnpc(player, NpcId.FORESTER.id(), 8);
+					if (forester != null) {
+						npcsay(player, forester, "Hey you can't come through here", "This is private land");
+						delay(2);
+						player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
+					} else {
+						player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
+						delay(2);
+						player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 					}
 				}
 				return;
