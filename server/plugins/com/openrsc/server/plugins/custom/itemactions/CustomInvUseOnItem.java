@@ -16,18 +16,26 @@ public class CustomInvUseOnItem implements UseInvTrigger {
 		if (item1.getItemStatus().getNoted() || item2.getItemStatus().getNoted()) return;
 
 		if (compareItemsIds(item1, item2, ItemId.COCONUT.id(), ItemId.MACHETTE.id())) {
-			if (player.getCarriedItems().remove(new Item(ItemId.COCONUT.id())) > -1) {
-				player.message("You slice open the coconut with the machette");
-				player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_COCONUT.id()));
+			int repeat = 1;
+			if (config().BATCH_PROGRESSION) {
+				repeat = player.getCarriedItems().getInventory().countId(ItemId.COCONUT.id());
 			}
+
+			startbatch(repeat);
+			batchSlice(player, new Item(ItemId.COCONUT.id()), new Item(ItemId.MACHETTE.id()),
+				ItemId.HALF_COCONUT.id(), "You slice open the coconut with the machette");
 			return;
 		}
 
 		else if (compareItemsIds(item1, item2, ItemId.DRAGONFRUIT.id(), ItemId.KNIFE.id())) {
-			if (player.getCarriedItems().remove(new Item(ItemId.DRAGONFRUIT.id())) > -1) {
-				player.message("You peel the dragonfruit with the knife");
-				player.getCarriedItems().getInventory().add(new Item(ItemId.SLICED_DRAGONFRUIT.id()));
+			int repeat = 1;
+			if (config().BATCH_PROGRESSION) {
+				repeat = player.getCarriedItems().getInventory().countId(ItemId.DRAGONFRUIT.id());
 			}
+
+			startbatch(repeat);
+			batchSlice(player, new Item(ItemId.DRAGONFRUIT.id()), new Item(ItemId.KNIFE.id()),
+				ItemId.SLICED_DRAGONFRUIT.id(), "You peel the dragonfruit with the knife");
 			return;
 		}
 
@@ -65,6 +73,26 @@ public class CustomInvUseOnItem implements UseInvTrigger {
 			batchSweeten(player, item1, item2, ItemId.SWEETENED_SLICES.id(), "You sweeten the fruit slices");
 
 			return;
+		}
+	}
+
+	private void batchSlice(Player player, Item toSlice, Item tool, int sliceId, String sliceString) {
+		// Make sure they still have the tool
+		if (!player.getCarriedItems().getInventory().hasCatalogID(tool.getCatalogId(), false)) {
+			return;
+		}
+
+		// Make sure they still have the item to be sliced
+		if (player.getCarriedItems().remove(toSlice) > -1) {
+			player.message(sliceString);
+			player.getCarriedItems().getInventory().add(new Item(sliceId));
+		}
+
+		// Repeat
+		updatebatch();
+		if (!ifinterrupted() && !isbatchcomplete()) {
+			delay();
+			batchSlice(player, toSlice, tool, sliceId, sliceString);
 		}
 	}
 

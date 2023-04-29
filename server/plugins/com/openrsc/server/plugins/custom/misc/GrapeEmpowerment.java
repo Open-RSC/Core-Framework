@@ -142,18 +142,37 @@ public class GrapeEmpowerment implements UseInvTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You need level 70 cooking to do this");
 				return;
 			}
-			player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
-			player.getCarriedItems().remove(new Item(item1.getCatalogId()));
-			player.getCarriedItems().remove(new Item(item2.getCatalogId()));
-			delay(5);
-			if (Formulae.calcProductionSuccessfulLegacy(70, player.getSkills().getLevel(Skill.COOKING.id()), true, 105)) {
-				player.playerServerMessage(MessageType.QUEST, "You make some powerful wine");
-				player.getCarriedItems().getInventory().add(new Item(resultWineId));
-				player.incExp(Skill.COOKING.id(), 550, true);
-			} else {
-				player.playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
-				player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_OR_UNFERMENTED_WINE.id()));
+
+			int repeat = 1;
+			if (config().BATCH_PROGRESSION) {
+				repeat = Math.min(player.getCarriedItems().getInventory().countId(item1.getCatalogId(), Optional.of(false)),
+					player.getCarriedItems().getInventory().countId(item2.getCatalogId(), Optional.of(false)));
 			}
+
+			startbatch(repeat);
+			batchPowerfulWineMaking(player, item1, item2, resultWineId);
+		}
+	}
+
+	private void batchPowerfulWineMaking(Player player, Item item1, Item item2, int resultWineId) {
+		player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
+		player.getCarriedItems().remove(new Item(item1.getCatalogId()));
+		player.getCarriedItems().remove(new Item(item2.getCatalogId()));
+		delay(5);
+		if (Formulae.calcProductionSuccessfulLegacy(70, player.getSkills().getLevel(Skill.COOKING.id()), true, 105)) {
+			player.playerServerMessage(MessageType.QUEST, "You make some powerful wine");
+			player.getCarriedItems().getInventory().add(new Item(resultWineId));
+			player.incExp(Skill.COOKING.id(), 550, true);
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_OR_UNFERMENTED_WINE.id()));
+		}
+
+		// Repeat
+		updatebatch();
+		if (!ifinterrupted() && !isbatchcomplete()) {
+			delay();
+			batchPowerfulWineMaking(player, item1, item2, resultWineId);
 		}
 	}
 
