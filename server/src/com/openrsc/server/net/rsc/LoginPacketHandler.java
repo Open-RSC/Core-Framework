@@ -141,8 +141,8 @@ public class LoginPacketHandler {
 
 					LOGGER.info("Client version: " + clientVersion.get());
 
-					if (clientVersion.get() >= 201) {
-						// Different login block generation starting from mud201?
+					if (clientVersion.get() > 204) {
+						// Different login block generation starting from mud205?
 						// Decrypt login block
 						int rsaLength = packet.readUnsignedShort();
 						byte[] loginBlock = Crypto.decryptRSA(packet.readBytes(rsaLength), 0, rsaLength);
@@ -234,7 +234,87 @@ public class LoginPacketHandler {
 						server.getLoginExecutor().add(request);
 					} else if (clientVersion.get() > 177) {
 						// login block with initial ISAAC
-						// TODO
+
+						packet.readShort();
+
+						int rsaLength = packet.getReadableBytes();
+						ByteBuffer loginBlock = ByteBuffer.wrap(Crypto.decryptRSA(packet.readBytes(rsaLength), 0, rsaLength));
+
+						// Handle RSA encrypted block
+
+						if (loginBlock.get() != 10) { // Authentic client will only send 10 here, probably as a 99.6% reliable "checksum" that it was able to decrypt correctly
+							//return LOGIN_REJECT;
+						}
+
+						for (int i = 0; i < 4; i++) {
+							loginInfo.keys[i] = loginBlock.getInt() & 0xFFFF;
+						}
+
+						int uid = loginBlock.getInt();
+
+						StringBuilder b = new StringBuilder();
+						char ch;
+
+						while ((ch = (char)(loginBlock.get() & 0xFF)) != 10) {
+							b.append(ch);
+						}
+
+						String username = b.toString().trim();
+
+						b = new StringBuilder();
+
+						try {
+							while ((ch = (char)(loginBlock.get() & 0xFF)) != 10) {
+								b.append(ch);
+							}
+						} catch (Exception e) {
+							// will overread buffer
+						}
+
+						String password = b.toString().trim();
+
+						ClientLimitations cl = new ClientLimitations(clientVersion.get());
+
+						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN, null) {
+							@Override
+							public void loginValidated(int response) {
+								loginResponse = response;
+								Channel channel = getChannel();
+								channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
+								if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
+									channel.close();
+								}
+							}
+
+							@Override
+							public void loadingComplete(Player loadedPlayer) {
+								ISAACCipher incomingCipher = new ISAACCipher();
+								incomingCipher.setKeys(loginInfo.keys);
+								ISAACCipher outgoingCipher = new ISAACCipher();
+								outgoingCipher.setKeys(loginInfo.keys);
+								attachment.ISAAC.set(new ISAACContainer(incomingCipher, outgoingCipher));
+
+								attachment.player.set(loadedPlayer);
+
+								attachment.authenticClient.set((short) clientVersion.get());
+
+								if (loadedPlayer.getLastLogin() == 0L) {
+									loadedPlayer.setInitialLocation(firstTimeLocation);
+									loadedPlayer.setChangingAppearance(true);
+								}
+
+								loadedPlayer.setClientVersion((short) getVersion(clientVersion.get(), loadedPlayer));
+								loadedPlayer.setClientLimitations(cl);
+
+								initializePcapLogger(loadedPlayer, attachment);
+
+								server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
+								ActionSender.sendLogin(loadedPlayer);
+
+								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP(), loadedPlayer.getUsernameHash());
+							}
+						};
+						server.getLoginExecutor().add(request);
 					} else if (clientVersion.get() >= 93) {
 						if (clientVersion.get() > 135) {
 							short referId = packet.readShort();

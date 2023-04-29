@@ -24,9 +24,12 @@ public class RSCSessionIdSender implements Runnable {
 
 			Thread.sleep(this.timer); // wait for clients that do not wait for session ID to send data
 			ConnectionAttachment att = ctx.channel().attr(RSCSessionIdSender.attachment).get();
-			if (att.canSendSessionId.get()) {
-				Integer sessionId = Functions.random(0, Integer.MAX_VALUE - 1);
-				att.sessionId.set(sessionId);
+			Integer sessionId = Functions.random(0, Integer.MAX_VALUE - 1);
+			att.sessionId.set(sessionId);
+			if (att.isLongSessionId.get()) {
+				ctx.writeAndFlush(Unpooled.buffer(8).writeLong(sessionId));
+				LOGGER.info("Set session id for " + ctx.channel().remoteAddress() + ": " + sessionId);
+			} else if (att.canSendSessionId.get()) {
 				ctx.writeAndFlush(Unpooled.buffer(4).writeInt(sessionId));
 				LOGGER.info("Set session id for " + ctx.channel().remoteAddress() + ": " + sessionId);
 			}

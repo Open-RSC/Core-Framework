@@ -61,6 +61,8 @@ public class ActionSender {
 			generator = new Payload69Generator();
 		} else if (player.isUsing233CompatibleClient()) {
 			generator = new Payload235Generator();
+		} else if (player.isUsing203CompatibleClient()) {
+			generator = new Payload203Generator();
 		} else if (player.isUsing177CompatibleClient()) {
 			generator = new Payload177Generator();
 		} else if (player.isUsing140CompatibleClient()) {
@@ -485,7 +487,7 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
-		if (isRetroClient(player) || player.isUsing177CompatibleClient()) {
+		if (player.getClientVersion() <= 204) {
 			FriendListStruct struct = new FriendListStruct();
 			int listSize = player.getSocial().getFriendList().size();
 			if (player.getBlockGlobalFriend()) {

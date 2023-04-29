@@ -38,6 +38,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		// Generates random Session ID for 2002-2003 clients.
 		// Sending this random data seems to crash other clients, so if we want to be simultaneously compatible,
 		// we must wait for more modern clients (and ancient clients) to send us data first & cancel out
+		ctx.channel().attr(attachment).get().isLongSessionId.set(false);
 		ctx.channel().attr(attachment).get().canSendSessionId.set(true);
 		Thread t = new Thread(new RSCSessionIdSender(ctx, server.getConfig().SESSION_ID_SENDER_TIMER));
 		t.start();
@@ -53,7 +54,6 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
 		final Channel channel = ctx.channel();
-		channel.attr(attachment).get().canSendSessionId.set(false);
 
 		if (message instanceof Packet) {
 
@@ -62,6 +62,15 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 			ConnectionAttachment att = channel.attr(attachment).get();
 			if (att != null) {
 				player = att.player.get();
+			}
+			// Authentic client > 194 <= 204 sends a truncated player name
+			// hash in order to find a login server first. We want to send
+			// the session ID after this initial packet is recieved.
+			if (player != null || packet.getLength() > 2) {
+				channel.attr(attachment).get().canSendSessionId.set(false);
+			}
+			if (player == null && packet.getLength() == 2) {
+				channel.attr(attachment).get().isLongSessionId.set(true);
 			}
 			if (player == null) {
 				if (packet.getID() == 19 && packet.getLength() < 2) {

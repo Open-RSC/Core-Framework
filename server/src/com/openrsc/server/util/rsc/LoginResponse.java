@@ -25,6 +25,8 @@ public class LoginResponse {
 	public static final int PASSWORD_STOLEN = 22;
 	public static final int NEED_TO_SET_DISPLAY_NAME = 23;
 	public static final int WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS = 24;
+
+	// in earlier clients this is "log in as moderator"
 	public static final int NONE_OF_YOUR_CHARACTERS_CAN_LOGIN = 25;
 
 	/* adm0 is regular, adm1 suggests mute,
