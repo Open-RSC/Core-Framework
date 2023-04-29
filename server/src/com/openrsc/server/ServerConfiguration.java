@@ -313,6 +313,7 @@ public class ServerConfiguration {
 	public boolean SERVER_SIDED_WORD_SPACE_FILTERING;
 	public boolean DISABLE_MINIMAP_ROTATION;
 	public boolean ALLOW_BEARDED_LADIES;
+	public boolean WANT_BUGGED_CLAWS_XP;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -471,6 +472,7 @@ public class ServerConfiguration {
 		CHAR_NAME_CAN_EQUAL_GLOBAL = tryReadBool("char_name_can_equal_global").orElse(false);
 		DISABLE_MINIMAP_ROTATION = tryReadBool("disable_minimap_rotation").orElse(true);
 		ALLOW_BEARDED_LADIES = tryReadBool("allow_bearded_ladies").orElse(false);
+		WANT_BUGGED_CLAWS_XP = tryReadBool("want_bugged_claws_xp").orElse(true);
 
 		// Retro features
 		GATHER_TOOL_ON_SCENERY = tryReadBool("gather_tool_on_scenery").orElse(false);

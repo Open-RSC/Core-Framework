@@ -626,13 +626,17 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 	}
 
 	public static void finalizeSpell(Player player, SpellDef spell, String message) {
+		finalizeSpell(player, spell, message, true);
+	}
+
+	public static void finalizeSpell(Player player, SpellDef spell, String message, boolean giveExp) {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
 		// don't display a message if message is null (example superheat)
 		if (message != null) {
 			player.playerServerMessage(MessageType.QUEST, message.trim().isEmpty() ? "Cast spell successfully" : message);
 		}
-		player.incExp(getMagicId(player, spell), spell.getExp(), true);
+		if (giveExp) player.incExp(getMagicId(player, spell), spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -660,30 +664,25 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				break;
 		}
 		if (spellEnum != Spells.CHARGE) {
-			double lowersBy = -1;
 			int affectsStat = -1;
 			if (spellEnum == Spells.CLAWS_OF_GUTHIX) {
-				lowersBy = 0.02;
 				affectsStat = Skill.DEFENSE.id();
 			} else if (spellEnum == Spells.SARADOMIN_STRIKE) {
-				lowersBy = 1;
 				affectsStat = Skill.PRAYER.id();
 			} else if (spellEnum == Spells.FLAMES_OF_ZAMORAK) {
-				lowersBy = 0.02;
 				affectsStat = Skill.MAGIC.id();
 			}
-			/* How much to lower the stat */
-			int lowerBy = (spellEnum != Spells.SARADOMIN_STRIKE ? (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy))
-				: (int) lowersBy);
-
+			final int lowerBy;
+			if (spellEnum != Spells.SARADOMIN_STRIKE) {
+				lowerBy = 1 + (int) (affectedMob.getSkills().getLevel(affectsStat) * 0.05);
+			} else {
+				lowerBy = 1;
+			}
 			/* New current level */
 			final int newStat = affectedMob.getSkills().getLevel(affectsStat) - lowerBy;
-			/* Lowest stat you can weaken to with this spell */
-			final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
-				- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy) * 4);
 
 			if (spellEnum != Spells.SARADOMIN_STRIKE) {
-				if (newStat < maxWeaken) {
+				if (affectedMob.getSkills().getLevel(affectsStat) < affectedMob.getSkills().getMaxStat(affectsStat)) {
 					final String skillName = player.getWorld().getServer().getConstants().getSkills().getSkill(affectsStat).getLongName().toLowerCase();
 					player.playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + skillName);
 					return;
@@ -1439,6 +1438,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				}
 				getPlayer().resetAllExceptDueling();
 				EntityType entityType = mob.isPlayer() ? EntityType.PLAYER : EntityType.NPC;
+				boolean isClaws = false;
 				switch (spellEnum) {
 					case FEAR:
 						if (!getPlayer().getConfig().HAS_FEAR_SPELL) {
@@ -1478,16 +1478,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					case CONFUSE_R:
 						double reduceBy = 0.02; // to date not known percentage, but possible
 						int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id()};
-						int lowerAmt, newLvl, maxLower;
 						for (int affectedStat : stats) {
-							lowerAmt = (int) Math.ceil((affectedMob.getSkills().getLevel(affectedStat) * reduceBy));
-							/* New current level */
-							newLvl = affectedMob.getSkills().getLevel(affectedStat) - lowerAmt;
-							/* Lowest stat you can weaken to with this spell */
-							maxLower = affectedMob.getSkills().getMaxStat(affectedStat)
-								- (int) Math.ceil((affectedMob.getSkills().getLevel(affectedStat) * reduceBy));
-							if (newLvl < maxLower || (affectedMob.getSkills().getLevel(affectedStat)
-								< affectedMob.getSkills().getMaxStat(affectedStat) && player.getConfig().WAIT_TO_REBOOST)) {
+							if (affectedMob.getSkills().getLevel(affectedStat) < affectedMob.getSkills().getMaxStat(affectedStat)) {
 								getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened stats");
 								return;
 							}
@@ -1564,10 +1556,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						int lowerBy = (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
 						/* New current level */
 						final int newStat = affectedMob.getSkills().getLevel(affectsStat) - lowerBy;
-						/* Lowest stat you can weaken to with this spell */
-						final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
-							- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
-						if (newStat < maxWeaken) {
+						if (affectedMob.getSkills().getLevel(affectsStat) < affectedMob.getSkills().getMaxStat(affectsStat)) {
 							final String skillName = getPlayer().getWorld().getServer().getConstants().getSkills().getSkill(affectsStat).getLongName().toLowerCase();
 							getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + skillName);
 							return;
@@ -1636,6 +1625,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 					case CLAWS_OF_GUTHIX:
+						isClaws = true;
 					case SARADOMIN_STRIKE:
 					case FLAMES_OF_ZAMORAK:
 						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_GUTHIX.id()) && spellEnum == Spells.CLAWS_OF_GUTHIX) {
@@ -1684,12 +1674,18 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 								getPlayer().getCache().set(spell.getName() + "_casts", 1);
 							}
 						}
+
+						boolean giveExp = true;
 						if (affectedMob.getRegion().getGameObject(affectedMob.getLocation(), getPlayer()) == null) {
+							//Authentically, Claws of Guthix only gave XP if the opponent was not stat drained already. Just RSC things...
+							if (affectedMob.getConfig().WANT_BUGGED_CLAWS_XP && isClaws && affectedMob.getSkills().getLevel(Skill.DEFENSE.id()) < affectedMob.getSkills().getMaxStat(Skill.DEFENSE.id())) {
+								giveExp = false;
+							}
+
 							godSpellObject(getPlayer(), affectedMob, spellEnum);
 						}
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1, setChasing));
-
-						finalizeSpell(getPlayer(), spell, DEFAULT);
+						finalizeSpell(getPlayer(), spell, DEFAULT, giveExp);
 						break;
 
 					case CHILL_BOLT:
