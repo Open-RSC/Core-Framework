@@ -709,6 +709,36 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 	}
 
 	@Override
+	public Sprite getBattery(int level) {
+		// This would be needed to be implemented if was desired to display Battery Status Icon
+		return null;
+	}
+
+	@Override
+	public int getBatteryPercent() {
+		// This would be needed to be implemented if was desired to display Battery Percent
+		return 100;
+	}
+
+	@Override
+	public boolean getBatteryCharging() {
+		// This would be needed to be implemented if was desired to display Battery Charging
+		return false;
+	}
+
+	@Override
+	public Sprite getConnectivity(int level) {
+		// This would be needed to be implemented if was desired to display Network Connectivity Status Icon
+		return null;
+	}
+
+	@Override
+	public String getConnectivityText() {
+		// This would be needed to be implemented if was desired to display Network Connectivity Status Text
+		return null;
+	}
+
+	@Override
 	public void resized() {
 		imageProducer.setDimensions(mudclient.getSurface().width2, mudclient.getSurface().height2);
 		initGraphics();

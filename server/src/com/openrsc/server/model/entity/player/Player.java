@@ -3320,6 +3320,13 @@ public final class Player extends Mob {
 		return 3;
 	}
 
+	public int getStatusBar() {
+		if (getCache().hasKey("setting_status_bar")) {
+			return getCache().getInt("setting_status_bar");
+		}
+		return 0;
+	}
+
 	public Boolean getHoldAndChoose() {
 		if (getCache().hasKey("setting_hold_choose")) {
 			return getCache().getBoolean("setting_hold_choose");

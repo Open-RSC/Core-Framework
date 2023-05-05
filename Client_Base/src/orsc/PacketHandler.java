@@ -2124,6 +2124,7 @@ public class PacketHandler {
 		mc.setHideLoginBox(packetsIncoming.getUnsignedByte() == 1); // 40
 		mc.setBlockGlobalFriend(packetsIncoming.getUnsignedByte() == 1); // 41
 		mc.setOptionHideUndergroundFlicker(packetsIncoming.getUnsignedByte() == 1); // 42
+		mc.setStatusBar(packetsIncoming.getUnsignedByte()); // 43
 	}
 
 	private void togglePrayer(int length) {

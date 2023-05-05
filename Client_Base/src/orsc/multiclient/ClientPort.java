@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -37,6 +38,16 @@ public interface ClientPort {
 	void close();
 
 	String getCacheLocation();
+
+	Sprite getBattery(int level);
+
+	int getBatteryPercent();
+
+	boolean getBatteryCharging();
+
+	Sprite getConnectivity(int level);
+
+	String getConnectivityText();
 
 	void resized();
 

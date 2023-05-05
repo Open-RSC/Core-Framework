@@ -5388,6 +5388,25 @@ public final class mudclient implements Runnable {
 								}
 							}
 						}
+
+						if (osConfig.C_STATUS_BAR == 0) { // icons + text
+							this.getSurface().drawSprite(clientPort.getBattery(0), uiX - 50, 10);
+							this.getSurface().drawColoredStringCentered(uiX - 40, clientPort.getBatteryPercent() + "%", 0xffffff, 0, 2, 10);
+							this.getSurface().drawSprite(clientPort.getConnectivity(0), uiX - 30, 10);
+						} else if (osConfig.C_STATUS_BAR == 1) { // icons only
+							this.getSurface().drawSprite(clientPort.getBattery(0), uiX - 50, 10);
+							this.getSurface().drawSprite(clientPort.getConnectivity(0), uiX - 30, 10);
+						} else if (osConfig.C_STATUS_BAR == 2) { // text only
+							this.getSurface().drawColoredStringCentered(uiX - 50, "BAT:", 0xffff00, 0, 2, 15);
+							this.getSurface().drawColoredStringCentered(uiX - 50, clientPort.getBatteryPercent() + "%", 0xffffff, 0, 2, 30);
+							if (clientPort.getBatteryCharging()) {
+								this.getSurface().drawColoredStringCentered(uiX - 50, "(C)", 0xffffff, 0, 2, 45);
+							}
+							this.getSurface().drawColoredStringCentered(uiX - 20, "NET:", 0xffff00, 0, 2, 15);
+							this.getSurface().drawColoredStringCentered(uiX - 20, clientPort.getConnectivityText(), 0xffffff, 0, 2, 30);
+						}
+
+
 					}
 
 					if (isAndroid() && Config.S_WANT_PLAYER_COMMANDS) { // on screen buttons for various player chat commands
@@ -9607,120 +9626,135 @@ public final class mudclient implements Runnable {
 		int index = 0;
 		this.getSurface().drawString("Android options", 3 + baseX, y, 0, 1);
 
+		// Status Bar
+		if (osConfig.C_STATUS_BAR == 0) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Show Status Bar - @gre@Icons & Text", 0, null, null);
+		} else if (osConfig.C_STATUS_BAR == 1) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Show Status Bar - @gr1@Icons", 0, null, null);
+		} else if (osConfig.C_STATUS_BAR == 2) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Show Status Bar - @yel@Text", 0, null, null);
+		} else if (osConfig.C_STATUS_BAR == 3) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Show Status Bar - @red@None", 0, null, null);
+		}
+
 		// Color changing long press timer option
 		// -> red
 		if (osConfig.C_LONG_PRESS_TIMER < 3) { // 1-2
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @red@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @red@" + (osConfig.C_LONG_PRESS_TIMER), 1, null, null);
 		}
 		// -> light red
 		if (osConfig.C_LONG_PRESS_TIMER > 2 && osConfig.C_LONG_PRESS_TIMER < 5) { // 3-4
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @lre@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @lre@" + (osConfig.C_LONG_PRESS_TIMER), 1, null, null);
 		}
 		// -> green
 		if (osConfig.C_LONG_PRESS_TIMER > 4 && osConfig.C_LONG_PRESS_TIMER < 9) { // 5-8
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @gre@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @gre@" + (osConfig.C_LONG_PRESS_TIMER), 1, null, null);
 		}
 		// -> light red
 		if (osConfig.C_LONG_PRESS_TIMER > 8 && osConfig.C_LONG_PRESS_TIMER < 11) { // 9-10
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @lre@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @lre@" + (osConfig.C_LONG_PRESS_TIMER), 1, null, null);
 		}
 		// -> red
 		if (osConfig.C_LONG_PRESS_TIMER > 10) { // 11
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold-time for Menu - @red@" + (osConfig.C_LONG_PRESS_TIMER), 0, null, null);
+				"@whi@Hold-time for Menu - @red@" + (osConfig.C_LONG_PRESS_TIMER), 1, null, null);
 		}
 
 		// Color changing font size toggle
 		// -> light red
 		if (osConfig.C_MENU_SIZE < 3) { // 1-2
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @lre@" + (osConfig.C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @lre@" + (osConfig.C_MENU_SIZE), 2, null, null);
 		}
 		// -> green
 		if (osConfig.C_MENU_SIZE > 2 && osConfig.C_MENU_SIZE < 5) { // 3-4
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @gre@" + (osConfig.C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @gre@" + (osConfig.C_MENU_SIZE), 2, null, null);
 		}
 		// -> light red
 		if (osConfig.C_MENU_SIZE > 4 && osConfig.C_MENU_SIZE < 7) { // 5-6
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @lre@" + (osConfig.C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @lre@" + (osConfig.C_MENU_SIZE), 2, null, null);
 		}
 
 		// menu size
 		if (osConfig.C_MENU_SIZE == 7) { // 7
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Font Size - @red@" + (osConfig.C_MENU_SIZE), 1, null, null);
+				"@whi@Font Size - @red@" + (osConfig.C_MENU_SIZE), 2, null, null);
 		}
 
 		// hold and choose
 		if (!osConfig.C_HOLD_AND_CHOOSE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold and Choose - @red@Off", 2, null, null);
+				"@whi@Hold and Choose - @red@Off", 3, null, null);
 		} else {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Hold and Choose - @gre@On", 2, null, null);
+				"@whi@Hold and Choose - @gre@On", 3, null, null);
 		}
 
 		// swipe to scroll
 		if (osConfig.C_SWIPE_TO_SCROLL_MODE == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Scroll - @red@Unset", 3, null, null);
+				"@whi@Swipe to Scroll - @red@Unset", 4, null, null);
 		} else if (osConfig.C_SWIPE_TO_SCROLL_MODE == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Scroll - @yel@Normal", 3, null, null);
+				"@whi@Swipe to Scroll - @yel@Normal", 4, null, null);
 		} else if (osConfig.C_SWIPE_TO_SCROLL_MODE == 2) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Scroll - @gre@Invert", 3, null, null);
+				"@whi@Swipe to Scroll - @gre@Invert", 4, null, null);
 		}
 
 		// swipe to zoom
 		if (osConfig.C_SWIPE_TO_ZOOM_MODE == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Zoom - @red@Unset", 4, null, null);
+				"@whi@Swipe to Zoom - @red@Unset", 5, null, null);
 		} else if (osConfig.C_SWIPE_TO_ZOOM_MODE == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Zoom - @yel@Normal", 4, null, null);
+				"@whi@Swipe to Zoom - @yel@Normal", 5, null, null);
 		} else if (osConfig.C_SWIPE_TO_ZOOM_MODE == 2) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Zoom - @gre@Invert", 4, null, null);
+				"@whi@Swipe to Zoom - @gre@Invert", 5, null, null);
 		}
 
 		// swipe to rotate
 		if (osConfig.C_SWIPE_TO_ROTATE_MODE == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Rotate - @red@Unset", 5, null, null);
+				"@whi@Swipe to Rotate - @red@Unset", 6, null, null);
 		} else if (osConfig.C_SWIPE_TO_ROTATE_MODE == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Rotate - @yel@Normal", 5, null, null);
+				"@whi@Swipe to Rotate - @yel@Normal", 6, null, null);
 		} else if (osConfig.C_SWIPE_TO_ROTATE_MODE == 2) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Swipe to Rotate - @gre@Invert", 5, null, null);
+				"@whi@Swipe to Rotate - @gre@Invert", 6, null, null);
 		}
 
 		// volume to rotate
 		if (osConfig.C_VOLUME_FUNCTION == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons - @red@Rotate", 6, null, null);
+				"@whi@Volume buttons - @red@Rotate", 7, null, null);
 		} else if (osConfig.C_VOLUME_FUNCTION == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons - @yel@Zoom", 6, null, null);
+				"@whi@Volume buttons - @yel@Zoom", 7, null, null);
 		} else if (osConfig.C_VOLUME_FUNCTION == 2) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons - @gre@Volume", 6, null, null);
+				"@whi@Volume buttons - @gre@Volume", 7, null, null);
 		}
 
 		// inventory close
 		if (!osConfig.C_ANDROID_INV_TOGGLE) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @red@Off", 7, null, null);
+				"@whi@Close inventory with menu - @red@Off", 8, null, null);
 		} else {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @gre@On", 7, null, null);
+				"@whi@Close inventory with menu - @gre@On", 8, null, null);
 		}
 
 		// logout text
@@ -10162,8 +10196,17 @@ public final class mudclient implements Runnable {
 	// android menu tab
 	private void handleAndroidSettingsClicks(short var5, int var6, int yFromTopDistance) {
 
-		// hold to right click delay control
+		// status bar control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 0 && this.mouseButtonClick == 1) {
+			osConfig.C_STATUS_BAR = ++osConfig.C_STATUS_BAR %3;
+			this.packetHandler.getClientStream().newPacket(111);
+			this.packetHandler.getClientStream().bufferBits.putByte(43);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_STATUS_BAR);
+			this.packetHandler.getClientStream().finishPacket();
+		}
+
+		// hold to right click delay control
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 1 && this.mouseButtonClick == 1) {
 			osConfig.C_LONG_PRESS_TIMER++;
 			if (osConfig.C_LONG_PRESS_TIMER == 13)
 				osConfig.C_LONG_PRESS_TIMER = 1;
@@ -10174,7 +10217,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// font size control
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 1 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
 			osConfig.C_MENU_SIZE++;
 			if (osConfig.C_MENU_SIZE == 8)
 				osConfig.C_MENU_SIZE = 1;
@@ -10188,7 +10231,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// hold to right click toggle
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 2 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
 			osConfig.C_HOLD_AND_CHOOSE = !osConfig.C_HOLD_AND_CHOOSE;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(21);
@@ -10197,7 +10240,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// swipe scroll control
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 3 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
 			osConfig.C_SWIPE_TO_SCROLL_MODE = ++osConfig.C_SWIPE_TO_SCROLL_MODE%3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(18);
@@ -10206,7 +10249,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// swipe camera zoom control
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 4 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
 			osConfig.C_SWIPE_TO_ZOOM_MODE = ++osConfig.C_SWIPE_TO_ZOOM_MODE%3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(22);
@@ -10215,7 +10258,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// swipe camera rotation control
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 5 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
 			osConfig.C_SWIPE_TO_ROTATE_MODE = ++osConfig.C_SWIPE_TO_ROTATE_MODE%3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(17);
@@ -10224,7 +10267,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// volume button function control (rotate, zoom, volume)
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 7 && this.mouseButtonClick == 1) {
 			osConfig.C_VOLUME_FUNCTION = ++osConfig.C_VOLUME_FUNCTION %3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(16);
@@ -10233,7 +10276,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// android inventory toggle
-		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 7 && this.mouseButtonClick == 1) {
+		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 8 && this.mouseButtonClick == 1) {
 			osConfig.C_ANDROID_INV_TOGGLE = !osConfig.C_ANDROID_INV_TOGGLE;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(37);
@@ -17711,6 +17754,10 @@ public final class mudclient implements Runnable {
 
 	public void setFontSize(int i) {
 		osConfig.C_MENU_SIZE = i;
+	}
+
+	public void setStatusBar(int i) {
+		osConfig.C_STATUS_BAR = i;
 	}
 
 	public void setHoldAndChoose(boolean b) {

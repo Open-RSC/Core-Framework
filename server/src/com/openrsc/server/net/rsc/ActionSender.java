@@ -648,6 +648,7 @@ public class ActionSender {
 			customOptions.add(player.getHideLoginBox() ? 1 : 0);
 			customOptions.add(player.getBlockGlobalFriend() ? 1 : 0);
 			customOptions.add(player.getHideUndergroundFlicker() ? 1 : 0);
+			customOptions.add(player.getStatusBar());
 		}
 		struct.customOptions = customOptions;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_GAME_SETTINGS, struct, player);

@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.AudioTrack;
 import android.text.InputType;
@@ -20,11 +22,16 @@ import android.view.inputmethod.InputConnection;
 
 import androidx.annotation.NonNull;
 
+import com.openrsc.client.R;
 import com.openrsc.client.android.GameActivity;
 import com.openrsc.client.model.Sprite;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import orsc.multiclient.ClientPort;
 import orsc.osConfig;
@@ -41,6 +48,8 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 	private final GameActivity gameActivity;
 	private boolean m_hb;
 
+	private Map<Integer, Sprite> statusSprites = new HashMap<>();
+
 	public RSCBitmapSurfaceView(Context c) {
 		super(c);
 		gameActivity = (GameActivity) c;
@@ -53,6 +62,16 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		setKeepScreenOn(true);
+		loadStatusSprites();
+	}
+
+	private void loadStatusSprites() {
+		int[] drawableIds = {R.drawable.battery_empty, R.drawable.battery_1_bar, R.drawable.battery_2_bar, R.drawable.battery_3_bar,
+			R.drawable.battery_4_bar, R.drawable.battery_5_bar, R.drawable.battery_6_bar, R.drawable.battery_full, R.drawable.battery_charging,
+			R.drawable.network_none, R.drawable.network_cell, R.drawable.network_wifi};
+		for (int drawableId : drawableIds) {
+			statusSprites.put(drawableId, getSpriteFromDrawableId(drawableId));
+		}
 	}
 
 	@Override
@@ -304,6 +323,84 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 		Sprite sprite = new Sprite(captchaPixels, width, height);
 		sprite.setSomething(width, height);
 		return sprite;
+	}
+
+	private Sprite getSpriteFromDrawableId(int drawableId) {
+		Drawable drawable = getResources().getDrawable(drawableId);
+		BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
+		Bitmap bitmap = bitmapDrawable.getBitmap();
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream); //use the compression format of your need
+		ByteArrayInputStream is = new ByteArrayInputStream(stream.toByteArray());
+
+		return getSpriteFromByteArray(is);
+	}
+
+	@Override
+	public boolean getBatteryCharging() {
+		return gameActivity.getBatteryCharging();
+	}
+
+	@Override
+	public int getBatteryPercent() {
+		return gameActivity.getBatteryPercent();
+	}
+
+	@Override
+	public Sprite getBattery(int level) {
+		int drawableId = R.drawable.battery_empty;
+		switch (level) {
+			case 8:
+				drawableId = R.drawable.battery_charging;
+				break;
+			case 7:
+				drawableId = R.drawable.battery_full;
+				break;
+			case 6:
+				drawableId = R.drawable.battery_6_bar;
+				break;
+			case 5:
+				drawableId = R.drawable.battery_5_bar;
+				break;
+			case 4:
+				drawableId = R.drawable.battery_4_bar;
+				break;
+			case 3:
+				drawableId = R.drawable.battery_3_bar;
+				break;
+			case 2:
+				drawableId = R.drawable.battery_2_bar;
+				break;
+			case 1:
+				drawableId = R.drawable.battery_1_bar;
+				break;
+			case 0:
+				drawableId = R.drawable.battery_empty;
+				break;
+		}
+		return statusSprites.get(drawableId);
+	}
+
+	@Override
+	public String getConnectivityText() {
+		return gameActivity.getConnectivityText();
+	}
+
+	@Override
+	public Sprite getConnectivity(int level) {
+		int drawableId = R.drawable.network_none;
+		switch (level) {
+			case 2:
+				drawableId = R.drawable.network_wifi;
+				break;
+			case 1:
+				drawableId = R.drawable.network_cell;
+				break;
+			case 0:
+				drawableId = R.drawable.network_none;
+				break;
+		}
+		return statusSprites.get(drawableId);
 	}
 
 	private AudioTrack audioTrack;
