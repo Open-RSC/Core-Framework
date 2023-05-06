@@ -84,7 +84,6 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_DUEL_CLOSE, 225);
 		put(OpcodeOut.SEND_OPEN_DETAILS, 232); // part of rsc era protocol
 		put(OpcodeOut.SEND_UPDATE_PLAYERS, 234);
-		put(OpcodeOut.SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE, 237);
 		put(OpcodeOut.SEND_GAME_SETTINGS, 240);
 		put(OpcodeOut.SEND_SLEEP_FATIGUE, 244);
 		put(OpcodeOut.SEND_OPTIONS_MENU_OPEN, 245);
@@ -140,7 +139,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 					if (message.length() > 4975) {
 						message = message.substring(0, 4975);
 					}
-					builder.writeZeroQuotedString(message);
+					builder.writeNonTerminatedString(message);
 					break;
 
 				case SEND_OPTIONS_MENU_OPEN:
@@ -148,7 +147,8 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 					int numOptions = Math.min(mo.numOptions, 5);
 					builder.writeByte((byte) numOptions);
 					for (int i = 0; i < 5 && i < numOptions; i++){
-						builder.writeZeroQuotedString(mo.optionTexts[i]);
+						builder.writeByte(mo.optionTexts[i].length());
+						builder.writeNonTerminatedString(mo.optionTexts[i]);
 					}
 					break;
 
@@ -272,7 +272,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_PLAY_SOUND:
 					PlaySoundStruct pls = (PlaySoundStruct) payload;
-					builder.writeZeroQuotedString(pls.soundName);
+					builder.writeNonTerminatedString(pls.soundName);
 					break;
 
 				case SEND_BUBBLE:
@@ -321,7 +321,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 						}
 					}
 
-					builder.writeZeroQuotedString(tc.targetPlayer);
+					builder.writeLong(DataConversions.usernameToHash(tc.targetPlayer));
 					builder.writeByte((byte) tradedItemSize);
 					for (int i = 0; i < tradedItemSize; i++) {
 						builder.writeShort(tc.opponentCatalogIDs[i]);
@@ -376,7 +376,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_DUEL_CONFIRMWINDOW:
 					DuelConfirmStruct dc = (DuelConfirmStruct) payload;
-					builder.writeZeroQuotedString(dc.targetPlayer);
+					builder.writeLong(DataConversions.usernameToHash(dc.targetPlayer));
 					int stakedItemSize = dc.opponentDuelCount;
 					builder.writeByte((byte) stakedItemSize);
 					for (int i = 0; i < stakedItemSize; i++) {
@@ -402,20 +402,8 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_FRIEND_UPDATE:
 					FriendUpdateStruct fr = (FriendUpdateStruct) payload;
-					builder.writeZeroQuotedString(fr.name);
-					builder.writeZeroQuotedString(fr.formerName);
-					builder.writeByte((byte) fr.onlineStatus);
-					if (!fr.worldName.equals(""))
-						builder.writeZeroQuotedString(fr.worldName);
-					break;
-
-				case SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE:
-					IgnoreListStruct uil = (IgnoreListStruct) payload;
-					builder.writeZeroQuotedString(uil.name[0]);
-					builder.writeZeroQuotedString(uil.name[0]);
-					builder.writeZeroQuotedString(uil.formerName[0]);
-					builder.writeZeroQuotedString(uil.formerName[0]);
-					builder.writeByte((byte)(uil.updateExisting ? 1 : 0));
+					builder.writeLong(DataConversions.usernameToHash(fr.name));
+					builder.writeByte((byte) fr.worldNumber);
 					break;
 
 				case SEND_IGNORE_LIST:
@@ -423,10 +411,8 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 					int ignoreSize = il.listSize;
 					builder.writeByte((byte) ignoreSize);
 					for (int i = 0; i < ignoreSize; i++) {
-						builder.writeZeroQuotedString(il.name[i]);
-						builder.writeZeroQuotedString(il.name[i]); // meant to be a duplicate
-						builder.writeZeroQuotedString(il.formerName[i]);
-						builder.writeZeroQuotedString(il.formerName[i]); // meant to be a duplicate
+						builder.writeLong(DataConversions.usernameToHash(il.name[i]
+));
 					}
 					break;
 
@@ -609,7 +595,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 							int value = (Character) entry;
 							builder.writeAppearanceByte((byte) value, 204);
 						} else if (entry instanceof String) {
-							builder.writeZeroQuotedString((String) entry);
+							builder.writeNonTerminatedString((String) entry);
 						} else if (entry instanceof RSCString) {
 							byte[] byteMe = StringUtil.compressMessage(entry.toString());
 							builder.writeByte(byteMe.length);
