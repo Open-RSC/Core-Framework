@@ -591,6 +591,8 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 							builder.writeShort((Short) entry);
 						} else if (entry instanceof Integer) {
 							builder.writeInt((Integer) entry);
+						} else if (entry instanceof Long) {
+							builder.writeLong((Long) entry);
 						} else if (entry instanceof Character) { // wrapper class for appearance byte
 							int value = (Character) entry;
 							builder.writeAppearanceByte((byte) value, 204);
