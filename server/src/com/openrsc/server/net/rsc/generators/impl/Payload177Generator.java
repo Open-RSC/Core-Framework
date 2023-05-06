@@ -16,6 +16,7 @@ import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MathUtil;
+import com.openrsc.server.util.rsc.StringUtil;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -501,7 +502,7 @@ public class Payload177Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_PRIVATE_MESSAGE:
 					PrivateMessageStruct pm = (PrivateMessageStruct) payload;
 					builder.writeLong(DataConversions.usernameToHash(pm.playerName));
-					builder.writeBytes(make177ChatMessage(pm.message));
+					builder.writeBytes(StringUtil.compressMessage(pm.message));
 					break;
 
 				case SEND_WELCOME_INFO:
@@ -607,7 +608,7 @@ public class Payload177Generator implements PayloadGenerator<OpcodeOut> {
 						} else if (entry instanceof String) {
 							builder.writeNonTerminatedString((String) entry);
 						} else if (entry instanceof RSCString) {
-							byte[] byteMe = make177ChatMessage(entry.toString());
+							byte[] byteMe = StringUtil.compressMessage(entry.toString());
 							builder.writeByte(byteMe.length);
 							builder.writeBytes(byteMe, 0, byteMe.length);
 						}
@@ -657,53 +658,5 @@ public class Payload177Generator implements PayloadGenerator<OpcodeOut> {
 		}
 
 		return builder != null ? builder.toPacket() : null;
-	}
-
-	private byte[] make177ChatMessage(String messageToSend) {
-		byte[] pmMessage = new byte[100];
-		char[] characterDictionary = new char[] { ' ', 'e', 't', 'a', 'o', 'i', 'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '£', '$', '%', '\"', '[', ']' };
-		if (messageToSend.length() > 80) {
-			messageToSend = messageToSend.substring(0, 80);
-		}
-
-		messageToSend = messageToSend.toLowerCase();
-		int messageLength = 0;
-		int aFlag = -1;
-		for (int messageIdx = 0; messageIdx < messageToSend.length(); messageIdx++) {
-			char curChar = messageToSend.charAt(messageIdx);
-			int charIdx = 0;
-			for (int i = 0; i < characterDictionary.length; i++) {
-				if (curChar == characterDictionary[i]) {
-					charIdx = i;
-					break;
-				}
-			}
-
-			if (charIdx > 12) {
-				charIdx += 195;
-			}
-
-			if (aFlag == -1) {
-				if (charIdx < 13) {
-					aFlag = charIdx;
-				} else {
-					pmMessage[messageLength++] = (byte) charIdx;
-				}
-			} else {
-				if (charIdx < 13) {
-					pmMessage[messageLength++] = (byte) ((aFlag << 4) + charIdx);
-					aFlag = -1;
-				} else {
-					pmMessage[messageLength++] = (byte) ((aFlag << 4) + (charIdx >> 4));
-					aFlag = charIdx & 15;
-				}
-			}
-		}
-
-		if (aFlag != -1) {
-			pmMessage[messageLength++] = (byte)(aFlag << 4);
-		}
-
-		return Arrays.copyOf(pmMessage, messageLength);
 	}
 }

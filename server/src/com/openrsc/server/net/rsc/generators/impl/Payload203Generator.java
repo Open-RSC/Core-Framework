@@ -14,6 +14,8 @@ import com.openrsc.server.net.rsc.enums.OpcodeOut;
 import com.openrsc.server.net.rsc.generators.PayloadGenerator;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
+import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +43,6 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_NPC_COORDS, 79);
 		put(OpcodeOut.SEND_DEATH, 83);
 		put(OpcodeOut.SEND_STOPSLEEP, 84);
-		put(OpcodeOut.SEND_PRIVATE_MESSAGE_SENT, 87);
 		put(OpcodeOut.SEND_BOX2, 89);
 		put(OpcodeOut.SEND_INVENTORY_UPDATEITEM, 90);
 		put(OpcodeOut.SEND_BOUNDARY_HANDLER, 91);
@@ -501,41 +502,13 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_SERVER_MESSAGE:
 					MessageStruct m = (MessageStruct) payload;
-					builder.writeByte((byte) m.messageTypeRsId);
-					int infoContained = m.infoContained;
-					builder.writeByte((byte) infoContained);
-					builder.writeZeroQuotedString(m.message);
-					if ((infoContained & 1) != 0) {
-						builder.writeZeroQuotedString(m.senderName);
-						builder.writeZeroQuotedString(m.senderName); // This is authentic; all recorded instances it's just the same username twice.
-					}
-					if ((infoContained & 2) != 0) {
-						builder.writeZeroQuotedString(m.colorString);
-					}
+					builder.writeNonTerminatedString(m.message);
 					break;
 
 				case SEND_PRIVATE_MESSAGE:
 					PrivateMessageStruct pm = (PrivateMessageStruct) payload;
-					builder.writeZeroQuotedString(pm.playerName);
-					builder.writeZeroQuotedString(pm.formerName);
-					builder.writeByte((byte) pm.iconSprite);
-
-					// 8 byte "Message ID" field is next
-					builder.writeByte(0); // Unused Padding
-					builder.writeByte(0); // Unused Padding
-					builder.writeByte(0); // Unused Padding
-					builder.writeShort(pm.worldNumber);
-					// 24 bit value for number of private messages sent on server since restart
-					builder.writeByte((pm.totalSentMessages & 0x00FF0000) >> 16);
-					builder.writeByte((pm.totalSentMessages & 0x0000FF00) >> 8);
-					builder.writeByte((pm.totalSentMessages & 0x000000FF));
-					builder.writeRSCString(pm.message);
-					break;
-
-				case SEND_PRIVATE_MESSAGE_SENT:
-					PrivateMessageStruct pm1 = (PrivateMessageStruct) payload;
-					builder.writeZeroQuotedString(pm1.playerName);
-					builder.writeRSCString(pm1.message);
+					builder.writeLong(DataConversions.usernameToHash(pm.playerName));
+					builder.writeBytes(StringUtil.compressMessage(pm.message));
 					break;
 
 				case SEND_WELCOME_INFO:
