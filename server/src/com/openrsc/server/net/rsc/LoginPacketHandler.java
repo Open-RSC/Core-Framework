@@ -247,7 +247,7 @@ public class LoginPacketHandler {
 						}
 
 						for (int i = 0; i < 4; i++) {
-							loginInfo.keys[i] = loginBlock.getInt() & 0xFFFF;
+							loginInfo.keys[i] = loginBlock.getInt();
 						}
 
 						int uid = loginBlock.getInt();
