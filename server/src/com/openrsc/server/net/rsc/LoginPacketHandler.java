@@ -281,7 +281,8 @@ public class LoginPacketHandler {
 								loginResponse = response;
 								Channel channel = getChannel();
 								channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
-								if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
+								if (response > LoginResponse.RECONNECT_SUCCESFUL &&
+									response != LoginResponse.NONE_OF_YOUR_CHARACTERS_CAN_LOGIN) {
 									channel.close();
 								}
 							}
