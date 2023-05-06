@@ -439,7 +439,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 						builder.writeShort((is.wielded[i] << 15) | is.catalogIDs[i]);
 						// amount[i] will only be > 0 if the item is stackable or noted.
 						if (is.amount[i] > 0) {
-							builder.writeUnsignedShortInt(is.amount[i]);
+							builder.writeUnsignedByteInt(is.amount[i]);
 						}
 					}
 					break;
@@ -457,7 +457,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 						builder.writeShort(iup.catalogID + (iup.wielded == 1 ? 32768 : 0));
 						// amount will only be > 0 if the item is stackable or noted
 						if (iup.amount > 0) {
-							builder.writeUnsignedShortInt(iup.amount);
+							builder.writeUnsignedByteInt(iup.amount);
 						}
 					} else {
 						builder.writeShort(0);
@@ -474,7 +474,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte(maxBankSize > 255 ? (byte)255 : maxBankSize & 0xFF);
 					for (int i = 0; i < storedSize; i++) {
 						builder.writeShort(b.catalogIDs[i]);
-						builder.writeUnsignedShortInt(b.amount[i]);
+						builder.writeUnsignedByteInt(b.amount[i]);
 					}
 					break;
 
@@ -482,7 +482,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 					BankUpdateStruct bu = (BankUpdateStruct) payload;
 					builder.writeByte((byte) bu.slot);
 					builder.writeShort(bu.catalogID);
-					builder.writeUnsignedShortInt(bu.amount);
+					builder.writeUnsignedByteInt(bu.amount);
 					break;
 
 				case SEND_SHOP_OPEN:
@@ -607,11 +607,13 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 							builder.writeInt((Integer) entry);
 						} else if (entry instanceof Character) { // wrapper class for appearance byte
 							int value = (Character) entry;
-							builder.writeAppearanceByte((byte) value, 235);
+							builder.writeAppearanceByte((byte) value, 204);
 						} else if (entry instanceof String) {
 							builder.writeZeroQuotedString((String) entry);
 						} else if (entry instanceof RSCString) {
-							builder.writeRSCString(entry.toString());
+							byte[] byteMe = StringUtil.compressMessage(entry.toString());
+							builder.writeByte(byteMe.length);
+							builder.writeBytes(byteMe, 0, byteMe.length);
 						}
 					}
 					break;
