@@ -373,7 +373,7 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 			case BANK_DEPOSIT:
 				BankStruct b1 = new BankStruct();
 				b1.catalogID = packet.readShort();
-				b1.amount = packet.readInt();
+				b1.amount = packet.readShort();
 				b1.magicNumber = packet.readInt();
 				result = b1;
 				break;
@@ -386,8 +386,8 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 			case SHOP_SELL:
 				ShopStruct s1 = new ShopStruct();
 				s1.catalogID = packet.readShort();
-				s1.stockAmount = packet.readUnsignedShort();
-				s1.amount = packet.readUnsignedShort();
+				s1.stockAmount = packet.readInt();
+				s1.amount = 1;
 				result = s1;
 				break;
 
@@ -740,7 +740,7 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 	// a basic check is done on authentic opcodes against their possible lengths
 	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
 		// TODO: remove this if checking valid for other protocol vers is implemented e.g. 127
-		if (protocolVer < 127 || (protocolVer > 175 && protocolVer != 235)) {
+		if (protocolVer < 127 || (protocolVer > 175 && protocolVer != 203)) {
 			return true;
 		}
 		int payloadLength = length - 1; // subtract off opcode length.
@@ -981,10 +981,10 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 					return payloadLength == 0;
 				// BANK_WITHDRAW
 				case 22:
-					return payloadLength == 10;
+					return payloadLength == 8;
 				// BANK_DEPOSIT
 				case 23:
-					return payloadLength == 10;
+					return payloadLength == 8;
 
 				// SLEEPWORD_ENTERED
 				case 45:

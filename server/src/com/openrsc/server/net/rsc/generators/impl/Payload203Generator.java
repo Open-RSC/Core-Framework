@@ -15,6 +15,7 @@ import com.openrsc.server.net.rsc.generators.PayloadGenerator;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MathUtil;
 import com.openrsc.server.util.rsc.StringUtil;
 
 import java.util.HashMap;
@@ -478,11 +479,10 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) s.isGeneralStore);
 					builder.writeByte((byte) s.sellModifier);
 					builder.writeByte((byte) s.buyModifier);
-					builder.writeByte((byte) s.stockSensitivity);
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);
-						builder.writeShort(s.baseAmount[i]);
+						builder.writeByte(MathUtil.boundedNumber(s.baseAmount[i] - s.amount[i], -127, 127));
 					}
 					break;
 
