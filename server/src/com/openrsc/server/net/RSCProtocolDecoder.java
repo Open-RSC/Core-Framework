@@ -138,8 +138,8 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 						}
 					}
 				}
-			} else if (authenticClient >= 204) {
-				// RSC Client with ISAAC (likely 233+)
+			} else if (authenticClient >= 183) {
+				// RSC Client with ISAAC
 				if (buffer.readableBytes() >= 2) {
 					buffer.markReaderIndex();
 					int length = buffer.readUnsignedByte();
