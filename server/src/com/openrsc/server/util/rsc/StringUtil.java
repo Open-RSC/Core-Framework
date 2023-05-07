@@ -328,4 +328,60 @@ public class StringUtil {
 
 		return Arrays.copyOf(pmMessage, messageLength);
 	}
+
+	public static String decompressMessage(byte[] data) {
+		int formattedLength = 0;
+		int aFlag = -1;
+		final char[] stringBuilder = new char[100];
+		final char[] characterDictionary = new char[]{' ', 'e', 't', 'a', 'o', 'i', 'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '£', '$', '%', '\"', '[', ']'};
+		for (byte charByte : data) {
+			int character = charByte & 255;
+			int charIdx = character >> 4 & 15;
+			if (aFlag == -1) {
+				if (charIdx < 13) {
+					stringBuilder[formattedLength++] = characterDictionary[charIdx];
+				} else {
+					aFlag = charIdx;
+				}
+			} else {
+				stringBuilder[formattedLength++] = characterDictionary[(aFlag << 4) + charIdx - 195];
+				aFlag = -1;
+			}
+
+			charIdx = character & 15;
+			if (aFlag == -1) {
+				if (charIdx < 13) {
+					stringBuilder[formattedLength++] = characterDictionary[charIdx];
+				} else {
+					aFlag = charIdx;
+				}
+			} else {
+				stringBuilder[formattedLength++] = characterDictionary[(aFlag << 4) + charIdx - 195];
+				aFlag = -1;
+			}
+		}
+
+		boolean forceCapital = true;
+		for (int charIdx = 0; charIdx < formattedLength; charIdx++) {
+			char asciiChar = stringBuilder[charIdx];
+			if (charIdx > 4 && asciiChar == '@') {
+				stringBuilder[charIdx] = ' ';
+			}
+
+			if (asciiChar == '%') {
+				stringBuilder[charIdx] = ' ';
+			}
+
+			if (forceCapital && asciiChar >= 'a' && asciiChar <= 'z') {
+				stringBuilder[charIdx] = (char) (stringBuilder[charIdx] - 32); // make uppercase
+				forceCapital = false;
+			}
+
+			if (asciiChar == '.' || asciiChar == '!') {
+				forceCapital = true;
+			}
+		}
+
+		return new String(stringBuilder, 0, formattedLength);
+	}
 }

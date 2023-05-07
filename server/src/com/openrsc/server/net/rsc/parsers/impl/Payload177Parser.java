@@ -10,6 +10,7 @@ import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.incoming.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.StringUtil;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -307,7 +308,7 @@ public class Payload177Parser implements PayloadParser<OpcodeIn> {
 
 			case CHAT_MESSAGE:
 				ChatStruct cs = new ChatStruct();
-				cs.message = read177RSCString(packet.readBytes(packet.getReadableBytes()));
+				cs.message = StringUtil.decompressMessage(packet.readBytes(packet.getReadableBytes()));
 				result = cs;
 				break;
 			case COMMAND:
@@ -323,7 +324,7 @@ public class Payload177Parser implements PayloadParser<OpcodeIn> {
 				FriendStruct fs = new FriendStruct();
 				fs.player = DataConversions.hashToUsername(packet.readLong());
 				if (opcode == OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE) {
-					fs.message = read177RSCString(packet.readBytes(packet.getReadableBytes()));
+					fs.message = StringUtil.decompressMessage(packet.readBytes(packet.getReadableBytes()));
 				}
 				result = fs;
 				break;
@@ -656,7 +657,7 @@ public class Payload177Parser implements PayloadParser<OpcodeIn> {
 			case REPORT_ABUSE:
 				ReportStruct r = new ReportStruct();
 				r.targetPlayerName = DataConversions.hashToUsername(packet.readLong());
-				r.reason = (byte)(packet.readByte() | 64); // adds 64 to separate from 204+ reasons
+				r.reason = (byte)(packet.readByte() | 64); // adds 64 to separate from 205+ reasons
 				r.suggestsOrMutes = 0;
 				result = r;
 				break;
@@ -707,62 +708,6 @@ public class Payload177Parser implements PayloadParser<OpcodeIn> {
 
 		return result;
 
-	}
-
-	private String read177RSCString(byte[] data) {
-		int formattedLength = 0;
-		int aFlag = -1;
-		char[] stringBuilder = new char[100];
-		char[] characterDictionary = new char[]{' ', 'e', 't', 'a', 'o', 'i', 'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g', 'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '!', '?', '.', ',', ':', ';', '(', ')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '£', '$', '%', '\"', '[', ']'};
-		for (byte charByte : data) {
-			int character = charByte & 255;
-			int charIdx = character >> 4 & 15;
-			if (aFlag == -1) {
-				if (charIdx < 13) {
-					stringBuilder[formattedLength++] = characterDictionary[charIdx];
-				} else {
-					aFlag = charIdx;
-				}
-			} else {
-				stringBuilder[formattedLength++] = characterDictionary[(aFlag << 4) + charIdx - 195];
-				aFlag = -1;
-			}
-
-			charIdx = character & 15;
-			if (aFlag == -1) {
-				if (charIdx < 13) {
-					stringBuilder[formattedLength++] = characterDictionary[charIdx];
-				} else {
-					aFlag = charIdx;
-				}
-			} else {
-				stringBuilder[formattedLength++] = characterDictionary[(aFlag << 4) + charIdx - 195];
-				aFlag = -1;
-			}
-		}
-
-		boolean forceCapital = true;
-		for (int charIdx = 0; charIdx < formattedLength; charIdx++) {
-			char asciiChar = stringBuilder[charIdx];
-			if (charIdx > 4 && asciiChar == '@') {
-				stringBuilder[charIdx] = ' ';
-			}
-
-			if (asciiChar == '%') {
-				stringBuilder[charIdx] = ' ';
-			}
-
-			if (forceCapital && asciiChar >= 'a' && asciiChar <= 'z') {
-				stringBuilder[charIdx] = (char) (stringBuilder[charIdx] - 32); // make uppercase
-				forceCapital = false;
-			}
-
-			if (asciiChar == '.' || asciiChar == '!') {
-				forceCapital = true;
-			}
-		}
-
-		return new String(stringBuilder, 0, formattedLength);
 	}
 
 	// a basic check is done on authentic opcodes against their possible lengths

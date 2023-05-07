@@ -10,6 +10,7 @@ import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.struct.*;
 import com.openrsc.server.net.rsc.struct.incoming.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.StringUtil;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -312,6 +313,9 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 		OpcodeIn opcode = toOpcodeEnum(packet, player);
 		AbstractStruct<OpcodeIn> result = null;
 
+		System.out.printf("Got id %d\n", packet.getID());
+
+		try {
 		switch (opcode) {
 			case COMBAT_STYLE_CHANGED:
 				CombatStyleStruct c = new CombatStyleStruct();
@@ -340,12 +344,12 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 
 			case CHAT_MESSAGE:
 				ChatStruct cs = new ChatStruct();
-				cs.message = DataConversions.getEncryptedString(packet);
+				cs.message = StringUtil.decompressMessage(packet.readBytes(packet.getReadableBytes()));
 				result = cs;
 				break;
 			case COMMAND:
 				CommandStruct co = new CommandStruct();
-				co.command = packet.readZeroPaddedString();
+				co.command = packet.readString();
 				result = co;
 				break;
 			case SOCIAL_ADD_FRIEND:
@@ -354,9 +358,9 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 			case SOCIAL_REMOVE_IGNORE:
 			case SOCIAL_SEND_PRIVATE_MESSAGE:
 				FriendStruct fs = new FriendStruct();
-				fs.player = packet.readZeroPaddedString();
+				fs.player = DataConversions.hashToUsername(packet.readLong());
 				if (opcode == OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE) {
-					fs.message = DataConversions.getEncryptedString(packet);
+					fs.message = StringUtil.decompressMessage(packet.readBytes(packet.getReadableBytes()));
 				}
 				result = fs;
 				break;
@@ -689,16 +693,16 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 
 			case REPORT_ABUSE:
 				ReportStruct r = new ReportStruct();
-				r.targetPlayerName = packet.readZeroPaddedString();
-				r.reason = packet.readByte();
+				r.targetPlayerName = DataConversions.hashToUsername(packet.readLong());
+				r.reason = (byte)(packet.readByte() | 64); // adds 64 to separate from 205+ reasons
 				r.suggestsOrMutes = packet.readByte();
 				result = r;
 				break;
 
 			case SLEEPWORD_ENTERED:
 				SleepStruct sl = new SleepStruct();
-				sl.sleepDelay = packet.readUnsignedByte();
-				sl.sleepWord = packet.readZeroPaddedString();
+				sl.sleepDelay = 0;
+				sl.sleepWord = packet.readString();
 				result = sl;
 				break;
 
@@ -721,6 +725,8 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 				}
 				result = w;
 				break;
+		}
+		} catch (Exception e) {
 		}
 
 		if (result != null) {
@@ -766,7 +772,7 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 					return false;
 			}
 		}
-		if (protocolVer == 235) {
+		if (protocolVer >= 203) {
 			switch (opcode) {
 				// HEARTBEAT
 				case 67:
@@ -804,7 +810,7 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 					return payloadLength >= 3 && payloadLength <=22;
 				// SOCIAL_SEND_PRIVATE_MESSAGE
 				case 218:
-					return payloadLength >= 6;
+					return payloadLength >= 9;
 				// SOCIAL_REMOVE_FRIEND
 				case 167:
 					return payloadLength >= 3 && payloadLength <=22;
@@ -960,16 +966,16 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 					return payloadLength == 2;
 				// CHAT_MESSAGE
 				case 216:
-					return payloadLength >= 2;
+					return payloadLength >= 1;
 				// COMMAND
 				case 38:
-					return payloadLength >= 3;
+					return payloadLength >= 1;
 				// PRIVACY_SETTINGS_CHANGED
 				case 64:
 					return payloadLength == 4;
 				// REPORT_ABUSE
 				case 206:
-					return payloadLength >= 5 && payloadLength <= 24;
+					return payloadLength == 10;
 				// BANK_CLOSE
 				case 212:
 					return payloadLength == 0;
@@ -982,7 +988,7 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 
 				// SLEEPWORD_ENTERED
 				case 45:
-					return payloadLength >= 3;
+					return payloadLength >= 1;
 
 				// SKIP_TUTORIAL
 				case 84:
