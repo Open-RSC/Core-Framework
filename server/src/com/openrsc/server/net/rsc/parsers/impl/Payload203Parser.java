@@ -890,7 +890,11 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 					return payloadLength == 8;
 				// GROUND_ITEM_TAKE
 				case 247:
-					return payloadLength == 6;
+					// Appears to be a genuine client bug (or anti-bot trap) introduced
+					// somewhere between 179-183 that garbage data is appended to the
+					// end, so it's more than 6 bytes even though it doesn't need to be.
+					// Fixed after 204.
+					return payloadLength >= 6;
 
 				// CAST_ON_INVENTORY_ITEM
 				case 4:
