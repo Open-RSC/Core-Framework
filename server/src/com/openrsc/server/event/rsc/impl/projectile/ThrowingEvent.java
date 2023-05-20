@@ -166,12 +166,15 @@ public class ThrowingEvent extends GameTickEvent {
 		}
 
 		if (Formulae.loseArrow(damage)) {
-			GroundItem knivesOrDarts = getFloorItem(throwingID);
+			//The old logic would attempt to add knives/spears to the ground in a stack; that can't happen, so it made all future knives/spears "break".
+			//We have to seperate them. Spears and knives create new ground items every time, while darts add to their stack.
+			GroundItem thrownItemOnGround = getFloorItem(throwingID);
+
 			if (!DropTable.handleRingOfAvarice(player, new Item(throwingID, 1))) {
-				if (knivesOrDarts == null) {
+				if (thrownItemOnGround == null || !thrownItemOnGround.getDef().isStackable()) {
 					getWorld().registerItem(new GroundItem(player.getWorld(), throwingID, target.getX(), target.getY(), 1, player));
 				} else {
-					knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
+					thrownItemOnGround.setAmount(thrownItemOnGround.getAmount() + 1);
 				}
 			}
 		}
