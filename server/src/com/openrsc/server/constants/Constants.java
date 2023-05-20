@@ -77,7 +77,7 @@ public final class Constants {
 	/**
 	 * Maximum number of clan members
 	 */
-	public static final int MAX_CLAN_SIZE = 150;
+	public static final int MAX_CLAN_SIZE = 200;
 	/**
 	 * Maximum number of users of a party
 	 */

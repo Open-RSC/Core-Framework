@@ -3,9 +3,9 @@ package com.openrsc.interfaces.misc.clan;
 import orsc.mudclient;
 
 public class Clan {
-	public String[] username = new String[25];
-	public int[] clanRank = new int[25];
-	public int[] onlineClanMember = new int[25];
+	public String[] username = new String[200];
+	public int[] clanRank = new int[200];
+	public int[] onlineClanMember = new int[200];
 	public boolean[] allowed = new boolean[2];
 	private boolean inClan;
 	private String clanName;
