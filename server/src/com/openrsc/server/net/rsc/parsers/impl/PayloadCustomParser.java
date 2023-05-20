@@ -10,11 +10,16 @@ import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.struct.*;
 import com.openrsc.server.net.rsc.struct.incoming.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Custom RSC Protocol Parser of Incoming Packets to respective Protocol Independent Structs
  * **/
 public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
+
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	@Override
 	public OpcodeIn toOpcodeEnum(Packet packet, Player player) {
 		OpcodeIn opcode = null;
@@ -338,11 +343,139 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 		return null;
 	}
 
+	private boolean isPossiblyValid(Packet packet, Player player) {
+		OpcodeIn opcode = toOpcodeEnum(packet, player);
+		switch (opcode) {
+			case COMBAT_STYLE_CHANGED:
+				return packet.getLength() == 1;
+			case PLAYER_APPEARANCE_CHANGE:
+				return packet.getLength() == 10;
+			case QUESTION_DIALOG_ANSWER:
+				return packet.getLength() == 1;
+			case BANK_SAVE_PRESET:
+			case BANK_LOAD_PRESET:
+				return packet.getLength() == 2;
+			case BANK_WITHDRAW:
+				if (player.getConfig().WANT_BANK_NOTES)
+					return packet.getLength() >= 7;
+				else
+					return packet.getLength() >= 6;
+			case BANK_DEPOSIT:
+				return packet.getLength() >= 6;
+			case SHOP_BUY:
+			case SHOP_SELL:
+				return packet.getLength() == 6;
+			case GROUND_ITEM_USE_ITEM:
+				return packet.getLength() == 4;
+			case ITEM_USE_ITEM:
+				return packet.getLength() == 4;
+			case ITEM_UNEQUIP_FROM_INVENTORY:
+			case ITEM_EQUIP_FROM_INVENTORY:
+				return packet.getLength() == 2;
+			case ITEM_UNEQUIP_FROM_EQUIPMENT:
+			case ITEM_REMOVE_TO_BANK:
+				return packet.getLength() == 1;
+			case ITEM_EQUIP_FROM_BANK:
+				return packet.getLength() == 2;
+			case USE_WITH_BOUNDARY:
+				return packet.getLength() >= 7;
+			case USE_ITEM_ON_SCENERY:
+				return packet.getLength() == 6;
+			case NPC_USE_ITEM:
+			case PLAYER_USE_ITEM:
+				return packet.getLength() == 4;
+			case BLINK:
+				return packet.getLength() == 4;
+			case GROUND_ITEM_TAKE:
+				return packet.getLength() == 6;
+			case ITEM_COMMAND:
+				return packet.getLength() >= 7;
+			case ITEM_DROP:
+				if (player.getWorld().getServer().getConfig().WANT_DROP_X) {
+					return packet.getLength() >= 6;
+				}
+				return packet.getLength() >= 4;
+			case OBJECT_COMMAND:
+			case OBJECT_COMMAND2:
+				return packet.getLength() == 4;
+			case INTERACT_WITH_BOUNDARY:
+			case INTERACT_WITH_BOUNDARY2:
+				return packet.getLength() == 5;
+			case NPC_ATTACK:
+			case NPC_COMMAND:
+			case NPC_COMMAND2:
+			case NPC_TALK_TO:
+			case PLAYER_ATTACK:
+			case PLAYER_FOLLOW:
+				return packet.getLength() == 2;
+			case CAST_ON_SELF:
+				return packet.getLength() == 2;
+			case PLAYER_CAST_PVP:
+			case CAST_ON_NPC:
+				return packet.getLength() == 4;
+			case CAST_ON_INVENTORY_ITEM:
+				return packet.getLength() == 4;
+			case CAST_ON_BOUNDARY:
+				return packet.getLength() == 7;
+			case CAST_ON_SCENERY:
+				return packet.getLength() == 6;
+			case CAST_ON_GROUND_ITEM:
+				return packet.getLength() == 8;
+			case CAST_ON_LAND:
+				return packet.getLength() == 6;
+			case PLAYER_DUEL:
+				return packet.getLength() == 2;
+			case DUEL_FIRST_SETTINGS_CHANGED:
+				return packet.getLength() == 4;
+			case DUEL_OFFER_ITEM:
+				return packet.getLength() >= 1;
+			case PLAYER_INIT_TRADE_REQUEST:
+				return packet.getLength() == 2;
+			case PLAYER_ADDED_ITEMS_TO_TRADE_OFFER:
+				return packet.getLength() >= 1;
+			case PRAYER_ACTIVATED:
+			case PRAYER_DEACTIVATED:
+				return packet.getLength() == 1;
+			case GAME_SETTINGS_CHANGED:
+				return packet.getLength() == 2;
+			case PRIVACY_SETTINGS_CHANGED:
+				return packet.getLength() == 4;
+			case PLAYER_ACCEPTED_INIT_TRADE_REQUEST:
+			case PLAYER_ACCEPTED_TRADE:
+			case PLAYER_DECLINED_TRADE:
+			case DUEL_FIRST_ACCEPTED:
+			case DUEL_DECLINED:
+			case DUEL_SECOND_ACCEPTED:
+			case HEARTBEAT:
+			case SKIP_TUTORIAL:
+			case ON_BLACK_HOLE:
+			case LOGOUT:
+			case CONFIRM_LOGOUT:
+				return packet.getLength() == 0;
+			case WALK_TO_POINT:
+			case WALK_TO_ENTITY:
+				return packet.getLength() >= 4;
+		}
+		return true;
+	}
+
 	@Override
 	public AbstractStruct<OpcodeIn> parse(Packet packet, Player player) {
 
 		OpcodeIn opcode = toOpcodeEnum(packet, player);
 		AbstractStruct<OpcodeIn> result = null;
+
+		final ItemOnObjectStruct iot;
+		final PlayerTradeStruct pt;
+		final PlayerDuelStruct pd;
+		final TargetPositionStruct tp;
+		final TargetObjectStruct to;
+		final SpellStruct sp;
+
+		if (!isPossiblyValid(packet, player)) {
+			LOGGER.info(String.format("Caught invalid incoming opcode (custom protocol);; id: %d; len: %d\n", packet.getID(), packet.getLength()));
+			return null;
+		}
 
 		switch (opcode) {
 			case COMBAT_STYLE_CHANGED:
@@ -461,16 +594,22 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case USE_WITH_BOUNDARY:
-			case USE_ITEM_ON_SCENERY:
-				ItemOnObjectStruct iot = new ItemOnObjectStruct();
+				iot = new ItemOnObjectStruct();
 				iot.coordObject = new Point(packet.readShort(), packet.readShort());
-				if (opcode == OpcodeIn.USE_WITH_BOUNDARY) {
-					iot.direction = packet.readByte();
-				}
+				iot.direction = packet.readByte();
 				iot.slotID = packet.readShort();
-				if (opcode == OpcodeIn.USE_WITH_BOUNDARY && player.getConfig().WANT_EQUIPMENT_TAB && iot.slotID == -1) {
+				if (player.getConfig().WANT_EQUIPMENT_TAB &&
+				    iot.slotID == -1 &&
+				    packet.getReadableBytes() >= 2) {
 					iot.itemID = packet.readShort();
 				}
+				result = iot;
+				break;
+
+			case USE_ITEM_ON_SCENERY:
+				iot = new ItemOnObjectStruct();
+				iot.coordObject = new Point(packet.readShort(), packet.readShort());
+				iot.slotID = packet.readShort();
 				result = iot;
 				break;
 
@@ -483,12 +622,15 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case BLINK:
-			case GROUND_ITEM_TAKE:
-				TargetPositionStruct tp = new TargetPositionStruct();
+				tp = new TargetPositionStruct();
 				tp.coordinate = new Point(packet.readShort(), packet.readShort());
-				if (opcode == OpcodeIn.GROUND_ITEM_TAKE) {
-					tp.itemId = packet.readShort();
-				}
+				result = tp;
+				break;
+
+			case GROUND_ITEM_TAKE:
+				tp = new TargetPositionStruct();
+				tp.coordinate = new Point(packet.readShort(), packet.readShort());
+				tp.itemId = packet.readShort();
 				result = tp;
 				break;
 
@@ -498,7 +640,7 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 				ic.index = packet.readShort();
 				if (opcode == OpcodeIn.ITEM_COMMAND) {
 					ic.amount = packet.readInt();
-					if (ic.index == -1) {
+					if (ic.index == -1 && packet.getReadableBytes() >= 2) {
 						ic.realIndex = packet.readShort();
 					}
 					ic.commandIndex = packet.readByte();
@@ -506,7 +648,7 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 					if (player.getWorld().getServer().getConfig().WANT_DROP_X) {
 						ic.amount = packet.readInt();
 					}
-					if (ic.index == -1) {
+					if (ic.index == -1 && packet.getReadableBytes() >= 2) {
 						ic.realIndex = packet.readShort();
 					}
 				}
@@ -515,13 +657,16 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 
 			case OBJECT_COMMAND:
 			case OBJECT_COMMAND2:
+				to = new TargetObjectStruct();
+				to.coordObject = new Point(packet.readShort(), packet.readShort());
+				result = to;
+				break;
+
 			case INTERACT_WITH_BOUNDARY:
 			case INTERACT_WITH_BOUNDARY2:
-				TargetObjectStruct to = new TargetObjectStruct();
+				to = new TargetObjectStruct();
 				to.coordObject = new Point(packet.readShort(), packet.readShort());
-				if (opcode == OpcodeIn.INTERACT_WITH_BOUNDARY || opcode == OpcodeIn.INTERACT_WITH_BOUNDARY2) {
-					to.direction = packet.readByte();
-				}
+				to.direction = packet.readByte();
 				result = to;
 				break;
 
@@ -537,76 +682,127 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case CAST_ON_SELF:
-			case PLAYER_CAST_PVP:
-			case CAST_ON_NPC:
-			case CAST_ON_INVENTORY_ITEM:
-			case CAST_ON_BOUNDARY:
-			case CAST_ON_SCENERY:
-			case CAST_ON_GROUND_ITEM:
-			case CAST_ON_LAND:
-				SpellStruct sp = new SpellStruct();
+				sp = new SpellStruct();
 				sp.spell = Constants.spellToEnum(packet.readShort());
-				if (opcode == OpcodeIn.PLAYER_CAST_PVP || opcode == OpcodeIn.CAST_ON_NPC
-					|| opcode == OpcodeIn.CAST_ON_INVENTORY_ITEM) {
-					sp.targetIndex = packet.readShort();
-				} else if (opcode == OpcodeIn.CAST_ON_BOUNDARY || opcode == OpcodeIn.CAST_ON_SCENERY
-					|| opcode == OpcodeIn.CAST_ON_GROUND_ITEM || opcode == OpcodeIn.CAST_ON_LAND) {
-					sp.targetCoord = new Point(packet.readShort(), packet.readShort());
-					if (opcode == OpcodeIn.CAST_ON_BOUNDARY) {
-						sp.direction = packet.readByte();
-					} else if (opcode == OpcodeIn.CAST_ON_GROUND_ITEM) {
-						sp.targetIndex = packet.readShort();
-					}
-				}
+				result = sp;
+				break;
+
+			case PLAYER_CAST_PVP:
+				sp = new SpellStruct();
+				sp.spell = Constants.spellToEnum(packet.readShort());
+				sp.targetIndex = packet.readShort();
+				result = sp;
+				break;
+
+			case CAST_ON_NPC:
+				sp = new SpellStruct();
+				sp.spell = Constants.spellToEnum(packet.readShort());
+				sp.targetIndex = packet.readShort();
+				result = sp;
+				break;
+
+			case CAST_ON_INVENTORY_ITEM:
+				sp = new SpellStruct();
+				sp.spell = Constants.spellToEnum(packet.readShort());
+				sp.targetIndex = packet.readShort();
+				result = sp;
+				break;
+
+			case CAST_ON_BOUNDARY:
+				sp = new SpellStruct();
+				sp.spell = Constants.spellToEnum(packet.readShort());
+				sp.targetCoord = new Point(packet.readShort(), packet.readShort());
+				sp.direction = packet.readByte();
+				result = sp;
+				break;
+
+			case CAST_ON_SCENERY:
+				sp = new SpellStruct();
+				sp.spell = Constants.spellToEnum(packet.readShort());
+				sp.targetCoord = new Point(packet.readShort(), packet.readShort());
+				result = sp;
+				break;
+
+			case CAST_ON_GROUND_ITEM:
+				sp = new SpellStruct();
+				sp.spell = Constants.spellToEnum(packet.readShort());
+				sp.targetCoord = new Point(packet.readShort(), packet.readShort());
+				sp.targetIndex = packet.readShort();
+				result = sp;
+				break;
+
+			case CAST_ON_LAND:
+				sp = new SpellStruct();
+				sp.spell = Constants.spellToEnum(packet.readShort());
+				sp.targetCoord = new Point(packet.readShort(), packet.readShort());
 				result = sp;
 				break;
 
 			case PLAYER_DUEL:
+				pd = new PlayerDuelStruct();
+				pd.targetPlayerID = packet.readShort();
+				result = pd;
+				break;
+
 			case DUEL_FIRST_SETTINGS_CHANGED:
-			case DUEL_FIRST_ACCEPTED:
-			case DUEL_DECLINED:
+				pd = new PlayerDuelStruct();
+				pd.disallowRetreat = packet.readByte();
+				pd.disallowMagic = packet.readByte();
+				pd.disallowPrayer = packet.readByte();
+				pd.disallowWeapons = packet.readByte();
+				result = pd;
+				break;
+
 			case DUEL_OFFER_ITEM:
-			case DUEL_SECOND_ACCEPTED:
-				PlayerDuelStruct pd = new PlayerDuelStruct();
-				if (opcode == OpcodeIn.PLAYER_DUEL) {
-					pd.targetPlayerID = packet.readShort();
-				} else if (opcode == OpcodeIn.DUEL_OFFER_ITEM) {
-					pd.duelCount = packet.readByte();
-					pd.duelCatalogIDs = new int[pd.duelCount];
-					pd.duelAmounts = new int[pd.duelCount];
-					pd.duelNoted = new boolean[pd.duelCount];
-					for (int slot = 0; slot < pd.duelCount; slot++) {
-						pd.duelCatalogIDs[slot] = packet.readShort();
-						pd.duelAmounts[slot] = packet.readInt();
-						pd.duelNoted[slot] = packet.readShort() == 1;
+				pd = new PlayerDuelStruct();
+				pd.duelCount = packet.readByte();
+				pd.duelCatalogIDs = new int[pd.duelCount];
+				pd.duelAmounts = new int[pd.duelCount];
+				pd.duelNoted = new boolean[pd.duelCount];
+				for (int slot = 0; slot < pd.duelCount; slot++) {
+					if (packet.getReadableBytes() < 8) {
+						break;
 					}
-				} else if (opcode == OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED) {
-					pd.disallowRetreat = packet.readByte();
-					pd.disallowMagic = packet.readByte();
-					pd.disallowPrayer = packet.readByte();
-					pd.disallowWeapons = packet.readByte();
+					pd.duelCatalogIDs[slot] = packet.readShort();
+					pd.duelAmounts[slot] = packet.readInt();
+					pd.duelNoted[slot] = packet.readShort() == 1;
 				}
 				result = pd;
 				break;
 
+			case DUEL_FIRST_ACCEPTED:
+			case DUEL_DECLINED:
+			case DUEL_SECOND_ACCEPTED:
+				pd = new PlayerDuelStruct();
+				result = pd;
+				break;
+
 			case PLAYER_INIT_TRADE_REQUEST:
+				pt = new PlayerTradeStruct();
+				pt.targetPlayerID = packet.readShort();
+				result = pt;
+				break;
+
 			case PLAYER_ACCEPTED_INIT_TRADE_REQUEST:
 			case PLAYER_ACCEPTED_TRADE:
 			case PLAYER_DECLINED_TRADE:
+				pt = new PlayerTradeStruct();
+				result = pt;
+				break;
+
 			case PLAYER_ADDED_ITEMS_TO_TRADE_OFFER:
-				PlayerTradeStruct pt = new PlayerTradeStruct();
-				if (opcode == OpcodeIn.PLAYER_INIT_TRADE_REQUEST) {
-					pt.targetPlayerID = packet.readShort();
-				} else if (opcode == OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER) {
-					pt.tradeCount = packet.readByte();
-					pt.tradeCatalogIDs = new int[pt.tradeCount];
-					pt.tradeAmounts = new int[pt.tradeCount];
-					pt.tradeNoted = new boolean[pt.tradeCount];
-					for (int slot = 0; slot < pt.tradeCount; slot++) {
-						pt.tradeCatalogIDs[slot] = packet.readShort();
-						pt.tradeAmounts[slot] = packet.readInt();
-						pt.tradeNoted[slot] = packet.readShort() == 1;
+				pt = new PlayerTradeStruct();
+				pt.tradeCount = packet.readByte();
+				pt.tradeCatalogIDs = new int[pt.tradeCount];
+				pt.tradeAmounts = new int[pt.tradeCount];
+				pt.tradeNoted = new boolean[pt.tradeCount];
+				for (int slot = 0; slot < pt.tradeCount; slot++) {
+					if (packet.getReadableBytes() < 8) {
+						break;
 					}
+					pt.tradeCatalogIDs[slot] = packet.readShort();
+					pt.tradeAmounts[slot] = packet.readInt();
+					pt.tradeNoted[slot] = packet.readShort() == 1;
 				}
 				result = pt;
 				break;
@@ -856,6 +1052,9 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 
 				int numWaypoints = packet.getReadableBytes() / 2;
 				for (int stepCount = 0; stepCount < numWaypoints; stepCount++) {
+					if (packet.getReadableBytes() < 2) {
+						break;
+					}
 					w.steps.add(new Point(packet.readByte(), packet.readByte()));
 				}
 				result = w;
