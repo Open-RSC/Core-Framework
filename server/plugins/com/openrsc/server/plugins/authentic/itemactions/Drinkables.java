@@ -433,12 +433,8 @@ public class Drinkables implements OpInvTrigger {
 		// In RSC stat restore potion is only applicable for Attack, Strength, and Defense
 		int[] affectedStats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
 		for (int i = 0; i < affectedStats.length; i++) {
-			// Restore by 30% + 10, unless below 14 (then do full restore)
-			if (player.getSkills().getLevel(affectedStats[i]) < 14) {
-				healstat(player, affectedStats[i], player.getSkills().getMaxStat(affectedStats[i]), 0);
-			} else {
-				healstat(player, affectedStats[i], 10, 30);
-			}
+			// Restore by 30% + 10
+			healstat(player, affectedStats[i], 10, 30);
 		}
 		delay(2);
 		if (left <= 0) {

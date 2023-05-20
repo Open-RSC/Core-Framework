@@ -432,8 +432,12 @@ public class Functions {
 	 * @param percent Percentage of current skill level to add
 	 */
 	public static void healstat(final Player player, final int statId, final int constant, final int percent) {
+		// The original 2001 RuneScript documentation describes it as operating on
+		// "the current level", but this is inconsistent with later observed behavior
+		// (from e.g. stat restore potions).
 		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + constant + (int)((currentLevel * percent) / 100.0);
+		final int levelToScalePotionEffect = player.getConfig().HEALSTAT_ON_CURRENT_STAT ? currentLevel : player.getSkills().getMaxStat(statId);
+		final int newLevel = currentLevel + constant + (int)((levelToScalePotionEffect * percent) / 100.0);
 		player.getSkills().setLevel(statId,
 			Math.min(newLevel, player.getSkills().getMaxStat(statId)), true, false);
 	}

@@ -20,9 +20,6 @@ public class RunecraftPotion implements OpInvTrigger {
 		if (!command.equalsIgnoreCase("drink"))
 			return false;
 
-		if (!config().WANT_RUNECRAFT)
-			return false;
-
 		int id = item.getCatalogId();
 
 		if (inArray(id, ItemId.FULL_RUNECRAFT_POTION.id(),
@@ -39,6 +36,9 @@ public class RunecraftPotion implements OpInvTrigger {
 			
 	@Override	       
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		if (!config().WANT_RUNECRAFT)
+			return;
+
 		int id = item.getCatalogId();
 
 		if (id == ItemId.FULL_RUNECRAFT_POTION.id())
@@ -62,7 +62,7 @@ public class RunecraftPotion implements OpInvTrigger {
 getWorld().getServer().getConstants().getSkills().getSkillName(affectedStat));
 			return;
 		}
-			
+
 		if (player.getCarriedItems().remove(item) == -1) return;
 		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());	
 		player.getCarriedItems().getInventory().add(new Item(newItem));
