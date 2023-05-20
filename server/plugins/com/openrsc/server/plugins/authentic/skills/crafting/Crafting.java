@@ -125,8 +125,9 @@ public class Crafting implements UseInvTrigger,
 				return;
 			}
 			if (getCurrentLevel(player, Skill.CRAFTING.id()) < 10) {
-				player.message("You need a crafting level of 10 to make the lens");
-				return;
+				player.message("Sorry, you need a crafting level");
+				player.message("Of 10 or above to use this object");
+				//Authentically bugged and wouldn't stop the player from actually making the lens.
 			}
 			if (carriedItems.remove(new Item(ItemId.MOLTEN_GLASS.id())) > -1) {
 				player.message("You pour the molten glass into the mould");

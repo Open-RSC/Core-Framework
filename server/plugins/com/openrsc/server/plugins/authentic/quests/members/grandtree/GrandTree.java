@@ -218,10 +218,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						} else if (qmenu == 3) {
 							questionMenu2(player, n);
 						} else if (qmenu == 4) {
-							questionMenu2(player, n);
 							if (!player.getCache().hasKey("gt_q1")) {
 								player.getCache().store("gt_q1", true);
 							}
+							questionMenu2(player, n);
 						}
 					} else if (menu == 1) {
 						if (!player.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id(), Optional.of(false))
