@@ -844,6 +844,34 @@ public class Npc extends Mob {
 		return "[NPC:" + getIndex() + ":" + getDef().getName() + " @ (" + getX() + ", " + getY() + ")]";
 	}
 
+	/**
+	 * Gets the NPC to move to an adjacent tile, with a priority system.
+	 */
+	public void moveToAdjacentTile() {
+		ArrayList<Point> possiblePoints = new ArrayList<>();
+		//Walk priority seems to be positives first? This is different from the client pathfinding.
+		//TODO: More investigation on the direction an NPC would move towards in this case.
+		for (int x = 1; x >= -1; x = x - 2) {
+			possiblePoints.add(new Point(getX() + x, getY()));
+		}
+		for (int y = 1; y >= -1; y = y - 2) {
+			possiblePoints.add(new Point(getX(), getY() + y));
+		}
+
+		possiblePoints.add(new Point(getX() + 1, getY() + 1));
+		possiblePoints.add(new Point(getX() + 1, getY() - 1));
+		possiblePoints.add(new Point(getX() - 1, getY() + 1));
+		possiblePoints.add(new Point(getX() - 1, getY() - 1));
+
+		for (Point possiblePoint : possiblePoints) {
+			if (possiblePoint.inBounds(getLoc().minX(), getLoc().minY(), getLoc().maxX(), getLoc().maxY())
+				&& canWalk(getWorld(), possiblePoint.getX(), possiblePoint.getY())) {
+				walk(possiblePoint.getX(), possiblePoint.getY());
+				break;
+			}
+		}
+	}
+
 	public void updatePosition() {
 		NpcInteraction interaction = getNpcInteraction();
 		Player player = getInteractingPlayer();
@@ -854,16 +882,7 @@ public class Npc extends Mob {
 					resetRange();
 					// NPCs on the same tile as you will walk somewhere else.
 					if (player.getLocation().equals(getLocation())) {
-						for (int x = -1; x <= 1; ++x) {
-							for (int y = -1; y <= 1; ++y) {
-								if (x == 0 || y == 0)
-									continue;
-								Point destination = canWalk(player.getWorld(), player.getX() - x, player.getY() - y);
-								if (destination != null && destination.inBounds(getLoc().minX, getLoc().minY, getLoc().maxY, getLoc().maxY)) {
-									walk(destination.getX(), destination.getY());
-								}
-							}
-						}
+						moveToAdjacentTile();
 					}
 				case NPC_USE_ITEM:
 				case NPC_GNOMEBALL_OP:
@@ -879,7 +898,7 @@ public class Npc extends Mob {
 		super.updatePosition();
 	}
 
-	private Point canWalk(World world, int x, int y) {
+	private boolean canWalk(World world, int x, int y) {
 		int myX = getX();
 		int myY = getY();
 		int newX = x;
@@ -904,7 +923,7 @@ public class Npc extends Mob {
 		}
 
 		if ((myXBlocked && myYBlocked) || (myXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
-			return null;
+			return false;
 		}
 
 		if (newX > myX) {
@@ -919,12 +938,12 @@ public class Npc extends Mob {
 			newYBlocked = checkBlocking(world, newX, newY, 4);
 		}
 		if ((newXBlocked && newYBlocked) || (newXBlocked && myY == newY) || (myYBlocked && myX == newX)) {
-			return null;
+			return false;
 		}
 		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) {
-			return null;
+			return false;
 		}
-		return new Point(newX, newY);
+		return true;
 	}
 
 	private boolean checkBlocking(World world, int x, int y, int bit) {

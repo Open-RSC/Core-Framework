@@ -1478,17 +1478,7 @@ public class Functions {
 
 	public static void npcWalkFromPlayer(Player player, Npc n) {
 		if (player.getLocation().equals(n.getLocation())) {
-			for (int x = -1; x <= 1; ++x) {
-				for (int y = -1; y <= 1; ++y) {
-					if (x == 0 || y == 0)
-						continue;
-					Point destination = canWalk(n, player.getX() - x, player.getY() - y);
-					if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
-						n.walk(destination.getX(), destination.getY());
-						break;
-					}
-				}
-			}
+			n.moveToAdjacentTile();
 		}
 	}
 
