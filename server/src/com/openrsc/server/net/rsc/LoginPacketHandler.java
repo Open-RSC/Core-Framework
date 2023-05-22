@@ -174,9 +174,12 @@ public class LoginPacketHandler {
 						// Decrypt XTEA block
 						int xteaLength = packet.readUnsignedShort();
 						byte[] xteaBlock = Crypto.decryptXTEA(packet.readBytes(xteaLength), 0, xteaLength, loginInfo.keys);
-
-						for (int i = 0; i < 5; i++) {
-							loginInfo.nonces[i + 6] = bytesToInt(loginBlock[i * 4], loginBlock[1 + i * 4], loginBlock[2 + i * 4], loginBlock[3 + i * 4]);
+						// byte limit30 = xteaBlock[0];
+						
+						// Read the nonces from the xteaBlock. There should be 24 bytes
+						// We start at index 1 because index 0 is 'limit30"
+						for (int i = 0; i < 6; i++) {
+							loginInfo.nonces[i + 6] = bytesToInt(xteaBlock[1 + i * 4], xteaBlock[2 + i * 4], xteaBlock[3 + i * 4], xteaBlock[4 + i * 4]);
 						}
 
 						String username = "";
