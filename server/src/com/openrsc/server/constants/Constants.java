@@ -69,7 +69,7 @@ public final class Constants {
 	/**
 	 * Maximum hit for Crumble Undead (Magic) spell. (Against undead)
 	 */
-	public static final int CRUMBLE_UNDEAD_MAX = 12;
+	public static final int CRUMBLE_UNDEAD_MAX = 8;
 	/**
 	 * Size of Regions in RegionManager
 	 */

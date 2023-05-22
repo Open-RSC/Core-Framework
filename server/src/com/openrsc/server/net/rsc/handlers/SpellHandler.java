@@ -1589,13 +1589,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().playerServerMessage(MessageType.QUEST, "This spell can only be used on skeletons, zombies and ghosts");
 							return;
 						}
-						int damaga = DataConversions.random(3, Constants.CRUMBLE_UNDEAD_MAX);
+						int damaga = CombatFormula.calculateMagicDamage(Constants.CRUMBLE_UNDEAD_MAX);
 						if (!checkAndRemoveRunes(getPlayer(), spell, capeActivated)) {
 							return;
 						}
-						if (DataConversions.random(0, 8) == 2)
-							damaga = 0;
-
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damaga, 1, setChasing));
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						return;
@@ -1697,9 +1694,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
-						int maxR = (int)getPlayer().getWorld().getServer().getConstants().getSpellDamages().getSpellDamage(spellEnum, entityType, SpellDamages.MagicType.GOODEVILMAGIC);
+						double maxR = getPlayer().getWorld().getServer().getConstants().getSpellDamages().getSpellDamage(spellEnum, entityType, SpellDamages.MagicType.GOODEVILMAGIC);
 
-						int damageR = CombatFormula.calculateMagicDamage(maxR + 1) - 1;
+						int damageR = CombatFormula.calculateMagicDamage(maxR);
 
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damageR, 1, setChasing));
 						getPlayer().setKillType(KillType.MAGIC);
@@ -1760,7 +1757,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
-						int max = (int)getPlayer().getWorld().getServer().getConstants().getSpellDamages().getSpellDamage(spellEnum, entityType, SpellDamages.MagicType.MODERNMAGIC);
+						double max = getPlayer().getWorld().getServer().getConstants().getSpellDamages().getSpellDamage(spellEnum, entityType, SpellDamages.MagicType.MODERNMAGIC);
 
 						// If the player is wearing chaos gauntlets and casts a bolt spell, they get +1 damage
 						final boolean gauntletBonus = getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id())
@@ -1770,7 +1767,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							max += 1;
 						}
 
-						int damage = CombatFormula.calculateMagicDamage(max + 1) - 1;
+						int damage = CombatFormula.calculateMagicDamage(max);
 
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1, setChasing));
 						getPlayer().setKillType(KillType.MAGIC);
