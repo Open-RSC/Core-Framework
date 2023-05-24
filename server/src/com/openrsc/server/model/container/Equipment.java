@@ -57,7 +57,7 @@ public class Equipment {
 	/** Primary Method Definitions */
 
 	// Equipment::add(Item)
-	// Adds an item to the equipment container. Updates the database instantly.
+	// Adds an item to the equipment container.
 	public int add(Item item) {
 		synchronized (list) {
 			ItemDefinition itemDef = item.getDef(player.getWorld());
@@ -87,7 +87,7 @@ public class Equipment {
 	}
 
 	// Equipment::remove(Item, int)
-	// Removes an item from the equipment container. Updates the database instantly.
+	// Removes an item from the equipment container. Doesn't put it anywhere else, just removes.
 	public int remove(Item item, int amount) {
 		return remove(item, amount, true);
 	}
@@ -401,16 +401,15 @@ public class Equipment {
 				if (itemDef == null)
 					return false;
 
-				ArrayList<Item> items = gatherConflictingItems(request);
+				ArrayList<Item> itemsToUnequip = gatherConflictingItems(request);
 
 				// We don't have enough space, even with the item we
 				// will equip removed from the inventory.
-				if (player.getFreeBankSlots() < items.size()) {
+				if (player.getFreeBankSlots() < itemsToUnequip.size()) {
 					player.message("You need more bank space to equip that.");
 					return false;
 				}
 
-				int originalAmount = player.getBank().countId(request.item.getCatalogId());
 				Item toEquip = player.getBank().get(
 					player.getBank().getFirstIndexById(request.item.getCatalogId())
 				);
@@ -422,29 +421,32 @@ public class Equipment {
 					return false;
 				}
 
-				for (Item item : items) {
-					remove(item, item.getAmount(), updateClient); // Remove from equipment
+				// Remove items from equipment (added to bank later)
+				for (Item item : itemsToUnequip) {
+					remove(item, item.getAmount(), updateClient);
 				}
 
 				if (!itemDef.isStackable()) {
 					player.getBank().remove(toEquip.getCatalogId(), 1, updateClient);
-					for (Item item : items) {
+					for (Item item : itemsToUnequip) {
 						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()), updateClient);
 					}
 
-					if (originalAmount > 1) {
+					if (toEquip.getAmount() > 1) {
 						add(new Item(toEquip.getCatalogId(), 1));
 					} else {
 						add(request.item);
 					}
 				} else {
-					player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount(), updateClient);
-					for (Item item : items) {
+					int amountToRemoveAndEquip = Math.min(toEquip.getAmount(), request.item.getAmount());
+
+					player.getBank().remove(toEquip.getCatalogId(), amountToRemoveAndEquip, updateClient);
+					for (Item item : itemsToUnequip) {
 						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()), updateClient);
 					}
 
-					if (originalAmount > request.item.getAmount()) {
-						add(new Item(request.item.getCatalogId(), request.item.getAmount()));
+					if (amountToRemoveAndEquip != request.item.getAmount()) {
+						add(new Item(request.item.getCatalogId(), amountToRemoveAndEquip));
 					} else {
 						add(request.item);
 					}

@@ -51,7 +51,7 @@ public class SqliteGameDatabaseConnection extends JDBCDatabaseConnection {
         }
 
         if(isConnected()) {
-            LOGGER.info(server.getName() + " : " + server.getName() + " - Connected to SQLite!");
+            LOGGER.info(server.getName() + " : " + server.getName() + " - Connected to SQLite @ " + getDBPath(dbName) + "!");
         } else {
             LOGGER.error("Unable to connect to SQLite");
             SystemUtil.exit(1);
