@@ -366,7 +366,7 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 			case SHOP_SELL:
 				return packet.getLength() == 6;
 			case GROUND_ITEM_USE_ITEM:
-				return packet.getLength() == 4;
+				return packet.getLength() == 8;
 			case ITEM_USE_ITEM:
 				return packet.getLength() == 4;
 			case ITEM_UNEQUIP_FROM_INVENTORY:
