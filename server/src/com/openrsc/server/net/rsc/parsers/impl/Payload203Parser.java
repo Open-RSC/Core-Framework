@@ -22,9 +22,6 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 	@Override
 	public OpcodeIn toOpcodeEnum(Packet packet, Player player) {
 		OpcodeIn opcode = null;
-		// since we have 235 w/RSC175 Security Settings
-		// some packet opcodes conflict, so packet needs to be further examined
-		boolean conflictFound = false;
 		switch (packet.getID()) {
 			case 67:
 				opcode = OpcodeIn.HEARTBEAT;
@@ -722,20 +719,19 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 					return payloadLength == 8;
 				// SOCIAL_ADD_IGNORE
 				case 132:
-					return payloadLength >= 3 && payloadLength <=22;
+					return payloadLength >= 8;
 				// SOCIAL_ADD_FRIEND
 				case 195:
-					return payloadLength >= 3 && payloadLength <=22;
+					return payloadLength >= 8;
 				// SOCIAL_SEND_PRIVATE_MESSAGE
 				case 218:
-					return payloadLength >= 9;
+					return payloadLength >= 8;
 				// SOCIAL_REMOVE_FRIEND
 				case 167:
-					return payloadLength >= 3 && payloadLength <=22;
+					return payloadLength >= 8;
 				// SOCIAL_REMOVE_IGNORE
 				case 241:
-					return payloadLength >= 3 && payloadLength <=22;
-
+					return payloadLength >= 8;
 				// DUEL_FIRST_SETTINGS_CHANGED
 				case 8:
 					return payloadLength == 4;
