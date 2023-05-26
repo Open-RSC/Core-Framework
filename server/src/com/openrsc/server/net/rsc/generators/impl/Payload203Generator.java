@@ -61,6 +61,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_TRADE_CLOSE, 128);
 		put(OpcodeOut.SEND_SERVER_MESSAGE, 131);
 		put(OpcodeOut.SEND_SHOP_CLOSE, 137);
+		put(OpcodeOut.SEND_FRIEND_LIST, 71);
 		put(OpcodeOut.SEND_FRIEND_UPDATE, 149);
 		put(OpcodeOut.SEND_EQUIPMENT_STATS, 153);
 		put(OpcodeOut.SEND_STATS, 156);
@@ -401,10 +402,26 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeBytes(ss.image);
 					break;
 
+				case SEND_FRIEND_LIST:
+					FriendListStruct fl = (FriendListStruct) payload;
+					int friendSize = fl.listSize;
+					builder.writeByte((byte) friendSize);
+					for (int i = 0; i < friendSize; i++) {
+						builder.writeLong(DataConversions.usernameToHash(fl.name[i]));
+						if (fl.worldNumber[i] != 0 && fl.worldNumber[i] != 255)
+							builder.writeByte((byte) (fl.worldNumber[i] + 9));
+						else
+							builder.writeByte((byte) fl.worldNumber[i]);
+					}
+					break;
+
 				case SEND_FRIEND_UPDATE:
 					FriendUpdateStruct fr = (FriendUpdateStruct) payload;
 					builder.writeLong(DataConversions.usernameToHash(fr.name));
-					builder.writeByte((byte) fr.worldNumber);
+					if (fr.worldNumber != 0 && fr.worldNumber != 255)
+						builder.writeByte((byte) (fr.worldNumber + 9));
+					else
+						builder.writeByte((byte) fr.worldNumber);
 					break;
 
 				case SEND_IGNORE_LIST:
@@ -494,6 +511,7 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_PRIVATE_MESSAGE:
 					PrivateMessageStruct pm = (PrivateMessageStruct) payload;
 					builder.writeLong(DataConversions.usernameToHash(pm.playerName));
+					builder.writeInt(pm.totalSentMessages);
 					builder.writeBytes(StringUtil.compressMessage(pm.message));
 					break;
 

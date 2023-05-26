@@ -488,6 +488,7 @@ public class ActionSender {
 	 */
 	public static void sendFriendList(Player player) {
 		if (player.getClientVersion() <= 204) {
+			final int sameWorld = player.getClientVersion() > 204 ? 99 : 255;
 			FriendListStruct struct = new FriendListStruct();
 			int listSize = player.getSocial().getFriendList().size();
 			if (player.getBlockGlobalFriend()) {
@@ -511,19 +512,19 @@ public class ActionSender {
 					if (player.getBlockGlobalFriend()) continue;
 					onlineStatus = 6; // online and same world
 					username = "Global$";
-					struct.worldNumber[i] = 99;
+					struct.worldNumber[i] = sameWorld;
 				} else if (player.getWorld().getPlayer(usernameHash) != null &&
 					player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
 					onlineStatus = getPlayerOnlineStatus(player, usernameHash);
 					try {
 						// TODO: we won't be able to reach across servers like this if there's more than one server
 						if (onlineStatus == 6) {
-							struct.worldNumber[i] = 99; // same world
+							struct.worldNumber[i] = sameWorld;
 						} else {
 							struct.worldNumber[i] = player.getWorld().getPlayer(usernameHash).getWorld().getServer().getConfig().WORLD_NUMBER;
 						}
 					} catch (Exception e) {
-						struct.worldNumber[i] = 99; // assume same world
+						struct.worldNumber[i] = sameWorld; // assume same world
 					}
 				}
 
@@ -579,24 +580,25 @@ public class ActionSender {
 		FriendUpdateStruct struct = new FriendUpdateStruct();
 		int onlineStatus = 0;
 		struct.worldNumber = 0;
+		final int sameWorld = player.getClientVersion() > 204 ? 99 : 255;
 
 		if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
 			if (player.getBlockGlobalFriend()) return;
 			onlineStatus = 6;
 			username = "Global$";
-			struct.worldNumber = 99;
+			struct.worldNumber = sameWorld;
 		} else if (player.getWorld().getPlayer(usernameHash) != null &&
 			player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
 			onlineStatus = getPlayerOnlineStatus(player, usernameHash);
 			try {
 				// TODO: we won't be able to reach across servers like this if there's more than one server
 				if (onlineStatus == 6) {
-					struct.worldNumber = 99; // same world
+					struct.worldNumber = sameWorld;
 				} else {
 					struct.worldNumber = player.getWorld().getPlayer(usernameHash).getWorld().getServer().getConfig().WORLD_NUMBER;
 				}
 			} catch (Exception e) {
-				struct.worldNumber = 99; // assume same world
+				struct.worldNumber = sameWorld; // assume same world
 			}
 		}
 
