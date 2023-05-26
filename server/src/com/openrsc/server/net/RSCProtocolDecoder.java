@@ -3,6 +3,7 @@ package com.openrsc.server.net;
 import com.openrsc.server.net.rsc.ISAACContainer;
 import com.openrsc.server.net.rsc.ReverseOpcodeLookup;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.parsers.impl.Payload203Parser;
 import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -178,8 +179,14 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 
 										// A check on whether or not the opcode's length is known invalid should be considered a good thing & retained,
 										// even if this problem of getting good ISAAC sync on login is fixed.
-										boolean isPossiblyValid = Payload235Parser.isPossiblyValid(opcode, length, 235)
-											|| Payload235Parser.isPossiblyValid(opcode, length, 175);
+
+										boolean isPossiblyValid;
+										if (authenticClient > 204) {
+											isPossiblyValid = Payload235Parser.isPossiblyValid(opcode, length, 235)
+												|| Payload235Parser.isPossiblyValid(opcode, length, 175);
+										} else {
+											isPossiblyValid = Payload203Parser.isPossiblyValid(opcode, length, 203);
+										}
 										if (isPossiblyValid) {
 											Packet packet = new Packet(opcode, bufferOrdered);
 											addPacketToIncoming(out, att, packet);

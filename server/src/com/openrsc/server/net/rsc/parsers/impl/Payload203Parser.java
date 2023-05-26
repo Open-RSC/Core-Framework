@@ -226,85 +226,21 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 				opcode = OpcodeIn.REGISTER_ACCOUNT;
 				break;
 			case 4:
-				// originally OpcodeIn.CAST_ON_INVENTORY_ITEM
-				// but with SecuritySettings may be OpcodeIn.FORGOT_PASSWORD
-				conflictFound = true;
+				opcode = OpcodeIn.CAST_ON_INVENTORY_ITEM;
 				break;
 			case 8:
-				// originally OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED
-				// but with SecuritySettings may be OpcodeIn.RECOVERY_ATTEMPT
-				conflictFound = true;
+				opcode = OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED;
 				break;
 			case 197:
-				// originally OpcodeIn.DUEL_DECLINED
-				// but with SecuritySettings may be OpcodeIn.CHANGE_RECOVERY_REQUEST
-				conflictFound = true;
+				opcode = OpcodeIn.DUEL_DECLINED;
 				break;
 			case 247:
-				// originally OpcodeIn.GROUND_ITEM_TAKE
-				// but with SecuritySettings may be OpcodeIn.CHANGE_DETAILS_REQUEST
-				conflictFound = true;
-				break;
-			case 25:
-				opcode = OpcodeIn.CHANGE_PASS;
-				break;
-			case 208:
-				opcode = OpcodeIn.SET_RECOVERY;
-				break;
-			case 253:
-				opcode = OpcodeIn.SET_DETAILS;
-				break;
-			case 196:
-				opcode = OpcodeIn.CANCEL_RECOVERY_REQUEST;
+				opcode = OpcodeIn.GROUND_ITEM_TAKE;
 				break;
 			default:
 				break;
 		}
-		if (conflictFound) {
-			opcode = resolveOpcode(packet, player);
-		}
-
 		return opcode;
-	}
-
-	private OpcodeIn resolveOpcode(Packet packet, Player player) {
-		int pID = packet.getID();
-		int length = packet.getLength();
-		Player affectedPlayer;
-
-		switch (pID) {
-			case 4:
-				if (player.isLoggedIn()) {
-					// only can be cast on inventory item here
-					return OpcodeIn.CAST_ON_INVENTORY_ITEM;
-				} else {
-					return OpcodeIn.FORGOT_PASSWORD;
-				}
-			case 8:
-				if (player.isLoggedIn()) {
-					// only can be duel settings changed
-					return OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED;
-				} else {
-					return OpcodeIn.RECOVERY_ATTEMPT;
-				}
-			case 197:
-				// both are same length, check first if player can decline duel
-				affectedPlayer = player.getDuel().getDuelRecipient();
-				if (affectedPlayer != null && affectedPlayer != player && player.getDuel().isDuelActive()) {
-					// likely to be a duel decline request
-					return OpcodeIn.DUEL_DECLINED;
-				} else {
-					return OpcodeIn.CHANGE_RECOVERY_REQUEST;
-				}
-			case 247:
-				if (length > 1) {
-					// ground item take request
-					return OpcodeIn.GROUND_ITEM_TAKE;
-				} else {
-					return OpcodeIn.CHANGE_DETAILS_REQUEST;
-				}
-		}
-		return null;
 	}
 
 	@Override
@@ -312,8 +248,6 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 
 		OpcodeIn opcode = toOpcodeEnum(packet, player);
 		AbstractStruct<OpcodeIn> result = null;
-
-		System.out.printf("Got id %d\n", packet.getID());
 
 		try {
 		switch (opcode) {
@@ -739,39 +673,8 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 
 	// a basic check is done on authentic opcodes against their possible lengths
 	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
-		// TODO: remove this if checking valid for other protocol vers is implemented e.g. 127
-		if (protocolVer < 127 || (protocolVer > 175 && protocolVer != 203)) {
-			return true;
-		}
 		int payloadLength = length - 1; // subtract off opcode length.
 
-		if (protocolVer <= 175) {
-			switch (opcode) {
-				// CHANGE_RECOVERY_REQUEST
-				case 197:
-					return payloadLength == 0;
-				// CHANGE_DETAILS_REQUEST
-				case 247:
-					return payloadLength == 0;
-				// CHANGE_PASS
-				case 25:
-					return payloadLength > 0;
-				// SET_RECOVERY
-				case 208:
-					return payloadLength >= 15; // 5 sets of at least 3 for question-answer
-				// SET_DETAILS
-				case 253:
-					return payloadLength >= 8; // 4 sets of at least 2 per each
-				// CANCEL_RECOVERY_REQUEST
-				case 196:
-					return payloadLength == 0;
-
-				// Unknown OPCODE
-				default:
-					System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client (unknown opcode)", opcode));
-					return false;
-			}
-		}
 		if (protocolVer >= 203) {
 			switch (opcode) {
 				// HEARTBEAT
@@ -985,10 +888,10 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 					return payloadLength == 0;
 				// BANK_WITHDRAW
 				case 22:
-					return payloadLength == 8;
+					return payloadLength >= 8;
 				// BANK_DEPOSIT
 				case 23:
-					return payloadLength == 8;
+					return payloadLength >= 8;
 
 				// SLEEPWORD_ENTERED
 				case 45:
