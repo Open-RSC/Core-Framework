@@ -768,7 +768,7 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 
 				// Unknown OPCODE
 				default:
-					System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client", opcode));
+					System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client (unknown opcode)", opcode));
 					return false;
 			}
 		}
@@ -1000,7 +1000,7 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 
 				// Unknown OPCODE
 				default:
-					System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client", opcode));
+					System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client (wrong length)", opcode));
 					return false;
 			}
 		}
