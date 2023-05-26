@@ -237,6 +237,9 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 			case 247:
 				opcode = OpcodeIn.GROUND_ITEM_TAKE;
 				break;
+			case 163:
+				opcode = OpcodeIn.KNOWN_PLAYERS;
+				break;
 			default:
 				break;
 		}
@@ -659,6 +662,18 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 				}
 				result = w;
 				break;
+
+			case KNOWN_PLAYERS:
+				KnownPlayersStruct kp = new KnownPlayersStruct();
+				kp.playerCount = packet.readShort();
+				kp.playerServerIndex = new int[kp.playerCount];
+				kp.playerServerAppearanceId = new int[kp.playerCount];
+				for (int i = 0; i < kp.playerCount; i++) {
+					kp.playerServerIndex[i] = packet.readShort();
+					kp.playerServerAppearanceId[i] = packet.readShort();
+				}
+				result = kp;
+				break;
 		}
 		} catch (Exception e) {
 		}
@@ -900,6 +915,10 @@ public class Payload203Parser implements PayloadParser<OpcodeIn> {
 				// SKIP_TUTORIAL
 				case 84:
 					return payloadLength == 0;
+
+				// KNOWN_PLAYERS
+				case 163:
+					return payloadLength >= 2;
 
 				// Unknown OPCODE
 				default:
