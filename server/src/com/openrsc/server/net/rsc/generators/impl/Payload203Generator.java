@@ -53,7 +53,6 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_SHOP_OPEN, 101);
 		put(OpcodeOut.SEND_UPDATE_NPC, 104);
 		put(OpcodeOut.SEND_IGNORE_LIST, 109);
-		put(OpcodeOut.SEND_ON_TUTORIAL, 111);
 		put(OpcodeOut.SEND_FATIGUE, 114);
 		put(OpcodeOut.SEND_SLEEPSCREEN, 117);
 		put(OpcodeOut.SEND_PRIVATE_MESSAGE, 120);
@@ -152,11 +151,6 @@ public class Payload203Generator implements PayloadGenerator<OpcodeOut> {
 						builder.writeByte(mo.optionTexts[i].length());
 						builder.writeNonTerminatedString(mo.optionTexts[i]);
 					}
-					break;
-
-				case SEND_ON_TUTORIAL:
-					PlayerOnTutorialStruct playOnTut = (PlayerOnTutorialStruct) payload;
-					builder.writeByte((byte) playOnTut.onTutorial);
 					break;
 
 				case SEND_SYSTEM_UPDATE:
