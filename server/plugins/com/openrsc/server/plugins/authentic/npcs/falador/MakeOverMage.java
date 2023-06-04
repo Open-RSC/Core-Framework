@@ -15,6 +15,21 @@ import static com.openrsc.server.plugins.Functions.*;
 public class MakeOverMage implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player player, final Npc npc) {
+		if (config().PRIDE_MONTH && !(player.getCarriedItems().hasCatalogID(ItemId.CAPE_OF_INCLUSION.id())
+			|| player.getBank().hasItemId(ItemId.CAPE_OF_INCLUSION.id()))) {
+			say(player, npc, "What is that cape you're wearing?");
+			npcsay(player, npc, "Oh this?", "It's a cape of inclusion",
+				"It's meant to show that the people of runescape",
+				"support acceptance and inclusion",
+				"And a small symbol to show that we can all get along");
+			if (multi(player, npc, "Can I have one?", "Ok") == 0) {
+				npcsay(player, npc, "Sure! Wear it with pride, and spread the message of love everywhere");
+				give(player, ItemId.CAPE_OF_INCLUSION.id(), 1);
+				mes("The make over mage hands you your very own cape of inclusion");
+				delay(3);
+				return;
+			}
+		}
 		if (config().WANT_CUSTOM_QUESTS && player.getQuestStage(Quests.PEELING_THE_ONION) >= PeelingTheOnion.STATE_SEDRIDOR_SUGGESTED_YOU_VISIT_MAKE_OVER_MAGE) {
 			PeelingTheOnion.makeOverMageDialogue(player, npc);
 			return;

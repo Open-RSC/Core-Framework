@@ -942,7 +942,7 @@ public class PacketHandler {
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
 		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio, wantOpenPkPresets;
-		int disableMinimapRotation, allowBeardedLadies;
+		int disableMinimapRotation, allowBeardedLadies, prideMonth;
 
 		String logoSpriteID;
 
@@ -1032,6 +1032,7 @@ public class PacketHandler {
 			showUndergroundFlickerToggle = this.getClientStream().getUnsignedByte(); // 83
 			disableMinimapRotation = this.getClientStream().getUnsignedByte(); // 84
 			allowBeardedLadies = this.getClientStream().getUnsignedByte(); // 85
+			prideMonth = this.getClientStream().getUnsignedByte(); // 86
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1118,6 +1119,7 @@ public class PacketHandler {
 			showUndergroundFlickerToggle = packetsIncoming.getUnsignedByte(); // 83
 			disableMinimapRotation = packetsIncoming.getUnsignedByte(); // 84
 			allowBeardedLadies = packetsIncoming.getUnsignedByte(); // 85
+			prideMonth = packetsIncoming.getUnsignedByte(); // 86
 		}
 
 		if (Config.DEBUG) {
@@ -1206,7 +1208,8 @@ public class PacketHandler {
 					"\nS_WANT_OPENPK_PRESETS " + wantOpenPkPresets + // 82
 					"\nS_SHOW_UNDERGROUND_FLICKER_TOGGLE " + showUndergroundFlickerToggle + // 83
 					"\nS_DISABLE_MINIMAP_ROTATION " + disableMinimapRotation + // 84
-					"\nS_ALLOW_BEARDED_LADIES " + allowBeardedLadies // 85
+					"\nS_ALLOW_BEARDED_LADIES " + allowBeardedLadies + // 85
+					"\nS_PRIDE_MONTH " + prideMonth // 86
 			);
 		}
 
@@ -1299,6 +1302,7 @@ public class PacketHandler {
 		props.setProperty("S_SHOW_UNDERGROUND_FLICKER_TOGGLE", showUndergroundFlickerToggle == 1 ? "true" : "false"); // 83
 		props.setProperty("S_DISABLE_MINIMAP_ROTATION", disableMinimapRotation == 1 ? "true" : "false"); // 84
 		props.setProperty("S_ALLOW_BEARDED_LADIES", allowBeardedLadies == 1 ? "true" : "false"); // 85
+		props.setProperty("S_PRIDE_MONTH", prideMonth == 1 ? "true" : "false"); // 86
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

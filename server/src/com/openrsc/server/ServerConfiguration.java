@@ -254,6 +254,7 @@ public class ServerConfiguration {
 	public boolean MICE_TO_MEET_YOU_EVENT = false;
 	public boolean WANT_MICE_TO_MEET_YOU_NO_RATS = false;
 	public boolean DEATH_ISLAND = false;
+	public boolean PRIDE_MONTH = false;
 	public int BASED_MAP_DATA = 64;
 	public int BASED_CONFIG_DATA = 85;
 	public boolean CAN_FEATURE_MEMBS;
@@ -665,6 +666,7 @@ public class ServerConfiguration {
 		MICE_TO_MEET_YOU_EVENT = tryReadBool("mice_to_meet_you").orElse(false);
 		WANT_MICE_TO_MEET_YOU_NO_RATS = tryReadBool("mice_to_meet_you_no_rats").orElse(false);
 		DEATH_ISLAND = tryReadBool("death_island").orElse(false);
+		PRIDE_MONTH = tryReadBool("pride_month").orElse(false) && SystemUtil.isJune();
 
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
 	}
