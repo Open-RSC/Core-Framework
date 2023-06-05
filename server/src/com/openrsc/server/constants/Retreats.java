@@ -29,7 +29,6 @@ public class Retreats {
 			put(NpcId.GOBLIN_OBSERVATORY.id(), 5);
 			put(NpcId.BEAR_LVL24.id(), 5);
 			put(NpcId.BEAR_LVL26.id(), 5);
-			put(NpcId.SHAPESHIFTER_BEAR.id(), 5);
 			put(NpcId.THIEF.id(), 5);
 			put(NpcId.THIEF_BLANKET.id(), 5);
 			put(NpcId.HEAD_THIEF.id(), 5);
@@ -83,9 +82,15 @@ public class Retreats {
 			put(NpcId.JONNY_THE_BEARD.id(), 1);
 			put(NpcId.WEAPONSMASTER.id(), 1);
 			put(NpcId.KALRAG.id(), 1);
-			put(NpcId.SHAPESHIFTER_SPIDER.id(), 1);
 			put(NpcId.PKBOT.id(), Constants.PKBOT_MEDIUM_RETREATS);
 		}};
+
+		if (constants.getServer().getConfig().BASED_CONFIG_DATA == 46) {
+			//Config46 is the only known one with Shapeshifter forms with retreat data. By the end of RSC, they did not retreat
+			//(see /ShaunDreclin/06-08-2018 21.46.28 finish witches house AND grand tree quest AND barcrawl)
+			npcData.put(NpcId.SHAPESHIFTER_BEAR.id(), 5);
+			npcData.put(NpcId.SHAPESHIFTER_SPIDER.id(), 1);
+		}
 	}
 
 }
