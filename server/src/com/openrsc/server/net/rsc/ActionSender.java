@@ -488,7 +488,7 @@ public class ActionSender {
 	 */
 	public static void sendFriendList(Player player) {
 		if (player.getClientVersion() <= 204) {
-			final int sameWorld = player.getClientVersion() > 204 ? 99 : 255;
+			final int sameWorld = player.getClientVersion() < 203 ? 99 : 255;
 			FriendListStruct struct = new FriendListStruct();
 			int listSize = player.getSocial().getFriendList().size();
 			if (player.getBlockGlobalFriend()) {
@@ -580,7 +580,7 @@ public class ActionSender {
 		FriendUpdateStruct struct = new FriendUpdateStruct();
 		int onlineStatus = 0;
 		struct.worldNumber = 0;
-		final int sameWorld = player.getClientVersion() > 204 ? 99 : 255;
+		final int sameWorld = player.getClientVersion() == 203 ? 255 : 99;
 
 		if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
 			if (player.getBlockGlobalFriend()) return;
