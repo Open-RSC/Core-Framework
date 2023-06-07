@@ -269,8 +269,7 @@ public final class GameStateUpdater {
 		}
 
 		boolean isRetroClient = playerToUpdate.isUsing38CompatibleClient() || playerToUpdate.isUsing39CompatibleClient();
-		boolean isCustomClient = playerToUpdate.isUsingCustomClient();
-		boolean isPre09Client = !isRetroClient && !isCustomClient && !playerToUpdate.isUsing233CompatibleClient();
+		boolean usesKnownPlayers = playerToUpdate.getClientVersion() >= 61 && playerToUpdate.getClientVersion() <= 204;
 
 		if (isRetroClient) {
 			// TODO: check impl
@@ -413,7 +412,7 @@ public final class GameStateUpdater {
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getSprite(), 4));
-					if (isPre09Client) {
+					if (usesKnownPlayers) {
 						mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.isKnownPlayer(otherPlayer.getIndex()) ? 1 : 0, 1));
 					}
 
@@ -491,10 +490,10 @@ public final class GameStateUpdater {
 				if (isRetroClient(player)) {
 					updates.add((byte) chatMessage.getMessageString().length());
 					updates.add(chatMessage.getMessageString());
-				} else if (!player.isUsingCustomClient()) {
-					updates.add(new RSCString(chatMessage.getMessageString()));
-				} else {
+				} else if (player.isUsingCustomClient()) {
 					updates.add(chatMessage.getMessageString());
+				} else {
+					updates.add(new RSCString(chatMessage.getMessageString()));
 				}
 			}
 			Damage npcNeedingHitsUpdate;
@@ -574,11 +573,11 @@ public final class GameStateUpdater {
 		if (player.getUpdateFlags().hasChatMessage()) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
 			if (!chatMessage.getMuted() || player.hasElevatedPriveledges()) {
-				// mid-period clients locally echos player's own chat messages instead of having the server confirm what the player sent
+				// late 2001 to 2006 clients locally echo player's own chat messages instead of having the server confirm what the player sent
 				if (
 					!(
 						// is a client that echos their own local chat messages
-						(player.getClientVersion() >= 115 && player.getClientVersion() <= 204) &&
+						(player.getClientVersion() >= 92 && player.getClientVersion() <= 204) &&
 							// is public chat & not quest/private message
 							(chatMessage.getRecipient() == null || chatMessage.getRecipient().isPlayer()) &&
 							// chat sender is chat receiver
@@ -661,7 +660,7 @@ public final class GameStateUpdater {
 				AppearanceUpdateStruct altStruct = new AppearanceUpdateStruct(); // for early mudclient, appearance update was sent appart;
 				boolean isRetroClient = player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient();
 				boolean isCustomClient = player.isUsingCustomClient();
-				boolean isPre09Client = !isRetroClient && !isCustomClient && !player.isUsing233CompatibleClient();
+				boolean appearanceUpdateWithUsernameHash = player.getClientVersion() >= 61 && player.getClientVersion() <= 204;
 
 				List<Object> updatesMain = new ArrayList<>();
 				List<Object> updatesAlt = new ArrayList<>();
@@ -827,7 +826,7 @@ public final class GameStateUpdater {
 								// this current behaviour is slightly buggy esp on rsc+, but will save bytes towards the 5000 allowed.
 								updatesMain.add(playerNeedingAppearanceUpdate.getUsername().substring(0, 1));
 							}
-						} else if (isPre09Client) {
+						} else if (appearanceUpdateWithUsernameHash) {
 							updatesMain.add((short) player.getAppearanceID());
 							updatesMain.add((long) DataConversions.usernameToHash(playerNeedingAppearanceUpdate.getUsername()));
 						} else if (player.isUsingCustomClient()) {
@@ -957,10 +956,10 @@ public final class GameStateUpdater {
 						for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
 							if (isRetroClient) {
 								updatesAlt.add((char) (AppearanceRetroConverter.convert(i) & 0xFF));
-							} else if (!isCustomClient) {
-								updatesMain.add((char) (i & 0xFF));
-							} else {
+							} else if (isCustomClient) {
 								updatesMain.add((short) i);
+							} else {
+								updatesMain.add((char) (i & 0xFF));
 							}
 						}
 					}

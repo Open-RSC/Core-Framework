@@ -657,7 +657,7 @@ public class Payload177Parser implements PayloadParser<OpcodeIn> {
 			case REPORT_ABUSE:
 				ReportStruct r = new ReportStruct();
 				r.targetPlayerName = DataConversions.hashToUsername(packet.readLong());
-				r.reason = (byte)(packet.readByte() | 64); // adds 64 to separate from 205+ reasons
+				r.reason = (byte)(packet.readByte() | 64); // adds 64 to separate from 182+ reasons
 				r.suggestsOrMutes = 0;
 				result = r;
 				break;

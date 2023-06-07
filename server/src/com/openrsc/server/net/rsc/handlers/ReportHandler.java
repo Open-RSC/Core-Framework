@@ -30,7 +30,7 @@ public final class ReportHandler implements PayloadProcessor<ReportStruct, Opcod
 
 
 		// botting or bug exploiting; "other" or impersonating jagex staff
-		if (reason != 4 && reason != 6 && reason != 8 + 64 && reason != 6 + 64) {
+		if (reason != 4 && reason != 6 && reason != 8 + 64 && reason != 6 + 64 && reason != 4 + 32 && reason != 5 + 32 && reason != 6 + 32 && reason != 7 + 32 && reason != 12 + 32) {
 			Iterator<Snapshot> i = player.getWorld().getSnapshots().iterator();
 			boolean foundPlayer = false;
 			if (i.hasNext()) {

@@ -143,7 +143,7 @@ public final class Constants {
 	};
 
 	public static final Map<Integer, String> reportReasons = new HashMap<Integer, String>() {{
-		// mudclient 204+ reasons
+		// mudclient 205+ reasons
 		put(1, "Buying or selling an account");
 		put(2, "Encouraging rule-breaking");
 		put(3, "Staff impersonation");
@@ -159,7 +159,21 @@ public final class Constants {
 		put(13, "Breaking real-world laws");
 		put(14, "Advertising websites");
 
-		// mudclient 177 reasons
+		// mudclient 182 to 204 reasons
+		put(1 + 32, "Offensive language");
+		put(2 + 32, "Item scamming");
+		put(3 + 32, "Password scamming");
+		put(4 + 32, "Bug abuse");
+		put(5 + 32, "Jagex Staff impersonation");
+		put(6 + 32, "Account sharing/trading");
+		put(7 + 32, "Macroing");
+		put(8 + 32, "Mutiple logging in"); // Lol mutiple {{sic}}
+		put(9 + 32, "Encouraging others to break rules");
+		put(10 + 32, "Misuse of customer support"); // How could this even happen in game
+		put(11 + 32, "Advertising / website");
+		put(12 + 32, "Real world item trading");
+
+		// mudclient 153 to 181 reasons (includes 177!)
 		put (0 + 64, "Non-vulgar insult such as 'idiot', 'noob', 'loser', etc...");
 		put (1 + 64, "Swearing, profanity, or racial abuse directed at me personally");
 		put (2 + 64, "I overheard the player being abusive to someone else");
@@ -172,7 +186,7 @@ public final class Constants {
 	}};
 
 	public static final Map<Integer, String> reportDiscordColours = new HashMap<Integer, String>() {{
-		// mudclient 204+ reasons
+		// mudclient 205+ reasons
 		put(1, "5069823"); // blue "Buying or selling an account"
 		put(2, "16753433"); // yellow "Encouraging rule-breaking"
 		put(3, "16776960"); // ff0 yellow "Staff impersonation"
@@ -188,7 +202,21 @@ public final class Constants {
 		put(13, "16711680"); // red "Breaking real-world laws"
 		put(14, "10949120"); // report abuse red "Advertising websites"
 
-		// mudclient 177 reasons
+		// mudclient 182 to 204 reasons
+		put(1 + 32, "10949120"); // report abuse red, "Offensive language"
+		put(2 + 32, "5069823"); // blue, "Item scamming"
+		put(3 + 32, "5069823"); // blue, "Password scamming"
+		put(4 + 32, "8942042"); // purple, "Bug abuse"
+		put(5 + 32, "16776960"); // ff0 yellow "Jagex Staff impersonation"
+		put(6 + 32, "5069823"); // blue, "Account sharing/trading"
+		put(7 + 32, "8942042"); // purple, "Macroing"
+		put(8 + 32, "1087508"); // green, "Mutiple logging in";; NOT AGAINST OUR MODERN DAY RULES...!
+		put(9 + 32, "15781888"); // yellow, "Encouraging others to break rules"
+		put(10 + 32, "8942042"); // purple "Misuse of customer support"); // How could this even happen in game
+		put(11 + 32, "10949120"); // report abuse red, "Advertising / website"
+		put(12 + 32, "10949120"); // report abuse red, "Real world item trading"
+
+		// mudclient 153 to 181 reasons (includes 177!)
 		put (0 + 64, "1087508"); // green, "Non-vulgar insult such as 'idiot', 'noob', 'loser', etc..."
 		put (1 + 64, "10949120"); // report abuse red "Swearing, profanity, or racial abuse directed at me personally"
 		put (2 + 64, "15781888"); // yellow "I overheard the player being abusive to someone else"
