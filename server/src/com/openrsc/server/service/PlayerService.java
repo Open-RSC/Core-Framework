@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.*;
+import com.openrsc.server.event.rsc.impl.DesertHeatEvent;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
@@ -430,8 +431,11 @@ public class PlayerService implements IPlayerService {
     @Override
     public void savePlayerCache(final Player player) throws GameDatabaseException {
         player.getCache().store("last_spell_cast", player.getCastTimer());
-		if (player.desertHeatCounter > 0)
-			player.getCache().store("desert_heat_counter", player.desertHeatCounter);
+		DesertHeatEvent desertHeatEvent = player.getAttribute("Desert Heat", null);
+		if (desertHeatEvent != null) {
+			if (desertHeatEvent.desertHeatCounter > 0)
+				player.getCache().store("desert_heat_counter", desertHeatEvent.desertHeatCounter);
+		}
         database.querySavePlayerCache(player);
     }
 

@@ -15,8 +15,8 @@ import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
-import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.PluginTask;
+import com.openrsc.server.event.rsc.impl.DesertHeatEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
 import com.openrsc.server.event.rsc.impl.projectile.*;
@@ -145,9 +145,7 @@ public final class Player extends Mob {
 	private int saveAttempts = 0;
 	private int sceneryMorph = -1;
 
-	public int desertHeatCounter = Integer.MIN_VALUE;
-	private boolean desertHeatMessaged = false;
-	public GameTickEvent desertHeatEvent = null;
+	public DesertHeatEvent desertHeatEvent = null;
 
 	public boolean canceledMenuHandler = false;
 
@@ -4034,183 +4032,12 @@ public final class Player extends Mob {
 			ActionSender.sendUnlockedAppearances(this);
 	}
 
-	//Calculate how many ticks until the player has a "heat stroke"
-	private int calculateHeatDelay() {
-		//Default tick delay of 140
-		//On base tick rate (0.64) this is 89.6 seconds
-		//On cabbage tick rate (0.43) this is 60.2 seconds
-
-		//Possible tick delay range depending on equipped items: 40-190
-		int tickDelay = 140;
-
-		Item item = this.getEquippedChest();
-		if (item != null) {
-			if (item.getCatalogId() == ItemId.DESERT_SHIRT.id())
-				tickDelay += 20;
-			else if (item.getDef(getWorld()).getArmourBonus() > 0)
-				tickDelay -= 40;
-		}
-
-		item = this.getEquippedLegs();
-		if (item != null) {
-			if (item.getCatalogId() == ItemId.DESERT_ROBE.id())
-				tickDelay += 20;
-			else if (item.getDef(getWorld()).getArmourBonus() > 0)
-				tickDelay -= 30;
-		}
-
-		item = this.getEquippedBoots();
-		if (item != null) {
-			if (item.getCatalogId() == ItemId.DESERT_BOOTS.id())
-				tickDelay += 10;
-			else if (item.getDef(getWorld()).getArmourBonus() > 0)
-				tickDelay -= 10;
-		}
-
-		item = this.getEquippedGloves();
-		if (item != null) {
-			if (item.getDef(getWorld()).getArmourBonus() > 0)
-				tickDelay -= 10;
-		}
-
-		item = this.getEquippedHelmet();
-		if (item != null) {
-			if (item.getDef(getWorld()).getArmourBonus() > 0)
-				tickDelay -= 10;
-		}
-
-		return tickDelay;
-	}
-
-	//Check if the player is in a location that experiences the desert heat effect
-	private boolean inDesert() {
-		Point loc = this.getLocation();
-		int x = loc.getX();
-		int y = loc.getY();
-
-		//Check if they could be in the desert
-		if (loc.inBounds(48, 721, 189, 815)) {
-
-			//Check if they are standing in Shantay pass
-			if (loc.inBounds(59, 721, 67, 732))
-				return false;
-
-			//Check if they are along the dunes of Al Kharid
-			else if (y <= 722 && x <= 82)
-				return false;
-
-			//Check if they are in the mining camp
-			else if (loc.inBounds(80, 799, 91, 812))
-				return false;
-
-			//Check if they are in Bedabin camp
-			else if (x >= 160 && y >= 784)
-				return false;
-
-			return true;
-		}
-
-		return false;
-	}
-
-	//The desert heat has ticked. Look for water or cause damage.
-	private void doHeatStroke() {
-		CarriedItems ci = this.getCarriedItems();
-
-		if (ci.remove(new Item(ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), 1)) >= 0)
-			ci.getInventory().add(new Item(ItemId.EMPTY_WATER_SKIN.id(), 1));
-		else if (ci.remove(new Item(ItemId.WATER_SKIN_MOSTLY_EMPTY.id(), 1)) >= 0)
-			ci.getInventory().add(new Item(ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), 1));
-		else if (ci.remove(new Item(ItemId.WATER_SKIN_MOSTLY_FULL.id(), 1)) >= 0)
-			ci.getInventory().add(new Item(ItemId.WATER_SKIN_MOSTLY_EMPTY.id(), 1));
-		else if (ci.remove(new Item(ItemId.FULL_WATER_SKIN.id(), 1)) >= 0)
-			ci.getInventory().add(new Item(ItemId.WATER_SKIN_MOSTLY_FULL.id(), 1));
-		else {
-			if (!this.desertHeatMessaged) {
-				this.message("You start dying of thirst while you're in the desert.");
-				this.desertHeatMessaged = true;
-			}
-
-			int damage = DataConversions.getRandom().nextInt(10);
-			this.damage(damage + 1);
-			return;
-		}
-
-		this.desertHeatMessaged = false;
-	}
-
-	public void doEvaporate() {
-		CarriedItems ci = this.getCarriedItems();
-		int jugCount = 0;
-		int bowlCount = 0;
-		int bucketCount = 0;
-		//Jugs
-		while (ci.remove(new Item(ItemId.JUG_OF_WATER.id(), 1), false) >= 0) {
-			++jugCount;
-			ci.getInventory().add(new Item(ItemId.JUG.id(), 1), false);
-		}
-
-		//Bowls
-		while (ci.remove(new Item(ItemId.BOWL_OF_WATER.id(), 1), false) >= 0) {
-			++bowlCount;
-			ci.getInventory().add(new Item(ItemId.BOWL.id(), 1), false);
-		}
-
-		//Buckets
-		while (ci.remove(new Item(ItemId.BUCKET_OF_WATER.id(), 1), false) >= 0) {
-			++bucketCount;
-			ci.getInventory().add(new Item(ItemId.BUCKET.id(), 1), false);
-		}
-
-		if (jugCount > 1)
-			this.message("The water in your jugs evaporates in the desert heat.");
-		else if (jugCount > 0)
-			this.message("The water in your jug evaporates in the desert heat.");
-
-		if (bowlCount > 1)
-			this.message("The water in your bowls evaporates in the desert heat.");
-		else if (bowlCount > 0)
-			this.message("The water in your bowl evaporates in the desert heat.");
-
-		if (bucketCount > 1)
-			this.message("The water in your buckets evaporates in the desert heat.");
-		else if (bucketCount > 0)
-			this.message("The water in your bucket evaporates in the desert heat.");
-
-		if (jugCount > 0 || bowlCount > 0 || bucketCount > 0)
-			ActionSender.sendInventory(this);
-	}
 	public void desertHeatInit() {
 		if (getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
 			if (!this.hasElevatedPriveledges()) {
-				if (this.getCache().hasKey("desert_heat_counter")) {
-					this.desertHeatCounter = (int)this.getCache().getLong("desert_heat_counter");
-					this.getCache().remove("desert_heat_counter");
-				}
-
-				this.desertHeatEvent = new GameTickEvent(getWorld(), this, 0, "Desert Heat", DuplicationStrategy.ONE_PER_MOB) {
-					public void run() {	getPlayerOwner().doDesertHeat(); }
-				};
+				this.desertHeatEvent = new DesertHeatEvent(getWorld(), this);
 				getWorld().getServer().getGameEventHandler().add(this.desertHeatEvent);
 			}
-		}
-	}
-	public void doDesertHeat() {
-		if (this.inDesert()) {
-			if (this.desertHeatCounter == Integer.MIN_VALUE) {
-				this.desertHeatCounter = calculateHeatDelay();
-				this.doEvaporate();
-			}
-
-			this.desertHeatCounter -= 1;
-
-			if (this.desertHeatCounter <= 0) {
-				this.doHeatStroke();
-				this.desertHeatCounter = calculateHeatDelay();
-			}
-		} else if (this.desertHeatCounter != Integer.MIN_VALUE) {
-			this.desertHeatCounter = Integer.MIN_VALUE;
-			this.desertHeatMessaged = false;
 		}
 	}
 
