@@ -600,6 +600,30 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		}
 	}
 
+	public void resetProjectileAllowance(final int x, final int y, final int dir, final int type, final int objectType, final int doorType) {
+		TileValue tile = getTile(x, y);
+		tile.projectileAllowed = tile.originalProjectileAllowed;
+
+		if ((type == 0 && objectType == 1) || (type == 1 && doorType != 1)) return;
+
+		if (dir == 0 && getTile(x - 1, y) != null) {
+			tile = getTile(x - 1, y);
+		}
+
+		else if (dir == 2 && getTile(x, y + 1) != null) {
+			tile = getTile(x, y + 1);
+		}
+
+		else if (dir == 4 && getTile(x + 1, y) != null) {
+			tile = getTile(x + 1, y);
+		}
+
+		else if (dir == 6 && getTile(x, y - 1) != null) {
+			tile = getTile(x, y - 1);
+		}
+		tile.projectileAllowed = tile.originalProjectileAllowed;
+	}
+
 	public void registerItem(final GroundItem i) {
 		registerItem(i, i.getConfig().GAME_TICK * 200);
 	}
@@ -748,6 +772,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				}
 				for (int x = o.getX(); x < o.getX() + width; ++x) {
 					for (int y = o.getY(); y < o.getY() + height; ++y) {
+						if (isProjectileClipAllowed(o)) {
+							resetProjectileAllowance(x, y, dir, o.getType(), o.getGameObjectDef().getType(), -1);
+						}
 						if (o.getGameObjectDef().getType() == 1) {
 							getTile(x, y).traversalMask &= 0xffbf;
 						} else if (dir == 0) {
@@ -771,6 +798,11 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 					return;
 				}
 				int x = o.getX(), y = o.getY();
+
+				if (isProjectileClipAllowed(o)) {
+					resetProjectileAllowance(x, y, dir, o.getType(), -1, o.getDoorDef().getDoorType());
+				}
+
 				if (dir == 0) {
 					getTile(x, y).traversalMask &= 0xfffe;
 					getTile(x, y - 1).traversalMask &= 65535 - 4;

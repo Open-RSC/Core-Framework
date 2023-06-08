@@ -10,6 +10,7 @@ public class TileValue {
 	public byte verticalWallVal = 0;
 	public byte elevation = 0;
 	public boolean projectileAllowed = false;
+	public boolean originalProjectileAllowed = false;
 
 	@Override
 	public String toString() {
@@ -21,6 +22,7 @@ public class TileValue {
 			", verticalWallVal=" + verticalWallVal +
 			", elevation=" + elevation +
 			", projectileAllowed=" + projectileAllowed +
+			", originalProjectileAllowed=" + originalProjectileAllowed +
 			'}';
 	}
 
@@ -31,6 +33,7 @@ public class TileValue {
 				this.overlay == other.overlay &&
 				this.verticalWallVal == other.verticalWallVal &&
 				this.elevation == other.elevation &&
-				this.projectileAllowed == other.projectileAllowed;
+				this.projectileAllowed == other.projectileAllowed &&
+				this.originalProjectileAllowed == other.originalProjectileAllowed;
 	}
 }

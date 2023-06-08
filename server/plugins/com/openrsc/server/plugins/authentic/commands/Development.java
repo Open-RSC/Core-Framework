@@ -718,6 +718,7 @@ public final class Development implements CommandTrigger {
 		TileValue tv = player.getWorld().getTile(player.getLocation());
 		player.message(messagePrefix + "traversal: " + tv.traversalMask + ", vertVal:" + (tv.verticalWallVal & 0xff) + ", horiz: "
 			+ (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff) + ", projectile: " + tv.projectileAllowed);
+		player.message("originalProjectileAllowed: " + tv.originalProjectileAllowed);
 	}
 
 	private void regionInformation(Player player, String command, String[] args) {

@@ -396,7 +396,9 @@ public class WorldLoader {
 
 					if (projectileClipAllowed(verticalWall)) {
 						tile.projectileAllowed = true;
+						tile.originalProjectileAllowed = true;
 						getWorld().getTile(bx, by - 1).projectileAllowed = true;
+						getWorld().getTile(bx, by - 1).originalProjectileAllowed = true;
 					}
 				}
 
@@ -408,7 +410,9 @@ public class WorldLoader {
 					getWorld().getTile(bx - 1, by).traversalMask |= 8; // 8
 					if (projectileClipAllowed(horizontalWall)) {
 						tile.projectileAllowed = true;
+						tile.originalProjectileAllowed = true;
 						getWorld().getTile(bx - 1, by).projectileAllowed = true;
+						getWorld().getTile(bx - 1, by).originalProjectileAllowed = true;
 					}
 				}
 
@@ -418,8 +422,9 @@ public class WorldLoader {
 					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1).getUnknown() == 0
 					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1).getDoorType() != 0) {
 					tile.traversalMask |= 0x20; // 32
-					if (projectileClipAllowed(diagonalWalls)) {
+					if (projectileClipAllowed(diagonalWalls & 0xFF)) {
 						tile.projectileAllowed = true;
+						tile.originalProjectileAllowed = true;
 					}
 				}
 				if (diagonalWalls > 12000
@@ -428,13 +433,15 @@ public class WorldLoader {
 					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 12001).getDoorType() != 0) {
 					tile.traversalMask |= 0x10; // 16
 
-					if (projectileClipAllowed(diagonalWalls)) {
+					if (projectileClipAllowed(diagonalWalls & 0xFF)) {
 						tile.projectileAllowed = true;
+						tile.originalProjectileAllowed = true;
 					}
 				}
 
 				if (tile.overlay == 2 || tile.overlay == 11) {
 					tile.projectileAllowed = true;
+					tile.originalProjectileAllowed = true;
 				}
 			}
 		}
