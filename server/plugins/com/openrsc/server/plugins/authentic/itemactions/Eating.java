@@ -43,7 +43,6 @@ public class Eating implements OpInvTrigger {
 			ActionSender.sendSound(player, "eat");
 
 			int id = item.getCatalogId();
-			boolean isKebabVariant = false;
 			boolean gaveMessage = false;
 			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			boolean gaveBoost = false;
@@ -66,11 +65,12 @@ public class Eating implements OpInvTrigger {
 				}
 				gaveMessage = true;
 			} else if (id == ItemId.KEBAB.id()) {
-				isKebabVariant = true;
 				handleKebab(player, item);
+				//Player already healed at this point. End plugin early.
+				return;
 			} else if (id == ItemId.TASTY_UGTHANKI_KEBAB.id()) {
-				isKebabVariant = true;
 				handleTastyKebab(player, item);
+				gaveMessage = true;
 			} else if (id == ItemId.COOKED_OOMLIE_MEAT_PARCEL.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You eat the prepared Oomlie meat in Palm leaf parcel");
 				player.message("It tastes very gamey !");
@@ -232,7 +232,7 @@ public class Eating implements OpInvTrigger {
 			if ((heals || gaveBoost) && !sendUpdate) {
 				player.getSkills().sendUpdateAll();
 			}
-			if (heals && !isKebabVariant && !gaveMessage) {
+			if (heals && !gaveMessage) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 				if (config().WANT_PARTIES) {
 					if (player.getParty() != null) {
