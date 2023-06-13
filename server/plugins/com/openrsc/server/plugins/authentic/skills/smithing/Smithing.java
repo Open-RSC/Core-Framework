@@ -272,7 +272,7 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 
-		final ItemSmithingDef def = player.getWorld().getServer().getEntityHandler().getSmithingDef((getBarType(item.getCatalogId()) * 22) + toMake);
+		final ItemSmithingDef def = player.getWorld().getServer().getEntityHandler().getSmithingDef((getBarType(item.getCatalogId()) * 24) + toMake);
 
 		if (def == null) {
 			// No definition found
@@ -657,6 +657,10 @@ public class Smithing implements UseLocTrigger {
 		options.add("Plate mail body (5 bars)");
 		options.add("Plate mail legs (3 bars)");
 		options.add("Plated Skirt (3 bars)");
+		if (config().WANT_CUSTOM_SPRITES) {
+			options.add("Chain mail top (3 bars)");
+			options.add("Plate mail top (5 bars)");
+		}
 
 		String[] finalOptions = new String[options.size()];
 
@@ -671,6 +675,13 @@ public class Smithing implements UseLocTrigger {
 		else if (option == 1) return 15; // Plate Mail Body
 		else if (option == 2) return 16; // Plate Mail Legs
 		else if (option == 3) return 17; // Plated Skirt
+		else if (config().WANT_CUSTOM_SPRITES) {
+			if (option == 4) {
+				return 22; // Chain mail top
+			} else if (option == 5) {
+				return 23; // Plate mail top
+			}
+		}
 		return -1;
 	}
 

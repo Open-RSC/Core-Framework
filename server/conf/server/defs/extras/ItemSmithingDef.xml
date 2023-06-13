@@ -132,6 +132,18 @@
 		<itemID>1418</itemID>
 		<amount>1</amount>
 	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Top -->
+		<level>11</level>
+		<bars>3</bars>
+		<itemID>1530</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Top -->
+		<level>18</level>
+		<bars>5</bars>
+		<itemID>308</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
 	<!-- IRON -->
 	<ItemSmithingDef><!-- Dagger -->
 		<level>15</level>
@@ -263,6 +275,18 @@
 		<level>23</level>
 		<bars>2</bars>
 		<itemID>1419</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Top -->
+		<level>25</level>
+		<bars>3</bars>
+		<itemID>1531</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Top -->
+		<level>33</level>
+		<bars>5</bars>
+		<itemID>312</itemID>
 		<amount>1</amount>
 	</ItemSmithingDef>
 	<!-- STEEL -->
@@ -398,6 +422,18 @@
 		<itemID>1420</itemID>
 		<amount>1</amount>
 	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Top -->
+		<level>41</level>
+		<bars>3</bars>
+		<itemID>1532</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Top -->
+		<level>48</level>
+		<bars>5</bars>
+		<itemID>309</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
 	<!-- MITHRIL -->
 	<ItemSmithingDef><!-- Dagger -->
 		<level>50</level>
@@ -529,6 +565,18 @@
 		<level>59</level>
 		<bars>2</bars>
 		<itemID>1421</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Top -->
+		<level>61</level>
+		<bars>3</bars>
+		<itemID>1534</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Top -->
+		<level>68</level>
+		<bars>5</bars>
+		<itemID>310</itemID>
 		<amount>1</amount>
 	</ItemSmithingDef>
 	<!-- ADAMANTITE -->
@@ -664,6 +712,18 @@
 		<itemID>1422</itemID>
 		<amount>1</amount>
 	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Top -->
+		<level>81</level>
+		<bars>3</bars>
+		<itemID>1535</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Top -->
+		<level>88</level>
+		<bars>5</bars>
+		<itemID>311</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
 	<!-- RUNITE -->
 	<ItemSmithingDef><!-- Dagger -->
 		<level>85</level>
@@ -795,6 +855,18 @@
 		<level>94</level>
 		<bars>2</bars>
 		<itemID>1423</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Chain Mail Top -->
+		<level>96</level>
+		<bars>3</bars>
+		<itemID>1536</itemID>
+		<amount>1</amount>
+	</ItemSmithingDef>
+	<ItemSmithingDef><!-- Plate Mail Top -->
+		<level>99</level>
+		<bars>5</bars>
+		<itemID>407</itemID>
 		<amount>1</amount>
 	</ItemSmithingDef>
 </ItemSmithingDef-array>
