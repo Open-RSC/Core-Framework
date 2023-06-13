@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.skills.smithing;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.Gauntlets;
@@ -23,8 +24,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Smelting implements UseLocTrigger {
 
-	public static final int FURNACE = 118;
-	public static final int LAVA_FURNACE = 1284;
+	public static final int FURNACE = SceneryId.FURNACE.id();
+	public static final int LAVA_FURNACE = SceneryId.LAVA_FORGE.id();
 
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
@@ -401,8 +402,8 @@ public class Smelting implements UseLocTrigger {
 
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
-		return (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SODA_ASH.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id()}, item.getCatalogId()))
-			|| obj.getID() == LAVA_FURNACE;
+		return (obj.getID() == FURNACE && !DataConversions.inArray(new int[]{ItemId.GOLD_BAR.id(), ItemId.SILVER_BAR.id(), ItemId.SODA_ASH.id(), ItemId.SAND.id(), ItemId.GOLD_BAR_FAMILYCREST.id(), ItemId.TREATED_HIDE.id()}, item.getCatalogId()))
+			|| (obj.getID() == LAVA_FURNACE && item.getCatalogId() != ItemId.TREATED_HIDE.id());
 	}
 
 	enum Smelt {

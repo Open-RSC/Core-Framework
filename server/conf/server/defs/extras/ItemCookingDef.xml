@@ -89,6 +89,33 @@
 			<requiredLvl>1</requiredLvl>
 		</ItemCookingDef>
 	</entry>
+    <entry>
+        <int>1540</int>
+        <ItemCookingDef>
+            <exp>120</exp>
+            <cookedId>132</cookedId>
+            <burnedId>134</burnedId>
+            <requiredLvl>1</requiredLvl>
+        </ItemCookingDef>
+    </entry>
+    <entry>
+        <int>1541</int>
+        <ItemCookingDef>
+            <exp>120</exp>
+            <cookedId>132</cookedId>
+            <burnedId>134</burnedId>
+            <requiredLvl>1</requiredLvl>
+        </ItemCookingDef>
+    </entry>
+    <entry>
+        <int>1542</int>
+        <ItemCookingDef>
+            <exp>120</exp>
+            <cookedId>132</cookedId>
+            <burnedId>134</burnedId>
+            <requiredLvl>1</requiredLvl>
+        </ItemCookingDef>
+    </entry>
 	<entry>
 		<int>349</int>
 		<ItemCookingDef>

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
@@ -203,18 +204,18 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private boolean craftingTypeChecks(final GameObject obj, final Item item, final Player player) {
-		boolean furnace = obj.getID() == 118 || obj.getID() == 813;
+		boolean furnace = obj.getID() == SceneryId.FURNACE.id()|| obj.getID() == SceneryId.FURNACE_UNDERGROUND_PASS.id();
 		boolean furnaceItem = DataConversions.inArray(itemsFurnance, item.getCatalogId());
 		boolean jewelryBar = item.getCatalogId() == ItemId.SILVER_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR.id();
-		boolean potteryOven = obj.getID() == 178;
+		boolean potteryOven = obj.getID() == SceneryId.POTTERY_OVEN.id();
 		boolean potteryItem = DataConversions.inArray(itemsOven, item.getCatalogId());
-		boolean spinningWheel = obj.getID() == 179;
+		boolean potteryWheel = obj.getID() == SceneryId.POTTERY_WHEEL.id();
 		boolean softClay = item.getCatalogId() == ItemId.SOFT_CLAY.id();
 
 		// Checks to make sure you're using the right item with the right object.
 		return (furnace && furnaceItem)
 			|| (potteryOven && potteryItem)
-			|| (spinningWheel && softClay);
+			|| (potteryWheel && softClay);
 	}
 
 	private void beginCrafting(final Item item, final Player player) {

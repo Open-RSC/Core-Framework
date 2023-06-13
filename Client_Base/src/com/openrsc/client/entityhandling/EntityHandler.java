@@ -4031,6 +4031,13 @@ public class EntityHandler {
 		items.add(new ItemDef("Rune Chain Mail Top", "A series of connected metal rings", "", 50000, -1, "items:595", false, true, 64, 65535, false, false, true, 1536));
 		items.add(new ItemDef("Dragon Scale Mail Top", "A dragon chain mail reinforced with dragon scales", "", 1500000, -1, "items:596", false, true, 64, 0x0000FF, true, false, true, 1537));
 
+		// Custom leather making
+		items.add(new ItemDef("Animal fat", "Thick and gelatinous", "", 0, -1, "items:animalfat", false, false, 0, 0, false, false, true, 1538));
+		items.add(new ItemDef("Treated hide", "I should use this on a fire to dry it", "", 1, -1, "items:treatedhide", false, false, 0, 0, false, false, true, 1539));
+		items.add(new ItemDef("lean bear meat", "I need to cook this first", "", 1, 60, "items:60", false, false, 0, 0xE57C2B, false, false, true, 1540));
+		items.add(new ItemDef("lean rat meat", "I need to cook this first", "", 1, 60, "items:60", false, false, 0, 0xE57C2B, false, false, true, 1541));
+		items.add(new ItemDef("lean beef", "I need to cook this first", "", 1, 60, "items:60", false, false, 0, 0xE57C2B, false, false, true, 1542));
+
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
