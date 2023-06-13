@@ -4003,7 +4003,7 @@ public class EntityHandler {
 
 		// Halloween 2022
 		items.add(new ItemDef("halloween mask", "aaaarrrghhh ... i'm a monster", "", 15, 284, "items:284", false, true, 32, 16711935, false, false, true, 1515));
-		items.add(new ItemDef("Cape of Inclusion", "A colourful cape made from many different pieces of cloth.", "", 3, -1, "items:pridecape", false, true, 2048, 0xFFFFFF, false, false, true, 1516));
+		items.add(new ItemDef("Cape of Inclusion", "A colourful cape made from many different pieces of cloth.", "", 3, -1, "items:pridecape", false, true, 2048, 0xFFFFFF, false, true, false, 1516));
 		items.add(new ItemDef("halloween mask", "aaaarrrghhh ... i'm a monster", "", 15, 284, "items:284", false, true, 32, 4, false, false, true, 1517));
 
 		// Rest of the skillcapes

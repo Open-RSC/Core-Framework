@@ -93,8 +93,6 @@ public class RuneMysteries implements QuestInterface {
 
 				switch (choice) {
 					case 1:
-
-						say(player, n, "What are you doing down here?");
 						npcsay(player, n, "That is, indeed, a good question.",
 							"Here in the cellar of the Wizards' Tower",
 							"you find the remains of the old Wizards' Tower,",
@@ -113,10 +111,8 @@ public class RuneMysteries implements QuestInterface {
 							"already seen once in the past.");
 						choice = multi(player, n, "Okay, well I'll leave you to it.", "What do you mean, 'treachery'?");
 						if (choice == 0) {
-							say(player, n, "Okay, well, I'll leave you to it");
 							return;
 						} else if (choice == 1) {
-							say(player, n, "What do you mean, 'treachery'?");
 							npcsay(player, n, "It is a long story. Many years ago, this Wizards' Tower",
 								"was a focus of great learning, where mages studied together",
 								"to learn the secrets behind the runes that allow us",

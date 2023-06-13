@@ -72,7 +72,7 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 
 		int choice = multi(player,npc, menu.toArray(new String[menu.size()]));
 		if (choice <= 0) return;
-		if (isRuneMysteries) {
+		if (isRuneMysteries || choice == 1) {
 			RuneMysteries.sedridorDialog(player, npc, choice);
 		} else {
 			PeelingTheOnion.sedridorDialogue(player, npc);

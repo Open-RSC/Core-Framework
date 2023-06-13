@@ -26,6 +26,7 @@ public class MakeOverMage implements TalkNpcTrigger {
 				npcsay(player, npc, "Sure! Wear it with pride, and spread the message of love everywhere");
 				give(player, ItemId.CAPE_OF_INCLUSION.id(), 1);
 				mes("The make over mage hands you your very own cape of inclusion");
+				player.getCache().store("pride_cape", System.currentTimeMillis());
 				delay(3);
 				return;
 			}

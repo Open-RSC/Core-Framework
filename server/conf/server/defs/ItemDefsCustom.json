@@ -5206,20 +5206,20 @@
             "isFemaleOnly": 0,
             "isMembersOnly": 0,
             "isStackable": 0,
-            "isUntradable": 0,
+            "isUntradable": 1,
             "isWearable": 1,
             "appearanceID": 510,
             "wearableID": 2048,
             "wearSlot": 11,
             "requiredLevel": 1,
             "requiredSkillID": 1,
-            "armourBonus": 0,
+            "armourBonus": 2,
             "weaponAimBonus": 0,
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
             "basePrice": 3,
-            "isNoteable": 1
+            "isNoteable": 0
         },
         {
             "id": 1517,

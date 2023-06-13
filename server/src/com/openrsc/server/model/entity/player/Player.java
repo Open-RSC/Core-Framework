@@ -2163,6 +2163,8 @@ public final class Player extends Mob {
 			killed = false;
 			resetCombatEvent();
 			setLastOpponent(null);
+			getSkills().setLevel(Skill.HITS.id(), getSkills().getMaxStat(Skill.HITS.id()));
+			setBusy(false);
 			skipTutorial();
 			return;
 		}
@@ -3957,9 +3959,11 @@ public final class Player extends Mob {
 				message("You cannot do that whilst fighting!");
 				return false;
 			}
+
 			if (isBusy()) {
 				return false;
 			}
+
 			if (getCache().hasKey("tutorial")) {
 				getCache().remove("tutorial");
 			}

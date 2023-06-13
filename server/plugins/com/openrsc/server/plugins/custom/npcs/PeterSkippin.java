@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.custom.npcs;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -18,10 +19,16 @@ public class PeterSkippin implements TalkNpcTrigger, KillNpcTrigger {
 			"Welcome to RuneScape");
 		if (multi("I'd like to skip the tutorial", "Thank you") != 0) return;
 		npcsay("Ok");
-		npcattack();
-		say("What are you doing?!");
-		npcsay("Sending you to Lumbridge",
-			"Have fun kid");
+
+		if (player.getIronMan() == IronmanMode.Hardcore.id()) {
+			npcsay("Have fun kid");
+			player.skipTutorial();
+		} else {
+			npcattack();
+			say("What are you doing?!");
+			npcsay("Sending you to Lumbridge",
+				"Have fun kid");
+		}
 	}
 
 	@Override

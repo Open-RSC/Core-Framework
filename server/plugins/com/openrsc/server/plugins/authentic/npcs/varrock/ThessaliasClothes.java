@@ -61,11 +61,16 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 		boolean scythe = player.getCarriedItems().hasCatalogID(ItemId.SCYTHE.id()) || player.getBank().countId(ItemId.SCYTHE.id()) > 0;
 		boolean bunnyRing = false;
 		boolean eggRing = false;
+		boolean prideCape = false;
 
 		// Check for custom items
-		if (config().WANT_CUSTOM_QUESTS && config().WANT_CUSTOM_SPRITES) {
-			bunnyRing = player.getCarriedItems().hasCatalogID(ItemId.RING_OF_BUNNY.id()) || player.getBank().countId(ItemId.RING_OF_BUNNY.id()) > 0;
-			eggRing = player.getCarriedItems().hasCatalogID(ItemId.RING_OF_EGG.id()) || player.getBank().countId(ItemId.RING_OF_EGG.id()) > 0;
+		if (config().WANT_CUSTOM_SPRITES) {
+			if (config().WANT_CUSTOM_QUESTS) {
+				bunnyRing = player.getCarriedItems().hasCatalogID(ItemId.RING_OF_BUNNY.id()) || player.getBank().countId(ItemId.RING_OF_BUNNY.id()) > 0;
+				eggRing = player.getCarriedItems().hasCatalogID(ItemId.RING_OF_EGG.id()) || player.getBank().countId(ItemId.RING_OF_EGG.id()) > 0;
+			}
+
+			prideCape = player.getCarriedItems().hasCatalogID(ItemId.CAPE_OF_INCLUSION.id()) || player.getBank().countId(ItemId.CAPE_OF_INCLUSION.id()) > 0;
 		}
 
 		ArrayList<String> options = new ArrayList<String>();
@@ -88,6 +93,11 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 		String optionEggRing = "I have lost my egg ring can I get another one please?";
 		if (player.getCache().hasKey("ester_rings") && !eggRing) {
 			options.add(optionEggRing);
+		}
+
+		String optionPrideCape = "Can I get another cape of inclusion please?";
+		if (player.getCache().hasKey("pride_cape") && !prideCape) {
+			options.add(optionPrideCape);
 		}
 
 		String optionShop = "What have you got?";
@@ -124,6 +134,11 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 			npcsay(player, n, "Ohh you poor dear, I have another here");
 			player.message("Thessalia gives you a new egg ring");
 			give(player, ItemId.RING_OF_EGG.id(), 1);
+		} else if  (options.get(option).equals(optionPrideCape)) {
+			say(player, n, optionPrideCape);
+			npcsay(player, n, "Ohh you poor dear, I have another here");
+			player.message("Thessalia gives you a new cape of inclusion");
+			give(player, ItemId.CAPE_OF_INCLUSION.id(), 1);
 		} else {
 			say(player, n, "No, thank you");
 		}
@@ -284,6 +299,15 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				}
 			}
 		}
+		else if (i.getID() == ItemId.CAPE_OF_INCLUSION.id()) {
+			if(!player.isAdmin()) {
+				if (player.getCarriedItems().hasCatalogID(ItemId.CAPE_OF_INCLUSION.id()) || player.getBank().countId(ItemId.CAPE_OF_INCLUSION.id()) > 0) {
+					player.message("You don't need another cape");
+					player.message("You already have one");
+					return;
+				}
+			}
+		}
 
 		player.groundItemTake(i);
 	}
@@ -293,6 +317,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 		return i.getID() == ItemId.BUNNY_EARS.id()
 			|| i.getID() == ItemId.SCYTHE.id()
 			|| i.getID() == ItemId.RING_OF_BUNNY.id()
-			|| i.getID() == ItemId.RING_OF_EGG.id();
+			|| i.getID() == ItemId.RING_OF_EGG.id()
+			|| i.getID() == ItemId.CAPE_OF_INCLUSION.id();
 	}
 }
