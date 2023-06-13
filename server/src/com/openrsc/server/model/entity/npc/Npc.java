@@ -877,9 +877,18 @@ public class Npc extends Mob {
 		Player player = getInteractingPlayer();
 		if (player != null && player.getInteractingNpc() == this) {
 			switch (interaction) {
+				//Interactions that should reset the NPC's path.
 				case NPC_TALK_TO:
+				case NPC_USE_ITEM:
 					resetPath();
 					resetRange();
+				default:
+					break;
+			}
+
+			switch (interaction) {
+				//Other interaction specific handling.
+				case NPC_TALK_TO:
 					// NPCs on the same tile as you will walk somewhere else.
 					if (player.getLocation().equals(getLocation())) {
 						moveToAdjacentTile();

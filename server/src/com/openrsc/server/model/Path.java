@@ -219,6 +219,10 @@ public class Path {
 		return waypoints.getFirst();
 	}
 
+	public Deque<Point> getWaypoints() {
+		return waypoints;
+	}
+
 	public Point element() {
 		return waypoints.element();
 	}

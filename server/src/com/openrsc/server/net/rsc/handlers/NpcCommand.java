@@ -31,50 +31,23 @@ public final class NpcCommand implements PayloadProcessor<TargetMobStruct, Opcod
 		if (affectedNpc == null) return;
 		NPCDef def = affectedNpc.getDef();
 		String command = (click ? def.getCommand1() : def.getCommand2()).toLowerCase();
-		int followRadius = command.equalsIgnoreCase("pickpocket")
+		boolean isPickpocket = command.equalsIgnoreCase("pickpocket");
+		boolean isGnomeballOp = command.equalsIgnoreCase("tackle") || command.equalsIgnoreCase("pass to");
+		int followRadius = isPickpocket
 			&& player.withinRange(affectedNpc, 1)
 			&& PathValidation.checkAdjacentDistance(player.getWorld(), player.getLocation(), affectedNpc.getLocation(), true)
 			? 0 : 1;
-		player.setFollowing(affectedNpc, followRadius, true, true);
-		//Custom behaviour causes a lot of issues with ops happening from more than 1 tile away (authentically happens from 2).
-		//Servers with these configs enabled will have them start from 0/1 tile away instead.
-		//TODO: Actually fix this so batching/custom ops don't break using the authentic logic.
-		final String[] authenticOps = new String[] {
-			"pickpocket",
-			"tackle",
-			"pass to",
-			"watch"
-		};
-		boolean isAuthenticOp = false;
-		for(String op : authenticOps) {
-			if (op.equalsIgnoreCase(command)) {
-				isAuthenticOp = true;
-				break;
-			}
-		}
-
-		boolean isCustomOp = !isAuthenticOp || player.getConfig().BATCH_PROGRESSION;
-		boolean isGnomeballOp = command.equalsIgnoreCase("tackle") || command.equalsIgnoreCase("pass to");
-		int radius = isCustomOp ? 1 : 2;
-		if (click && player.withinRange(affectedNpc, 1)
-			&& affectedNpc.getDef().getCommand1().equalsIgnoreCase("pickpocket") && isCustomOp) {
-			radius = 0;
-		}
+		// Don't believe that the player would follow during pickpocketing if they were on the same tile. If they do, they follow under the NPC for one tick, which has not been seen on footage review.
+		if (!isPickpocket || !player.getLocation().equals(affectedNpc.getLocation())) player.setFollowing(affectedNpc, followRadius, true, true);
+		int radius = 1;
 
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, radius) {
 			public void executeInternal() {
 				NpcInteraction interaction = isGnomeballOp ? NpcInteraction.NPC_GNOMEBALL_OP : NpcInteraction.NPC_OP;
-				if (getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().canReach(affectedNpc)) {
+				if (getPlayer().isBusy() || getPlayer().isRanging()) {
 					return;
 				}
-				if (isCustomOp) {
-					getPlayer().resetFollowing();
-					getPlayer().resetPath();
-					getPlayer().resetAll();
-				} else {
-					getPlayer().resetAll(true, false);
-				}
+				getPlayer().resetAll(true, false);
 				NpcInteraction.setInteractions(affectedNpc, getPlayer(), interaction);
 
 				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(OpNpcTrigger.class, getPlayer(), new Object[]{getPlayer(), affectedNpc, command}, this);

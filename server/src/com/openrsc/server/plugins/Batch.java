@@ -2,6 +2,7 @@ package com.openrsc.server.plugins;
 
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 
@@ -69,6 +70,15 @@ public class Batch {
 	 * @return Returns false when the batch is complete
 	 */
 	public void update() {
+		int xDiff = Math.abs(this.location.getX() - getPlayer().getLocation().getX());
+		int yDiff = Math.abs(this.location.getY() - getPlayer().getLocation().getY());
+		/*
+		Because some actions (like thieving) can take place one extra tile away from their target before the player gets close,
+		we will give them one tile worth of wiggle room on the first increment before we cancel their batch.
+		*/
+		if (getPlayer().getNpcInteraction() == NpcInteraction.NPC_OP && current == 0 && xDiff <= 1 && yDiff <= 1) {
+			this.location = getPlayer().getLocation();
+		}
 		if (!getPlayer().getLocation().equals(this.location)) {
 			stop();
 			return;

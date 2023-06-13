@@ -85,6 +85,7 @@ public class ItemActionHandler implements PayloadProcessor<ItemCommandStruct, Op
 		final WalkToAction walkToAction = player.getWalkToAction();
 		if (walkToAction != null) {
 			walkToAction.finishExecution();
+			player.setWalkToAction(null);
 		}
 
 		final String command = item.getDef(player.getWorld()).getCommand()[commandIndex];

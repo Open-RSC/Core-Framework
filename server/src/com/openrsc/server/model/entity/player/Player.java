@@ -2397,10 +2397,9 @@ public final class Player extends Mob {
 
 		if (isFollowing()
 			&& getEndFollowRadius() > -1
-			&& getFollowEvent().getTimesRan() > 1
+			&& getFollowEvent().getTimesRan() >= 1
 			&& withinRange(getFollowing(), getEndFollowRadius())
-			&& PathValidation.checkAdjacentDistance(getWorld(), getLocation(), getFollowing().getLocation(), true)
-			&& canReach(getFollowing())) {
+			&& PathValidation.checkAdjacentDistance(getWorld(), getLocation(), getFollowing().getLocation(), true, false)) {
 			resetFollowing();
 			resetPath();
 		}

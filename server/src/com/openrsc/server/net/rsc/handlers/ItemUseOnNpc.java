@@ -44,12 +44,11 @@ public class ItemUseOnNpc implements PayloadProcessor<ItemOnMobStruct, OpcodeIn>
 			return;
 		}
 		player.setFollowing(affectedNpc, 1, false, true);
-		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 2) {
+		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
 			public void executeInternal() {
 				NpcInteraction interaction = NpcInteraction.NPC_USE_ITEM;
 				if ((!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
-					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
-					|| affectedNpc.isBusy()) && item.getCatalogId() != ItemId.RESETCRYSTAL.id()) {
+					|| getPlayer().isRanging() || affectedNpc.isBusy()) && item.getCatalogId() != ItemId.RESETCRYSTAL.id()) {
 					return;
 				}
 				getPlayer().resetAll(true, false);

@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
+import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.ActionType;
 import com.openrsc.server.model.action.WalkToAction;
@@ -205,9 +206,11 @@ public class NpcBehavior {
 			else
 				npc.walkToEntity(target.getX(), target.getY());
 
-			// Fight the target when in range
-			if (npc.withinRange(target, 1)
-				&& npc.canReach(target)
+			// Fight the target when in range (1 tile ahead, like players, while chasing).
+			// TODO: Further investigation on whether NPCs would ignore diagonal blocks like players. For now, we let them ignore them for consistency.
+			Point checkedPoint = npc.getWalkingQueue().getNextMovement();
+			if (checkedPoint.withinRange(target.getLocation(), 1)
+				&& PathValidation.checkAdjacentDistance(npc.getWorld(), checkedPoint, target.getLocation(), true, false)
 				&& !target.inCombat()) {
 				if (target.isPlayer() && EnchantedCrowns.shouldActivate((Player)target, ItemId.CROWN_OF_MIMICRY)
 					&& ((Player)target).getBatch() != null && !((Player)target).getBatch().isComplete()) {
@@ -421,13 +424,13 @@ public class NpcBehavior {
 	}
 
 	Player getChasedPlayer() {
-		if (target.isPlayer())
+		if (target != null && target.isPlayer())
 			return (Player) target;
 		return null;
 	}
 
 	Npc getChasedNpc() {
-		if (target.isNpc())
+		if (target != null && target.isNpc())
 			return (Npc) target;
 		return null;
 	}

@@ -26,11 +26,10 @@ public class NpcUseItem implements PayloadProcessor<ItemOnMobStruct, OpcodeIn> {
 			return;
 		}
 		player.setFollowing(affectedNpc, 1, false, true);
-		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 2) {
+		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
 			public void executeInternal() {
 				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
-					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
-					|| affectedNpc.isBusy()) {
+					|| getPlayer().isRanging() || affectedNpc.isBusy()) {
 					return;
 				}
 				getPlayer().resetAll(true, false);

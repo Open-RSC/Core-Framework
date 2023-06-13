@@ -38,10 +38,10 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 		}
 
 		player.setFollowing(npc, 1, false, true);
-		player.setWalkToAction(new WalkToMobAction(player, npc, 2) {
+		player.setWalkToAction(new WalkToMobAction(player, npc, 1) {
 			public void executeInternal() {
 				NpcInteraction interaction = NpcInteraction.NPC_TALK_TO;
-				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(npc)) {
+				if (getPlayer().isBusy() || getPlayer().isRanging()) {
 					return;
 				}
 				getPlayer().resetAll(true, false);

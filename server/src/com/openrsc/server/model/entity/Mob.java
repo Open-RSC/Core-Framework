@@ -446,16 +446,22 @@ public abstract class Mob extends Entity {
 				//   4. Mob is not following something.
 				boolean duelActive = (isPlayer() && ((Player) Mob.this).getDuel().isDuelActive());
 				boolean shouldInterrupt = canInterrupt && (!duelActive && isBusy());
+				//In range and adjacent, and we ran this event more than once.
+				boolean shouldStopWalking = withinRange(mob, radius)
+					&& PathValidation.checkAdjacentDistance(getWorld(), getLocation(), mob.getLocation(), true, false)
+					&& getTimesRan() >= 1;
+
 				if (!withinRange(mob) || shouldInterrupt) {
 					if (!mob.isFollowing()) {
 						resetFollowing();
 					}
+				} else if ((radius > 0 && getWalkingQueue().getNextMovement().equals(mob.getLocation())) || shouldStopWalking) {
+					//Don't allow more walking if the radius is more than 0 and the next step will move the follower onto the followee's tile.
+					//Also don't allow more if the conditionals are fulfilled.
+					resetPath();
 				} else if (finishedPath()) {
 					// We have finished the current follow path, but we need to keep walking to get to the target.
-					if (!withinRange(mob, radius) || !PathValidation.checkAdjacentDistance(getWorld(), getLocation(), mob.getLocation(), true)) walkToEntity(mob.getX(), mob.getY());
-				} else {
-					// We have not finished the current follow path, but we are in range!
-					if (withinRange(mob, radius) && PathValidation.checkAdjacentDistance(getWorld(), getLocation(), mob.getLocation(), true)) resetPath();
+					walkToEntity(mob.getX(), mob.getY());
 				}
 			}
 		};
@@ -958,8 +964,10 @@ public abstract class Mob extends Entity {
 	}
 
 	public void setSprite(final int x) {
-		setSpriteChanged();
-		mobSprite = x;
+		if (mobSprite != x) {
+			setSpriteChanged();
+			mobSprite = x;
+		}
 	}
 
 	public StatRestorationEvent getStatRestorationEvent() {

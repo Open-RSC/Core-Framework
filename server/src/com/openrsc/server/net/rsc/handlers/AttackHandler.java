@@ -97,7 +97,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			player.setFollowing(affectedMob, 0, false, true);
 
 			int radius = affectedMob.isPlayer() ? player.getConfig().PVP_CATCHING_DISTANCE : player.getConfig().PVM_CATCHING_DISTANCE;
-			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false, ActionType.ATTACK, true) {
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, true, ActionType.ATTACK) {
 				public void executeInternal() {
 					getPlayer().resetFollowing();
 
@@ -105,8 +105,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 						getPlayer().message("I can't get close enough");
 						return;
 					}
-					if (getPlayer().isBusy() || mob.isBusy() || !getPlayer().canReach(mob)
-						|| !getPlayer().checkAttack(mob, false)) {
+					if (getPlayer().isBusy() || mob.isBusy() || !getPlayer().checkAttack(mob, false)) {
 						return;
 					}
 					if (mob.isNpc()) {
