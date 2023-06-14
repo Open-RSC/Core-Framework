@@ -111,7 +111,7 @@ public class PathValidation {
 	 * @param curPoint - Current point
 	 * @param nextPoint - Point to check validity of movement against
 	 * @param ignoreProjectileAllowed - Whether the projectileAllowed variable of a tile should be ignored
-	 * @param wantDiagCheck - If false, makes diagonal movements only check for actual diagonal walls instead of other wall traversal masks
+	 * @param wantDiagCheck - If false, makes diagonal movements only check for actual diagonal walls and full blocks instead of other wall traversal masks
 	 * @return True if the movement is valid
 	 */
 
@@ -189,7 +189,7 @@ public class PathValidation {
 
 		// Destination Y blocked with same X coord.
 		if (DEBUG_DISTANCE) System.out.println("PathValidation 6");
-		if (myYBlocked && startX == coords[0]) return false;
+		if (newYBlocked && startX == coords[0]) return false;
 
 		// Start X and new X are blocked.
 		if (DEBUG_DISTANCE) System.out.println("PathValidation 7");
@@ -227,10 +227,24 @@ public class PathValidation {
 				bit, false, ignoreProjectileAllowed);
 		}
 
-		if (diagonalBlocked)
-			return false;
+		if (diagonalBlocked) return false;
 
-		if (DEBUG_DISTANCE) System.out.println("PathValidation 13");
+		int xDiff = destX - startX;
+		int yDiff = destY - startY;
+		boolean diagonalWallBlocksDiagonalMovement = false;
+
+		if (Math.abs(xDiff) == 1 && Math.abs(yDiff) == 1) {
+			if (DEBUG_DISTANCE) System.out.println("PathValidation 13");
+			//Check for any possible diagonal walls if the mob is going diagonally.
+			//Bit of -2 is to strictly only check diagonals - full blocks are ignored here, as they should be validated in a prior check.
+			//This serves to block diagonal movement when the wall layout leads from a diagonal to a vertical/horizontal wall.
+			diagonalWallBlocksDiagonalMovement = checkBlockingDistance(world, startX + xDiff, startY, -2, false, ignoreProjectileAllowed)
+			|| checkBlockingDistance(world, startX, startY + yDiff, -2, false, ignoreProjectileAllowed);
+		}
+
+		if (diagonalWallBlocksDiagonalMovement) return false;
+
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 14");
 		return true;
 	}
 
@@ -243,8 +257,15 @@ public class PathValidation {
 		return isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
 	}
 
+	/**
+	 * Checks to see if a given tile will block movement
+	 * @param objectValue Traversal mask value of this tile
+	 * @param bit Mask value to compare with. If <= -1, will only check diagonal walls and full blocks. If <= -2, will ignore full blocks as well.
+	 * @param isCurrentTile Whether this tile is the starting tile.
+	 * @return True if this tile blocks, false otherwise.
+	 */
 	public static boolean isBlocking(int objectValue, byte bit, boolean isCurrentTile) {
-		// A bit value of -1 means that we don't want to check anything but diagonal walls.
+		// A bit value of -1 or -2 means that we don't want to check this.
 		if (bit > -1 && (objectValue & bit) != 0) { // There is a wall in the way
 			return true;
 		}
@@ -255,7 +276,8 @@ public class PathValidation {
 			return true;
 		}
 		// This tile is unwalkable
-		return !isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_C) != 0;
+		// A bit value of -2 means we don't want to check this.
+		return bit > -2 && !isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_C) != 0;
 	}
 
 	static boolean checkDiagonalPassThroughCollisions(World world, Point curPoint, Point nextPoint) {
@@ -558,16 +580,16 @@ public class PathValidation {
 		}
 
 		if (coords[1] > startY) {
-			newXBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_NORTH, false);
+			newYBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_NORTH, false);
 		} else if (coords[1] < startY) {
-			newXBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_SOUTH, false);
+			newYBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_SOUTH, false);
 		}
 
 		if (newXBlocked && newYBlocked) return false;
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 8");
 		if (newXBlocked && startY == coords[1]) return false;
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 9");
-		if (myYBlocked && startX == coords[0]) return false;
+		if (newYBlocked && startX == coords[0]) return false;
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 10");
 		if (myXBlocked && newXBlocked) return false;
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 11");
