@@ -417,9 +417,34 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
+		// Check if UIM want to exchange for bank or market certs
 		if (Certer.UIMCertBlock(player, npc, item)) {
-			Certer.UIMCert(player, npc, item);
-			return;
+			if (item.getNoted()) {
+				Certer.UIMCert(player, npc, item);
+				return;
+			} else {
+				mes("Would you like to exchange this item for bank or market certificates?");
+				delay(3);
+				final int option = multi(player, npc, false,
+					"Bank certificates", "Market certificates", "Nevermind");
+				if (option == -1 || option == 2) return;
+				else if (option == 0) {
+					Certer.UIMCert(player, npc, item);
+					return;
+				}
+				// If they chose option 2, we do not return and carry on to the code below
+			}
+		} else if (Certer.certExchangeBlock(player, npc, item)) {
+			mes("Would you like to exchange this market certification for bank certifications or items?");
+			delay(3);
+			final int option = multi(player, npc, false,
+				"Bank certificates", "Items", "Nevermind");
+			if (option == -1 || option == 2) return;
+			else if (option == 0) {
+				Certer.exchangeMarketForBankCerts(player, npc, item);
+				return;
+			}
+			// If they chose option 2, we do not return and carry on to the code below
 		}
 		if (npc.getID() == SIDNEY_SMITH && inArray(item.getCatalogId(), PRAYER_RESTORE_POT,
 			SUPER_ATTACK_POT, SUPER_STRENGTH_POT, SUPER_DEFENSE_POT, DRAGON_BONES,

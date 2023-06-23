@@ -338,16 +338,19 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		if (UIMCertBlock(player, npc, item)) {
+		// If the item is a cert, we probably want to exchange it to a bank cert
+		if (certToItemIds.containsKey(item.getCatalogId())) {
+			exchangeMarketForBankCerts(player, npc, item);
+		}
+		// Otherwise we will bank-cert the item
+		else {
 			UIMCert(player, npc, item);
-		} else {
-			mes("Nothing interesting happens");
 		}
 	}
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return UIMCertBlock(player, npc, item);
+		return npc.getID() != NpcId.SIDNEY_SMITH.id() && (UIMCertBlock(player, npc, item) || certExchangeBlock(player, npc, item));
 	}
 
 	public static void UIMCert(Player player, Npc npc, Item item) {
@@ -447,7 +450,12 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		// Make sure notes are enabled
 		if (!player.getConfig().WANT_BANK_NOTES) return false;
 		// Make sure they're using a market cert on the NPC
-		return certToItemIds.containsKey(item.getCatalogId());
+		if (certToItemIds.containsKey(item.getCatalogId())) {
+			// Make sure they're using it on the right NPC
+			final int itemId = certToItemIds.get(item.getCatalogId());
+			return inArray(itemId, certerTable.get(npc.getID()));
+		}
+		return false;
 	}
 
 	public static boolean UIMCertBlock(Player player, Npc npc, Item item) {
