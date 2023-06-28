@@ -518,6 +518,9 @@ Moderator Commands
   - Toggles more aggressive badword censorship. Space filtering is the act of filtering a badword with spaces in it.
   - For example, if "cow" is a badword on the server "c o... w" would be caught by the same badword once space filtering enabled.
   - Using this command does not change the behaviour of the server after reboot. Space filtering is disabled in server configs by default.
+- onlinelistlocs
+  - Usage: `::onlinelistlocs`
+  - Shows a list of online players with their locations appended in parentheses next to their usernames.
 ------------------------
 Event Commands
 ------------------------
@@ -570,6 +573,22 @@ Event Commands
   - Usage: `::possessrandom`
   - Selects a random player other than yourself to possess.
   - Alias: `::pr`
+- leapaboutinstantnavigator
+  - Usage: `::leapaboutinstantnavigator (tick observation length) (serial)`
+  - Automates `::possessnext` and `::possessrandom` commands, repeating on a tick interval.
+  - "tick observation length" is an integer number of ticks before moving on to the next player possession.
+  - if "serial" is true, (or 1 or yes, etc), `::posssessnext` command is automated. Else, `::possessrandom` is automated.
+  - Alias: `::lain` or `::becomelain` or `::hellonavi` or `::navi`
+- reset
+  - Usage: `::reset`
+  - If the user is in lain mode, then lain mode is exited.
+  - You can also exit lain mode by simply clicking away from your current possessee.
+  - Moderators and above can use this command to spawn a reset crystal if not in lain mode.
+- weird
+  - Usage: `::weird`
+  - Halts lain mode, if the current player seems weird and should be observed further (e.g. for botting)
+  - To resume lain mode, simply issue the lain command again.
+  - Alias: `::weirdplayer` or `::stay` 
 - npctalk
   - Usage: `::npctalk [npc_id] [msg]`
   - Causes the specified NPC to say the specified message to all players in the area.

@@ -73,6 +73,10 @@ public final class PlayerModerator implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("become")) {
 			if (args[0].equalsIgnoreCase("god")) {
 				becomeGod(player);
+			} else if (args[0].equalsIgnoreCase("lain")) {
+				if (player.isEvent()) {
+					player.becomeLain(true, 5);
+				}
 			} else {
 				becomeNpc(player, args);
 			}
@@ -886,6 +890,11 @@ public final class PlayerModerator implements CommandTrigger {
 	}
 
 	private void becomeGod(Player player) {
+		if (player.isLain()) {
+			player.message("You are already god.");
+			return;
+		}
+
 		// TODO: God could be more sophisticated
 		for (int i = 0; i < 12; i++) {
 			player.updateWornItems(i, random(124, 180));

@@ -106,7 +106,11 @@ public abstract class Mob extends Entity {
 	/**
 	 * Event to handle possessing
 	 */
-	private GameTickEvent possesionEvent;
+	private GameTickEvent possessionEvent = null;
+	/**
+	 * Event to handle automatic possession
+	 */
+	private GameTickEvent LAINEvent = null;
 	/**
 	 * Who we are currently possessing (if anyone)
 	 */
@@ -475,7 +479,7 @@ public abstract class Mob extends Entity {
 		} else {
 			possessingUsername = ((Npc) possessing).getDef().getName();
 		}
-		possesionEvent = new GameTickEvent(getWorld(), this, 0, "Moderator possessing Mob", DuplicationStrategy.ALLOW_MULTIPLE) {
+		possessionEvent = new GameTickEvent(getWorld(), this, 0, "Moderator possessing Mob", DuplicationStrategy.ALLOW_MULTIPLE) {
 			public void run() {
 				setDelayTicks(1);
 				Player moderator = (Player)getOwner();
@@ -514,8 +518,77 @@ public abstract class Mob extends Entity {
 				}
 			}
 		};
-		getWorld().getServer().getGameEventHandler().add(possesionEvent);
+		getWorld().getServer().getGameEventHandler().add(possessionEvent);
 
+	}
+
+	public void becomeLain(boolean serial, int interval) {
+		if (!(this instanceof Player)) {
+			return;
+		}
+		Player lain = (Player) this;
+		lain.setCacheInvisible(true);
+		lain.message("@yel@Lain: Hello, Navi.");
+		lain.message("@whi@Navi: Hello, Lain.");
+		if (LAINEvent != null) {
+			LAINEvent.stop();
+		}
+		if (serial) {
+			// automates ::pn command
+			LAINEvent = new GameTickEvent(getWorld(), this, 0, "Lain Automatic Possession", DuplicationStrategy.ALLOW_MULTIPLE) {
+				public void run() {
+					setDelayTicks(interval);
+
+					int preferredPid;
+					if (lain.getPossessing() instanceof Player) {
+						preferredPid = lain.getPossessing().getIndex() + 1;
+					} else {
+						// not currently possessing anything
+						preferredPid = 0;
+					}
+
+
+					Player targetPlayer = lain.getWorld().getNextPlayer(preferredPid, lain.getIndex());
+
+					if (targetPlayer == null || targetPlayer.getUsername().equals(lain.getUsername())) {
+						lain.message("You are alone and disconnected, lain.");
+						this.stop();
+						return;
+					} else {
+						lain.setPossessing(targetPlayer);
+					}
+				}
+			};
+		} else {
+			// random experiments lain?
+			// automates ::pr command
+			LAINEvent = new GameTickEvent(getWorld(), this, 0, "Lain Automatic Possession", DuplicationStrategy.ALLOW_MULTIPLE) {
+				public void run() {
+					setDelayTicks(interval);
+
+					Player targetPlayer = null;
+					int retries = 0;
+					while ((targetPlayer == null || targetPlayer.getUsername().equals(lain.getUsername())) && retries++ < 30) {
+						targetPlayer = this.getWorld().getRandomPlayer();
+					}
+					if (targetPlayer == null || targetPlayer.getUsername().equals(lain.getUsername())) {
+						lain.message("Everyone has forgotten you, lain.");
+						this.stop();
+						return;
+					} else {
+						lain.setPossessing(targetPlayer);
+					}
+				}
+			};
+		}
+		getWorld().getServer().getGameEventHandler().add(LAINEvent);
+	}
+
+	public void resetLain() {
+		if (LAINEvent != null) {
+			LAINEvent.stop();
+			LAINEvent = null;
+		}
 	}
 
 	public void setFollowingAstar(final Mob mob, final int radius) {
@@ -559,7 +632,12 @@ public abstract class Mob extends Entity {
 			followEvent = null;
 		}
 
-		if (possesionEvent != null) {
+		if (LAINEvent != null) {
+			LAINEvent.stop();
+			LAINEvent = null;
+		}
+
+		if (possessionEvent != null) {
 			if (tellLeft) {
 				if (this instanceof Player) {
 					if (possessing instanceof Player) {
@@ -570,8 +648,8 @@ public abstract class Mob extends Entity {
 					}
 				}
 			}
-			possesionEvent.stop();
-			possesionEvent = null;
+			possessionEvent.stop();
+			possessionEvent = null;
 			possessing = null;
 			possessingUsername = null;
 		}
@@ -929,6 +1007,10 @@ public abstract class Mob extends Entity {
 
 	public Mob getPossessing() {
 		return possessing;
+	}
+
+	public boolean isLain() {
+		return LAINEvent != null;
 	}
 
 	public int getHitsMade() {

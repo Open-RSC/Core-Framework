@@ -85,7 +85,9 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("shareexp")) {
 			toggleExperienceShare(player);
 		} else if (command.equalsIgnoreCase("onlinelist")) {
-			queryOnlinePlayers(player, args);
+			queryOnlinePlayers(player, args, false);
+		} else if (command.equalsIgnoreCase("onlinelistlocs")) {
+			queryOnlinePlayers(player, args, true);
 		} else if (command.equalsIgnoreCase("groups") || command.equalsIgnoreCase("ranks")) {
 			queryGroupIDs(player);
 		} else if (command.equalsIgnoreCase("time") || command.equalsIgnoreCase("date") || command.equalsIgnoreCase("datetime")) {
@@ -589,21 +591,21 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 	}
 
-	public static void queryOnlinePlayers(Player player, String[] args) {
+	public static void queryOnlinePlayers(Player player, String[] args, boolean wantLocations) {
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("all") || args[0].equalsIgnoreCase("yes") || args[0].equals("1") || args[0].equalsIgnoreCase("true")) {
-				queryOnlinePlayers(player, true);
+				queryOnlinePlayers(player, true, wantLocations);
 				return;
 			}
 		}
-		queryOnlinePlayers(player, false);
+		queryOnlinePlayers(player, false, wantLocations);
 	}
 
-	public static void queryOnlinePlayers(Player player, boolean retroClientListsAll) {
+	public static void queryOnlinePlayers(Player player, boolean retroClientListsAll, boolean wantLocations) {
 		int online = 0;
 		ArrayList<Player> players = new ArrayList<>();
 		ArrayList<String> locations = new ArrayList<>();
-		if (player.isMod()) {
+		if (player.isMod() && wantLocations) {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
 				if (targetPlayer.getGroupID() >= player.getGroupID()) {
 					players.add(targetPlayer);
@@ -626,10 +628,13 @@ public final class RegularPlayer implements CommandTrigger {
 						privacyAllows = true;
 					}
 				}
+				if (targetPlayer.isInvisibleTo(player)) {
+					privacyAllows = false;
+				}
 
-				if (privacyAllows) {
+				if (privacyAllows || player.isMod()) {
 					players.add(targetPlayer);
-					locations.add(""); // No locations for regular players.
+					locations.add(""); // No locations.
 					online++;
 				}
 			}

@@ -92,7 +92,7 @@ public class Superchisel implements OpInvTrigger, UseInvTrigger, UseNpcTrigger {
 						}
 					}
 
-					RegularPlayer.queryOnlinePlayers(player, true);
+					RegularPlayer.queryOnlinePlayers(player, true, false);
 				}
 				break;
 			case 4:
