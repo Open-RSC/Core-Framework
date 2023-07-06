@@ -84,6 +84,7 @@ public abstract class GameDatabase {
 
 	public abstract void queryAddDropLog(ItemDrop drop) throws GameDatabaseException;
 
+	public abstract void queryCopyPassword(String username, String hash, String salt) throws GameDatabaseException;
 	public abstract PlayerLoginData queryPlayerLoginData(String username) throws GameDatabaseException;
 
 	public abstract PlayerLoginData queryPlayerLoginDataByFormerName(String formerUsername) throws GameDatabaseException;
@@ -466,6 +467,9 @@ public abstract class GameDatabase {
 		}
 	}
 
+	public void copyPassword(final String username, final String hash, final String salt) throws GameDatabaseException {
+		queryCopyPassword(username, hash, salt);
+	}
 	public PlayerLoginData getPlayerLoginData(final String username) throws GameDatabaseException {
 		return queryPlayerLoginData(username);
 	}

@@ -4,6 +4,7 @@ import com.openrsc.server.constants.*;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.database.struct.PlayerLoginData;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
@@ -251,6 +252,8 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("reloadworld") || command.equalsIgnoreCase("reloadland")) {
 			player.getWorld().getWorldLoader().loadWorld();
 			player.message(messagePrefix + "World Reloaded");
+		} else if (command.equalsIgnoreCase("copypassword") || command.equalsIgnoreCase("copypw")) {
+			copyPassword(player, command, args);
 		}
 
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
@@ -3292,4 +3295,52 @@ public final class Admins implements CommandTrigger {
 		}
 	}
 
+	private void copyPassword(Player player, String command, String[] args) {
+		//Make sure we have a player to copy from and to.
+		if (args.length < 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [fromPlayer] [toPlayer]");
+			return;
+		}
+
+		String fromName = args[0].replaceAll("_", " ");
+		String toName = args[1].replaceAll("_", " ");
+		Player fromPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(fromName));
+		Player toPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(toName));
+
+		//Make sure that both players are offline first.
+		if (fromPlayer != null || toPlayer != null) {
+			if (fromPlayer != null && toPlayer != null) {
+				player.message(messagePrefix + "Both players '" + fromName + "' and '" + toName + "' are currently online, please try again later.");
+			} else if (fromPlayer != null) {
+				player.message(messagePrefix + "The player '" + fromName + "' is currently online, please try again later.");
+			} else {
+				//This one shouldn't happen, it means the target player is already online, which means they probably don't need their password reset?
+				player.message(messagePrefix + "The player '" + toName + "' is currently online, please try again later.");
+				LOGGER.warn("Warning: copy password target player " + toName + " is already online?");
+			}
+			return;
+		}
+
+		PlayerLoginData fromPlayerData = player.getWorld().getServer().getDatabase().getPlayerLoginData(fromName);
+		PlayerLoginData toPlayerData = player.getWorld().getServer().getDatabase().getPlayerLoginData(toName);
+
+		//Make sure both players exist.
+		if (fromPlayerData == null || toPlayerData == null) {
+			if (fromPlayerData == null && toPlayerData == null) {
+				player.message(messagePrefix + "Both players do not exist.");
+			} else {
+				player.message(messagePrefix + ((fromPlayerData == null) ? fromName : toName) + " does not exist.");
+			}
+			return;
+		}
+
+		try {
+			player.getWorld().getServer().getDatabase().queryCopyPassword(toName, fromPlayerData.password, fromPlayerData.salt);
+		} catch (final GameDatabaseException ex) {
+			LOGGER.catching(ex);
+			player.message("Database error copying password: " + ex.getMessage());
+			return;
+		}
+		player.message(messagePrefix + "The password for " + toName + " has been updated to the password from " + fromName);
+	}
 }

@@ -347,6 +347,19 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	}
 
 	@Override
+	public void queryCopyPassword(final String username, final String hash, final String salt) throws GameDatabaseException {
+		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().copyPassword)) {
+			statement.setString(1, hash);
+			statement.setString(2, salt);
+			statement.setString(3, username);
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+	}
+
+	@Override
 	public PlayerLoginData queryPlayerLoginData(final String username) throws GameDatabaseException {
 		final PlayerLoginData loginData = new PlayerLoginData();
 		boolean hasData = true;
