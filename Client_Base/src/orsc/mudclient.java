@@ -7084,15 +7084,31 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	private int getExperienceCounterColor() {
+		switch (C_EXPERIENCE_COUNTER_COLOR) {
+			case 1:
+				return 0xFFFF00; // Yellow
+			case 2:
+				return 0xFF0000; // Red
+			case 3:
+				return 0x0000FF; // Blue
+			case 4:
+				return 0x00FF00; // Green
+			case 5:
+				return 0xFF8ED9; // Pink
+			case 6:
+				return 0xFF00FF; // Magenta
+			default:
+				return 0xFFFFFF; // White
+		}
+	}
+
 	private void drawExperienceCounter(int skill) {
 		if (!S_EXPERIENCE_COUNTER_TOGGLE) return;
 		if (selectedSkill >= 0) {
 			skill = selectedSkill;
 		}
-		int textColor = C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-			C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
-				C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
-					C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
+		int textColor = getExperienceCounterColor();
 		long totalXp = 0;
 		long timePassed = 0;
 		if (C_EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
@@ -16677,10 +16693,7 @@ public final class mudclient implements Runnable {
 										drawExperienceCounter(xpdrop.skill);
 									}
 
-									int textColor = C_EXPERIENCE_COUNTER_COLOR == 0 ? 0xFFFFFF :
-										C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
-											C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
-												C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
+									int textColor = getExperienceCounterColor();
 
 									if (!xpdrop.levelUp) {
 										if (textColor == 0xFFFFFF) {

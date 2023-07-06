@@ -10,7 +10,7 @@ public final class ExperienceConfigInterface {
 	public Panel experienceConfig;
 	public int experienceConfigScroll;
 	public boolean selectSkillMenu = false;
-	int width = 350, height = 195;
+	int width = 350, height = 225;
 	private boolean visible = false;
 	private mudclient mc;
 	private int panelColour, textColour, bordColour, lineColour;
@@ -143,29 +143,41 @@ public final class ExperienceConfigInterface {
 				Config.C_EXPERIENCE_COUNTER_COLOR = 4;
 			}
 		});
+		this.drawButton(x + 145, y + 135, 50, 20, "@pin@Pink", 2, Config.C_EXPERIENCE_COUNTER_COLOR == 5 ? true : false, new ButtonHandler() {
+			@Override
+			void handle() {
+				Config.C_EXPERIENCE_COUNTER_COLOR = 5;
+			}
+		});
+		this.drawButton(x + 205, y + 135, 50, 20, "@mag@Magenta", 2, Config.C_EXPERIENCE_COUNTER_COLOR == 6 ? true : false, new ButtonHandler() {
+			@Override
+			void handle() {
+				Config.C_EXPERIENCE_COUNTER_COLOR = 6;
+			}
+		});
 
-		this.drawString("Speed: ", x + 10, y + 150, 3, textColour);
-		this.drawButton(x + 105, y + 135, 50, 20, "Slow", 2, Config.C_EXPERIENCE_DROP_SPEED == 0 ? true : false, new ButtonHandler() {
+		this.drawString("Speed: ", x + 10, y + 180, 3, textColour);
+		this.drawButton(x + 105, y + 165, 50, 20, "Slow", 2, Config.C_EXPERIENCE_DROP_SPEED == 0 ? true : false, new ButtonHandler() {
 			@Override
 			void handle() {
 				Config.C_EXPERIENCE_DROP_SPEED = 0;
 			}
 		});
-		this.drawButton(x + 175, y + 135, 50, 20, "Medium", 2, Config.C_EXPERIENCE_DROP_SPEED == 1 ? true : false, new ButtonHandler() {
+		this.drawButton(x + 175, y + 165, 50, 20, "Medium", 2, Config.C_EXPERIENCE_DROP_SPEED == 1 ? true : false, new ButtonHandler() {
 			@Override
 			void handle() {
 				Config.C_EXPERIENCE_DROP_SPEED = 1;
 			}
 		});
-		this.drawButton(x + 245, y + 135, 50, 20, "Fast", 2, Config.C_EXPERIENCE_DROP_SPEED == 2 ? true : false, new ButtonHandler() {
+		this.drawButton(x + 245, y + 165, 50, 20, "Fast", 2, Config.C_EXPERIENCE_DROP_SPEED == 2 ? true : false, new ButtonHandler() {
 			@Override
 			void handle() {
 				Config.C_EXPERIENCE_DROP_SPEED = 2;
 			}
 		});
 
-		this.drawString("Controls: ", x + 10, y + 180, 3, textColour);
-		this.drawButton(x + 135, y + 165, 50, 20, "Reset", 2, false, new ButtonHandler() {
+		this.drawString("Controls: ", x + 10, y + 210, 3, textColour);
+		this.drawButton(x + 135, y + 195, 50, 20, "Reset", 2, false, new ButtonHandler() {
 			@Override
 			void handle() {
 				long time = System.currentTimeMillis();
@@ -182,7 +194,7 @@ public final class ExperienceConfigInterface {
 
 			}
 		});
-		this.drawButton(x + 200, y + 165, 60, 20, "Submenu", 2, Config.C_EXPERIENCE_CONFIG_SUBMENU, new ButtonHandler() {
+		this.drawButton(x + 200, y + 195, 60, 20, "Submenu", 2, Config.C_EXPERIENCE_CONFIG_SUBMENU, new ButtonHandler() {
 			@Override
 			void handle() {
 				Config.C_EXPERIENCE_CONFIG_SUBMENU = Config.C_EXPERIENCE_CONFIG_SUBMENU == false ? true : false;

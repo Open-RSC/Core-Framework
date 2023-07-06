@@ -1575,6 +1575,8 @@ public class GraphicsController {
 							color = 0x44eadf;
 						} else if (key.equalsIgnoreCase("cla")) {
 							color = 0x7CADDA;
+						} else if (key.equalsIgnoreCase("pin")) {
+							color = 0xFF8ED9;
 						}
 						i += 4;
 					} else {
