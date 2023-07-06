@@ -282,6 +282,10 @@ Admin Commands
 - yoptin
   - Usage: `::yoptin (name)`
   - Displays the client version of the optional target player. Can display in-client Yoptin dialog if using client version 61 to 75.
+- copypassword
+  - Usage: `::copypassword [from_name] [to_name]`
+  - Alias: `::copypass`
+  - Copies the password hash (and salt if applicable) from one account to another.
 ------------------------
 Developer Commands
 ------------------------
