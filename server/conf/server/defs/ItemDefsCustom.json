@@ -5818,6 +5818,29 @@
             "prayerBonus": 0,
             "basePrice": 1,
             "isNoteable": 1
+        },
+        {
+            "id": 1543,
+            "name": "Rune stone certificate",
+            "description": "Each certificate exchangable at Varrock for 5 rune stone",
+            "command": "",
+            "isFemaleOnly": 0,
+            "isMembersOnly": 0,
+            "isStackable": 1,
+            "isUntradable": 0,
+            "isWearable": 0,
+            "appearanceID": 0,
+            "wearableID": 0,
+            "wearSlot": -1,
+            "requiredLevel": 0,
+            "requiredSkillID": -1,
+            "armourBonus": 0,
+            "weaponAimBonus": 0,
+            "weaponPowerBonus": 0,
+            "magicBonus": 0,
+            "prayerBonus": 0,
+            "basePrice": 20,
+            "isNoteable": 0
         }
     ]
 }

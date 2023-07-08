@@ -25,7 +25,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 	//sidney smith is in its own file
 
 	// For custom content, use item on certer
-	final static HashMap<Integer, int[]> certerTable = new HashMap<Integer, int[]>() {{
+	public final static HashMap<Integer, int[]> certerTable = new HashMap<Integer, int[]>() {{
 		// Fish
 		put(NpcId.NILES.id(), new int[]{ItemId.SWORDFISH.id(), ItemId.RAW_SWORDFISH.id(),
 			ItemId.LOBSTER.id(), ItemId.RAW_LOBSTER.id()});
@@ -59,6 +59,8 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			ItemId.FULL_SUPER_STRENGTH_POTION.id(), ItemId.FULL_SUPER_DEFENSE_POTION.id(),
 			ItemId.FULL_RESTORE_PRAYER_POTION.id(), ItemId.DRAGON_BONES.id(),
 			ItemId.LIMPWURT_ROOT.id()});
+		// Mortimer (custom)
+		put(NpcId.MORTIMER.id(), new int[]{ItemId.RUNE_STONE.id()});
 	}};
 
 	public static HashMap<Integer, Integer> certToItemIds = new HashMap<Integer, Integer>(){{
@@ -89,6 +91,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		put(ItemId.PRAYER_POTION_CERTIFICATE.id(), ItemId.FULL_RESTORE_PRAYER_POTION.id());
 		put(ItemId.DRAGON_BONE_CERTIFICATE.id(), ItemId.DRAGON_BONES.id());
 		put(ItemId.LIMPWURT_ROOT_CERTIFICATE.id(), ItemId.LIMPWURT_ROOT.id());
+		put(ItemId.RUNE_STONE_CERTIFICATE.id(), ItemId.RUNE_STONE.id());
 	}};
 
 	@Override

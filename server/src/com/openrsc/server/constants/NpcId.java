@@ -823,7 +823,9 @@ public enum NpcId {
 	SANTA(819),
 	KRESH(820),
 	LILY(821),
-	PETER_SKIPPIN(822);
+	PETER_SKIPPIN(822),
+	MORTIMER(823),
+	RANDOLPH(824);
 
 	private int npcId;
 
