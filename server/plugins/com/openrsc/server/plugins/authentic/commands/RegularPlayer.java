@@ -160,6 +160,20 @@ public final class RegularPlayer implements CommandTrigger {
 			setGlobalOutput(player, MessageType.QUEST);
 		} else if (command.equalsIgnoreCase("globalprivate") || command.equalsIgnoreCase("gp")) {
 			setGlobalOutput(player, MessageType.PRIVATE_RECIEVE);
+		} else if (command.equalsIgnoreCase("ihavereadandagreetotheglobalchatrules")) {
+			acceptGlobalChatRules(player);
+		}
+	}
+
+	private void acceptGlobalChatRules(Player player) {
+		if (player.getCache().hasKey("accepted_global_rules")) {
+			player.message(messagePrefix + "You have already agreed to the global chat rules");
+			player.message("You can use ::g or the Global$ friend to speak in global chat");
+		} else {
+			player.getCache().store("accepted_global_rules", true);
+			player.playerServerMessage(MessageType.QUEST, "Thank you for agreeing to the Global chat rules!");
+			player.playerServerMessage(MessageType.QUEST, "You can now use ::g or the Global$ to speak in global chat");
+
 		}
 	}
 

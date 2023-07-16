@@ -4205,6 +4205,7 @@ public final class Player extends Mob {
 			message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from global chat.");
 			return false;
 		}
+
 		long sayDelay = 0;
 		if (getCache().hasKey("say_delay")) {
 			sayDelay = getCache().getLong("say_delay");
@@ -4228,6 +4229,40 @@ public final class Player extends Mob {
 
 		if (getLocation().onTutorialIsland() && !isMod()) {
 			message("@cya@Once you finish the tutorial, this lets you send messages to everyone on the server");
+			return false;
+		}
+
+		if (!getCache().hasKey("accepted_global_rules") && !isPlayerMod()) {
+			if (getClientLimitations().supportsMessageBox) {
+				ActionSender.sendBox(this,
+				"@cya@Global Chat Rules %" +
+				"@whi@You must read and agree to the following rules before being able to use the Global chat feature. %" +
+				"1. Do not bring up grievances with other players in Global chat. %" +
+				"2. Discussion of PKing is allowed, but PK \"banter\" does not belong " +
+				"in Global chat. Take that to private messages, but remain respectful. %" +
+				"3. If you wish to talk with one person specifically, then consider using private messages instead. %" +
+				"4. Do not attempt to use Global chat as a way to circumvent ignore lists. %" +
+				"5. Global chat is held to the same community standards as other forms of chat. " + 
+				"Please ascertain that you are familiar with our general rules before using Global chat. % %" +
+				"Once you have read the above rules, please type @gre@::ihavereadandagreetotheglobalchatrules @whi@to agree " +
+				"to them and begin using Global chat", true);
+			} else {
+				playerServerMessage(MessageType.QUEST, "@cya@Global Chat Rules");
+				playerServerMessage(MessageType.QUEST, "You must read and agree to the following rules beofre being able to use");
+				playerServerMessage(MessageType.QUEST, "the Global chat feature");
+				playerServerMessage(MessageType.QUEST, "1. Do not bring up grievances with other players in Global chat");
+				playerServerMessage(MessageType.QUEST, "2. Discussion of PKing is allowed, but PK \"banter\" does not belong");
+				playerServerMessage(MessageType.QUEST, "in Global chat. Take that to private messages, but remain respectful");
+				playerServerMessage(MessageType.QUEST, "3. If you wish to talk with one person specifically, then consider using private");
+				playerServerMessage(MessageType.QUEST, "messages instead");
+				playerServerMessage(MessageType.QUEST, "4. Do not attempt to use Global chat as a way to circumvent ignore lists");
+				playerServerMessage(MessageType.QUEST, "5. Global chat is held to the same community standards as other forms of chat");
+				playerServerMessage(MessageType.QUEST, "Please accertain that you are familiar with our general rules before using Global chat");
+				playerServerMessage(MessageType.QUEST, "Once you have read the obve rules, please type");
+				playerServerMessage(MessageType.QUEST, "@cya@::ihavereadandagreetotheglobalchatrules");
+				playerServerMessage(MessageType.QUEST, "to agree to them and begin using Global chat");
+				playerServerMessage(MessageType.QUEST, "(Use the Quest history tab to view this message in its entirety)");
+			}
 			return false;
 		}
 
