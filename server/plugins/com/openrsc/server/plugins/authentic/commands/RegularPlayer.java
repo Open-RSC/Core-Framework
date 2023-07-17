@@ -969,7 +969,7 @@ public final class RegularPlayer implements CommandTrigger {
 		if (player.getLocation().onTutorialIsland()) {
 			player.setBusy(false);
 			if (!player.skipTutorial()) {
-				player.message("Couldn't skip tutorial.");
+				player.message("Unable to skip tutorial at this time.");
 			}
 		}
 	}

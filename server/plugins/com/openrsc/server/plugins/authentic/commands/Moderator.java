@@ -126,7 +126,21 @@ public final class Moderator implements CommandTrigger {
 			removeAlertword(player, command, args);
 		} else if (command.equalsIgnoreCase("togglespacefiltering")) {
 			toggleSpaceFiltering(player);
+		} else if (command.equalsIgnoreCase("gettutorial")) {
+			getTutorial(player);
+		} else if (command.equalsIgnoreCase("toggletutorial")) {
+			toggleTutorial(player);
 		}
+	}
+
+	private void getTutorial(Player player) {
+		player.message("player.getConfig().SHOW_TUTORIAL_SKIP_OPTION is currently " + player.getConfig().SHOW_TUTORIAL_SKIP_OPTION);
+	}
+
+
+	private void toggleTutorial(Player player) {
+		player.getConfig().SHOW_TUTORIAL_SKIP_OPTION = !player.getConfig().SHOW_TUTORIAL_SKIP_OPTION;
+		player.message("set player.getConfig().SHOW_TUTORIAL_SKIP_OPTION to " + player.getConfig().SHOW_TUTORIAL_SKIP_OPTION);
 	}
 
 	private void toggleSpaceFiltering(Player player) {

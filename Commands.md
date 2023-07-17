@@ -525,6 +525,12 @@ Moderator Commands
 - onlinelistlocs
   - Usage: `::onlinelistlocs`
   - Shows a list of online players with their locations appended in parentheses next to their usernames.
+- gettutorial
+  - Usage: `::gettutorial`
+  - Tells the user if the tutorial is mandatory to complete, or if it can be skipped by new players.
+- toggletutorial
+  - Usage: `::toggletutorial`
+  - If completing tutorial island is currently mandatory, allow new users to skip. If the tutorial can currently be skipped, disable that ability.
 ------------------------
 Event Commands
 ------------------------
