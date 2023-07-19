@@ -168,19 +168,28 @@ public final class RegularPlayer implements CommandTrigger {
 	}
 
 	private void acceptGlobalChatRules(Player player) {
+		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
 		if (player.getCache().hasKey("accepted_global_rules")) {
 			player.message(messagePrefix + "You have already agreed to the global chat rules");
-			player.message("You can use ::g or the Global$ friend to speak in global chat");
+			if (config().WANT_GLOBAL_FRIEND) {
+				player.message("You can use ::g or the Global$ friend to speak in global chat");
+			} else {
+				player.message("You can use ::g to speak in global chat");
+			}
 			player.message("If you wish to view the global chat rules again, you can use the @cya@::globalrules @whi@command");
 		} else {
 			player.getCache().store("accepted_global_rules", true);
 			player.playerServerMessage(MessageType.QUEST, "Thank you for agreeing to the Global chat rules!");
-			player.playerServerMessage(MessageType.QUEST, "You can now use ::g or the Global$ to speak in global chat");
-
+			if (config().WANT_GLOBAL_FRIEND) {
+				player.message("You can now use ::g or the Global$ friend to speak in global chat");
+			} else {
+				player.message("You can now use ::g to speak in global chat");
+			}
 		}
 	}
 
 	private void displayGlobalRules(Player player) {
+		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
 		if (player.getClientLimitations().supportsMessageBox) {
 			ActionSender.sendBox(player,
 			"@cya@Global Chat Rules %" +
@@ -214,6 +223,7 @@ public final class RegularPlayer implements CommandTrigger {
 	}
 
 	private void setGlobalOutput(Player player, MessageType questOrPrivate) {
+		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
 		if (questOrPrivate.equals(MessageType.QUEST)) {
 			if (player.getCache().hasKey("private_message_global")) {
 				player.getCache().remove("private_message_global");
@@ -234,6 +244,7 @@ public final class RegularPlayer implements CommandTrigger {
 	}
 
 	private void setGlobalMessageColor(Player player, String[] args) {
+		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
 		if (args.length >= 1) {
 			player.getCache().store("global_message_color", args[0]);
 			player.message("@cya@Global message color set to " + args[0] + "This color.");
