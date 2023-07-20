@@ -64,15 +64,11 @@ public class CustomCerter implements TalkNpcTrigger {
 				uncert(player, npc, itemsCerted);
 				break;
 			case 2: // What things do you cert
-				// Need this for Randolph. He will get stuff to cert later
-				if (itemsCerted == null) {
-					npcsay("Well, I can't certificate anything right now");
-					return;
-				}
-
-				npcsay("I can certificate the following items");
-				for (int itemId : itemsCerted) {
-					npcsay((new Item(itemId)).getDef(player.getWorld()).getName());
+				if (npc.getID() == NpcId.MORTIMER.id()) {
+					npcsay("Right now, I only certificate rune stone");
+				} else if (npc.getID() == NpcId.RANDOLPH.id()) {
+					npcsay("I don't certificate anything at the moment");
+					npcsay("Come back later when I am more settled in");
 				}
 				break;
 			case 3: // Who are you?
