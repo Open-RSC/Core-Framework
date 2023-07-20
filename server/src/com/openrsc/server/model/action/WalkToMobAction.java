@@ -42,12 +42,17 @@ public abstract class WalkToMobAction extends WalkToAction {
 		 */
 		Point checkedPoint = ignoreProjectileAllowed ? getPlayer().getWalkingQueue().getNextMovement() : getPlayer().getLocation();
 		boolean pathingCheckPassed = PathValidation.checkAdjacentDistance(getPlayer().getWorld(), checkedPoint, mob.getLocation(), ignoreProjectileAllowed, !ignoreProjectileAllowed);
-		return checkedPoint.withinRange(mob.getLocation(), radius) && pathingCheckPassed;
+		boolean actionExecutedThisTick = checkedPoint.withinRange(mob.getLocation(), radius) && pathingCheckPassed;
+		if (actionType == ActionType.ATTACKMAGIC && getPlayer().inCombat() && !actionExecutedThisTick) {
+			//If the player attempted to cast magic, is in combat, and was not able to cast it, we should clear it since it was unsuccessful.
+			getPlayer().setWalkToAction(null);
+		}
+		return actionExecutedThisTick;
 	}
 
 	@Override
 	public boolean isPvPAttack() {
-		return mob.isPlayer() && actionType == ActionType.ATTACK;
+		return mob.isPlayer() && (actionType == ActionType.ATTACK || actionType == ActionType.ATTACKMAGIC);
 	}
 }
 

@@ -438,7 +438,7 @@ public abstract class Mob extends Entity {
 			public void run() {
 				if (getDelayTicks() == 0) setDelayTicks(1);
 
-				if (mob.isRemoved()) {
+				if (mob.isRemoved() || inCombat()) {
 					resetFollowing();
 					return;
 				}
