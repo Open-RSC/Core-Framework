@@ -2309,9 +2309,10 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Lily", "She has a green thumb", "", 1, 1, 10, 1, false, sprites, 0xEEBB70, 0x006600, 0x663300, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Peter Skippin", "Shut up, Meg", "", 20, 20, 20, 20, false, sprites, 11167296, 0xFFFFFF, 0x014E00, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Mortimer", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
-		npcs.add(new NPCDef("Randolph", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{0, -1, 2, -1, -1, -1, 531, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Mortimer", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 0x5C5C5C, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{0, -1, 2, -1, -1, -1, 532, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Randolph", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 0x303030, 15523536, 145, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3901,7 +3902,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon Plate Mail Body", "Provides excellent protection", "", 5000000, -1, "items:498", false, true, 322, 0, false, false, true, 1427));
 		items.add(new ItemDef("Dragon Plate Mail Top", "Armour designed for females", "", 5000000, -1, "items:500", false, true, 322, 0, false, false, true, 1428));
 		items.add(new ItemDef("Dragon Plate Mail Legs", "These look pretty heavy", "", 5000000, -1, "items:499", false, true, 644, 0, false, false, true, 1429));
-		items.add(new ItemDef("Dragon Plated Skirt", "Designer leg protection", "", 5000000, -1, "items:88", false, true, 640, 16711748, false, false, true, 1430));
+		items.add(new ItemDef("Dragon Plated Skirt", "Designer leg protection", "", 5000000, -1, "items:88", false, true, 640, 0x960018, false, false, true, 1430));
 
 		items.add(new ItemDef("White CTF Flag", "White Capture the flag banner", "", 1, -1, "items:554", false, true, 16, 0, false, false, true, 1431));
 		items.add(new ItemDef("Guthix CTF Flag", "Guthix capture the flag banner", "", 1, -1, "items:554", false, true, 16, 4246592, false, false, true, 1432));
@@ -4741,6 +4742,8 @@ public class EntityHandler {
 			animations.add(new AnimationDef("fchainmail", "equipment", 65535, 0, true, false, 0));//528 rune
 			animations.add(new AnimationDef("fchainmail", "equipment", 3158064, 0, true, false, 0));//529 black
 			animations.add(new AnimationDef("fdragonscalemail", "equipment", 0, 0, true, false, 0));//530
+			animations.add(new AnimationDef("mortimertorso", "equipment", 0, 0, true, false, 0));//531
+			animations.add(new AnimationDef("randolphtorso", "equipment", 0, 0, true, false, 0));//532
 		}
 	}
 
