@@ -10214,7 +10214,7 @@ public final class mudclient implements Runnable {
 
 		// status bar control
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 0 && this.mouseButtonClick == 1) {
-			osConfig.C_STATUS_BAR = ++osConfig.C_STATUS_BAR %3;
+			osConfig.C_STATUS_BAR = ++osConfig.C_STATUS_BAR % 4;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(43);
 			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_STATUS_BAR);
