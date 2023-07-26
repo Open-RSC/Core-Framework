@@ -456,7 +456,9 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		if (certToItemIds.containsKey(item.getCatalogId())) {
 			// Make sure they're using it on the right NPC
 			final int itemId = certToItemIds.get(item.getCatalogId());
-			return inArray(itemId, certerTable.get(npc.getID()));
+			if (certerTable.containsKey(npc.getID())) {
+				return inArray(itemId, certerTable.get(npc.getID()));
+			}
 		}
 		return false;
 	}
