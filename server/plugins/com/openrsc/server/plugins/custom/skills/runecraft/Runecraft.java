@@ -298,10 +298,17 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				return;
 			}
 
-			if ((cursed || enfeebled)
-				&& player.getSkills().getLevel(Skill.RUNECRAFT.id()) < def.getRequiredLvl() + levelAdd) {
-				player.message("You require more skill to use this talisman with this altar.");
-				return;
+			if (cursed || enfeebled) {
+				if (player.getSkills().getLevel(Skill.RUNECRAFT.id()) < def.getRequiredLvl() + levelAdd) {
+					player.message("You require more skill to use this talisman with this altar.");
+					return;
+				}
+				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.CROWN_OF_THE_ARTISAN.id())) {
+					player.message("As you attempt to bind the temple's power into " + def.getRuneName() + " runes");
+					delay(3);
+					player.message("You feel a conflict between the magic of your crown and talisman");
+					return;
+				}
 			}
 
 			player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
@@ -314,7 +321,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				if (i == null) break;
 				player.getCarriedItems().remove(i);
 
-				// Don't get any runes if they have a enfeebled talisman
+				// Don't get any runes if they have an enfeebled talisman
 				if (!enfeebled) {
 					player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
 				}
@@ -351,7 +358,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					player.message("The runes crumble to dust");
 					delay(3);
 					player.message("And your talisman explodes!");
-					delay(3);
+					say(player, "ouch");
 					player.message("You feel strange");
 
 					int subtractLevel = (int)Math.round(player.getSkills().getLevel(Skill.RUNECRAFT.id()) * 0.15D);
@@ -362,7 +369,6 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					if (!sendUpdate) {
 						player.getSkills().sendUpdateAll();
 					}
-					say(player, "ouch");
 				}
 			}
 

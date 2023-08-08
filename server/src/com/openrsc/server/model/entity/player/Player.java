@@ -1729,8 +1729,8 @@ public final class Player extends Mob {
 		boolean doubledXp = false;
 
 		if (useFatigue && !fromQuest
-			&& !inArray(skill, Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.HITS.id(), Skill.RANGED.id(),
-			Skill.MAGIC.id(), Skill.EVILMAGIC.id(), Skill.GOODMAGIC.id(), Skill.PRAYER.id(), Skill.PRAYEVIL.id(), Skill.PRAYGOOD.id())
+			&& inArray(skill, Skill.HERBLAW.id(), Skill.CRAFTING.id(), Skill.FLETCHING.id(),
+			Skill.SMITHING.id(), Skill.RUNECRAFT.id(), Skill.COOKING.id())
 			&& EnchantedCrowns.shouldActivate(this, ItemId.CROWN_OF_THE_ARTISAN)) {
 			skillXP *= 2;
 			doubledXp = true;
