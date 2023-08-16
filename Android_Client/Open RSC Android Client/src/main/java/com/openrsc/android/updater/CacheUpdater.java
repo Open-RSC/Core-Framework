@@ -224,13 +224,13 @@ public class CacheUpdater extends Activity {
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
 					case 0: // Open RSC
-						selectServer("https://game.openrsc.com", "43596");
+						selectServer("https://game.openrsc.com", "43602");
 						break;
                     case 1: // RSC Cabbage
 						selectServer("https://game.openrsc.com", "43595");
 						break;
 					case 2: // RSC Uranium
-						selectServer("https://game.openrsc.com", "43235");
+						selectServer("https://game.openrsc.com", "43601");
 						break;
 					case 3: // RSC Coleslaw
 						selectServer("https://game.openrsc.com", "43599");
