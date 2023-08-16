@@ -45,7 +45,7 @@ public class ClientLauncher {
 						break;
 					case Settings.OPENRSC:
 					case ClientSettingsCard.OPENRSC:
-						setOpenRSCClientEndpoint(ip, port);
+						setOpenRSCClientEndpoint(ip, "43602");
 						launchOpenRSCClient();
 						break;
 					default:
@@ -56,11 +56,11 @@ public class ClientLauncher {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-						launchWinRune(ip, port, "2003");
+						launchWinRune(ip, "43600", "2003");
 						break;
 					case Settings.WEBCLIENT:
 					case ClientSettingsCard.WEBCLIENT:
-						Utils.openWebpage("http://game.openrsc.com/play/preservation/members");
+						Utils.openWebpage("https://rsc.vet/play/preservation/members");
 						break;
 				}
 				return;
@@ -96,7 +96,7 @@ public class ClientLauncher {
 						break;
 					case Settings.OPENRSC:
 					case ClientSettingsCard.OPENRSC:
-						setOpenRSCClientEndpoint(ip, port);
+						setOpenRSCClientEndpoint(ip, "43601");
 						launchOpenRSCClient();
 						break;
 					default:
@@ -107,7 +107,7 @@ public class ClientLauncher {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-						launchWinRune(ip, port, "2003");
+						launchWinRune(ip, "43605", "2003");
 						break;
 					case Settings.APOSBOT:
 					case ClientSettingsCard.APOSBOT:
@@ -119,7 +119,7 @@ public class ClientLauncher {
 						break;
 					case Settings.WEBCLIENT:
 					case ClientSettingsCard.WEBCLIENT:
-						Utils.openWebpage("http://game.openrsc.com/play/uranium/members");
+						Utils.openWebpage("https://rsc.vet/play/uranium/members");
 						break;
 				}
 				return;
@@ -187,22 +187,9 @@ public class ClientLauncher {
 							e.printStackTrace();
 						}
 						break;
-					case Settings.RSCPLUS:
-					case ClientSettingsCard.RSCPLUS:
-						try {
-							Updater.updateRSCPlus();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						break;
-					case Settings.OPENRSC:
-					case ClientSettingsCard.OPENRSC:
-						setOpenRSCClientEndpoint(ip, port);
-						launchOpenRSCClient();
-						break;
 					case Settings.WEBCLIENT:
 					case ClientSettingsCard.WEBCLIENT:
-						Utils.openWebpage("http://game.openrsc.com/play/2001scape/members");
+						Utils.openWebpage("https://rsc.vet/play/2001scape/members");
 						break;
 				}
 				return;
