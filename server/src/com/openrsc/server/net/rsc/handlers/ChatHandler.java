@@ -31,10 +31,17 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 
 		String message = payload.message;
 
-		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted()) && !sender.hasElevatedPriveledges();
+		final boolean babyModeFiltered = sender.isBabyModeFiltered();
+		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted() || babyModeFiltered) && !sender.hasElevatedPriveledges();
 
 		if (!mutedChat) {
 			message = MessageFilter.filter(sender, message, "public chat");
+		}
+
+		if (babyModeFiltered) {
+			sender.message("Sorry, but someone we banned for breaking our rules is actively throwing a tantrum right now.");
+			sender.message("New accounts are not allowed to speak until they've reached " + sender.getConfig().BABY_MODE_LEVEL_THRESHOLD + " total level during this time.");
+			sender.getWorld().getServer().getDiscordService().reportBabyModeFilteredMessageToDiscord(sender, message, "public chat");
 		}
 
 		if (!sender.speakTongues) {

@@ -853,6 +853,44 @@ public class DiscordService implements Runnable{
 		naughtyWordsRequests.add(embed);
 	}
 
+	public void reportBabyModeFilteredMessageToDiscord(Player sender, String originalMessage, String context) {
+		if(!getServer().getConfig().WANT_DISCORD_NAUGHTY_WORDS_UPDATES) {
+			return;
+		}
+
+		if (context.contains("private messages")) {
+			// Reporting private messages turned out to be too detrimental for user privacy.
+			return;
+		}
+
+		StringBuilder mainContent = new StringBuilder();
+		mainContent.append("**");
+		mainContent.append(sender.getUsername());
+		mainContent.append("** sent the following message to **");
+		mainContent.append(context);
+		if (context.equals("public chat")) {
+			mainContent.append("** near (");
+			mainContent.append(sender.getX());
+			mainContent.append(", ");
+			mainContent.append(sender.getY());
+			mainContent.append("):");
+		} else {
+			mainContent.append(":**");
+		}
+		mainContent.append("\n```\n");
+		mainContent.append(originalMessage);
+		mainContent.append("```\n");
+
+		DiscordEmbed embed = new DiscordEmbed(
+			"**===  Message by " + sender.getUsername() + " was filtered on " + sender.getConfig().SERVER_NAME + " due to **Baby Mode**  ===**",
+			"",
+			"8942042", // purple
+			mainContent.toString()
+		);
+
+		naughtyWordsRequests.add(embed);
+	}
+
 	public void reportSpaceFilteringConfigChangeToDiscord(Player sender) {
 		if(!getServer().getConfig().WANT_DISCORD_NAUGHTY_WORDS_UPDATES || !getServer().getConfig().SERVER_SIDED_WORD_FILTERING) {
 			return;
@@ -868,6 +906,36 @@ public class DiscordService implements Runnable{
 			mainContent.append("disabled");
 		}
 		mainContent.append(" **S P A C E   F I L T E R I N G** ");
+
+		mainContent.append("\n\nThis change was made on the **");
+		mainContent.append(sender.getWorld().getServer().getName());
+		mainContent.append("** server.");
+
+		DiscordEmbed embed = new DiscordEmbed(
+			"",
+			"",
+			"1087508", // pleasant green colour, taken from RSC tree
+			mainContent.toString()
+		);
+
+		naughtyWordsRequests.add(embed);
+	}
+
+	public void reportBabyModeChangeToDiscord(Player sender) {
+		if(!getServer().getConfig().WANT_DISCORD_NAUGHTY_WORDS_UPDATES || !getServer().getConfig().SERVER_SIDED_WORD_FILTERING) {
+			return;
+		}
+
+		StringBuilder mainContent = new StringBuilder();
+		mainContent.append("**");
+		mainContent.append(sender.getUsername());
+		if (getServer().getConfig().BABY_MODE_LEVEL_THRESHOLD > 0) {
+			mainContent.append("** set Baby Mode level threshold to: **");
+			mainContent.append(getServer().getConfig().BABY_MODE_LEVEL_THRESHOLD);
+			mainContent.append("**");
+		} else {
+			mainContent.append("** disabled Baby Mode.");
+		}
 
 		mainContent.append("\n\nThis change was made on the **");
 		mainContent.append(sender.getWorld().getServer().getName());

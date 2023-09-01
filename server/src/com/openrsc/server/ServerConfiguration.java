@@ -303,6 +303,7 @@ public class ServerConfiguration {
 	public int PVM_CATCHING_DISTANCE;
 	public int PVP_CATCHING_DISTANCE;
 	public int PVP_REATTACK_TIMER;
+	public int BABY_MODE_LEVEL_THRESHOLD;
 	public boolean SHUFFLE_PID_ORDER;
 	public int SHUFFLE_PID_ORDER_INTERVAL;
 	public int SPELL_RANGE_DISTANCE;
@@ -438,6 +439,7 @@ public class ServerConfiguration {
 		PVM_CATCHING_DISTANCE = tryReadInt("pvm_catching_distance").orElse(1);
 		PVP_CATCHING_DISTANCE = tryReadInt("pvp_catching_distance").orElse(1);
 		PVP_REATTACK_TIMER = tryReadInt("pvp_reattack_timer").orElse(5);
+		BABY_MODE_LEVEL_THRESHOLD = tryReadInt("baby_mode_level_threshold").orElse(0);
 		SHUFFLE_PID_ORDER = tryReadBool("shuffle_pid_order").orElse(true);
 		SHUFFLE_PID_ORDER_INTERVAL = tryReadInt("shuffle_pid_order_interval").orElse(500);
 		SPELL_RANGE_DISTANCE = tryReadInt("spell_range_distance").orElse(4);

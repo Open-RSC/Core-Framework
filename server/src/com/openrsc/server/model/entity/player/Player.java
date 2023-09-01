@@ -4232,6 +4232,12 @@ public final class Player extends Mob {
 			return false;
 		}
 
+		if (isBabyModeFiltered()) {
+			message("Sorry, but someone we banned for breaking our rules is actively throwing a tantrum right now.");
+			message("New accounts are not allowed to speak until they've reached " + getConfig().BABY_MODE_LEVEL_THRESHOLD + " total level during this time.");
+			return false;
+		}
+
 		if (!getCache().hasKey("accepted_global_rules") && !isPlayerMod()) {
 			message("@cya@You must agree to the global chat rules before using global chat");
 			message("@cya@Use the ::globalrules command to view them.");
@@ -4313,5 +4319,9 @@ public final class Player extends Mob {
 
 	public Npc getInteractingNpc() {
 		return this.interactingNpc;
+	}
+
+	public boolean isBabyModeFiltered() {
+		return getTotalLevel() < getConfig().BABY_MODE_LEVEL_THRESHOLD;
 	}
 }

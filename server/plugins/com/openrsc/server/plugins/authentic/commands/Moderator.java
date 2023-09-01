@@ -130,23 +130,76 @@ public final class Moderator implements CommandTrigger {
 			getTutorial(player);
 		} else if (command.equalsIgnoreCase("toggletutorial")) {
 			toggleTutorial(player);
+		} else if (command.equalsIgnoreCase("babymode")) {
+			setBabyModeLevelThreshold(player, command, args);
 		}
 	}
 
 	private void getTutorial(Player player) {
-		player.message("player.getConfig().SHOW_TUTORIAL_SKIP_OPTION is currently " + player.getConfig().SHOW_TUTORIAL_SKIP_OPTION);
+		if (player.getConfig().SHOW_TUTORIAL_SKIP_OPTION) {
+			player.message("Players are able to skip tutorial island.");
+		} else {
+			player.message("Players are NOT able to skip tutorial island.");
+		}
 	}
 
 
 	private void toggleTutorial(Player player) {
 		player.getConfig().SHOW_TUTORIAL_SKIP_OPTION = !player.getConfig().SHOW_TUTORIAL_SKIP_OPTION;
-		player.message("set player.getConfig().SHOW_TUTORIAL_SKIP_OPTION to " + player.getConfig().SHOW_TUTORIAL_SKIP_OPTION);
+		if (player.getConfig().SHOW_TUTORIAL_SKIP_OPTION) {
+			player.message("Players are now able to skip tutorial island.");
+		} else {
+			player.message("Players are NO LONGER able to skip tutorial island.");
+		}
 	}
 
 	private void toggleSpaceFiltering(Player player) {
 		player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING = !player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING;
 		player.message("set player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING to " + player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING);
 		player.getWorld().getServer().getDiscordService().reportSpaceFilteringConfigChangeToDiscord(player);
+	}
+
+	private void setBabyModeLevelThreshold(Player player, String command, String[] args) {
+		int previousThreshold = player.getConfig().BABY_MODE_LEVEL_THRESHOLD;
+		if (args.length < 1) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [\"on\"/\"off\"/[level]]");
+			return;
+		}
+		if (args[0].equalsIgnoreCase("off")) {
+			if (previousThreshold != 0) {
+				player.getConfig().BABY_MODE_LEVEL_THRESHOLD = 0;
+				player.message("Baby mode has been disabled.");
+				player.getWorld().getServer().getDiscordService().reportBabyModeChangeToDiscord(player);
+			} else {
+				player.message("Baby mode was already disabled.");
+			}
+			return;
+		}
+
+		int levelReq;
+		if (args[0].equalsIgnoreCase("on")) {
+			if (previousThreshold != 100) {
+				levelReq = 100;
+			} else {
+				player.message("Baby mode was already set to a total level 100 requirement.");
+				return;
+			}
+		} else {
+			try {
+				levelReq = Integer.parseInt(args[0]);
+				if (previousThreshold == levelReq) {
+					player.message("Baby mode was already set to a total level " + levelReq + " requirement.");
+					return;
+				}
+			} catch (NumberFormatException ex) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [\"on\"/\"off\"/[level]]");
+				return;
+			}
+		}
+
+		player.getConfig().BABY_MODE_LEVEL_THRESHOLD = levelReq;
+		player.message("Set Baby Mode threshold to at least " + player.getConfig().BABY_MODE_LEVEL_THRESHOLD + " total level.");
+		player.getWorld().getServer().getDiscordService().reportBabyModeChangeToDiscord(player);
 	}
 
 	private void reloadGoodwordBadwords(Player player) {
