@@ -209,6 +209,7 @@ public class ServerConfiguration {
 	public int FPS;
 	public boolean WANT_EMAIL;
 	public boolean WANT_REGISTRATION_LIMIT;
+	public int REGISTRATION_LIMIT_COUNT;
 	public boolean ALLOW_RESIZE;
 	public boolean LENIENT_CONTACT_DETAILS;
 	//loosened checks
@@ -400,6 +401,7 @@ public class ServerConfiguration {
 		IS_DOUBLE_EXP = tryReadBool("double_exp").orElse(false);
 		NPC_RESPAWN_MULTIPLIER = tryReadDouble("npc_respawn_multiplier").orElse(1.0);
 		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
+		REGISTRATION_LIMIT_COUNT = tryReadInt("registration_limit_count").orElse(2);
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
 		IS_LOCALHOST_RESTRICTED = tryReadBool("is_localhost_restricted").orElse(true);
 		GLOBAL_MESSAGE_COOLDOWN = tryReadInt("global_message_cooldown").orElse(0);

@@ -170,7 +170,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				}
 
 				if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
-					int registerTimeout = applyHarshRegistration ? 720 : 1; //time in minutes
+					int registerTimeout = applyHarshRegistration ? 1440 : 1; //time in minutes
 					boolean recentlyRegistered = getIpAddress().equals("127.0.0.1") || getServer().getDatabase().checkRecentlyRegistered(getIpAddress(), registerTimeout);
 					if (recentlyRegistered) {
 						LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
@@ -273,7 +273,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
-				int registerTimeout = applyHarshRegistration ? 720 : 1; //time in minutes
+				int registerTimeout = applyHarshRegistration ? 1440 : 1; //time in minutes
 				boolean recentlyRegistered = (getServer().getConfig().IS_LOCALHOST_RESTRICTED && getIpAddress().equals("127.0.0.1"))
 					|| (!getIpAddress().equals("127.0.0.1") && getServer().getDatabase().checkRecentlyRegistered(getIpAddress(), registerTimeout));
 				if (recentlyRegistered) {

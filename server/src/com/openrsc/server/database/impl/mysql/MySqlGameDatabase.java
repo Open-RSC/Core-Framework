@@ -454,7 +454,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 			statement.setLong(2, (System.currentTimeMillis() / 1000) - ((long)minutes * 60L));
 
 			try (final ResultSet result = statement.executeQuery()) {
-				if (result.next()) {
+				if (result.next() && result.getInt("count") >= server.getConfig().REGISTRATION_LIMIT_COUNT) {
 					recentlyRegistered = true;
 				}
 			}

@@ -80,7 +80,7 @@ public class MySqlQueries {
 
 		copyPassword = "UPDATE `" + PREFIX + "players` SET `pass` = ?, `salt` = ? WHERE `username` = ?";
 		createPlayer = "INSERT INTO `" + PREFIX + "players` (`username`, `email`, `pass`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?)";
-		recentlyRegistered = "SELECT 1 FROM `" + PREFIX + "players` WHERE `creation_ip`=?" +
+		recentlyRegistered = "SELECT count(*) AS count FROM `" + PREFIX + "players` WHERE `creation_ip`=?" +
 			" AND `creation_date` > ?";
 		initMaxStats = "INSERT INTO `" + PREFIX + "maxstats` (`playerID`) VALUES (?)";
 		initStats = "INSERT INTO `" + PREFIX + "curstats` (`playerID`) VALUES (?)";
