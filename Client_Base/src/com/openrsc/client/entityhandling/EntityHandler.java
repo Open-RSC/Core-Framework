@@ -51,7 +51,7 @@ public class EntityHandler {
 
 	public static NPCDef getNpcDef(int id) {
 		if (id < 0 || id >= npcs.size()) {
-			return null;
+			return npcs.get(825); //Default NPC is Ana (not in a barrel)
 		}
 		return npcs.get(id);
 	}
@@ -67,15 +67,16 @@ public class EntityHandler {
 			newId = (newId + 1) * -1;
 			noted = true;
 		}
-
+		if (id >= items.size()) {
+			return items.get(1544); //Default Item is Unobtanium
+		}
 		return findItem(newId, noted);
 	}
 
 	public static ItemDef getItemDef(int id, boolean isNote) {
-		if (id < 0) {
-			return null;
+		if (id < 0 || id >= items.size()) {
+			return items.get(1544); //Default Item is Unobtanium
 		}
-
 		return findItem(id, isNote);
 	}
 
@@ -174,7 +175,7 @@ public class EntityHandler {
 				if (objects.get(i).id == id)
 					return objects.get(i);
 			}
-			return null;
+			return objects.get(4); // Default Object is tree stump
 		}
 		return objects.get(id);
 	}
@@ -2313,6 +2314,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Mortimer", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 0x5C5C5C, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, -1, 2, -1, -1, -1, 532, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Randolph", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 0x303030, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{3, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Ana (not in a barrel)", "I should update my client.", "", 17, 15, 16, 18, false, sprites, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -4047,6 +4050,10 @@ public class EntityHandler {
 		} else {
 			items.add(new ItemDef("Rune stone certificate", "Each certificate exchangable at Varrock for 5 rune stone", "", 20, 180, "items:180", true, false, 0, 0, false, false, false, 1543));
 		}
+
+		items.add(new ItemDef("Unobtanium", "I should update my client.", "", 17, 70, "items:70", false, false, 0, 0xCC4CFF, false, false, true, 1544));
+		items.add(new ItemDef("Unobtanium", "I should update my client.", "", 17, 70, "items:70", true, false, 0, 0xCC4CFF, false, false, false, 1545));
+
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";

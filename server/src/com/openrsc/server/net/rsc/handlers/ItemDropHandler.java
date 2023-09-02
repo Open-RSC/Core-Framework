@@ -82,6 +82,12 @@ public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct
 			return;
 		}
 
+		if (item.getCatalogId() > player.getClientLimitations().maxItemId) {
+			player.message("You don't even know what that is...!");
+			player.message("Definitely update your client before trying to drop that item.");
+			return;
+		}
+
 		if (inventorySlot != -1) {
 			final int idCount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
 

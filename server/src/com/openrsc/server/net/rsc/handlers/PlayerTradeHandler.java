@@ -272,6 +272,11 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
+					if (item.getCatalogId() > player.getClientLimitations().maxItemId) {
+						player.message("You don't even know what that is...!");
+						player.message("Definitely update your client before trying to trade that item.");
+						continue;
+					}
 					if (item.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 						player.setRequiresOfferUpdate(true);
 						continue;

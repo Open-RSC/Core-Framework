@@ -2,6 +2,7 @@ package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.*;
+import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
 import java.util.HashMap;
@@ -114,8 +115,7 @@ public class Item implements Comparable<Item> {
 		return itemStatus.getCatalogId();
 	}
 
-	// This should only be called if player.isUsingCustomClient() has already been checked
-	public final int getCatalogIdAuthenticNoting() {
+	private final int getCatalogIdAuthenticNoting(int maxItemId, World world) {
 		if (getNoted()) {
 			// Unfortunately, noted items will need to appear as some other stackable item.
 			// There's no way to show a stack of an unstackable item in the authentic protocol.
@@ -123,10 +123,45 @@ public class Item implements Comparable<Item> {
 			// most of the functions of the noted item are retained.
 
 			// The Shantay Desert Pass is chosen due to its low value, untradability, & visual similarity to a note.
-			return 1030; // Shantay Desert Pass
+			if (maxItemId >= ItemId.SHANTAY_DESERT_PASS.id()) {
+				return ItemId.SHANTAY_DESERT_PASS.id();
+			}
+			// an alternative placeholder stackable item supported by all clients.
+			return ItemId.BRONZE_ARROWS.id();
 		} else {
-			return getCatalogId();
+			if (getCatalogId() <= maxItemId) {
+				return getCatalogId();
+			}
+
+			// client cannot display the item. Substitute an item it can handle.
+			if (getDef(world).isStackable() || getNoted()) {
+				return ItemId.BRONZE_ARROWS.id();
+			} else {
+				return ItemId.IRON_MACE.id();
+			}
 		}
+	}
+
+	private final int getUnobtaniumPlaceholderId(World world) {
+		if (getDef(world).isStackable() || getNoted()) {
+			return ItemId.UNOBTANIUM_STACKABLE.id();
+		} else {
+			return ItemId.UNOBTANIUM.id();
+		}
+	}
+
+	// manipulates the item ID to report to the player depending on the limitations of their client
+	public final int getSafeItemId(Player player) {
+		int safeId;
+		if (player.isUsingCustomClient()) {
+			safeId = getCatalogId();
+			if (safeId > player.getClientLimitations().maxItemId) {
+				safeId = getUnobtaniumPlaceholderId(player.getWorld());
+			}
+		} else {
+			safeId = getCatalogIdAuthenticNoting(player.getClientLimitations().maxItemId, player.getWorld());
+		}
+		return safeId;
 	}
 
 	public int getAmount() {

@@ -340,7 +340,7 @@ public class ActionSender {
 			}
 			int i = 0;
 			for (Item item : items) {
-				struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+				struct.catalogIDs[i] = item.getSafeItemId(player);
 				if (item.getNoted() && !player.isUsingCustomClient()) {
 					String itemName = item.getDef(player.getWorld()).getName();
 					player.playerServerMessage(MessageType.QUEST,
@@ -948,7 +948,7 @@ public class ActionSender {
 			i = 0;
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				struct.wielded[i] = item.isWielded() ? 1 : 0;
-				struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+				struct.catalogIDs[i] = item.getSafeItemId(player);
 				struct.noted[i] = item.getNoted() ? 1 : 0;
 				if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
 					// amount sent only for stackable
@@ -1726,7 +1726,7 @@ public class ActionSender {
 			}
 			i = 0;
 			for (Item item : items) {
-				struct.opponentCatalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+				struct.opponentCatalogIDs[i] = item.getSafeItemId(player);
 				if (item.getNoted() && !player.isUsingCustomClient()) {
 					String itemName = item.getDef(player.getWorld()).getName();
 					player.playerServerMessage(MessageType.QUEST,
@@ -1786,7 +1786,7 @@ public class ActionSender {
 			struct.slot = slot;
 			Item item = player.getCarriedItems().getInventory().get(slot);
 			if (item != null) {
-				struct.catalogID = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+				struct.catalogID = item.getSafeItemId(player);
 				struct.wielded = item.isWielded() ? 1 : 0;
 				struct.noted = item.getNoted() ? 1 : 0;
 				struct.amount = item.getDef(player.getWorld()).isStackable() || item.getNoted() ?
@@ -1857,7 +1857,7 @@ public class ActionSender {
 		synchronized (player.getBank().getItems()) {
 			int i = 0;
 			for (Item item : player.getBank().getItems()) {
-				struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+				struct.catalogIDs[i] = item.getSafeItemId(player);
 				struct.amount[i] = item.getAmount();
 				i++;
 			}
@@ -1886,7 +1886,7 @@ public class ActionSender {
 
 		int i = 0;
 		for (Item item : bank) {
-			struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+			struct.catalogIDs[i] = item.getSafeItemId(player);
 			struct.amount[i] = item.getAmount();
 			i++;
 		}
@@ -1916,7 +1916,7 @@ public class ActionSender {
 			Item item = shop.getShopItem(i);
 			if (maxId > ItemId.NOTHING.id() && item.getCatalogId() > maxId)
 				continue;
-			struct.catalogIDs[idx] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+			struct.catalogIDs[idx] = item.getSafeItemId(player);
 			struct.amount[idx] = item.getAmount();
 			struct.baseAmount[idx] = shop.getStock(item.getCatalogId());
 			struct.price[idx] = 0; // TODO: get from shop list for early protocols??
