@@ -352,7 +352,7 @@ Super/Senior Moderator Commands
   - Sets a cache value for the specified player.
   - If no player is specified, then the current player's cache is modified.
 - deletecache
-  - Usage: `::getcache (name) [cache_key]`
+  - Usage: `::deletecache (name) [cache_key]`
   - Alias: `::dcache` or `::removecache` or `::rcache`
   - Remove the cache contents of a specified key for the specified player.
   - If no player is specified, then the current player's cache is modified.
