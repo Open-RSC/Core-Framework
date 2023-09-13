@@ -47,13 +47,13 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
-				"I'd like to talk about bank pin",
+				"I'd like to inquire about bank pins",
 				"I'd like to collect my items from auction");
 		else if (config().WANT_BANK_PINS && !player.getBankPinOptOut())
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
-				"I'd like to talk about bank pin");
+				"I'd like to inquire about bank pins");
 		else if (config().SPAWN_AUCTION_NPCS)
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",

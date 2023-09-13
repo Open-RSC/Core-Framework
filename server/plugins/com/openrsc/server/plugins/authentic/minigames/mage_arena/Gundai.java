@@ -27,7 +27,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		String optionBank = "cool, I'd like to access my bank account please";
 		options.add(optionBank);
 
-		String optionPin = "I'd like to talk about bank pin";
+		String optionPin = "I'd like to inquire about bank pins";
 		if (config().WANT_BANK_PINS && !player.getBankPinOptOut())
 			options.add(optionPin);
 

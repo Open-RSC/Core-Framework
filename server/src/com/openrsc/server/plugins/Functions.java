@@ -809,30 +809,33 @@ public class Functions {
 						}
 					}
 					// authentic client can only show 5 options at once.
-					pinNum = Functions.multi(player, "1 (one)", "2 (two)", "3 (three)", "4 (four)", "-- more --") + 1;
-					if (pinNum == 5) {
-						pinNum = Functions.multi(player, "5 (five)", "6 (six)", "7 (seven)", "8 (eight)", "-- more --") + 1;
-						if (pinNum == 5) {
-							pinNum = Functions.multi(player, "9 (nine)", "0 (zero)", "cycle back to 1", "please cancel", "i love you") + 1;
+					pinNum = Functions.multi(player, "1 (one)", "2 (two)", "3 (three)", "4 (four)", "-- more --");
+					if (pinNum == -1) return null;
+					if (pinNum == 4) {
+						pinNum = Functions.multi(player, "5 (five)", "6 (six)", "7 (seven)", "8 (eight)", "-- more --");
+						if (pinNum == -1) return null;
+						if (pinNum == 4) {
+							pinNum = Functions.multi(player, "9 (nine)", "0 (zero)", "cycle back to 1", "please cancel", "i love you");
+							if (pinNum == -1) return null;
 							switch (pinNum) {
-								case 1:
+								case 0:
 									pinNum = 9;
 									playerSatisfied = true;
 									break;
-								case 2:
+								case 1:
 									pinNum = 0;
 									playerSatisfied = true;
 									break;
-								case 3:
+								case 2:
 									if (n != null) {
 										npcsay(player, n, "ok no big deal, all good");
 										bankerIsAnnoyed = true;
 									}
 									continue;
-								case 4:
+								case 3:
 									player.resetMenuHandler();
 									return null;
-								case 5:
+								case 4:
 									// if you remove this feature the entire client breaks
 									if (n != null) {
 										npcsay(player, n, "@red@*blushes*");
@@ -844,7 +847,7 @@ public class Functions {
 									break;
 							}
 						} else {
-							pinNum += 4;
+							pinNum += 5;
 							playerSatisfied = true;
 						}
 					} else {
