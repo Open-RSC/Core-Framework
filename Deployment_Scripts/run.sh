@@ -11,7 +11,7 @@ echo ""
 cd server
 
 # runs server with the configuration found in "server/default.conf"
-bash ./ant_launcher.sh default
+bash ./ant_launcher.sh default g1gc
 
 # uncomment to run additional servers with different configurations. Prod use: uncomment all below
 #bash ./ant_launcher.sh openrsc &&  \

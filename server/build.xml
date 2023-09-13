@@ -73,7 +73,7 @@
 
     <property name="confFile" value="default" />
     <property name="coloredLogging" value="false" />
-    <target name="runserver">
+    <target name="runserverzgc">
         <!-- java 17+ recommended for mature ZGC implementation -->
         <echo message="Using JVM 17+ launch arguments"/>
         <java classname="com.openrsc.server.Server" fork="true">
@@ -99,7 +99,7 @@
         </java>
     </target>
 
-    <target name="runserverg1gc">
+    <target name="runserver">
         <!-- java 8 compatible jvm args. Add more heap if you can. -->
         <echo message="Using JVM arguments for Java 8 minimum."/>
         <echo message="Upgrade to Java 17 or later for better garbage collection."/>

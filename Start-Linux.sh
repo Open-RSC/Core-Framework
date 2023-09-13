@@ -150,9 +150,9 @@ Choices:
     ${RED}2${NC} - MariaDB (production game hosting)"
         read -r sql
         if [ "$sql" == "1" ]; then
-            make backup-sqlite db=$db
+            make backup-sqlite-local db=$db
         elif [ "$sql" == "2" ]; then
-            make backup-mariadb db=$db
+            make backup-mariadb-local db=$db
         fi
         clear
         echo "Database $db backup complete."
@@ -179,9 +179,9 @@ Choices:
     ${RED}2${NC} - MariaDB (production game hosting)"
         read -r sql
         if [ "$sql" == "1" ]; then
-            make restore-sqlite name=$filename db=$db
+            make restore-sqlite-local name=$filename db=$db
         elif [ "$sql" == "2" ]; then
-            make restore-mariadb name=$filename db=$db
+            make restore-mariadb-local name=$filename db=$db
         fi
         clear
         echo "File $filename was restored to database $db."
