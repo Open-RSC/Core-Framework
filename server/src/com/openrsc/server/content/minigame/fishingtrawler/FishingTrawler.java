@@ -201,6 +201,7 @@ public class FishingTrawler extends DelayedEvent {
 						for (Player player : players) {
 							player.message("the boats gone under");
 							player.message("you're lost at sea!");
+							registerFailure(player);
 							// defensive code, in case this teleport fails
 							// attempt to teleport in the cleanup stage
 							try {
@@ -313,11 +314,16 @@ public class FishingTrawler extends DelayedEvent {
 			// x2 since about half will be filled with junk
 			int rewardForEach = 2 * fishCaught / players.size();
 			for (Player player : players) {
+				int successfulTrips = 1;
+				if (player.getCache().hasKey("fishing_trawler_success")) {
+					successfulTrips += player.getCache().getInt("fishing_trawler_success");
+				}
 				ActionSender.sendBox(player,
 					"@yel@you have trawled a full net% %@yel@It's time to go back in and inspect the catch", false);
 				player.message("murphy turns the boat towards shore");
 				player.setLocation(SPAWN_LAND, true);
 				player.getCache().set("fishing_trawler_reward", rewardForEach);
+				player.getCache().set("fishing_trawler_success", successfulTrips);
 				ActionSender.hideFishingTrawlerInterface(player);
 			}
 		}
@@ -468,6 +474,7 @@ public class FishingTrawler extends DelayedEvent {
 	}
 
 	public void disconnectPlayer(Player player, boolean fromAction) {
+		registerFailure(player);
 		players.remove(player);
 		player.setLocation(spawnFail, true);
 		if (fromAction) {
@@ -478,9 +485,18 @@ public class FishingTrawler extends DelayedEvent {
 	//quitting players (by talking to Murphy) always got the west fail spawn
 	//regardless of chosen boat
 	public void quitPlayer(Player player) {
+		registerFailure(player);
 		players.remove(player);
 		player.setLocation(SPAWN_WEST_FAIL, true);
 		ActionSender.hideFishingTrawlerInterface(player);
+	}
+
+	public void registerFailure(Player player) {
+		int failedTrips = 1;
+		if (player.getCache().hasKey("fishing_trawler_failures")) {
+			failedTrips += player.getCache().getInt("fishing_trawler_failures");
+		}
+		player.getCache().set("fishing_trawler_failures", failedTrips);
 	}
 
 	public Area getShipAreaWater() {

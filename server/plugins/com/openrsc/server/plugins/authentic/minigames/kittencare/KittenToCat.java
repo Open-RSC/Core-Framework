@@ -48,6 +48,11 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
+			int totalReleased = 1;
+			if (player.getCache().hasKey("kittens_released")) {
+				totalReleased += player.getCache().getInt("kittens_released");
+			}
+			player.getCache().set("kittens_released", totalReleased);
 			player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 			mes("you drop the kitten");
 			delay(2);
@@ -234,13 +239,24 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 
 			// kitten runs off - reset counters
 			if (kittenHunger >= 4*BASE_FACTOR || kittenLoneliness >= 4*BASE_FACTOR) {
+				int totalReleased = 1;
+				if (player.getCache().hasKey("kittens_released")) {
+					totalReleased += player.getCache().getInt("kittens_released");
+				}
+				player.getCache().set("kittens_released", totalReleased);
 				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 			}
 			// kitten grows to cat - replace and reset counters
 			else if (kittenEvents >= 32) {
+				int totalRaised = 1;
+				if (player.getCache().hasKey("kittens_raised")) {
+					totalRaised += player.getCache().getInt("kittens_raised");
+				}
+
 				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CAT.id()));
+				player.getCache().set("kittens_raised", totalRaised);
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 				mes("you're kitten has grown into a healthy cat");
 				delay(2);

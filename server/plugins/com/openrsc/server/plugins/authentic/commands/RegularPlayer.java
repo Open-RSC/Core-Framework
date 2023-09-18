@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
@@ -54,6 +55,8 @@ public final class RegularPlayer implements CommandTrigger {
 
 		if (command.equalsIgnoreCase("gang")) {
 			queryGang(player);
+		} else if (command.equalsIgnoreCase("minigamelog")) {
+			queryMinigameLog(player, args);
 		} else if (command.equalsIgnoreCase("c") && config().WANT_CLANS) {
 			sendMessageClan(player, args);
 		} else if (command.equalsIgnoreCase("clanaccept") && config().WANT_CLANS) {
@@ -879,6 +882,80 @@ public final class RegularPlayer implements CommandTrigger {
 			groups.add(Group.getStaffPrefix(player.getWorld(), entry.getKey()) + entry.getValue() + (player.isDev() ? " (" + entry.getKey() + ")" : ""));
 		}
 		ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
+	}
+
+	private static void queryMinigameLog(Player recipient, String[] args) {
+		final Player target;
+
+		if (args.length > 0) {
+			target = recipient.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		} else {
+			target = recipient;
+		}
+
+		if (target == null) {
+			recipient.message("Invalid name or player is not online");
+			return;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("@yel@Minigame Log for %s", target.getUsername()));
+		sb.append(" % %@whi@");
+
+		if (target.getWorld().canYield(new Item(ItemId.BAILING_BUCKET.id()))) {
+			int trawlerSuccess = 0, trawlerFailures = 0;
+			if (target.getCache().hasKey("fishing_trawler_success")) {
+				trawlerSuccess = target.getCache().getInt("fishing_trawler_success");
+			}
+			if (target.getCache().hasKey("fishing_trawler_failures")) {
+				trawlerFailures = target.getCache().getInt("fishing_trawler_failures");
+			}
+			sb.append(String.format("Fishing Trawler - successful trips: %d%%", trawlerSuccess));
+			sb.append(String.format("Fishing Trawler - failed trips: %d%%", trawlerFailures));
+			sb.append(" %");
+		}
+
+		if (target.getWorld().canYield(new Item(ItemId.GNOME_BALL.id()))) {
+			int gnomeballGoals = 0;
+			if (target.getCache().hasKey("gnomeball_total_goals")) {
+				gnomeballGoals = target.getCache().getInt("gnomeball_total_goals");
+			}
+			sb.append(String.format("Gnomeball - total goals: %d%%", gnomeballGoals));
+			sb.append(" %");
+		}
+
+		if (target.getWorld().canYield(new Item(ItemId.GIANNE_COOK_BOOK.id()))) {
+			int gnomeRestaurantOrders = 0;
+			if (target.getCache().hasKey("gianne_jobs_completed")) {
+				gnomeRestaurantOrders = target.getCache().getInt("gianne_jobs_completed");
+			}
+			sb.append(String.format("Gnome restaurant - orders delivered: %d%%", gnomeRestaurantOrders));
+			sb.append(" %");
+		}
+
+		if (target.getWorld().canYield(new Item(ItemId.GNOME_COCKTAIL_GUIDE.id()))) {
+			int gnomeBarOrders = 0;
+			if (target.getCache().hasKey("blurberry_jobs_completed")) {
+				gnomeBarOrders = target.getCache().getInt("blurberry_jobs_completed");
+			}
+			sb.append(String.format("Gnome bar - orders delivered: %d%%", gnomeBarOrders));
+			sb.append(" %");
+		}
+
+		if (target.getWorld().canYield(new Item(ItemId.KITTEN.id()))) {
+			int kittensRaised = 0, kittensReleased = 0;
+			if (target.getCache().hasKey("kittens_raised")) {
+				kittensRaised = target.getCache().getInt("kittens_raised");
+			}
+			if (target.getCache().hasKey("kittens_released")) {
+				kittensReleased = target.getCache().getInt("kittens_released");
+			}
+			sb.append(String.format("Kittens - raised to adult cats: %d%%", kittensRaised));
+			sb.append(String.format("Kittens - released to the wild: %d%%", kittensReleased));
+			sb.append(" %");
+		}
+
+		ActionSender.sendBox(recipient, sb.toString(), true);
 	}
 
 	private void queryKillList(Player player, String[] args) {
