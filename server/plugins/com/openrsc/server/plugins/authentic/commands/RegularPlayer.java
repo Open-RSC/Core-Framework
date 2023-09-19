@@ -55,8 +55,6 @@ public final class RegularPlayer implements CommandTrigger {
 
 		if (command.equalsIgnoreCase("gang")) {
 			queryGang(player);
-		} else if (command.equalsIgnoreCase("minigamelog")) {
-			queryMinigameLog(player, args);
 		} else if (command.equalsIgnoreCase("c") && config().WANT_CLANS) {
 			sendMessageClan(player, args);
 		} else if (command.equalsIgnoreCase("clanaccept") && config().WANT_CLANS) {
@@ -167,6 +165,8 @@ public final class RegularPlayer implements CommandTrigger {
 			displayGlobalRules(player);
 		} else if (command.equalsIgnoreCase("ihavereadandagreetotheglobalchatrules")) {
 			acceptGlobalChatRules(player);
+		} else if (command.equalsIgnoreCase("minigamelog")) {
+			queryMinigameLog(player, args);
 		}
 	}
 
@@ -884,8 +884,9 @@ public final class RegularPlayer implements CommandTrigger {
 		ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 	}
 
-	private static void queryMinigameLog(Player recipient, String[] args) {
-		final Player target;
+	private void queryMinigameLog(Player recipient, String[] args) {
+		Player target;
+		final String noData = "Invalid name or player is not online";
 
 		if (args.length > 0) {
 			target = recipient.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
@@ -894,8 +895,22 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 
 		if (target == null) {
-			recipient.message("Invalid name or player is not online");
+			recipient.message(noData);
 			return;
+		}
+
+		boolean blockAll = target.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, target.isUsingCustomClient())
+			== PlayerSettings.BlockingMode.All.id();
+		boolean blockNonFriend = target.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, target.isUsingCustomClient())
+			== PlayerSettings.BlockingMode.NonFriends.id();
+		if (!recipient.getUsername().equals(target.getUsername())) {
+			if ((blockAll ||
+				(blockNonFriend && !target.getSocial().isFriendsWith(recipient.getUsernameHash())) ||
+				target.getSocial().isIgnoring(recipient.getUsernameHash())) &&
+				!recipient.isMod()) {
+				recipient.message(noData);
+				return;
+			}
 		}
 
 		StringBuilder sb = new StringBuilder();

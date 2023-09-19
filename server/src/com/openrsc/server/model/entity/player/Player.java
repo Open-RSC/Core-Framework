@@ -290,10 +290,6 @@ public final class Player extends Mob {
 	 */
 	private int owner = 1;
 	/**
-	 * The player's password
-	 */
-	private String password;
-	/**
 	 * Total quest points
 	 */
 	private int questPoints = 0;
@@ -427,7 +423,6 @@ public final class Player extends Mob {
 	public Player(final World world, final LoginRequest request) {
 		super(world, EntityType.PLAYER);
 
-		password = request.getPassword();
 		usernameHash = DataConversions.usernameToHash(request.getUsername());
 		username = DataConversions.hashToUsername(usernameHash);
 		sessionStart = System.currentTimeMillis();
@@ -459,7 +454,6 @@ public final class Player extends Mob {
 	public Player(final World world, final long hash) {
 		super(world, EntityType.PLAYER);
 
-		password = "";
 		usernameHash = hash;
 		username = DataConversions.hashToUsername(usernameHash);
 		sessionStart = System.currentTimeMillis();
@@ -1341,10 +1335,6 @@ public final class Player extends Mob {
 
 	public int getOwner() {
 		return owner;
-	}
-
-	public String getPassword() {
-		return password;
 	}
 
 	public int getQuestPoints() {

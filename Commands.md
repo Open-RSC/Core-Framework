@@ -829,3 +829,7 @@ Regular Player Commands
   - Usage `::setglobalmessagecolor (colorcode)]`
   - Example: `::setglobalmessagecolor @dre@`
   - If run with no parameter, resets the color to default.
+- minigamelog
+  - Usage `::minigamelog (player name)`
+  - Example: `::minigamelog` or `::minigamelog friendUsername`
+  - Run with no parameter to check your own minigame related statistics. You can also check another person's minigame stats if they are online and not blocking private messages from you. 

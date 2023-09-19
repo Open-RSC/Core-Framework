@@ -8,10 +8,6 @@ import java.util.Map;
 public class PlayerList extends EntityList<Player> {
     private final Map<Long, Player> playerHashIndex = new HashMap<>();
 
-    public PlayerList() {
-        super();
-    }
-
     public PlayerList(int capacity) {
         super(capacity);
     }
