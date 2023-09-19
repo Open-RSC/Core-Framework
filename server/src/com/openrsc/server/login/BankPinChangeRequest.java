@@ -87,7 +87,7 @@ public class BankPinChangeRequest extends LoginExecutorProcess {
 			PlayerLoginData playerLoginData = getPlayer().getWorld().getServer().getDatabase().getPlayerLoginData(getPlayer().getUsername());
 			String salt = playerLoginData.salt;
 
-			if(getOldBankPin() != null && getPlayer().getCache().hasKey("bank_pin") && !getPlayer().getAttribute("bankpin", false)) {
+			if(getOldBankPin() != null && getPlayer().getCache().hasKey("bank_pin")) {
 				if(!DataConversions.checkPassword(getOldBankPin(), salt, getPlayer().getCache().getString("bank_pin"))) {
 					getPlayer().playerServerMessage(MessageType.QUEST, "Can not change bank pin: Invalid old bank pin");
 					// TODO: Database logging
