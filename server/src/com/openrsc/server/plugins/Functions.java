@@ -851,6 +851,7 @@ public class Functions {
 							playerSatisfied = true;
 						}
 					} else {
+						pinNum += 1;
 						playerSatisfied = true;
 					}
 				}
