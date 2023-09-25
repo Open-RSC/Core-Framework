@@ -2015,7 +2015,7 @@ public class ActionSender {
                 sendPrivacySettings(player);
                 sendMessage(player, null,  MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0, null);
 
-				if (HolidayDropEvent.isOccurring(player) && player.getWorld().getServer().getConfig().WANT_BANK_PINS) { // TODO: this is not a good way to detect that we are not using the RSCP config
+				if (HolidayDropEvent.isOccurring(player)) {
 				    sendMessage(player, null, MessageType.QUEST, "@mag@There is a Holiday Drop Event going on now! Type @gre@::drop@mag@ for more information.", 0, null);
                 }
 

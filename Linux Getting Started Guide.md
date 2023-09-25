@@ -21,7 +21,7 @@ Once you open the game client, you will need to click "New User" to create a pla
 At this point, you may wish to use different game features than the default RSC ones. This requires you to fully exit the game client and the game server (use choice #2 to exit in the command prompt window) to fully shut it down.
 
 
-Now navigate to "server" and delete the existing file named "local.conf", then make a copy of "rsccabbage.conf", renaming the duplicate file "local.conf". Same applies for "openrsc.conf" and the other files in that directory. If "local.conf" exists, the game server will override the settings that are in "default.conf". Think of "openrsc.conf" and "rsccabbage.conf" as ready to go config presets.
+Now navigate to "server" and delete the existing file named "local.conf", then make a copy of "rsccabbage.conf", renaming the duplicate file "local.conf". Same applies for "preservation.conf" and the other files in that directory. If "local.conf" exists, the game server will override the settings that are in "default.conf". Think of "preservation.conf" and "rsccabbage.conf" as ready to go config presets.
 
 Depending on server configuration, your server port may differ. If 43594 is instead now 43595 because "rsccabbage.conf" is being used, and you do not wish to edit it any, you will need to go into "core -> Client_Base -> Cache" and edit "port.txt" to reflect the new port being used by the game server.
 
