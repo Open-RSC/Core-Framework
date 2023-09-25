@@ -11,7 +11,19 @@ backup-mariadb:
 	mkdir -p $(MYSQL_DUMPS_DIR)/`date "+%Y%m"`
 	chmod -R 777 $(MYSQL_DUMPS_DIR)/`date "+%Y%m"`
 	mysqldump -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --single-transaction --quick --lock-tables=false | gzip > $(MYSQL_DUMPS_DIR)/`date "+%Y%m"`/`date "+%Y%m%d-%H%M-%Z"`-${db}.sql.gz
-	
+
+# Remove unnecessary data from database after 3 months.
+# Call via "make purge-old-logs db=cabbage"
+purge-old-logs:
+	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
+	mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --execute="DELETE FROM generic_logs WHERE time < UNIX_TIMESTAMP(NOW() - INTERVAL 3 MONTH);"
+	mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --execute="DELETE FROM droplogs WHERE ts < NOW() - INTERVAL 3 MONTH;"
+	mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --execute="DELETE FROM chat_logs WHERE time < UNIX_TIMESTAMP(NOW() - INTERVAL 3 MONTH);"
+	mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --execute="DELETE FROM trade_logs WHERE time < UNIX_TIMESTAMP(NOW() - INTERVAL 3 MONTH);"
+	mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --execute="DELETE FROM private_message_logs WHERE time < UNIX_TIMESTAMP(NOW() - INTERVAL 3 MONTH);"
+	mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} --execute="DELETE FROM live_feeds WHERE time < UNIX_TIMESTAMP(NOW() - INTERVAL 3 MONTH);"
+	curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data "{ \"content\": \"\", \"embeds\": [ { \"title\": \"Clean-up of ${db} database completed.\", \"color\": 1087508, \"description\": \"Public, Private, and Global messages older than 3 months have been removed from the live database.\n\nAlso deleted were Generic logs (such as dropping items), logs of items received as drops by monsters, trade logs, and the live_feeds events older than 3 months.\n\nThese records now only exist in database backups.\" } ] }" $(TERMINAL_WEBHOOK)
+
 #########################################
 #####   End of Production Scripts   ##### 
 #########################################
