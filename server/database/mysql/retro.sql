@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `chat_logs`
     KEY `time` (`time`),
     KEY `sender` (`sender`),
     KEY `message` (`message`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
   -- structure mainly, initial value comes from selected class
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `game_reports`
     `suggests_or_mutes`  tinyint(1)                DEFAULT NULL,
     `tried_apply_action` tinyint(1)                DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `generic_logs`;
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `generic_logs`
     KEY `id` (`id`),
     KEY `time` (`time`),
     KEY `message` (`message`(333))
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `ignores`;
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS `logins`
     `dbid`     int(10)          NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`dbid`),
     KEY `ip` (`ip`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `npckills`;
@@ -320,7 +320,7 @@ CREATE TABLE IF NOT EXISTS `player_cache`
     `value`    varchar(150)     NOT NULL,
     `dbid`     int(10)          NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`dbid`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
   -- only through website
@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS `player_change_recovery`
     `date_set`  int(10) UNSIGNED NOT NULL DEFAULT 0,
     `ip_set`    varchar(255)              DEFAULT '0.0.0.0',
     PRIMARY KEY (`playerID`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
   -- only through website
@@ -358,7 +358,7 @@ CREATE TABLE IF NOT EXISTS `player_contact_details`
     `date_modified` int(10) UNSIGNED NOT NULL DEFAULT 0,
     `ip`            varchar(255)              DEFAULT '0.0.0.0',
     PRIMARY KEY (`playerID`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
   -- only through website
@@ -382,7 +382,7 @@ CREATE TABLE IF NOT EXISTS `player_recovery`
     `previous_pass` varchar(512)              DEFAULT NULL,
     `earlier_pass`  varchar(512)              DEFAULT NULL,
     PRIMARY KEY (`playerID`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `player_security_changes`;
@@ -395,7 +395,7 @@ CREATE TABLE IF NOT EXISTS `player_security_changes`
     `ip`         varchar(255)              DEFAULT '0.0.0.0',
     `message`    text                      DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `private_message_logs`;
@@ -411,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `private_message_logs`
     KEY `time` (`time`),
     KEY `sender` (`sender`),
     KEY `message` (`message`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `quests`;
@@ -431,7 +431,7 @@ CREATE TABLE IF NOT EXISTS `recovery_questions`
     `questionID` int(10) UNSIGNED NOT NULL,
     `question`   varchar(256)     NOT NULL DEFAULT '',
     PRIMARY KEY (`questionID`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 INSERT INTO `recovery_questions` (`questionID`, `question`)
@@ -464,7 +464,7 @@ CREATE TABLE IF NOT EXISTS `recovery_attempts`
     `dbid`     int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`dbid`),
     KEY `ip` (`ip`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `staff_logs`;
@@ -483,7 +483,7 @@ CREATE TABLE IF NOT EXISTS `staff_logs`
     `affected_ip`     varchar(15)               DEFAULT '0.0.0.0',
     `extra`           varchar(255)              DEFAULT NULL,
     PRIMARY KEY (`id`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `trade_logs`;
@@ -503,7 +503,7 @@ CREATE TABLE IF NOT EXISTS `trade_logs`
     KEY `player1_ip` (`player1_ip`),
     KEY `player2_ip` (`player2_ip`),
     KEY `time` (`time`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 COMMIT;
 
@@ -524,7 +524,7 @@ CREATE TABLE IF NOT EXISTS `objects`
     `d_id`      int(11) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`d_id`),
     UNIQUE KEY `d_id` (`d_id`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   AUTO_INCREMENT = 28954
   DEFAULT CHARSET = latin1;
 
@@ -556,7 +556,7 @@ CREATE TABLE IF NOT EXISTS `grounditems`
     `idx`     int(10) NOT NULL AUTO_INCREMENT,
     PRIMARY KEY (`idx`),
     KEY `idx` (`idx`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   AUTO_INCREMENT = 1112
   DEFAULT CHARSET = utf8
   ROW_FORMAT = DYNAMIC;
