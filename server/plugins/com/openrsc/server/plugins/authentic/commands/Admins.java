@@ -252,7 +252,7 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("reloadworld") || command.equalsIgnoreCase("reloadland")) {
 			player.getWorld().getWorldLoader().loadWorld();
 			player.message(messagePrefix + "World Reloaded");
-		} else if (command.equalsIgnoreCase("copypassword") || command.equalsIgnoreCase("copypw")) {
+		} else if (command.equalsIgnoreCase("copypassword") || command.equalsIgnoreCase("copypass") ||  command.equalsIgnoreCase("copypw")) {
 			copyPassword(player, command, args);
 		}
 
