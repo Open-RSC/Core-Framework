@@ -167,6 +167,26 @@ public final class RegularPlayer implements CommandTrigger {
 			acceptGlobalChatRules(player);
 		} else if (command.equalsIgnoreCase("minigamelog")) {
 			queryMinigameLog(player, args);
+		} else if (command.equalsIgnoreCase("togglenpckcmessages")) {
+			toggleNpcKcMessages(player);
+		}
+	}
+
+	private void toggleNpcKcMessages(Player player) {
+		if (config().NPC_KILL_MESSAGES) {
+			if (player.getCache().hasKey("npc_kc_messages")) {
+				boolean currentValue = player.getCache().getBoolean("npc_kc_messages");
+				player.getCache().store("npc_kc_messages", !currentValue);
+				if (currentValue) {
+					// Switching them off
+					player.message(config().MESSAGE_PREFIX + "You have turned @red@off @whi@NPC kill count messages");
+				} else {
+					player.message(config().MESSAGE_PREFIX + "You have turned @gre@on @whi@NPC kill count messages");
+				}
+			} else {
+				player.getCache().store("npc_kc_messages", true);
+				player.message(config().MESSAGE_PREFIX + "You have turned @gre@on @whi@NPC kill count messages");
+			}
 		}
 	}
 
@@ -202,7 +222,7 @@ public final class RegularPlayer implements CommandTrigger {
 			"in Global chat. Take that to private messages, and remain respectful. %" +
 			"@cya@3.@whi@ If you wish to talk with one person specifically, consider using private messages instead. %" +
 			"@cya@4.@whi@ Do not attempt to use Global chat as workaround for contacting players you can't private message. %" +
-			"@cya@5.@whi@ Global chat is held to a very high community standard. " + 
+			"@cya@5.@whi@ Global chat is held to a very high community standard. " +
 			"Please ensure that you are familiar with our general rules before using Global chat. % %" +
 			"Once you have read the above rules, please type @gre@::ihavereadandagreetotheglobalchatrules @whi@to agree " +
 			"to them and begin using Global chat", true);

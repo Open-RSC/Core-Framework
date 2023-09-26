@@ -5,5 +5,7 @@ import com.openrsc.server.net.rsc.struct.AbstractStruct;
 
 public class MobKillsStruct extends AbstractStruct<OpcodeOut> {
 
-	public int count;
+	public int totalCount;
+	public int recentNpcId;
+	public int recentNpcKills;
 }

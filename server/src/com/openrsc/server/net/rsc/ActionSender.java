@@ -453,7 +453,9 @@ public class ActionSender {
 
 	public static void sendNpcKills(Player player) {
 	    MobKillsStruct struct = new MobKillsStruct();
-	    struct.count = player.getNpcKills();
+	    struct.totalCount = player.getNpcKills();
+	    struct.recentNpcId = player.getLastNpcKilledId();
+	    struct.recentNpcKills = player.getRecentNpcKills();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_NPC_KILLS, struct, player);
 	}
 
@@ -653,6 +655,7 @@ public class ActionSender {
 			customOptions.add(player.getBlockGlobalFriend() ? 1 : 0);
 			customOptions.add(player.getHideUndergroundFlicker() ? 1 : 0);
 			customOptions.add(player.getStatusBar());
+			customOptions.add(player.getShowRecentNPCKC() ? 1 : 0);
 		}
 		struct.customOptions = customOptions;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_GAME_SETTINGS, struct, player);
@@ -841,7 +844,7 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //65
 		configs.add((byte) stepsPerFrame); //66
 		configs.add((byte) (server.getConfig().WANT_LEFTCLICK_WEBS ? 1 : 0)); //67
-		configs.add((byte) ((server.getConfig().NPC_KILL_LOGGING && server.getConfig().NPC_KILL_MESSAGES) ? 1 : 0)); //68
+		configs.add((byte) (server.getConfig().NPC_KILL_COUNTERS ? 1 : 0)); //68
 		configs.add((byte) (server.getConfig().WANT_CUSTOM_UI ? 1 : 0)); //69
 		configs.add((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); //70
 		configs.add((byte) server.getConfig().CHARACTER_CREATION_MODE); //71

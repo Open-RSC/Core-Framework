@@ -762,7 +762,9 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_NPC_KILLS:
 					MobKillsStruct mk = (MobKillsStruct) payload;
-					builder.writeShort(mk.count);
+					builder.writeInt(mk.totalCount);
+					builder.writeInt(mk.recentNpcId);
+					builder.writeInt(mk.recentNpcKills);
 					break;
 
 				case SEND_OPENPK_POINTS:

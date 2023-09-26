@@ -621,6 +621,8 @@ public final class mudclient implements Runnable {
 	private int statFatigue = 0;
 	private int statFatigueAuthentic = 0;
 	private int statKills2 = 0;
+	private int lastNpcKilledId = -1;
+	private int statKills3 = 0;
 	private int expShared = 0;
 	private int petFatigue = 0;
 	private long openPkPoints = 0;
@@ -5335,9 +5337,20 @@ public final class mudclient implements Runnable {
 						this.getSurface().drawString(
 							"Prayer: " + this.playerStatCurrent[5] + "@gre@/@whi@" + this.playerStatBase[5], 7, i, 0xffffff, 1);
 						i += 14;
-						if (C_NPC_KC) {
+						if (C_TOTAL_NPC_KC) {
 							this.getSurface().drawString(
-								"Kills: " + this.statKills2 + "@whi@", 7, i, 0xffffff, 1);
+								"Kills: " + getStatKills2() + "@whi@", 7, i, 0xffffff, 1);
+							i += 14;
+						}
+						if (C_RECENT_NPC_KC) {
+							if (getLastNpcKilledId() != -1) {
+								this.getSurface().drawString(
+									"Last NPC Kills: " + getStatKills3() + "@whi@", 7, i, 0xffffff, 1);
+							} else {
+								this.getSurface().drawString(
+									"Last NPC Kills: None@whi@", 7, i, 0xffffff, 1);
+							}
+							i += 14;
 						}
 						if (Config.S_WANT_FATIGUE) {
 							i += 14;
@@ -9452,13 +9465,20 @@ public final class mudclient implements Runnable {
 		}
 
 		// npc kill count messages
-		if (S_NPC_KILL_MESSAGES) {
-			if (!C_NPC_KC) {
+		if (S_NPC_KILL_COUNTERS) {
+			if (!C_TOTAL_NPC_KC) {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Show NPC killcount - @red@Off", 38, null, null);
+					"@whi@Total NPC Killcounter - @red@Off", 38, null, null);
 			} else {
 				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-					"@whi@Show NPC killcount - @gre@On", 38, null, null);
+					"@whi@Total NPC Killcounter - @gre@On", 38, null, null);
+			}
+			if (!C_RECENT_NPC_KC) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Last NPC Killcounter - @red@Off", 44, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Last NPC Killcounter - @gre@On", 44, null, null);
 			}
 		}
 		// show roof
@@ -10024,12 +10044,21 @@ public final class mudclient implements Runnable {
 			}
 
 			// npc killcount shows
-			if (settingIndex == 38 && this.mouseButtonClick == 1 && S_NPC_KILL_MESSAGES) {
-				C_NPC_KC = !C_NPC_KC;
-				this.packetHandler.getClientStream().newPacket(111);
-				this.packetHandler.getClientStream().bufferBits.putByte(38);
-				this.packetHandler.getClientStream().bufferBits.putByte(C_NPC_KC ? 1 : 0);
-				this.packetHandler.getClientStream().finishPacket();
+			if (S_NPC_KILL_COUNTERS) {
+				if (settingIndex == 38 && this.mouseButtonClick == 1) {
+					C_TOTAL_NPC_KC = !C_TOTAL_NPC_KC;
+					this.packetHandler.getClientStream().newPacket(111);
+					this.packetHandler.getClientStream().bufferBits.putByte(38);
+					this.packetHandler.getClientStream().bufferBits.putByte(C_TOTAL_NPC_KC ? 1 : 0);
+					this.packetHandler.getClientStream().finishPacket();
+				}
+				if (settingIndex == 44 && this.mouseButtonClick == 1) {
+					C_RECENT_NPC_KC = !C_RECENT_NPC_KC;
+					this.packetHandler.getClientStream().newPacket(111);
+					this.packetHandler.getClientStream().bufferBits.putByte(44);
+					this.packetHandler.getClientStream().bufferBits.putByte(C_RECENT_NPC_KC ? 1 : 0);
+					this.packetHandler.getClientStream().finishPacket();
+				}
 			}
 		}
 
@@ -16346,6 +16375,26 @@ public final class mudclient implements Runnable {
 		this.statKills2 = kills2;
 	}
 
+	public int getStatKills3() {
+		return this.statKills3;
+	}
+
+	public void setStatKills3(int kills3) {
+		if (DEBUG)
+			System.out.println("Kills3: " + kills3);
+		this.statKills3 = kills3;
+	}
+
+	public int getLastNpcKilledId() {
+		return this.lastNpcKilledId;
+	}
+
+	public void setLastNpcKilledId(int lastNpcKilledId) {
+		if (DEBUG)
+			System.out.println("Last Npc Killed Id: " + lastNpcKilledId);
+		this.lastNpcKilledId = lastNpcKilledId;
+	}
+
 	public int getPetFatigue() {
 		return this.petFatigue;
 	}
@@ -17836,7 +17885,11 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setShowNPCKC(boolean b) {
-		C_NPC_KC = b;
+		C_TOTAL_NPC_KC = b;
+	}
+
+	public void setShowRecentNPCKC(boolean b) {
+		C_RECENT_NPC_KC = b;
 	}
 
 	public void setHideNameTag(boolean b) {

@@ -380,6 +380,7 @@ public final class Player extends Mob {
 	private Map<UUID, Pair<Integer, Integer>> trackedDamageFromMob = new HashMap<UUID, Pair<Integer, Integer>>();
 
 	private Npc interactingNpc = null;
+	private int lastNpcKilledId = -1;
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -3000,6 +3001,11 @@ public final class Player extends Mob {
 		return npcKills;
 	}
 
+	public int getRecentNpcKills() {
+		if (getLastNpcKilledId() == -1) return 0;
+		return getKillCache().get(getLastNpcKilledId());
+	}
+
 	public int getExpShared() {
 		return expShared;
 	}
@@ -3348,6 +3354,13 @@ public final class Player extends Mob {
 	public boolean getShowNPCKC() {
 		if (getCache().hasKey("show_npc_kc")) {
 			return getCache().getBoolean("show_npc_kc");
+		}
+		return false;
+	}
+
+	public boolean getShowRecentNPCKC() {
+		if (getCache().hasKey("show_recent_npc_kc")) {
+			return getCache().getBoolean("show_recent_npc_kc");
 		}
 		return false;
 	}
@@ -4313,5 +4326,13 @@ public final class Player extends Mob {
 
 	public boolean isBabyModeFiltered() {
 		return getTotalLevel() < getConfig().BABY_MODE_LEVEL_THRESHOLD;
+	}
+
+	public int getLastNpcKilledId() {
+		return this.lastNpcKilledId;
+	}
+
+	public void setLastNpcKilledId(int npcId) {
+		this.lastNpcKilledId = npcId;
 	}
 }

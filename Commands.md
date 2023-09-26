@@ -833,3 +833,7 @@ Regular Player Commands
   - Usage `::minigamelog (player name)`
   - Example: `::minigamelog` or `::minigamelog friendUsername`
   - Run with no parameter to check your own minigame related statistics. You can also check another person's minigame stats if they are online and not blocking private messages from you. 
+- togglenpckcmessages
+  - Usage `::togglenpckcmessages`
+  - Example: `::togglenpckcmessages`
+  - Toggles kill count messages in the chat

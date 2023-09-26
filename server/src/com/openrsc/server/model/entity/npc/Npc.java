@@ -18,7 +18,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -340,6 +339,7 @@ public class Npc extends Mob {
 			owner.playerServerMessage(MessageType.QUEST, "@dcy@Your defense cape blocked " + totalBlockedDamage + " damage!");
 		}
 
+		owner.setLastNpcKilledId(this.getID());
 
 		Pair<UUID, Long> ownerInfo = handleXpDistribution(mob);
 		owner = getWorld().getPlayerByUUID(ownerInfo.getLeft());
@@ -356,7 +356,6 @@ public class Npc extends Mob {
 		ActionSender.sendSound(owner, "victory");
 		owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
 		owner.incNpcKills();
-		ActionSender.sendNpcKills(owner);
 
 		//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
 		//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
@@ -364,6 +363,8 @@ public class Npc extends Mob {
 		if (getConfig().NPC_KILL_LOGGING) {
 			logNpcKill(owner);
 		}
+
+		ActionSender.sendNpcKills(owner);
 
 		/** Item Drops **/
 		dropItems(owner);
@@ -377,7 +378,7 @@ public class Npc extends Mob {
 	}
 
 	private void logNpcKill(Player owner) {
-		if (owner.getCache().hasKey("show_npc_kc") && owner.getCache().getBoolean("show_npc_kc")
+		if (owner.getCache().hasKey("npc_kc_messages") && (owner.getCache().getBoolean("npc_kc_messages"))
 			&& getConfig().NPC_KILL_MESSAGES) {
 			owner.addNpcKill(this, !getConfig().NPC_KILL_MESSAGES_FILTER
 				|| getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));

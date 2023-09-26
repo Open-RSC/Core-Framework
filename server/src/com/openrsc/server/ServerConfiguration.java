@@ -129,6 +129,7 @@ public class ServerConfiguration {
 	public boolean NPC_KILL_LIST;
 	public boolean NPC_KILL_MESSAGES;
 	public boolean NPC_KILL_MESSAGES_FILTER;
+	public boolean NPC_KILL_COUNTERS;
 	public String NPC_KILL_MESSAGES_NPCs;
 	public boolean NPC_KILL_LOGGING;
 	public boolean VALUABLE_DROP_MESSAGES;
@@ -477,6 +478,7 @@ public class ServerConfiguration {
 		ALLOW_BEARDED_LADIES = tryReadBool("allow_bearded_ladies").orElse(false);
 		WANT_BUGGED_CLAWS_XP = tryReadBool("want_bugged_claws_xp").orElse(true);
 		HEALSTAT_ON_CURRENT_STAT = tryReadBool("healstat_on_current_stat").orElse(false);
+		NPC_KILL_COUNTERS = tryReadBool("npc_kill_counters").orElse(false);
 
 		// Retro features
 		GATHER_TOOL_ON_SCENERY = tryReadBool("gather_tool_on_scenery").orElse(false);

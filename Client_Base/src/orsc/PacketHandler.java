@@ -428,8 +428,11 @@ public class PacketHandler {
 			}
 
 				// Kills2
-			else if (opcode == 147)
-				mc.setStatKills2(packetsIncoming.getShort());
+			else if (opcode == 147) {
+				mc.setStatKills2(packetsIncoming.get32());
+				mc.setLastNpcKilledId(packetsIncoming.get32());
+				mc.setStatKills3(packetsIncoming.get32());
+			}
 
 			else if (opcode == 148) // Set OpenPK Points
 				mc.setPoints(packetsIncoming.getLong(0));
@@ -939,7 +942,7 @@ public class PacketHandler {
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
-		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
+		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillCounters;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
 		int globalFriendChat, wantRightClickTrade, featuresSleep, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio, wantOpenPkPresets;
 		int disableMinimapRotation, allowBeardedLadies, prideMonth;
@@ -1014,7 +1017,7 @@ public class PacketHandler {
 			miningRocksExtended = this.getClientStream().getUnsignedByte(); //65
 			movePerFrame = this.getClientStream().getByte(); //66
 			wantLeftclickWebs = this.getClientStream().getByte(); //67
-			npcKillMessages = this.getClientStream().getByte(); //68
+			npcKillCounters = this.getClientStream().getByte(); //68
 			wantCustomUI = this.getClientStream().getUnsignedByte(); //69
 			wantGlobalFriend = this.getClientStream().getUnsignedByte(); //70
 			characterCreationMode = this.getClientStream().getUnsignedByte(); //71
@@ -1101,7 +1104,7 @@ public class PacketHandler {
 			miningRocksExtended = packetsIncoming.getUnsignedByte(); //65
 			movePerFrame = packetsIncoming.getByte(); //66
 			wantLeftclickWebs = packetsIncoming.getByte(); //67
-			npcKillMessages = packetsIncoming.getByte(); //68
+			npcKillCounters = packetsIncoming.getByte(); //68
 			wantCustomUI = packetsIncoming.getUnsignedByte(); //69
 			wantGlobalFriend = packetsIncoming.getUnsignedByte(); //70
 			characterCreationMode = packetsIncoming.getUnsignedByte(); //71
@@ -1191,7 +1194,7 @@ public class PacketHandler {
 					"\nS_MINING_ROCKS_EXTENDED " + miningRocksExtended + // 65
 					"\nC_MOVE_PER_FRAME " + movePerFrame + // 66
 					"\nS_WANT_LEFTCLICK_WEBS " + wantLeftclickWebs + // 67
-					"\nS_NPC_KILL_MESSAGES " + npcKillMessages + // 68
+					"\nS_NPC_KILL_COUNTERS " + npcKillCounters + // 68
 					"\nS_WANT_CUSTOM_UI " + wantCustomUI + // 69
 					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
@@ -1284,7 +1287,7 @@ public class PacketHandler {
 		props.setProperty("S_MINING_ROCKS_EXTENDED", miningRocksExtended == 1 ? "true" : "false"); //65
 		props.setProperty("C_MOVE_PER_FRAME", String.valueOf(movePerFrame)); //66
 		props.setProperty("S_WANT_LEFTCLICK_WEBS", wantLeftclickWebs == 1 ? "true" : "false"); //67
-		props.setProperty("S_NPC_KILL_MESSAGES", npcKillMessages == 1 ? "true" : "false"); //68
+		props.setProperty("S_NPC_KILL_COUNTERS", npcKillCounters == 1 ? "true" : "false"); //68
 		props.setProperty("S_WANT_CUSTOM_UI", wantCustomUI == 1 ? "true" : "false"); //69
 		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //70
 		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
@@ -2129,6 +2132,7 @@ public class PacketHandler {
 		mc.setBlockGlobalFriend(packetsIncoming.getUnsignedByte() == 1); // 41
 		mc.setOptionHideUndergroundFlicker(packetsIncoming.getUnsignedByte() == 1); // 42
 		mc.setStatusBar(packetsIncoming.getUnsignedByte()); // 43
+		mc.setShowRecentNPCKC(packetsIncoming.getUnsignedByte() == 1); // 44
 	}
 
 	private void togglePrayer(int length) {
