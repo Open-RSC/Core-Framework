@@ -625,62 +625,58 @@ public class DiscordService implements Runnable{
 
 	@Override
 	public void run()  {
-		synchronized(running) {
-			String message = null;
-			DiscordEmbed embed = null;
+		String message = null;
+		DiscordEmbed embed = null;
 
-			try {
-				while ((message = auctionRequests.poll()) != null) {
-					sendToDiscord(getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
-				}
-				while ((message = staffCommandRequests.poll()) != null) {
-					sendToDiscord(getServer().getConfig().DISCORD_STAFF_COMMANDS_WEBHOOK_URL, message);
-				}
-				while ((message = monitoringRequests.poll()) != null) {
-					sendToDiscord(getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
-				}
-				while ((embed = reportAbuseRequests.poll()) != null) {
-					sendEmbedToDiscord(getServer().getConfig().DISCORD_REPORT_ABUSE_WEBHOOK_URL, embed);
-				}
-				while ((embed = naughtyWordsRequests.poll()) != null) {
-					sendEmbedToDiscord(getServer().getConfig().DISCORD_NAUGHTY_WORDS_WEBHOOK_URL, embed);
-				}
-			} catch (final Exception e) {
-				LOGGER.catching(e);
+		try {
+			while ((message = auctionRequests.poll()) != null) {
+				sendToDiscord(getServer().getConfig().DISCORD_AUCTION_WEBHOOK_URL, message);
 			}
+			while ((message = staffCommandRequests.poll()) != null) {
+				sendToDiscord(getServer().getConfig().DISCORD_STAFF_COMMANDS_WEBHOOK_URL, message);
+			}
+			while ((message = monitoringRequests.poll()) != null) {
+				sendToDiscord(getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
+			}
+			while ((embed = reportAbuseRequests.poll()) != null) {
+				sendEmbedToDiscord(getServer().getConfig().DISCORD_REPORT_ABUSE_WEBHOOK_URL, embed);
+			}
+			while ((embed = naughtyWordsRequests.poll()) != null) {
+				sendEmbedToDiscord(getServer().getConfig().DISCORD_NAUGHTY_WORDS_WEBHOOK_URL, embed);
+			}
+		} catch (final Exception e) {
+			LOGGER.catching(e);
 		}
+
 	}
 
 	public void start() {
-		synchronized(running) {
-			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
-					new ServerAwareThreadFactory(
-							server.getName()+" : DiscordServiceThread",
-							server.getConfig()
-					)
-			);
-			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
-			running = true;
-		}
+		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+				new ServerAwareThreadFactory(
+						server.getName()+" : DiscordServiceThread",
+						server.getConfig()
+				)
+		);
+		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		running = true;
 	}
 
 	public void stop() {
-		synchronized(running) {
-			scheduledExecutor.shutdown();
-			try {
-				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
-				if (!terminationResult) {
-					LOGGER.error("DiscordService thread termination failed");
-					List<Runnable> skippedTasks = scheduledExecutor.shutdownNow();
-					LOGGER.error("{} task(s) never commenced execution", skippedTasks.size());
-				}
-			} catch (final InterruptedException e) {
-				LOGGER.catching(e);
+		scheduledExecutor.shutdown();
+		try {
+			final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+			if (!terminationResult) {
+				LOGGER.error("DiscordService thread termination failed");
+				List<Runnable> skippedTasks = scheduledExecutor.shutdownNow();
+				LOGGER.error("{} task(s) never commenced execution", skippedTasks.size());
 			}
-			clearRequests();
-			scheduledExecutor = null;
-			running = false;
+		} catch (final InterruptedException e) {
+			LOGGER.catching(e);
 		}
+		running = false;
+		run();
+		clearRequests();
+		scheduledExecutor = null;
 	}
 
 	private void clearRequests() {

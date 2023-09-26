@@ -141,46 +141,43 @@ public class Market implements Runnable {
 
 	@Override
 	public void run() {
-		synchronized (running) {
-			try {
-				if (System.currentTimeMillis() - lastCleanUp > 60000) checkAndRemoveExpiredItems();
-				processAuctionTasks();
-				processUpdateAuctionItemCache();
-				processRefreshRequests();
-			} catch (final Throwable r) {
-				LOGGER.catching(r);
-			}
+		try {
+			if (System.currentTimeMillis() - lastCleanUp > 60000) checkAndRemoveExpiredItems();
+			processAuctionTasks();
+			processUpdateAuctionItemCache();
+			processRefreshRequests();
+		} catch (final Throwable r) {
+			LOGGER.catching(r);
 		}
 	}
 
 	public void stop() {
-		synchronized(running) {
-			// Process the rest of the Market tasks.
-			auctionItems.clear();
-			scheduledExecutor.shutdown();
-			try {
-				scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
-			} catch (final InterruptedException e) {
-				LOGGER.catching(e);
-			}
-			scheduledExecutor = null;
-			running = false;
+		// Process the rest of the Market tasks.
+		auctionItems.clear();
+		scheduledExecutor.shutdown();
+		try {
+			final boolean success = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+			if (!success) scheduledExecutor.shutdownNow();
+		} catch (final InterruptedException e) {
+			LOGGER.catching(e);
 		}
+		scheduledExecutor = null;
+		running = false;
+		//We call run() manually at the end of stop() to ensure there's nothing more to run, just like LoginExecutor.
+		run();
 	}
 
 	public void start() {
-		synchronized(running) {
-			Server server = getWorld().getServer();
-			this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
-					new ServerAwareThreadFactory(
-							server.getName() + " : AuctionHouseThread",
-							server.getConfig()
-					)
-			);
-			scheduledExecutor.scheduleAtFixedRate(this, 50, 50, TimeUnit.MILLISECONDS);
-			running = true;
-			LOGGER.info("Market executor running");
-		}
+		Server server = getWorld().getServer();
+		this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+				new ServerAwareThreadFactory(
+						server.getName() + " : AuctionHouseThread",
+						server.getConfig()
+				)
+		);
+		scheduledExecutor.scheduleAtFixedRate(this, 50, 50, TimeUnit.MILLISECONDS);
+		running = true;
+		LOGGER.info("Market executor running");
 	}
 
 	public World getWorld() {
