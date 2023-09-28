@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `expired_auctions`
     `claimed`     tinyint(1)       NOT NULL DEFAULT 0,
     `explanation` varchar(255)     NOT NULL DEFAULT ' ',
     PRIMARY KEY (`claim_id`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `auctions`;
@@ -33,5 +33,5 @@ CREATE TABLE IF NOT EXISTS `auctions`
     KEY `seller_username_2` (`seller_username`),
     KEY `time` (`time`),
     KEY `seller_username` (`seller_username`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

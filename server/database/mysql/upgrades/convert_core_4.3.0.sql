@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemdef`
     KEY `id_2` (`id`),
     KEY `name` (`name`),
     KEY `name_2` (`name`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`,
@@ -2276,7 +2276,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_reindexer`
     `catalogID`     int(10) UNSIGNED    DEFAULT NULL,
     `noted`         tinyint(1) UNSIGNED DEFAULT 0,
     PRIMARY KEY (`old_catalogID`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 INSERT INTO `openrsc_reindexer` (`old_catalogID`, `catalogID`, `noted`)

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `openrsc_reindexer`
     `catalogID`     int(10) UNSIGNED    DEFAULT NULL,
     `noted`         tinyint(1) UNSIGNED DEFAULT 0,
     PRIMARY KEY (`old_catalogID`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 INSERT INTO `openrsc_reindexer` (`old_catalogID`, `catalogID`, `noted`)

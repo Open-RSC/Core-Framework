@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `clan`
     `clan_points`       int(10) UNSIGNED      NOT NULL DEFAULT 0,
     `bank_size`         mediumint(5) UNSIGNED NOT NULL DEFAULT 10,
     PRIMARY KEY (`id`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `clan_players`;
@@ -26,5 +26,5 @@ CREATE TABLE IF NOT EXISTS `clan_players`
     `kills`    mediumint(5) UNSIGNED NOT NULL DEFAULT 0,
     `deaths`   mediumint(5) UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
-) ENGINE = MyISAM
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
