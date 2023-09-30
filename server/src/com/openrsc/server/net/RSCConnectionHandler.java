@@ -54,25 +54,35 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
 		final Channel channel = ctx.channel();
+		channel.attr(attachment).get().canSendSessionId.set(false);
 
 		if (message instanceof Packet) {
-
 			final Packet packet = (Packet) message;
 			Player player = null;
 			ConnectionAttachment att = channel.attr(attachment).get();
 			if (att != null) {
 				player = att.player.get();
 			}
-			// Authentic client > 194 <= 204 sends a truncated player name
-			// hash in order to find a login server first. We want to send
-			// the session ID after this initial packet is recieved.
-			if (player != null || packet.getLength() > 2) {
-				channel.attr(attachment).get().canSendSessionId.set(false);
-			}
-			if (player == null && packet.getLength() == 2) {
-				channel.attr(attachment).get().isLongSessionId.set(true);
+			// Authentic client > 194 <= 204 sends packet 32 to request a session ID.
+			if (player == null && packet.getLength() == 2 && packet.getID() == 32) {
+				// The first byte sent by 204 is always 32, the opcode for "session id request"
+				// The second byte is tougher for us to make use of, it is half of the username hash.
+				// "Half the username" was likely sent by Jagex in order to find a login server.
+
+				// For our purpose of determining this is most likely client 203/204,
+				// and not 233 which has a 1/255 chance of randomly sending packet ID 32,
+				// We can check that the first half of the username hash is in range.
+				final int SMALLEST_POSSIBLE_USERNAME_HALF_HASH = 0; // first byte of username hash of player with username "A"
+				final int LARGEST_POSSIBLE_USERNAME_HALF_HASH = 21; // first byte of username hash of player with username "ZZZZZZZZZZZZ"
+				int halfUsernameHash = packet.getBuffer().readByte();
+				packet.getBuffer().resetReaderIndex();
+				packet.getBuffer().readByte(); // reset readerIndex back to position 1, in case this is actually not 203/204
+				if (halfUsernameHash >= SMALLEST_POSSIBLE_USERNAME_HALF_HASH && halfUsernameHash <= LARGEST_POSSIBLE_USERNAME_HALF_HASH) {
+					channel.attr(attachment).get().isLongSessionId.set(true);
+				}
 			}
 			if (player == null) {
+				// Custom client sends opcode 19 to request server configs
 				if (packet.getID() == 19 && packet.getLength() < 2) {
 					if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), false)) {
 						ctx.channel().close();

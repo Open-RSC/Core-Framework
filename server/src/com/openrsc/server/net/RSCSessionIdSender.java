@@ -28,10 +28,10 @@ public class RSCSessionIdSender implements Runnable {
 			att.sessionId.set(sessionId);
 			if (att.isLongSessionId.get()) {
 				ctx.writeAndFlush(Unpooled.buffer(8).writeLong(sessionId));
-				LOGGER.info("Set session id for " + ctx.channel().remoteAddress() + ": " + sessionId);
+				LOGGER.info("Set long session id for " + ctx.channel().remoteAddress() + ": " + sessionId);
 			} else if (att.canSendSessionId.get()) {
 				ctx.writeAndFlush(Unpooled.buffer(4).writeInt(sessionId));
-				LOGGER.info("Set session id for " + ctx.channel().remoteAddress() + ": " + sessionId);
+				LOGGER.info("Set int session id for " + ctx.channel().remoteAddress() + ": " + sessionId);
 			}
 		} catch (InterruptedException e) {
 			LOGGER.catching(e);
