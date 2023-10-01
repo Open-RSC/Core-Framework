@@ -47,6 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static org.apache.logging.log4j.util.Unbox.box;
@@ -86,7 +87,7 @@ public class Server implements Runnable {
 	private EventLoopGroup workerGroup;
 	private EventLoopGroup bossGroup;
 
-	private volatile Boolean running = false;
+	private volatile AtomicBoolean running = new AtomicBoolean(false);
 	private boolean restarting = false;
 	private boolean shuttingDown = false;
 
@@ -430,7 +431,7 @@ public class Server implements Runnable {
 				}
 
 				lastTickTimestamp = serverStartedTime = System.nanoTime();
-				running = true;
+				running.set(true);
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
 				SystemUtil.exit(1);
@@ -501,7 +502,7 @@ public class Server implements Runnable {
 					serversList.remove(this.getName());
 				}
 
-				running = false;
+				running.set(false);
 
 				LOGGER.info("Server unloaded");
 			} catch (final Throwable t) {
@@ -847,7 +848,7 @@ public class Server implements Runnable {
 	}
 
 	public final boolean isRunning() {
-		return running;
+		return running.get();
 	}
 
 	public final Constants getConstants() {

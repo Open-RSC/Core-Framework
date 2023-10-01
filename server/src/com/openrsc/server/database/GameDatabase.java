@@ -31,6 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class GameDatabase {
 	/**
@@ -39,11 +40,11 @@ public abstract class GameDatabase {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public final Server server;
-	private volatile Boolean open;
+	private volatile AtomicBoolean open = new AtomicBoolean(false);
 
 	public GameDatabase(final Server server) {
 		this.server = server;
-		open = false;
+		open.set(false);
 	}
 
 	public abstract Set<Integer> getItemIDList();
@@ -301,7 +302,7 @@ public abstract class GameDatabase {
 			try {
 				openInternal();
 				initializeOnlinePlayers();
-				open = true;
+				open.set(true);
 			} catch (final GameDatabaseException ex) {
 				LOGGER.catching(ex);
 				SystemUtil.exit(1);
@@ -312,7 +313,7 @@ public abstract class GameDatabase {
 	public void close() {
 		synchronized (open) {
 			closeInternal();
-			open = false;
+			open.set(false);
 		}
 	}
 
@@ -758,7 +759,7 @@ public abstract class GameDatabase {
 	}
 
 	public boolean isOpen() {
-		return open;
+		return open.get();
 	}
 
 	public void querySavePlayerData(Player player) throws GameDatabaseException {

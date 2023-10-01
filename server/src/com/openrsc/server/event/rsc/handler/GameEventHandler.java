@@ -10,10 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class GameEventHandler {
 
@@ -33,7 +31,16 @@ public class GameEventHandler {
 	}
 
 	public void load() {
-		executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler", getServer().getConfig()));
+		final int maxThreads;
+		if (getServer().getConfig().WANT_THREADING__BREAK_PID_PRIORITY) {
+			// can be slightly faster if we don't care which order events are done in (you always should care!)
+			// TODO: currently also causes issues with scenery breaking from having two players accessing it
+			maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
+		} else {
+			// single thread events so that PID order is always respected.
+			maxThreads = 1;
+		}
+		executor = new ThreadPoolExecutor(Math.max(1, maxThreads / 2), maxThreads, Long.MAX_VALUE, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler", getServer().getConfig()));
 		executor.prestartAllCoreThreads();
 	}
 
@@ -76,19 +83,6 @@ public class GameEventHandler {
 
 	public long processNonPlayerEvents() {
 		return getServer().bench(() -> {
-			final int maxThreads;
-			if (getServer().getConfig().WANT_THREADING__BREAK_PID_PRIORITY) {
-				// can be slightly faster if we don't care which order events are done in (you always should care!)
-				// TODO: currently also causes issues with scenery breaking from having two players accessing it
-				maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
-			} else {
-				// single thread events so that PID order is always respected.
-				maxThreads = 1;
-			}
-
-			executor.setMaximumPoolSize(maxThreads);
-			executor.setCorePoolSize(maxThreads / 2);
-
 			try {
 				executor.invokeAll(eventStore.getNonPlayerEvents());
 			} catch (final Exception e) {
@@ -113,25 +107,11 @@ public class GameEventHandler {
 	}
 
 	public void processEvents(final Player player) {
-		final int maxThreads;
-		if (getServer().getConfig().WANT_THREADING__BREAK_PID_PRIORITY) {
-			// can be slightly faster if we don't care which order events are done in (you always should care!)
-			// TODO: currently also causes issues with scenery breaking from having two players accessing it
-			maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
-		} else {
-			// single thread events so that PID order is always respected.
-			maxThreads = 1;
-		}
-
-		executor.setMaximumPoolSize(maxThreads);
-		executor.setCorePoolSize(maxThreads / 2);
-
 		try {
 			executor.invokeAll(eventStore.getPlayerEvents(player.getUsernameHash()));
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
-
 	}
 
 	public void submit(final Runnable r, final String descriptor) {
