@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.yanille;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -18,6 +19,19 @@ public class SigbertTheAdventurer implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.SIGBERT_THE_ADVENTURER.id()) {
+			if (config().WANT_COMBAT_ODYSSEY
+				&& CombatOdyssey.getCurrentTier(player) == 7
+				&& CombatOdyssey.isTierCompleted(player)) {
+				if (CombatOdyssey.biggumMissing()) return;
+				int newTier = 8;
+				CombatOdyssey.assignNewTier(player, newTier);
+				npcsay(player, n, "You're doing the combat odyssey I assume",
+					"Well you've made it this far, i guess you have a chance",
+					"You now have to kill");
+				npcsay(player, n, player.getWorld().getCombatOdyssey().getTier(newTier).getTasksAndCounts());
+				npcsay(player, n, "Go see Achetties when you're done");
+				return;
+			}
 			npcsay(player, n, "I'd be very careful going up there friend");
 			int menu = multi(player, n,
 				"Why what's up there?",

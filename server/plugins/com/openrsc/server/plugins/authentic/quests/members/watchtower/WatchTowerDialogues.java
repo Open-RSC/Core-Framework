@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
@@ -378,6 +379,21 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 		else if (n.getID() == NpcId.GREW.id()) {
 			switch (player.getQuestStage(this)) {
 				case -1:
+					if (config().WANT_COMBAT_ODYSSEY
+						&& CombatOdyssey.getCurrentTier(player) == 2
+						&& CombatOdyssey.isTierCompleted(player)) {
+						if (CombatOdyssey.biggumMissing()) return;
+						int newTier = 3;
+						CombatOdyssey.assignNewTier(player, newTier);
+						npcsay(player, n, "So the morsel returns",
+							"The sorceror asked me to give you this if you made it this far");
+						CombatOdyssey.giveRewards(player, n);
+						npcsay(player, n, "The morsel is meant to kill these things");
+						npcsay(player, n, player.getWorld().getCombatOdyssey().getTier(newTier).getTasksAndCounts());
+						npcsay(player, n, "If the morsel manages this without being eaten",
+							"then the morsel should see the dark mage in the city north");
+						return;
+					}
 					player.message("The ogre is not interested in you anymore");
 					break;
 				case 0:

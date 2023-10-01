@@ -10,6 +10,8 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quests;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -50,6 +52,8 @@ public final class SuperModerator implements CommandTrigger {
 			setQuest(player, command, args);
 		} else if (command.equalsIgnoreCase("questcomplete") || command.equalsIgnoreCase("questcom")) {
 			setQuestComplete(player, command, args);
+		} else if (command.equalsIgnoreCase("completeallquests")) {
+			completeAllQuests(player);
 		} else if (command.equalsIgnoreCase("viewipbans")) {
 			queryIPBans(player, command, args);
 		} else if (command.equalsIgnoreCase("ipban")) {
@@ -226,6 +230,12 @@ public final class SuperModerator implements CommandTrigger {
 			targetPlayer.message(messagePrefix + "A staff member has changed your quest to completed for QuestID " + quest);
 		}
 		player.message(messagePrefix + "You have completed Quest ID " + quest + " for " + targetPlayer.getUsername());
+	}
+
+	private void completeAllQuests(Player player) {
+		for (QuestInterface quest : player.getWorld().getQuests()) {
+			setQuestComplete(player, "questcomplete", new String[]{player.getUsername(), String.valueOf(quest.getQuestId())});
+		}
 	}
 
 	private void queryIPBans(Player player, String command, String[] args) {

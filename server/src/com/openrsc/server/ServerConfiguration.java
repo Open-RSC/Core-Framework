@@ -185,6 +185,8 @@ public class ServerConfiguration {
 	public int RESPAWN_LOCATION_X;
 	public int RESPAWN_LOCATION_Y;
 	public boolean FORM_FITTING_CHAINMAIL;
+	public boolean WANT_COMBAT_ODYSSEY;
+	public boolean WANT_INSTANCED_NPCS;
 	public double PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER;
 	public double PARTY_DISTANCE_PERCENT_DECREASE;
 	public double PARTY_SAVE_XP_FOR_SKILLER_PERCENT;
@@ -584,6 +586,8 @@ public class ServerConfiguration {
 		CAN_FEATURE_MEMBS = tryReadBool("can_feature_membs").orElse(true);
 		WANT_OPENPK_PRESETS = tryReadBool("want_openpk_presets").orElse(false);
 		FORM_FITTING_CHAINMAIL = tryReadBool("form_fitting_chainmail").orElse(false);
+		WANT_COMBAT_ODYSSEY = tryReadBool("want_combat_odyssey").orElse(false);
+		WANT_INSTANCED_NPCS = tryReadBool("want_instanced_npcs").orElse(false);
 
 		// Party settings
 		WANT_PARTIES = tryReadBool("want_parties").orElse(false);

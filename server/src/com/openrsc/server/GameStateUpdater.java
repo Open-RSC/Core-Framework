@@ -202,6 +202,17 @@ public final class GameStateUpdater {
 			for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
 				Npc localNpc = it$.next();
 
+				if (playerToUpdate.getConfig().WANT_INSTANCED_NPCS && !playerToUpdate.isAdmin()) {
+					if (playerToUpdate.getConfig().WANT_COMBAT_ODYSSEY
+						&& localNpc.getID() == NpcId.BIGGUM_FLODROT.id()
+						&& !playerToUpdate.canSeeBiggum()) {
+						it$.remove();
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(3, 2));
+					}
+				}
+
 				if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
 					it$.remove();
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
@@ -222,6 +233,15 @@ public final class GameStateUpdater {
 				}
 			}
 			for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
+
+				if (playerToUpdate.getConfig().WANT_INSTANCED_NPCS && !playerToUpdate.isAdmin()) {
+					if (playerToUpdate.getConfig().WANT_COMBAT_ODYSSEY
+						&& newNPC.getID() == NpcId.BIGGUM_FLODROT.id()
+						&& !playerToUpdate.canSeeBiggum()) {
+						continue;
+					}
+				}
+
 				if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
 					|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
 					|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {

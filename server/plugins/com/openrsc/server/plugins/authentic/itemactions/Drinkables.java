@@ -284,6 +284,7 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		player.cure();
+		player.setCurePoisonProtection(); // 3 minutes.
 		delay(2);
 		if (dosesLeft <= 0) {
 			player.message("You have finished your potion");
@@ -297,7 +298,7 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase() + " potion");
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		player.cure();
-		player.setAntidoteProtection(); // 90 seconds.
+		player.setAntidoteProtection(); // 6 minutes.
 		delay(2);
 		if (dosesLeft <= 0) {
 			player.message("You have finished your potion");

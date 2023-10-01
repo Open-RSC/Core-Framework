@@ -60,7 +60,11 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			ItemId.FULL_RESTORE_PRAYER_POTION.id(), ItemId.DRAGON_BONES.id(),
 			ItemId.LIMPWURT_ROOT.id()});
 		// Mortimer (custom)
-		put(NpcId.MORTIMER.id(), new int[]{ItemId.RUNE_STONE.id()});
+		put(NpcId.MORTIMER.id(), new int[]{ItemId.RUNE_STONE.id(), ItemId.FULL_STAT_RESTORATION_POTION.id(),
+			ItemId.FULL_CURE_POISON_POTION.id(), ItemId.FULL_POISON_ANTIDOTE.id()});
+		// Randolph (custom)
+		put(NpcId.RANDOLPH.id(), new int[]{ItemId.GIANT_CARP.id(), ItemId.LAVA_EEL.id(),
+			ItemId.MANTA_RAY.id(), ItemId.SEA_TURTLE.id()});
 	}};
 
 	public static HashMap<Integer, Integer> certToItemIds = new HashMap<Integer, Integer>(){{
@@ -92,6 +96,13 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		put(ItemId.DRAGON_BONE_CERTIFICATE.id(), ItemId.DRAGON_BONES.id());
 		put(ItemId.LIMPWURT_ROOT_CERTIFICATE.id(), ItemId.LIMPWURT_ROOT.id());
 		put(ItemId.RUNE_STONE_CERTIFICATE.id(), ItemId.RUNE_STONE.id());
+		put(ItemId.STAT_RESTORATION_POTION_CERTIFICATE.id(), ItemId.FULL_STAT_RESTORATION_POTION.id());
+		put(ItemId.GIANT_CARP_CERTIFICATE.id(), ItemId.GIANT_CARP.id());
+		put(ItemId.LAVA_EEL_CERTIFICATE.id(), ItemId.LAVA_EEL.id());
+		put(ItemId.POISON_ANTIDOTE_CERTIFICATE.id(), ItemId.FULL_POISON_ANTIDOTE.id());
+		put(ItemId.MANTA_RAY_CERTIFICATE.id(), ItemId.MANTA_RAY.id());
+		put(ItemId.SEA_TURTLE_CERTIFICATE.id(), ItemId.SEA_TURTLE.id());
+		put(ItemId.CURE_POISON_POTION_CERTIFICATE.id(), ItemId.FULL_CURE_POISON_POTION.id());
 	}};
 
 	@Override
@@ -213,7 +224,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			certAmount = player.getCarriedItems().getInventory().countId(certID, Optional.of(false));
 			if (certAmount <= 0) {
 				player.message("You don't have any " + names[index]
-					+ " certificates");
+					+ " certificates to exchange");
 				return;
 			}
 			Item bankItem = new Item(itemID, certAmount * 5);
@@ -225,12 +236,12 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 							+ bankItem.getDef(player.getWorld()).getName()
 							+ " is added to your bank");
 					} else {
-						player.playerServerMessage(MessageType.QUEST, "There was a problem uncerting. Your certs are returned.");
+						player.playerServerMessage(MessageType.QUEST, "There was a problem exchanging certificates. Your certificates are returned.");
 						player.getCarriedItems().getInventory().add(new Item(certID, certAmount));
 					}
 				}
 			} else {
-				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to uncert to bank at this time.");
+				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to exchange certificates into it at this time.");
 			}
 		} else {
 			certAmount += 1;
@@ -277,7 +288,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			certAmount = (int) (player.getBank().countId(itemID) / 5);
 			int itemAmount = certAmount * 5;
 			if (itemAmount <= 0) {
-				player.message("You don't have any " + names[useIndex] + " to cert");
+				player.message("You don't have any " + names[useIndex] + " to certificate");
 				return;
 			}
 
@@ -399,7 +410,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			toExchange = totalHeld;
 		}
 
-		mes("You hand " + npcName + " your " + (isNoted ? "certed " : "") + itemName + (toExchange > 1 ? "s" : ""));
+		mes("You hand " + npcName + " your " + itemName + (isNoted ? " certificate" : "") + (toExchange > 1 ? "s" : ""));
 		delay(3);
 		if (isNoted) {
 			if (player.getCarriedItems().remove(new Item(item.getCatalogId(), toExchange, true)) == -1) return;
@@ -416,7 +427,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			player.getCarriedItems().getInventory().add(new Item(item.getCatalogId(), toExchange, true));
 		}
 		mes(npcName + " hands you back " + (toExchange > 1 ? "some " : "a ") +
-			itemName + (isNoted ? "" : " cert") + (toExchange > 1 ? "s" : ""));
+			itemName + (isNoted ? "" : " certificate") + (toExchange > 1 ? "s" : ""));
 		delay(3);
 	}
 
@@ -432,8 +443,8 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		final String newItemName = itemToGet.getDef(player.getWorld()).getName();
 
 		// Flavor text
-		say(player, npc, "Will you please exchange these near-useless market certs?",
-			"I'd like some much more useful bank certs");
+		say(player, npc, "Will you please exchange these near-useless market certificates?",
+			"I'd like some much more useful bank certificates");
 		npcsay(player, npc, "Of course " + (player.isMale() ? "sir" : "miss"));
 
 		mes(npc, "You hand " + npcName + " your " + certItemName);

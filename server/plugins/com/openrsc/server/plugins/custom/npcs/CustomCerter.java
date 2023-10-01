@@ -65,10 +65,16 @@ public class CustomCerter implements TalkNpcTrigger {
 				break;
 			case 2: // What things do you cert
 				if (npc.getID() == NpcId.MORTIMER.id()) {
-					npcsay("Right now, I only certificate rune stone");
+					npcsay("I can certificate rune stone",
+						"stat restoration potions",
+						"cure poison potions",
+						"and poison antidotes");
 				} else if (npc.getID() == NpcId.RANDOLPH.id()) {
-					npcsay("I don't certificate anything at the moment");
-					npcsay("Come back later when I am more settled in");
+					npcsay("I specialize in certificating rare seafood",
+						"Specifically giant carp",
+						"lava eels",
+						"manta rays",
+						"and sea turtles");
 				}
 				break;
 			case 3: // Who are you?

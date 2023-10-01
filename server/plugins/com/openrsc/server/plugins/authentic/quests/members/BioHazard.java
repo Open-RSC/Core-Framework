@@ -1131,7 +1131,9 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 				closeCupboard(obj, player, NURSE_SARAHS_CUPBOARD_CLOSED);
 			} else {
 				player.message("you search the cupboard");
-				if ((!player.getCarriedItems().hasCatalogID(ItemId.DOCTORS_GOWN.id(), Optional.empty())) && (player.getQuestStage(this) == 4 || player.getQuestStage(this) == 5)) {
+				if ((!player.getCarriedItems().hasCatalogID(ItemId.DOCTORS_GOWN.id(), Optional.empty()))
+					&& ((player.getQuestStage(this) == 4 || player.getQuestStage(this) == 5)
+					|| config().CAN_RETRIEVE_POST_QUEST_ITEMS)) {
 					player.message("inside you find a doctor's gown");
 					give(player, ItemId.DOCTORS_GOWN.id(), 1);
 				} else {

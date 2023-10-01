@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -67,6 +68,21 @@ public class Ladders {
 		} else if (obj.getID() == 5 && obj.getX() == 329 && obj.getY() == 3418) {
 			//Ladder from lava forge to dwarven mine
 			player.teleport(271, 3339, false);
+			return;
+		} else if (obj.getID() == 41 && obj.getX() == 516 && obj.getY() == 1479) {
+			// Legend's Guild second floor stairs up
+			player.message("You go up the stairs");
+			player.teleport(516, 2426, false);
+			if (player.getConfig().WANT_COMBAT_ODYSSEY) {
+				if (CombatOdyssey.getIntroStage(player) == CombatOdyssey.TALKED_TO_RADIMUS) {
+					CombatOdyssey.meetBiggum(player);
+				} else if (CombatOdyssey.getIntroStage(player) != CombatOdyssey.NOT_STARTED
+					&& CombatOdyssey.getPrestige(player) < 1
+					&& !player.getCarriedItems().hasCatalogID(ItemId.BIGGUM_FLODROT.id())
+					&& !player.getBank().hasItemId(ItemId.BIGGUM_FLODROT.id())) {
+					CombatOdyssey.recoverBiggum(player);
+				}
+			}
 			return;
 		}
 

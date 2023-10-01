@@ -1,0 +1,1581 @@
+{
+    "tiers": [
+        {
+            "tierId": 0,
+            "tierMasterId": 151,
+            "rewards": [],
+            "tasks": [
+                {
+                    "description": "Spiders",
+                    "npcIds": [
+                        34,
+                        23,
+                        74
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not like spiders. Too many legs, long hairy legs",
+                        "Some spiders go squish, some spiders go squash"
+                    ]
+                },
+                {
+                    "description": "Rats",
+                    "npcIds": [
+                        47,
+                        177,
+                        19,
+                        473,
+                        29,
+                        630
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Goblin gumbo: half part rat, half part... hmm what's other stuff",
+                        "Ah yes, mud. Nice delicious mud. Warm or cold not matter. Goblin gumbo always good",
+                        "Can also add mushnoobs to see funny things"
+                    ]
+                },
+                {
+                    "description": "Gnome Civilians",
+                    "npcIds": [
+                        399,
+                        583,
+                        585,
+                        586,
+                        592,
+                        593
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dumb gnomes think they so much better than goblin",
+                        "They not better than goblin, they just dumb and green",
+                        "Not brave and strong like goblin"
+                    ]
+                },
+                {
+                    "description": "Chickens",
+                    "npcIds": [
+                        3,
+                        252
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum kill many, many chickens",
+                        "Best thing Biggum likes to eat",
+                        "But feathers are bad for Biggums stomach"
+                    ]
+                },
+                {
+                    "description": "Imps",
+                    "npcIds": [
+                        114
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Imps drop the best loot",
+                        "Biggum once killed biggest imp ever",
+                        "Biggum got a blue helmet",
+                        "Traded it for a pointy stick"
+                    ]
+                },
+                {
+                    "description": "Goblins",
+                    "npcIds": [
+                        62,
+                        154,
+                        153,
+                        4,
+                        660,
+                        192,
+                        109
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Human not kill ironclaw goblin",
+                        "Weaker tribe goblin fine to kill",
+                        "Ironclaw goblin too strong for big dumb human"
+                    ]
+                },
+                {
+                    "description": "Cows",
+                    "npcIds": [
+                        6
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum once was on delicious chicken raid",
+                        "Farmer chase Biggum into awful big moo pen",
+                        "Worst day ever"
+                    ]
+                },
+                {
+                    "description": "Men",
+                    "npcIds": [
+                        11,
+                        72,
+                        318,
+                        550,
+                        25
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dogs best friend",
+                        "Goblins worst enemy",
+                        "Dey are ugly smelly creatures"
+                    ]
+                },
+                {
+                    "description": "Muggers",
+                    "npcIds": [
+                        21
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "A man who beats up other man",
+                        "He friend of goblins"
+                    ]
+                },
+                {
+                    "description": "Monks",
+                    "npcIds": [
+                        93
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Silly men with funny clothes",
+                        "One put hand on Biggums head and say funny words to hex Biggum",
+                        "Biggum stuck him but get no loot"
+                    ]
+                },
+                {
+                    "description": "Highwaymen",
+                    "npcIds": [
+                        89
+                    ],
+                    "kills": 20,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Evil bully man",
+                        "One time chase poor Biggum from Fallington to Lumberbridge",
+                        "Big dumb human put him in his place"
+                    ]
+                },
+                {
+                    "description": "Darkwizards",
+                    "npcIds": [
+                        60,
+                        57,
+                        182
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum try killing such things for precious stones",
+                        "But big dumb wizard keep dropping keys same colour as beetroot",
+                        "Biggum likes beetroot but keys not taste good"
+                    ]
+                },
+                {
+                    "description": "Farmers",
+                    "npcIds": [
+                        63,
+                        319
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "The one true enemy of Biggum Flodrot",
+                        "One day Biggum will get rid of all farmers",
+                        "And all the chickens will be his"
+                    ]
+                },
+                {
+                    "description": "Dungeon Rats",
+                    "npcIds": [
+                        367
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggest, meanest rats, not even good for goblin gumbo",
+                        "Goblins keep them in cage, keep world safe"
+                    ]
+                },
+                {
+                    "description": "Wizards",
+                    "npcIds": [
+                        81
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Goblins not go near big scary wizzingtower",
+                        "But Biggum once sneak inside",
+                        "Steal green ball for the glory of ironclaw"
+                    ]
+                },
+                {
+                    "description": "Barbarians",
+                    "npcIds": [
+                        76,
+                        78
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dey not smell so bad as other men",
+                        "But just as crazy"
+                    ]
+                },
+                {
+                    "description": "Thugs",
+                    "npcIds": [
+                        251
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Silly wildyness humans",
+                        "They always attack those who are unprepared",
+                        "They never have courage to fight equal opponent",
+                        "Biggum teach them a lesson many times"
+                    ]
+                },
+                {
+                    "description": "Dwarves",
+                    "npcIds": [
+                        94,
+                        694,
+                        699
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Funny little men",
+                        "Always very angry",
+                        "Biggum likes to poke them with stick and run run away"
+                    ]
+                },
+                {
+                    "description": "Skeletons",
+                    "npcIds": [
+                        195,
+                        45,
+                        179,
+                        46,
+                        40,
+                        50
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "In big battle long ago",
+                        "Biggum saw more skellingtons than human can imagine",
+                        "Now almost none left"
+                    ]
+                },
+                {
+                    "description": "Iban Disciples",
+                    "npcIds": [
+                        658
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Red men with bald heads",
+                        "Make big roar like Biggum and scare them all away"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 1,
+            "tierMasterId": 151,
+            "rewards": [
+                {
+                    "itemId": 1546,
+                    "amount": 20
+                },
+                {
+                    "itemId": 1547,
+                    "amount": 200
+                },
+                {
+                    "itemId": 316,
+                    "amount": 1
+                },
+                {
+                    "itemId": 399,
+                    "amount": 1
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Monks Of Zamorak",
+                    "npcIds": [
+                        293,
+                        139,
+                        140
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "These men are a kind of crazy not even Biggum mess with",
+                        "Once took their lemonade, they all get very mad",
+                        "Hexed Biggum and chased him to village of lowland goblins"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 2,
+            "tierMasterId": 300,
+            "rewards": [],
+            "tasks": [
+                {
+                    "description": "Chaos Druids",
+                    "npcIds": [
+                        270,
+                        555,
+                        567
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum likes meat",
+                        "Rat, chicken, moo, snoozers, raw, cooked and burnt",
+                        "But these dummies only drop salad"
+                    ]
+                },
+                {
+                    "description": "Zombies",
+                    "npcIds": [
+                        68,
+                        180,
+                        214,
+                        41,
+                        359,
+                        52
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Skellingtons in the making",
+                        "Walk like normal human do after five beer"
+                    ]
+                },
+                {
+                    "description": "Foresters",
+                    "npcIds": [
+                        348
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Meanies not let goblins live in forest",
+                        "Put up fences, set out dogs and make signs saying \"greenies keep out\""
+                    ]
+                },
+                {
+                    "description": "Rogues",
+                    "npcIds": [
+                        342
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "These men run about in dark places like goblins",
+                        "Biggum respect these men and their wily ways"
+                    ]
+                },
+                {
+                    "description": "Dark Warriors",
+                    "npcIds": [
+                        199
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dumb dark men have cool castle in wildyness",
+                        "Maybe Biggum Flotrot will capture such a castle for the glory of goblins",
+                        "Goblins more worthy than dumb dark men anyway"
+                    ]
+                },
+                {
+                    "description": "Scorpions",
+                    "npcIds": [
+                        70,
+                        271,
+                        136
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Like spiders but even weirder",
+                        "Goblins not often mess with them"
+                    ]
+                },
+                {
+                    "description": "Thieves",
+                    "npcIds": [
+                        64,
+                        351,
+                        352
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Man with goblin antics",
+                        "He may have taken the ethos of goblin, but not the courage"
+                    ]
+                },
+                {
+                    "description": "Unicorns",
+                    "npcIds": [
+                        0,
+                        296
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Silly horse with horn",
+                        "Wait, what's a horse?"
+                    ]
+                },
+                {
+                    "description": "Souless",
+                    "npcIds": [
+                        655,
+                        644
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Creepy even for a human",
+                        "Stick them, chop them, crush them",
+                        "Just make sure they never leave their creepy cave"
+                    ]
+                },
+                {
+                    "description": "Target Practice Zombies",
+                    "npcIds": [
+                        516
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not need target practice",
+                        "Biggum already expert at throwing things",
+                        "Me once throw spear into eye of big ugly one-eye",
+                        "Me thinks his name was Polymephus"
+                    ]
+                },
+                {
+                    "description": "Mourners",
+                    "npcIds": [
+                        502,
+                        495
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dumb humans with dumb clothes",
+                        "What they mourning for anyway"
+                    ]
+                },
+                {
+                    "description": "Happy Peasants",
+                    "npcIds": [
+                        417
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Happy peasant surely has many chickens",
+                        "You distract happy peasant and Biggum will have a look around",
+                        "Can share spoils"
+                    ]
+                },
+                {
+                    "description": "Witches",
+                    "npcIds": [
+                        79
+                    ],
+                    "kills": 25,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Evil, ugly and up to no good",
+                        "Best kind of human if human was to ask Biggum Flodrot",
+                        "Her cooking is also good"
+                    ]
+                },
+                {
+                    "description": "Ghosts",
+                    "npcIds": [
+                        664,
+                        53,
+                        80,
+                        178
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not afraid of no poltergeist"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 3,
+            "tierMasterId": 681,
+            "rewards": [
+                {
+                    "itemId": 403,
+                    "amount": 1
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Bears",
+                    "npcIds": [
+                        188,
+                        8
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggest snoozers Biggum knows",
+                        "Not good idea to poke a snoozebear",
+                        "Especially one with little snoozeberries",
+                        "They get very very mad"
+                    ]
+                },
+                {
+                    "description": "Warriors",
+                    "npcIds": [
+                        159,
+                        320,
+                        86
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Yes yes, big strong warrior human",
+                        "Humans always think they big strong warrior",
+                        "But they never as strong and brave as goblin",
+                        "In great big battle of bluebird plains, humans ran and goblins fought"
+                    ]
+                },
+                {
+                    "description": "Soldiers",
+                    "npcIds": [
+                        519,
+                        518
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Humans who not fight for glory and riches",
+                        "But for something they call greater good",
+                        "Biggum thinks this is most unnatural"
+                    ]
+                },
+                {
+                    "description": "Khazard Troops",
+                    "npcIds": [
+                        407
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Big dumb humans fighting little dumb gnomes",
+                        "Biggum finds this arrangement most excellent"
+                    ]
+                },
+                {
+                    "description": "Mountain Dwarves",
+                    "npcIds": [
+                        356
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Like normal dwarf",
+                        "But even more angry",
+                        "Maybe shorter too"
+                    ]
+                },
+                {
+                    "description": "Guards",
+                    "npcIds": [
+                        65,
+                        100,
+                        321,
+                        375,
+                        376
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Big dumb guards always keep goblins out of cities",
+                        "As if we savage or something",
+                        "Biggum wants to stick them with a spear"
+                    ]
+                },
+                {
+                    "description": "Bandits",
+                    "npcIds": [
+                        232,
+                        234,
+                        236,
+                        237,
+                        238
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Goblins sometime raid bandit camp",
+                        "They exiles much like goblin"
+                    ]
+                },
+                {
+                    "description": "Druids",
+                    "npcIds": [
+                        200
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggums great grandfather fight many men in white rags",
+                        "At big battle of place with funny name",
+                        "Goblins just call it battle of first stone circle"
+                    ]
+                },
+                {
+                    "description": "Pirates",
+                    "npcIds": [
+                        264,
+                        137
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Whats a pirate if he has no ship?",
+                        "Whats a wolf if he has no teeth?",
+                        "Whats a goblin if he has no green?"
+                    ]
+                },
+                {
+                    "description": "Desert Wolves",
+                    "npcIds": [
+                        721
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum once trained one to be pet",
+                        "But then it ate other goblin",
+                        "Had to make wolf barbeque",
+                        "Worst meal ever"
+                    ]
+                },
+                {
+                    "description": "Gnome Guards",
+                    "npcIds": [
+                        551,
+                        582,
+                        562
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Ugly green gnome with courage",
+                        "But still no good in battle"
+                    ]
+                },
+                {
+                    "description": "White Wolves",
+                    "npcIds": [
+                        239,
+                        248,
+                        249
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Humans very scared of white wolf pass",
+                        "When human goes there, wolf eats human",
+                        "When goblin goes there, goblin eats wolf"
+                    ]
+                },
+                {
+                    "description": "Oomlie Birds",
+                    "npcIds": [
+                        777
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Like a chicken",
+                        "But bigger, tastier and angrier"
+                    ]
+                },
+                {
+                    "description": "Shantay Pass Guards",
+                    "npcIds": [
+                        717
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Not really a guard",
+                        "Just a bully for greedy Shantay",
+                        "Acting as if greedy dumb Shantay owns desert"
+                    ]
+                },
+                {
+                    "description": "Giant Bats",
+                    "npcIds": [
+                        43
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Annoying flappy thing",
+                        "Knock it on the head and it will flap no more"
+                    ]
+                },
+                {
+                    "description": "Hobgoblins",
+                    "npcIds": [
+                        311,
+                        67
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Hoblingoblins always think they better than other goblins",
+                        "Ironclaw goblins put them in their place"
+                    ]
+                },
+                {
+                    "description": "Yanille Watchmen",
+                    "npcIds": [
+                        574
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dumb guards thinking they not guards",
+                        "Nice bread though"
+                    ]
+                },
+                {
+                    "description": "Necromancers",
+                    "npcIds": [
+                        358
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum once fight such a conjurer of skellingtons and zombs",
+                        "Must kill the conjurer, else he will continue conjuring"
+                    ]
+                },
+                {
+                    "description": "Jailguards",
+                    "npcIds": [
+                        127
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not know what these are guarding",
+                        "But probably many riches or tasties"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 4,
+            "tierMasterId": 667,
+            "rewards": [
+                {
+                    "itemId": 93,
+                    "amount": 1
+                },
+                {
+                    "itemId": 1552,
+                    "amount": 20
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Pit Scorpions",
+                    "npcIds": [
+                        786
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not allowed to kill these yet",
+                        "Had to sneak into cellar of Radimus to find them"
+                    ]
+                },
+                {
+                    "description": "Blessed Spiders",
+                    "npcIds": [
+                        631
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Spiders hide in dumb places",
+                        "These get very mad if you bonk their boss"
+                    ]
+                },
+                {
+                    "description": "Deadly Red Spiders",
+                    "npcIds": [
+                        99
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Spider eggs very popular in goblin food",
+                        "Give spicy taste, just like pink berries"
+                    ]
+                },
+                {
+                    "description": "Giants",
+                    "npcIds": [
+                        61
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Like big dumb human, just much bigger",
+                        "Biggum once friends with giant",
+                        "In place called thunder mountain"
+                    ]
+                },
+                {
+                    "description": "Tribesmen",
+                    "npcIds": [
+                        421
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not like fighting these",
+                        "They have spicy swords that sting for long time"
+                    ]
+                },
+                {
+                    "description": "Mercenaries",
+                    "npcIds": [
+                        668,
+                        670,
+                        690,
+                        692,
+                        710,
+                        716,
+                        669
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "These dumb humans steal other dumb humans",
+                        "Biggum first think it very fun",
+                        "But then they make Biggum think of hoblingoblins",
+                        "Now Biggum wants to put them in their place"
+                    ]
+                },
+                {
+                    "description": "Shipyard Workers",
+                    "npcIds": [
+                        557,
+                        558,
+                        559
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "They part of evil gnome war machine",
+                        "Biggum teach them lesson they never forget!"
+                    ]
+                },
+                {
+                    "description": "Ugthanki",
+                    "npcIds": [
+                        653
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Strangest creature Biggum has seen",
+                        "And Biggum has seen things you wouldn't believe!"
+                    ]
+                },
+                {
+                    "description": "Animated Axes",
+                    "npcIds": [
+                        295
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not know what sorcery has made axes fly",
+                        "But they die just the same with a bonk or two"
+                    ]
+                },
+                {
+                    "description": "Guard Dogs",
+                    "npcIds": [
+                        262
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dumb guard dogs have ruined many an apple tree raid for Biggum",
+                        "Dog is goblins worst enemy"
+                    ]
+                },
+                {
+                    "description": "Black Knights",
+                    "npcIds": [
+                        66,
+                        108,
+                        189
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggums father fight in battle of green wood",
+                        "Kill very many black knight humans",
+                        "Drive them away from their own homeland"
+                    ]
+                },
+                {
+                    "description": "Jungle Spiders",
+                    "npcIds": [
+                        521
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Evil spiders of course friends with evil gnomes",
+                        "Squash them all, Biggum says"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 5,
+            "tierMasterId": 667,
+            "rewards": [
+                {
+                    "itemId": 619,
+                    "amount": 200
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Battle Mages",
+                    "npcIds": [
+                        789,
+                        790,
+                        791
+                    ],
+                    "kills": 100,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Not much battle in these mages",
+                        "They not even fight back",
+                        "Spellcraft and sorcery no match for pointy stick"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 6,
+            "tierMasterId": 546,
+            "rewards": [
+                {
+                    "itemId": 1548,
+                    "amount": 200
+                },
+                {
+                    "itemId": 317,
+                    "amount": 1
+                },
+                {
+                    "itemId": 112,
+                    "amount": 1
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Baby Blue Dragons",
+                    "npcIds": [
+                        203
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Ironclaw goblin use these for combat training",
+                        "Only get fried little by them",
+                        "Big firebreathers, not good"
+                    ]
+                },
+                {
+                    "description": "Renegade Knights",
+                    "npcIds": [
+                        277
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Only thing Biggum likes less than knight",
+                        "Is cowardly knight with no honour",
+                        "Biggum put goblin curse on such fellows"
+                    ]
+                },
+                {
+                    "description": "Earth Warriors",
+                    "npcIds": [
+                        584
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Dumb golems living in dumb place",
+                        "Great big cowards with heart of a horse",
+                        "Wait, what's a horse?"
+                    ]
+                },
+                {
+                    "description": "Shadow Spiders",
+                    "npcIds": [
+                        343
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Only spiders that scare Biggum",
+                        "They not like the light",
+                        "Kill them with fire, lots and lots of fire"
+                    ]
+                },
+                {
+                    "description": "Knights",
+                    "npcIds": [
+                        322
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum think human knighthood not more than nepotism",
+                        "Give them a big bonk and a stab and they fall down easy"
+                    ]
+                },
+                {
+                    "description": "White Knights",
+                    "npcIds": [
+                        102
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "White knights of Fallington are very silly",
+                        "Thinking they strong and mighty in fancy castle",
+                        "But if not for ironclaw goblins",
+                        "Black knights of green forest would still be mightiest"
+                    ]
+                },
+                {
+                    "description": "Ice Warriors",
+                    "npcIds": [
+                        158
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not know where blue men came from",
+                        "But they better warriors than human"
+                    ]
+                },
+                {
+                    "description": "Ogres",
+                    "npcIds": [
+                        312,
+                        525,
+                        706,
+                        704
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Ogres as tall as two goblins",
+                        "And they have great big war bonkers",
+                        "Biggum respects ogres and their wily ways"
+                    ]
+                },
+                {
+                    "description": "Jogres",
+                    "npcIds": [
+                        523
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Like ogre, but green like goblin",
+                        "Must be best kind of ogre indeed",
+                        "Maybe ironclaw jogres live some place"
+                    ]
+                },
+                {
+                    "description": "Chaos Dwarves",
+                    "npcIds": [
+                        109
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Angriest kind of dwarf",
+                        "Biggum think they eat too much salt",
+                        "Not good for blood pressure",
+                        "Should eat better things, like mud and raw chicken"
+                    ]
+                },
+                {
+                    "description": "Karamja Wolves",
+                    "npcIds": [
+                        775
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Big mean jungle dogs",
+                        "They eat all the googly birds"
+                    ]
+                },
+                {
+                    "description": "Undeadones",
+                    "npcIds": [
+                        542
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Caged jungle zombs",
+                        "Good to kill for lazy human",
+                        "Biggum not lazy, they not good to kill for Biggum"
+                    ]
+                },
+                {
+                    "description": "Moss Giants",
+                    "npcIds": [
+                        104,
+                        594
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum once live in a mossy giant beard for a fortnight",
+                        "Not discovered until Biggum started a fire in there",
+                        "Best den ever"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 7,
+            "tierMasterId": 546,
+            "rewards": [
+                {
+                    "itemId": 1549,
+                    "amount": 20
+                },
+                {
+                    "itemId": 404,
+                    "amount": 1
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Poison Spiders",
+                    "npcIds": [
+                        292
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not like these spicy spiders",
+                        "Has to eat all his favourite food to kill them"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 8,
+            "tierMasterId": 573,
+            "rewards": [],
+            "tasks": [
+                {
+                    "description": "Shadow Warriors",
+                    "npcIds": [
+                        787
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not allowed to kill these yet",
+                        "Only able to when being a sneaky sneak"
+                    ]
+                },
+                {
+                    "description": "Ice Spiders",
+                    "npcIds": [
+                        263
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "An ice spider",
+                        "A nice spider",
+                        "Geddit? Hehehehehehehe"
+                    ]
+                },
+                {
+                    "description": "Grey Wolves",
+                    "npcIds": [
+                        243
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Canis lupus...",
+                        "Biggum saw these when he visited the land of midnight sun",
+                        "And became friends with funny men with funny songs"
+                    ]
+                },
+                {
+                    "description": "Otherworldly Beings",
+                    "npcIds": [
+                        298
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not even sure what this is supposed to be",
+                        "Give it a bonk for good measure"
+                    ]
+                },
+                {
+                    "description": "Ice Giants",
+                    "npcIds": [
+                        135
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "From second root of ash tree of life",
+                        "Out come the children of Aurgelmir",
+                        "Army of goblin ancestors went to place they come from",
+                        "But none come home"
+                    ]
+                },
+                {
+                    "description": "Paladins",
+                    "npcIds": [
+                        323,
+                        632,
+                        633
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "12 pallydins guarding the king",
+                        "12 pallydins fighting great big war in south",
+                        "Few pallydins come home",
+                        "The rest fell with Rolan the brave",
+                        "Goblins have song about him"
+                    ]
+                },
+                {
+                    "description": "Ogre Chieftans",
+                    "npcIds": [
+                        531
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Big ogre boss once call Biggum Flodrot a flathead",
+                        "Biggum call him bignose funnypants",
+                        "Now Biggum alive and big ogres boss not"
+                    ]
+                },
+                {
+                    "description": "Lesser Demons",
+                    "npcIds": [
+                        22,
+                        181
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Just a big imp",
+                        "Biggum kill many imps"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 9,
+            "tierMasterId": 253,
+            "rewards": [
+                {
+                    "itemId": 1272,
+                    "amount": 100
+                },
+                {
+                    "itemId": 597,
+                    "amount": 1
+                },
+                {
+                    "itemId": 81,
+                    "amount": 1
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Death Wings",
+                    "npcIds": [
+                        768
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Have you ever seen death wing?",
+                        "They look horrible!",
+                        "Dead, googly eyes, claw feets",
+                        "Huge grotesque flappers!"
+                    ]
+                },
+                {
+                    "description": "Heroes",
+                    "npcIds": [
+                        324
+                    ],
+                    "kills": 10,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not allowed in hero guild anymore",
+                        "They kick poor Biggum out after bathing in fountain"
+                    ]
+                },
+                {
+                    "description": "Jungle Savages",
+                    "npcIds": [
+                        776
+                    ],
+                    "kills": 50,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum once friend with jungle dweller",
+                        "Told Biggum about banana king and bear necessities",
+                        "And war elephants... but what's elephant?"
+                    ]
+                },
+                {
+                    "description": "Greater Demons",
+                    "npcIds": [
+                        184
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Imps again...",
+                        "Just give them a good bashing",
+                        "That's what Biggum Flodrot does"
+                    ]
+                },
+                {
+                    "description": "Ogre Guards",
+                    "npcIds": [
+                        684,
+                        697
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum not sure what these are guarding",
+                        "Biggum just likes to brawl with them when visiting Feldip Hills",
+                        "Easy to start trouble with ogre"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 10,
+            "tierMasterId": 785,
+            "rewards": [
+                {
+                    "itemId": 1550,
+                    "amount": 100
+                },
+                {
+                    "itemId": 1551,
+                    "amount": 100
+                },
+                {
+                    "itemId": 543,
+                    "amount": 1
+                },
+                {
+                    "itemId": 1273,
+                    "amount": 20
+                },
+                {
+                    "itemId": 1275,
+                    "amount": 20
+                },
+                {
+                    "itemId": 1274,
+                    "amount": 20
+                }
+            ],
+            "tasks": [
+                {
+                    "description": "Blue Dragons",
+                    "npcIds": [
+                        202
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Great big goblin warrior once kill many blue firebreathers",
+                        "Suddenly he become goblin high priest"
+                    ]
+                },
+                {
+                    "description": "Fire Giants",
+                    "npcIds": [
+                        344
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "When first goblin went to drink from Hvergelmir",
+                        "He met great big evil Surt",
+                        "And all his fire giant minions",
+                        "One day Biggum Flodrot shall cast them back into the fire",
+                        "And fight big jotun Surt",
+                        "In Muspelheim where fires burn forever"
+                    ]
+                },
+                {
+                    "description": "Hellhounds",
+                    "npcIds": [
+                        294
+                    ],
+                    "kills": 250,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Only hellhound to ever scare Biggum",
+                        "Was old Garm",
+                        "Guarding big gate to the land beyond"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 11,
+            "tierMasterId": 785,
+            "rewards": [],
+            "tasks": [
+                {
+                    "description": "Red Dragons",
+                    "npcIds": [
+                        201
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum remember story of old big red firebreather",
+                        "Human hero called Sidurg stab it",
+                        "Sidurg eat firebreather heart and get smart",
+                        "But he marry the wrong one, not so smart",
+                        "Brynhilde very brave. Many tales and songs of her",
+                        "Gudrun not so much. Angry evil human"
+                    ]
+                },
+                {
+                    "description": "Black Demons",
+                    "npcIds": [
+                        290
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggums grandmother very famous goblin hero",
+                        "She travel far away over water, mountain, big sand",
+                        "She tell tales of rakshasa and rakshasi",
+                        "This thing look like grandmothers tales"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 12,
+            "tierMasterId": 785,
+            "rewards": [],
+            "tasks": [
+                {
+                    "description": "Black Dragons",
+                    "npcIds": [
+                        291
+                    ],
+                    "kills": 500,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggum was told bedtime stories of firebreathers of old",
+                        "Much bigger than puny firebreathers left now",
+                        "And much warmer fire"
+                    ]
+                }
+            ]
+        },
+        {
+            "tierId": 13,
+            "tierMasterId": 785,
+            "rewards": [],
+            "tasks": [
+                {
+                    "description": "King Black Dragon",
+                    "npcIds": [
+                        477
+                    ],
+                    "kills": 1,
+                    "taskInfoDialog": [],
+                    "monsterInfoDialog": [
+                        "Biggums ancestor kill this",
+                        "And declare: now am become ironclaw",
+                        "Destroyer of firebreathers"
+                    ]
+                }
+            ]
+        }
+    ]
+}

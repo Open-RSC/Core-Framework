@@ -31,6 +31,7 @@ public final class SiegfriedErkel extends AbstractShop {
 				"Can I help you at all?");
 			int option = multi(player, n, "Yes please. What are you selling?",
 				"No thanks");
+
 			if (option == 0) {
 				npcsay(player, n, "Take a look");
 				player.setAccessingShop(shop);

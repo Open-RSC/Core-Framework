@@ -8,10 +8,10 @@ import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.market.Market;
+import com.openrsc.server.content.minigame.combatodyssey.CombatOdysseyData;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler.TrawlerBoat;
 import com.openrsc.server.content.party.PartyManager;
-import com.openrsc.server.database.impl.mysql.queries.logging.LoginLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.database.impl.mysql.queries.player.login.PlayerOnlineFlagQuery;
 import com.openrsc.server.event.DelayedEvent;
@@ -107,6 +107,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final ClanManager clanManager;
 	private final Market market;
 	private final WorldLoader worldLoader;
+	private final CombatOdysseyData combatOdysseyData;
 	private final HashMap<Point, Integer> sceneryLocs;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 
@@ -137,6 +138,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		this.regionManager = new RegionManager(this);
 		this.clanManager = new ClanManager(this);
 		this.partyManager = new PartyManager(this);
+		this.combatOdysseyData = new CombatOdysseyData(this);
 
 		final ServerConfiguration config = server.getConfig();
 		this.avatarGenerator = config.AVATAR_GENERATOR ? new AvatarGenerator(this) : null;
@@ -410,6 +412,10 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 			if (PathValidation.DEBUG) {
 				pathfindingDebug = new PathfindingDebug(this);
+			}
+
+			if (getServer().getConfig().WANT_COMBAT_ODYSSEY) {
+				getCombatOdyssey().load();
 			}
 		} catch (final Exception e) {
 			LOGGER.catching(e);
@@ -1002,6 +1008,10 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public synchronized RegionManager getRegionManager() {
 		return regionManager;
+	}
+
+	public synchronized CombatOdysseyData getCombatOdyssey() {
+		return combatOdysseyData;
 	}
 
 	public synchronized Market getMarket() {

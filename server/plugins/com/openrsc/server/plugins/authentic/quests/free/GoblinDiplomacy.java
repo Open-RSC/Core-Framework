@@ -3,10 +3,12 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.content.minigame.combatodyssey.Tier;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -161,8 +163,51 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 					npcsay(player, n, "Come back when you have some");
 				}
 			} else if (player.getQuestStage(this) == -1) { // COMPLETED
-				npcsay(player, n,
-					"Now you've solved our argument we gotta think of something else to do");
+				if (config().WANT_COMBAT_ODYSSEY) {
+					if (CombatOdyssey.getIntroStage(player) == CombatOdyssey.MET_BIGGUM) {
+						if (CombatOdyssey.biggumMissing()) return;
+						int newTier = 0;
+						CombatOdyssey.biggumSay(player, "Generals of lowland village!",
+							"Big dumb human is on big long killing spree for Radimus",
+							"What kills to do?");
+						npcsay(player, n, "Ha! Dis gon be gud");
+						npcsay(player, otherGoblin, "Shut up warty and give tasks");
+						npcsay(player, n, "You shut up and give tasks!");
+						npcsay(player, otherGoblin, "Flodrot pay attention cause humans not too bright");
+						CombatOdyssey.biggumSay(player, "Yes yes, give things to kill");
+						npcsay(player, n, player.getWorld().getCombatOdyssey().getTier(newTier).getTasksAndCounts());
+						npcsay(player, otherGoblin, "Human can ask Flodrot what to kill first");
+						npcsay(player, n, "Come back to us when done with these");
+						CombatOdyssey.assignNewTier(player, newTier);
+						return;
+					} else if (CombatOdyssey.getCurrentTier(player) == 0) {
+						if (CombatOdyssey.isTierCompleted(player)) {
+							if (CombatOdyssey.biggumMissing()) return;
+							int newTier = 1;
+							// We do this first since the rewards are associated with the next tier.
+							CombatOdyssey.assignNewTier(player, newTier);
+							npcsay(player, otherGoblin, "Well done human");
+							npcsay(player, n, "Here is little help for final task we give");
+							CombatOdyssey.giveRewards(player, n);
+							npcsay(player, otherGoblin, "Last thing to kill is");
+							Tier tier = player.getWorld().getCombatOdyssey().getTier(newTier);
+							npcsay(player, otherGoblin, tier.getTasksAndCounts());
+							npcsay(player, n, "Go talk with Thormac the sorcerer when done");
+						} else {
+							npcsay(player, n, "Talk to Flodrot, he know what to kill");
+						}
+						return;
+					}
+				}
+				if (config().WANT_COMBAT_ODYSSEY && CombatOdyssey.getCurrentTier(player) > 0
+					|| (CombatOdyssey.getIntroStage(player) == CombatOdyssey.NOT_STARTED
+					&& CombatOdyssey.getPrestige(player) > 0)) {
+					npcsay(player, n,
+						"Now you've solved our argument and killed thousands we gotta think of something else to do");
+				} else {
+					npcsay(player, n,
+						"Now you've solved our argument we gotta think of something else to do");
+				}
 				npcsay(player, otherGoblin, "Yep, we bored now");
 			}
 		} else if (n.getID() == NpcId.GOBLIN_RED_ARMOUR_LVL13.id()) {

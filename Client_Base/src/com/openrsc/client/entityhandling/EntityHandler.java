@@ -2316,6 +2316,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Randolph", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 0x303030, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Ana (not in a barrel)", "I should update my client.", "", 17, 15, 16, 18, false, sprites, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, i++));
+		sprites = new int[]{533, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Biggum Flodrot", "Biggum Flodrot, goblin hero", "", 99, 99, 99, 99, false, sprites, 0, 0, 0, 0, 219, 206, 9, 8, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -4045,15 +4047,27 @@ public class EntityHandler {
 		items.add(new ItemDef("lean rat meat", "I need to cook this first", "", 1, 60, "items:60", false, false, 0, 0xE57C2B, false, false, true, 1541));
 		items.add(new ItemDef("lean beef", "I need to cook this first", "", 1, 60, "items:60", false, false, 0, 0xE57C2B, false, false, true, 1542));
 
-		if (Config.S_WANT_BANK_NOTES && !Config.S_WANT_CERT_AS_NOTES) {
-			items.add(new ItemDef("Rune stone certificate (market)", "Each certificate exchangable at Varrock for 5 rune stone", "", 20, 180, "items:180", true, false, 0, 0, false, false, false, 1543));
-		} else {
-			items.add(new ItemDef("Rune stone certificate", "Each certificate exchangable at Varrock for 5 rune stone", "", 20, 180, "items:180", true, false, 0, 0, false, false, false, 1543));
-		}
+		items.add(new ItemDef("Rune stone certificate", "Each certificate exchangable at Varrock for 5 rune stone", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1543));
 
 		items.add(new ItemDef("Unobtanium", "I should update my client.", "", 17, 70, "items:70", false, false, 0, 0xCC4CFF, false, false, true, 1544));
 		items.add(new ItemDef("Unobtanium", "I should update my client.", "", 17, 70, "items:70", true, false, 0, 0xCC4CFF, false, false, false, 1545));
 
+		items.add(new ItemDef("stat restoration Potion certificate", "Each certificate exchangable at Varrock for 5 stat restore potions", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1546));
+		items.add(new ItemDef("giant carp certificate", "Each certificate exchangable at Varrock for 5 giant carp", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1547));
+		items.add(new ItemDef("Lava eel certificate", "Each certificate exchangable at Varrock for 5 lava eels", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1548));
+		items.add(new ItemDef("Poison antidote certificate", "Each certificate exchangable at Varrock for 5 poison antidote potions", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1549));
+		items.add(new ItemDef("Manta ray certificate", "Each certificate exchangable at Varrock for 5 manta rays", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1550));
+		items.add(new ItemDef("Sea turtle certificate", "Each certificate exchangable at Varrock for 5 sea turtles", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1551));
+		items.add(new ItemDef("Cure poison Potion certificate", "Each certificate exchangable at Varrock for 5 cure poison potions", "", 10, 180, "items:180", true, false, 0, 0, false, false, false, 1552));
+
+		items.add(new ItemDef("Biggum Flodrot", "Biggum Flodrot, goblin hero", "Talk", 0, -1, "items:597", false, false, 0, 0, true, true, false, 1553));
+
+		// Custom certificate names
+		if (Config.S_WANT_BANK_NOTES && !Config.S_WANT_CERT_AS_NOTES) {
+			for (int i : new int[]{1543, 1546, 1547, 1548, 1549, 1550, 1551, 1552}) {
+				items.get(i).name = items.get(i).getName() + " (market)";
+			}
+		}
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4751,6 +4765,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("fdragonscalemail", "equipment", 0, 0, true, false, 0));//530
 			animations.add(new AnimationDef("mortimertorso", "equipment", 0, 0, true, false, 0));//531
 			animations.add(new AnimationDef("randolphtorso", "equipment", 0, 0, true, false, 0));//532
+			animations.add(new AnimationDef("biggum", "npc", 0xFFFFFF, 0, true, false, 0));//533
 		}
 	}
 

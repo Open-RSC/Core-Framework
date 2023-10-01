@@ -30,12 +30,12 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.THRANDER.id() && getNewId(item) != ItemId.NOTHING.id();
+		return npc.getID() == NpcId.THRANDER.id() && (isExchangeable(player, item) || isDragon(player, item));
 	}
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		if (isExchangeable(item)) {
+		if (isExchangeable(player, item)) {
 
 			int newId = getNewId(item);
 			Item newItem = new Item(newId);
@@ -74,6 +74,10 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 
 			give(newId, 1);
 
+		} else if (isDragon(player, item)) {
+			npcsay("Where did you get that?",
+				"I'm sorry",
+				"But I can't work this kind of metal");
 		} else {
 			mes("Nothing interesting happens");
 		}
@@ -103,9 +107,6 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			case RUNE_PLATE_MAIL_TOP:
 				newId = ItemId.RUNE_PLATE_MAIL_BODY.id();
 				break;
-			case DRAGON_PLATE_MAIL_TOP:
-				newId = ItemId.DRAGON_PLATE_MAIL_BODY.id();
-				break;
 			case BRONZE_PLATE_MAIL_BODY:
 				newId = ItemId.BRONZE_PLATE_MAIL_TOP.id();
 				break;
@@ -126,9 +127,6 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 				break;
 			case RUNE_PLATE_MAIL_BODY:
 				newId = ItemId.RUNE_PLATE_MAIL_TOP.id();
-				break;
-			case DRAGON_PLATE_MAIL_BODY:
-				newId = ItemId.DRAGON_PLATE_MAIL_TOP.id();
 				break;
 			case BRONZE_PLATED_SKIRT:
 				newId = ItemId.BRONZE_PLATE_MAIL_LEGS.id();
@@ -151,9 +149,6 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			case RUNE_SKIRT:
 				newId = ItemId.RUNE_PLATE_MAIL_LEGS.id();;
 				break;
-			case DRAGON_PLATED_SKIRT:
-				newId = ItemId.DRAGON_PLATE_MAIL_LEGS.id();
-				break;
 			case BRONZE_PLATE_MAIL_LEGS:
 				newId = ItemId.BRONZE_PLATED_SKIRT.id();
 				break;
@@ -174,9 +169,6 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 				break;
 			case RUNE_PLATE_MAIL_LEGS:
 				newId = ItemId.RUNE_SKIRT.id();
-				break;
-			case DRAGON_PLATE_MAIL_LEGS:
-				newId = ItemId.DRAGON_PLATED_SKIRT.id();
 				break;
 			case BRONZE_CHAIN_MAIL_TOP:
 				newId = ItemId.BRONZE_CHAIN_MAIL_BODY.id();
@@ -199,9 +191,6 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			case RUNE_CHAIN_MAIL_TOP:
 				newId = ItemId.RUNE_CHAIN_MAIL_BODY.id();
 				break;
-			case DRAGON_SCALE_MAIL_TOP:
-				newId = ItemId.DRAGON_SCALE_MAIL.id();
-				break;
 			case BRONZE_CHAIN_MAIL_BODY:
 				newId = ItemId.BRONZE_CHAIN_MAIL_TOP.id();
 				break;
@@ -223,16 +212,13 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			case RUNE_CHAIN_MAIL_BODY:
 				newId = ItemId.RUNE_CHAIN_MAIL_TOP.id();
 				break;
-			case DRAGON_SCALE_MAIL:
-				newId = ItemId.DRAGON_SCALE_MAIL_TOP.id();
-				break;
 			default:
 				break;
 		}
 		return newId;
 	}
 
-	private boolean isExchangeable(final Item item) {
+	private boolean isExchangeable(final Player player, final Item item) {
 		final boolean isAuthenticItem = Functions.inArray(item.getCatalogId(), ItemId.BRONZE_PLATE_MAIL_TOP.id(), ItemId.IRON_PLATE_MAIL_TOP.id(), ItemId.STEEL_PLATE_MAIL_TOP.id(),
 			ItemId.BLACK_PLATE_MAIL_TOP.id(), ItemId.MITHRIL_PLATE_MAIL_TOP.id(), ItemId.ADAMANTITE_PLATE_MAIL_TOP.id(), ItemId.RUNE_PLATE_MAIL_TOP.id(),
 			ItemId.BRONZE_PLATE_MAIL_BODY.id(), ItemId.IRON_PLATE_MAIL_BODY.id(), ItemId.STEEL_PLATE_MAIL_BODY.id(),
@@ -240,19 +226,26 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			ItemId.BRONZE_PLATED_SKIRT.id(), ItemId.IRON_PLATED_SKIRT.id(), ItemId.STEEL_PLATED_SKIRT.id(),
 			ItemId.BLACK_PLATED_SKIRT.id(), ItemId.MITHRIL_PLATED_SKIRT.id(), ItemId.ADAMANTITE_PLATED_SKIRT.id(), ItemId.RUNE_SKIRT.id(),
 			ItemId.BRONZE_PLATE_MAIL_LEGS.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(), ItemId.STEEL_PLATE_MAIL_LEGS.id(),
-			ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id(),
-			ItemId.DRAGON_PLATE_MAIL_BODY.id(), ItemId.DRAGON_PLATE_MAIL_TOP.id(), ItemId.DRAGON_PLATE_MAIL_LEGS.id(), ItemId.DRAGON_PLATED_SKIRT.id());
+			ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id());
 
 		boolean isChainmail = false;
-		if (Functions.config().WANT_CUSTOM_SPRITES) {
+		if (player.getConfig().WANT_CUSTOM_SPRITES) {
 			isChainmail = Functions.inArray(item.getCatalogId(), ItemId.BRONZE_CHAIN_MAIL_TOP.id(), ItemId.IRON_CHAIN_MAIL_TOP.id(),
 				ItemId.STEEL_CHAIN_MAIL_TOP.id(), ItemId.BLACK_CHAIN_MAIL_TOP.id(), ItemId.MITHRIL_CHAIN_MAIL_TOP.id(), ItemId.ADAMANTITE_CHAIN_MAIL_TOP.id(),
-				ItemId.RUNE_CHAIN_MAIL_TOP.id(), ItemId.DRAGON_SCALE_MAIL_TOP.id(), ItemId.BRONZE_CHAIN_MAIL_BODY.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(),
+				ItemId.RUNE_CHAIN_MAIL_TOP.id(), ItemId.BRONZE_CHAIN_MAIL_BODY.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(),
 				ItemId.STEEL_CHAIN_MAIL_BODY.id(), ItemId.BLACK_CHAIN_MAIL_BODY.id(), ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(),
-				ItemId.RUNE_CHAIN_MAIL_BODY.id(), ItemId.DRAGON_SCALE_MAIL.id());
+				ItemId.RUNE_CHAIN_MAIL_BODY.id());
 		}
 
 		return isAuthenticItem || isChainmail;
+	}
+
+	private boolean isDragon(final Player player, final Item item) {
+		if (!player.getConfig().WANT_CUSTOM_SPRITES) return false;
+
+		return Functions.inArray(item.getCatalogId(), ItemId.DRAGON_SCALE_MAIL.id(), ItemId.DRAGON_SCALE_MAIL_TOP.id(),
+			ItemId.DRAGON_PLATE_MAIL_BODY.id(), ItemId.DRAGON_PLATE_MAIL_TOP.id(), ItemId.DRAGON_PLATE_MAIL_LEGS.id(),
+			ItemId.DRAGON_PLATED_SKIRT.id());
 	}
 
 }

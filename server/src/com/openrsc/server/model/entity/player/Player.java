@@ -230,6 +230,10 @@ public final class Player extends Mob {
 	 */
 	private long lastAntidote = 0;
 	/**
+	 * How long the poison protection should last
+	 */
+	private int poisonProtectionTime = 0;
+	/**
 	 * Stores the last IP address used
 	 */
 	private String lastIP = "0.0.0.0";
@@ -2007,7 +2011,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isAntidoteProtected() {
-		return System.currentTimeMillis() - lastAntidote < 90000;
+		return System.currentTimeMillis() - lastAntidote < poisonProtectionTime;
 	}
 
 	public boolean isInBank() {
@@ -2736,8 +2740,22 @@ public final class Player extends Mob {
 		lastChargeEvent = timer;
 	}
 
-	public void setAntidoteProtection() {
+	public void setCurePoisonProtection() {
+		// Cure poison last for 3 minutes
+		// But we don't want to override a poison antidote
+		long remainingProtection = (lastAntidote + poisonProtectionTime) - System.currentTimeMillis();
+		if (remainingProtection > 180000) {
+			return;
+		}
+
 		lastAntidote = System.currentTimeMillis();
+		poisonProtectionTime = 180000;
+	}
+
+	public void setAntidoteProtection() {
+		// Poison antidote last for 6 minutes
+		lastAntidote = System.currentTimeMillis();
+		poisonProtectionTime = 360000;
 	}
 
 	public void setLastReport() {
@@ -4314,6 +4332,13 @@ public final class Player extends Mob {
 
 	public boolean canBeReattacked() {
 		return this.getRanAwayTimer() + getConfig().PVP_REATTACK_TIMER <= getWorld().getServer().getCurrentTick();
+	}
+
+	public boolean canSeeBiggum() {
+		int prestige = getCache().hasKey("co_prestige") ? getCache().getInt("co_prestige") : 0;
+		boolean playerHasBiggum = getCarriedItems().hasCatalogID(ItemId.BIGGUM_FLODROT.id()) || getBank().hasItemId(ItemId.BIGGUM_FLODROT.id());
+
+		return prestige >= 1 && !playerHasBiggum;
 	}
 
 	public void setInteractingNpc(Npc npc) {

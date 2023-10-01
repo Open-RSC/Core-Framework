@@ -3,11 +3,13 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.content.minigame.combatodyssey.CombatOdysseyData;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -266,6 +268,24 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 					}
 					break;
 				case -1:
+					if (config().WANT_COMBAT_ODYSSEY
+						&& CombatOdyssey.getCurrentTier(player) == 1
+						&& CombatOdyssey.isTierCompleted(player)) {
+						if (CombatOdyssey.biggumMissing()) return;
+						int newTier = 2;
+						CombatOdyssey.assignNewTier(player, newTier);
+						npcsay(player, n, "Hello adventurer",
+							"I suppose you're here on Radimus' mission?",
+							"I have not forgotten your help in the past, and I wish you luck",
+							"Radimus has asked me to send you to kill the following");
+						npcsay(player, n, player.getWorld().getCombatOdyssey().getTier(newTier).getTasksAndCounts());
+						CombatOdyssey.biggumSay(player, "Biggum keep track! Biggum help human!");
+						npcsay(player, n, "...",
+							"A most peculiar friend you have there",
+							"Once done, you may seek out the ogre, Grew",
+							"He will send you on the next part of this bizarre quest");
+						return;
+					}
 					npcsay(player, n, "Thankyou for rescuing my scorpions");
 					int four = multi(player, n, "That's ok",
 						"You said you'd enchant my battlestaff for me");

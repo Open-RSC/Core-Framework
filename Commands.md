@@ -365,6 +365,9 @@ Super/Senior Moderator Commands
   - Usage: `::setquest [player] [questId]`
   - Alias: `::questcom`
   - Sets the specified quest to completed for the specified player.
+- completeallquests
+  - Usage: `::completeallquests`
+  - Completes all quests for the player that uses this command.
 - reloaddrops
   - Usage: `::reloaddrops`
   - Reloads NPC drop tables.

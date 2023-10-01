@@ -826,7 +826,8 @@ public enum NpcId {
 	PETER_SKIPPIN(822),
 	MORTIMER(823),
 	RANDOLPH(824),
-	ANA_NOT_IN_A_BARREL(825);
+	ANA_NOT_IN_A_BARREL(825),
+	BIGGUM_FLODROT(826);
 
 	private int npcId;
 

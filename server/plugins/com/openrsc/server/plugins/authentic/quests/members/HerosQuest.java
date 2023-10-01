@@ -12,6 +12,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -383,6 +384,20 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					}
 					break;
 				case -1:
+					if (config().WANT_COMBAT_ODYSSEY
+						&& CombatOdyssey.getCurrentTier(player) == 8
+						&& CombatOdyssey.isTierCompleted(player)) {
+						if (CombatOdyssey.biggumMissing()) return;
+						int newTier = 9;
+						CombatOdyssey.assignNewTier(player, newTier);
+						say(player, n, "Sigbert sent me here for Radimus' quest");
+						npcsay(player, n, "Yes he asked me to give you this");
+						CombatOdyssey.giveRewards(player, n);
+						npcsay(player, n, "For me you have to kill the following");
+						npcsay(player, n, player.getWorld().getCombatOdyssey().getTier(newTier).getTasksAndCounts());
+						npcsay(player, n, "If you manage to do that then go speak to Radimus himself");
+						return;
+					}
 					npcsay(player, n, "Greetings welcome to the hero's guild");
 					if (canBuyCape(player)) {
 						if (multi(player, n, "Could I get a heroic cape like yours?",

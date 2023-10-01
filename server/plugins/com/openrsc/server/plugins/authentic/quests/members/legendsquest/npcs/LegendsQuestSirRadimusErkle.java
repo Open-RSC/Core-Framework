@@ -8,6 +8,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -115,6 +116,10 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						}
 						break;
 					case -1:
+						if (doCombatOdyssey(player, n)) {
+							return;
+						}
+
 						npcsay(player, n, "Hello there! How are you enjoying the Legends Guild?");
 						mes(n, "Radimus looks busy...");
 						delay(2);
@@ -275,6 +280,10 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							"And we can discuss your reward !");
 						break;
 					case -1:
+						if (doCombatOdyssey(player, n)) {
+							return;
+						}
+
 						npcsay(player, n, "Hello there! How are you enjoying the Legends Guild?");
 						mes(n, "Radimus looks busy...");
 						delay(2);
@@ -464,6 +473,32 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					break;
 			}
 		}
+	}
+
+	private boolean doCombatOdyssey(Player player, Npc npc) {
+		if (config().WANT_COMBAT_ODYSSEY) {
+			if ((CombatOdyssey.getIntroStage(player) >= CombatOdyssey.MET_BIGGUM
+				|| CombatOdyssey.getIntroStage(player) == CombatOdyssey.IN_PROGRESS)
+				&& !player.getBank().hasItemId(ItemId.BIGGUM_FLODROT.id())
+				&& !player.getCarriedItems().hasCatalogID(ItemId.BIGGUM_FLODROT.id())) {
+				CombatOdyssey.recoverBiggum(player);
+				return true;
+			}
+
+			if (CombatOdyssey.getIntroStage(player) != CombatOdyssey.IN_PROGRESS) {
+				CombatOdyssey.radimusDialog(player, npc);
+				return true;
+			} else {
+				int currentTier = CombatOdyssey.getCurrentTier(player);
+				if ((currentTier == 9 || currentTier == 10 || currentTier == 11 || currentTier == 12 || currentTier == 13)
+					&& CombatOdyssey.isTierCompleted(player)
+					&& !CombatOdyssey.biggumMissing()) {
+					CombatOdyssey.radimusDialog(player, npc);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override

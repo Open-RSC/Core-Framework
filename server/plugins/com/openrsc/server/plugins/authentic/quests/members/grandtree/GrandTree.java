@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -424,6 +425,13 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						"how are you?");
 					say(player, n, "i'm good thanks, how's the tree?");
 					npcsay(player, n, "better than ever, thanks for asking");
+					if (config().CAN_RETRIEVE_POST_QUEST_ITEMS && !player.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id(), Optional.of(false))) {
+						say(player, n, "i've lost the book you gave me");
+						npcsay(player, n, "don't worry i have more",
+							"here you go");
+						player.message("king shareem gives you a translation book");
+						give(player, ItemId.TREE_GNOME_TRANSLATION.id(), 1);
+					}
 					break;
 			}
 		}
@@ -478,6 +486,50 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				case 15:
 				case 16:
 				case -1:
+					if (config().WANT_COMBAT_ODYSSEY) {
+						int currentTier = CombatOdyssey.getCurrentTier(player);
+						if (currentTier == 5 && CombatOdyssey.isTierCompleted(player)) {
+							if (CombatOdyssey.biggumMissing()) return;
+							if (player.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id())) {
+								int newTier = 6;
+								CombatOdyssey.assignNewTier(player, newTier);
+								npcsay(player, n, "qaxahblat");
+								CombatOdyssey.giveRewards(player, n);
+								npcsay(player, n, "voxavava latxxahaqasol");
+								npcsay(player, n, hazelmereTranslate(player.getWorld().getCombatOdyssey().getTier(newTier).getTasksAndCounts()));
+								npcsay(player, n, "xc:vzavo latho xasolva:vhaqe");
+								CombatOdyssey.biggumSay(player, "Biggum knows to keep enemies close",
+									"Biggum understand gnomespeak");
+							} else {
+								mes("The mage mumbles in an ancient tongue",
+									"You can't understand a word");
+								delay(3);
+								say(player, "I should probably get a tree gnome translation for this");
+							}
+							return;
+						} else if (currentTier == 6 && CombatOdyssey.isTierCompleted(player)) {
+							if (CombatOdyssey.biggumMissing()) return;
+							if (player.getCarriedItems().hasCatalogID(ItemId.TREE_GNOME_TRANSLATION.id())) {
+								int newTier = 7;
+								CombatOdyssey.assignNewTier(player, newTier);
+								npcsay(player, n, "qaxahblat");
+								CombatOdyssey.giveRewards(player, n);
+								npcsay(player, n, "hahoh voxavava");
+								String[] npcsAndCounts = player.getWorld().getCombatOdyssey().getTier(newTier).getTasksAndCounts();
+								npcsay(player, n, hazelmereTranslate(npcsAndCounts));
+								npcsay(player, n, "qaho latho solxaqax::::qilat latx::: h::vqiqixahoqi");
+								CombatOdyssey.biggumSay(player, "Human go kill");
+								CombatOdyssey.biggumSay(player, npcsAndCounts);
+								CombatOdyssey.biggumSay(player, "And then go see Sigbert adventure man");
+							} else {
+								mes("The mage mumbles in an ancient tongue",
+									"You can't understand a word");
+								delay(3);
+								say(player, "I should probably get a tree gnome translation for this");
+							}
+							return;
+						}
+					}
 					player.message("the mage mumbles in an ancient tounge");
 					player.message("you can't understand a word");
 					break;
@@ -1049,6 +1101,105 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					break;
 			}
 		}
+	}
+
+	private String[] hazelmereTranslate(String... messages) {
+		String[] translatedMessages = new String[messages.length];
+		for (int i = 0; i < messages.length; ++i) {
+			StringBuilder newString = new StringBuilder();
+			for (char c : messages[i].toCharArray()) {
+				// Just leave everything that isn't a letter the same
+				if (Character.isLetter(c)) {
+					c = Character.toLowerCase(c);
+				}
+
+				switch (c) {
+					case 'a':
+						newString.append(":v");
+						break;
+					case 'b':
+						newString.append("x:");
+						break;
+					case 'c':
+						newString.append("za");
+						break;
+					case 'd':
+						newString.append("qe");
+						break;
+					case 'e':
+						newString.append(":::");
+						break;
+					case 'f':
+						newString.append("hb");
+						break;
+					case 'g':
+						newString.append("qa");
+						break;
+					case 'h':
+						newString.append("x");
+						break;
+					case 'i':
+						newString.append("xa");
+						break;
+					case 'j':
+						newString.append("ve");
+						break;
+					case 'k':
+						newString.append("vo");
+						break;
+					case 'l':
+						newString.append("va");
+						break;
+					case 'm':
+						newString.append("ql");
+						break;
+					case 'n':
+						newString.append("ha");
+						break;
+					case 'o':
+						newString.append("ho");
+						break;
+					case 'p':
+						newString.append("ni");
+						break;
+					case 'q':
+						newString.append("na");
+						break;
+					case 'r':
+						newString.append("qi");
+						break;
+					case 's':
+						newString.append("sol");
+						break;
+					case 't':
+						newString.append("lat");
+						break;
+					case 'u':
+						newString.append("z");
+						break;
+					case 'v':
+						newString.append("::");
+						break;
+					case 'w':
+						newString.append("h:");
+						break;
+					case 'x':
+						newString.append(":i:");
+						break;
+					case 'y':
+						newString.append("im");
+						break;
+					case 'z':
+						newString.append("dim");
+						break;
+					default:
+						newString.append(c);
+						break;
+				}
+			}
+			translatedMessages[i] = newString.toString();
+		}
+		return translatedMessages;
 	}
 
 	private void questionMenu2(final Player player, final Npc n) {
