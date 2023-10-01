@@ -38,7 +38,6 @@ public final class AuctionHouse {
 
 	private boolean visible = false;
 	private int selectedFilter;
-	private String[] resources = {"log", "bones", "pickaxe", "dough"};
 	private int orderingBy = 0;
 	private Comparator<AuctionItem> auctionComparator = (o1, o2) -> {
 		if (orderingBy == 0) { /* price down */
@@ -668,41 +667,49 @@ public final class AuctionHouse {
 				continue;
 			} else if (selectedFilter == 2 && ((24 & def.wearableID) != 0 || !def.isWieldable()) && !itemName.contains("shield")) {
 				continue;
-			} else if (selectedFilter == 3) {
+			} else if (selectedFilter == 3) { // Consumable
 				commandFilter = new String[]{"drink", "eat"};
 				nameFilter = new String[]{"raw"};
-			} else if (selectedFilter == 4) {
-				nameFilter = new String[]{"-rune", "arrow", "bolt"};
-			} else if (selectedFilter == 5) {
-				nameFilter = new String[]{"uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone"};
+			} else if (selectedFilter == 4) { // Projectile
+				nameFilter = new String[]{"-rune", "arrow", "bolt", "rune stone"};
+			} else if (selectedFilter == 5) {  // Jewelry
+				nameFilter = new String[]{"uncut", "sapphire", "emerald", "ruby", "diamond", "dragonstone", "crown"};
 				exactNameFilter = new String[]{"opal", "jade", "amulet of accuracy", "gold amulet", "brass necklace",
 					"gold necklace", "holy symbol of saradomin", "unblessed holy symbol", "ring of wealth",
-				"ring of avarice", "ring of recoil", "ring of forging", "ring of splendor", "dwarven ring"};
-			} else if (selectedFilter == 6) {
+					"ring of avarice", "ring of recoil", "ring of forging", "ring of splendor",
+					"dwarven ring", "ring of life"};
+			} else if (selectedFilter == 6) { // Ore and Bar
 				nameFilter = new String[]{" ore", "coal", "bar", "clay"};
 				exactNameFilter = new String[]{"gold", "silver", "silver certificate", "gold certificate"};
-			} else if (selectedFilter == 7) {
+			} else if (selectedFilter == 7) { // Herblaw
 				commandFilter = new String[]{"identify"};
-				nameFilter = new String[]{"unfinished", "vial", "weed", "ground", "root", "scale"};
-				exactNameFilter = new String[]{"Guam Leaf", "Marrentill", "Tarromin", "Harralander", "Irit leaf",
-					"Avantoe", "Kwuarm", "Cadantine", "Torstol", "Pestle and mortar", "Eye of newt", "Jangerberries",
-					"Red spiders eggs", "White berries", "Snape grass", "Wine of zamorak"};
-			} else if (selectedFilter == 8) {
-				nameFilter = new String[]{"halloween", "bunny", "party", "pumpkin", "easter", "scythe", "cracker"};
-				exactNameFilter = new String[]{"Disc of returning", "santa's hat"};
+				nameFilter = new String[]{"unfinished", "vial", "weed", "ground", "root", "wine of",
+					"dragonfruit", "coconut"};
+				exactNameFilter = new String[]{"guam Leaf", "marrentill", "tarromin", "harralander", "irit leaf",
+					"avantoe", "kwuarm", "cadantine", "torstol", "pestle and mortar", "eye of newt", "jangerberries",
+					"red spiders eggs", "white berries", "snape grass", "blue dragon scale", "fish oil",
+					"unicorn horn", "grapes"};
+			} else if (selectedFilter == 8) { // Rare
+				nameFilter = new String[]{"halloween", "christmas", "bunny", "party", "easter", "scythe", "cracker",
+					"santa's", "mask", "antlers"};
+				exactNameFilter = new String[]{"disc of returning", "pumpkin", "present", "rubber chicken cap",
+					"half full wine jug", "rune spear", "star cookie", "cane cookie", "glass of milk", "tree cookie"};
 			}
-			if (selectedFilter == 9) {
-				nameFilter = resources;
+			if (selectedFilter == 9) { // Misc
+				nameFilter = new String[]{"log", "bones", "pickaxe", "dough", "bead", "key", "mould",
+					"hatchet", "watering can"};
 				exactNameFilter = new String[]{
 					"fur", "leather", "wool", "bow string", "flax", "cow hide",
 					"knife", "egg", "bucket", "milk", "flour", "skull", "grain",
 					"needle", "thread", "holy", "water", "cadavaberries",
-					"pot", "jug", "grapes", "shears", "tinderbox",
+					"pot", "bowl", "pie dish", "jug", "grapes", "shears", "tinderbox",
 					"chisel", "hammer", "ashes", "apron", "chef's hat", "skirt", "silk",
-					"flier", "garlic", "redberries", "rope", "bad wine", "cape",
+					"flier", "garlic", "redberries", "rope", "bad wine", "cape", "mixing bowl",
 					"eye of newt", "lobster pot", "net", "fishing rod", "fly fishing rod", "harpoon",
-					"fishing bait", "feather"
-				};
+					"fishing bait", "feather", "hand shovel", "herb clippers", "fruit picker",
+					"redberry pie", "broken shield", "king black dragon scale", "chipped dragon scale",
+					"dragon metal chain", "bronze axe", "iron axe", "steel axe", "black axe", "mithril axe",
+					"adamantite axe", "rune axe" };
 			}
 			boolean skip = true;
 
