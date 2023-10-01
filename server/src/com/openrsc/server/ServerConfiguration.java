@@ -173,6 +173,8 @@ public class ServerConfiguration {
 	public String DISCORD_REPORT_ABUSE_WEBHOOK_URL;
 	public boolean WANT_DISCORD_NAUGHTY_WORDS_UPDATES;
 	public String DISCORD_NAUGHTY_WORDS_WEBHOOK_URL;
+	public boolean WANT_DISCORD_GENERAL_LOGGING;
+	public String DISCORD_GENERAL_WEBHOOK_URL;
 	public boolean WANT_DISCORD_BOT;
 	public long CROSS_CHAT_CHANNEL;
 	public boolean WANT_EQUIPMENT_TAB;
@@ -615,6 +617,7 @@ public class ServerConfiguration {
 		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
 		DISCORD_REPORT_ABUSE_WEBHOOK_URL = tryReadString("discord_report_abuse_webhook_url").orElse("null");
 		DISCORD_NAUGHTY_WORDS_WEBHOOK_URL = tryReadString("discord_naughty_words_webhook_url").orElse("null");
+		DISCORD_GENERAL_WEBHOOK_URL = tryReadString("discord_general_webhook_url").orElse("null");
 		CROSS_CHAT_CHANNEL = tryReadInt("cross_chat_channel").orElse(0);
 		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false)
 			&& !DISCORD_AUCTION_WEBHOOK_URL.equals("null");
@@ -626,6 +629,8 @@ public class ServerConfiguration {
 			&& !DISCORD_REPORT_ABUSE_WEBHOOK_URL.equals("null");
 		WANT_DISCORD_NAUGHTY_WORDS_UPDATES = tryReadBool("want_discord_naughty_words_updates").orElse(false)
 			&& !DISCORD_NAUGHTY_WORDS_WEBHOOK_URL.equals("null");
+		WANT_DISCORD_GENERAL_LOGGING = tryReadBool("want_discord_general_logging").orElse(false)
+			&& !DISCORD_GENERAL_WEBHOOK_URL.equals("null");
 		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false)
 			&& CROSS_CHAT_CHANNEL != 0;
 

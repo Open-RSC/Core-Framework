@@ -161,6 +161,9 @@ public class RSCPacketFilter {
 
 		if(!allowPacket) {
 			LOGGER.info(hostAddress + " (" + player + ") filtered for exceeding the PPS limit: " + pps + "/" + getServer().getConfig().MAX_PACKETS_PER_SECOND);
+			if (player != null && player.getConfig().WANT_DISCORD_GENERAL_LOGGING) {
+				player.getWorld().getServer().getDiscordService().playerLog(player, hostAddress + " filtered for exceeding the PPS limit: " + pps + "/" + getServer().getConfig().MAX_PACKETS_PER_SECOND);
+			}
 			if(doIpBans) {
 				ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "packets per second limit");
 			}

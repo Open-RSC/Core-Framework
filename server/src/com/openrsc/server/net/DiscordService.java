@@ -51,6 +51,7 @@ public class DiscordService implements Runnable{
 	private ScheduledExecutorService scheduledExecutor;
 
 	private final Queue<String> staffCommandRequests = new ConcurrentLinkedQueue<String>();
+	private final Queue<String> generalLogs = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<DiscordEmbed> reportAbuseRequests = new ConcurrentLinkedQueue<DiscordEmbed>();
@@ -465,6 +466,25 @@ public class DiscordService implements Runnable{
 		}
 	}
 
+	public void playerLog(final Player player, final String text) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar calendar = Calendar.getInstance();
+		final String playerMessage = String.format("%s %s %s: %s: %s",
+				"[" + dateFormat.format(calendar.getTime()) +  "]",
+				"[" + player.getWorld().getServer().getConfig().SERVER_NAME + "]",
+				player.getUsername(),
+				"[X: " + player.getX() + ", Y: " + player.getY() + "]",
+				text
+		);
+		generalLog(playerMessage);
+	}
+
+	private void generalLog(final String message) {
+		if (getServer().getConfig().WANT_DISCORD_GENERAL_LOGGING) {
+			generalLogs.add(message);
+		}
+	}
+
 	public void monitoringSendServerBehind(final String message, final boolean showEventData) {
 		monitoringSendToDiscord(message + (showEventData ? "\r\n" + getServer().getGameEventHandler().buildProfilingDebugInformation(false) : ""));
 	}
@@ -644,6 +664,9 @@ public class DiscordService implements Runnable{
 			while ((embed = naughtyWordsRequests.poll()) != null) {
 				sendEmbedToDiscord(getServer().getConfig().DISCORD_NAUGHTY_WORDS_WEBHOOK_URL, embed);
 			}
+			while ((message = generalLogs.poll()) != null) {
+				sendToDiscord(getServer().getConfig().DISCORD_GENERAL_WEBHOOK_URL, message);
+			}
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
@@ -685,6 +708,7 @@ public class DiscordService implements Runnable{
 		staffCommandRequests.clear();
 		reportAbuseRequests.clear();
 		naughtyWordsRequests.clear();
+		generalLogs.clear();
 	}
 
 	public final boolean isRunning() {
