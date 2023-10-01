@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skill;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -77,15 +74,14 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public boolean blockUseLoc(final Player player, final GameObject obj,
 							   final Item item) {
-		return obj.getID() == 355 || obj.getID() == 350;
+		return obj.getID() == SceneryId.VINE_RED_FISHING_CONTEST.id() || obj.getID() == SceneryId.PIPE_FISHING_CONTEST.id();
 	}
 
 	@Override
 	public boolean blockOpLoc(final Player player, final GameObject obj,
 							  final String command) {
-		//353 - big dave's spot, 354 - joshua's spot
-		return obj.getID() == 358 || obj.getID() == 352 || obj.getID() == 351
-				|| obj.getID() == 359 || obj.getID() == 353 || obj.getID() == 354;
+		return obj.getID() == SceneryId.GATE_WOODEN_FISHING_CONTEST_CLOSED.id() || obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_CARPS_SPOT.id() || obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_REGULAR_SPOT.id()
+				|| obj.getID() == SceneryId.STAIRS_STONE_WHITE_WOLF_PASS_DOWN.id() || obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_DAVE_SPOT.id() || obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_JOSHUA_SPOT.id();
 	}
 
 	@Override
@@ -486,7 +482,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseLoc(final Player player, final GameObject obj, final Item item) {
 
-		if (obj.getID() == 355 && item.getCatalogId() == ItemId.SPADE.id()) { // teleport coords:
+		if (obj.getID() == SceneryId.VINE_RED_FISHING_CONTEST.id() && item.getCatalogId() == ItemId.SPADE.id()) { // teleport coords:
 			// 567, 451
 			mes("you dig in amoungst the vines");
 			delay(3);
@@ -494,7 +490,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			delay(3);
 			give(player, ItemId.RED_VINE_WORMS.id(), 1);
 		}
-		else if (obj.getID() == 350 && item.getCatalogId() == ItemId.GARLIC.id()) {
+		else if (obj.getID() == SceneryId.PIPE_FISHING_CONTEST.id() && item.getCatalogId() == ItemId.GARLIC.id()) {
 			Npc sinister = ifnearvisnpc(player, NpcId.SINISTER_STRANGER.id(), 10);
 			Npc bonzo = ifnearvisnpc(player , NpcId.BONZO.id(), 15);
 
@@ -525,7 +521,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onOpLoc(final Player player, final GameObject obj, final String command) {
 
-		if (obj.getID() == 358) {
+		if (obj.getID() == SceneryId.GATE_WOODEN_FISHING_CONTEST_CLOSED.id()) {
 			Npc bonzo = ifnearvisnpc(player, NpcId.BONZO.id(), 15);
 			Npc morris = ifnearvisnpc(player, NpcId.MORRIS.id(), 15);
 			if (player.getX() <= 564) {
@@ -536,7 +532,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 						mes("You show Morris your pass");
 						delay(3);
 						npcsay(player, morris, "Move on through");
-						doGate(player, obj, 357);
+						doGate(player, obj, SceneryId.GATE_WOODEN_FISHING_CONTEST_KARAMJA_GLIDER_OPEN.id());
 					} else {
 						ArrayList<String> menuOptions = new ArrayList<>();
 						menuOptions.add("I don't have one of them");
@@ -558,7 +554,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, morris, "You are in luck champ",
 								"there are currently no competitions",
 								"feel free to use your usual fishing spot");
-							doGate(player, obj, 357);
+							doGate(player, obj, SceneryId.GATE_WOODEN_FISHING_CONTEST_KARAMJA_GLIDER_OPEN.id());
 							if (!player.getCache().hasKey("usable_carp_spot")) {
 								player.getCache().store("usable_carp_spot", true);
 							}
@@ -568,7 +564,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 					System.err.println("morris is null");
 			} else if (player.getX() >= 565) {
 				if (player.getQuestStage(getQuestId()) == 3) {
-					doGate(player, obj, 357);
+					doGate(player, obj, SceneryId.GATE_WOODEN_FISHING_CONTEST_KARAMJA_GLIDER_OPEN.id());
 					return;
 				}
 				if (bonzo != null && player.getCache().hasKey("paid_contest_fee")) {
@@ -580,19 +576,19 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 					if (leaveMenu == 0) {
 						player.getCache().remove("paid_contest_fee");
 						player.getCache().remove("contest_catches");
-						doGate(player, obj, 357);
+						doGate(player, obj, SceneryId.GATE_WOODEN_FISHING_CONTEST_KARAMJA_GLIDER_OPEN.id());
 					} else if (leaveMenu == 1) {
 						npcsay(player, bonzo, "Good luck");
 					}
 				} else {
-					doGate(player, obj, 357);
+					doGate(player, obj, SceneryId.GATE_WOODEN_FISHING_CONTEST_KARAMJA_GLIDER_OPEN.id());
 					return;
 				}
 			}
 		}
 		Npc sinister = ifnearvisnpc(player, NpcId.SINISTER_STRANGER.id(), 10);
 		Npc bonzo = ifnearvisnpc(player, NpcId.BONZO.id(), 15);
-		if (obj.getID() == 351) {
+		if (obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_REGULAR_SPOT.id()) {
 			// spot by tree (normal fish)
 			if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 				player.message("you have already won the fishing competition");
@@ -639,7 +635,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				}
 			}
 		}
-		else if (obj.getID() == 352) {
+		else if (obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_CARPS_SPOT.id()) {
 			// spot by pipe (with carps)
 			if (!player.getCache().hasKey("usable_carp_spot")) {
 				// regular and post quest if !config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE
@@ -698,19 +694,19 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 					"I like to savour the aroma coming from these pipes");
 			}
 		}
-		else if (obj.getID() == 353) {
+		else if (obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_DAVE_SPOT.id()) {
 			Npc dave = ifnearvisnpc(player, NpcId.BIG_DAVE.id(), 10);
 			if (dave != null) {
 				bigDaveDialogue(player, dave);
 			}
 		}
-		else if (obj.getID() == 354) {
+		else if (obj.getID() == SceneryId.FISH_BAIT_FISHING_CONTEST_JOSHUA_SPOT.id()) {
 			Npc joshua = ifnearvisnpc(player, NpcId.JOSHUA.id(), 10);
 			if (joshua != null) {
 				joshuaDialogue(player, joshua);
 			}
 		}
-		else if (obj.getID() == 359) {
+		else if (obj.getID() == SceneryId.STAIRS_STONE_WHITE_WOLF_PASS_DOWN.id()) {
 			if (player.getQuestStage(getQuestId()) == -1) {
 				player.message("You go down the stairs");
 				if (obj.getX() == 426 && obj.getY() == 458) {
