@@ -115,6 +115,7 @@ public class ServerConfiguration {
 	public int WANT_KEYBOARD_SHORTCUTS;
 	public boolean WANT_CUSTOM_BANKS;
 	public boolean WANT_BANK_PINS;
+	public boolean TOLERATE_BANK_PINS;
 	public boolean WANT_BANK_NOTES;
 	public boolean WANT_CERT_DEPOSIT;
 	public boolean CUSTOM_FIREMAKING;
@@ -640,6 +641,11 @@ public class ServerConfiguration {
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);
 		WANT_CUSTOM_BANKS = tryReadBool("want_custom_banks").orElse(false);
 		WANT_BANK_PINS = tryReadBool("want_bank_pins").orElse(false);
+		TOLERATE_BANK_PINS = tryReadBool("tolerate_bank_pins").orElse(false);
+		if (WANT_BANK_PINS && TOLERATE_BANK_PINS) {
+			// These shouldn't both be true, TOLERATE has different logic exclusive from when server WANTs bankpins
+			TOLERATE_BANK_PINS = false;
+		}
 		WANT_BANK_NOTES = tryReadBool("want_bank_notes").orElse(false);
 		WANT_CERT_DEPOSIT = tryReadBool("want_cert_deposit").orElse(false);
 		WANT_CERTER_BANK_EXCHANGE = tryReadBool("want_certer_bank_exchange").orElse(false);

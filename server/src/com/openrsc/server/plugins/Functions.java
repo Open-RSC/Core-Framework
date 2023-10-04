@@ -959,7 +959,7 @@ public class Functions {
 		BankPinVerifyRequest request;
 		String pin;
 
-		if (!player.getConfig().WANT_BANK_PINS) {
+		if (!player.getConfig().WANT_BANK_PINS && !player.getConfig().TOLERATE_BANK_PINS) {
 			return true;
 		}
 
@@ -984,6 +984,7 @@ public class Functions {
 		return player.getAttribute("bankpin", false);
 	}
 
+	// called only on servers that have WANT_BANK_PIN enabled and aren't CUSTOM_SPRITE_ENABLED
 	public static boolean bankpinoptout(final Player player, final Npc n, final boolean concerned) {
 		say(player, n, "Can you please never mention bank pins to me again?");
 		if (!player.getCache().hasKey("bank_pin")) {

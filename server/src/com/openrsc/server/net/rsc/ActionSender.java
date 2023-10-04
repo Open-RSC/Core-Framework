@@ -806,7 +806,7 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
 		configs.add((byte) server.getConfig().WANT_KEYBOARD_SHORTCUTS); // 28
 		configs.add((byte) (server.getConfig().WANT_CUSTOM_BANKS ? 1 : 0)); // 29
-		configs.add((byte) (server.getConfig().WANT_BANK_PINS ? 1 : 0)); // 30
+		configs.add((byte) (server.getConfig().WANT_BANK_PINS || server.getConfig().TOLERATE_BANK_PINS ? 1 : 0)); // 30
 		configs.add((byte) (server.getConfig().WANT_BANK_NOTES ? 1 : 0)); // 31
 		configs.add((byte) (server.getConfig().WANT_CERT_DEPOSIT ? 1 : 0)); // 32
 		configs.add((byte) (server.getConfig().CUSTOM_FIREMAKING ? 1 : 0)); // 33

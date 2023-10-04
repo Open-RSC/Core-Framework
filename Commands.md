@@ -840,3 +840,11 @@ Regular Player Commands
   - Usage `::togglenpckcmessages`
   - Example: `::togglenpckcmessages`
   - Toggles kill count messages in the chat
+- bankpinoptin
+  - Usage `::bankpinoptin`
+  - Alias: `::bank_pin_opt_in` or `::bankpin_optin`
+  - Opt into the bank PINs feature. First you start by opting in, then you can talk to any banker to set a bank pin.
+- bankpinoptout
+  - Usage `::bankpinoptout`
+  - Alias: `::bank_pin_opt_out` or `::bankpin_optout`
+  - Opt out of the bank PINs feature. You must first have removed your bank PIN.

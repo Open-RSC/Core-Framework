@@ -169,6 +169,63 @@ public final class RegularPlayer implements CommandTrigger {
 			queryMinigameLog(player, args);
 		} else if (command.equalsIgnoreCase("togglenpckcmessages")) {
 			toggleNpcKcMessages(player);
+		} else if (command.equalsIgnoreCase("bankpinoptin") || command.equalsIgnoreCase("bankpin_optin") || command.equalsIgnoreCase("bank_pin_opt_in")) {
+			bankPinOptIn(player);
+		} else if (command.equalsIgnoreCase("bankpinoptout") || command.equalsIgnoreCase("bankpin_optout") || command.equalsIgnoreCase("bank_pin_opt_out")) {
+			bankPinOptOut(player);
+		}
+	}
+
+	private void bankPinOptIn(Player player) {
+		if (!config().WANT_BANK_PINS && !config().TOLERATE_BANK_PINS) {
+			return;
+		}
+		if (config().TOLERATE_BANK_PINS) {
+			if (player.getBankPinOptIn()) {
+				player.playerServerMessage(MessageType.QUEST, "You already have opted into bank pins!");
+			} else {
+				player.getCache().store("bankpin_optin", true);
+				player.playerServerMessage(MessageType.QUEST, "You have successfully opted into bank pins!");
+			}
+			player.playerServerMessage(MessageType.QUEST, "Talk to a banker to get started.");
+		} else if (config().WANT_BANK_PINS) {
+			if (player.getBankPinOptOut()) {
+				player.getCache().remove("bankpin_optout");
+				if (!player.getBankPinOptOut()) {
+					player.playerServerMessage(MessageType.QUEST, "You can now talk to the banker about bank pins again!");
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "Something went wrong opting-in to bankpins.");
+					player.playerServerMessage(MessageType.QUEST, "Please try opting-in again.");
+				}
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "This server has bank pins enabled by default.");
+				player.playerServerMessage(MessageType.QUEST, "Talk to a banker to get started.");
+			}
+		}
+	}
+
+	private void bankPinOptOut(Player player) {
+		if (!config().WANT_BANK_PINS && !config().TOLERATE_BANK_PINS) {
+			return;
+		}
+		if (player.getCache().hasKey("bank_pin")) {
+			player.playerServerMessage(MessageType.QUEST, "You must first remove your bank pin to do that!");
+			return;
+		}
+		if (config().TOLERATE_BANK_PINS) {
+			if (!player.getCache().hasKey("bankpin_optin")) {
+				player.playerServerMessage(MessageType.QUEST, "You are already opted out of bank pins!");
+				return;
+			}
+			player.playerServerMessage(MessageType.QUEST, "You have successfully opted out of bank pins!");
+			player.getCache().remove("bankpin_optin");
+		} else if (config().WANT_BANK_PINS) {
+			if (player.getCache().hasKey("bankpin_optout")) {
+				player.playerServerMessage(MessageType.QUEST, "You are already opted out of bank pins!");
+				return;
+			}
+			player.playerServerMessage(MessageType.QUEST, "You have successfully opted out of bank pins!");
+			player.getCache().store("bankpin_optout", 3);
 		}
 	}
 

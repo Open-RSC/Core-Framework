@@ -4017,6 +4017,12 @@ public final class Player extends Mob {
 		return getCache().hasKey("bankpin_optout");
 	}
 
+	public boolean getBankPinOptIn() { return getCache().hasKey("bankpin_optin") || getCache().hasKey("bank_pin"); }
+
+	public boolean getBankPinOption() {
+		return (getConfig().WANT_BANK_PINS && !getBankPinOptOut()) || (getConfig().TOLERATE_BANK_PINS && getBankPinOptIn());
+	}
+
 	public boolean isUsingAndroidClient() {
 		return getClientLimitations().isAndroidClient;
 	}

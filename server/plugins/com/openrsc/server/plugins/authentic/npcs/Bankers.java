@@ -43,13 +43,13 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 
 		int menu;
 
-		if (config().SPAWN_AUCTION_NPCS && config().WANT_BANK_PINS)
+		if (config().SPAWN_AUCTION_NPCS && player.getBankPinOption())
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to inquire about bank pins",
 				"I'd like to collect my items from auction");
-		else if (config().WANT_BANK_PINS && !player.getBankPinOptOut())
+		else if (player.getBankPinOption())
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
@@ -125,9 +125,9 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 						"As if we didn't know what town we were in or something!");
 				}
 			}
-		} else if (menu == 2 && config().WANT_BANK_PINS && !player.getBankPinOptOut()) {
+		} else if (menu == 2 && player.getBankPinOption()) {
 			int bankPinMenu;
-			if (config().WANT_CUSTOM_SPRITES) {
+			if (config().WANT_CUSTOM_SPRITES || player.getBankPinOptIn()) {
 				bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			} else {
 				bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin", "Can you please never mention bank pins to me again?");
@@ -141,7 +141,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				changebankpin(player, npc);
 			} else if (bankPinMenu == 2) {
 				removebankpin(player, npc);
-			} else if (bankPinMenu == 3 && !config().WANT_CUSTOM_SPRITES) {
+			} else if (bankPinMenu == 3 && !config().WANT_CUSTOM_SPRITES && !player.getBankPinOptIn()) {
 				if (bankpinoptout(player, npc, true)) {
 					player.playerServerMessage(MessageType.QUEST, "You have successfully opted out of even THE MENTION of a bank pin.");
 				}

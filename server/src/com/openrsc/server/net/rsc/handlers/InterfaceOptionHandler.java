@@ -75,7 +75,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				handleIronmanMode(player, payload);
 				break;
 			case BANK_PIN:
-				if (!player.getConfig().WANT_BANK_PINS) return;
+				if (!player.getConfig().WANT_BANK_PINS && !player.getConfig().TOLERATE_BANK_PINS) return;
 				handleBankPinEntry(player, payload);
 				break;
 			case AUCTION:
