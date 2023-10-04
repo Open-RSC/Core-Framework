@@ -72,8 +72,8 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 				// For our purpose of determining this is most likely client 203/204,
 				// and not 233 which has a 1/255 chance of randomly sending packet ID 32,
 				// We can check that the first half of the username hash is in range.
-				final int SMALLEST_POSSIBLE_USERNAME_HALF_HASH = 0; // first byte of username hash of player with username "A"
-				final int LARGEST_POSSIBLE_USERNAME_HALF_HASH = 21; // first byte of username hash of player with username "ZZZZZZZZZZZZ"
+				final int SMALLEST_POSSIBLE_USERNAME_HALF_HASH = 0; // selected byte of username hash of player with username "A"
+				final int LARGEST_POSSIBLE_USERNAME_HALF_HASH = 31; // selected byte of username hash of player with username "WWWWWWWWWWWW"
 				int halfUsernameHash = packet.getBuffer().readByte();
 				packet.getBuffer().resetReaderIndex();
 				packet.getBuffer().readByte(); // reset readerIndex back to position 1, in case this is actually not 203/204
