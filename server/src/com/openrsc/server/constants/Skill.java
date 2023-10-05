@@ -40,9 +40,9 @@ public class Skill {
 	}
 
 	// internal skill index
-	private Integer id;
+	private final Integer id;
 	// external skill name / alias
-	private String name;
+	private final String name;
 
 	private Skill(String name, Integer id) {
 		this.name = name;
@@ -76,15 +76,11 @@ public class Skill {
 	/**
 	 * Retrieves a Skill with the present name or one associated to NONE if not found.
 	 * Prefer the use by the named Skill alias, e.g. Skill.ATTACK whenever possible
-	 * @param name the skill name. These are found on {@link com.openrsc.server.constants.Skills}, e.g. ATTACK
+	 * @param name the skill name, must be UPPERCASE. These are found on {@link com.openrsc.server.constants.Skills}, e.g. ATTACK
 	 * @return the appropriate Skill object
 	 */
 	public static Skill of(String name) {
-		if (nameMap.containsKey(name.toUpperCase())) {
-			return nameMap.get(name.toUpperCase());
-		} else {
-			return nameMap.get(Skills.NONE);
-		}
+		return nameMap.getOrDefault(name, nameMap.get(Skills.NONE));
 	}
 
 	public static void init(Map<String, Integer> mapSkills) {

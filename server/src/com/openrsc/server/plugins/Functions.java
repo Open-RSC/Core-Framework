@@ -72,7 +72,6 @@ import java.util.stream.Collectors;
  * ifheld
  * ifnearvisnpc
  * inarray
- * incQuestReward
  * isBlocking
  * isObject
  * mes
@@ -103,7 +102,7 @@ import java.util.stream.Collectors;
 public class Functions {
 
 	private static final int DEFAULT_TICK = 640;
-	public static int ZERO_RESERVED = Integer.MAX_VALUE;
+	public static final int ZERO_RESERVED = Integer.MAX_VALUE;
 
 	/**
 	 * The asynchronous logger.
@@ -1274,34 +1273,12 @@ public class Functions {
 		return item1.getCatalogId() == idA && item2.getCatalogId() == idB || item1.getCatalogId() == idB && item2.getCatalogId() == idA;
 	}
 
-	/**
-	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
-	 *
-	 * @param player         - the player
-	 * @param questData - the data, if skill id is < 0 means no exp is applied
-	 * @param applyQP   - apply the quest point increase
-	 */
-	@Deprecated
-	public static void incQuestReward(Player player, Either<Integer, String>[] questData, boolean applyQP) {
-		int qp = questData[0].fromLeft().get();
-		String skill = questData[1].fromRight().get();
-		int baseXP = questData[2].fromLeft().get();
-		int varXP = questData[3].fromLeft().get();
-		if (skill != Skill.NONE.name() && baseXP > 0 && varXP >= 0) {
-			player.incQuestExp(Skill.of(skill).id(),
-				player.getSkills().getMaxStat(Skill.of(skill).id()) * varXP + baseXP, false);
-		}
-		if (applyQP) {
-			player.incQuestPoints(qp);
-		}
-	}
-
 	public static void incStat(Player player, Integer skillId, Integer baseXP, Integer varXP) {
 		incStat(player, skillId, baseXP, varXP, false);
 	}
 
 	public static void incStat(Player player, Integer skillId, Integer baseXP, Integer varXP, Boolean useFatigue) {
-		if (skillId != Skill.NONE.id() && baseXP > 0 && varXP >= 0) {
+		if (!skillId.equals(Skill.NONE.id()) && baseXP > 0 && varXP >= 0) {
 			player.incQuestExp(skillId,
 				player.getSkills().getMaxStat(skillId) * varXP + baseXP, useFatigue);
 		}
