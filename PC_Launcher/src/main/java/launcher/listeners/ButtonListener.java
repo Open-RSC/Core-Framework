@@ -24,7 +24,7 @@ public class ButtonListener implements ActionListener {
 		final String action = event.getActionCommand().toLowerCase();
 		switch (action) {
 			case "openrsc_sword_logo": {
-				Utils.openWebpage("https://openrsc.com");
+				Utils.openWebpage("https://rsc.vet");
 				return;
 			}
 
