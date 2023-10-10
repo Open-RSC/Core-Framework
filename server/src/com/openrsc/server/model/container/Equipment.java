@@ -272,8 +272,13 @@ public class Equipment {
 				}
 			}
 			if (newItem != null) {
-				player.getCarriedItems().remove(request.item);
-				player.getCarriedItems().getInventory().add(newItem);
+				if (request.requestType == EquipRequest.RequestType.FROM_BANK && player.getBank().remove(request.item.getCatalogId(), 1)) {
+					player.getBank().add(newItem);
+				} else if (request.requestType == EquipRequest.RequestType.FROM_INVENTORY && player.getCarriedItems().remove(request.item) != -1) {
+					player.getCarriedItems().getInventory().add(newItem);
+				} else {
+					return false;
+				}
 				request.item = newItem;
 			}
 		}
