@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import static com.openrsc.server.plugins.RuneScript.*;
 
 public class CombatOdyssey implements DropObjTrigger, KillNpcTrigger, OpInvTrigger, TalkNpcTrigger,
-	UseInvTrigger, UseNpcTrigger {
+	UseInvTrigger, UseNpcTrigger, UsePlayerTrigger {
 	// INTRODUCTION STAGES
 	public static final int NOT_STARTED = 0;
 	public static final int TALKED_TO_RADIMUS = 1;
@@ -325,6 +325,78 @@ public class CombatOdyssey implements DropObjTrigger, KillNpcTrigger, OpInvTrigg
 		return DataConversions.inArray(taskNpcs, npc.getID());
 	}
 
+	private void developerOptions(Player modPlayer, Player targetPlayer) {
+		Tier tierData = targetPlayer.getWorld().getCombatOdyssey().getTier(getCurrentTier(targetPlayer));
+		if (tierData == null) {
+			biggumSay(modPlayer, 0, "Other human is not doing the Odyssey");
+			return;
+		}
+		Task taskData = tierData.getTask(getCurrentTask(targetPlayer));
+		if (taskData == null) {
+			biggumSay(modPlayer, 0, "Other human is not doing the Odyssey");
+			return;
+		}
+
+		int devOption = multi(false,
+			"Set 1 kill away from task completion",
+			"Mark task as complete",
+			"Mark current tier as complete",
+			"Complete the Odyssey");
+
+		if (devOption == 0) {
+			int taskKills = taskData.getKills();
+			int newKills = taskData.getKills() - 1;
+			updateCurrentTaskInfo(targetPlayer, newKills, CURRENT_KILLS);
+			if (modPlayer != targetPlayer) {
+				biggumSay(modPlayer, 0, "Other human has been set to " + newKills + "/" + taskKills);
+			}
+			biggumSay(targetPlayer, "Human has been set to " + newKills + "/" + taskKills);
+		} else if (devOption == 1) {
+			// Update the killcount to the goal
+			updateCurrentTaskInfo(targetPlayer, taskData.getKills(), CURRENT_KILLS);
+			// Mark the task as complete within the tier
+			completeTask(targetPlayer, taskData.getTaskId());
+			if (modPlayer != targetPlayer) {
+				biggumSay(modPlayer, 0, "Other human's task now complete");
+			}
+			biggumSay(targetPlayer, "Task complete",
+				"Speak to Biggum for next task");
+		} else if (devOption == 2) {
+			// Make sure the current task is complete, otherwise this could mess with some stuff
+			updateCurrentTaskInfo(targetPlayer, taskData.getKills(), CURRENT_KILLS);
+			// Do the math to mark the tier as complete
+			targetPlayer.getCache().store("co_tier_progress", (long)(Math.pow(2, tierData.getTotalTasks()) - 1));
+			if (modPlayer != targetPlayer) {
+				biggumSay(modPlayer, 0, "Biggum has marked other human's tier as complete");
+			}
+			biggumSay(targetPlayer, "Biggum has marked tier completed",
+				"Speak to Biggum to know where to go next");
+		} else if (devOption == 3) {
+			// Skip ahead to tier 13 and mark it as complete
+			updateCurrentTaskInfo(targetPlayer, 13, CURRENT_TIER);
+			updateCurrentTaskInfo(targetPlayer, 0, CURRENT_TASK);
+			updateCurrentTaskInfo(targetPlayer, 1, CURRENT_KILLS);
+			targetPlayer.getCache().store("co_tier_progress", 1);
+			if (modPlayer != targetPlayer) {
+				biggumSay(modPlayer, 0, "Biggum has marked the final tier as completed for other human");
+			}
+			biggumSay(targetPlayer, "Human has now completed final tier",
+				"Speak to Biggum to know where to go next");
+		}
+	}
+
+	@Override
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
+		if (player.isMod()) {
+			developerOptions(player, otherPlayer);
+		}
+	}
+
+	@Override
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
+		return item.getCatalogId() == ItemId.BIGGUM_FLODROT.id() && player.isMod();
+	}
+
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (!command.equalsIgnoreCase("talk")) return;
@@ -392,12 +464,14 @@ public class CombatOdyssey implements DropObjTrigger, KillNpcTrigger, OpInvTrigg
 		}
 
 		if (option == 0) {
+			say("What is my current task?");
 			int currentKills = getCurrentKills(player);
 			biggumSay(player, "Human needs to kill " + taskData.getKills() + " " + taskData.getDescription());
 			if (currentKills > 0) {
 				biggumSay(player, "Human has already killed " + currentKills);
 			}
 		} else if (option == 1) {
+			say("What can you tell me about my current task?");
 			if (getPrestige(player) > 0) {
 				if (taskData.getDescription().equalsIgnoreCase("Pit Scorpions")) {
 					biggumSay(player, "Biggum has tried these in many goblin foods",
@@ -412,6 +486,7 @@ public class CombatOdyssey implements DropObjTrigger, KillNpcTrigger, OpInvTrigg
 			}
 			biggumSay(player, taskData.getMonsterInfoDialog());
 		} else if (option == 2) {
+			say("What tasks do I have left to do?");
 			StringBuilder tasksRemaining = new StringBuilder();
 			tasksRemaining.append("@yel@Human still has to kill @whi@ % % ");
 			boolean firstTask = true;
@@ -437,39 +512,7 @@ public class CombatOdyssey implements DropObjTrigger, KillNpcTrigger, OpInvTrigg
 
 			ActionSender.sendBox(player, tasksRemaining.toString(), true);
 		} else if (option == 3 && player.isDev()) {
-			int devOption = multi(false,
-				"Set me 1 kill away from task completion",
-				"Mark my task as complete",
-				"Mark my current tier as complete",
-				"Complete the Odyssey");
-			if (devOption == 0) {
-				int taskKills = taskData.getKills();
-				int newKills = taskData.getKills() - 1;
-				updateCurrentTaskInfo(player, newKills, CURRENT_KILLS);
-				biggumSay(player, "Human has been set to " + newKills + "/" + taskKills);
-			} else if (devOption == 1) {
-				// Update the killcount to the goal
-				updateCurrentTaskInfo(player, taskData.getKills(), CURRENT_KILLS);
-				// Mark the task as complete within the tier
-				completeTask(player, taskData.getTaskId());
-				biggumSay(player, "Task complete",
-					"Speak to Biggum for next task");
-			} else if (devOption == 2) {
-				// Make sure the current task is complete, otherwise this could mess with some stuff
-				updateCurrentTaskInfo(player, taskData.getKills(), CURRENT_KILLS);
-				// Do the math to mark the tier as complete
-				player.getCache().store("co_tier_progress", (long)(Math.pow(2, tierData.getTotalTasks()) - 1));
-				biggumSay(player, "Biggum has marked tier completed",
-					"Speak to Biggum to know where to go next");
-			} else if (devOption == 3) {
-				// Skip ahead to tier 13 and mark it as complete
-				updateCurrentTaskInfo(player, 13, CURRENT_TIER);
-				updateCurrentTaskInfo(player, 0, CURRENT_TASK);
-				updateCurrentTaskInfo(player, 1, CURRENT_KILLS);
-				player.getCache().store("co_tier_progress", 1);
-				biggumSay(player, "Human has now completed final tier",
-					"Speak to Biggum to know where to go next");
-			}
+			developerOptions(player, player);
 		}
 	}
 
