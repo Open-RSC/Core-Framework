@@ -44,7 +44,8 @@ public class DragonFireBreath implements OnCombatStartScript {
 				reduction -= 0.8;// shield lowers by about 80% of the max
 				player.playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 			}
-			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_SCALE_MAIL.id())) {
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_SCALE_MAIL.id())
+				|| player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_SCALE_MAIL_TOP.id())) {
 				reduction -= 0.1;
 				player.playerServerMessage(MessageType.QUEST, "Your scale mail prevents some of the damage from the flames");
 			}
