@@ -73,7 +73,9 @@ public final class ReportHandler implements PayloadProcessor<ReportStruct, Opcod
 
 		GameReport gameReport = new GameReport(player, playerName, reason, suggestsOrMutes != 0, player.isMod());
 		player.getWorld().getServer().getGameLogger().addQuery(gameReport);
-		player.getWorld().getServer().getDiscordService().reportSendToDiscord(gameReport, player.getWorld().getServer().getName());
+		if (player.getWorld().getServer().getDiscordService() != null) {
+			player.getWorld().getServer().getDiscordService().reportSendToDiscord(gameReport, player.getWorld().getServer().getName());
+		}
 		player.setLastReport();
 
 		if (suggestsOrMutes != 0 && player.isMod()) {
