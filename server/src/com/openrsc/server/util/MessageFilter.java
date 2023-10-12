@@ -152,13 +152,31 @@ public class MessageFilter {
 
 			// check for words/phrases to alert on, but not censor.
 			ArrayList<String> alertwordsTriggered = new ArrayList<String>();
-			for (String alertword : alertwords) {
-				if (messageLowercase.contains(alertword)) {
-					alertwordsTriggered.add(alertword);
+			for (final String alertword : alertwords) {
+				boolean exactMatch = alertword.charAt(0) == '"' && alertword.charAt(alertword.length() - 1) == '"';
+				if (exactMatch) {
+					final String alertwordExact = alertword.substring(1,alertword.length() - 1);
+					for (int charIndex = messageLowercase.indexOf(alertwordExact); charIndex > -1 && charIndex < message.length(); ) {
+						// check that we are either at beginning of message, or preceding character is non-alphanumeric
+						boolean precedingCharacterNonAlphanumeric = charIndex < 1 || !messageLowercase.substring(charIndex - 1, charIndex).matches("[a-z]");
+						boolean proceedingCharacterNonAlphanumeric = charIndex + alertwordExact.length() >= messageLowercase.length() || !messageLowercase.substring(charIndex + alertwordExact.length(), charIndex + alertwordExact.length() + 1).matches("[a-z]");
+						if (precedingCharacterNonAlphanumeric && proceedingCharacterNonAlphanumeric) {
+							alertwordsTriggered.add(alertword);
+						}
+						charIndex = messageLowercase.indexOf(alertwordExact, charIndex + alertwordExact.length());
+					}
+				} else {
+					if (messageLowercase.contains(alertword)) {
+						alertwordsTriggered.add(alertword);
+					}
 				}
 			}
 			if (alertwordsTriggered.size() > 0) {
-				sender.getWorld().getServer().getDiscordService().reportAlertWordToDiscord(sender, originalMessage, alertwordsTriggered, context);
+				if (sender.getWorld().getServer().getDiscordService() != null) {
+					sender.getWorld().getServer().getDiscordService().reportAlertWordToDiscord(sender, originalMessage, alertwordsTriggered, context);
+				} else {
+					LOGGER.info("Alertword \"" + alertwordsTriggered.get(0) + "\" found in message sent by \"" + sender.getUsername() + "\": " + originalMessage);
+				}
 			}
 
 			// check for and save goodword matches
@@ -169,7 +187,7 @@ public class MessageFilter {
 					String originalGoodwordUserCapitalization = message.substring(goodwordIndex, goodwordIndex + goodword.length());
 
 					goodwordsReplacements.put(goodwordIndex, originalGoodwordUserCapitalization);
-					message = message.replace(originalGoodwordUserCapitalization, padAsterisk(originalGoodwordUserCapitalization.length()));
+					message = message.replaceFirst(originalGoodwordUserCapitalization, padAsterisk(originalGoodwordUserCapitalization.length()));
 					messageLowercase = message.toLowerCase();
 				}
 			}
@@ -244,13 +262,17 @@ public class MessageFilter {
 			}
 
 			if (stringProblems.size() > 0) {
-				sender.getWorld().getServer().getDiscordService().reportNaughtyWordToDiscord(sender, originalMessage, message, stringProblems, context);
+				if (sender.getWorld().getServer().getDiscordService() != null) {
+					sender.getWorld().getServer().getDiscordService().reportNaughtyWordToDiscord(sender, originalMessage, message, stringProblems, context);
+				}
 			}
 		} catch (Exception e) {
 			StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			stringProblems.add("error filtering string: " + sw.toString());
-			sender.getWorld().getServer().getDiscordService().reportNaughtyWordToDiscord(sender, originalMessage, "Cabbage", stringProblems, context);
+			if (sender.getWorld().getServer().getDiscordService() != null) {
+				sender.getWorld().getServer().getDiscordService().reportNaughtyWordToDiscord(sender, originalMessage, "Cabbage", stringProblems, context);
+			}
 			e.printStackTrace();
 			return "Cabbage";
 		}

@@ -191,7 +191,8 @@ public final class Development implements CommandTrigger {
 			"@ran@",
 			"@cow@",
 			"you are a @cow@",
-			"Hi everyone, how is everyone doing?"
+			"Hi everyone, how is everyone doing?",
+			"one one hell hello one one cow class sucks class hello"
 		};
 		for (String testString : testStrings) {
 			player.playerServerMessage(MessageType.QUEST, "@red@" + testString);

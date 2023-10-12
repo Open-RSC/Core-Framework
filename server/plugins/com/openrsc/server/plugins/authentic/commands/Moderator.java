@@ -162,7 +162,9 @@ public final class Moderator implements CommandTrigger {
 	private void toggleSpaceFiltering(Player player) {
 		player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING = !player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING;
 		player.message("set player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING to " + player.getConfig().SERVER_SIDED_WORD_SPACE_FILTERING);
-		player.getWorld().getServer().getDiscordService().reportSpaceFilteringConfigChangeToDiscord(player);
+		if (player.getWorld().getServer().getDiscordService() != null) {
+			player.getWorld().getServer().getDiscordService().reportSpaceFilteringConfigChangeToDiscord(player);
+		}
 	}
 
 	private void setBabyModeLevelThreshold(Player player, String command, String[] args) {
@@ -175,7 +177,9 @@ public final class Moderator implements CommandTrigger {
 			if (previousThreshold != 0) {
 				player.getConfig().BABY_MODE_LEVEL_THRESHOLD = 0;
 				player.message("Baby mode has been disabled.");
-				player.getWorld().getServer().getDiscordService().reportBabyModeChangeToDiscord(player);
+				if (player.getWorld().getServer().getDiscordService() != null) {
+					player.getWorld().getServer().getDiscordService().reportBabyModeChangeToDiscord(player);
+				}
 			} else {
 				player.message("Baby mode was already disabled.");
 			}
@@ -205,7 +209,9 @@ public final class Moderator implements CommandTrigger {
 
 		player.getConfig().BABY_MODE_LEVEL_THRESHOLD = levelReq;
 		player.message("Set Baby Mode threshold to at least " + player.getConfig().BABY_MODE_LEVEL_THRESHOLD + " total level.");
-		player.getWorld().getServer().getDiscordService().reportBabyModeChangeToDiscord(player);
+		if (player.getWorld().getServer().getDiscordService() != null) {
+			player.getWorld().getServer().getDiscordService().reportBabyModeChangeToDiscord(player);
+		}
 	}
 
 	private void reloadGoodwordBadwords(Player player) {
@@ -239,7 +245,9 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.addAlertWord(newAlertword)) {
 			MessageFilter.syncAlertwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newAlertword, MessageFilterType.alertword, true);
+			if (player.getWorld().getServer().getDiscordService() != null) {
+				player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newAlertword, MessageFilterType.alertword, true);
+			}
 			player.message("@whi@Added @red@" + newAlertword + "@whi@ to the alertwords list.");
 		} else {
 			player.message("@red@Not able to add @dre@" + newAlertword + "@red@ to the alertwords list.");
@@ -265,7 +273,9 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.removeAlertWord(oldAlertword)) {
 			MessageFilter.syncAlertwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldAlertword, MessageFilterType.alertword, false);
+			if (player.getWorld().getServer().getDiscordService() != null) {
+				player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldAlertword, MessageFilterType.alertword, false);
+			}
 			player.message("@whi@Removed @gre@" + oldAlertword + "@whi@ from the alertwords list.");
 		} else {
 			player.message("@red@Not able to remove @gr1@" + oldAlertword + "@red@ from the alertwords list.");
@@ -298,7 +308,9 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.addBadWord(newBadWord)) {
 			MessageFilter.syncBadwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newBadWord, MessageFilterType.badword, true);
+			if (player.getWorld().getServer().getDiscordService() != null) {
+				player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newBadWord, MessageFilterType.badword, true);
+			}
 			player.message("@whi@Added @red@" + newBadWord + "@whi@ to the badwords list.");
 		} else {
 			player.message("@red@Not able to add @dre@" + newBadWord + "@red@ to the badwords list.");
@@ -324,7 +336,9 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.removeBadWord(oldBadWord)) {
 			MessageFilter.syncBadwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldBadWord, MessageFilterType.badword, false);
+			if (player.getWorld().getServer().getDiscordService() != null) {
+				player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldBadWord, MessageFilterType.badword, false);
+			}
 			player.message("@whi@Removed @gre@" + oldBadWord + "@whi@ from the badwords list.");
 		} else {
 			player.message("@red@Not able to remove @gr1@" + oldBadWord + "@red@ from the badwords list.");
@@ -357,7 +371,9 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.addGoodWord(newGoodword)) {
 			MessageFilter.syncGoodwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newGoodword, MessageFilterType.goodword, true);
+			if (player.getWorld().getServer().getDiscordService() != null) {
+				player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, newGoodword, MessageFilterType.goodword, true);
+			}
 			player.message("@whi@Added @red@" + newGoodword + "@whi@ to the goodwords list.");
 		} else {
 			player.message("@red@Not able to add @dre@" + newGoodword + "@red@ to the goodwords list.");
@@ -383,7 +399,9 @@ public final class Moderator implements CommandTrigger {
 		reloadGoodwordBadwords(player);
 		if (MessageFilter.removeGoodWord(oldGoodword)) {
 			MessageFilter.syncGoodwordsToDisk();
-			player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldGoodword, MessageFilterType.goodword, false);
+			if (player.getWorld().getServer().getDiscordService() != null) {
+				player.getWorld().getServer().getDiscordService().reportNaughtyWordChangedToDiscord(player, oldGoodword, MessageFilterType.goodword, false);
+			}
 			player.message("@whi@Removed @gre@" + oldGoodword + "@whi@ from the goodwords list.");
 		} else {
 			player.message("@red@Not able to remove @gr1@" + oldGoodword + "@red@ from the goodwords list.");
