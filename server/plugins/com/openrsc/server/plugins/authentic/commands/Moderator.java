@@ -86,7 +86,13 @@ public final class Moderator implements CommandTrigger {
 			banPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("unban")) {
 			unbanPlayer(player, command, args);
-		} else if (command.equalsIgnoreCase("renameplayer") || command.equalsIgnoreCase("renameuser")) {
+		} else if (command.equalsIgnoreCase("renameplayer")
+			|| command.equalsIgnoreCase("rename")
+			|| command.equalsIgnoreCase("rp")
+			|| command.equalsIgnoreCase("rn")
+			|| command.equalsIgnoreCase("ren")
+			|| command.equalsIgnoreCase("renameuser")
+			|| command.equalsIgnoreCase("renamechar")) {
 			renamePlayer(player, command, args, false);
 		} else if (command.equalsIgnoreCase("offensivename") || command.equalsIgnoreCase("inappropriatename") || command.equalsIgnoreCase("badname")) {
 			badName(player, command, args);
@@ -496,7 +502,6 @@ public final class Moderator implements CommandTrigger {
 		// Make sure we have received all arguments
 		if (args.length < 2) {
 			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Offensive username] [Reason]");
-			player.message("(underscores will become spaces)");
 			return;
 		}
 
@@ -517,17 +522,15 @@ public final class Moderator implements CommandTrigger {
 		if (args.length < 4) {
 			if (calledFromBadName) {
 				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Offensive username] [Reason]");
-				player.message("(underscores will become spaces)");
 			} else {
 				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [CurrentName] [NewName] [Inappropriate (yes/no)] [Reason]");
-				player.message("(underscores will become spaces)");
 			}
 			return;
 		}
 
 		// parse args
-		String targetPlayerUsername = args[0].replaceAll("_", " ");
-		String newUsername = args[1].replaceAll("_", " ");
+		String targetPlayerUsername = args[0].replaceAll("[._]", " ");
+		String newUsername = args[1].replaceAll("[._]", " ");
 		if (newUsername.length() > 12) {
 			player.message("Cannot have a username with more than 12 characters.");
 			return;
@@ -538,10 +541,8 @@ public final class Moderator implements CommandTrigger {
 		} catch (NumberFormatException ex) {
 			if (calledFromBadName) {
 				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [Offensive username] [Reason]");
-				player.message("(underscores will become spaces)");
 			} else {
 				player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [CurrentName] [NewName] [Inappropriate (yes/no)] [Reason]");
-				player.message("(underscores will become spaces)");
 			}
 			return;
 		}
@@ -592,7 +593,12 @@ public final class Moderator implements CommandTrigger {
 			// offline player rename
 			try {
 				// determine if this rename is likely intended to just Free the name
-				long loginDate = player.getWorld().getServer().getDatabase().queryLoadPlayerData(targetPlayerUsername).loginDate;
+				PlayerData playerData = player.getWorld().getServer().getDatabase().queryLoadPlayerData(targetPlayerUsername);
+				if (playerData == null) {
+					player.message("The player \"" + targetPlayerUsername + "\" does not exist");
+					return;
+				}
+				long loginDate = playerData.loginDate;
 				long secondsSinceLastLogin = (System.currentTimeMillis() / 1000) - loginDate;
 				if (changeType != UsernameChangeType.INAPPROPRIATE && secondsSinceLastLogin > (SECONDS_IN_A_MONTH / 2)) {
 					player.message("The name \"" + targetPlayerUsername + "\" belongs to a user that has not logged in in the past 2 weeks.");

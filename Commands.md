@@ -472,8 +472,8 @@ Moderator Commands
   - Display the quest stage for the specified user for the specified quest.
 - renameplayer
   - Usage: `::renameplayer [current name] [new name] [inappropriate (yes/no)] [reason]`
-  - Alias: `::renameuser`
-  - Renames a specified player. Please note that ALL underscores will be replaced with spaces
+  - Alias: `::rename` or `::renameuser` or `::renamechar` or `::rn` or `::rp` or `::ren`
+  - Renames a specified player. Please note that ALL underscores and periods will be replaced with spaces
   - For "Inappropriate", you may type "1" for yes or "0" for no as well.
   - Reason must be specified.
   - Cannot use this command to rename players that have not logged in in the past 2 weeks unless it is an inappropriate name.
@@ -848,3 +848,7 @@ Regular Player Commands
   - Usage `::bankpinoptout`
   - Alias: `::bank_pin_opt_out` or `::bankpin_optout`
   - Opt out of the bank PINs feature. You must first have removed your bank PIN.
+- rename
+  - This command is not yet implemented.
+  - This command would allow users to rename themselves after having had their previous name freed or marked as inappropriate.
+  - Does not work for Moderators or above.

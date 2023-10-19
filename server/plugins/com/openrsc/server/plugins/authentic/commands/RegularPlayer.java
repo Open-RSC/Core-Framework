@@ -173,7 +173,14 @@ public final class RegularPlayer implements CommandTrigger {
 			bankPinOptIn(player);
 		} else if (command.equalsIgnoreCase("bankpinoptout") || command.equalsIgnoreCase("bankpin_optout") || command.equalsIgnoreCase("bank_pin_opt_out")) {
 			bankPinOptOut(player);
+		} else if (command.equalsIgnoreCase("rename")) {
+			renameSelf(player, args);
 		}
+	}
+
+	private void renameSelf(Player player, String[] args) {
+		if (player.isMod()) return;
+		// Not yet implemented
 	}
 
 	private void bankPinOptIn(Player player) {
