@@ -18,7 +18,7 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 
 		//Restrict access to Ultimate Ironmen
 		if (player.isIronMan(IronmanMode.Ultimate.id())) {
-			player.message("As an Ultimate Iron Man, you cannot use the bank.");
+			player.message("As an Ultimate Ironman, you cannot use the bank.");
 			player.resetBank();
 			return;
 		}

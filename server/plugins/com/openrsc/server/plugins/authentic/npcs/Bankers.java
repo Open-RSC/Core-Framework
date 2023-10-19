@@ -66,7 +66,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 
 		if (menu == 0) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				player.message("As an Ultimate Iron Man, you cannot use the bank.");
+				player.message("As an Ultimate Ironman, you cannot use the bank.");
 				return;
 			}
 
@@ -251,7 +251,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 
 	private void quickFeature(Npc npc, Player player, boolean auction) {
 		if (player.isIronMan(IronmanMode.Ultimate.id())) {
-			player.message("As an Ultimate Iron Man, you cannot use the bank.");
+			player.message("As an Ultimate Ironman, you cannot use the bank.");
 			return;
 		}
 

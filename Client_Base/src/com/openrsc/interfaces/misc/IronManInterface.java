@@ -15,19 +15,19 @@ public final class IronManInterface {
 	private boolean deactivationMenu = false;
 	private boolean visible;
 	private mudclient mc;
-	private String[] ironManTitle = {"Standard Iron Man", "Hardcore Iron Man", "Ultimate Iron Man", "None"};
+	private String[] ironManTitle = {"Standard Ironman", "Hardcore Ironman", "Ultimate Ironman", "None"};
 	private String[] ironManDescription =
 		{
-			"An Iron Man cannot trade, stake, receive PK loot, scavenge dropped items, nor play certain multiplayer minigames.",
-			"In addition to the standard Iron Man rules, a Hardcore Iron Man only has 1 life. A dangerous death will result in being downgraded to a standard Iron Man.",
-			"In addition to the standard Iron Man rules, an Ultimate Iron Man cannot use banks, nor retain any items on death in dangerous areas.",
-			"- No Iron Man restrictions will apply to this account."
+			"An Ironman cannot trade, stake, receive PK loot, scavenge dropped items, nor play certain multiplayer minigames.",
+			"In addition to the standard Ironman rules, a Hardcore Ironman only has 1 life. A dangerous death will result in being downgraded to a standard Ironman.",
+			"In addition to the standard Ironman rules, an Ultimate Ironman cannot use banks, nor retain any items on death in dangerous areas.",
+			"- No Ironman restrictions will apply to this account."
 		};
 	private String[] restrictionTitle = {"PIN", "Permanent"};
 	private String[] restrictionDesc =
 		{
-			"You must enter your Bank Pin to request that Iron Man restrictions be removed.",
-			"- The Iron Man restrictions can never be removed."
+			"You must enter your Bank Pin to request that Ironman restrictions be removed.",
+			"- The Ironman restrictions can never be removed."
 		};
 	private int[] order = {3, 0, 2, 1};
 	private int[] selectMode = {1, 3, 2, 0};
@@ -78,14 +78,14 @@ public final class IronManInterface {
 		graphics.drawBoxAlpha(x, y, width, height, 0x483E33, 255);
 		graphics.drawLineHoriz(x, y + 24, width, 0x2A2926);
 		graphics.drawBoxBorder(x, width, y, height, 0x2A2926);
-		graphics.drawColoredStringCentered(mc.getGameWidth() / 2, "Iron Man Setup", 0xFF981F, 0, 3, y + 17);
+		graphics.drawColoredStringCentered(mc.getGameWidth() / 2, "Ironman Setup", 0xFF981F, 0, 3, y + 17);
 
 		//content box
 		graphics.drawBoxAlpha(x + 5, y + 29, 380, 185, 0x534A3F, 255);
 		graphics.drawBoxBorder(x + 5, 380, y + 29, 185, 0x777775);
 		graphics.drawLineHoriz(x + 5, y + 48, 380, 0x777775);
 		graphics.drawLineHoriz(x + 5, y + 49, 380, 0x777775);
-		graphics.drawColoredStringCentered(mc.getGameWidth() / 2 - 46, "Iron Man Mode", 0xFFFFFF, 0, 2, y + 43);
+		graphics.drawColoredStringCentered(mc.getGameWidth() / 2 - 46, "Ironman Mode", 0xFFFFFF, 0, 2, y + 43);
 
 
 		//deactivation box
@@ -163,7 +163,7 @@ public final class IronManInterface {
 			}
 		}
 
-		drawClickBox(graphics, drawBoxX + 5, drawBoxY + 58, 250, 222, 34, "        Deactivation settings", titleY - 3, "Set restrictions on deactivating or downgrading your Iron Man status.", descX - 5, descY + 10, new ButtonHandler() {
+		drawClickBox(graphics, drawBoxX + 5, drawBoxY + 58, 250, 222, 34, "        Deactivation settings", titleY - 3, "Set restrictions on deactivating or downgrading your Ironman status.", descX - 5, descY + 10, new ButtonHandler() {
 			@Override
 			void handle() {
 				if (getIronManMode() >= 1 && getIronManMode() <= 3) {

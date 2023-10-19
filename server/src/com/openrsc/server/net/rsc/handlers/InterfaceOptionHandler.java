@@ -157,12 +157,12 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				case 0: // None
 				case 1: // Regular
 					if (mode == 1 && currentMode <= IronmanMode.None.id() || currentMode > IronmanMode.Transfer.id()) {
-						player.message("You cannot become an Iron Man after leaving Tutorial Island.");
+						player.message("You cannot become an Ironman after leaving Tutorial Island.");
 						return;
 					}
 
 					if (player.getIronManRestriction() != 0) {
-						player.message("Your Iron Man status is permanent and cannot be changed.");
+						player.message("Your Ironman status is permanent and cannot be changed.");
 						return;
 					}
 
@@ -188,10 +188,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					ironManNpc.initializeTalkScript(player);
 					break;
 				case 2: // Ultimate
-					player.message("You cannot become an Ultimate Iron Man after leaving Tutorial Island.");
+					player.message("You cannot become an Ultimate Ironman after leaving Tutorial Island.");
 					break;
 				case 3: // Hardcore
-					player.message("You cannot become a Hardcore Iron Man after leaving Tutorial Island.");
+					player.message("You cannot become a Hardcore Ironman after leaving Tutorial Island.");
 					break;
 			}
 		} else if (value == 1) { // Change deactivation setting
@@ -208,7 +208,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			}
 
 			if (player.getIronMan() == IronmanMode.None.id()) {
-				player.message("Select an Iron Man mode before changing this setting.");
+				player.message("Select an Ironman mode before changing this setting.");
 				return;
 			}
 
@@ -260,7 +260,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 	private void handleAuction(Player player, OptionsStruct payload) {
 		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-			player.message("As an Iron Man, you cannot use the Auction.");
+			player.message("As an Ironman, you cannot use the Auction.");
 			return;
 		}
 		if (player.getWorld().getServer().getTimeUntilShutdown() > 0) {
@@ -515,7 +515,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-					player.message("You are an Iron Man. You stand alone.");
+					player.message("You are an Ironman. You stand alone.");
 					return;
 				}
 
@@ -540,7 +540,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				Player invited = player.getWorld().getPlayer(payload.id);
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-					player.message("You are an Iron Man. You stand alone.");
+					player.message("You are an Ironman. You stand alone.");
 					return;
 				}
 				if (player.getParty() == null) {
@@ -668,7 +668,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-					player.message("You are an Iron Man. You stand alone.");
+					player.message("You are an Ironman. You stand alone.");
 					return;
 				}
 				if (player.getParty() == null) {

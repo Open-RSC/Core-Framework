@@ -241,7 +241,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 						if (menu8 == 0) {
 							say(player, n, "I'll pay the fine.");
 							if (player.isIronMan(2)) {
-								player.message("As an Ultimate Iron Man, you cannot use the bank.");
+								player.message("As an Ultimate Ironman, you cannot use the bank.");
 								return;
 							}
 							npcsay(player, n,
@@ -299,7 +299,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 							if (menu8 == 0) {
 								say(player, n, "I'll pay the fine.");
 								if (player.isIronMan(2)) {
-									player.message("As an Ultimate Iron Man, you cannot use the bank.");
+									player.message("As an Ultimate Ironman, you cannot use the bank.");
 									return;
 								}
 								npcsay(player, n,
@@ -447,7 +447,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == BANK_CHEST) {
 			if (player.isIronMan(2)) {
-				player.message("As an Ultimate Iron Man, you cannot use the bank.");
+				player.message("As an Ultimate Ironman, you cannot use the bank.");
 				return;
 			}
 			if (obj.getX() == 58 && obj.getY() == 731) {

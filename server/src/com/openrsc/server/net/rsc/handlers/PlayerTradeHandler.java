@@ -62,13 +62,13 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 				}
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-					player.message("You are an Iron Man. You stand alone.");
+					player.message("You are an Ironman. You stand alone.");
 					player.getTrade().resetAll();
 					return;
 				}
 				if (affectedPlayer.isIronMan(IronmanMode.Ironman.id()) || affectedPlayer.isIronMan(IronmanMode.Ultimate.id())
 					|| affectedPlayer.isIronMan(IronmanMode.Hardcore.id()) || affectedPlayer.isIronMan(IronmanMode.Transfer.id())) {
-					player.message(affectedPlayer.getUsername() + " is an Iron Man. They stand alone.");
+					player.message(affectedPlayer.getUsername() + " is an Ironman. They stand alone.");
 					player.getTrade().resetAll();
 					return;
 				}

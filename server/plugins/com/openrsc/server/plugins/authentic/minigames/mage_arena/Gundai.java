@@ -43,7 +43,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		if (option == -1) return;
 		if (options.get(option).equalsIgnoreCase(optionBank)) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				player.message("As an Ultimate Iron Man, you cannot use the bank.");
+				player.message("As an Ultimate Ironman, you cannot use the bank.");
 				return;
 			}
 
@@ -122,7 +122,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 
 	private void quickFeature(Npc npc, Player player, boolean auction) {
 		if (player.isIronMan(IronmanMode.Ultimate.id())) {
-			player.message("As an Ultimate Iron Man, you cannot use the bank.");
+			player.message("As an Ultimate Ironman, you cannot use the bank.");
 			return;
 		}
 

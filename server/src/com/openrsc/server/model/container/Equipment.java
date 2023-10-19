@@ -685,17 +685,17 @@ public class Equipment {
 		*/
 
 		// Ironman armour.
-		else if ((item.getCatalogId() == ItemId.IRONMAN_HELM.id() || item.getCatalogId() == ItemId.IRONMAN_PLATEBODY.id()
-			|| item.getCatalogId() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
-			player.message("You need to be an Iron Man to wear this");
+		else if ((item.getCatalogId() == ItemId.IRONMAN_HELM.id() || item.getCatalogId() == ItemId.IRONMAN_PLATEBODY.id() || item.getCatalogId() == ItemId.IRONMAN_PLATE_TOP.id()
+			|| item.getCatalogId() == ItemId.IRONMAN_PLATELEGS.id() || item.getCatalogId() == ItemId.IRONMAN_PLATED_SKIRT.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
+			player.message("You need to be an Ironman to wear this");
 			return false;
-		} else if ((item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
-			|| item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
-			player.message("You need to be an Ultimate Iron Man to wear this");
+		} else if ((item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id() || item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATE_TOP.id()
+			|| item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id() || item.getCatalogId() == ItemId.ULTIMATE_IRONMAN_PLATED_SKIRT.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
+			player.message("You need to be an Ultimate Ironman to wear this");
 			return false;
-		} else if ((item.getCatalogId() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
-			|| item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
-			player.message("You need to be a Hardcore Iron Man to wear this");
+		} else if ((item.getCatalogId() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id() || item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATE_TOP.id()
+			|| item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id() || item.getCatalogId() == ItemId.HARDCORE_IRONMAN_PLATED_SKIRT.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
+			player.message("You need to be a Hardcore Ironman to wear this");
 			return false;
 		} else if (item.getCatalogId() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");

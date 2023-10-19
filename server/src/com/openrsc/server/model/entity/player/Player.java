@@ -512,9 +512,9 @@ public final class Player extends Mob {
 	}
 
 	/**
-	 * Checks if the player is any type of Iron Man (except a transfer character)
+	 * Checks if the player is any type of Ironman (except a transfer character)
 	 *
-	 * @return True if the player is any type of Iron Man, false otherwise
+	 * @return True if the player is any type of Ironman, false otherwise
 	 */
 	public boolean isIronMan() {
 		return getIronMan() == IronmanMode.Ironman.id()
@@ -523,10 +523,10 @@ public final class Player extends Mob {
 	}
 
 	/**
-	 * Checks if the player is the specified type of Iron Man
+	 * Checks if the player is the specified type of Ironman
 	 *
-	 * @param mode The Iron Man type to check for
-	 * @return True if the player is of the specified Iron Man Type, false otherwise
+	 * @param mode The Ironman type to check for
+	 * @return True if the player is of the specified Ironman Type, false otherwise
 	 */
 	public boolean isIronMan(final int mode) {
 		if (mode == IronmanMode.Ironman.id() && getIronMan() == IronmanMode.Ironman.id()) {
@@ -1780,7 +1780,7 @@ public final class Player extends Mob {
 		// enough, this player will get all the XP.
 		int thisXp = skillXP;
 
-		// Check if the player is an Iron Man and in a party
+		// Check if the player is an Ironman and in a party
 		final boolean notIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !this.isIronMan();
 		if (this.getParty() != null && notIronMan) {
 			ArrayList<PartyPlayer> sharers = new ArrayList<PartyPlayer>();
@@ -1798,7 +1798,7 @@ public final class Player extends Mob {
 				// Make sure the player isn't on the same IP
 				final boolean notSameIp = getConfig().PARTY_SHARE_WITH_SAME_IP || !this.getCurrentIP().equals(partyMemberPlayer.getCurrentIP());
 
-				// Make sure the player isn't an Iron Man
+				// Make sure the player isn't an Ironman
 				final boolean isntIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !partyMemberPlayer.isIronMan();
 
 				// Make sure the party member isn't this!!
@@ -2235,7 +2235,7 @@ public final class Player extends Mob {
 		if (isIronMan(IronmanMode.Hardcore.id())) {
 			updateHCIronman(IronmanMode.Ironman.id());
 			ActionSender.sendIronManMode(this);
-			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
+			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "has died and lost the HC Ironman Rank!"));
 		}
 
 		resetCombatEvent();

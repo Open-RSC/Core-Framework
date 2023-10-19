@@ -44,7 +44,7 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 
 		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-			player.message("You are an Iron Man. You stand alone.");
+			player.message("You are an Ironman. You stand alone.");
 			unsetOptions(player);
 			unsetOptions(affectedPlayer);
 			return;
@@ -86,7 +86,7 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 
 				if (affectedPlayer.isIronMan(IronmanMode.Ironman.id()) || affectedPlayer.isIronMan(IronmanMode.Ultimate.id())
 					|| affectedPlayer.isIronMan(IronmanMode.Hardcore.id()) || affectedPlayer.isIronMan(IronmanMode.Transfer.id())) {
-					player.message(affectedPlayer.getUsername() + " is an Iron Man. " + (affectedPlayer.isMale() ? "He" : "She") + " stands alone.");
+					player.message(affectedPlayer.getUsername() + " is an Ironman. " + (affectedPlayer.isMale() ? "He" : "She") + " stands alone.");
 					unsetOptions(player);
 					unsetOptions(affectedPlayer);
 					return;

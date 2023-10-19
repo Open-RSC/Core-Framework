@@ -43,7 +43,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 		if (menu == 0) {
 			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 				|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-				player.message("As an Iron Man, you cannot use the Auction.");
+				player.message("As an Ironman, you cannot use the Auction.");
 				return;
 			}
 			if (player.getTotalLevel() < 100) {
@@ -97,7 +97,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 			if (command.equalsIgnoreCase("Auction")) {
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-					player.message("As an Iron Man, you cannot use the Auction.");
+					player.message("As an Ironman, you cannot use the Auction.");
 					return;
 				}
 				if(validatebankpin(player, n)) {
@@ -114,7 +114,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 			if (command.equalsIgnoreCase("Auction")) {
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
-					player.message("As an Iron Man, you cannot use the Auction.");
+					player.message("As an Ironman, you cannot use the Auction.");
 					return;
 				}
 				if(validatebankpin(player, n)) {

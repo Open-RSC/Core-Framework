@@ -139,7 +139,7 @@ public class CustomCerter implements TalkNpcTrigger {
 
 		if (certAmountChoice == 5 && config().WANT_CERTER_BANK_EXCHANGE) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				mes("As an Ultimate Iron Man, you cannot use this feature");
+				mes("As an Ultimate Ironman, you cannot use this feature");
 				return;
 			}
 
@@ -213,7 +213,7 @@ public class CustomCerter implements TalkNpcTrigger {
 
 		if (certAmountChoice == 5 && config().WANT_CERTER_BANK_EXCHANGE) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				mes("As an Ultimate Iron Man, you cannot use this feature");
+				mes("As an Ultimate Ironman, you cannot use this feature");
 				return;
 			}
 

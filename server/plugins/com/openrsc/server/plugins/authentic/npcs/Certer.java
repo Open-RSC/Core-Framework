@@ -218,7 +218,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		int itemID = certerDef.getItemID(index);
 		if (certAmount == 5) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				player.message("As an Ultimate Iron Man, you cannot use certer bank exchange.");
+				player.message("As an Ultimate Ironman, you cannot use certer bank exchange.");
 				return;
 			}
 			certAmount = player.getCarriedItems().getInventory().countId(certID, Optional.of(false));
@@ -282,7 +282,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		int itemID = certerDef.getItemID(useIndex);
 		if (certAmount == 5) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				player.message("As an Ultimate Iron Man. you cannot use certer bank exchange.");
+				player.message("As an Ultimate Ironman. you cannot use certer bank exchange.");
 				return;
 			}
 			certAmount = (int) (player.getBank().countId(itemID) / 5);

@@ -308,7 +308,7 @@ public class DoorAction {
 									if (menu8 == 0) {
 										say(player, shantay, "I'll pay the fine.");
 										if (player.isIronMan(2)) {
-											player.message("As an Ultimate Iron Man, you cannot use the bank.");
+											player.message("As an Ultimate Ironman, you cannot use the bank.");
 											return;
 										}
 										npcsay(player, shantay,
@@ -355,7 +355,7 @@ public class DoorAction {
 										if (menu8 == 0) {
 											say(player, shantay, "I'll pay the fine.");
 											if (player.isIronMan(2)) {
-												player.message("As an Ultimate Iron Man, you cannot use the bank.");
+												player.message("As an Ultimate Ironman, you cannot use the bank.");
 												return;
 											}
 											npcsay(player, shantay,

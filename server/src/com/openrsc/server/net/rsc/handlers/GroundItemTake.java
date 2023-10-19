@@ -75,13 +75,13 @@ public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, Op
 				if (item.getLocation().inWilderness() && !item.belongsTo(getPlayer()) && item.getAttribute("playerKill", false)
 					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
-					getPlayer().message("You're an Iron Man, so you can't loot items from players.");
+					getPlayer().message("You're an Ironman, so you can't loot items from players.");
 					return;
 				}
 				if (!item.belongsTo(getPlayer())
 					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
-					getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
+					getPlayer().message("You're an Ironman, so you can't take items that other players have dropped.");
 					return;
 				}
 

@@ -212,6 +212,42 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			case RUNE_CHAIN_MAIL_BODY:
 				newId = ItemId.RUNE_CHAIN_MAIL_TOP.id();
 				break;
+			case IRONMAN_PLATE_TOP:
+				newId = ItemId.IRONMAN_PLATEBODY.id();
+				break;
+			case IRONMAN_PLATED_SKIRT:
+				newId = ItemId.IRONMAN_PLATELEGS.id();
+				break;
+			case ULTIMATE_IRONMAN_PLATE_TOP:
+				newId = ItemId.ULTIMATE_IRONMAN_PLATEBODY.id();
+				break;
+			case ULTIMATE_IRONMAN_PLATED_SKIRT:
+				newId = ItemId.ULTIMATE_IRONMAN_PLATELEGS.id();
+				break;
+			case HARDCORE_IRONMAN_PLATE_TOP:
+				newId = ItemId.HARDCORE_IRONMAN_PLATEBODY.id();
+				break;
+			case HARDCORE_IRONMAN_PLATED_SKIRT:
+				newId = ItemId.HARDCORE_IRONMAN_PLATELEGS.id();
+				break;
+			case IRONMAN_PLATEBODY:
+				newId = ItemId.IRONMAN_PLATE_TOP.id();
+				break;
+			case IRONMAN_PLATELEGS:
+				newId = ItemId.IRONMAN_PLATED_SKIRT.id();
+				break;
+			case ULTIMATE_IRONMAN_PLATEBODY:
+				newId = ItemId.ULTIMATE_IRONMAN_PLATE_TOP.id();
+				break;
+			case ULTIMATE_IRONMAN_PLATELEGS:
+				newId = ItemId.ULTIMATE_IRONMAN_PLATED_SKIRT.id();
+				break;
+			case HARDCORE_IRONMAN_PLATEBODY:
+				newId = ItemId.HARDCORE_IRONMAN_PLATE_TOP.id();
+				break;
+			case HARDCORE_IRONMAN_PLATELEGS:
+				newId = ItemId.HARDCORE_IRONMAN_PLATED_SKIRT.id();
+				break;
 			default:
 				break;
 		}
@@ -237,7 +273,12 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 				ItemId.RUNE_CHAIN_MAIL_BODY.id());
 		}
 
-		return isAuthenticItem || isChainmail;
+		boolean isIronmanItem = false;
+		if (player.getConfig().SPAWN_IRON_MAN_NPCS) {
+			isIronmanItem = Functions.inArray(item.getCatalogId(), ItemId.IRONMAN_PLATEBODY.id(), ItemId.IRONMAN_PLATELEGS.id(), ItemId.ULTIMATE_IRONMAN_PLATEBODY.id(), ItemId.ULTIMATE_IRONMAN_PLATELEGS.id(), ItemId.HARDCORE_IRONMAN_PLATEBODY.id(), ItemId.HARDCORE_IRONMAN_PLATELEGS.id(), ItemId.IRONMAN_PLATE_TOP.id(), ItemId.IRONMAN_PLATED_SKIRT.id(), ItemId.ULTIMATE_IRONMAN_PLATE_TOP.id(), ItemId.ULTIMATE_IRONMAN_PLATED_SKIRT.id(), ItemId.HARDCORE_IRONMAN_PLATE_TOP.id(), ItemId.HARDCORE_IRONMAN_PLATED_SKIRT.id());
+		}
+
+		return isAuthenticItem || isChainmail || isIronmanItem;
 	}
 
 	private boolean isDragon(final Player player, final Item item) {

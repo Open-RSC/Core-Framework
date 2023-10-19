@@ -2255,12 +2255,12 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Subscription Vendor", "Exchange your subscription token to subscription time", "", 0, 0, 3, 0, false, sprites, 16761440, 143190, 143190, 15523536, 145, 230, 6, 6, 5, i++));
 		sprites = new int[]{241, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Gaia", "The earth queen with a rotten heart", "", 78, 79, 79, 80, true, sprites, 0, 0, 0, 0, 275, 262, 11, 11, 30, i++));
-		sprites = new int[]{0, 318, 319, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Iron Man", "An Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{0, 321, 322, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Ultimate Iron Man", "An Ultimate Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{323, 324, 325, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Hardcore Iron Man", "A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{0, -1, -1, -1, -1, -1, 318, 319, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Ironman", "An Ironman", "Armour", 0, 0, 0, 0, false, sprites, 6751590, 0, 14, 13415270, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{3, -1, -1, -1, -1, -1, 535, 538, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Ultimate Ironman", "An Ultimate Ironman", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{0, -1, -1, -1, -1, 323, 324, 325, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Hardcore Ironman", "A Hardcore Ironman", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Greatwood", "A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
@@ -4062,6 +4062,16 @@ public class EntityHandler {
 
 		items.add(new ItemDef("Biggum Flodrot", "Biggum Flodrot, goblin hero", "Talk", 0, -1, "items:597", false, false, 0, 0, true, true, false, 1553));
 
+		// Ironman plate tops
+		items.add(new ItemDef("Ironman plate top", "Take it off and what are you?", "", 560, -1, "items:130", false, true, 322, 11189164, false, true, true, 1554));
+		items.add(new ItemDef("Ultimate ironman plate top", "Take it off and what are you?", "", 560, -1, "items:130", false, true, 322, 16768685, false, true, true, 1555));
+		items.add(new ItemDef("Hardcore ironman plate top", "Take it off and what are you?", "", 560, -1, "items:130", false, true, 322, 10027084, false, true, true, 1556));
+
+		// Ironman plated skirts
+		items.add(new ItemDef("Ironman plated skirt", "Take it off and what are you?", "", 280, -1, "items:88", false, true, 644, 0x6F7A70, false, true, true, 1557));
+		items.add(new ItemDef("Ultimate ironman plated skirt", "Take it off and what are you?", "", 280, -1, "items:88", false, true, 644, 0xA69070, false, true, true, 1558));
+		items.add(new ItemDef("Hardcore ironman plated skirt", "Take it off and what are you?", "", 280, -1, "items:88", false, true, 644, 0x640031, false, true, true, 1559));
+
 		// Custom certificate names
 		if (Config.S_WANT_BANK_NOTES && !Config.S_WANT_CERT_AS_NOTES) {
 			for (int i : new int[]{1543, 1546, 1547, 1548, 1549, 1550, 1551, 1552}) {
@@ -4766,6 +4776,16 @@ public class EntityHandler {
 			animations.add(new AnimationDef("mortimertorso", "equipment", 0, 0, true, false, 0));//531
 			animations.add(new AnimationDef("randolphtorso", "equipment", 0, 0, true, false, 0));//532
 			animations.add(new AnimationDef("biggum", "npc", 0xFFFFFF, 0, true, false, 0));//533
+
+			// Ironman plate tops
+			animations.add(new AnimationDef("fplatemailtop", "equipment", 11189164, 0, true, false, 0)); //534 - ironman plate top
+			animations.add(new AnimationDef("fplatemailtop", "equipment", 16768685, 0, true, false, 0)); //535 - ultimate ironman plate top
+			animations.add(new AnimationDef("fplatemailtop", "equipment", 10027084, 0, true, false, 0)); //536 - hc ironman plate top
+
+			// Ironman plated skirts
+			animations.add(new AnimationDef("armorskirt", "equipment", 11189164, 0, true, false, 0));//537 - ironman plated skirt
+			animations.add(new AnimationDef("armorskirt", "equipment", 16768685, 0, true, false, 0));//538 - ultimate ironman palted skirt
+			animations.add(new AnimationDef("armorskirt", "equipment", 10027084, 0, true, false, 0));//539 - hc ironman plated skirt
 		}
 	}
 
