@@ -522,7 +522,7 @@ public class ActionSender {
 						// TODO: we won't be able to reach across servers like this if there's more than one server
 						if (onlineStatus == 6) {
 							struct.worldNumber[i] = sameWorld;
-						} else {
+						} else if (onlineStatus != 0) {
 							struct.worldNumber[i] = player.getWorld().getPlayer(usernameHash).getWorld().getServer().getConfig().WORLD_NUMBER;
 						}
 					} catch (Exception e) {
@@ -596,7 +596,7 @@ public class ActionSender {
 				// TODO: we won't be able to reach across servers like this if there's more than one server
 				if (onlineStatus == 6) {
 					struct.worldNumber = sameWorld;
-				} else {
+				} else if (onlineStatus != 0) {
 					struct.worldNumber = player.getWorld().getPlayer(usernameHash).getWorld().getServer().getConfig().WORLD_NUMBER;
 				}
 			} catch (Exception e) {
