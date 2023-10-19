@@ -31,7 +31,7 @@ public class CombatFormula {
 	 */
 	private static int calculateMeleeDamage(final Mob source) {
 		int maxRoll = getMeleeDamage(source);
-		int chosenHit = (DataConversions.getRandom().nextInt(maxRoll) + 320) / 640;
+		int chosenHit = maxRoll <= 0 ? 0 : (DataConversions.getRandom().nextInt(maxRoll) + 320) / 640;
 		return chosenHit;
 	}
 
