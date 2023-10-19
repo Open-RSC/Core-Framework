@@ -1,5 +1,8 @@
 package com.openrsc.server;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.database.GameDatabase;
@@ -43,10 +46,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -114,6 +114,8 @@ public class Server implements Runnable {
 	private int privateMessagesSent = 0;
 
 	private volatile int maxItemId;
+
+	private final ListeningExecutorService sqlLoggingThreadPool;
 
 	static {
 		Thread.currentThread().setName("InitThread");
@@ -263,6 +265,12 @@ public class Server implements Runnable {
 		achievementSystem = new AchievementSystem(this);
 		playerService = new PlayerService(world, config, database);
 		i18nService = new I18NService(this);
+		ThreadPoolExecutor sqlLoggingExecutor = new ThreadPoolExecutor(
+			1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>()
+		);
+		sqlLoggingExecutor.allowCoreThreadTimeOut(false);
+		sqlLoggingExecutor.setThreadFactory(new NamedThreadFactory(getName() + " : SqlLoggingThread", getConfig()));
+		sqlLoggingThreadPool = MoreExecutors.listeningDecorator(sqlLoggingExecutor);
 		MessageFilter.loadGoodAndBadWordsFromDisk();
 
 		maxItemId = 0;
@@ -769,6 +777,14 @@ public class Server implements Runnable {
 
 	public final DiscordService getDiscordService() {
 		return discordService;
+	}
+
+	public ListenableFuture<?> submitSqlLogging(Runnable runnable) {
+		return sqlLoggingThreadPool.submit(runnable);
+	}
+
+	public <V> ListenableFuture<V> submitSqlLogging(Callable<V> callable) {
+		return sqlLoggingThreadPool.submit(callable);
 	}
 
 	public final LoginExecutor getLoginExecutor() {

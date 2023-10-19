@@ -503,13 +503,14 @@ public class Npc extends Mob {
 					GroundItem groundItem = new GroundItem(getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
 					groundItem.setAttribute("npcdrop", true);
 					getWorld().registerItem(groundItem);
-					try {
-
-						getWorld().getServer().getDatabase().addDropLog(
-							owner, this, item.getCatalogId(), item.getAmount());
-					} catch (final GameDatabaseException ex) {
-						LOGGER.catching(ex);
-					}
+					getWorld().getServer().submitSqlLogging(() -> {
+						try {
+							getWorld().getServer().getDatabase().addDropLog(
+								owner, this, item.getCatalogId(), item.getAmount());
+						} catch (final GameDatabaseException ex) {
+							LOGGER.catching(ex);
+						}
+					});
 					if (item.getCatalogId() == ItemId.DRAGON_2_HANDED_SWORD.id()) {
 						owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
 					}
@@ -564,12 +565,14 @@ public class Npc extends Mob {
 			amount += Formulae.getSplendorBoost(amount);
 			owner.message("Your ring of splendor shines brightly!");
 		}
-
-		try {
-			getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-		}
+		final int finalAmount = amount;
+		getWorld().getServer().submitSqlLogging(() -> {
+			try {
+				getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, finalAmount);
+			} catch (final GameDatabaseException ex) {
+				LOGGER.catching(ex);
+			}
+		});
 
 		if (!DropTable.handleRingOfAvarice(owner, new Item(dropID, amount))) {
 			GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
@@ -581,11 +584,14 @@ public class Npc extends Mob {
 	private void dropStandardItem(Item item, Player owner) {
 		int dropID = item.getCatalogId();
 		int amount = item.getAmount();
-		try {
-			getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-		}
+		final int finalAmount = amount;
+		getWorld().getServer().submitSqlLogging(() -> {
+			try {
+				getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, finalAmount);
+			} catch (final GameDatabaseException ex) {
+				LOGGER.catching(ex);
+			}
+		});
 		GroundItem groundItem;
 
 		// We need to drop multiple counts of "1" item if it's not a stack
