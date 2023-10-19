@@ -4265,7 +4265,7 @@ public final class Player extends Mob {
 			return false;
 		}
 
-		if (!getCache().hasKey("accepted_global_rules") && !isPlayerMod()) {
+		if (getConfig().WANT_GLOBAL_RULES_AGREEMENT && !getCache().hasKey("accepted_global_rules") && !isPlayerMod()) {
 			message("@cya@You must agree to the global chat rules before using global chat");
 			message("@cya@Use the ::globalrules command to view them.");
 			return false;

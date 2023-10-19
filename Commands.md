@@ -848,6 +848,13 @@ Regular Player Commands
   - Usage `::bankpinoptout`
   - Alias: `::bank_pin_opt_out` or `::bankpin_optout`
   - Opt out of the bank PINs feature. You must first have removed your bank PIN.
+- globalrules
+  - Usage `::globalrules`
+  - Displays the list of global chat rules for the server (if applicable)
+- i_have_read_and_agree_to_the_global_chat_rules
+  - Usage `::i_have_read_and_agree_to_the_global_chat_rules`
+  - Aliases: `::i_have_read_and_agreed_to_the_global_chat_rules` or `::ihavereadandagreetotheglobalchatrules` or `::ihavereadandagreedtotheglobalchatrules`
+  - Accepts the global chat rules of the server and allows the user to speak in global chat (if the global chat rules config is set to true).
 - rename
   - This command is not yet implemented.
   - This command would allow users to rename themselves after having had their previous name freed or marked as inappropriate.

@@ -163,7 +163,10 @@ public final class RegularPlayer implements CommandTrigger {
 			setGlobalOutput(player, MessageType.PRIVATE_RECIEVE);
 		} else if (command.equalsIgnoreCase("globalrules")) {
 			displayGlobalRules(player);
-		} else if (command.equalsIgnoreCase("ihavereadandagreetotheglobalchatrules")) {
+		} else if (command.equalsIgnoreCase("i_have_read_and_agree_to_the_global_chat_rules")
+			|| command.equalsIgnoreCase("i_have_read_and_agreed_to_the_global_chat_rules")
+			|| command.equalsIgnoreCase("ihavereadandagreetotheglobalchatrules")
+			|| command.equalsIgnoreCase("ihavereadandagreedtotheglobalchatrules")) {
 			acceptGlobalChatRules(player);
 		} else if (command.equalsIgnoreCase("minigamelog")) {
 			queryMinigameLog(player, args);
@@ -256,6 +259,7 @@ public final class RegularPlayer implements CommandTrigger {
 
 	private void acceptGlobalChatRules(Player player) {
 		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
+		if (!config().WANT_GLOBAL_RULES_AGREEMENT) return;
 		if (player.getCache().hasKey("accepted_global_rules")) {
 			player.message(messagePrefix + "You have already agreed to the global chat rules");
 			if (config().WANT_GLOBAL_FRIEND) {
@@ -277,35 +281,42 @@ public final class RegularPlayer implements CommandTrigger {
 
 	private void displayGlobalRules(Player player) {
 		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
+		if (!config().WANT_GLOBAL_RULES_AGREEMENT) return;
+
 		if (player.getClientLimitations().supportsMessageBox) {
-			ActionSender.sendBox(player,
-			"@cya@Global Chat Rules %" +
-			"@whi@You must read and agree to the following rules before being able to use the Global chat feature. %" +
-			"@cya@1.@whi@ Do not bring up grievances with other players in Global chat. %" +
-			"@cya@2.@whi@ Discussions of PKing are allowed, but PK \"banter\" does not belong " +
-			"in Global chat. Take that to private messages, and remain respectful. %" +
-			"@cya@3.@whi@ If you wish to talk with one person specifically, consider using private messages instead. %" +
-			"@cya@4.@whi@ Do not attempt to use Global chat as workaround for contacting players you can't private message. %" +
-			"@cya@5.@whi@ Global chat is held to a very high community standard. " +
-			"Please ensure that you are familiar with our general rules before using Global chat. % %" +
-			"Once you have read the above rules, please type @gre@::ihavereadandagreetotheglobalchatrules @whi@to agree " +
-			"to them and begin using Global chat", true);
+			StringBuilder rulesBuilder = new StringBuilder();
+			for (String rule : config().GLOBAL_RULES) {
+				rulesBuilder.append(rule);
+				rulesBuilder.append(" %");
+			}
+			ActionSender.sendBox(player, rulesBuilder.toString(), true);
 		} else {
-			player.playerServerMessage(MessageType.QUEST, "@cya@Global Chat Rules");
-			player.playerServerMessage(MessageType.QUEST, "You must read and agree to the following rules before being able to use");
-			player.playerServerMessage(MessageType.QUEST, "the Global chat feature");
-			player.playerServerMessage(MessageType.QUEST, "1. Do not bring up grievances with other players in Global chat");
-			player.playerServerMessage(MessageType.QUEST, "2. Discussion of PKing is allowed, but PK \"banter\" does not belong");
-			player.playerServerMessage(MessageType.QUEST, "in Global chat. Take that to private messages, and remain respectful");
-			player.playerServerMessage(MessageType.QUEST, "3. If you wish to talk with one person specifically, then consider using private");
-			player.playerServerMessage(MessageType.QUEST, "messages instead");
-			player.playerServerMessage(MessageType.QUEST, "4. Do not attempt to use Global chat for contacting players you can't private message");
-			player.playerServerMessage(MessageType.QUEST, "5. Global chat is held to a very high community standard.");
-			player.playerServerMessage(MessageType.QUEST, "Please ensure that you are familiar with our general rules before using Global chat");
-			player.playerServerMessage(MessageType.QUEST, "Once you have read the obve rules, please type");
-			player.playerServerMessage(MessageType.QUEST, "@cya@::ihavereadandagreetotheglobalchatrules");
-			player.playerServerMessage(MessageType.QUEST, "to agree to them and begin using Global chat");
-			player.playerServerMessage(MessageType.QUEST, "(Use the Quest history tab to view this message in its entirety)");
+			for (String rule : config().GLOBAL_RULES) {
+				// Skip whitespace-only lines
+				if (rule.trim().equals("")) {
+					continue;
+				}
+				// We need to keep track of how many characters we've printed to the screen
+				int charCount = 0;
+				StringBuilder lineBuilder = new StringBuilder();
+				for (String word : rule.split(" ")) {
+					// See how many characters will be on the screen if we were to add this word
+					// Don't forget to add 1 for the space
+					charCount += word.length() + 1;
+					// If it will be more than 85, then we will empty the buffer to the screen and move on to the next line
+					if (charCount >= 85) {
+						player.playerServerMessage(MessageType.QUEST, lineBuilder.toString());
+						charCount = word.length() + 1;
+						lineBuilder.setLength(0);
+					}
+					lineBuilder.append(word);
+					lineBuilder.append(" ");
+				}
+				// If there is anything left afterwards, dump it to the screen
+				if (lineBuilder.length() > 0) {
+					player.playerServerMessage(MessageType.QUEST, lineBuilder.toString());
+				}
+			}
 		}
 	}
 

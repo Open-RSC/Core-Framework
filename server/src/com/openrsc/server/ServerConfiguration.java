@@ -8,8 +8,8 @@ import com.openrsc.server.util.YMLReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -107,6 +107,8 @@ public class ServerConfiguration {
 	public boolean SHOW_TUTORIAL_SKIP_OPTION;
 	public boolean WANT_GLOBAL_CHAT;
 	public boolean WANT_GLOBAL_FRIEND;
+	public boolean WANT_GLOBAL_RULES_AGREEMENT;
+	public String[] GLOBAL_RULES;
 	public int GLOBAL_MESSAGE_COOLDOWN;
 	public int GLOBAL_MESSAGE_TOTAL_LEVEL_REQ;
 	public boolean WANT_SKILL_MENUS;
@@ -540,6 +542,10 @@ public class ServerConfiguration {
 		SHOW_TUTORIAL_SKIP_OPTION = tryReadBool("show_tutorial_skip_option").orElse(true);
 		WANT_GLOBAL_CHAT = tryReadBool("want_global_chat").orElse(false);
 		WANT_GLOBAL_FRIEND = tryReadBool("want_global_friend").orElse(false);
+		WANT_GLOBAL_RULES_AGREEMENT = tryReadBool("want_global_rules_agreement").orElse(false);
+		if (WANT_GLOBAL_RULES_AGREEMENT) {
+			readGlobalRules("globalrules.txt");
+		}
 		WANT_EXPERIENCE_ELIXIRS = tryReadBool("want_experience_elixirs").orElse(false);
 		WANT_KEYBOARD_SHORTCUTS = tryReadInt("want_keyboard_shortcuts").orElse(0);
 		WANT_CUSTOM_RANK_DISPLAY = tryReadBool("want_custom_rank_display").orElse(false);
@@ -788,5 +794,30 @@ public class ServerConfiguration {
 		}
 		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
+	}
+
+	private void readGlobalRules(final String fileName) {
+		File file = new File(fileName);
+
+		try {
+			ArrayList<String> globalRules = new ArrayList<String>();
+
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+
+			String line = reader.readLine();
+			while (line != null) {
+				globalRules.add(line);
+				line = reader.readLine();
+			}
+
+			GLOBAL_RULES = globalRules.toArray(new String[0]);
+			return;
+		} catch (FileNotFoundException fileNotFoundException) {
+			LOGGER.info("globalrules.txt not found. Setting want_global_rules_agreement to false");
+		} catch (IOException ioException) {
+			LOGGER.info("IOException when reading globalrules.txt. Setting want_global_rules_agreement to false");
+		}
+		WANT_GLOBAL_RULES_AGREEMENT = false;
+		GLOBAL_RULES = null;
 	}
 }

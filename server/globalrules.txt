@@ -1,0 +1,10 @@
+@cya@Global Chat Rules
+@whi@You must read and agree to the following rules before being able to use the Global chat feature.
+@cya@1.@whi@ Do not bring up grievances with other players in Global chat.
+@cya@2.@whi@ Discussions of PKing are allowed, but PK "banter" does not belong in Global chat. Take that to private messages, and remain respectful.
+@cya@3.@whi@ If you wish to talk with one person specifically, consider using private messages instead.
+@cya@4.@whi@ Do not attempt to use Global chat as workaround for contacting players you can't private message.
+@cya@5.@whi@ Global chat is held to a very high community standard.
+@cya@6.@whi@ All our regular community rules also apply in Global chat.
+
+Once you have read the above rules, please type @gre@::i_have_read_and_agree_to_the_global_chat_rules @whi@to agree to them and begin using Global chat
