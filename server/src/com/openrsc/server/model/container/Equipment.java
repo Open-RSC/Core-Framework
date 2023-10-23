@@ -613,7 +613,7 @@ public class Equipment {
 		}
 
 		// Rune plate mail body and top
-		if ((item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_TOP.id())
+		if (!player.getConfig().EQUIP_QUEST_ITEMS_WITHOUT_QUESTS && (item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_TOP.id())
 			&& (player.getQuestStage(Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
@@ -621,21 +621,21 @@ public class Equipment {
 		}
 
 		// Dragon sword
-		else if (!player.getConfig().WANT_OPENPK_POINTS && item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
+		else if (!player.getConfig().EQUIP_QUEST_ITEMS_WITHOUT_QUESTS && item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return false;
 		}
 
 		// Dragon battle axe
-		else if (!player.getConfig().WANT_OPENPK_POINTS && item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
+		else if (!player.getConfig().EQUIP_QUEST_ITEMS_WITHOUT_QUESTS && item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return false;
 		}
 
 		// Dragon square shield
-		else if (!player.getConfig().WANT_OPENPK_POINTS && item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+		else if (!player.getConfig().EQUIP_QUEST_ITEMS_WITHOUT_QUESTS && item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return false;
