@@ -1030,7 +1030,7 @@ public final class Admins implements CommandTrigger {
 		} else {
 			List<Item> bisList;
 			boolean forRetroConfig = false;
-			if (config().WANT_CUSTOM_SPRITES) {
+			if (config().WANT_CUSTOM_SPRITES && config().WANT_EQUIPMENT_TAB) {
 				bisList = newArrayList(
 					new Item(ItemId.LARGE_DRAGON_HELMET.id()),
 					player.isMale() ? new Item(ItemId.DRAGON_PLATE_MAIL_BODY.id()) : new Item(ItemId.DRAGON_PLATE_MAIL_TOP.id()),
