@@ -46,7 +46,10 @@ get-updates:
 	`pwd`/Deployment_Scripts/get-updates.sh
 
 compile:
-	`pwd`/Deployment_Scripts/get-updates.sh
+	ant -f server/build.xml compile_core
+	ant -f server/build.xml compile_plugins
+	ant -f Client_Base/build.xml compile
+	ant -f PC_Launcher/build.xml compile
 
 # Sets a specified username to be in a specified group in a specified database
 # Call via "make rank-mariadb db=cabbage group=0 username=wolf"
