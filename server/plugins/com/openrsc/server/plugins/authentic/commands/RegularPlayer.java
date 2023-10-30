@@ -16,6 +16,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.custom.minigames.CombatOdyssey;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.MessageFilter;
 import com.openrsc.server.util.languages.PreferredLanguage;
@@ -1062,6 +1063,12 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 			sb.append(String.format("Kittens - raised to adult cats: %d%%", kittensRaised));
 			sb.append(String.format("Kittens - released to the wild: %d%%", kittensReleased));
+			sb.append(" %");
+		}
+
+		if (target.getConfig().WANT_COMBAT_ODYSSEY) {
+			int odysseyCompletions = CombatOdyssey.getPrestige(target);
+			sb.append(String.format("Odyssey - completions: %d%%", odysseyCompletions));
 			sb.append(" %");
 		}
 
