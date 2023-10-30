@@ -60,7 +60,8 @@ public class ItemUseOnNpc implements PayloadProcessor<ItemOnMobStruct, OpcodeIn>
 					NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
 				int[] CERTERS = {NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(),
 					NpcId.WATTO.id(), NpcId.OWEN.id(), NpcId.CHUCK.id(), NpcId.ORVEN.id(),
-					NpcId.PADIK.id(), NpcId.SETH.id(), NpcId.FORESTER.id(), NpcId.SIDNEY_SMITH.id()};
+					NpcId.PADIK.id(), NpcId.SETH.id(), NpcId.FORESTER.id(), NpcId.SIDNEY_SMITH.id(),
+					NpcId.MORTIMER.id(), NpcId.RANDOLPH.id()};
 
 				if (item.getNoted() &&
 					!(inArray(affectedNpc.getID(), BANKERS) || inArray(affectedNpc.getID(), CERTERS))) {
