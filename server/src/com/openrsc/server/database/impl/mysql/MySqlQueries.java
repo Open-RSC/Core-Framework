@@ -27,7 +27,7 @@ public class MySqlQueries {
 	public final String clans, clanMembers, newClan, saveClanMember, deleteClan, deleteClanMembers, updateClan, updateClanMember;
 	public final String expiredAuction, collectibleItems, collectItem, newAuction, cancelAuction, auctionCount, playerAuctionCount, auctionItem, auctionItems, auctionSellOut, updateAuction;
 	public final String discordIdToPlayerId, playerIdFromPairToken, pairDiscord, deleteTokenFromCache, watchlist, watchlists, updateWatchlist, deleteWatchlist;
-	public final String save_IronMan, checkMute, updateMute;
+	public final String save_IronMan, checkMute, updateMute, updatePlayerLocation;
 	public final String selectFriendNameUsername, fixFriendNameCapitalization, insertFormerName, insertLoginAttempt, playerGetFormerNameInvoluntaryChange;
 	private final Server server;
 
@@ -207,6 +207,7 @@ public class MySqlQueries {
 		updateAuction = "UPDATE `" + PREFIX + "auctions` SET `amount_left`=?, `price` = ?, `buyer_info`=? WHERE `auctionID`= ?";
 		checkMute = "SELECT `value` FROM `" + PREFIX + "player_cache` WHERE `key` = ? AND `playerID` = ?";
 		updateMute = "UPDATE `" + PREFIX + "player_cache` SET `value` = ? WHERE `key` = ? AND `playerID` = ?";
+		updatePlayerLocation = "UPDATE `" + PREFIX + "players` SET `x` = ?, `y` = ? WHERE `id` = ?";
 
 		discordIdToPlayerId = "SELECT `playerID` FROM `" + PREFIX + "player_cache` WHERE `value` = ?";
 		playerIdFromPairToken = "SELECT `playerID` FROM `" + PREFIX + "player_cache` WHERE `value` = ?";

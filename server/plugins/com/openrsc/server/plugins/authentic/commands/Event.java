@@ -397,23 +397,6 @@ public final class Event implements CommandTrigger {
 			isTownOrPlayer = false;
 		}
 
-		if(targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
-
-		if(!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not teleport a staff member of equal or greater rank.");
-			return;
-		}
-
-		if(player.isJailed() && targetPlayer.getUsernameHash() == player.getUsernameHash() && !player.isAdmin()) {
-			player.message(messagePrefix + "You can not teleport while you are jailed.");
-			return;
-		}
-
-		originalLocation = targetPlayer.getLocation();
-
 		if (isTownOrPlayer) {
 
 			// Check player first
@@ -449,6 +432,37 @@ public final class Event implements CommandTrigger {
 			return;
 		}
 
+		if(targetPlayer == null) {
+			// Offline teleport
+			String targetUsername = args[0];
+			int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetUsername);
+			if (playerId == -1) {
+				player.message(messagePrefix + "Invalid name or player is not online");
+				return;
+			}
+
+			try {
+				player.getWorld().getServer().getDatabase().updatePlayerLocation(playerId, teleportTo);
+				player.message(messagePrefix + "You have teleported " + targetUsername + " to " + teleportTo);
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 15, player.getUsername() + " has offline teleported " + targetUsername + " to " + teleportTo));
+				return;
+			} catch (GameDatabaseException e) {
+				player.message("There was a database error");
+				LOGGER.catching(e);
+			}
+		}
+
+		if(!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
+			player.message(messagePrefix + "You can not teleport a staff member of equal or greater rank.");
+			return;
+		}
+
+		if(player.isJailed() && targetPlayer.getUsernameHash() == player.getUsernameHash() && !player.isAdmin()) {
+			player.message(messagePrefix + "You can not teleport while you are jailed.");
+			return;
+		}
+
+		originalLocation = targetPlayer.getLocation();
 
 		// Same player and command usage is tpto or goto, we want to set a return point in order to use ::return later
 		if((command.equalsIgnoreCase("goto") || command.equalsIgnoreCase("tpto")) && targetPlayer.getUsernameHash() == player.getUsernameHash()) {

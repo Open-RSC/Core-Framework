@@ -14,6 +14,7 @@ import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.external.SkillDef;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -291,6 +292,8 @@ public abstract class GameDatabase {
 	public abstract void queryInsertPlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException;
 
 	public abstract void queryUpdatePlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException;
+
+	public abstract void queryUpdatePlayerLocation(final int playerId, final Point newLocation) throws GameDatabaseException;
 
 	public abstract void queryInsertFormerName(final int playerId, final String formerName, final String whoChanged, final int changeType, final String reason) throws GameDatabaseException;
 
@@ -1088,6 +1091,10 @@ public abstract class GameDatabase {
 			duration = System.currentTimeMillis() + (duration * 60000L);
 		}
 		queryUpdatePlayerMute(playerId, duration, muteType);
+	}
+
+	public void updatePlayerLocation(final int playerId, final Point newLocation) throws GameDatabaseException {
+		queryUpdatePlayerLocation(playerId, newLocation);
 	}
 
 	protected void queryInventoryAdd(final Player player, final Item item, int slot) throws GameDatabaseException {

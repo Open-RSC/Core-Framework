@@ -17,6 +17,7 @@ import com.openrsc.server.database.utils.SQLUtils;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemStatus;
@@ -2584,6 +2585,20 @@ public class MySqlGameDatabase extends JDBCDatabase {
 			} else {
 				statement.setString(2, "global_mute");
 			}
+			statement.setInt(3, playerId);
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+	}
+
+	@Override
+	public void queryUpdatePlayerLocation(final int playerId, final Point newLocation) throws GameDatabaseException {
+		try (
+			final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().updatePlayerLocation)) {
+			statement.setInt(1, newLocation.getX());
+			statement.setInt(2, newLocation.getY());
 			statement.setInt(3, playerId);
 
 			statement.executeUpdate();
