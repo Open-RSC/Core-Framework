@@ -160,8 +160,13 @@ public class Equipment {
 			case FROM_INVENTORY:
 				request.item.setWielded(false);
 				ItemDefinition curEquipDef = request.item.getDef(player.getWorld());
-				player.updateWornItems(curEquipDef.getWieldPosition(),
-					player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
+				// The item was no longer equipped once we removed it, so we pass isEquipped as false
+				player.updateWornItems(
+					curEquipDef.getWieldPosition(),
+					player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()),
+					curEquipDef.getWearableId(),
+					false
+				);
 				break;
 			case FROM_EQUIPMENT:
 				synchronized (list) {
