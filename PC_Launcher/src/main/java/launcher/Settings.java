@@ -33,7 +33,7 @@ public class Settings {
 	public static String preferredClient2001scape = RSCTIMES;
 	public static String preferredClientKale; // TODO: define name when it is known
 	public static String preferredClientOpenpk = OPENRSC;
-	public static String preferredClientUranium = RSCPLUS;
+	public static String preferredClientUranium = APOSBOT;
 	public static String preferredClientColeslaw = IDLERSC;
 
 	// props keys
