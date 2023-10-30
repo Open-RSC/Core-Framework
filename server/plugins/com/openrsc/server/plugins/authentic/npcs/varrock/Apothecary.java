@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.minigames.ABoneToPick;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -121,7 +122,13 @@ public final class Apothecary implements
 		options.add("Do you know a potion to make hair fall out?");
 		options.add("Have you got any good potions to give way?");
 
-		if (config().WANT_APOTHECARY_QOL && !player.getQolOptOut()) {
+		if (config().A_BONE_TO_PICK
+			&& ABoneToPick.getStage(player) == ABoneToPick.TALKED_TO_ODDENSTEIN
+			&& !ifheld(player, ItemId.CHIPPED_PESTLE_AND_MORTAR.id())) {
+			options.add("Can I have a pestle and mortar?");
+		}
+
+		else if (config().WANT_APOTHECARY_QOL && !player.getQolOptOut()) {
 			options.add("Could you empty these vials?");
 			options.add("Could you fill these vials with water?");
 		}
@@ -174,6 +181,9 @@ public final class Apothecary implements
 					npcsay(player, npc, "Sorry, charity is not my strong point");
 				}
 			}
+		} else if (option == 3 && config().A_BONE_TO_PICK && ABoneToPick.getStage(player) == ABoneToPick.TALKED_TO_ODDENSTEIN
+			&& !ifheld(player, ItemId.CHIPPED_PESTLE_AND_MORTAR.id())) {
+			ABoneToPick.apothecaryDialogue(player, npc);
 		} else if (option == 3 && !player.getQolOptOut() && player.getConfig().WANT_CUSTOM_SPRITES) { // Empty vials
 			emptyVials(player, npc);
 		} else if (option == 4 && !player.getQolOptOut() && player.getConfig().WANT_CUSTOM_SPRITES) { // Fill with water

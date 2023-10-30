@@ -249,4 +249,14 @@
 			<respawnTime>300</respawnTime>
 		</ObjectHarvestingDef>
 	</entry>
+	<entry>
+		<int>1275</int>
+		<ObjectHarvestingDef>
+			<requiredLvl>1</requiredLvl>
+			<prodId>1569</prodId> 
+			<exp>72</exp>
+			<exhaust>16</exhaust>
+			<respawnTime>90</respawnTime>
+		</ObjectHarvestingDef>
+	</entry>
 </map>

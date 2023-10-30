@@ -1,28 +1,18 @@
 package com.openrsc.server.plugins.authentic.defaults;
 
-import com.openrsc.server.constants.AppearanceId;
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Spells;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
-import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.NpcInteraction;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.DefaultHandler;
 import com.openrsc.server.plugins.shared.AttackPlayer;
 import com.openrsc.server.plugins.shared.DropObject;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.util.rsc.DataConversions;
-
-import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -34,7 +24,7 @@ public class Default implements DefaultHandler,
 	CatGrowthTrigger, CommandTrigger, DropObjTrigger,
 	OpInvTrigger, UseObjTrigger, UseInvTrigger, RemoveObjTrigger,
 	UseNpcTrigger, UseLocTrigger, UsePlayerTrigger, UseBoundTrigger, WearObjTrigger,
-	OpNpcTrigger, OpLocTrigger, TakeObjTrigger, AttackPlayerTrigger,
+	OpNpcTrigger, OpLocTrigger, TakeObjTrigger, AttackPlayerTrigger, TimedEventTrigger,
 	AttackNpcTrigger, PlayerDeathTrigger, KillNpcTrigger, PlayerLoginTrigger,
 	PlayerLogoutTrigger, SpellInvTrigger, SpellPlayerTrigger, SpellNpcTrigger,
 	SpellLocTrigger, EscapeNpcTrigger, PlayerKilledPlayerTrigger, PlayerRangePlayerTrigger,
@@ -417,6 +407,16 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public boolean blockWearObj(Player player, Integer invIndex, EquipRequest request) {
+		return false;
+	}
+
+	@Override
+	public void onTimedEvent(Player player) {
+		// No default action
+	}
+
+	@Override
+	public boolean blockTimedEvent(Player player) {
 		return false;
 	}
 }

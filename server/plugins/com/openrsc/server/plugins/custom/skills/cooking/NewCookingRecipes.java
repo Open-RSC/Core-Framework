@@ -30,6 +30,9 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 
 	private boolean canMix(Item itemOne, Item itemTwo) {
 		if (itemOne.getCatalogId() == ItemId.PIE_SHELL.id() || itemTwo.getCatalogId() == ItemId.PIE_SHELL.id()) {
+			if (itemOne.getCatalogId() == ItemId.LILYS_PUMPKIN.id() || itemTwo.getCatalogId() == ItemId.LILYS_PUMPKIN.id()) {
+				return true;
+			}
 			if (itemOne.getCatalogId() == ItemId.EGG.id() || itemTwo.getCatalogId() == ItemId.EGG.id() ||
 				itemOne.getCatalogId() == ItemId.MILK.id() || itemTwo.getCatalogId() == ItemId.MILK.id() ||
 				itemOne.getCatalogId() == ItemId.PUMPKIN.id() || itemTwo.getCatalogId() == ItemId.PUMPKIN.id() ||
@@ -91,11 +94,26 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		// Pumpkin Pie & White Pumpkin Pie
+
 		if (item1.getCatalogId() == ItemId.PIE_SHELL.id() || item2.getCatalogId() == ItemId.PIE_SHELL.id()) {
+			if (item1.getCatalogId() == ItemId.LILYS_PUMPKIN.id() || item2.getCatalogId() == ItemId.LILYS_PUMPKIN.id()) {
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 40) {
+					player.message("You need level 40 cooking to do this");
+					return;
+				}
+				if (ifheld(player, ItemId.PIE_SHELL.id())
+					&& ifheld(player, ItemId.LILYS_PUMPKIN.id())) {
+					if (player.getCarriedItems().remove(new Item(ItemId.LILYS_PUMPKIN.id())) > -1
+						&& player.getCarriedItems().remove(new Item(ItemId.PIE_SHELL.id())) > -1) {
+						give(player, ItemId.UNCOOKED_LILYS_PUMPKIN_PIE.id(), 1);
+						mes("You add the pumpkin to the pie shell");
+					}
+				}
+			}
+			// Pumpkin Pie & White Pumpkin Pie
 			if (item1.getCatalogId() == ItemId.WHITE_PUMPKIN.id() || item2.getCatalogId() == ItemId.WHITE_PUMPKIN.id()) {
-				if (player.getSkills().getLevel(Skill.COOKING.id()) < 50) {
-					player.message("You need level 50 cooking to do this");
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 80) {
+					player.message("You need level 80 cooking to do this");
 					return;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.EGG.id()) &&
@@ -120,8 +138,8 @@ public class NewCookingRecipes implements OpInvTrigger, UseInvTrigger {
 			if (item1.getCatalogId() == ItemId.EGG.id() || item2.getCatalogId() == ItemId.EGG.id() ||
 				item1.getCatalogId() == ItemId.MILK.id() || item2.getCatalogId() == ItemId.MILK.id() ||
 				item1.getCatalogId() == ItemId.PUMPKIN.id() || item2.getCatalogId() == ItemId.PUMPKIN.id()) {
-				if (player.getSkills().getLevel(Skill.COOKING.id()) < 50) {
-					player.message("You need level 50 cooking to do this");
+				if (player.getSkills().getLevel(Skill.COOKING.id()) < 80) {
+					player.message("You need level 80 cooking to do this");
 					return;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.EGG.id()) &&

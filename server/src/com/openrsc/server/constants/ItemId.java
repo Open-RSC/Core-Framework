@@ -1566,7 +1566,7 @@ public enum ItemId {
 	CROWN_OF_THE_HERBALIST(1513),
 	CROWN_OF_THE_OCCULT(1514),
 
-	PINK_HALLOWEEN_MASK(1515),
+	PURPLE_HALLOWEEN_MASK(1515),
 	CAPE_OF_INCLUSION(1516),
 	BLACK_HALLOWEEN_MASK(1517),
 
@@ -1616,12 +1616,27 @@ public enum ItemId {
 	// Ironman plated skirts
 	IRONMAN_PLATED_SKIRT(1557),
 	ULTIMATE_IRONMAN_PLATED_SKIRT(1558),
-	HARDCORE_IRONMAN_PLATED_SKIRT(1559);
+	HARDCORE_IRONMAN_PLATED_SKIRT(1559),
+
+	// 2023 Halloween
+	BONECRUSHER(1560),
+	CHIPPED_PESTLE_AND_MORTAR(1561),
+	ALUMINIUM_BAR(1562),
+	ALUMINIUM_COG(1563),
+	WOODEN_BOX(1564),
+	RING_OF_SKULL(1565),
+	PINK_HALLOWEEN_MASK(1566),
+	SPOOKIES_BONES(1567),
+	SCARIES_BONES(1568),
+	LILYS_PUMPKIN(1569),
+	UNCOOKED_LILYS_PUMPKIN_PIE(1570),
+	LILYS_PUMPKIN_PIE(1571),
+	HALF_A_LILYS_PUMPKIN_PIE(1572);
 
 	private int itemId;
 
 	public static final int maxAuthentic = 1289;
-	public static final int maxCustom = 1501;
+	public static final int maxCustom = 1572;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
 	private static final Map<String, ItemId> byName = new HashMap<String, ItemId>();

@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.ABoneToPick;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -18,6 +19,7 @@ import com.openrsc.server.plugins.triggers.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -267,16 +269,37 @@ public class ErnestTheChicken implements QuestInterface,
 			switch (player.getQuestStage(this)) {
 				case -1:
 				case 0:
+					ArrayList<String> choices = new ArrayList<String>();
+					choices.add("What does this machine do?");
+					choices.add("Is this your house?");
+					if (config().A_BONE_TO_PICK) {
+						int stage = ABoneToPick.getStage(player);
+						if (stage == ABoneToPick.HEARD_AMAZING_SONG) {
+							choices.add("Can you help me get rid of some annoying skeletons?");
+						} else if (stage == ABoneToPick.TALKED_TO_ODDENSTEIN) {
+							choices.add("About the Bonecrusher");
+						} else if (stage == ABoneToPick.FINISHED_BONECRUSHER
+							&& !ifheld(player, ItemId.BONECRUSHER.id())) {
+							choices.add("I've lost the Bonecrusher!");
+						}
+					}
+
+					// Retrieve bonecrusher post-quest
+					// Don't need to check for config because this will always be false if the player hasn't done the event
+					if (ABoneToPick.getStage(player) == ABoneToPick.COMPLETED
+						&& !ifheld(player, ItemId.BONECRUSHER.id())) {
+						choices.add("I've lost the Bonecrusher!");
+					}
+
 					npcsay(player, n, "Be careful in here",
 						"Lots of dangerous equipment in here");
-					int choice = multi(player, n, false, //do not send over
-						"What does this machine do?", "Is this your house?");
+					int choice = multi(player, n, choices.toArray(new String[0]));
 					if (choice == 0) {
-						say(player, n, "What does this machine do?");
 						oddensteinDialogue(player, n, Oddenstein.MACHINE);
 					} else if (choice == 1) {
-						say(player, n, "Is this your house?");
 						oddensteinDialogue(player, n, Oddenstein.HOUSE);
+					} else if (choice == 2) {
+						ABoneToPick.oddensteinDialogue(player, n);
 					}
 					break;
 				case 1:

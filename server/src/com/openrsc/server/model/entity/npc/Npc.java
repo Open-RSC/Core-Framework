@@ -56,7 +56,9 @@ public class Npc extends Mob {
 		NpcId.SIR_MORDRED.id(),
 		NpcId.LUCIEN_EDGE.id(),
 		NpcId.BLACK_KNIGHT_TITAN.id(),
-		NpcId.PETER_SKIPPIN.id()
+		NpcId.PETER_SKIPPIN.id(),
+		NpcId.SPOOKIE.id(),
+		NpcId.SCARIE.id()
 	};
 
 	/**

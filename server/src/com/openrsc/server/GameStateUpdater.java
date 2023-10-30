@@ -22,6 +22,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.enums.OpcodeOut;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
+import com.openrsc.server.plugins.triggers.TimedEventTrigger;
 import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -103,6 +104,9 @@ public final class GameStateUpdater {
 		}
 		if (curTime - player.getLastSaveTime() >= (autoSave) && player.loggedIn()) {
 			player.timeIncrementActivity();
+			if (player.getConfig().WANT_CUSTOM_QUESTS) {
+				player.getWorld().getServer().getPluginHandler().handlePlugin(TimedEventTrigger.class, player, new Object[]{player});
+			}
 			player.save();
 			player.setLastSaveTime(curTime);
 		}

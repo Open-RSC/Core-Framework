@@ -17,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 
-	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 26, 26, 26, 27, 27, 30, 30};
+	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 25, 25, 25, 22, 21, 22, 26, 26};
 	private static final int[] holidayIds = {
 		ItemId.WHITE_UNICORN_MASK.id(),
 		ItemId.BLOOD_UNICORN_MASK.id(),
@@ -33,13 +33,14 @@ public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 		ItemId.RED_HALLOWEEN_MASK.id(),
 		ItemId.BLUE_HALLOWEEN_MASK.id(),
 		ItemId.BLACK_HALLOWEEN_MASK.id(),
+		ItemId.PURPLE_HALLOWEEN_MASK.id(),
 		ItemId.PINK_HALLOWEEN_MASK.id(),
 
 		ItemId.FOX_MASK.id(),
 		ItemId.PESTILENCE_MASK.id(),
 	};
 
-	private static final int[] prizeWeights = {48, 48, 12, 12, 20, 48, 48, 12, 8};
+	private static final int[] prizeWeights = {48, 48, 12, 12, 20, 48};//, 48, 12, 8};
 	private static final int[] prizeIds = {
 		ItemId.PUMPKIN.id(),
 		ItemId.CHOCOLATE_BAR.id(),
@@ -49,9 +50,11 @@ public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 		ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id(),
 
 		ItemId.NOTHING_REROLL4.id(), // hit the trick items
+		/*
 		ItemId.NOTHING_REROLL3.id(), // Roll for a Black items
 		ItemId.NOTHING_REROLL2.id(), // Roll for a good items
 		ItemId.NOTHING_REROLL.id(), // hit the RDT
+		 */
 	};
 
 	private static final int[] trickWeights = {48, 52, 52, 52, 52};

@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.custom.skills.harvesting;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.EnchantedCrowns;
 import com.openrsc.server.content.SkillCapes;
@@ -11,6 +12,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.custom.minigames.ABoneToPick;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -150,6 +152,16 @@ public final class Harvesting implements OpLocTrigger {
 		if (object.getID() == 1238) {
 			startbatch(10);
 			handleXmasHarvesting(player, object);
+		} else if (object.getID() == SceneryId.PUMPKIN.id()) {
+			if (ABoneToPick.getStage(player) != ABoneToPick.COMPLETED) {
+				if (!config().A_BONE_TO_PICK) {
+					mes("These aren't yours; you should probably leave them be");
+				} else {
+					ABoneToPick.pumpkinPatchDialogue(player);
+				}
+			} else {
+				handleHarvesting(object, player, player.click);
+			}
 		} else if (command.equalsIgnoreCase("clip")) {
 			handleClipHarvesting(object, player, player.click);
 		} else {

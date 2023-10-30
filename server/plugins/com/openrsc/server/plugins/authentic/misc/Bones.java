@@ -6,13 +6,15 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.RuneScript;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Bones implements OpInvTrigger {
+public class Bones implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
@@ -64,7 +66,11 @@ public class Bones implements OpInvTrigger {
 		}
 	}
 
+
 	private void giveBonesExperience(Player player, Item item) {
+		giveBonesExperience(player, item, false);
+	}
+	private void giveBonesExperience(Player player, Item item, boolean bonecrusher) {
 
 		// TODO: Config for custom sounds.
 		//owner.playSound("takeobject");
@@ -99,10 +105,13 @@ public class Bones implements OpInvTrigger {
 		}
 		if (skillXP > 0) {
 			for (int praySkillId : prayerSkillIds) {
-				player.incExp(praySkillId, skillXP / factor, true);
+				skillXP /= factor;
+				if (bonecrusher) skillXP /= 2;
+				player.incExp(praySkillId, skillXP, true);
 			}
 		}
 	}
+
 
 	private void prayerCape(final Player player, final Item bone) {
 		final int currentPrayerLevel = player.getSkills().getLevel(Skill.PRAYER.id());
@@ -131,5 +140,37 @@ public class Bones implements OpInvTrigger {
 			}
 			player.getSkills().setLevel(Skill.PRAYER.id(), newPrayer, true);
 		}
+	}
+
+	@Override
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
+		Item bones;
+		if (item1.getCatalogId() == ItemId.BONECRUSHER.id()) {
+			bones = item2;
+		} else {
+			bones = item1;
+		}
+
+		mes("You place the bones into the bonecrusher");
+		RuneScript.remove(bones.getCatalogId(), 1);
+		delay(3);
+		mes("The gods are angered by your sacrilege");
+		giveBonesExperience(player, bones, true);
+	}
+
+	@Override
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
+		if (item1.getCatalogId() == ItemId.BONECRUSHER.id()) {
+			return item2.getCatalogId() == ItemId.BONES.id()
+				|| item2.getCatalogId() == ItemId.BAT_BONES.id()
+				|| item2.getCatalogId() == ItemId.BIG_BONES.id()
+				|| item2.getCatalogId() == ItemId.DRAGON_BONES.id();
+		} else if (item2.getCatalogId() == ItemId.BONECRUSHER.id()) {
+			return item1.getCatalogId() == ItemId.BONES.id()
+				|| item1.getCatalogId() == ItemId.BAT_BONES.id()
+				|| item1.getCatalogId() == ItemId.BIG_BONES.id()
+				|| item1.getCatalogId() == ItemId.DRAGON_BONES.id();
+		}
+		return false;
 	}
 }

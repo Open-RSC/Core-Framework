@@ -41,7 +41,8 @@ public enum Action {
 	playerrangenpc(EntityType.NPC, "playerrangenpc"),
 	playerrangeplayer(EntityType.PLAYER, "playerrangeplayer"),
 	startup(EntityType.NONE, "startup"),
-	trade(EntityType.NONE, "opnpc");
+	trade(EntityType.NONE, "opnpc"),
+	timedevent(EntityType.NONE, "timedevent");
 
 	public static Action getActionFromPlugin(final String pluginInterface) {
 		for (Action action : Action.values()) {

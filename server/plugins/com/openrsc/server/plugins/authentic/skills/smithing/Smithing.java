@@ -9,6 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.minigames.ABoneToPick;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MathUtil;
@@ -35,6 +36,11 @@ public class Smithing implements UseLocTrigger {
 
 	@Override
 	public void onUseLoc(final Player player, GameObject obj, final Item item) {
+		if ((obj.getID() == DORICS_ANVIL || obj.getID() == ANVIL)
+			&& item.getCatalogId() == ItemId.ALUMINIUM_BAR.id()) {
+			ABoneToPick.makeAluminiumCog(player);
+			return;
+		}
 
 		if (obj.getID() == LAVA_ANVIL) {
 			if (player.getCache().hasKey("miniquest_dwarf_youth_rescue")

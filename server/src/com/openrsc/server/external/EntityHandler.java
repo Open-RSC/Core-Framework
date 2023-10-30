@@ -530,6 +530,36 @@ public final class EntityHandler {
 			items.get(ItemId.MITHRIL_PICKAXE.id()).setAppearanceId(437);
 			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setAppearanceId(438);
 			items.get(ItemId.RUNE_PICKAXE.id()).setAppearanceId(439);
+
+			// Make non-enchanted rings wearable
+			items.get(ItemId.GOLD_RING.id()).setWieldable(true);
+			items.get(ItemId.GOLD_RING.id()).setWearableId(1200);
+			items.get(ItemId.GOLD_RING.id()).setWieldPosition(13);
+			items.get(ItemId.GOLD_RING.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.SAPPHIRE_RING.id()).setWieldable(true);
+			items.get(ItemId.SAPPHIRE_RING.id()).setWearableId(1200);
+			items.get(ItemId.SAPPHIRE_RING.id()).setWieldPosition(13);
+			items.get(ItemId.SAPPHIRE_RING.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.EMERALD_RING.id()).setWieldable(true);
+			items.get(ItemId.EMERALD_RING.id()).setWearableId(1200);
+			items.get(ItemId.EMERALD_RING.id()).setWieldPosition(13);
+			items.get(ItemId.EMERALD_RING.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.RUBY_RING.id()).setWieldable(true);
+			items.get(ItemId.RUBY_RING.id()).setWearableId(1200);
+			items.get(ItemId.RUBY_RING.id()).setWieldPosition(13);
+			items.get(ItemId.RUBY_RING.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.DIAMOND_RING.id()).setWieldable(true);
+			items.get(ItemId.DIAMOND_RING.id()).setWearableId(1200);
+			items.get(ItemId.DIAMOND_RING.id()).setWieldPosition(13);
+			items.get(ItemId.DIAMOND_RING.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.DRAGONSTONE_RING.id()).setWieldable(true);
+			items.get(ItemId.DRAGONSTONE_RING.id()).setWearableId(1200);
+			items.get(ItemId.DRAGONSTONE_RING.id()).setWieldPosition(13);
+			items.get(ItemId.DRAGONSTONE_RING.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.OPAL_RING.id()).setWieldable(true);
+			items.get(ItemId.OPAL_RING.id()).setWearableId(1200);
+			items.get(ItemId.OPAL_RING.id()).setWieldPosition(13);
+			items.get(ItemId.OPAL_RING.id()).setRequiredSkillIndex(0);
 		}
 
 		// This enables overrides for existing authentic items so replacement custom equipment animations may be used instead

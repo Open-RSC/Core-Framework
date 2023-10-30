@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.itemactions.RunecraftPotion;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -17,7 +18,7 @@ public class Drinkables implements OpInvTrigger {
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return command.equalsIgnoreCase("drink");
+		return command.equalsIgnoreCase("drink") && !inArray(item.getCatalogId(), RunecraftPotion.runecraftPotions);
 	}
 
 	@Override

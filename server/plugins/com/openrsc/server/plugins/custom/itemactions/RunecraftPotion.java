@@ -1,19 +1,24 @@
 package com.openrsc.server.plugins.custom.itemactions;
-			
+
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
-import com.openrsc.server.util.rsc.DataConversions; 
 import com.openrsc.server.util.rsc.MessageType;
-	
-import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static com.openrsc.server.plugins.Functions.*;
-		
+
 public class RunecraftPotion implements OpInvTrigger {
+
+	public static final int[] runecraftPotions = new int[] {
+		ItemId.FULL_RUNECRAFT_POTION.id(),
+		ItemId.TWO_RUNECRAFT_POTION.id(),
+		ItemId.ONE_RUNECRAFT_POTION.id(),
+		ItemId.FULL_SUPER_RUNECRAFT_POTION.id(),
+		ItemId.TWO_SUPER_RUNECRAFT_POTION.id(),
+		ItemId.ONE_SUPER_RUNECRAFT_POTION.id()
+	};
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
@@ -22,19 +27,10 @@ public class RunecraftPotion implements OpInvTrigger {
 
 		int id = item.getCatalogId();
 
-		if (inArray(id, ItemId.FULL_RUNECRAFT_POTION.id(),
-				ItemId.TWO_RUNECRAFT_POTION.id(),
-				ItemId.ONE_RUNECRAFT_POTION.id(),
-				ItemId.FULL_SUPER_RUNECRAFT_POTION.id(),
-				ItemId.TWO_SUPER_RUNECRAFT_POTION.id(),
-				ItemId.ONE_SUPER_RUNECRAFT_POTION.id())) {
-			return true;
-		}
+		return inArray(id, runecraftPotions);
+	}
 
-		return false;
-	}       
-			
-	@Override	       
+	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (!config().WANT_RUNECRAFT)
 			return;
@@ -47,7 +43,7 @@ public class RunecraftPotion implements OpInvTrigger {
 			useRunecraftPotion(player, item, ItemId.ONE_RUNECRAFT_POTION.id(), false, 1);
 		else if (id == ItemId.ONE_RUNECRAFT_POTION.id())
 			useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), false, 0);
-		else if (id == ItemId.FULL_SUPER_RUNECRAFT_POTION.id()) 
+		else if (id == ItemId.FULL_SUPER_RUNECRAFT_POTION.id())
 			useRunecraftPotion(player, item, ItemId.TWO_SUPER_RUNECRAFT_POTION.  id(), true, 2);
 		else if (id == ItemId.TWO_SUPER_RUNECRAFT_POTION.id())
 			useRunecraftPotion(player, item, ItemId.ONE_SUPER_RUNECRAFT_POTION.  id(), true, 1);
@@ -64,10 +60,10 @@ getWorld().getServer().getConstants().getSkills().getSkillName(affectedStat));
 		}
 
 		if (player.getCarriedItems().remove(item) == -1) return;
-		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());	
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		int newStat;
-		// TODO Should probably put the boost values in some kind of configuration or definition at some point.    
+		// TODO Should probably put the boost values in some kind of configuration or definition at some point.
 		addstat(player, Skill.RUNECRAFT.id(), superPot ? 6 : 3, 0);
 		delay(2);
 		if (left <= 0) {

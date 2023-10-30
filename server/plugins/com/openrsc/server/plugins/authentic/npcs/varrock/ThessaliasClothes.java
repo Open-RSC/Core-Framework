@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
+import com.openrsc.server.plugins.custom.minigames.ABoneToPick;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -61,6 +62,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 		boolean scythe = player.getCarriedItems().hasCatalogID(ItemId.SCYTHE.id()) || player.getBank().countId(ItemId.SCYTHE.id()) > 0;
 		boolean bunnyRing = false;
 		boolean eggRing = false;
+		boolean skullRing = false;
 		boolean prideCape = false;
 
 		// Check for custom items
@@ -68,6 +70,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 			if (config().WANT_CUSTOM_QUESTS) {
 				bunnyRing = player.getCarriedItems().hasCatalogID(ItemId.RING_OF_BUNNY.id()) || player.getBank().countId(ItemId.RING_OF_BUNNY.id()) > 0;
 				eggRing = player.getCarriedItems().hasCatalogID(ItemId.RING_OF_EGG.id()) || player.getBank().countId(ItemId.RING_OF_EGG.id()) > 0;
+				skullRing = player.getCarriedItems().hasCatalogID(ItemId.RING_OF_SKULL.id()) || player.getBank().countId(ItemId.RING_OF_SKULL.id()) > 0;
 			}
 
 			prideCape = player.getCarriedItems().hasCatalogID(ItemId.CAPE_OF_INCLUSION.id()) || player.getBank().countId(ItemId.CAPE_OF_INCLUSION.id()) > 0;
@@ -100,6 +103,11 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 			options.add(optionPrideCape);
 		}
 
+		String optionSkullRing = "I have lost my skull ring can I get another one please?";
+		if (ABoneToPick.getStage(player) == ABoneToPick.COMPLETED && !skullRing) {
+			options.add(optionSkullRing);
+		}
+
 		String optionShop = "What have you got?";
 		options.add(optionShop);
 
@@ -129,16 +137,21 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 			npcsay(player, n, "Ohh you poor dear, I have another here");
 			player.message("Thessalia gives you a new bunny ring");
 			give(player, ItemId.RING_OF_BUNNY.id(), 1);
-		} else if  (options.get(option).equals(optionEggRing)) {
+		} else if (options.get(option).equals(optionEggRing)) {
 			say(player, n, optionEggRing);
 			npcsay(player, n, "Ohh you poor dear, I have another here");
 			player.message("Thessalia gives you a new egg ring");
 			give(player, ItemId.RING_OF_EGG.id(), 1);
-		} else if  (options.get(option).equals(optionPrideCape)) {
+		} else if (options.get(option).equals(optionPrideCape)) {
 			say(player, n, optionPrideCape);
 			npcsay(player, n, "Ohh you poor dear, I have another here");
 			player.message("Thessalia gives you a new cape of inclusion");
 			give(player, ItemId.CAPE_OF_INCLUSION.id(), 1);
+		} else if (options.get(option).equals(optionSkullRing)) {
+			say(player, n, optionSkullRing);
+			npcsay(player, n, "Ohh you poor dear, I have another here");
+			player.message("Thessalia gives you a new skull ring");
+			give(player, ItemId.RING_OF_SKULL.id(), 1);
 		} else {
 			say(player, n, "No, thank you");
 		}

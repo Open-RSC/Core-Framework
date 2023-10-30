@@ -447,6 +447,12 @@ public class Eating implements OpInvTrigger {
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
+		else if (id == ItemId.LILYS_PUMPKIN_PIE.id())
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_LILYS_PUMPKIN_PIE.id()));
+
+		else if (id == ItemId.HALF_A_LILYS_PUMPKIN_PIE.id())
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
+
 		else if (id == ItemId.PUMPKIN_PIE.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_PUMPKIN_PIE.id()));
 

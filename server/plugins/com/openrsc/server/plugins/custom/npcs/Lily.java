@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.Functions;
+import com.openrsc.server.plugins.custom.minigames.ABoneToPick;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import java.util.ArrayList;
 
@@ -24,6 +25,18 @@ public class Lily implements TalkNpcTrigger {
         if (Functions.config().WANT_CUSTOM_SPRITES) { // This should always be true if harvesting is active
             options.add("I like your cape!");
         }
+        if (Functions.config().A_BONE_TO_PICK) {
+        	int stage = ABoneToPick.getStage(player);
+			if (stage == ABoneToPick.COMPLETED) {
+				options.add("The skeletons have been dealt with");
+			} else if (stage <= ABoneToPick.HECKLED_THRICE) {
+        		options.add("Have two skeletons been bothering you?");
+			} else if (stage == ABoneToPick.SPOKE_TO_LILY) {
+        		options.add("Where am I supposed to go?");
+			} else if (stage == ABoneToPick.HEARD_AMAZING_SONG) {
+        		options.add("The skeletons will not leave");
+			}
+		}
 
         int option = multi(options.toArray(new String[0]));
 
@@ -115,6 +128,10 @@ public class Lily implements TalkNpcTrigger {
 						"One day you'll get there!");
 				}
                 break;
+			case 3:
+				if (!Functions.config().A_BONE_TO_PICK) return;
+				ABoneToPick.lilyDialogue(player, npc);
+				break;
         }
 	}
 
