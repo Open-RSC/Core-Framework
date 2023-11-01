@@ -516,9 +516,9 @@ public class ABoneToPick implements TimedEventTrigger, TalkNpcTrigger, KillNpcTr
 				if (agilityLevel < 40) {
 					npcsay(player, spookie, "You okay there " + player.getUsername() + "?");
 					npcsay(player, scarie, "Yeah you're looking a little winded");
-					npcsay(player, spookie, "With only " + agilityLevel + " that must happen a lot!");
+					npcsay(player, spookie, "With only " + agilityLevel + " agility that must happen a lot!");
 				} else {
-					npcsay(player, spookie, "You have " + agilityLevel + "?");
+					npcsay(player, spookie, "You have " + agilityLevel + " agility?");
 					npcsay(player, scarie, "We don't even have anything to say about that");
 					npcsay(player, spookie, "The fact that you would run around in circles for that long speaks for itself");
 				}

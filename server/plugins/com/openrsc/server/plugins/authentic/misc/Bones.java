@@ -105,9 +105,9 @@ public class Bones implements OpInvTrigger, UseInvTrigger {
 		}
 		if (skillXP > 0) {
 			for (int praySkillId : prayerSkillIds) {
-				skillXP /= factor;
-				if (bonecrusher) skillXP /= 2;
-				player.incExp(praySkillId, skillXP, true);
+				int xpToGive = skillXP / factor;
+				if (bonecrusher) xpToGive /= 2;
+				player.incExp(praySkillId, xpToGive, true);
 			}
 		}
 	}
