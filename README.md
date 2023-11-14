@@ -68,7 +68,17 @@ Feel free to submit bug reports in the repository issues section! If you would l
 
 ## Thank You<a name="thankyou"></a>
 This project has been made possible thanks to the time and efforts of countless individuals. Here is a short list:
-- Kenix, Marwolf, Luis, Aenge, Logg, Ipkpjersi, Rick IBM, Lucki, Extendo28, Kristof, Ryan, Pyramin, Mige, RSC2001, Red Bracket, Retrogamer02, Zoso_, Fah Qu, KO9, Aurora, Leclerc, Peeter, xEnt, Christofosho, Frogdoubler, Kepler, Rodgerwilco, Orbrun, Yumeko, Seatta, Hikilaka, IanWONeill, Jamosaur, Bl0dzy, Yong Min, Lothy, Cleaned, Hixk, Neq, Ceikry, Heleor, Beast Fable, and many more!
+- Kenix, Marwolf, Luis, Aenge, Logg, Ipkpjersi, Rick IBM, Lucki, Extendo28, Kristof, Ryan, Pyramin, Mige, RSC2001, Red Bracket, Retrogamer02, Zoso_, Fah Qu, Aurora, Leclerc, Christofosho, Frogdoubler, Kepler, Orbrun, Yumeko, Seatta, IanWONeill, Jamosaur, Bl0dzy, Cleaned, Hixk, Neq, Ceikry, Heleor, Beast Fable, Morgue, Conker, and many more!
+
+Additionally, we'd like to thank the following people for consulting on performance and other issues:
+- Kris, Graham, and Blakeman8192
+
+OpenRSC was originally based on the following RSC replication & private server projects:
+- Tooling, reverse engineering, and general concept (2004-2005) by wL and saevion.
+- RSCDaemon (2006-2007) by eXemplar, SeanWT, pd, Mediator, and Reines.
+- RSCAngel (2007-2010) by Peeter, xEnt, and KO9.
+- RSCRevolution (2013-2016) by Fate, Kevin, and n0m.
+- RSCLegacy (2016-2018) by Fate and Kevin.
 
 Several organizations and companies have helped us out along the way and we are forever grateful to them:
 - <a href="https://rsc.plus/">RSC+</a>
