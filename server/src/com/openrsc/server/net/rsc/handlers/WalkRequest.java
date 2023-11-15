@@ -57,7 +57,14 @@ public class WalkRequest implements PayloadProcessor<WalkStruct, OpcodeIn> {
 						victimPlayer.setRanAwayTimer(); //This player also needs to be immune from player attacks for a while.
 					}
 					player.setLastCombatState(CombatState.RUNNING);
-					opponent.setLastCombatState(CombatState.WAITING);
+					if (opponent.isPlayer()) {
+						// protect both players engaged in PvP combat from being attacked by NPCs if the other player retreats
+						opponent.setLastCombatState(CombatState.RUNNING);
+						opponent.resetCombatEvent();
+						opponent.setRanAwayTimer();
+					} else {
+						opponent.setLastCombatState(CombatState.WAITING);
+					}
 					player.resetCombatEvent();
 					player.setRanAwayTimer();
 					ActionSender.sendSound(player, "retreat");
