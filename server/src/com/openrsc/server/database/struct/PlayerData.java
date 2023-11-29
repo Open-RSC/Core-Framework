@@ -7,6 +7,7 @@ public class PlayerData {
 	public int combatLevel;
 	public int totalLevel;
 	public long loginDate;
+	public long creationDate;
 	public String loginIp;
 	public int xLocation;
 	public int yLocation;

@@ -40,7 +40,8 @@ public final class DataConversions {
 		'U', 'V', 'W', 'X', 'Y', 'Z', '<', '>', '^', '_', '|', '/'};
 	private static final int bcryptWorkFactor = 10;
 	private static final String bcryptTest = "$2y$"+bcryptWorkFactor+"$";
-	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
+	private static SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
+	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMMM yyyy");
 	private static MessageDigest md5, sha1, sha512;
 	private static Random rand = new Random();
 	private static SecureRandom secureRandom = new SecureRandom();
@@ -514,7 +515,11 @@ public final class DataConversions {
 	}
 
 	public static String timeFormat(long l) {
-		return formatter.format(l);
+		return timeFormatter.format(l);
+	}
+
+	public static String dateFormat(long l) {
+		return dateFormatter.format(l);
 	}
 
 	public static String timeSince(long time) {

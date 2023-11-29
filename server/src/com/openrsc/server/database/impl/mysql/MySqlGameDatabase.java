@@ -530,6 +530,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 						playerData.combatLevel = result.getInt("combat");
 						playerData.totalLevel = result.getInt("skill_total");
 						playerData.loginDate = result.getLong("login_date");
+						playerData.creationDate = result.getLong("creation_date");
 						playerData.loginIp = result.getString("login_ip");
 						playerData.xLocation = result.getInt("x");
 						playerData.yLocation = result.getInt("y");

@@ -525,17 +525,20 @@ public final class RegularPlayer implements CommandTrigger {
 		long sessionPlay = player.getSessionPlay();
 		long timePlayed = (player.getCache().hasKey("total_played") ?
 			player.getCache().getLong("total_played") : 0) + sessionPlay;
+		long creationDate = player.getWorld().getServer().getDatabase().queryLoadPlayerData(player).creationDate * 1000;
 
 		if (player.getClientLimitations().supportsMessageBox) {
 			ActionSender.sendBox(player,
 				"@lre@Player Information: %"
 					+ " %"
 					+ "@gre@Coordinates:@whi@ " + player.getLocation().toString() + " %"
+					+ "@gre@Creation Date:@whi@ " + DataConversions.dateFormat(creationDate) + " %"
 					+ "@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed) + " %"
 				, true);
 		} else {
 			player.playerServerMessage(MessageType.QUEST,"@lre@Player Information:");
 			player.playerServerMessage(MessageType.QUEST,"@gre@Coordinates:@whi@ " + player.getLocation().toString());
+			player.playerServerMessage(MessageType.QUEST,"@gre@Creation Date:@whi@ " + DataConversions.dateFormat(creationDate));
 			player.playerServerMessage(MessageType.QUEST,"@gre@Total Time Played:@whi@ " + DataConversions.getDateFromMsec(timePlayed));
 		}
 	}
