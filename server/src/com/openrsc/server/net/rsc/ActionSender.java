@@ -1109,8 +1109,10 @@ public class ActionSender {
 		}
 		p = getGenerator(player).generate(struct, player);
 		if (p != null) {
+			LOGGER.info("Closing channel for logout request with packet for player " + player.getUsername());
 			player.getChannel().writeAndFlush(p).addListener((ChannelFutureListener) arg0 -> arg0.channel().close());
 		} else {
+			LOGGER.info("Closing channel for logout request with null packet for player " + player.getUsername());
 			// Packet was not able to be generated
 			// Just proceed to close the channel
 			player.getChannel().close();

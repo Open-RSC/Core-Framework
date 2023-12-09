@@ -47,6 +47,16 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) {
+		ConnectionAttachment att = ctx.channel().attr(attachment).get();
+		Player player = null;
+		if (att != null) {
+			player = att.player.get();
+		}
+		if (player != null) {
+			LOGGER.info("Channel inactive for player " + player.getUsername() + " with IP " + ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress() +  ", closing channel");
+		} else {
+			LOGGER.info("Channel inactive for null player with IP " + ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress() +  ", closing channel");
+		}
 		ctx.channel().close();
 		ctx.fireChannelInactive();
 	}
@@ -85,6 +95,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 				// Custom client sends opcode 19 to request server configs
 				if (packet.getID() == 19 && packet.getLength() < 2) {
 					if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), false)) {
+						LOGGER.info("Packet 19 with size " + packet.getLength() +  " not allowed for null player with IP " + ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress() + ", closing channel");
 						ctx.channel().close();
 						return;
 					}
@@ -97,6 +108,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 				}
 			} else {
 				if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), true)) {
+					LOGGER.info("Packet " + packet.getID() + " with size " + packet.getLength() +  " not allowed for player " + player.getUsername() + " with IP " + ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress() + ", closing channel");
 					ctx.channel().close();
 
 					return;
@@ -115,6 +127,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		ctx.channel().attr(attachment).set(new ConnectionAttachment());
 
 		if (!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
+			LOGGER.info("Channel register not allowed for IP " + hostAddress + ", temporarily banning IP and closing channel");
 			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
 			ctx.channel().close();
 		}
@@ -152,8 +165,10 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 			LOGGER.catching(e);
 		}
 
-		if (ctx.channel().isActive())
+		if (ctx.channel().isActive()) {
+			LOGGER.info("Channel still active in exceptCaught for IP " + ctx.channel().remoteAddress() + (ctx.channel().attr(attachment).get() == null ? "" : " : Attached Player " + ctx.channel().attr(attachment).get().player.get()));
 			ctx.channel().close();
+		}
 	}
 
 	@Override
