@@ -169,7 +169,6 @@ public class PlayerService implements IPlayerService {
         player.setGroupID(playerData.groupId);
         player.setUsername(playerData.username);
         player.setFormerName(playerData.former_name);
-        player.setTotalLevel(playerData.totalLevel);
         /*if (player.isUsingCustomClient()) {
             player.setCombatStyle((byte) playerData.combatStyle);
         } else {

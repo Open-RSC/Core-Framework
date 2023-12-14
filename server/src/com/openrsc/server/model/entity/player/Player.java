@@ -80,7 +80,6 @@ public final class Player extends Mob {
 	// so everything is multiplied by 2 to avoid decimals
 	private final int KITTEN_ACTIVITY_THRESHOLD = 50;
 	public int sessionId;
-	private int totalLevel = 0;
 	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
 	private int actionsMouseStill = 0;
 	private long lastMouseMoved = 0;
@@ -3824,11 +3823,7 @@ public final class Player extends Mob {
 	}
 
 	public int getTotalLevel() {
-		return this.totalLevel;
-	}
-
-	public void setTotalLevel(int total) {
-		this.totalLevel = total;
+		return getSkills().getTotalLevel();
 	}
 
 	public long getLastExchangeTime() {
