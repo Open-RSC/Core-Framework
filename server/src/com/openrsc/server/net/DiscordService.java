@@ -469,11 +469,12 @@ public class DiscordService implements Runnable{
 	public void playerLog(final Player player, final String text) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
-		final String playerMessage = String.format("%s %s %s: %s: %s",
+		final String playerMessage = String.format("%s %s %s: %s %s: %s",
 				"[" + dateFormat.format(calendar.getTime()) +  "]",
 				"[" + player.getWorld().getServer().getConfig().SERVER_NAME + "]",
 				player.getUsername(),
 				"[X: " + player.getX() + ", Y: " + player.getY() + "]",
+				"[Client Version: " + player.getClientVersion() + "]",
 				text
 		);
 		generalLog(playerMessage);
