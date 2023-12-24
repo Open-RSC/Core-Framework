@@ -2324,6 +2324,12 @@ public class EntityHandler {
 		// head, shirt, pants, shield, weapon, hat, body, legs, gloves, boots, amulet, cape
 		sprites = new int[]{0, 1, 2, -1, 109, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Todd Sandyman", "Some of the children call him \"The White Ogre\"", "", 0, 0, 3, 0, false, sprites, 16753488, 0xFFFFFF, 0x663300, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Praeteritum", "The ghost of Christmas past", "", 15, 15, 5, 15, false, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));
+		sprites = new int[]{137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Praesens", "The ghost of Christmas present", "", 15, 15, 5, 15, false, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));
+		sprites = new int[]{137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Futurum", "The ghost of Christmas future", "", 15, 15, 5, 15, false, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -4093,6 +4099,25 @@ public class EntityHandler {
 		items.add(new ItemDef("Lily's pumpkin pie", "Mmm a pie made with Lily's pumpkins", "eat", 30, 112, "items:604", false, false, 0, 16633518, false, false, true, 1571));
 		items.add(new ItemDef("Half a Lily's pumpkin pie", "Mmm a pie made with Lily's pumpkins", "eat", 5, 113, "items:605", false, false, 0, 16633518, false, false, true, 1572));
 
+		// Christmas 2023
+		items.add(new ItemDef("Duke Horacio's Journal", "This is a journal not a diary", "read", 1, 28, "items:28", false, false, 0, 0xFF0000, false, true, false, 1573));
+		items.add(new ItemDef("parchment", "I can write on this", "write", 1, 244, "items:244", false, false, 0, 14540253, false, true, false, 1574));
+		items.add(new ItemDef("Apology letter", "A heartfelt apology letter", "read", 1, 244, "items:244", false, false, 0, 14540253, false, true, false, 1575));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x820101, false, true, false, 1576));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0xc3c90e, false, true, false, 1577));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x012c82, false, true, false, 1578));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x6804b5, false, true, false, 1579));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0xcf7602, false, true, false, 1580));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x106105, false, true, false, 1581));
+		items.add(new ItemDef("Party Hat", "Party!!!", "", 2, 189, "items:189", false, true, 32, 1, false, false, true, 1582));
+		items.add(new ItemDef("Santa's hat", "It's a santa claus' hat", "", 160, -1, "items:pinksantahat", false, true, 32, 0, false, false, true, 1583));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x820101, false, true, false, 1584));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0xc3c90e, false, true, false, 1585));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x012c82, false, true, false, 1586));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x6804b5, false, true, false, 1587));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0xcf7602, false, true, false, 1588));
+		items.add(new ItemDef("Christmas sweater", "Knitted with love!", "", 5, 87, "items:christmassweater", false, true, 64, 0x106105, false, true, false, 1589));
+
 		// Custom certificate names
 		if (Config.S_WANT_BANK_NOTES && !Config.S_WANT_CERT_AS_NOTES) {
 			for (int i : new int[]{1543, 1546, 1547, 1548, 1549, 1550, 1551, 1552}) {
@@ -4811,6 +4836,22 @@ public class EntityHandler {
 			// Halloween 2023
 			animations.add(new AnimationDef("halloweenmask_pink", "equipment", 0, 0, true, false, 0));//540 - pink halloween mask
 			animations.add(new AnimationDef("skeletonmorph", "npc", 16777215, 0, true, false, 0));//541
+
+			// Christmas 2023
+			animations.add(new AnimationDef("christmassweater", "equipment", 0x820101, 0, true, false, 0));//542 - red
+			animations.add(new AnimationDef("christmassweater", "equipment", 0xc3c90e, 0, true, false, 0));//543 - yellow
+			animations.add(new AnimationDef("christmassweater", "equipment", 0x012c82, 0, true, false, 0));//544 - blue
+			animations.add(new AnimationDef("christmassweater", "equipment", 0x6804b5, 0, true, false, 0));//545 - purple
+			animations.add(new AnimationDef("christmassweater", "equipment", 0xcf7602, 0, true, false, 0));//546 - orange
+			animations.add(new AnimationDef("christmassweater", "equipment", 0x106105, 0, true, false, 0));//547 - green
+			animations.add(new AnimationDef("partyhat", "equipment", 0x1a1a1a, 0, true, false, 0));//548 - black party hat
+			animations.add(new AnimationDef("pinksantahat", "equipment", 0, 0, true, false, 0));//549 - pink santa hat
+			animations.add(new AnimationDef("fchristmassweater", "equipment", 0x820101, 0, true, false, 0));//550 - red
+			animations.add(new AnimationDef("fchristmassweater", "equipment", 0xc3c90e, 0, true, false, 0));//551 - yellow
+			animations.add(new AnimationDef("fchristmassweater", "equipment", 0x012c82, 0, true, false, 0));//552 - blue
+			animations.add(new AnimationDef("fchristmassweater", "equipment", 0x6804b5, 0, true, false, 0));//553 - purple
+			animations.add(new AnimationDef("fchristmassweater", "equipment", 0xcf7602, 0, true, false, 0));//554 - orange
+			animations.add(new AnimationDef("fchristmassweater", "equipment", 0x106105, 0, true, false, 0));//555 - green
 		}
 	}
 

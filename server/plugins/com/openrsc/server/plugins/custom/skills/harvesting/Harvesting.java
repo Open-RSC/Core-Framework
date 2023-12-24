@@ -174,7 +174,7 @@ public final class Harvesting implements OpLocTrigger {
 		delay(4);
 
 		final Item present = new Item(ItemId.PRESENT.id());
-		if (getProduce(1, 1)) {
+		if (getProduce(1, 99)) {
 			//check if the tree still has gifts
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			if (obj == null) {

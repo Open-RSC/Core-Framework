@@ -278,6 +278,18 @@ public final class WorldPopulator {
 						if (!getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
 							npclocs.removeIf(npcLoc -> npcLoc.getId() == NpcId.DEATH.id() && npcLoc.startX < 600);
 						}
+
+						// Remove the Christmas party NPCs upstairs in the Rising Sun Inn
+						if (!getWorld().getServer().getConfig().A_LUMBRIDGE_CAROL) {
+							npclocs.removeIf(npcLoc -> npcLoc.startX == 320
+								&& (npcLoc.getId() == NpcId.DUKE_OF_LUMBRIDGE.id()
+								|| npcLoc.getId() == NpcId.MUM.id()
+								|| npcLoc.getId() == NpcId.TRAMP.id()
+								|| npcLoc.getId() == NpcId.SHILOP.id()));
+							npclocs.removeIf(npcLoc -> npcLoc.getId() == NpcId.PRAETERITUM.id());
+							npclocs.removeIf(npcLoc -> npcLoc.getId() == NpcId.PRAESENS.id());
+							npclocs.removeIf(npcLoc -> npcLoc.getId() == NpcId.FUTURUM.id());
+						}
 					}
 					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
 				}

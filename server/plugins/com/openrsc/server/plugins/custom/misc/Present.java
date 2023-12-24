@@ -38,8 +38,8 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		 * Holiday Items Table
 		 * Authentic holiday items are meant to be more common
 		 */
-		holidayTable.addItemDrop(ItemId.CHRISTMAS_CRACKER.id(), 1, 64, false);
-		holidayTable.addItemDrop(ItemId.SANTAS_HAT.id(), 1, 64, false);
+		holidayTable.addItemDrop(ItemId.CHRISTMAS_CRACKER.id(), 1, 32, false);
+		holidayTable.addItemDrop(ItemId.SANTAS_HAT.id(), 1, 24, false);
 		holidayTable.addItemDrop(ItemId.CHRISTMAS_CAPE.id(), 1, 9, false);
 		holidayTable.addItemDrop(ItemId.SANTAS_HAT_BEARD.id(), 1, 9, false);
 		holidayTable.addItemDrop(ItemId.CHRISTMAS_APRON.id(), 1, 9, false);
@@ -53,6 +53,8 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		holidayTable.addItemDrop(ItemId.CANE_COOKIE.id(), 1, 12, false);
 		holidayTable.addItemDrop(ItemId.STAR_COOKIE.id(), 1, 12, false);
 		holidayTable.addItemDrop(ItemId.TREE_COOKIE.id(), 1, 12, false);
+		holidayTable.addItemDrop(ItemId.BLACK_PARTY_HAT.id(), 1, 9, false);
+		holidayTable.addItemDrop(ItemId.PINK_SANTA_HAT.id(), 1, 9, false);
 
 		/**
 		 * Junk Items
@@ -247,8 +249,9 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		/**
 		 * Bring all the tables together
 		 */
-		cabbagePresentDrops.addTableDrop(holidayTable, 128);
-		cabbagePresentDrops.addTableDrop(junkTable, 48);
+		cabbagePresentDrops.addTableDrop(holidayTable, 170);
+		cabbagePresentDrops.addTableDrop(junkTable, 86);
+		/*
 		cabbagePresentDrops.addTableDrop(bronzeTable, 14);
 		cabbagePresentDrops.addTableDrop(ironTable, 13);
 		cabbagePresentDrops.addTableDrop(steelTable, 12);
@@ -257,6 +260,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		cabbagePresentDrops.addTableDrop(addyTable, 10);
 		cabbagePresentDrops.addTableDrop(runeTable, 6);
 		cabbagePresentDrops.addTableDrop(ultraRareTable, 2);
+		 */
 
 		/**
 		 *

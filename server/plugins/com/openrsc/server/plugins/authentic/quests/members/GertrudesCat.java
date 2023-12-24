@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.custom.minigames.ALumbridgeCarol;
 import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
@@ -230,6 +231,17 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		}
 		//shilop & wilough same dialogue
 		else if (n.getID() == NpcId.SHILOP.id() || n.getID() == NpcId.WILOUGH.id()) {
+			if (config().A_LUMBRIDGE_CAROL && n.getID() == NpcId.SHILOP.id()) {
+				if (ALumbridgeCarol.inPartyRoom(n)) {
+					ALumbridgeCarol.partyDialogue(player, n);
+					return;
+				}
+				int stage = ALumbridgeCarol.getStage(player);
+				if (stage >= ALumbridgeCarol.FIND_SHILOP && stage <= ALumbridgeCarol.GET_SWORD) {
+					ALumbridgeCarol.shilopDialogue(player, n, stage);
+					return;
+				}
+			}
 			switch (player.getQuestStage(this)) {
 				case 0:
 					say(player, n, "hello youngster");

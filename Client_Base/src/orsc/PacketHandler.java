@@ -2715,6 +2715,10 @@ public class PacketHandler {
 					player.colourTop = packetsIncoming.getUnsignedByte();
 					player.colourBottom = packetsIncoming.getUnsignedByte();
 					player.colourSkin = packetsIncoming.getUnsignedByte();
+					if (Config.S_WANT_CUSTOM_SPRITES && player == mc.getLocalPlayer()) {
+						// Change mum's skin color to match the player's
+						EntityHandler.getNpcDef(812).skinColour = mc.getPlayerSkinColors()[player.colourSkin];
+					}
 					player.level = packetsIncoming.getUnsignedByte();
 					player.skullVisible = packetsIncoming.getUnsignedByte();
 					if (packetsIncoming.getByte() == 1) {

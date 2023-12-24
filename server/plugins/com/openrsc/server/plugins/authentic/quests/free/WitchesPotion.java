@@ -428,12 +428,28 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onTalkNpc(final Player player, final Npc npc) {
 		if (npc.getID() == NpcId.HETTY.id()) {
-
-			// There's no point in doing the regular dialog if the event is active
-			// There aren't any rats
 			if (config().MICE_TO_MEET_YOU_EVENT) {
-				miceToMeetYou(player, npc);
-				return;
+				int witchPotionStage = player.getQuestStage(this);
+				int miceToMeetYouStage = player.getCache().hasKey("mice_to_meet_you") ? player.getCache().getInt("mice_to_meet_you") : 0;
+				// If Witch's Potion is in progress, we want to skip this next bit and just go straight to the quest dialogue
+				if (witchPotionStage == 0 || witchPotionStage == -1) {
+					// If Mice to Meet You is in progress, we'll go straight to that
+					if (miceToMeetYouStage > 0) {
+						miceToMeetYou(player, npc);
+						return;
+					} else {
+						// If neither are in progress (not started or completed), we'll ask
+						int choice = multi(false,
+							"Witch's Potion",
+							"Mice to Meet You");
+						if (choice == -1) {
+							return;
+						} else if (choice == 1) {
+							miceToMeetYou(player, npc);
+							return;
+						}
+					}
+				}
 			} else if (player.getCache().hasKey("mice_to_meet_you") && !hasEak(player)) {
 				returnEak(player);
 				return;

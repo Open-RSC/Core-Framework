@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.npcs.varrock;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.minigames.ALumbridgeCarol;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -12,6 +13,8 @@ import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isP
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
+import java.util.ArrayList;
+
 public class Tramp implements TalkNpcTrigger {
 	public boolean blockTalkNpc(final Player player, final Npc npc) {
 		return npc.getID() == NpcId.TRAMP.id();
@@ -19,11 +22,28 @@ public class Tramp implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
+		if (config().A_LUMBRIDGE_CAROL && ALumbridgeCarol.inPartyRoom(n)) {
+			ALumbridgeCarol.partyDialogue(player, n);
+			return;
+		}
 		npcsay(player, n, "Spare some change guv?");
-		int menu = multi(player, n, "Sorry I haven't got any",
-			"Go get a job",
-			"Ok here you go",
-			"Is there anything down this alleyway?");
+
+		ArrayList<String> options = new ArrayList<String>();
+		options.add("Sorry I haven't got any");
+		options.add("Go get a job");
+		options.add("Ok here you go");
+		options.add("Is there anything down this alleyway?");
+		if (config().A_LUMBRIDGE_CAROL) {
+			int stage = ALumbridgeCarol.getStage(player);
+			if (stage == ALumbridgeCarol.FIND_TRAMP) {
+				options.add("I have a job offer for you");
+			} else if (stage == ALumbridgeCarol.GET_CLOTHES) {
+				options.add("About the clothes...");
+			}
+		}
+
+		int menu = multi(player, n, options.toArray(new String[0]));
+
 		if (menu == 0) {
 			npcsay(player, n, "Thanks anyway");
 		} else if (menu == 1) {
@@ -81,6 +101,8 @@ public class Tramp implements TalkNpcTrigger {
 					player.getCache().store("spoken_tramp", true);
 				}
 			}
+		} else if (menu == 4 && config().A_LUMBRIDGE_CAROL) {
+			ALumbridgeCarol.trampDialogue(player, n);
 		}
 	}
 }

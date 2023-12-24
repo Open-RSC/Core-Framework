@@ -266,6 +266,7 @@ public class ServerConfiguration {
 	public boolean DEATH_ISLAND = false;
 	public boolean PRIDE_MONTH = false;
 	public boolean A_BONE_TO_PICK = false;
+	public boolean A_LUMBRIDGE_CAROL = false;
 	public int BASED_MAP_DATA = 64;
 	public int BASED_CONFIG_DATA = 85;
 	public boolean CAN_FEATURE_MEMBS;
@@ -698,6 +699,7 @@ public class ServerConfiguration {
 		DEATH_ISLAND = tryReadBool("death_island").orElse(false);
 		PRIDE_MONTH = tryReadBool("pride_month").orElse(false) && SystemUtil.isJune();
 		A_BONE_TO_PICK = tryReadBool("a_bone_to_pick").orElse(false);
+		A_LUMBRIDGE_CAROL = tryReadBool("a_lumbridge_carol").orElse(false);
 
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
 	}

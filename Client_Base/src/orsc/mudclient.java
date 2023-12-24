@@ -17332,7 +17332,7 @@ public final class mudclient implements Runnable {
 		return playerClothingColors;
 	}
 
-	private int[] getPlayerSkinColors() {
+	public int[] getPlayerSkinColors() {
 		return playerSkinColors;
 	}
 
