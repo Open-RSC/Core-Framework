@@ -17,7 +17,7 @@ public class MySqlQueries {
 	public final String save_DeleteInv, save_InventoryAdd, save_InventoryRemove, save_DeleteEquip, save_EquipmentAdd, save_EquipmentRemove, save_UpdateBasicInfo;
 	public final String save_DeleteQuests, save_DeleteAchievements, save_DeleteCache, save_AddCache, save_AddQuest, save_AddAchievement;
 	public final String save_Password, save_PreviousPasswords, previousPassword, achievements, rewards, tasks;
-	public final String playerLoginData, fetchLoginIp, fetchLinkedPlayers, playerPendingRecovery, playerChangeRecoveryInfo, playerRecoveryInfo, newPlayerRecoveryInfo, newPlayerChangeRecoveryInfo, playerRecoveryAttempt;
+	public final String playerLoginData, fetchPlayerIps, fetchLinkedPlayers, playerPendingRecovery, playerChangeRecoveryInfo, playerRecoveryInfo, newPlayerRecoveryInfo, newPlayerChangeRecoveryInfo, playerRecoveryAttempt;
 	public final String playerLoginDataByFormerName, userToId, usernameToProperUsername, idToUser, initializeOnlineUsers;
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate, playerLastRecoveryTryId, cancelRecoveryChangeRequest;
 	public final String contactDetails, newContactDetails, updateContactDetails;
@@ -168,8 +168,10 @@ public class MySqlQueries {
 		banPlayer = "UPDATE `" + PREFIX + "players` SET `banned`=?, offences = offences + 1 WHERE `username` LIKE ?";
 		unbanPlayer = "UPDATE `" + PREFIX + "players` SET `banned`= 0 WHERE `username` LIKE ?";
 		initializeOnlineUsers = "UPDATE `" + PREFIX + "players` SET `online`='0' WHERE online='1'";
-		fetchLoginIp = "SELECT `login_ip` FROM `" + PREFIX + "players` WHERE `username` like ?";
-		fetchLinkedPlayers = "SELECT `username`, `group_id` FROM `" + PREFIX + "players` WHERE `login_ip` LIKE ?";
+		fetchPlayerIps = "SELECT `login_ip`, `creation_ip` FROM `" + PREFIX + "players` WHERE `username` like ?";
+		fetchLinkedPlayers = "SELECT p.`id`, p.`username`, p.`banned`, gm.`key` AS `global_mute_key`, gm.`value` AS `global_mute_value`, me.`key` AS `mute_expires_key`, me.`value` AS `mute_expires_value` FROM `"
+			+ PREFIX + "players` p LEFT JOIN `" + PREFIX + "player_cache` gm ON p.`id` = gm.`playerId` AND gm.`key` = 'global_mute' LEFT JOIN `"
+			+ PREFIX + "player_cache` me ON p.`id` = me.`playerId` AND me.`key` = 'mute_expires' WHERE (p.`login_ip` LIKE ? OR p.`login_ip` LIKE ? OR p.`creation_ip` LIKE ? OR p.`creation_ip` LIKE ?)";
 		addNpcSpawn = "INSERT INTO `" + PREFIX + "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES(?, ?, ?, ?, ?, ?, ?)";
 		removeNpcSpawn = "DELETE FROM `" + PREFIX + "npclocs` WHERE id=? AND startX=? AND startY=? AND minX=? AND maxX=? AND minY=? AND maxY=?";
 		addObjectSpawn = "INSERT INTO `" + PREFIX + "objects`(`x`, `y`, `id`, `direction`, `type`) VALUES (?, ?, ?, ?, ?)";

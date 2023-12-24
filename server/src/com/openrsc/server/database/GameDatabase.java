@@ -95,9 +95,9 @@ public abstract class GameDatabase {
 
 	public abstract PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException;
 
-	protected abstract String queryPlayerLoginIp(String username) throws GameDatabaseException;
+	protected abstract PlayerIps queryPlayerIps(String username) throws GameDatabaseException;
 
-	protected abstract LinkedPlayer[] queryLinkedPlayers(String ip) throws GameDatabaseException;
+	protected abstract LinkedPlayer[] queryLinkedPlayers(String loginIp, String creationIp) throws GameDatabaseException;
 
 	protected abstract void queryInsertNpcSpawn(NPCLoc loc) throws GameDatabaseException;
 
@@ -415,12 +415,12 @@ public abstract class GameDatabase {
 		return queryUsernameFromPlayerId(playerId);
 	}
 
-	public String playerLoginIp(final String username) throws GameDatabaseException {
-		return queryPlayerLoginIp(username);
+	public PlayerIps playerIps(final String username) throws GameDatabaseException {
+		return queryPlayerIps(username);
 	}
 
-	public LinkedPlayer[] linkedPlayers(final String ip) throws GameDatabaseException {
-		return queryLinkedPlayers(ip);
+	public LinkedPlayer[] linkedPlayers(final String loginIp, String creationIp) throws GameDatabaseException {
+		return queryLinkedPlayers(loginIp, creationIp);
 	}
 
 	public void addNpcSpawn(final NPCLoc loc) throws GameDatabaseException {

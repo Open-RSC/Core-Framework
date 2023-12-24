@@ -2263,37 +2263,54 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	}
 
 	@Override
-	public String queryPlayerLoginIp(final String username) throws GameDatabaseException {
-		String ip = null;
-		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().fetchLoginIp)) {
+	public PlayerIps queryPlayerIps(final String username) throws GameDatabaseException {
+		PlayerIps playerIps = null;
+		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().fetchPlayerIps)) {
 			statement.setString(1, SQLUtils.escapeLikeParameter(username));
 
 			try (final ResultSet result = statement.executeQuery()) {
 				if (result.next()) {
-					ip = result.getString("login_ip");
+					playerIps = new PlayerIps();
+					playerIps.loginIp = result.getString("login_ip");
+					playerIps.creationIp = result.getString("creation_ip");
 				}
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
-		return ip;
+		return playerIps;
 	}
 
 	@Override
-	public LinkedPlayer[] queryLinkedPlayers(final String ip) throws GameDatabaseException {
-		final ArrayList<LinkedPlayer> list = new ArrayList<>();
+	public LinkedPlayer[] queryLinkedPlayers(final String loginIp, String creationIp) throws GameDatabaseException {
+		final ArrayList<LinkedPlayer> list = new ArrayList<LinkedPlayer>();
 		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().fetchLinkedPlayers)) {
-			statement.setString(1, ip);
+			statement.setString(1, "%" + loginIp + "%");
+			statement.setString(2, "%" + creationIp + "%");
+			statement.setString(3, "%" + loginIp + "%");
+			statement.setString(4, "%" + creationIp + "%");
 
 			try (final ResultSet result = statement.executeQuery()) {
 				while (result.next()) {
-					final int group = result.getInt("group_id");
+					final int id = result.getInt("id");
 					final String user = result.getString("username");
+					final long banned = result.getLong("banned");
+					final String globalMuteKey = result.getString("global_mute_key");
+					final long globalMuteValue = result.getLong("global_mute_value");
+					final String muteExpiresKey = result.getString("mute_expires_key");
+					final long muteExpiresValue = result.getLong("mute_expires_value");
 
-					final LinkedPlayer linkedPlayer = new LinkedPlayer();
-					linkedPlayer.groupId = group;
+					LinkedPlayer linkedPlayer = new LinkedPlayer();
+					linkedPlayer.id = id;
 					linkedPlayer.username = user;
+					linkedPlayer.banned = banned;
+					if (globalMuteKey != null) {
+						linkedPlayer.global_mute = globalMuteValue;
+					}
+					if (muteExpiresKey != null) {
+						linkedPlayer.mute_expires = muteExpiresValue;
+					}
 
 					list.add(linkedPlayer);
 				}

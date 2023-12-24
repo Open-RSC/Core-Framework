@@ -5,8 +5,9 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.LinkedPlayer;
+import com.openrsc.server.database.struct.PlayerIps;
+import com.openrsc.server.event.rsc.ImmediateEvent;
 import com.openrsc.server.external.NPCDef;
-import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -19,6 +20,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.openrsc.server.constants.AppearanceId.*;
@@ -85,6 +88,17 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 	}
 
+	private String stripPort(String ip) {
+		// Sometimes we have slashes in IPs that need to be removed
+		ip = ip.replaceAll("/","");
+
+		// IPv4
+		if (ip.contains(".") && ip.contains(":")) {
+			return ip.substring(0, ip.lastIndexOf(":"));
+		}
+		return ip;
+	}
+
 	private void queryPlayerAlternateCharacters(Player player, String command, String[] args) {
 		if(args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player]");
@@ -94,75 +108,179 @@ public final class PlayerModerator implements CommandTrigger {
 		String targetUsername = args[0].replace('.', ' ');
 		Player target = player.getWorld().getPlayer(DataConversions.usernameToHash(targetUsername));
 
-		String currentIp = null;
-		if (target == null) {
-			try {
-				currentIp = player.getWorld().getServer().getDatabase().playerLoginIp(targetUsername);
 
-				if(currentIp == null) {
-					player.message(messagePrefix + "No character named '" + targetUsername + "' is online or was found in the database.");
+		player.getWorld().getServer().submitSql(() -> {
+			try {
+				PlayerIps playerIps = player.getWorld().getServer().getDatabase().playerIps(targetUsername);
+
+				if(playerIps == null) {
+					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 1") {
+						@Override
+						public void action() {
+							player.message(messagePrefix + "No character named '" + targetUsername + "' is online or was found in the database.");
+						}
+					});
 					return;
 				}
-			} catch (final GameDatabaseException e) {
-				LOGGER.catching(e);
-				player.message(messagePrefix + "A Database error has occurred! " + e.getMessage());
-				return;
-			}
-		} else {
-			currentIp = target.getCurrentIP();
-		}
 
-		try {
-			final LinkedPlayer[] linkedPlayers = player.getWorld().getServer().getDatabase().linkedPlayers(currentIp);
+				// Here we are going to get rid of localhost IP (127.0.0.1) because we don't want to match every single webclient player
+				// We also want to get rid of 0.0.0.0 from the login IP, since that just means that the player has never logged in.
+				// First we need to get rid of the ports though
+				playerIps.creationIp = stripPort(playerIps.creationIp);
+				playerIps.loginIp = stripPort(playerIps.loginIp);
 
-			// Check if any of the found users have a group less than the player who is running this command
-			boolean authorized = true;
-			for (final LinkedPlayer linkedPlayer : linkedPlayers) {
-				if(linkedPlayer.groupId < player.getGroupID())
-				{
-					authorized = false;
-					break;
+				boolean localCreationIp = playerIps.creationIp.equals("127.0.0.1");
+				boolean localLoginIp = playerIps.loginIp.equals("127.0.0.1");
+				boolean neverLoggedIn = playerIps.loginIp.equals("0.0.0.0");
+
+				if ((localCreationIp && localLoginIp) || (localCreationIp && neverLoggedIn)) {
+					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 2") {
+						@Override
+						public void action() {
+							player.message(messagePrefix + targetUsername + " is a webclient-only player");
+						}
+					});
+					return;
+				} else if (localCreationIp) {
+					playerIps.creationIp = playerIps.loginIp;
+				} else if (localLoginIp || neverLoggedIn) {
+					playerIps.loginIp = playerIps.creationIp;
 				}
-			}
 
-			List<String> names = new ArrayList<>();
-			for (final LinkedPlayer linkedPlayer : linkedPlayers) {
-				String dbUsername	= linkedPlayer.username;
-				// Only display usernames if the player running the action has a better rank or if the username is the one being targeted
-				if(authorized || dbUsername.toLowerCase().trim().equals(targetUsername.toLowerCase().trim()))
-					names.add(dbUsername);
-			}
-			StringBuilder builder = new StringBuilder("@red@")
-				.append(targetUsername.toUpperCase());
-			if (target != null) {
-				builder.append(" (" + target.getX() + "," + target.getY() + ")");
-			}
-			builder.append(" @whi@currently has ")
-				.append(names.size() > 0 ? "@gre@" : "@red@")
-				.append(names.size())
-				.append(" @whi@registered characters.");
-
-			if(player.isAdmin())
-				builder.append(" %IP Address: " + currentIp);
-
-			if (names.size() > 0) {
-				builder.append(" % % They are: ");
-			}
-			for (int i = 0; i < names.size(); i++) {
-
-				builder.append("@yel@").append(player.getWorld().getPlayer(DataConversions.usernameToHash(names.get(i))) != null
-					? "@gre@" : "@red@").append(names.get(i));
-
-				if (i != names.size() - 1) {
-					builder.append("@whi@, ");
+				final List<LinkedPlayer> linkedPlayers;
+				try {
+					linkedPlayers = new ArrayList<LinkedPlayer>(Arrays.asList(
+						player.getWorld().getServer().getDatabase().linkedPlayers(playerIps.loginIp, playerIps.creationIp)
+					));
+				} catch (final GameDatabaseException ex) {
+					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 3") {
+						@Override
+						public void action() {
+							player.message(messagePrefix + "A MySQL error has occured! " + ex.getMessage());
+						}
+					});
+					LOGGER.catching(ex);
+					return;
 				}
-			}
 
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 18, target));
-			ActionSender.sendBox(player, builder.toString(), names.size() > 10);
-		} catch (final GameDatabaseException ex) {
-			player.message(messagePrefix + "A MySQL error has occured! " + ex.getMessage());
-		}
+				boolean noBox = !player.getClientLimitations().supportsMessageBox;
+
+				StringBuilder builder = new StringBuilder(target == null ? "@red@" : "@gre@")
+					.append(targetUsername.toUpperCase());
+
+				if (target != null) {
+					builder.append(" (" + target.getX() + "," + target.getY() + ")");
+				}
+				builder.append(" @whi@currently has ")
+					.append(linkedPlayers.size() > 0 ? "@gre@" : "@red@")
+					.append(linkedPlayers.size())
+					.append(" @whi@registered characters.");
+				final String characters =  builder.toString();
+				if (noBox) {
+					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 4") {
+						@Override
+						public void action() {
+							player.playerServerMessage(MessageType.QUEST, characters);
+						}
+					});
+					builder.setLength(0);
+				}
+
+				if(player.isAdmin()) {
+					if (noBox) {
+						player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 5") {
+							@Override
+							public void action() {
+								player.playerServerMessage(MessageType.QUEST, "IP Address: " + playerIps.loginIp);
+							}
+						});
+					} else {
+						builder.append(" %Last Login IP Address: ")
+							.append(playerIps.loginIp);
+					}
+				}
+
+				if (linkedPlayers.size() > 0) {
+					if (!noBox) {
+						builder.append(" % % They are: ");
+					}
+				}
+
+				for (int i = 0; i < linkedPlayers.size(); i++) {
+					builder.append("@yel@")
+						.append(player.getWorld().getPlayer(DataConversions.usernameToHash(linkedPlayers.get(i).username)) != null
+							? "@gre@" : "@red@")
+						.append(linkedPlayers.get(i).username);
+
+					// Determine if the player is banned
+					long banned = linkedPlayers.get(i).banned;
+					if (banned == -1) {
+						builder.append(" (B -1)");
+					} else if (banned > 0) {
+						long bannedFor = banned - System.currentTimeMillis();
+						if (bannedFor > 0) {
+							builder.append(" (B ")
+								.append(bannedFor / 60000)
+								.append(")");
+						}
+					} else {
+						// Determine if the player is muted, but we don't care if they're already banned
+						long regularMuted = linkedPlayers.get(i).mute_expires;
+
+						if (regularMuted == -1) {
+							builder.append(" (M -1)");
+						} else if (regularMuted > 0) {
+							long mutedFor = regularMuted - System.currentTimeMillis();
+							if (mutedFor > 0) {
+								builder.append(" (M ")
+									.append(mutedFor / 60000)
+									.append(")");
+							}
+						} else {
+							// Check for a global mute. Again, we don't care about this if they're already banned or muted
+							long globalMuted = linkedPlayers.get(i).global_mute;
+							if (globalMuted == -1) {
+								builder.append(" (GM -1)");
+							} else if (globalMuted > 0) {
+								long mutedFor = globalMuted - System.currentTimeMillis();
+								if (mutedFor > 0) {
+									builder.append(" (GM ")
+										.append(mutedFor / 60000)
+										.append(")");
+								}
+							}
+						}
+					}
+
+					if (i != linkedPlayers.size() - 1) {
+						builder.append("@whi@, ");
+					}
+					final String character = builder.toString();
+					if (noBox) {
+						player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 6") {
+							@Override
+							public void action() {
+								player.playerServerMessage(MessageType.QUEST, character);
+							}
+						});
+						builder.setLength(0);
+					}
+				}
+
+				player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 18, target));
+				if (!noBox) {
+					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 7") {
+						@Override
+						public void action() {
+							ActionSender.sendBox(player, builder.toString(), linkedPlayers.size() >= 8);
+						}
+					});
+				}
+
+			} catch (final GameDatabaseException ex) {
+				LOGGER.catching(ex);
+			}
+		});
 	}
 
 	private void mute(final Player player, final Player targetPlayer, final int targetPlayerId,

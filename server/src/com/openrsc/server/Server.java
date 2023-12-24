@@ -116,6 +116,7 @@ public class Server implements Runnable {
 	private volatile int maxItemId;
 
 	private final ListeningExecutorService sqlLoggingThreadPool;
+	private final ListeningExecutorService sqlThreadPool;
 
 	static {
 		Thread.currentThread().setName("InitThread");
@@ -271,6 +272,12 @@ public class Server implements Runnable {
 		sqlLoggingExecutor.allowCoreThreadTimeOut(false);
 		sqlLoggingExecutor.setThreadFactory(new NamedThreadFactory(getName() + " : SqlLoggingThread", getConfig()));
 		sqlLoggingThreadPool = MoreExecutors.listeningDecorator(sqlLoggingExecutor);
+		ThreadPoolExecutor sqlExecutor = new ThreadPoolExecutor(
+			1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>()
+		);
+		sqlExecutor.allowCoreThreadTimeOut(false);
+		sqlExecutor.setThreadFactory(new NamedThreadFactory(getName() + " : SqlThread", getConfig()));
+		sqlThreadPool = MoreExecutors.listeningDecorator(sqlExecutor);
 		MessageFilter.loadGoodAndBadWordsFromDisk();
 
 		maxItemId = 0;
@@ -785,6 +792,14 @@ public class Server implements Runnable {
 
 	public <V> ListenableFuture<V> submitSqlLogging(Callable<V> callable) {
 		return sqlLoggingThreadPool.submit(callable);
+	}
+
+	public ListenableFuture<?> submitSql(Runnable runnable) {
+		return sqlThreadPool.submit(runnable);
+	}
+
+	public <V> ListenableFuture<V> submitSql(Callable<V> callable) {
+		return sqlThreadPool.submit(callable);
 	}
 
 	public final LoginExecutor getLoginExecutor() {
