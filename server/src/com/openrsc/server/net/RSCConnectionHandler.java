@@ -166,7 +166,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		}
 
 		if (ctx.channel().isActive()) {
-			LOGGER.info("Channel still active in exceptCaught for IP " + ctx.channel().remoteAddress() + (ctx.channel().attr(attachment).get() == null ? "" : " : Attached Player " + ctx.channel().attr(attachment).get().player.get()));
+			LOGGER.info("Channel still active in exceptionCaught for IP " + ctx.channel().remoteAddress() + (ctx.channel().attr(attachment).get() == null ? "" : " : Attached Player " + ctx.channel().attr(attachment).get().player.get()));
 			ctx.channel().close();
 		}
 	}
