@@ -219,11 +219,11 @@ public class CacheUpdater extends Activity {
             builder.setTitle("Game Selection");
 
             // add a list
-            //String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha)", "Open PK (beta)", "Dev Testing", "Local Instance"};
-            String[] games = {"Open RSC", "RSC Cabbage", "RSC Uranium", "RSC Coleslaw", "Local Instance"};
+            //String[] games = {"RSC Preservation", "RSC Cabbage", "Open PK (beta)", "Dev Testing", "Local Instance"};
+            String[] games = {"RSC Preservation", "RSC Cabbage", "RSC Uranium", "RSC Coleslaw", "Local Instance"};
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
-					case 0: // Open RSC
+					case 0: // RSC Preservation
 						selectServer("https://game.openrsc.com", "43602");
 						break;
                     case 1: // RSC Cabbage
