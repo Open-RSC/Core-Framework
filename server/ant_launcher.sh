@@ -7,6 +7,17 @@ if [[ -z $1 ]]; then
     exit 1
 fi
 
+# Check if the specified config file exists, if not and if it's 'local', copy from default.conf
+if [[ $1 == "local" ]] && [ ! -f "$1.conf" ]; then
+    echo "Local config not found. Creating local.conf from default.conf."
+    cp default.conf local.conf
+    # Check if the copy was successful
+    if [ ! -f local.conf ]; then
+        echo "Failed to create local.conf from default.conf. Exiting."
+        exit 1
+    fi
+fi
+
 # Run the game server
 echo "Running the game server with config named \"$1.conf\"."
 

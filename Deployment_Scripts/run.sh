@@ -10,8 +10,8 @@ echo "Use 'CTRL + A, D' to detach the live server screen so it runs in the backg
 echo ""
 cd server
 
-# runs server with the configuration found in "server/default.conf"
-bash ./ant_launcher.sh default g1gc
+# runs server with the configuration found in "server/local.conf"
+bash ./ant_launcher.sh local g1gc
 
 # uncomment to run additional servers with different configurations. Prod use: uncomment all below
 #bash ./ant_launcher.sh openrsc &&  \
