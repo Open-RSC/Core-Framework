@@ -4,8 +4,11 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DailyShutdownEvent extends DailyEvent  {
+	private static final Logger LOGGER = LogManager.getLogger();
 	private int actionedResets;
 	private final String eventMessage;
 
@@ -23,7 +26,7 @@ public class DailyShutdownEvent extends DailyEvent  {
 	}
 
 	public void action() {
-
+		LOGGER.info("Server shutdown (closeProcess) requested by DailyShutdownEvent");
 		getWorld().getServer().closeProcess(60, "Daily Reboot");
 		//getWorld().getServer().shutdown(300);
 

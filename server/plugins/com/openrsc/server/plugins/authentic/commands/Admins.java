@@ -709,7 +709,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		seconds = seconds < 30 ? 30 : seconds;
-
+		LOGGER.info("Server shutdown requested by Admin " + player.getUsername());
 		player.getWorld().getServer().shutdown(seconds);
 	}
 
@@ -739,7 +739,7 @@ public final class Admins implements CommandTrigger {
 			+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
 			+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
 			+ (reason.toString().equals("") ? "" : ": % % " + reason);
-
+		LOGGER.info("Server update requested by Admin " + player.getUsername());
 		player.getWorld().getServer().closeProcess(seconds, message);
 		// Services.lookup(DatabaseManager.class).addQuery(new
 		// StaffLog(player, 7));

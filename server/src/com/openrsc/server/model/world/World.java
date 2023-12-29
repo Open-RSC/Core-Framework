@@ -423,6 +423,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	}
 
 	public void unloadPlayers() {
+		LOGGER.info("unloadPlayers requested");
 		for (final Player p : getPlayers()) {
 			unregisterPlayer(p);
 		}

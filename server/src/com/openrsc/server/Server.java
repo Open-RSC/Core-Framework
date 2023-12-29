@@ -161,7 +161,7 @@ public class Server implements Runnable {
 					}
 				}
 			}
-
+			LOGGER.info("Server shutdown requested by closeProcess");
 			server.shutdown(seconds);
 		}
 
@@ -460,7 +460,7 @@ public class Server implements Runnable {
 				if (!isRunning()) {
 					return;
 				}
-
+				LOGGER.info("Server stop requested");
 				getWorld().unloadPlayers();
 
 				scheduledExecutor.shutdown();
@@ -621,6 +621,7 @@ public class Server implements Runnable {
 	private void dailyShutdownEvent() {
 		try {
 			if (getConfig().WANT_AUTO_SERVER_SHUTDOWN) {
+				LOGGER.info("Daily shutdown event requested and enabled");
 				List<GameTickEvent> events = getWorld().getServer().getGameEventHandler().getEvents();
 				for (GameTickEvent event : events) {
 					if (!(event instanceof DailyShutdownEvent)) continue;
@@ -702,6 +703,7 @@ public class Server implements Runnable {
 		if (shutdownEvent != null) {
 			return false;
 		}
+		LOGGER.info("Server shutdown requested");
 		shutdownEvent = new FinitePeriodicEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, 1, "Server shut down") {
 			int ticksElapsed = 0;
 
@@ -732,6 +734,7 @@ public class Server implements Runnable {
 		if (shutdownEvent != null) {
 			return false;
 		}
+		LOGGER.info("Server restart requested");
 		shutdownEvent = new FinitePeriodicEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, 1, "Server shut down") {
 			int ticksElapsed = 0;
 
