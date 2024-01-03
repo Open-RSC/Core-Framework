@@ -204,13 +204,7 @@ public class HalloweenCracker implements UsePlayerTrigger, UseNpcTrigger {
 			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 				|| player.isIronMan(IronmanMode.Hardcore.id())) {
 
-				String playerDialogue;
-				if (player.isMale()) {
-					playerDialogue = "I am an ironman, I stand alone.";
-				} else {
-					playerDialogue = "I am an ironwoman, I stand alone.";
-				}
-				say(player, npc, playerDialogue);
+				say(player, npc, "Would you pull this cracker with me?");
 				npcsay(player, npc, "very good, let me help you out with the cracker");
 				if (player.getCarriedItems().remove(new Item(ItemId.HALLOWEEN_CRACKER.id())) > -1) {
 					thinkbubble(item);

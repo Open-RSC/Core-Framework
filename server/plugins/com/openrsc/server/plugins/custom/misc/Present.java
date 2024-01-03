@@ -53,7 +53,6 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		holidayTable.addItemDrop(ItemId.CANE_COOKIE.id(), 1, 12, false);
 		holidayTable.addItemDrop(ItemId.STAR_COOKIE.id(), 1, 12, false);
 		holidayTable.addItemDrop(ItemId.TREE_COOKIE.id(), 1, 12, false);
-		holidayTable.addItemDrop(ItemId.BLACK_PARTY_HAT.id(), 1, 9, false);
 		holidayTable.addItemDrop(ItemId.PINK_SANTA_HAT.id(), 1, 9, false);
 
 		/**
@@ -407,17 +406,10 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 			|| player.isIronMan(IronmanMode.Hardcore.id())) {
-
-			String playerDialogue;
-			if (player.isMale()) {
-				playerDialogue = "I am an ironman, I stand alone.";
-			} else {
-				playerDialogue = "I am an ironwoman, I stand alone.";
-			}
-			player.getUpdateFlags().setChatMessage(new ChatMessage(player, playerDialogue, null));
-			delay(2);
 			thinkbubble(item);
 			player.playerServerMessage(MessageType.QUEST, "You rip open the present and thrust your hand inside...");
+			delay(3);
+			player.getCarriedItems().remove(item);
 
 			if (config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
 				cabbageRollAndAwardPresent(player);
@@ -425,7 +417,6 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				// this code is usually unreachable, since no other official config has ironman mode enabled
 				openRSCRollAndAwardPresent(player);
 			}
-			player.getCarriedItems().remove(item);
 
 		} else {
 			player.message("It would be selfish to keep this for myself");
@@ -457,8 +448,10 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		Item prize = prizeList.get(0);
 		String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
 
-		if (!selfUse)
+		if (!selfUse) {
 			player.playerServerMessage(MessageType.QUEST, otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
+		}
+
 		otherPlayer.playerServerMessage(MessageType.QUEST, "You take out a " + prizeName + ".");
 		delay();
 
@@ -499,8 +492,10 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			playerDialogue = "Happy holidays";
 		}
 
-		if (!selfUse)
+		if (!selfUse) {
 			player.getUpdateFlags().setChatMessage(new ChatMessage(player, playerDialogue, null));
+		}
+
 		otherPlayer.getCarriedItems().getInventory().add(prize);
 	}
 

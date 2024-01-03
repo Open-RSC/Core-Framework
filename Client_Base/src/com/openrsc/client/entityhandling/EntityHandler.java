@@ -2285,9 +2285,9 @@ public class EntityHandler {
 			sprites = new int[]{3, 4, 2, -1, -1, -1, 426, -1, 46, -1, -1, -1};
 		}
 		npcs.add(new NPCDef("Robin Banks", "A master thief", "", 34, 32, 37, 33, false, sprites, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, i++));
-		sprites = new int[]{3, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
+		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
 		npcs.add(new NPCDef("Mum", "The greatest woman in the world", "", 1, 99, 3, 1, false, sprites, 16752704, 3211263, 14540032, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{3, 1, 2, -1, 122, 191, 197, 189, -1, -1, -1, 68};
+		sprites = new int[]{3, 4, 2, -1, 122, 191, 197, 189, -1, -1, -1, 68};
 		npcs.add(new NPCDef("Ester", "She looks quite frazzled", "", 1, 99, 3, 1, false, sprites, 16763992, 3211263, 14540032, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{472, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Bunny", "A fluffy bunny", "", 1, 1, 10, 1, false, sprites, 0, 0, 0, 0, 95, 85, 7, 7, 10, i++));
@@ -2306,7 +2306,7 @@ public class EntityHandler {
 		// head, shirt, pants, shield, weapon, hat, body, legs, gloves, boots, amulet, cape
 		sprites = new int[]{7, 1, 2, -1, -1, 500, 501, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Kresh", "He's kind of like an onion", "", 123, 123, 123, 123, false, sprites, 0, 0xFFFFFF, 0x802415, 0xb5ff1d, 160, 220, 6, 6, 5, i++));
-		sprites = new int[]{3, 1, 2, -1, -1, -1, -1, -1, 46, -1, 10, 519};
+		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, -1, 46, -1, 10, 519};
 		npcs.add(new NPCDef("Lily", "She has a green thumb", "", 1, 1, 10, 1, false, sprites, 0xEEBB70, 0x006600, 0x663300, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Peter Skippin", "Shut up, Meg", "", 20, 20, 20, 20, false, sprites, 11167296, 0xFFFFFF, 0x014E00, 15523536, 145, 220, 6, 6, 5, i++));
@@ -2314,7 +2314,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Mortimer", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 0x5C5C5C, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, -1, 2, -1, -1, -1, 532, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Randolph", "A not-so-wealthy tradesman", "", 11, 8, 7, 11, false, sprites, 15921906, 2, 0x303030, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{3, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1};
+		sprites = new int[]{3, 4, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Ana (not in a barrel)", "I should update my client.", "", 17, 15, 16, 18, false, sprites, 16760880, 8409120, 8409120, 10056486, 120, 220, 6, 6, 5, i++));
 		sprites = new int[]{533, 139, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Biggum Flodrot", "Biggum Flodrot, goblin hero", "", 99, 99, 99, 99, false, sprites, 0, 0, 0, 0, 219, 206, 9, 8, 5, i++));

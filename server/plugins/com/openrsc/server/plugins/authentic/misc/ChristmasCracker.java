@@ -26,6 +26,17 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 		ItemId.YELLOW_PARTY_HAT.id()
 	};
 
+	private static final int[] customPhatWeights = {10, 15, 20, 23, 32, 28, 10};
+	private static final int[] customPhatIds = {
+		ItemId.PINK_PARTY_HAT.id(),
+		ItemId.BLUE_PARTY_HAT.id(),
+		ItemId.GREEN_PARTY_HAT.id(),
+		ItemId.WHITE_PARTY_HAT.id(),
+		ItemId.RED_PARTY_HAT.id(),
+		ItemId.YELLOW_PARTY_HAT.id(),
+		ItemId.BLACK_PARTY_HAT.id()
+	};
+
 	private static final int[] prizeWeights = {5, 6, 10, 11, 10, 12, 15, 17, 18, 24};
 	private static final int[] prizeIds = {
 		ItemId.LAW_RUNE.id(),
@@ -64,7 +75,13 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 
 			if (player.getCarriedItems().remove(item) == -1) return;
 
-			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
+			int phatId;
+			if (config().WANT_CUSTOM_SPRITES) {
+				phatId = Formulae.weightedRandomChoice(customPhatIds, customPhatWeights);
+			} else {
+				phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
+			}
+
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
 			Item phat = new Item(phatId);
 			Item prize = new Item(prizeId);
@@ -99,13 +116,7 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 				|| player.isIronMan(IronmanMode.Hardcore.id())) {
 
-				String playerDialogue;
-				if (player.isMale()) {
-					playerDialogue = "I am an ironman, I stand alone.";
-				} else {
-					playerDialogue = "I am an ironwoman, I stand alone.";
-				}
-				say(player, npc, playerDialogue);
+				say(player, npc, "Would you pull this cracker with me?");
 				npcsay(player, npc, "very good, let me help you out with the cracker");
 				thinkbubble(item);
 				player.playerServerMessage(MessageType.QUEST, "The banker pulls the christmas cracker on you");
@@ -114,7 +125,13 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 
 				if (player.getCarriedItems().remove(item) == -1) return;
 
-				int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
+				int phatId;
+				if (config().WANT_CUSTOM_SPRITES) {
+					phatId = Formulae.weightedRandomChoice(customPhatIds, customPhatWeights);
+				} else {
+					phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
+				}
+				
 				int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
 				Item phat = new Item(phatId);
 				Item prize = new Item(prizeId);
