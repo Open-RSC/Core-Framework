@@ -478,7 +478,7 @@ public final class mudclient implements Runnable {
 	private int optionsMenuCount = 0;
 	private String m_ig = "";
 	private int questPoints = 0;
-	private int m_Ji = 0;
+	private int magicOrPrayerList = 0;
 	private int tabEquipmentIndex = 0;
 	private int settingTab = 0;
 	private int loginButtonExistingUser;
@@ -7265,67 +7265,6 @@ public final class mudclient implements Runnable {
 				e.printStackTrace();
 			}
 
-			if (lastSelectedSpell != -1 && isAndroid()) {
-				int boxWidth = 75;
-				int boxHeight = 50;
-				int x = getGameWidth() - boxWidth - 15;
-				int y = halfGameHeight() - boxHeight;
-
-				getSurface().drawBoxAlpha(x, y, boxWidth, boxHeight, 0x989898, 128);
-				getSurface().drawBoxBorder(x, boxWidth, y, boxHeight, 0);
-
-				SpellDef spellDef = EntityHandler.getSpellDef(lastSelectedSpell);
-				if (spellDef != null) {
-					getSurface().drawBoxAlpha(x, y, boxWidth, 16, 0x6b8e23, 128);
-					getSurface().drawBoxBorder(x, boxWidth, y, 16, 0);
-
-					getSurface().drawBoxAlpha(x, y + 49, boxWidth, 20, GenUtil.buildColor(255, 0, 0), 128);
-					getSurface().drawBoxBorder(x, boxWidth, y + 49, 20, 0);
-
-					getSurface().drawColoredStringCentered(x + (boxWidth / 2), "@whi@Remove", 0, 0, 1, y + 63);
-
-					String[] spellName = spellDef.getName().split(" ");
-					String color = "@yel@";
-					for (Entry<?, ?> e : EntityHandler.getSpellDef(lastSelectedSpell).getRunesRequired()) {
-						if (hasRunes((Integer) e.getKey(), (Integer) e.getValue())) {
-							continue;
-						}
-						color = "@whi@";
-						break;
-					}
-					int textHeightOffset = 25;
-					getSurface().drawColoredStringCentered(x + (boxWidth / 2), "@whi@" + "Tap to Cast", 0, 0, 1,
-						y + 12);
-
-					for (String s : spellName) {
-						getSurface().drawColoredStringCentered(x + (boxWidth / 2), color + s, 0, 0, 1,
-							y + textHeightOffset + 1);
-						textHeightOffset += 10;
-					}
-
-					if (mouseX > x && mouseX < x + boxWidth && mouseY > y && mouseY < y + boxHeight
-						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
-						if (color.equals("@yel@") || S_WANT_CUSTOM_SPRITES) {
-							// due to magic cape can't determine client side if spell will not require runes
-							selectedSpell = lastSelectedSpell;
-						} else {
-							this.showMessage(false, null,
-								"You don't have all the reagents you need for this spell",
-								MessageType.GAME, 0, null);
-							selectedSpell = -1;
-						}
-						mouseButtonClick = 0;
-					}
-
-					if (mouseX > x && mouseX < x + boxWidth && mouseY > y + 49 && mouseY < y + 69
-						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
-						selectedSpell = -1;
-						lastSelectedSpell = -1;
-						mouseButtonClick = 0;
-					}
-				}
-			}
-
 			//TODO: add && !C_CUSTOM_UI where needed + scroll down to next TODO and fill in
 
 			if (var1 != this.logoutTimeout) {
@@ -8679,47 +8618,55 @@ public final class mudclient implements Runnable {
 		int maxY = getUITabsY();
 
 		try {
-			int var3 = this.getSurface().width2 - 199;
-			int var4 = 36;
+			int magicPanelX = this.getSurface().width2 - 199;
+			int magicPanelYStart = 36;
 			if (!C_CUSTOM_UI)
-				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSPELLS.getDef()), var3 - 49, 3);
+				this.getSurface().drawSprite(spriteSelect(GUIPARTS.MENUSPELLS.getDef()), magicPanelX - 49, 3);
 			if (C_CUSTOM_UI)
-				var4 = maxY - 182;
-			short var5 = 196;
-			short var6 = 182;
+				magicPanelYStart = maxY - 182;
+			short magicPanelWidth = 196;
 			int var8;
 			int var7 = var8 = GenUtil.buildColor(160, 160, 160);
-			if (this.m_Ji != 0) {
+			if (this.magicOrPrayerList != 0) {
 				var8 = GenUtil.buildColor(220, 220, 220);
 			} else {
 				var7 = GenUtil.buildColor(220, 220, 220);
 			}
 
-			this.getSurface().drawBoxAlpha(var3, var4, var5 / 2, 24, var7, 128);
-			this.getSurface().drawBoxAlpha(var5 / 2 + var3, var4, var5 / 2, 24, var8, 128);
-			this.getSurface().drawBoxAlpha(var3, var4 + 24, var5, 90, GenUtil.buildColor(220, 220, 220), 128);
-			this.getSurface().drawBoxAlpha(var3, 114 + var4, var5, var6 - 24 - 90, GenUtil.buildColor(160, 160, 160),
+			this.getSurface().drawBoxAlpha(magicPanelX, magicPanelYStart, magicPanelWidth / 2, 24, var7, 128);
+			this.getSurface().drawBoxAlpha(magicPanelWidth / 2 + magicPanelX, magicPanelYStart, magicPanelWidth / 2, 24, var8, 128);
+			this.getSurface().drawBoxAlpha(magicPanelX, magicPanelYStart + 24, magicPanelWidth, 90, GenUtil.buildColor(220, 220, 220), 128);
+			this.getSurface().drawBoxAlpha(magicPanelX, 114 + magicPanelYStart, magicPanelWidth, 68, GenUtil.buildColor(160, 160, 160),
 				128);
-			this.getSurface().drawLineHoriz(var3, 24 + var4, var5, 0);
-			this.getSurface().drawLineVert(var3 + var5 / 2, 0 + var4, 0, 24);
-			this.getSurface().drawLineHoriz(var3, var4 + 113, var5, 0);
+			this.getSurface().drawLineHoriz(magicPanelX, 24 + magicPanelYStart, magicPanelWidth, 0);
+			this.getSurface().drawLineVert(magicPanelX + magicPanelWidth / 2, 0 + magicPanelYStart, 0, 24);
+			this.getSurface().drawLineHoriz(magicPanelX, magicPanelYStart + 113, magicPanelWidth, 0);
 			if (var2 == -74) {
-				this.getSurface().drawColoredStringCentered(var5 / 4 + var3, "Magic", 0, var2 + 74, 4, 16 + var4);
-				this.getSurface().drawColoredStringCentered(var3 + var5 / 4 + var5 / 2, "Prayers", 0, 0, 4, 16 + var4);
-				int var9;
-				int var10;
+				this.getSurface().drawColoredStringCentered(magicPanelWidth / 4 + magicPanelX, "Magic", 0, var2 + 74, 4, 16 + magicPanelYStart);
+				this.getSurface().drawColoredStringCentered(magicPanelX + magicPanelWidth / 4 + magicPanelWidth / 2, "Prayers", 0, 0, 4, 16 + magicPanelYStart);
+				int spellIndex;
+				int magicLevel;
 				String var11;
 				int var12;
 				int var18;
-				if (this.m_Ji == 0) {
+
+				// Variables for last "cast last spell" box for Android
+				int lastSpellWidth = magicPanelWidth;
+				int lastSpellHeight = 50;
+				int lastSpellX = magicPanelX;
+				int lastSpellY = magicPanelYStart + 182;
+				String lastSpellNameColor = "@yel@";
+
+				// 0 is magic list
+				if (this.magicOrPrayerList == 0) {
 					this.panelMagic.clearList(this.controlMagicPanel);
-					var9 = 0;
+					spellIndex = 0;
 
 					int var13;
-					for (var10 = 0; var10 < EntityHandler.spellCount(); ++var10) {
+					for (magicLevel = 0; magicLevel < EntityHandler.spellCount(); ++magicLevel) {
 						var11 = "@yel@";
 
-						for (Entry<?, ?> e : EntityHandler.getSpellDef(var10).getRunesRequired()) {
+						for (Entry<?, ?> e : EntityHandler.getSpellDef(magicLevel).getRunesRequired()) {
 							var13 = (Integer) e.getKey();
 							if (!this.hasRunes(var13, (Integer) e.getValue())) {
 								var11 = "@whi@";
@@ -8728,121 +8675,158 @@ public final class mudclient implements Runnable {
 						}
 
 						var12 = this.playerStatCurrent[6];
-						if (EntityHandler.getSpellDef(var10).getReqLevel() > var12) {
+						if (EntityHandler.getSpellDef(magicLevel).getReqLevel() > var12) {
 							var11 = "@bla@";
 						}
 
 						this.panelMagic
-							.setListEntry(this.controlMagicPanel, var9++,
-								var11 + "Level " + EntityHandler.getSpellDef(var10).getReqLevel() + ": "
-									+ EntityHandler.getSpellDef(var10).getName(),
+							.setListEntry(this.controlMagicPanel, spellIndex++,
+								var11 + "Level " + EntityHandler.getSpellDef(magicLevel).getReqLevel() + ": "
+									+ EntityHandler.getSpellDef(magicLevel).getName(),
 								0, null, null);
 					}
 
 					this.panelMagic.drawPanel();
-					var10 = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
-					if (var10 != -1) {
+					magicLevel = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
+					if (magicLevel != -1) {
 						this.getSurface().drawString(
-							"Level " + EntityHandler.getSpellDef(var10).getReqLevel() + ": "
-								+ EntityHandler.getSpellDef(var10).getName(),
-							2 + var3, var4 + 124, 0xFFFF00, 1);
-						this.getSurface().drawString(EntityHandler.getSpellDef(var10).getDescription(), 2 + var3,
-							136 + var4, 0xFFFFFF, 0);
+							"Level " + EntityHandler.getSpellDef(magicLevel).getReqLevel() + ": "
+								+ EntityHandler.getSpellDef(magicLevel).getName(),
+							2 + magicPanelX, magicPanelYStart + 124, 0xFFFF00, 1);
+						this.getSurface().drawString(EntityHandler.getSpellDef(magicLevel).getDescription(), 2 + magicPanelX,
+							136 + magicPanelYStart, 0xFFFFFF, 0);
 						var18 = 0;
-						for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(var10).getRunesRequired()) {
+						for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(magicLevel).getRunesRequired()) {
 							var12 = e.getKey();
 							this.getSurface().drawSprite(
 								spriteSelect(EntityHandler.getItemDef(var12)),
-								2 + var3 + var18 * 44, var4 + 150);
+								2 + magicPanelX + var18 * 44, magicPanelYStart + 150);
 							var13 = this.getInventoryCount(var12);
 							int var14 = e.getValue();
 							String var15 = "@red@";
 							if (this.hasRunes(var12, var14)) {
 								var15 = "@gre@";
 							}
-							this.getSurface().drawString(var15 + var13 + "/" + var14, 2 + var3 + var18 * 44, var4 + 150,
+							this.getSurface().drawString(var15 + var13 + "/" + var14, 2 + magicPanelX + var18 * 44, magicPanelYStart + 150,
 								0xFFFFFF, 1);
 							var18++;
 						}
 					} else {
-						this.getSurface().drawString("Point at a spell for a description", var3 + 2, var4 + 124, 0, 1);
+						this.getSurface().drawString("Point at a spell for a description", magicPanelX + 2, magicPanelYStart + 124, 0, 1);
+					}
+
+					// Android "cast last spell" box
+					if (lastSelectedSpell != -1 && isAndroid()) {
+						getSurface().drawBoxAlpha(lastSpellX, lastSpellY, lastSpellWidth, lastSpellHeight, 0x989898, 128);
+						getSurface().drawBoxBorder(lastSpellX, lastSpellWidth, lastSpellY, lastSpellHeight, 0);
+
+						SpellDef spellDef = EntityHandler.getSpellDef(lastSelectedSpell);
+						if (spellDef != null) {
+							getSurface().drawBoxAlpha(lastSpellX, lastSpellY, lastSpellWidth, 16, 0x6b8e23, 128);
+							getSurface().drawBoxBorder(lastSpellX, lastSpellWidth, lastSpellY, 16, 0);
+
+							getSurface().drawBoxAlpha(lastSpellX, lastSpellY + 49, lastSpellWidth, 20, GenUtil.buildColor(255, 0, 0), 128);
+							getSurface().drawBoxBorder(lastSpellX, lastSpellWidth, lastSpellY + 49, 20, 0);
+
+							getSurface().drawColoredStringCentered(lastSpellX + (lastSpellWidth / 2), "@whi@Remove", 0, 0, 1, lastSpellY + 63);
+
+							String[] spellName = spellDef.getName().split(" ");
+							for (Entry<?, ?> e : EntityHandler.getSpellDef(lastSelectedSpell).getRunesRequired()) {
+								if (hasRunes((Integer) e.getKey(), (Integer) e.getValue())) {
+									continue;
+								}
+								lastSpellNameColor = "@whi@";
+								break;
+							}
+							int textHeightOffset = 25;
+							getSurface().drawColoredStringCentered(lastSpellX + (lastSpellWidth / 2), "@whi@" + "Tap to Cast", 0, 0, 1,
+								lastSpellY + 12);
+
+							for (String s : spellName) {
+								getSurface().drawColoredStringCentered(lastSpellX + (lastSpellWidth / 2), lastSpellNameColor + s, 0, 0, 1,
+									lastSpellY + textHeightOffset + 1);
+								textHeightOffset += 10;
+							}
+						}
 					}
 				}
 
-				if (this.m_Ji == 1) {
+				// 1 is prayer list
+				if (this.magicOrPrayerList == 1) {
 					this.panelMagic.clearList(this.controlMagicPanel);
-					var9 = 0;
+					spellIndex = 0;
 
-					for (var10 = 0; var10 < EntityHandler.prayerCount(); ++var10) {
+					for (magicLevel = 0; magicLevel < EntityHandler.prayerCount(); ++magicLevel) {
 						var11 = "@whi@";
-						if (EntityHandler.getPrayerDef(var10).getReqLevel() > this.playerStatBase[5]) {
+						if (EntityHandler.getPrayerDef(magicLevel).getReqLevel() > this.playerStatBase[5]) {
 							var11 = "@bla@";
 						}
 
-						if (this.prayerOn[var10]) {
+						if (this.prayerOn[magicLevel]) {
 							var11 = "@gre@";
 						}
 
 						this.panelMagic
-							.setListEntry(this.controlMagicPanel, var9++,
-								var11 + "Level " + EntityHandler.getPrayerDef(var10).getReqLevel() + ": "
-									+ EntityHandler.getPrayerDef(var10).getName(),
+							.setListEntry(this.controlMagicPanel, spellIndex++,
+								var11 + "Level " + EntityHandler.getPrayerDef(magicLevel).getReqLevel() + ": "
+									+ EntityHandler.getPrayerDef(magicLevel).getName(),
 								0, null, null);
 					}
 
 					this.panelMagic.drawPanel();
-					var10 = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
-					if (var10 == -1) {
-						this.getSurface().drawString("Point at a prayer for a description", var3 + 2, var4 + 124, 0, 1);
+					magicLevel = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
+					if (magicLevel == -1) {
+						this.getSurface().drawString("Point at a prayer for a description", magicPanelX + 2, magicPanelYStart + 124, 0, 1);
 					} else {
 						this.getSurface()
-							.drawColoredStringCentered(var3 + var5 / 2,
-								"Level " + EntityHandler.getPrayerDef(var10).getReqLevel() + ": "
-									+ EntityHandler.getPrayerDef(var10).getName(),
-								0xFFFF00, 0, 1, var4 + 130);
-						this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
-							EntityHandler.getPrayerDef(var10).getDescription(), 0xFFFFFF, 0, 0, 145 + var4);
-						this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
-							"Drain rate: " + EntityHandler.getPrayerDef(var10).getDrainRate(), 0, 0, 1, 160 + var4);
+							.drawColoredStringCentered(magicPanelX + magicPanelWidth / 2,
+								"Level " + EntityHandler.getPrayerDef(magicLevel).getReqLevel() + ": "
+									+ EntityHandler.getPrayerDef(magicLevel).getName(),
+								0xFFFF00, 0, 1, magicPanelYStart + 130);
+						this.getSurface().drawColoredStringCentered(magicPanelX + magicPanelWidth / 2,
+							EntityHandler.getPrayerDef(magicLevel).getDescription(), 0xFFFFFF, 0, 0, 145 + magicPanelYStart);
+						this.getSurface().drawColoredStringCentered(magicPanelX + magicPanelWidth / 2,
+							"Drain rate: " + EntityHandler.getPrayerDef(magicLevel).getDrainRate(), 0, 0, 1, 160 + magicPanelYStart);
 					}
 					// this.getSurface().drawColoredStringCentered(var3 + var5 / 2,
 					//		"Prayer points: " + this.playerStatCurrent[5] + "/" + this.playerStatBase[5], 0, 0, 1, 175 + var4);
 				}
 
 				if (var1) {
-					var3 = 199 - this.getSurface().width2 + this.mouseX;
-					int var17 = this.mouseY - 36;
+					magicPanelX = 199 - this.getSurface().width2 + this.mouseX;
+					int relativeMouseY = this.mouseY - 36;
+					int maxClickableY = isAndroid() ? 250 : 182;
 					if (C_CUSTOM_UI)
-						var17 = this.mouseY - var4;
-					if (var3 >= 0 && var17 >= 0 && var3 < 196 && var17 < 182) {
+						relativeMouseY = this.mouseY - magicPanelYStart;
+					if (magicPanelX >= 0 && relativeMouseY >= 0 && magicPanelX < 196 && relativeMouseY < maxClickableY) {
 						if (C_CUSTOM_UI)
 							this.panelMagic.handleMouse(this.getMouseX(), this.getMouseY(), this.getMouseButtonDown(), this.getLastMouseDown());
 						else
-							this.panelMagic.handleMouse(var3 + (this.getSurface().width2 - 199), var17 + 36,
+							this.panelMagic.handleMouse(magicPanelX + (this.getSurface().width2 - 199), relativeMouseY + 36,
 								this.currentMouseButtonDown, this.lastMouseButtonDown);
-						if (var17 <= 24 && this.mouseButtonClick == 1) {
-							if (var3 < 98 && this.m_Ji == 1) {
-								this.m_Ji = 0;
+						if (relativeMouseY <= 24 && this.mouseButtonClick == 1) {
+							if (magicPanelX < 98 && this.magicOrPrayerList == 1) {
+								this.magicOrPrayerList = 0;
 								prayerMenuIndex = this.panelMagic.getScrollPosition(this.controlMagicPanel);
 								this.panelMagic.resetListToIndex(this.controlMagicPanel, magicMenuIndex);
-							} else if (var3 > 98 && this.m_Ji == 0) {
-								this.m_Ji = 1;
+							} else if (magicPanelX > 98 && this.magicOrPrayerList == 0) {
+								this.magicOrPrayerList = 1;
 								magicMenuIndex = this.panelMagic.getScrollPosition(this.controlMagicPanel);
 								this.panelMagic.resetListToIndex(this.controlMagicPanel, prayerMenuIndex);
 							}
 						}
 
-						if (this.mouseButtonClick == 1 && this.m_Ji == 0) {
-							var9 = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
-							if (var9 != -1) {
-								var10 = this.playerStatCurrent[6];
-								if (var10 < EntityHandler.getSpellDef(var9).getReqLevel()) {
+						if (this.mouseButtonClick == 1 && this.magicOrPrayerList == 0) {
+							spellIndex = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
+							if (spellIndex != -1) {
+								magicLevel = this.playerStatCurrent[6];
+								if (magicLevel < EntityHandler.getSpellDef(spellIndex).getReqLevel()) {
 									this.showMessage(false, null,
 										"Your magic ability is not high enough for this spell", MessageType.GAME, 0,
 										null);
 								} else {
 									int k3 = 0;
-									for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(var9)
+									for (Entry<Integer, Integer> e : EntityHandler.getSpellDef(spellIndex)
 										.getRunesRequired()) {
 										if (!hasRunes(e.getKey(), e.getValue())) {
 											this.showMessage(false, null,
@@ -8853,11 +8837,11 @@ public final class mudclient implements Runnable {
 										}
 										k3++;
 									}
-									if (k3 == EntityHandler.getSpellDef(var9).getRuneCount()) {
-										this.selectedSpell = var9;
-										lastSelectedSpell = var9;
+									if (k3 == EntityHandler.getSpellDef(spellIndex).getRuneCount()) {
+										this.selectedSpell = spellIndex;
+										lastSelectedSpell = spellIndex;
 										this.selectedItemInventoryIndex = -1;
-										if (openInventorySpell(var9))
+										if (openInventorySpell(spellIndex))
 											this.showUiTab = Config.INVENTORY_TAB;
 										//if (EntityHandler.getSpellDef(var9).getSpellType() == 3 && var9 != 16) {
 										//	showUiTab = 1;
@@ -8865,13 +8849,34 @@ public final class mudclient implements Runnable {
 									}
 								}
 							}
+
+							if (mouseX > lastSpellX && mouseX < lastSpellX + lastSpellWidth && mouseY > lastSpellY && mouseY < lastSpellY + lastSpellHeight
+								&& mouseButtonClick > 0) {
+								if (lastSpellNameColor.equals("@yel@") || S_WANT_CUSTOM_SPRITES) {
+									// due to magic cape can't determine client side if spell will not require runes
+									selectedSpell = lastSelectedSpell;
+								} else {
+									this.showMessage(false, null,
+										"You don't have all the reagents you need for this spell",
+										MessageType.GAME, 0, null);
+									selectedSpell = -1;
+								}
+								mouseButtonClick = 0;
+							}
+
+							if (mouseX > lastSpellX && mouseX < lastSpellX + lastSpellWidth && mouseY > lastSpellY + 49 && mouseY < lastSpellY + 69
+								&& mouseButtonClick > 0) {
+								selectedSpell = -1;
+								lastSelectedSpell = -1;
+								mouseButtonClick = 0;
+							}
 						}
 
-						if (this.mouseButtonClick == 1 && this.m_Ji == 1) {
-							var9 = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
-							if (var9 != -1) {
-								var10 = this.playerStatBase[5];
-								if (var10 < EntityHandler.getPrayerDef(var9).getReqLevel()) {
+						if (this.mouseButtonClick == 1 && this.magicOrPrayerList == 1) {
+							spellIndex = this.panelMagic.getControlSelectedListIndex(this.controlMagicPanel);
+							if (spellIndex != -1) {
+								magicLevel = this.playerStatBase[5];
+								if (magicLevel < EntityHandler.getPrayerDef(spellIndex).getReqLevel()) {
 									this.showMessage(false, null,
 										"Your prayer ability is not high enough for this prayer", MessageType.GAME,
 										0, null);
@@ -8879,20 +8884,20 @@ public final class mudclient implements Runnable {
 									this.showMessage(false, null,
 										"You have run out of prayer points. Return to a church to recharge",
 										MessageType.GAME, 0, null);
-								} else if (!this.prayerOn[var9]) {
+								} else if (!this.prayerOn[spellIndex]) {
 									this.packetHandler.getClientStream().newPacket(60);
-									this.packetHandler.getClientStream().bufferBits.putByte(var9);
+									this.packetHandler.getClientStream().bufferBits.putByte(spellIndex);
 									this.packetHandler.getClientStream().finishPacket();
-									this.prayerOn[var9] = true;
+									this.prayerOn[spellIndex] = true;
 
 									if (MEMBER_WORLD) {
 										soundPlayer.playSoundFile("prayeron");
 									}
 								} else {
 									this.packetHandler.getClientStream().newPacket(254);
-									this.packetHandler.getClientStream().bufferBits.putByte(var9);
+									this.packetHandler.getClientStream().bufferBits.putByte(spellIndex);
 									this.packetHandler.getClientStream().finishPacket();
-									this.prayerOn[var9] = false;
+									this.prayerOn[spellIndex] = false;
 
 									if (MEMBER_WORLD) {
 										soundPlayer.playSoundFile("prayeroff");
@@ -8903,7 +8908,6 @@ public final class mudclient implements Runnable {
 
 						this.mouseButtonClick = 0;
 					}
-
 				}
 			}
 		} catch (RuntimeException var16) {
@@ -9782,15 +9786,6 @@ public final class mudclient implements Runnable {
 		} else if (osConfig.C_VOLUME_FUNCTION == 2) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Volume buttons - @gre@Volume", 7, null, null);
-		}
-
-		// inventory close
-		if (!osConfig.C_ANDROID_INV_TOGGLE) {
-			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @red@Off", 8, null, null);
-		} else {
-			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Close inventory with menu - @gre@On", 8, null, null);
 		}
 
 		// logout text
@@ -12861,19 +12856,13 @@ public final class mudclient implements Runnable {
 				}
 				case ITEM_USE: {
 					this.selectedItemInventoryIndex = indexOrX;
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
-						if (!C_CUSTOM_UI)
-							this.showUiTab = 0;
-					}
+					this.showUiTab = 0;
 					this.m_ig = EntityHandler.getItemDef(getInventoryItemID(this.selectedItemInventoryIndex)).getName();
 					break;
 				}
 				case ITEM_USE_EQUIPTAB:
 					this.selectedItemInventoryIndex = indexOrX + S_PLAYER_INVENTORY_SLOTS;
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
-						if (!C_CUSTOM_UI)
-							this.showUiTab = 0;
-					}
+					this.showUiTab = 0;
 					this.m_ig = equippedItems[indexOrX].getName();
 					break;
 				case ITEM_DROP: {
@@ -12882,10 +12871,7 @@ public final class mudclient implements Runnable {
 					int amount = getInventoryItemSize(indexOrX);
 					this.packetHandler.getClientStream().bufferBits.putInt(amount);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
-						if (!C_CUSTOM_UI)
-							this.showUiTab = 0;
-					}
+					this.showUiTab = 0;
 					this.selectedItemInventoryIndex = -1;
 					this.showMessage(false, null,
 						"Dropping " + EntityHandler.getItemDef(getInventoryItemID(indexOrX)).getName(),
@@ -12905,10 +12891,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().bufferBits.putShort(dropInventorySlot);
 					this.packetHandler.getClientStream().bufferBits.putInt(dropQuantity);
 					this.packetHandler.getClientStream().finishPacket();
-					if (!isAndroid() || osConfig.C_ANDROID_INV_TOGGLE) {
-						if (!C_CUSTOM_UI)
-							this.showUiTab = 0;
-					}
+					this.showUiTab = 0;
 					this.selectedItemInventoryIndex = this.dropInventorySlot = -1;
 					if (dropQuantity == 1)
 						this.showMessage(false, null,
@@ -13155,6 +13138,10 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case CANCEL: {
+					// Don't want the option to cancel on Android. Makes touching hard.
+					if (isAndroid() && this.mouseButtonClick == 1) {
+						break;
+					}
 					this.selectedSpell = -1;
 					this.selectedItemInventoryIndex = -1;
 					break;
@@ -13674,7 +13661,20 @@ public final class mudclient implements Runnable {
 				this.showUiTab = 0;
 			}
 
-			if ((this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB || this.showUiTab == Config.MAGIC_AND_PRAYER_TAB || this.showUiTab == Config.FRIENDS_TAB)
+			// If we are on Android, this area needs to be larger in the Y direction for the "cast last spell" box
+			if (this.showUiTab == MAGIC_AND_PRAYER_TAB) {
+				if (isAndroid()) {
+					if (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 300) {
+						this.showUiTab = 0;
+					}
+				} else {
+					if (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > 240) {
+						this.showUiTab = 0;
+					}
+				}
+			}
+
+			if ((this.showUiTab == Config.MINIMAP_AND_COMPASS_TAB || this.showUiTab == Config.FRIENDS_TAB)
 				&& (this.getSurface().width2 - 199 > this.mouseX || this.mouseY > (this.panelSocialTab == 1 ? 307 : 240))) {
 				this.showUiTab = 0;
 			}
