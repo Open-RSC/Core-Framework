@@ -239,8 +239,9 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return new ValidatedLogin(LoginResponse.ACCOUNT_LOGGEDIN);
 			}
 
-			if(!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
-				LOGGER.debug(getIpAddress() + " is using " + getServer().getPacketFilter().getPlayersCount(getIpAddress()) + " out of " + getServer().getConfig().MAX_PLAYERS_PER_IP + " allowed sessions.");
+			int playersCount = getServer().getPacketFilter().getPlayersCount(getIpAddress());
+			if (!isAdmin && !getIpAddress().equals("127.0.0.1") && playersCount >= getServer().getConfig().MAX_PLAYERS_PER_IP) {
+				LOGGER.info(getIpAddress() + " is using " + playersCount + " out of " + getServer().getConfig().MAX_PLAYERS_PER_IP + " allowed sessions, rejecting additional connection.");
 				return new ValidatedLogin(LoginResponse.IP_IN_USE);
 			}
 
@@ -279,7 +280,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		if (reconnecting && clientVersion <= 204) {
 			return new ValidatedLogin(LoginResponse.RECONNECT_SUCCESFUL);
 		}
-
+		getServer().getPacketFilter().addLoggedInPlayer(getIpAddress(), getUsernameHash());
 		return new ValidatedLogin(LoginResponse.LOGIN_SUCCESSFUL[groupId]);
 	}
 

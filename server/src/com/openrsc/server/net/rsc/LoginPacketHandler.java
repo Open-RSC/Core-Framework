@@ -227,8 +227,6 @@ public class LoginPacketHandler {
 
 								server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 								ActionSender.sendLogin(loadedPlayer);
-
-								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP(), loadedPlayer.getUsernameHash());
 							}
 						};
 						server.getLoginExecutor().add(request);
@@ -311,8 +309,6 @@ public class LoginPacketHandler {
 
 								server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 								ActionSender.sendLogin(loadedPlayer);
-
-								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP(), loadedPlayer.getUsernameHash());
 							}
 						};
 						server.getLoginExecutor().add(request);
@@ -395,7 +391,6 @@ public class LoginPacketHandler {
 
 									server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 									ActionSender.sendLogin(loadedPlayer);
-									getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP(), loadedPlayer.getUsernameHash());
 								}
 							};
 							server.getLoginExecutor().add(request);
@@ -463,8 +458,6 @@ public class LoginPacketHandler {
 
 								server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 								ActionSender.sendLogin(loadedPlayer);
-
-								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP(), loadedPlayer.getUsernameHash());
 							}
 						};
 						server.getLoginExecutor().add(request);
@@ -545,8 +538,6 @@ public class LoginPacketHandler {
 
 							server.getPluginHandler().handlePlugin(PlayerLoginTrigger.class, loadedPlayer, new Object[]{loadedPlayer});
 							ActionSender.sendLogin(loadedPlayer);
-
-							getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP(), loadedPlayer.getUsernameHash());
 						}
 					};
 					server.getLoginExecutor().add(request);
