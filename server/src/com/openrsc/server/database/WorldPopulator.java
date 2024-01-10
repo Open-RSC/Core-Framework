@@ -227,6 +227,9 @@ public final class WorldPopulator {
 					if (getWorld().getServer().getConfig().MICE_TO_MEET_YOU_EVENT) {
 						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsMiceToMeetYou.json", type);
 					}
+					if (getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+						loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsWoodcuttingGuild.json", type);
+					}
 					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOther.json", type);
 				}
 				return;

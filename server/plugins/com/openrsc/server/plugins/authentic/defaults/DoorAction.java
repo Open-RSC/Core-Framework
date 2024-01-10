@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.custom.misc.WoodcuttingGuild;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -1224,8 +1225,16 @@ public class DoorAction {
 					return;
 				}
 				if (player.getY() <= 472) {
-					player.playerServerMessage(MessageType.QUEST, "the gate is locked");
+					if (!config().WANT_WOODCUTTING_GUILD) {
+						player.playerServerMessage(MessageType.QUEST, "the gate is locked");
+					} else {
+						doGate(player, obj);
+					}
 				} else {
+					if (config().WANT_WOODCUTTING_GUILD) {
+						WoodcuttingGuild.frontGate(player);
+						return;
+					}
 					// 8 is the authentic radius for ifnearvisnpc, however this could have used ifnearnpc which has a radius of 16
 					final Npc forester = ifnearvisnpc(player, NpcId.FORESTER.id(), 8);
 					if (forester != null) {

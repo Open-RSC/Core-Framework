@@ -608,6 +608,9 @@ public final class SkillGuideInterface {
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(405, "1", "All axes"));
 			} else if (curTab == 2) {
+				if (Config.S_WANT_WOODCUTTING_GUILD) {
+					skillMenuEntries.add(new SkillMenuItem(405, "55", "Woodcutting Guild"));
+				}
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1525, "99", "Woodcutting Cape"));
 				}
@@ -1025,6 +1028,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(410, "67", "Yanille Agility Dungeon pile of rubble"));
 				skillMenuEntries.add(new SkillMenuItem(410, "67", "Lava Maze stepping stones"));
 				skillMenuEntries.add(new SkillMenuItem(410, "70", "Taverly Dungeon pipe crawl"));
+				skillMenuEntries.add(new SkillMenuItem(410, "85", "Karamja river stepping stone"));
 			} else if (curTab == 2) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1518, "99", "Agility Cape"));

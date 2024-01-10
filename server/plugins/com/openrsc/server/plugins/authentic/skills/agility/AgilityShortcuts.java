@@ -1,7 +1,9 @@
 package com.openrsc.server.plugins.authentic.skills.agility;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.SceneryId;
 import com.openrsc.server.constants.Skill;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -47,7 +49,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 	private static final int FALADOR_MEMBERS_EXIT_HANDHOLDS = 1290;
 	private static final int KBD_TO_LAVADUNG_STEPPING_STONE = 1291;
 	private static final int LAVADUNG_TO_KBD_STEPPING_STONE = 1292;
-
+	private static final int SHILO_TO_NATURE_STEPPING_STONE = 1295;
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
@@ -76,8 +78,9 @@ public class AgilityShortcuts implements OpLocTrigger,
 			TAVERLY_STEPPING_STONE,
 			CATHERBY_STEPPING_STONE,
 			FALADOR_MEMBERS_EXIT_HANDHOLDS,
-			KBD_TO_LAVADUNG_STEPPING_STONE, LAVADUNG_TO_KBD_STEPPING_STONE
-			);
+			KBD_TO_LAVADUNG_STEPPING_STONE, LAVADUNG_TO_KBD_STEPPING_STONE,
+			SHILO_TO_NATURE_STEPPING_STONE
+		);
 	}
 
 	@Override
@@ -739,6 +742,37 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.damage(lavaDamage);
 				}
 
+				break;
+			case SHILO_TO_NATURE_STEPPING_STONE:
+				if (getCurrentLevel(player, Skill.AGILITY.id()) < 85) {
+					player.message("You need an agility level of 85 to jump to the stone");
+					return;
+				}
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to jump to the stone");
+						return;
+					}
+				}
+
+				// Check if we're going to fail
+				boolean cross = succeed(player, 85);
+				damage = (int) Math.round((player.getSkills().getLevel(Skill.HITS.id())) * 0.20D);
+				Point successPoint = player.getY() > 830 ? new Point(369, 829) : new Point(367, 831);
+				Point failPoint = player.getY() > 830 ? new Point(383, 836) : new Point(383, 833);
+
+				mes("You jump out onto the stone");
+				player.teleport(368, 830);
+				delay(3);
+				if (cross) {
+					mes("You successfully cross the river");
+					player.teleport(successPoint.getX(), successPoint.getY());
+					player.incExp(Skill.AGILITY.id(), 280, true);
+				} else {
+					mes("You slip and fall into the river");
+					player.damage(damage);
+					player.teleport(failPoint.getX(), failPoint.getY());
+				}
 				break;
 		}
 	}

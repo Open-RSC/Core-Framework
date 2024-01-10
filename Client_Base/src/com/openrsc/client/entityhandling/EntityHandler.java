@@ -2330,6 +2330,10 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Praesens", "The ghost of Christmas present", "", 15, 15, 5, 15, false, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));
 		sprites = new int[]{137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Futurum", "The ghost of Christmas future", "", 15, 15, 5, 15, false, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, 107, -1, 45, -1, -1, 11, -1, -1};
+		npcs.add(new NPCDef("Forester", "He looks after McGrubor's wood", "", 24, 22, 17, 23, false, sprites, 1, 56576, 43520, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("McGrubor", "Grumpy old McGruber", "", 20, 20, 20, 20, false, sprites, 0xAAAAAA, 12277060, 0x007900, 15523536, 160, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -6924,6 +6928,7 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Dragonfruit Tree", "A tree filled with many ripe dragonfruits", "Harvest", "Examine", 1, 1, 1, 0, "dragonfruit", ++i)); //1293
 		objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "depleteddragonfruit", ++i)); //1294
 
+		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1295
 	}
 
 	public static void load(boolean loadMembers) {

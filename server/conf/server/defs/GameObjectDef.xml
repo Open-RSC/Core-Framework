@@ -14243,4 +14243,15 @@
     <groundItemVar>0</groundItemVar>
     <objectModel>depleteddragonfruit</objectModel>
   </GameObjectDef>
+  <GameObjectDef>
+    <name>Stepping Stone</name>
+    <description>It looks like I could jump on this</description>
+    <command1>jump to</command1>
+    <command2>Examine</command2>
+    <type>1</type>
+    <width>1</width>
+    <height>1</height>
+    <groundItemVar>0</groundItemVar>
+    <objectModel>stonedisc</objectModel>
+  </GameObjectDef>
 </GameObjectDef-array>

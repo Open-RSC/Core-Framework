@@ -13,6 +13,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
+import com.openrsc.server.plugins.RuneScript;
+import com.openrsc.server.plugins.custom.misc.WoodcuttingGuild;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -450,6 +452,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				player.message("As an Ultimate Ironman, you cannot use the bank.");
 				return;
 			}
+
 			if (obj.getX() == 58 && obj.getY() == 731) {
 				mes("This chest is used by Shantay and his men.");
 				delay(2);
@@ -457,8 +460,16 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				delay(2);
 				mes("You open the bank.");
 				delay(2);
+			} else if (config().WANT_WOODCUTTING_GUILD && obj.getX() == 556 && obj.getY() == 455) {
+				if (RuneScript.ifnearnpc(NpcId.MCGRUBOR.id())) {
+					WoodcuttingGuild.mcGruborDialogue(player);
+				} else {
+					mes("I should talk to McGrubor before I use his bank chest");
+				}
+				return;
 			}
-			if(validatebankpin(player, null)) {
+
+			if (validatebankpin(player, null)) {
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			}
