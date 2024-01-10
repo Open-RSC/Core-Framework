@@ -980,6 +980,10 @@ public class DiscordService implements Runnable{
 		if(!getServer().getConfig().WANT_DISCORD_DOWNTIME_REPORTS) {
 			return;
 		}
+		long downtime = endmillis - startmillis;
+		if (downtime < getServer().getConfig().DISCORD_DOWNTIME_REPORTS_MILLISECONDS_DOWN_BEFORE_REPORT) {
+			return;
+		}
 
 		StringBuilder mainContent = new StringBuilder();
 		mainContent.append("**");
@@ -988,11 +992,15 @@ public class DiscordService implements Runnable{
 		mainContent.append("**");
 
 		mainContent.append("\n\nThe server detected it was offline at <t:");
-		mainContent.append(startmillis/1000);
-		mainContent.append("> and recovered at <t:");
-		mainContent.append(endmillis/1000);
-		mainContent.append(">. A total downtime of **");
-		long downtime = endmillis - startmillis;
+		mainContent.append(startmillis / 1000);
+		mainContent.append("> (");
+		mainContent.append(startmillis);
+		mainContent.append(") and recovered at <t:");
+		mainContent.append(endmillis / 1000);
+		mainContent.append("> (");
+		mainContent.append(endmillis);
+		mainContent.append("). A total downtime of **");
+
 		if (downtime > 60000) {
 			mainContent.append(downtime / 60000);
 			mainContent.append(" minutes.**");

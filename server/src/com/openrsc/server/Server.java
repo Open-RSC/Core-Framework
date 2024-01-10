@@ -631,7 +631,7 @@ public class Server implements Runnable {
 		try {
 			InetAddress address = InetAddress.getByName(getConfig().MONITOR_IP);
 			long timeOffline = System.currentTimeMillis();
-			boolean monitor_reachable = address.isReachable(200);
+			boolean monitor_reachable = address.isReachable(getConfig().MONITOR_IP_TIMEOUT);
 			boolean unloadedPlayers = false;
 			final boolean OFFLINE_THIS_TICK = !monitor_reachable;
 			int playersOnline = 0;
@@ -650,7 +650,7 @@ public class Server implements Runnable {
 					LOGGER.info("unloaded all players on " + getConfig().SERVER_NAME + " as a result of being offline for over 10 seconds.");
 					unloadedPlayers = true;
 				}
-				monitor_reachable = address.isReachable(200);
+				monitor_reachable = address.isReachable(getConfig().MONITOR_IP_TIMEOUT);
 			}
 
 			// now back online

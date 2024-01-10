@@ -183,6 +183,9 @@ public class ServerConfiguration {
 	public boolean MONITOR_ONLINE;
 	public String MONITOR_IP;
 	public boolean WANT_DISCORD_DOWNTIME_REPORTS;
+
+	public int MONITOR_IP_TIMEOUT;
+	public long DISCORD_DOWNTIME_REPORTS_MILLISECONDS_DOWN_BEFORE_REPORT;
 	public String DISCORD_DOWNTIME_REPORT_WEBHOOK_URL;
 	public boolean WANT_EQUIPMENT_TAB;
 	public boolean WANT_BANK_PRESETS;
@@ -652,6 +655,8 @@ public class ServerConfiguration {
 		// Monitoring to ensure server is online
 		MONITOR_IP = tryReadString("monitor_ip").orElse("localhost");
 		MONITOR_ONLINE = tryReadBool("monitor_online").orElse(false);
+		DISCORD_DOWNTIME_REPORTS_MILLISECONDS_DOWN_BEFORE_REPORT = tryReadInt("discord_downtime_reports_milliseconds_down_before_report").orElse(1000);
+		MONITOR_IP_TIMEOUT = tryReadInt("monitor_ip_timeout").orElse(100);
 		DISCORD_DOWNTIME_REPORT_WEBHOOK_URL = tryReadString("discord_downtime_report_webhook_url").orElse("null");
 		WANT_DISCORD_DOWNTIME_REPORTS = tryReadBool("want_discord_downtime_reports").orElse(false)
 			&& !DISCORD_DOWNTIME_REPORT_WEBHOOK_URL.equals("null");
