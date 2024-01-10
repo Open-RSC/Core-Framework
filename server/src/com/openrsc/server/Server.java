@@ -44,6 +44,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.*;
@@ -255,7 +256,8 @@ public class Server implements Runnable {
 		final boolean wantDiscordReportAbuseUpdates = getConfig().WANT_DISCORD_REPORT_ABUSE_UPDATES;
 		final boolean wantDiscordStaffCommands = getConfig().WANT_DISCORD_STAFF_COMMANDS;
 		final boolean wantDiscordNaughtyWordsUpdates = getConfig().WANT_DISCORD_NAUGHTY_WORDS_UPDATES;
-		discordService = wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates || wantDiscordReportAbuseUpdates || wantDiscordStaffCommands || wantDiscordNaughtyWordsUpdates ? new DiscordService(this) : null;
+		final boolean wantDiscordDowntimeReports = getConfig().WANT_DISCORD_DOWNTIME_REPORTS;
+		discordService = wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates || wantDiscordReportAbuseUpdates || wantDiscordStaffCommands || wantDiscordNaughtyWordsUpdates || wantDiscordDowntimeReports ? new DiscordService(this) : null;
 		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
 		gameEventHandler = new GameEventHandler(this);
@@ -568,6 +570,9 @@ public class Server implements Runnable {
 
 							incrementLastExecuteWalkToActionsDuration(getGameUpdater().executePidlessCatching());
 							incrementLastProcessMessageQueuesDuration(getWorld().processGlobalMessageQueue());
+
+							checkAndRespondToServerNotHavingAccessToInternet();
+
 							for (final Player player : getWorld().getPlayers()) {
 								player.processLogout();
 							}
@@ -615,6 +620,48 @@ public class Server implements Runnable {
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
 			}
+		}
+	}
+
+	private void checkAndRespondToServerNotHavingAccessToInternet() {
+		if (getConfig().MONITOR_IP.equals("localhost") || !getConfig().MONITOR_ONLINE) {
+			return;
+		}
+
+		try {
+			InetAddress address = InetAddress.getByName(getConfig().MONITOR_IP);
+			long timeOffline = System.currentTimeMillis();
+			boolean monitor_reachable = address.isReachable(200);
+			boolean unloadedPlayers = false;
+			final boolean OFFLINE_THIS_TICK = !monitor_reachable;
+			int playersOnline = 0;
+			if (!monitor_reachable) {
+				// calculate number of affected users
+				for (Player p : getWorld().getPlayers()) {
+					playersOnline++;
+				}
+			}
+			while (!monitor_reachable) {
+				LOGGER.info(getConfig().SERVER_NAME + " has been offline for " + (System.currentTimeMillis() - timeOffline) + " millis!");
+				// after 10 seconds offline, give up and unregister all players
+				if (System.currentTimeMillis() - timeOffline > 10000 && !unloadedPlayers) {
+					LOGGER.info(getConfig().SERVER_NAME + " server offline for over 10 seconds, unloading all players...");
+					getWorld().unloadPlayers();
+					LOGGER.info("unloaded all players on " + getConfig().SERVER_NAME + " as a result of being offline for over 10 seconds.");
+					unloadedPlayers = true;
+				}
+				monitor_reachable = address.isReachable(200);
+			}
+
+			// now back online
+			if (OFFLINE_THIS_TICK) {
+				// tell discord we were offline, for how long, and that we are now back online.
+				if (getDiscordService() != null) {
+					getDiscordService().reportDowntimeToDiscord(timeOffline, System.currentTimeMillis(), unloadedPlayers, playersOnline);
+				}
+			}
+		} catch(IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 

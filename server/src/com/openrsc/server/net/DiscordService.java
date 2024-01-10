@@ -56,6 +56,7 @@ public class DiscordService implements Runnable{
 	private final Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
 	private final Queue<DiscordEmbed> reportAbuseRequests = new ConcurrentLinkedQueue<DiscordEmbed>();
 	private final Queue<DiscordEmbed> naughtyWordsRequests = new ConcurrentLinkedQueue<DiscordEmbed>();
+	private final Queue<DiscordEmbed> downtimeReports = new ConcurrentLinkedQueue<DiscordEmbed>();
 
 	private static final Logger LOGGER = LogManager.getLogger();
 	private long monitoringLastUpdate = 0;
@@ -668,6 +669,9 @@ public class DiscordService implements Runnable{
 			while ((message = generalLogs.poll()) != null) {
 				sendToDiscord(getServer().getConfig().DISCORD_GENERAL_WEBHOOK_URL, message);
 			}
+			while ((embed = downtimeReports.poll()) != null) {
+				sendEmbedToDiscord(getServer().getConfig().DISCORD_DOWNTIME_REPORT_WEBHOOK_URL, embed);
+			}
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
@@ -970,5 +974,48 @@ public class DiscordService implements Runnable{
 		);
 
 		naughtyWordsRequests.add(embed);
+	}
+
+	public void reportDowntimeToDiscord(long startmillis, long endmillis, boolean unloaded, int onlineCount) {
+		if(!getServer().getConfig().WANT_DISCORD_DOWNTIME_REPORTS) {
+			return;
+		}
+
+		StringBuilder mainContent = new StringBuilder();
+		mainContent.append("**");
+		mainContent.append(getServer().getName());
+		mainContent.append(" is now back online...!");
+		mainContent.append("**");
+
+		mainContent.append("\n\nThe server detected it was offline at <t:");
+		mainContent.append(startmillis/1000);
+		mainContent.append("> and recovered at <t:");
+		mainContent.append(endmillis/1000);
+		mainContent.append(">. A total downtime of **");
+		long downtime = endmillis - startmillis;
+		if (downtime > 60000) {
+			mainContent.append(downtime / 60000);
+			mainContent.append(" minutes.**");
+		} else {
+			mainContent.append(downtime / 1000);
+			mainContent.append(" seconds.**");
+		}
+
+		if (unloaded) {
+			mainContent.append("\n\nBecause the downtime was so long, all players were unloaded from the server, after 10 seconds.");
+		}
+
+		mainContent.append("\n\n");
+		mainContent.append(onlineCount);
+		mainContent.append(" accounts were logged in at the time of the outage.");
+
+		DiscordEmbed embed = new DiscordEmbed(
+			"",
+			"",
+			"16753433", // yellow
+			mainContent.toString()
+		);
+
+		downtimeReports.add(embed);
 	}
 }
