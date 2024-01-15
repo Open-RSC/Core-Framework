@@ -7772,7 +7772,7 @@
         "defense": 25,
         "ranged": false,
         "combatlvl": 21,
-        "isMembers": 1,
+        "isMembers": 0,
         "attackable": 1,
         "aggressive": 0,
         "respawnTime": 74,
