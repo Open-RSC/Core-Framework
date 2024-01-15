@@ -418,6 +418,10 @@ Moderator Commands
   - Usage `::announcement [message]`
   - Alias: `::announce` or `::anouncement` or `::anounce`
   - Send an important message to every player on the server.
+- systemmessage
+  - Usage: `::systemmessage [message]`
+  - Alias: `::sysmes`
+  - Shows a system message box for every player on the server.
 - kick
   - Usage: `::kick [player]`
   - Kicks the specified player from the server.
