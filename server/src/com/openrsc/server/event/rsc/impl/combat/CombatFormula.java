@@ -347,9 +347,10 @@ public class CombatFormula {
 	 */
 	private static int rangedPower(final int arrowId) {
 		/**
-		 * We don't have good data for spears, or throwing knives,
-		 * so everything besides adamantite spear and rune knives
-		 * is a guess based on arrows increasing by 5 per tier.
+		 * We don't have good data for throwing knives,
+		 * so everything besides rune knives is a guess based on
+		 * arrows increasing by 5 per tier.
+		 * Rune spear should be accurate since the stats were leaked.
 		 * Note circa 14th May 2023: even this might be wrong now. The arrow data should now be pretty accurate, but thrown items may need re-review.
 		 * All the values were scaled back by 5 based on extensive ranged data fitting into the new formula.
 		 * Iron, steel, and adamantite darts are also guesses.
@@ -403,30 +404,32 @@ public class CombatFormula {
 				return 40;
 			case ADAMANTITE_THROWING_KNIFE:
 			case POISONED_ADAMANTITE_THROWING_KNIFE:
-			case BRONZE_SPEAR:
-			case POISONED_BRONZE_SPEAR:
 				return 45;
 			case RUNE_THROWING_KNIFE:
 			case POISONED_RUNE_THROWING_KNIFE:
-			case IRON_SPEAR:
-			case POISONED_IRON_SPEAR:
 			case DRAGON_ARROWS:
 			case POISON_DRAGON_ARROWS:
 			case DRAGON_BOLTS:
 			case POISON_DRAGON_BOLTS:
 				return 50;
+			case BRONZE_SPEAR:
+			case POISONED_BRONZE_SPEAR:
+				return 29;
+			case IRON_SPEAR:
+			case POISONED_IRON_SPEAR:
+				return 37;
 			case STEEL_SPEAR:
 			case POISONED_STEEL_SPEAR:
-				return 55;
+				return 46;
 			case MITHRIL_SPEAR:
 			case POISONED_MITHRIL_SPEAR:
-				return 60;
+				return 53;
 			case ADAMANTITE_SPEAR:
 			case POISONED_ADAMANTITE_SPEAR:
-				return 65;
+				return 61;
 			case RUNE_SPEAR:
 			case POISONED_RUNE_SPEAR:
-				return 70;
+				return 69;
 			default:
 				return 0;
 		}
@@ -448,7 +451,8 @@ public class CombatFormula {
 		 * darts.
 		 *
 		 * For spears and knives, we can only make wild guesses
-		 * (people didn't throw enough of them).
+		 * (people didn't throw enough of them). Rune spear was
+		 * leaked.
 		 */
 		switch (ItemId.getById(bowId)) {
 			case SHORTBOW:
@@ -494,30 +498,33 @@ public class CombatFormula {
 			case POISONED_ADAMANTITE_THROWING_DART:
 			case MITHRIL_THROWING_KNIFE:
 			case POISONED_MITHRIL_THROWING_KNIFE:
-			case BRONZE_SPEAR:
-			case POISONED_BRONZE_SPEAR:
 				return 45;
 			case RUNE_THROWING_DART:
 			case POISONED_RUNE_THROWING_DART:
 			case ADAMANTITE_THROWING_KNIFE:
 			case POISONED_ADAMANTITE_THROWING_KNIFE:
-			case IRON_SPEAR:
-			case POISONED_IRON_SPEAR:
 				return 50;
 			case RUNE_THROWING_KNIFE:
 			case POISONED_RUNE_THROWING_KNIFE:
+				return 55;
+			case BRONZE_SPEAR:
+			case POISONED_BRONZE_SPEAR:
+				return 25;
+			case IRON_SPEAR:
+			case POISONED_IRON_SPEAR:
+				return 33;
 			case STEEL_SPEAR:
 			case POISONED_STEEL_SPEAR:
-				return 55;
+				return 41;
 			case MITHRIL_SPEAR:
 			case POISONED_MITHRIL_SPEAR:
-				return 60;
+				return 49;
 			case ADAMANTITE_SPEAR:
 			case POISONED_ADAMANTITE_SPEAR:
-				return 65;
+				return 57;
 			case RUNE_SPEAR:
 			case POISONED_RUNE_SPEAR:
-				return 70;
+				return 65;
 			default:
 				return 0;
 		}
