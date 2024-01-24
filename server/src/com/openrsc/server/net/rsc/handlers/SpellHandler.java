@@ -1619,7 +1619,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							int casts = getPlayer().getCache().getInt(spell.getName() + "_casts");
 							getPlayer().getCache().set(spell.getName() + "_casts", casts - 1);
 						}
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateIbanSpellDamage(), 1, setChasing));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateIbanSpellDamage(), 4, setChasing));
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 					case CLAWS_OF_GUTHIX:
