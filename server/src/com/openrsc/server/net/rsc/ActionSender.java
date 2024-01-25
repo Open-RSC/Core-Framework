@@ -607,7 +607,7 @@ public class ActionSender {
 		struct.name = username;
 		struct.formerName = formerName.equalsIgnoreCase(username) ? "" : formerName;
 		struct.onlineStatus = nameChangeEvent ? onlineStatus | 1 : onlineStatus;
-		struct.worldName = (onlineStatus & 4) != 0 ? "OpenRSC" : "";
+		struct.worldName = (onlineStatus & 4) != 0 ? player.getConfig().SERVER_NAME : "";
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_FRIEND_UPDATE, struct, player);
 	}
 
