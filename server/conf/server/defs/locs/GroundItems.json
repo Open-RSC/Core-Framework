@@ -126,7 +126,7 @@
 			"Y": 180
 		},
 		"amount": 1,
-		"respawn": 120
+		"respawn": 630
 	}, {
 		"id": 10,
 		"pos": {
