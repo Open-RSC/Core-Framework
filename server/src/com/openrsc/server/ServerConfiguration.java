@@ -200,6 +200,7 @@ public class ServerConfiguration {
 	public boolean WANT_COMBAT_ODYSSEY;
 	public boolean WANT_INSTANCED_NPCS;
 	public boolean EQUIP_QUEST_ITEMS_WITHOUT_QUESTS;
+	public boolean WANT_PACKET_REGISTER;
 	public double PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER;
 	public double PARTY_DISTANCE_PERCENT_DECREASE;
 	public double PARTY_SAVE_XP_FOR_SKILLER_PERCENT;
@@ -608,6 +609,7 @@ public class ServerConfiguration {
 		WANT_COMBAT_ODYSSEY = tryReadBool("want_combat_odyssey").orElse(false);
 		WANT_INSTANCED_NPCS = tryReadBool("want_instanced_npcs").orElse(false);
 		EQUIP_QUEST_ITEMS_WITHOUT_QUESTS = tryReadBool("equip_quest_items_without_quests").orElse(false);
+		WANT_PACKET_REGISTER = tryReadBool("want_packet_register").orElse(true);
 
 		// Party settings
 		WANT_PARTIES = tryReadBool("want_parties").orElse(false);

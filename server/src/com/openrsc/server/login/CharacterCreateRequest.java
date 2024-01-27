@@ -129,6 +129,12 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 	}
 
 	protected void processInternal() {
+		if (!getServer().getConfig().WANT_PACKET_REGISTER) {
+			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) RegisterLoginResponse.UNSUCCESSFUL).toPacket());
+			getChannel().close();
+			return;
+		}
+		
 		if (getAuthenticClient()) {
 			int registerResponse = validateRegister();
 			if (clientVersion <= 204) {
