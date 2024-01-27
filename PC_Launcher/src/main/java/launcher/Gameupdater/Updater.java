@@ -40,14 +40,12 @@ public class Updater {
 			// Set variables
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/rscplus/");
 			String _FILE_NAME = "rscplus-master.zip";
-			String _URL = Defaults._RSCPLUS_REPOSITORY_DL;
-			Double _EXTRA_VERSION = Defaults._RSCPLUS_VERSION;
 			File _PRESERVATION_CONFIG = new File( _CACHE_DIR + "/extras/rscplus/worlds/01_RSC Preservation.ini");
 			File _URANIUM_CONFIG = new File(_CACHE_DIR + "/extras/rscplus/worlds/02_RSC Uranium.ini");
 			File _DEFAULT_CONFIG = new File(_CACHE_DIR + "/extras/rscplus/worlds/01_World 1.ini");
 
 			// Download new or update existing, then execute
-			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, Defaults._RSCPLUS_REPOSITORY_DL, Defaults._RSCPLUS_VERSION, "_RSCPLUS_VERSION");
 
 			// if (!_PRESERVATION_CONFIG.exists()) {
 				createPreservationConfig(_PRESERVATION_CONFIG);
@@ -70,11 +68,9 @@ public class Updater {
 			// Set variables
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/apos/");
 			String _FILE_NAME = "apos-master.zip";
-			String _URL = Defaults._APOS_REPOSITORY_DL;
-			Double _EXTRA_VERSION = Defaults._APOS_VERSION;
 
 			// Download new or update existing, then execute
-			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, Defaults._APOS_REPOSITORY_DL, Defaults._APOS_VERSION, "_APOS_VERSION");
 			ClientLauncher.launchAPOS();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -86,11 +82,9 @@ public class Updater {
 			// Set variables
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/idlersc/");
 			String _FILE_NAME = "idlersc-master.zip";
-			String _URL = Defaults._IDLERSC_REPOSITORY_DL;
-			Double _EXTRA_VERSION = Defaults._IDLERSC_VERSION;
 
 			// Download new or update existing, then execute
-			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, Defaults._IDLERSC_REPOSITORY_DL, Defaults._IDLERSC_VERSION, "_IDLERSC_VERSION");
 			ClientLauncher.launchIdleRSC();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -102,11 +96,9 @@ public class Updater {
 			// Set variables
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/winrune/");
 			String _FILE_NAME = "winrune-master.zip";
-			String _URL = Defaults._WINRUNE_REPOSITORY_DL;
-			Double _EXTRA_VERSION = Defaults._WINRUNE_VERSION;
 
 			// Download new or update existing, execute elsewhere
-			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, Defaults._WINRUNE_REPOSITORY_DL, Defaults._WINRUNE_VERSION, "_WINRUNE_VERSION");;
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
@@ -117,13 +109,11 @@ public class Updater {
 			// Set variables
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/rsctimes/");
 			String _FILE_NAME = "rsctimes-master.zip";
-			String _URL = Defaults._RSCTIMES_REPOSITORY_DL;
-			Double _EXTRA_VERSION = Defaults._RSCTIMES_VERISION;
 			File _2001SCAPE_CONFIG = new File( _CACHE_DIR + "/extras/rsctimes/worlds/01_2001scape.ini");
 			File _DEFAULT_CONFIG = new File(_CACHE_DIR + "/extras/rsctimes/worlds/01_World 1.ini");
 
 			// Download new or update existing, then execute
-			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, Defaults._RSCTIMES_REPOSITORY_DL, Defaults._RSCTIMES_VERISION, "_RSCTIMES_VERSION");
 
 			//if (!_2001SCAPE_CONFIG.exists()) {
 				create2001scapeConfig(_2001SCAPE_CONFIG);
@@ -143,17 +133,15 @@ public class Updater {
 			// Set variables
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/fleacircus/");
 			String _FILE_NAME = "fleacircus.zip";
-			String _URL = Defaults._FLEACIRCUS_REPOSITORY_DL;
-			Double _EXTRA_VERSION = Defaults._FLEACIRCUS_VERISION;
 
 			// Download new or update existing, execute elsewhere
-			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
+			downloadOrUpdate(_GAME_PATH, _FILE_NAME, Defaults._FLEACIRCUS_REPOSITORY_DL, Defaults._FLEACIRCUS_VERISION, "_FLEACIRCUS_VERSION");
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void downloadOrUpdate(File _GAME_PATH, String _FILE_NAME, String _URL, Double _EXTRA_VERSION) {
+	private static void downloadOrUpdate(File _GAME_PATH, String _FILE_NAME, String _URL, Double currentVersion, String versionStringVarName) {
     Downloader.currently_updating = true;
 		ProgressBar.initProgressBar();
 		ProgressBar.setDownloadProgress("Checking for updates", 100.0f);
@@ -199,7 +187,7 @@ public class Updater {
 
         // If the folder already exists, check if there is an updated version. If so, download latest, extract, and launch.
         if (_GAME_PATH.exists() || _GAME_PATH.isDirectory()) {
-          double latestVersion = fetchLatestExtrasVersionNumber(_EXTRA_VERSION);
+          double latestVersion = fetchLatestExtrasVersionNumber(currentVersion, versionStringVarName);
           if (Defaults._CURRENT_VERSION < latestVersion) {
             try {
               URLConnection connection = new URL(_URL).openConnection();
@@ -262,7 +250,6 @@ public class Updater {
 				}
 				inZipEntry = inZip.getNextEntry();
 			}
-			//inZipEntry.close();
 			inZip.close();
 			Logger.Info("Finished Unzipping");
 		} catch (IOException e) {

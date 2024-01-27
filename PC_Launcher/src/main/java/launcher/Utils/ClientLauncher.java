@@ -280,7 +280,4 @@ public class ClientLauncher {
 		Utils.execCmd(new String[]{"java", "-jar", idlerscJar.getAbsolutePath()}, idlerscJar.getParentFile());
 	}
 
-	private static void exit() {
-		System.exit(0);
-	}
 }

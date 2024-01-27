@@ -296,7 +296,7 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "idlersc-large": {
-				Utils.openWebpage("https://gitlab.com/idlersc/idlersc");
+				Utils.openWebpage("https://gitlab.com/open-runescape-classic/idlersc");
 				return;
 			}
 
