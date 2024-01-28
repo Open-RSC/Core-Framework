@@ -1315,13 +1315,13 @@ public final class Player extends Mob {
 		getCache().store("global_mute", l);
 	}
 
-	public void setMuteNotify(final boolean n) {
-		getCache().store("mute_notify", n);
+	public void setShadowMute(final boolean n) {
+		getCache().store("shadow_mute", n);
 	}
 
-	public boolean getMuteNotify() {
-		if (getCache().hasKey("mute_notify"))
-			return getCache().getBoolean("mute_notify");
+	public boolean isShadowMuted() {
+		if (getCache().hasKey("shadow_mute"))
+			return getCache().getBoolean("shadow_mute");
 		else
 			return false;
 	}
@@ -4217,14 +4217,17 @@ public final class Player extends Mob {
 	public boolean isElligibleToGlobalChat() {
 		final String messagePrefix = getConfig().MESSAGE_PREFIX;
 		if (isMuted()) {
-			if (getMuteNotify()) {
-				message(messagePrefix + "You are muted, you cannot send messages");
+			if (!isShadowMuted()) {
+				final long muteDelay = getMuteExpires();
+				message(messagePrefix + "You are " + (muteDelay == -1 ? "permanently muted" : "temporarily muted for " + getMinutesMuteLeft() + " minutes") + ".");
 			}
 			return false;
 		}
 		if (isGlobalMuted()) {
-			final long globalMuteDelay = getCache().getLong("global_mute");
-			message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporary muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from global chat.");
+			if (!isShadowMuted()) {
+				final long globalMuteDelay = getCache().getLong("global_mute");
+				message(messagePrefix + "You are " + (globalMuteDelay == -1 ? "permanently muted" : "temporarily muted for " + (int) ((globalMuteDelay - System.currentTimeMillis()) / 1000 / 60) + " minutes") + " from global chat.");
+			}
 			return false;
 		}
 

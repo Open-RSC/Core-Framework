@@ -158,12 +158,12 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				}
 				Player friendPlayer = player.getWorld().getPlayer(friendHash);
 				if (player.isMuted() && (friendPlayer == null || !friendPlayer.hasElevatedPriveledges())) {
-					if (player.getMuteNotify()) {
-						player.message("You have been " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " due to breaking a rule");
+					if (!player.isShadowMuted()) {
+						player.message("You have been " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " muted.");
 						if (player.getMuteExpires() != -1) {
-							player.message("This mute will remain for a further " + DataConversions.formatTimeString(player.getMinutesMuteLeft()));
+							player.message("This mute will expire in " + player.getMinutesMuteLeft() + " minutes.");
+							player.message("To prevent further mutes please read the rules");
 						}
-						player.message("To prevent further mutes please read the rules");
 					}
 					return;
 				}

@@ -21,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.openrsc.server.constants.AppearanceId.*;
@@ -284,7 +283,7 @@ public final class PlayerModerator implements CommandTrigger {
 	}
 
 	private void mute(final Player player, final Player targetPlayer, final int targetPlayerId,
-					  final String targetPlayerUsername, final int duration, final boolean notify,
+					  final String targetPlayerUsername, final int duration, final boolean shadowMute,
 					  final String reason, final int muteType) {
 		final String muteText = muteType == REGULAR_MUTE ? " " : " global chat ";
 		final String minuteText = duration == -1 ? "permanent" : duration + " minute";
@@ -309,7 +308,7 @@ public final class PlayerModerator implements CommandTrigger {
 		} else { // The player is online
 			if (duration == 0) {
 				// Handle unmute
-				if (notify && !player.isInvisibleTo(targetPlayer)) {
+				if (!shadowMute) {
 					targetPlayer.message("Your " + muteText + "mute has been lifted. Happy Classic Scaping!");
 				}
 
@@ -320,7 +319,7 @@ public final class PlayerModerator implements CommandTrigger {
 				}
 			} else {
 				// Handle muting
-				if (notify && !player.isInvisibleTo(targetPlayer)) {
+				if (!shadowMute) {
 					targetPlayer.message(messagePrefix + "You have received a " + minuteText + muteText + "mute.");
 				}
 
@@ -330,7 +329,7 @@ public final class PlayerModerator implements CommandTrigger {
 				} else {
 					targetPlayer.setGlobalMuteExpires(endTime);
 				}
-				targetPlayer.setMuteNotify(notify);
+				targetPlayer.setShadowMute(shadowMute);
 			}
 		}
 
@@ -391,7 +390,7 @@ public final class PlayerModerator implements CommandTrigger {
 				minutes = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
 				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
-				player.message("... (notify) (Reason)");
+				player.message("... (Shadow mute) (Reason)");
 				return;
 			}
 		} else {
@@ -399,10 +398,6 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 
 		if (!player.isMod()) {
-			if (minutes == 0) {
-				player.message(messagePrefix + "You are not allowed to unmute users.");
-				return;
-			}
 			if (minutes == -1) {
 				player.message(messagePrefix + "You are not allowed to mute indefinitely.");
 				return;
@@ -414,15 +409,17 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
-		boolean notify;
+		boolean shadowMute;
 		if (args.length >= 3) {
 			try {
-				notify = Integer.parseInt(args[2]) == 1;
+				shadowMute = DataConversions.parseBoolean(args[2]);
 			} catch (NumberFormatException nfe) {
-				notify = Boolean.parseBoolean(args[2]);
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
+				player.message("... (Shadow mute) (Reason)");
+				return;
 			}
 		} else {
-			notify = false;
+			shadowMute = false;
 		}
 
 		String reason;
@@ -460,7 +457,7 @@ public final class PlayerModerator implements CommandTrigger {
 					String prevCommand = "::" + command + " ";
 					prevCommand += targetPlayerUsername + " ";
 					prevCommand += minutes + " ";
-					prevCommand += notify + " ";
+					prevCommand += shadowMute + " ";
 					prevCommand += "(reason) ";
 					prevCommand += "f";
 					player.playerServerMessage(MessageType.QUEST, prevCommand);
@@ -469,7 +466,7 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 		}
 
-		mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, notify, reason, muteType);
+		mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, shadowMute, reason, muteType);
 	}
 
 	private void unmutePlayerGlobal(Player player, String command, String[] args) {
@@ -483,7 +480,7 @@ public final class PlayerModerator implements CommandTrigger {
 	private void mutePlayerGlobal(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
-			player.message("... (notify) (Reason)");
+			player.message("... (Shadow mute) (Reason)");
 			return;
 		}
 
@@ -501,7 +498,7 @@ public final class PlayerModerator implements CommandTrigger {
 	private void mutePlayer(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
-			player.message("... (notify) (Reason)");
+			player.message("... (Shadow mute) (Reason)");
 			return;
 		}
 

@@ -15,13 +15,12 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 
 	public void process(ChatStruct payload, Player sender) throws Exception {
 		if (sender.isMuted()) {
-			if (sender.getMuteNotify()) {
-				//sender.message(sender.getConfig().MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
-				sender.message("You have been " + (sender.getMuteExpires() == -1 ? "permanently" : "temporarily") + " due to breaking a rule");
+			if (!sender.isShadowMuted()) {
+				sender.message("You have been " + (sender.getMuteExpires() == -1 ? "permanently" : "temporarily") + " muted.");
 				if (sender.getMuteExpires() != -1) {
-					sender.message("This mute will remain for a further " + DataConversions.formatTimeString(sender.getMinutesMuteLeft()));
+					sender.message("This mute will expire in " + sender.getMinutesMuteLeft() + " minutes.");
+					sender.message("To prevent further mutes please read the rules");
 				}
-				sender.message("To prevent further mutes please read the rules");
 			}
 		}
 

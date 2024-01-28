@@ -619,8 +619,11 @@ public final class RegularPlayer implements CommandTrigger {
 
 	private void sendMessageParty(Player player, String command, String[] args) {
 		if (player.isMuted()) {
-			if (player.getMuteNotify()) {
-				player.message(messagePrefix + "You are muted, you cannot send messages");
+			if (!player.isShadowMuted()) {
+				player.message(messagePrefix + "You are " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " muted, you cannot send messages");
+				if (player.getMuteExpires() != -1) {
+					player.message("Your mute will expire in " + player.getMinutesMuteLeft() + " minutes.");
+				}
 			}
 			return;
 		}

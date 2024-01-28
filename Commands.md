@@ -685,17 +685,23 @@ Event Commands
 Player Moderator Commands
 ------------------------
 - gmute
-  - Usage: `::gmute [name] (time in minutes, -1 or exclude for permanent)`
+  - Usage: `::gmute [name] (time in minutes, -1 for permanent, 0 to unmute) (Shadow mute) (Reason)`
   - Mutes the specified player from global chat.
   - You can not mute a staff member of equal or greater rank.
+  - time: Defaults to 60 minutes for player moderators and permanent (-1) for moderators and above. Player moderators cannot mute for longer than 1 week (10,080 minutes).
+  - Shadow mute: If true, this will not notify the player they have been muted when the command is issued or when the player tries to speak in the future.
+  - Reason: For database logging
 - ungmute
   - Usage: `::ungmute [name]`
   - Unmutes the specified player from global chat.
   - You can not unmute a staff member of equal or greater rank.
 - mute
-  - Usage: `::mute [name] (time in minutes, -1 or exclude for permanent)`
+  - Usage: `::mute [name] (time in minutes, -1 for permanent, 0 to unmute) (Shadow mute) (Reason)`
   - Mutes the specified player from both in game and global chat.
   - You can not mute a staff member of equal or greater rank.
+  - time: Defaults to 60 minutes for player moderators and permanent (-1) for moderators and above. Player moderators cannot mute for longer than 1 week (10,080 minutes).
+  - Shadow mute: If true, this will not notify the player they have been muted when the command is issued or when the player tries to speak in the future.
+  - Reason: For database logging
 - unmute
   - Usage: `::unmute [name]`
   - Unmutes the specified player
