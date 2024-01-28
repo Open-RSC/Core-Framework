@@ -2,6 +2,19 @@ OpenRSC Commands
 ------------------------
 Admin Commands
 ------------------------
+- clearipbans
+  - Usage: `::clearipbans`
+  - Clears all temporary IP bans.
+- viewipban
+  - Usage: `::viewipban`
+  - Alias: `::checkipban`
+  - Checks if an IP is banned.
+- viewipbanslist
+  - Usage: `::viewipbanslist`
+  - Usage: `::viewipbanlist`
+  - Alias: `::checkipbanslist`
+  - Alias: `::checkipbanlist`
+  - Displays all banned IPs in a list.
 - beastmode
   - Usage: `::beastmode`
   - Completes required quests and stats, then sets the player to wield top tier items. Items vary based on if custom sprites are enabled on the server.
@@ -399,6 +412,15 @@ Moderator Commands
   - Usage: `::ban [name] [time in minutes, -1 for permanent, 0 to unban]`
   - Bans the specified player.
   - You can not ban a staff member of equal or greater rank.
+- ipban
+  - Usage: `::ipban [ip] [time in minutes, -1 for permanent, 0 to unban]`
+  - Alias: `::banip`
+  - Bans the specified player.
+  - You can not ban a staff member of equal or greater rank.
+- syncipbans
+  - Usage: `::syncipbans`
+  - Alias: `::sip`
+  - Syncs/reloads IP bans from the ipbans text file.
 - bank
   - Usage: `::bank (player) (want box) (want catalog ids)`
   - Shows bank information for the specified player.

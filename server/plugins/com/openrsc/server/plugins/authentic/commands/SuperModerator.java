@@ -56,8 +56,10 @@ public final class SuperModerator implements CommandTrigger {
 			completeAllQuests(player);
 		} else if (command.equalsIgnoreCase("viewipbans")) {
 			queryIPBans(player, command, args);
-		} else if (command.equalsIgnoreCase("ipban")) {
+		} else if (command.equalsIgnoreCase("ipban") || command.equalsIgnoreCase("banip")) {
 			banPlayerIP(player, command, args);
+		} else if (command.equalsIgnoreCase("syncipbans") || command.equalsIgnoreCase("sip")) {
+			syncIPBans(player, command, args);
 		} else if (command.equalsIgnoreCase("ipcount")) {
 			countOnlineByIP(player, command, args);
 		} else if (command.equalsIgnoreCase("simlogin")) {
@@ -256,7 +258,7 @@ public final class SuperModerator implements CommandTrigger {
 
 	private void banPlayerIP(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unban]");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [ip] [time in minutes, -1 for permanent, 0 to unban]");
 			return;
 		}
 
@@ -275,7 +277,7 @@ public final class SuperModerator implements CommandTrigger {
 			try {
 				time = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] (time in minutes, -1 for permanent, 0 to unban)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [ip] (time in minutes, -1 for permanent, 0 to unban)");
 				return;
 			}
 		} else {
@@ -331,6 +333,16 @@ public final class SuperModerator implements CommandTrigger {
 		//player.message(messagePrefix + player.getWorld().getServer().getLoginExecutor().getPlayerDatabase().banPlayer(usernameToBan, time));
 
 		player.getWorld().getServer().getPacketFilter().ipBanHost(ipToBan, (time == -1 || time == 0) ? time : (System.currentTimeMillis() + (time * 60 * 1000)), "by ipban command");
+		if (time == 0) {
+			player.message("IP " + ipToBan + " has been unbanned.");
+		} else {
+			player.message("IP " + ipToBan + " has been banned " + (time == -1 ? "permanently" : " for " + time + " minutes"));
+		}
+	}
+
+	private void syncIPBans(Player player, String command, String[] args) {
+		player.getWorld().getServer().getPacketFilter().reload();
+		player.message("IP bans reloaded!");
 	}
 
 	private void countOnlineByIP(Player player, String command, String[] args) {

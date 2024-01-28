@@ -149,3 +149,5 @@ Client_Base/Cache/video/SceneryLocsExpansion.json
 
 Backups/*.zip
 Deployment_Scripts/.discordstaffmonitorwebhook
+server/ipbans.txt
+server/ipbans.temp

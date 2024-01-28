@@ -44,6 +44,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -113,8 +114,12 @@ public final class Admins implements CommandTrigger {
 			serverShutdown(player, args);
 		} else if (command.equalsIgnoreCase("update")) {
 			serverUpdate(player, args);
-    	} else if (command.equalsIgnoreCase("clearipbans")) {
+		} else if (command.equalsIgnoreCase("clearipbans")) {
 			clearIpBans(player);
+		} else if (command.equalsIgnoreCase("viewipban") || command.equalsIgnoreCase("checkipban")) {
+			viewIpBan(player, command, args);
+		} else if (command.equalsIgnoreCase("viewipbanslist") || command.equalsIgnoreCase("viewipbanlist") || command.equalsIgnoreCase("checkipbanslist") || command.equalsIgnoreCase("checkipbanlist")) {
+			viewIpBansList(player);
 		} else if (command.equalsIgnoreCase("fixloggedincount")) {
 			recalcLoggedInCounts(player);
 		} else if (command.equalsIgnoreCase("getloggedincount")) {
@@ -710,15 +715,55 @@ public final class Admins implements CommandTrigger {
 		player.getWorld().getServer().restart(seconds);
 	}
 
-	  private void clearIpBans(Player player) {
+	private void clearIpBans(Player player) {
 		int removedIpAddresses = player.getWorld().getServer().clearAllIpBans();
 		player.message(messagePrefix + "Cleared " + removedIpAddresses + " from the Banned IP Table.");
-	  }
+	}
 
-	  private void recalcLoggedInCounts(Player player) {
+	private void viewIpBan(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (ip)");
+			return;
+		}
+		String ipToCheck = args[0];
+		HashMap<String, Long> ipBans = player.getWorld().getServer().getPacketFilter().getIpBans();
+
+		if (ipBans.containsKey(ipToCheck)) {
+			Long banTimestamp = ipBans.get(ipToCheck);
+			String banDate = (banTimestamp == -1) ? "Never" : DateFormat.getInstance().format(banTimestamp);
+			player.message(messagePrefix + "IP " + ipToCheck + " is banned. Unban date: " + banDate);
+		} else {
+			player.message(messagePrefix + "IP " + ipToCheck + " is not banned.");
+		}
+	}
+
+	private void viewIpBansList(Player player) {
+		HashMap<String, Long> ipBans = player.getWorld().getServer().getPacketFilter().getIpBans();
+		if (ipBans.isEmpty()) {
+			player.message(messagePrefix + "There are no banned IPs.");
+			return;
+		}
+		player.message(messagePrefix + "The following IPs are currently banned: ");
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		for (String ip : ipBans.keySet()) {
+			sb.append(ip);
+			count++;
+			//Append a comma only if this is not the last IP in the group of three and not the last IP overall
+			if (count % 3 != 0 && count != ipBans.size()) {
+				sb.append(", ");
+			}
+			if (count % 3 == 0 || count == ipBans.size()) {
+				player.message(sb.toString());
+				sb = new StringBuilder(); //Reset the StringBuilder for the next line
+			}
+		}
+	}
+
+	private void recalcLoggedInCounts(Player player) {
 		  int fixedIps = player.getWorld().getServer().recalculateLoggedInCounts();
 		  player.message(messagePrefix + "Fixed lingering loggedInCounts for " + fixedIps + " IP address" + (fixedIps != 1 ? "es." : "."));
-	  }
+	}
 
 	private void obtainLoggedInCounts(Player player, String[] args) {
 		String ip = args.length >= 1 ? args[0] : "127.0.0.1";
