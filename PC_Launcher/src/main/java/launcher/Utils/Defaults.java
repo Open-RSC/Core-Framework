@@ -1,20 +1,18 @@
 package launcher.Utils;
 
-import java.io.File;
-
 public class Defaults {
 
   // URLS
   public static final String _VERSION_UPDATE_URL = "https://raw.githubusercontent.com/Open-RSC/Core-Framework/develop/PC_Launcher/src/main/java/launcher/Utils/Defaults.java";
   public final static String _GAME_FILES_SERVER = "https://rsc.vet/downloads/";
 
-    // EXTRAS
-	public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/releases/download/Latest/rscplus-windows.zip";
-    public final static String _APOS_REPOSITORY_DL = "https://github.com/Open-RSC/APOS/archive/master.zip";
-	public final static String _IDLERSC_REPOSITORY_DL = "https://gitlab.com/open-runescape-classic/idlersc/-/jobs/artifacts/master/raw/IdleRSC.zip?job=build";
-	public final static String _WINRUNE_REPOSITORY_DL = "https://github.com/RSCPlus/WinRune/archive/refs/heads/master.zip";
-	public final static String _RSCTIMES_REPOSITORY_DL = "https://github.com/RSCPlus/rsctimes/releases/download/Latest/rsctimes-windows.zip";
-	public final static String _FLEACIRCUS_REPOSITORY_DL = "https://github.com/Hubcapp/fleacircus2000-deob/releases/download/Latest/fleacircus.zip";
+  // EXTRAS
+  public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/releases/download/Latest/rscplus-windows.zip";
+  public final static String _APOS_REPOSITORY_DL = "https://github.com/Open-RSC/APOS/archive/master.zip";
+  public final static String _IDLERSC_REPOSITORY_DL = "https://gitlab.com/open-runescape-classic/idlersc/-/jobs/artifacts/master/raw/IdleRSC.zip?job=build";
+  public final static String _WINRUNE_REPOSITORY_DL = "https://github.com/RSCPlus/WinRune/archive/refs/heads/master.zip";
+  public final static String _RSCTIMES_REPOSITORY_DL = "https://github.com/RSCPlus/rsctimes/releases/download/Latest/rsctimes-windows.zip";
+  public final static String _FLEACIRCUS_REPOSITORY_DL = "https://github.com/Hubcapp/fleacircus2000-deob/releases/download/Latest/fleacircus.zip";
 
   // STRINGS
   public final static String _TITLE = "Open RuneScape Classic Game Launcher";

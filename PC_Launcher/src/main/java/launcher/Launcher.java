@@ -1,7 +1,7 @@
 package launcher;
 
 import launcher.Fancy.MainWindow;
-import launcher.Gameupdater.Updater;
+import launcher.Gameupdater.ClientUpdater;
 import launcher.Utils.Defaults;
 import launcher.Utils.Logger;
 
@@ -14,7 +14,7 @@ import java.net.URLConnection;
 public class Launcher extends Component {
   public static ImageIcon icon = null;
   private JProgressBar m_progressBar;
-  public static Updater updater;
+  public static ClientUpdater updater;
 
   public void initializeLauncher() {
     Settings.loadSettings();
@@ -115,7 +115,7 @@ public class Launcher extends Component {
     frame.build();
 
     // Fetch OpenRSC client jar and cache updates; also init progress bar
-    updater = new Updater(Main.configFileLocation, Defaults._CURRENT_VERSION.toString());
+    updater = new ClientUpdater(Main.configFileLocation);
     updater.updateOpenRSCClient();
   }
 
@@ -144,34 +144,6 @@ public class Launcher extends Component {
     } catch (Exception e) {
       Logger.Error("Error checking latest version");
       return Defaults._CURRENT_VERSION;
-    }
-  }
-
-  public static Double fetchLatestExtrasVersionNumber(Double _EXTRA_VERSION, String versionStringVarName) {
-    try {
-      double extraVersion = 0.0;
-      URL updateURL = new URL(Defaults._VERSION_UPDATE_URL);
-
-      // Open connection
-      URLConnection connection = updateURL.openConnection();
-      connection.setConnectTimeout(3000);
-      connection.setReadTimeout(3000);
-      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-      String line;
-      while ((line = in.readLine()) != null) {
-        if (line.contains(versionStringVarName)) {
-          extraVersion = Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
-          Logger.Info("Extra Version: " + extraVersion);
-          break;
-        }
-      }
-
-      // Close connection
-      in.close();
-      return extraVersion;
-    } catch (Exception e) {
-      Logger.Error("Error checking latest extra version");
-      return _EXTRA_VERSION;
     }
   }
 

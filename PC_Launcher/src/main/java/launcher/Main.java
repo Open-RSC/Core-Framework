@@ -1,6 +1,5 @@
 package launcher;
 
-import launcher.Utils.Defaults;
 import launcher.Utils.Utils;
 
 import java.io.File;

@@ -1,7 +1,7 @@
 package launcher.Utils;
 
 import launcher.Gameupdater.Downloader;
-import launcher.Gameupdater.Updater;
+import launcher.Gameupdater.ClientUpdater;
 import launcher.Main;
 import launcher.Settings;
 import launcher.elements.ClientSettingsCard;
@@ -15,7 +15,7 @@ import java.io.OutputStreamWriter;
 import javax.swing.JOptionPane;
 
 public class ClientLauncher {
-	public static void launchClientForServer(String serverName) {
+	public static void launchClientForServer(String serverName) throws IOException {
     if (Downloader.currently_updating) {
       JOptionPane.showMessageDialog(null, "Currently updating the client, please wait!");
       return;
@@ -23,7 +23,6 @@ public class ClientLauncher {
 		switch (serverName) {
 			case "preservation": {
 				String ip = "game.openrsc.com";
-				String port = "43596";
 				String client;
 				try {
 					if (PopupFrame.get().isVisible()) {
@@ -37,11 +36,8 @@ public class ClientLauncher {
 				switch (client) {
 					case Settings.RSCPLUS:
 					case ClientSettingsCard.RSCPLUS:
-						try {
-							Updater.updateRSCPlus();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateRSCPlus();
+            launchRSCPlus();
 						break;
 					case Settings.OPENRSC:
 					case ClientSettingsCard.OPENRSC:
@@ -51,11 +47,7 @@ public class ClientLauncher {
 					default:
 					case Settings.WINRUNE:
 					case ClientSettingsCard.WINRUNE:
-						try {
-							Updater.updateWinRune();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateWinRune();
 						launchWinRune(ip, "43600", "2003");
 						break;
 					case Settings.WEBCLIENT:
@@ -74,7 +66,6 @@ public class ClientLauncher {
 
 			case "uranium": {
 				String ip = "game.openrsc.com";
-				String port = "43235";
 				String client;
 				try {
 					if (PopupFrame.get().isVisible()) {
@@ -88,11 +79,8 @@ public class ClientLauncher {
 				switch (client) {
 					case Settings.RSCPLUS:
 					case ClientSettingsCard.RSCPLUS:
-						try {
-							Updater.updateRSCPlus();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateRSCPlus();
+            launchRSCPlus();
 						break;
 					case Settings.OPENRSC:
 					case ClientSettingsCard.OPENRSC:
@@ -102,20 +90,13 @@ public class ClientLauncher {
 					default:
 					case Settings.WINRUNE:
 					case ClientSettingsCard.WINRUNE:
-						try {
-							Updater.updateWinRune();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateWinRune();
 						launchWinRune(ip, "43605", "2003");
 						break;
 					case Settings.APOSBOT:
 					case ClientSettingsCard.APOSBOT:
-						try {
-							Updater.updateAPOS();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateAPOS();
+            launchAPOS();
 						break;
 					case Settings.WEBCLIENT:
 					case ClientSettingsCard.WEBCLIENT:
@@ -139,11 +120,8 @@ public class ClientLauncher {
 				switch (client) {
 					case Settings.IDLERSC:
 					case ClientSettingsCard.IDLERSC:
-						try {
-							Updater.updateIdleRSC();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateIdleRSC();
+            launchIdleRSC();
 						break;
 					case Settings.OPENRSC:
 					case ClientSettingsCard.OPENRSC:
@@ -172,20 +150,13 @@ public class ClientLauncher {
 					case Settings.MUD38:
 					case ClientSettingsCard.MUD38:
 					default:
-						try {
-							Updater.updateWinRune();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateWinRune();
 						launchWinRune(ip, port, "2001");
 						break;
 					case Settings.RSCTIMES:
 					case ClientSettingsCard.RSCTIMES:
-						try {
-							Updater.updateRSCTimes();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+						ClientUpdater.updateRSCTimes();
+            launchRSCTimes();
 						break;
 					case Settings.WEBCLIENT:
 					case ClientSettingsCard.WEBCLIENT:
@@ -276,7 +247,7 @@ public class ClientLauncher {
 	}
 
 	public static void launchIdleRSC() {
-		File idlerscJar = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "idlersc" + File.separator + "IdleRSC-master" + File.separator + "IdleRSC.jar");
+		File idlerscJar = new File(Main.configFileLocation + File.separator + "extras" + File.separator + "idlersc" + File.separator + "IdleRSC" + File.separator + "IdleRSC.jar");
 		Utils.execCmd(new String[]{"java", "-jar", idlerscJar.getAbsolutePath()}, idlerscJar.getParentFile());
 	}
 
