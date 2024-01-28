@@ -699,18 +699,12 @@ public final class RegularPlayer implements CommandTrigger {
 
 	private void queryUniqueOnlinePlayerCount(Player player) {
 		ArrayList<String> IP_ADDRESSES = new ArrayList<>();
-		int webclientUsers = 0;
 		for (Player targetPlayer : player.getWorld().getPlayers()) {
 			boolean elevated = targetPlayer.hasElevatedPriveledges();
-			if (targetPlayer.getCurrentIP().equals("127.0.0.1") || targetPlayer.getCurrentIP().equals("192.168.1.100")) {
-				webclientUsers += 1;
-			} else {
-				if (!IP_ADDRESSES.contains(targetPlayer.getCurrentIP()) && !elevated)
-					IP_ADDRESSES.add(targetPlayer.getCurrentIP());
-			}
+			if (!IP_ADDRESSES.contains(targetPlayer.getCurrentIP()) && !elevated)
+				IP_ADDRESSES.add(targetPlayer.getCurrentIP());
 		}
-		player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online not using web client.");
-		player.message(messagePrefix + "as well as " + webclientUsers + " players online that are using web client.");
+		player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
 	}
 
 	private void sendClanRequest(Player player, String[] args) {

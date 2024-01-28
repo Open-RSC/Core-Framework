@@ -226,7 +226,6 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 
 			boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
 
-			// TODO: check threshold for webclients, since they get associated IP 127.0.0.1
 			if (!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
 				return (byte) RegisterLoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
@@ -259,7 +258,6 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return (byte) RegisterLoginResponse.ACCOUNT_LOGGEDIN;
 			}
 
-			// Disabled 127.0.0.1 since can't be tracked of abuse
 			if (((getServer().getConfig().IS_LOCALHOST_RESTRICTED && getIpAddress().equals("127.0.0.1"))
 				|| (!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP) && !isAdmin)) {
 				return (byte) RegisterLoginResponse.IP_IN_USE;

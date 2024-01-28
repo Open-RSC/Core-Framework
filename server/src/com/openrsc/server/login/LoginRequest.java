@@ -198,7 +198,6 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				isAdmin = isAdmin || groupId == Group.OWNER || groupId == Group.ADMIN;
 			}
 
-			// TODO: check threshold for webclients, since they get associated IP 127.0.0.1
 			if(!getIpAddress().equals("127.0.0.1") && getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
 				return new ValidatedLogin(LoginResponse.LOGIN_ATTEMPTS_EXCEEDED);
 			}

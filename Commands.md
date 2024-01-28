@@ -806,7 +806,6 @@ Regular Player Commands
 - uniqueonline
   - Usage: `::uniqueonline`
   - Shows the number of players with a unique IP address currently online.
-  - Assumes that local ip addresses are "web client" users, as is currently the case on our live server.
 - onlinelist
   - Usage: `::onlinelist`
   - Shows a list of online players.

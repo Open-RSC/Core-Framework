@@ -81,7 +81,7 @@ public class RSCPacketFilter {
 				// creates new file only if ipbans.txt file doesn't already exist.
 				boolean newFile = ipBansFile.createNewFile();
 				if (newFile) {
-					System.out.println("Created new IP bans file at " + ipBansFile.getAbsolutePath());
+					LOGGER.info("Created new IP bans file at " + ipBansFile.getAbsolutePath());
 					return;
 				}
 				BufferedReader reader = new BufferedReader(new FileReader(BAN_FILE_PATH));
@@ -90,7 +90,7 @@ public class RSCPacketFilter {
 					counter++;
 					ipBans.put(line.trim(), -1L);
 				}
-				System.out.println("Loaded " + counter + " banned IPs.");
+				LOGGER.info("Loaded " + counter + " banned IPs.");
 			} catch (IOException ex) {
 				LOGGER.catching(ex);
 			}

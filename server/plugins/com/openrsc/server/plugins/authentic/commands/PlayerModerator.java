@@ -122,7 +122,7 @@ public final class PlayerModerator implements CommandTrigger {
 					return;
 				}
 
-				// Here we are going to get rid of localhost IP (127.0.0.1) because we don't want to match every single webclient player
+				// Here we are going to get rid of localhost IP (127.0.0.1) because historically all webclient player shared that IP.
 				// We also want to get rid of 0.0.0.0 from the login IP, since that just means that the player has never logged in.
 				// First we need to get rid of the ports though
 				playerIps.creationIp = stripPort(playerIps.creationIp);
@@ -136,7 +136,7 @@ public final class PlayerModerator implements CommandTrigger {
 					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "queryPlayerAlternateCharacters Player Message 2") {
 						@Override
 						public void action() {
-							player.message(messagePrefix + targetUsername + " is a webclient-only player");
+							player.message(messagePrefix + targetUsername + " was a webclient-only player");
 						}
 					});
 					return;
