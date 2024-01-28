@@ -18,5 +18,6 @@ public class ConnectionAttachment {
 	public AtomicReference<Integer> sessionId = new AtomicReference<Integer>();
 	public AtomicReference<Boolean> canSendSessionId = new AtomicReference<Boolean>();
 	public AtomicReference<Boolean> isLongSessionId = new AtomicReference<Boolean>();
+	public AtomicReference<Boolean> isWebSocket = new AtomicReference<Boolean>(false);
 
 }

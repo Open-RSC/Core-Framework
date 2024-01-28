@@ -41,6 +41,8 @@ public class ServerConfiguration {
 	public int MAX_PLAYERS_PER_IP;
 	public int SESSION_ID_SENDER_TIMER;
 	int SERVER_PORT;
+	int WS_SERVER_PORT;
+	boolean WANT_FEATURE_WEBSOCKETS;
 	int IDLE_TIMER;
 	int AUTO_SAVE;
 	public int MILLISECONDS_BETWEEN_CASTS;
@@ -51,6 +53,10 @@ public class ServerConfiguration {
 	public String DB_USER;
 	public String DB_PASS;
 	public String DB_TABLE_PREFIX;
+
+	public String SSL_SERVER_CERT_PATH;
+	public String SSL_SERVER_KEY_PATH;
+
 	public int PLAYER_LEVEL_LIMIT;
 	public boolean WANT_EXPERIENCE_CAP;
 	public int EXPERIENCE_LIMIT;
@@ -379,6 +385,10 @@ public class ServerConfiguration {
 		DB_PASS = tryReadString("db_pass").orElse("root");
 		DB_TABLE_PREFIX = tryReadString("db_table_prefix").orElse("");
 
+		// SSL settings
+		SSL_SERVER_CERT_PATH = tryReadString("ssl_server_cert_path").orElse("");
+		SSL_SERVER_KEY_PATH = tryReadString("ssl_server_key_path").orElse("");
+
 		// World settings
 		SERVER_NAME = tryReadString("server_name").orElse("Runescape");
 		SERVER_NAME_WELCOME = tryReadString("server_name_welcome").orElse("Runescape Classic");
@@ -394,6 +404,8 @@ public class ServerConfiguration {
 		CLIENT_VERSION = tryReadInt("client_version").orElse(10009);
 		ENFORCE_CUSTOM_CLIENT_VERSION = tryReadBool("enforce_custom_client_version").orElse(true);
 		SERVER_PORT = tryReadInt("server_port").orElse(43594);
+		WS_SERVER_PORT = tryReadInt("ws_server_port").orElse(43494);
+		WANT_FEATURE_WEBSOCKETS = tryReadBool("want_feature_websockets").orElse(true);
 		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(20);
 		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
 		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(100);

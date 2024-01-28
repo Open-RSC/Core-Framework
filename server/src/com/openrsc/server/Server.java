@@ -15,14 +15,17 @@ import com.openrsc.server.database.patches.PatchApplier;
 import com.openrsc.server.event.custom.DailyShutdownEvent;
 import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.rsc.FinitePeriodicEvent;
-import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.*;
+import com.openrsc.server.net.DiscordService;
+import com.openrsc.server.net.RSCConnectionHandler;
+import com.openrsc.server.net.RSCMultiPortDecoder;
+import com.openrsc.server.net.RSCPacketFilter;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.handler.PluginHandler;
@@ -40,9 +43,12 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -85,8 +91,11 @@ public class Server implements Runnable {
 
 	private GameTickEvent shutdownEvent;
 	private ChannelFuture serverChannel;
+	private ChannelFuture serverChannelWs;
 	private EventLoopGroup workerGroup;
 	private EventLoopGroup bossGroup;
+	private EventLoopGroup workerGroupWs;
+	private EventLoopGroup bossGroupWs;
 
 	private volatile AtomicBoolean running = new AtomicBoolean(false);
 	private boolean restarting = false;
@@ -118,6 +127,8 @@ public class Server implements Runnable {
 
 	private final ListeningExecutorService sqlLoggingThreadPool;
 	private final ListeningExecutorService sqlThreadPool;
+
+	public static final String rscConnectionHandlerId = "handler";
 
 	static {
 		Thread.currentThread().setName("InitThread");
@@ -413,34 +424,102 @@ public class Server implements Runnable {
 						0,
 						new NamedThreadFactory(getName() + " : IOWorkerThread", getConfig())
 				);
+				bossGroupWs = new NioEventLoopGroup(
+					0,
+					new NamedThreadFactory(getName() + " : IOBossWSThread", getConfig())
+				);
+				workerGroupWs = new NioEventLoopGroup(
+					0,
+					new NamedThreadFactory(getName() + " : IOWorkerWSThread", getConfig())
+				);
 				final ServerBootstrap bootstrap = new ServerBootstrap();
 				final Server serverOwner = this;
+				final int numberBootstraps = getConfig().WANT_FEATURE_WEBSOCKETS && getConfig().WS_SERVER_PORT != getConfig().SERVER_PORT ? 2 : 1;
 
-				bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(
-					new ChannelInitializer<SocketChannel>() {
-						@Override
-						protected void initChannel(final SocketChannel channel) {
-							final ChannelPipeline pipeline = channel.pipeline();
-							pipeline.addLast("decoder", new RSCProtocolDecoder());
-							pipeline.addLast("encoder", new RSCProtocolEncoder());
-							pipeline.addLast("handler", new RSCConnectionHandler(serverOwner));
-						}
-					}
-				);
-
-				bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-				bootstrap.childOption(ChannelOption.SO_KEEPALIVE, false);
-				bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
-				bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
-				try {
-					getPluginHandler().handlePlugin(StartupTrigger.class);
-					serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
-					LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
-                    LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());
-                    LOGGER.info("RSA modulus: " + Crypto.getPublicModulus());
-				} catch (final InterruptedException e) {
-					LOGGER.error(e);
+				SslContext sslContext;
+				if (!getConfig().SSL_SERVER_CERT_PATH.trim().isEmpty() && !getConfig().SSL_SERVER_KEY_PATH.trim().isEmpty()) {
+					sslContext = SslContextBuilder.forServer(new File(getConfig().SSL_SERVER_CERT_PATH), new File(getConfig().SSL_SERVER_KEY_PATH))
+						.build();
+				} else {
+					sslContext = null;
 				}
+
+				if (numberBootstraps == 1) {
+					// either not wanting to feature websocket or they are in shared port (not recommended on prod)
+					final boolean wantWebSocket = getConfig().WANT_FEATURE_WEBSOCKETS;
+					final RSCMultiPortDecoder.DecoderMode mode = !wantWebSocket ? RSCMultiPortDecoder.DecoderMode.TCP : RSCMultiPortDecoder.DecoderMode.MIXED;
+					bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(
+						new ChannelInitializer<SocketChannel>() {
+							@Override
+							protected void initChannel(final SocketChannel channel) {
+								final ChannelPipeline pipeline = channel.pipeline();
+								pipeline.addLast("decoder", new RSCMultiPortDecoder(mode, sslContext));
+								pipeline.addLast(rscConnectionHandlerId, new RSCConnectionHandler(serverOwner));
+							}
+						}
+					);
+
+					bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+					bootstrap.childOption(ChannelOption.SO_KEEPALIVE, false);
+					bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
+					bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
+					try {
+						getPluginHandler().handlePlugin(StartupTrigger.class);
+						serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
+						LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
+						LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());
+						LOGGER.info("RSA modulus: " + Crypto.getPublicModulus());
+					} catch (final InterruptedException e) {
+						LOGGER.error(e);
+					}
+				} else {
+					final ServerBootstrap bootstrapWs = new ServerBootstrap();
+
+					bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(
+						new ChannelInitializer<SocketChannel>() {
+							@Override
+							protected void initChannel(final SocketChannel channel) {
+								final ChannelPipeline pipeline = channel.pipeline();
+								pipeline.addLast("decoder_tcp", new RSCMultiPortDecoder(RSCMultiPortDecoder.DecoderMode.TCP, sslContext));
+								pipeline.addLast(rscConnectionHandlerId, new RSCConnectionHandler(serverOwner));
+							}
+						}
+					);
+
+					bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+					bootstrap.childOption(ChannelOption.SO_KEEPALIVE, false);
+					bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
+					bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
+
+					bootstrapWs.group(bossGroupWs, workerGroupWs).channel(NioServerSocketChannel.class).childHandler(
+						new ChannelInitializer<SocketChannel>() {
+							@Override
+							protected void initChannel(final SocketChannel channel) {
+								final ChannelPipeline pipeline = channel.pipeline();
+								pipeline.addLast("decoder_ws", new RSCMultiPortDecoder(RSCMultiPortDecoder.DecoderMode.WS, sslContext));
+								pipeline.addLast(rscConnectionHandlerId, new RSCConnectionHandler(serverOwner));
+							}
+						}
+					);
+
+					bootstrapWs.childOption(ChannelOption.TCP_NODELAY, true);
+					bootstrapWs.childOption(ChannelOption.SO_KEEPALIVE, false);
+					bootstrapWs.childOption(ChannelOption.SO_RCVBUF, 10000);
+					bootstrapWs.childOption(ChannelOption.SO_SNDBUF, 10000);
+
+					try {
+						getPluginHandler().handlePlugin(StartupTrigger.class);
+						serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
+						serverChannelWs = bootstrapWs.bind(new InetSocketAddress(getConfig().WS_SERVER_PORT)).sync();
+						LOGGER.info("Game world is now online on port {}! (TCP)", box(getConfig().SERVER_PORT));
+						LOGGER.info("Game world is now online on port {}! (WS)", box(getConfig().WS_SERVER_PORT));
+						LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());
+						LOGGER.info("RSA modulus: " + Crypto.getPublicModulus());
+					} catch (final InterruptedException e) {
+						LOGGER.error(e);
+					}
+				}
+
 
 				// Only add this server to the active servers list if it's not already there
 				if (!isRestarting()) {
@@ -494,11 +573,17 @@ public class Server implements Runnable {
 				bossGroup.shutdownGracefully().sync();
 				workerGroup.shutdownGracefully().sync();
 				serverChannel.channel().closeFuture().sync();
+				bossGroupWs.shutdownGracefully().sync();
+				workerGroupWs.shutdownGracefully().sync();
+				if (serverChannelWs != null) serverChannelWs.channel().closeFuture().sync();
 
 				shutdownEvent = null;
 				serverChannel = null;
+				if (serverChannelWs != null) serverChannelWs = null;
 				bossGroup = null;
 				workerGroup = null;
+				bossGroupWs = null;
+				workerGroupWs = null;
 				scheduledExecutor = null;
 
 				maxItemId = 0;
