@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static com.openrsc.server.plugins.Functions.ZERO_RESERVED;
 import static com.openrsc.server.plugins.Functions.patchObject;
@@ -42,6 +43,8 @@ public final class EntityHandler {
 	public ArrayList<ItemDefinition> itemsPatch;
 	public ArrayList<NPCDef> npcs;
 	public ArrayList<NPCDef> npcsPatch;
+	public HashSet<String> npcNames;
+	public HashSet<String> npcNamesLowerCase;
 	public SpellDef[] spells;
 	private HashMap<Integer, ItemArrowHeadDef> arrowHeads;
 	private HashMap<Integer, ItemBowStringDef> bowString;
@@ -114,6 +117,8 @@ public final class EntityHandler {
 	public void unload() {
 		npcs = null;
 		npcsPatch = null;
+		npcNames = null;
+		npcNamesLowerCase = null;
 		items = null;
 		itemsPatch = null;
 
@@ -151,12 +156,15 @@ public final class EntityHandler {
 	public void load() {
 		npcs = new ArrayList<>();
 		npcsPatch = new ArrayList<>();
+		npcNames = new HashSet<>();
+		npcNamesLowerCase = new HashSet<>();
 		LOGGER.info("Loading npc definitions...");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
 		//loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsExpansion.json");
 		patchNpcs();
 		customNpcConditions();
+		loadNpcNames();
 		LOGGER.info("Loaded " + npcs.size() + " total npc definitions");
 
 		items = new ArrayList<>();
@@ -323,6 +331,15 @@ public final class EntityHandler {
 					LOGGER.error(e);
 				}
 			}
+		}
+	}
+
+	private void loadNpcNames() {
+		for (NPCDef npc : getServer().getConfig().BASED_CONFIG_DATA < 85 ? getServer().getEntityHandler().npcsPatch : getServer().getEntityHandler().npcs) {
+			npcNames.add(npc.getName());
+		}
+		for (NPCDef npc : getServer().getConfig().BASED_CONFIG_DATA < 85 ? getServer().getEntityHandler().npcsPatch : getServer().getEntityHandler().npcs) {
+			npcNamesLowerCase.add(npc.getName().toLowerCase());
 		}
 	}
 
@@ -892,6 +909,28 @@ public final class EntityHandler {
 			return null;
 		}
 		return npcs.get(id);
+	}
+
+	/**
+	 * @param name the entities name
+	 * @return the NPC name with the given NPC name, if found, otherwise ""
+	 */
+	public String getNpcName(String name) {
+		if (npcNames.contains(name)) {
+			return name;
+		}
+		return "";
+	}
+
+	/**
+	 * @param name the entities lower-case name
+	 * @return the lower-case NPC name with the given lower-case NPC name, if found, otherwise ""
+	 */
+	public String getNpcNameLowerCase(String name) {
+		if (npcNamesLowerCase.contains(name)) {
+			return name;
+		}
+		return "";
 	}
 
 	/**

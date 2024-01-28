@@ -130,6 +130,7 @@ public class ServerConfiguration {
 	public boolean MESSAGE_FULL_INVENTORY;
 	public boolean NPC_DONT_RETREAT;
 	public boolean NPC_KILL_LIST;
+	public boolean NPC_KILL_LIST_LOOKUP_ONLY;
 	public boolean NPC_KILL_MESSAGES;
 	public boolean NPC_KILL_MESSAGES_FILTER;
 	public boolean NPC_KILL_COUNTERS;
@@ -682,6 +683,7 @@ public class ServerConfiguration {
 
 		// NPC kills
 		NPC_KILL_LIST = tryReadBool("npc_kill_list").orElse(false);
+		NPC_KILL_LIST_LOOKUP_ONLY = tryReadBool("npc_kill_list_lookup_only").orElse(false);
 		NPC_KILL_MESSAGES = tryReadBool("npc_kill_messages").orElse(false);
 		NPC_KILL_MESSAGES_FILTER = tryReadBool("npc_kill_messages_filter").orElse(false);
 		NPC_KILL_MESSAGES_NPCs = tryReadString("npc_kill_messages_npcs").orElse("King Black Dragon,Black Dragon");

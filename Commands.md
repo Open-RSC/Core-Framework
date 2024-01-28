@@ -675,7 +675,7 @@ Event Commands
   - If no stat is specified, then all stats are modified.
 - npckills
   - Usage: `::npckills [name]`
-  - Shows kill counts for name.
+  - Shows total NPC kill count for name.
 - shufflepid
   - Usage: `::shufflepid [on/off]`
   - Alias: `::pidshuffle`
@@ -836,8 +836,10 @@ Regular Player Commands
   - Usage: `::shareexp`
   - Toggles experience sharing for the party.
 - kills
-  - Usage: `::kills`
+  - Usage: `::kills (npc name)`
+  - Alias: `::kc (npc name)`
   - Displays the top NPC kill counts for the player
+  - Optionally accepts an NPC name to find matching NPCs to display NPC kill counts for.
 - qoloptout
   - Usage: `::qoloptout`
   - Allows the player to permanently opt out of QoL features for their account.
