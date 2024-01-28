@@ -724,7 +724,7 @@ public final class GameStateUpdater {
 				while ((cm = chatMessagesNeedingDisplayed.poll()) != null) {
 					Player sender = (Player) cm.getSender();
 					boolean tutorialPlayer = sender.getLocation().onTutorialIsland() && !sender.hasElevatedPriveledges();
-					boolean muted = sender.isMuted();
+					boolean muted = cm.getMuted();
 
 					// Determine Update Type
 					int updateType;
