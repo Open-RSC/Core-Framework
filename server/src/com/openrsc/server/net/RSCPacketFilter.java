@@ -76,15 +76,23 @@ public class RSCPacketFilter {
 	public void load() {
 		synchronized (ipBans) {
 			int counter = 0;
-			try (BufferedReader reader = new BufferedReader(new FileReader(BAN_FILE_PATH))) {
+			File ipBansFile = new File(BAN_FILE_PATH);
+			try {
+				// creates new file only if ip bas file doesn't already exist.
+				boolean newFile = ipBansFile.createNewFile();
+				if (newFile) {
+					System.out.println("Created new IP bans file at " + ipBansFile.getAbsolutePath());
+					return;
+				}
+				BufferedReader reader = new BufferedReader(new FileReader(BAN_FILE_PATH));
 				String line;
 				while ((line = reader.readLine()) != null) {
 					counter++;
 					ipBans.put(line.trim(), -1L);
 				}
 				System.out.println("Loaded " + counter + " banned IPs.");
-			} catch (IOException e) {
-				LOGGER.catching(e);
+			} catch (IOException ex) {
+				LOGGER.catching(ex);
 			}
 		}
 	}
