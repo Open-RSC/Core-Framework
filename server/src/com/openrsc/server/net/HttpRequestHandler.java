@@ -16,12 +16,12 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<FullHttpRequ
 
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
-		if (this. websocketUri.equalsIgnoreCase(request.getUri())) { // if the request uri matches the web socket path, we forward to next handler which will handle the upgrade handshake
+		if (this. websocketUri.equalsIgnoreCase(request.uri())) { // if the request uri matches the web socket path, we forward to next handler which will handle the upgrade handshake
 			ctx.fireChannelRead(request.retain()); // we need to increment the reference count to retain the ByteBuf for upcoming processing
 		} else {
 			// Otherwise, process your HTTP request and send the flush the response
 			HttpResponse response = new DefaultHttpResponse(
-				request.getProtocolVersion(), HttpResponseStatus.OK);
+				request.protocolVersion(), HttpResponseStatus.OK);
 			ctx.write(response);
 			ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
 			future.addListener(ChannelFutureListener.CLOSE);

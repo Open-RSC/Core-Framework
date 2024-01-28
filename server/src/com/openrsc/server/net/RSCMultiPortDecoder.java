@@ -9,21 +9,19 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.OptionalSslHandler;
-import io.netty.handler.ssl.SslContext;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.netty.util.AttributeMap;
-
 import java.util.List;
 
 public final class RSCMultiPortDecoder extends ByteToMessageDecoder implements AttributeMap {
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 	private final DecoderMode mode;
-	private final SslContext sslContext;
+	private final Server server;
 
-	public RSCMultiPortDecoder(DecoderMode mode, SslContext sslContext) {
+	public RSCMultiPortDecoder(DecoderMode mode, Server server) {
 		this.mode = mode;
-		this.sslContext = sslContext;
+		this.server = server;
 	}
 
 	@Override
@@ -54,7 +52,7 @@ public final class RSCMultiPortDecoder extends ByteToMessageDecoder implements A
 	}
 
 	private void addWebHandlerStack(ChannelHandlerContext ctx) {
-		ctx.pipeline().addFirst(new OptionalSslHandler(sslContext));
+		ctx.pipeline().addFirst(new OptionalSslHandler(this.server.getSslContext()));
 		ctx.pipeline().addBefore(Server.rscConnectionHandlerId, "httpcodec", new HttpServerCodec());
 		ctx.pipeline().addBefore(Server.rscConnectionHandlerId, "aggregator", new HttpObjectAggregator(65536));
 		ctx.pipeline().addBefore(Server.rscConnectionHandlerId, "httphandler", new HttpRequestHandler("/"));

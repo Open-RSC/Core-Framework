@@ -307,6 +307,10 @@ Admin Commands
   - Usage: `::setmonitortimeoutmillis [number]`
   - Alias: `::smtm`
   - Part of the monitor ip feature, maximum number of milliseconds before a ping fails.
+- reloadsslcert
+  - Usage: `::reloadsslcert`
+  - Alias: `::refreshsslcert`
+  - Used to reload the SSL certificate files used for websocket connections to the server.
 ------------------------
 Developer Commands
 ------------------------

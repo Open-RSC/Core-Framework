@@ -42,7 +42,7 @@ public class ServerConfiguration {
 	public int SESSION_ID_SENDER_TIMER;
 	int SERVER_PORT;
 	int WS_SERVER_PORT;
-	boolean WANT_FEATURE_WEBSOCKETS;
+	public boolean WANT_FEATURE_WEBSOCKETS;
 	int IDLE_TIMER;
 	int AUTO_SAVE;
 	public int MILLISECONDS_BETWEEN_CASTS;
@@ -406,6 +406,13 @@ public class ServerConfiguration {
 		SERVER_PORT = tryReadInt("server_port").orElse(43594);
 		WS_SERVER_PORT = tryReadInt("ws_server_port").orElse(43494);
 		WANT_FEATURE_WEBSOCKETS = tryReadBool("want_feature_websockets").orElse(true);
+		if (WS_SERVER_PORT == SERVER_PORT) {
+			// Disable port sharing of Websockets & TCP port
+			// technically maybe sharing the port can work, but let's just not do this ever.
+			WANT_FEATURE_WEBSOCKETS = false;
+			LOGGER.warn("Websocket listening disabled!");
+			LOGGER.warn("You cannot host the websocket on the same port as other TCP connections.");
+		}
 		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(20);
 		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
 		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(100);
