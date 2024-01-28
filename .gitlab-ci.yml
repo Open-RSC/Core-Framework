@@ -1,12 +1,12 @@
 image: eclipse-temurin:8-jdk
 
-# Packages installation before running script
 before_script:
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes ant
 
 stages:
   - build
+  - upload
 
 build:
   stage: build
@@ -14,3 +14,19 @@ build:
     - cd server && ant compile_core && ant compile_plugins && cd ../
     - cd Client_Base && ant compile && cd ../
     - cd PC_Launcher && ant compile && cd ../
+  artifacts:
+    paths:
+      - PC_Launcher/OpenRSC.jar
+    when: on_success
+    expose_as: 'OpenRSC jar'  # (Optional) provides a direct download link in the job UI
+
+launcherUpload:
+  stage: upload
+  script:
+    - echo "Uploading OpenRSC.jar"
+  needs:
+    - build
+  artifacts:
+    paths:
+      - PC_Launcher/OpenRSC.jar
+    when: on_success
