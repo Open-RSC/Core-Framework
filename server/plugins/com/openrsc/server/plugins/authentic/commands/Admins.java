@@ -3450,7 +3450,7 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 		if (!(new File(player.getConfig().SSL_SERVER_KEY_PATH.trim())).exists()) {
-			player.message("Websocket certificate file does not exist at " + player.getConfig().SSL_SERVER_KEY_PATH);
+			player.message("Websocket private key file does not exist at " + player.getConfig().SSL_SERVER_KEY_PATH);
 			return;
 		}
 

@@ -1217,11 +1217,11 @@ public class Server implements Runnable {
 		return sslContext;
 	}
 
-	public void setSSLContext(SslContext sslContext) {
+	private void setSSLContext(SslContext sslContext) {
 		this.sslcontext = sslContext;
 	}
 
-	public SslContext getSslContext() {
+	public SslContext getSSLContext() {
 		return this.sslcontext;
 	}
 }

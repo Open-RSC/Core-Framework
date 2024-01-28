@@ -78,7 +78,7 @@ public class RSCPacketFilter {
 			int counter = 0;
 			File ipBansFile = new File(BAN_FILE_PATH);
 			try {
-				// creates new file only if ip bas file doesn't already exist.
+				// creates new file only if ipbans.txt file doesn't already exist.
 				boolean newFile = ipBansFile.createNewFile();
 				if (newFile) {
 					System.out.println("Created new IP bans file at " + ipBansFile.getAbsolutePath());
