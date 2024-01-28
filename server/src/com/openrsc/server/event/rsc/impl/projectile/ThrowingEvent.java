@@ -1,7 +1,9 @@
 package com.openrsc.server.event.rsc.impl.projectile;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.DropTable;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.event.rsc.DuplicationStrategy;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
@@ -11,12 +13,14 @@ import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.PlayerRangeNpcTrigger;
 import com.openrsc.server.plugins.triggers.PlayerRangePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
+import com.openrsc.server.util.rsc.MessageType;
 
 public class ThrowingEvent extends GameTickEvent {
 
@@ -85,7 +89,7 @@ public class ThrowingEvent extends GameTickEvent {
 			return;
 		}
 
-		setDelayTicks(3);
+
 
 		player.resetPath();
 		if (!PathValidation.checkPath(getWorld(), player.getLocation(), target.getLocation())) {
@@ -96,7 +100,6 @@ public class ThrowingEvent extends GameTickEvent {
 
 		// Authentic player always faced NW
 		player.face(player.getX() + 1, player.getY() - 1);
-		setDelayTicks(3);
 
 		if (target.isPlayer()) {
 			Player playerTarget = (Player) target;
@@ -158,7 +161,15 @@ public class ThrowingEvent extends GameTickEvent {
 			return;
 		}*/
 
-		int damage = RangeUtils.doRangedDamage(player, throwingID, throwingID, target);
+		boolean skillCape = SkillCapes.shouldActivate(player, ItemId.RANGED_CAPE);
+
+		int delay = 3;
+		if (skillCape) {
+			player.playerServerMessage(MessageType.QUEST, "@gre@Your Ranged cape activates, letting you shoot two arrows at once!");
+			delay = 1;
+		}
+
+		int damage = RangeUtils.doRangedDamage(player, throwingID, throwingID, target, skillCape);
 
 		RangeUtils.applyDragonFireBreath(player, target, deliveredFirstProjectile);
 		if((target.isPlayer() || getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT) && damage > 0) {
@@ -194,6 +205,9 @@ public class ThrowingEvent extends GameTickEvent {
 			}
 		}
 
+		setDelayTicks(delay);
+
+		player.setAttribute("can_range_again", getWorld().getServer().getCurrentTick() + delay);
 		getOwner().setKillType(KillType.RANGED);
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), player, target, damage, 2));
 		deliveredFirstProjectile = true;

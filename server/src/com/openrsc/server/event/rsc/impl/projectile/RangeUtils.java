@@ -230,11 +230,11 @@ public class RangeUtils {
                 && ALLOWED_PROJECTILES.get(weaponId).contains(arrowId);
     }
 
-    public static int doRangedDamage(final Mob attacker, final int bowId, final int arrowId, final Mob defender) {
+    public static int doRangedDamage(final Mob attacker, final int bowId, final int arrowId, final Mob defender, final boolean skillCape) {
 		if (attacker.getWorld().getServer().getConfig().OSRS_COMBAT_RANGED) {
-			return OSRSCombatFormula.Ranged.doRangedDamage(attacker, bowId, arrowId, defender);
+			return OSRSCombatFormula.Ranged.doRangedDamage(attacker, bowId, arrowId, defender, skillCape);
 		} else {
-			return CombatFormula.doRangedDamage(attacker, bowId, arrowId, defender);
+			return CombatFormula.doRangedDamage(attacker, bowId, arrowId, defender, skillCape);
 		}
 	}
 

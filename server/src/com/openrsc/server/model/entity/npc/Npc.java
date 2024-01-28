@@ -335,6 +335,9 @@ public class Npc extends Mob {
 			}
 		}
 
+		// Reset the player's range timer
+		owner.setAttribute("can_range_again", getWorld().getServer().getCurrentTick());
+
 		// Defense skillcape message
 		int totalBlockedDamage = owner.getTrackedBlockedDamage(this);
 		if (totalBlockedDamage > 0) {

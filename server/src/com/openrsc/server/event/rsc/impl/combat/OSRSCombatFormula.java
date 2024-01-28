@@ -253,9 +253,9 @@ public class OSRSCombatFormula {
 		 * @param defender The defending mob
 		 * @return The damage dealt to the defending mob
 		 */
-		public static int doRangedDamage(final Mob attacker, final int bowId, final int arrowId, final Mob defender) {
+		public static int doRangedDamage(final Mob attacker, final int bowId, final int arrowId, final Mob defender, final boolean skillCape) {
 			boolean isHit = rollHit(calcHitChance(attacker, defender, bowId));
-			return isHit ? rollDamage(calcMaxHit(attacker, arrowId)) : 0;
+			return isHit ? rollDamage(calcMaxHit(attacker, arrowId) * (skillCape ? 2 : 1)) : 0;
 		}
 
 		/**

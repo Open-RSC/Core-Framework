@@ -199,12 +199,19 @@ public class CombatFormula {
 	 * @param victim             The mob being attacked.
 	 * @return The amount to hit.
 	 */
-	public static int doRangedDamage(final Mob source, final int bowId, final int arrowId, final Mob victim) {
+	public static int doRangedDamage(final Mob source, final int bowId, final int arrowId, final Mob victim, final boolean skillCape) {
 		boolean isHit = calculateRangedAccuracy(source, bowId, victim);
+
+		if (!isHit) return 0;
+
+		if (skillCape) {
+			int maxHit = (getRangedDamage(source, bowId, arrowId) + 320) / 640;
+			return DataConversions.getRandom().nextInt(maxHit * 2);
+		}
 
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
 
-		return isHit ? calculateRangedDamage(source, bowId, arrowId) : 0;
+		return calculateRangedDamage(source, bowId, arrowId);
 	}
 
 	/**

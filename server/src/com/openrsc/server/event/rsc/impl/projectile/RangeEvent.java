@@ -15,6 +15,7 @@ import com.openrsc.server.model.entity.KillType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.handler.PluginHandler;
@@ -135,7 +136,14 @@ public class RangeEvent extends GameTickEvent {
 			return;
 		}
 
-		final int damage = RangeUtils.doRangedDamage(player, weaponId, ammoId, target);
+		boolean skillCape = SkillCapes.shouldActivate(player, ItemId.RANGED_CAPE);
+		int delay = 3;
+		if (skillCape) {
+			player.playerServerMessage(MessageType.QUEST, "@gre@Your Ranged cape activates, letting you shoot two arrows at once!");
+			delay = 1;
+		}
+
+		final int damage = RangeUtils.doRangedDamage(player, weaponId, ammoId, target, skillCape);
 
 		if ((target.isPlayer() || getWorld().getServer().getConfig().RANGED_GIVES_XP_HIT) && damage > 0) {
 			player.incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
@@ -147,13 +155,10 @@ public class RangeEvent extends GameTickEvent {
 
 		getOwner().setKillType(KillType.RANGED);
 		deliveredFirstProjectile = true;
-		if (SkillCapes.shouldActivate(player, ItemId.RANGED_CAPE)) {
-			player.playerServerMessage(MessageType.QUEST, "@gre@Your Ranged cape activates, letting you shoot two arrows at once!");
-			setDelayTicks(0);
-		} else {
-			setDelayTicks(3);
-		}
 
+		setDelayTicks(delay);
+
+		player.setAttribute("can_range_again", getWorld().getServer().getCurrentTick() + delay);
 		ActionSender.sendSound(player, "shoot");
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), player, target, damage, 2));
 	}
