@@ -133,11 +133,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.getCarriedItems().getInventory().add(newItem);
 		player.playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(player.getWorld()).getName());
 		giveHerbExperience(player, herb);
-		delay(2);
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
+			delay(2);
 			batchIdentify(player, herb, herbDef);
 		}
 	}
@@ -481,11 +481,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			ci.remove(herb);
 		}
 		ci.getInventory().add(new Item(herbDef.getPotionId()));
-		delay(2);
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
+			delay(2);
 			batchPotionMaking(player, herb, herbDef, vial);
 		}
 	}
@@ -577,11 +577,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
 		player.incExp(Skill.HERBLAW.id(), def.getExp(), true);
-		delay(2);
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
+			delay(2);
 			batchPotionSecondary(player, unfinished, second, def, bubbleItem);
 		}
 	}
@@ -696,11 +696,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(resultId));
 
 		player.incExp(Skill.HERBLAW.id(), xp, true);
-		delay(2);
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
+			delay(2);
 			batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp, requiredSecondaries);
 		}
 	}
