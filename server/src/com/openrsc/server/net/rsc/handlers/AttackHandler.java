@@ -128,8 +128,6 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false, ActionType.ATTACK) {
 				public void executeInternal() {
 					if (getPlayer().isBusy() || getPlayer().inCombat()) return;
-					long currentTick = getPlayer().getWorld().getServer().getCurrentTick();
-					if (getPlayer().getAttribute("can_range_again", 0L) > currentTick) return;
 					getPlayer().resetFollowing();
 					if (getMob().isPlayer()) {
 						Player affectedPlayer = (Player) getMob();

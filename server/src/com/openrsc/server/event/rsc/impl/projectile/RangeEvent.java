@@ -54,6 +54,10 @@ public class RangeEvent extends GameTickEvent {
 	public void reTarget(final Mob mob) {
 		target = mob;
 		setDelayTicks(2);
+		long currentTick = player.getWorld().getServer().getCurrentTick();
+		if (player.getAttribute("can_range_again", 0L) > currentTick + 1) {
+			player.setAttribute("can_range_again", currentTick + 1);
+		}
 	}
 
 	public void restart() {
@@ -62,6 +66,9 @@ public class RangeEvent extends GameTickEvent {
 
 	public void run() {
 		if (!running) return;
+
+		long currentTick = player.getWorld().getServer().getCurrentTick();
+		if (player.getAttribute("can_range_again", 0L) > currentTick) return;
 
 		final int weaponId = player.getRangeEquip();
 

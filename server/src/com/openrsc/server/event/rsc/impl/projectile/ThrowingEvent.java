@@ -47,6 +47,10 @@ public class ThrowingEvent extends GameTickEvent {
 	public void reTarget(final Mob mob) {
 		target = mob;
 		setDelayTicks(2);
+		long currentTick = getPlayerOwner().getWorld().getServer().getCurrentTick();
+		if (getPlayerOwner().getAttribute("can_range_again", 0L) > currentTick + 1) {
+			getPlayerOwner().setAttribute("can_range_again", currentTick + 1);
+		}
 	}
 
 	public void restart() {
@@ -70,6 +74,10 @@ public class ThrowingEvent extends GameTickEvent {
 	@Override
 	public void run() {
 		final Player player = getPlayerOwner();
+
+		long currentTick = player.getWorld().getServer().getCurrentTick();
+		if (player.getAttribute("can_range_again", 0L) > currentTick) return;
+
 		int throwingID = player.getThrowingEquip();
 		if (!player.loggedIn() || player.inCombat()
 				|| (target.isPlayer() && !((Player) target).loggedIn())
