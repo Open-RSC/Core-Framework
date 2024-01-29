@@ -12,11 +12,17 @@ public class RandomUsername {
 		for (int i = 0; i < 256; i++) {
 			String baseWord = shakespeareNames[(int) (shakespeareNames.length * Math.random())];
 			StringBuilder candidateUsername = new StringBuilder(baseWord);
+			StringBuilder endingNumbersBuilder = new StringBuilder(4);
+
 			int baseWordLength = baseWord.length();
 			for (int j = baseWordLength; j < 12 && j < baseWordLength + 4; j++) {
 				int randomNumberCharIndex = (int) (numbers.length() * Math.random());
-				candidateUsername.append(numbers.charAt(randomNumberCharIndex));
+				endingNumbersBuilder.append(numbers.charAt(randomNumberCharIndex));
 			}
+			String endingNumbers = endingNumbersBuilder.toString();
+
+			// Adjust inappropriate numbers
+			candidateUsername.append(endingNumbers.equals("1488") ? "1289" : endingNumbers);
 
 			if (candidateUsername.length() <= 12 && !server.getDatabase().playerExists(candidateUsername.toString())) {
 				return candidateUsername.toString();
