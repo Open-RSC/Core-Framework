@@ -29,4 +29,5 @@ launcherUpload:
   artifacts:
     paths:
       - PC_Launcher/OpenRSC.jar
+      - PC_Launcher/vet.rsc.OpenRSC.Launcher.appdata.xml
     when: on_success
