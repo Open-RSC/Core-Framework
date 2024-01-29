@@ -11,7 +11,7 @@ function pause() {
 function start() {
     clear
     echo ""
-    echo "Open RuneScape Classic: Striving for a replica RSC game and more
+    echo "OpenRSC: Striving for a replica RSC game and more
 
 What would you like to do?
 
@@ -31,7 +31,7 @@ Choices:
     clear
 
     if [ "$action" == "1" ]; then # Compile and start the game
-        echo "Starting Open RuneScape Classic."
+        echo "Starting OpenRSC."
         make compile
         pause
         echo "What would you like to do?

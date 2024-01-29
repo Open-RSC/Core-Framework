@@ -583,7 +583,7 @@ public final class Development implements CommandTrigger {
 		}
 		player.toggleDenyAllLogoutRequests();
 
-		player.message("Now displaying all scenery in RuneScape Classic in 5 second intervals.");
+		player.message("Now displaying all scenery in RSC in 5 second intervals.");
 
 		int maxScenery;
 		if (player.getConfig().RESTRICT_SCENERY_ID >= 0) {
@@ -606,7 +606,7 @@ public final class Development implements CommandTrigger {
 				return;
 			}
 		}
-		player.message("That is all of the scenery in RuneScape Classic!");
+		player.message("That is all of the scenery in RSC!");
 		player.message("If you'd like to see it lit from a different angle, I'd suggest editing map tile " + player.getLocation().pointToJagexPoint());
 		player.message("Then play this same replay again.");
 		delay(8);
@@ -623,7 +623,7 @@ public final class Development implements CommandTrigger {
 		boolean isRetroClient = player.isUsing38CompatibleClient() || player.isUsing39CompatibleClient();
 		int delayLen = Integer.parseInt(args[0]);
 
-		player.message("Now displaying all animations in RuneScape Classic in 5 second intervals.");
+		player.message("Now displaying all animations in RSC in 5 second intervals.");
 
 		for (int id = 0; id <= player.getClientLimitations().maxAnimationId; id++) {
 			player.message("animation id: " + (isRetroClient ? AppearanceRetroConverter.convert(id) : id));
@@ -635,7 +635,7 @@ public final class Development implements CommandTrigger {
 				return;
 			}
 		}
-		player.message("That is all of the animations in RuneScape Classic!");
+		player.message("That is all of the animations in RSC!");
 		delay(8);
 		player.toggleDenyAllLogoutRequests();
 	}
@@ -674,7 +674,7 @@ public final class Development implements CommandTrigger {
 
 		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE) {
 			player.message(messagePrefix + "@red@Warning: @dre@This function will only work for inauthentic clients!");
-			player.message("@dre@It is not possible to dynamically rotate scenery under any authentic protocol of RuneScape Classic.");
+			player.message("@dre@It is not possible to dynamically rotate scenery under any authentic protocol of RSC.");
 		}
 
 		if(!player.getWorld().withinWorld(x, y))

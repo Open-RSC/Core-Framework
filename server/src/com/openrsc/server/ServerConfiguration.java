@@ -31,7 +31,7 @@ public class ServerConfiguration {
 	public String SERVER_NAME;
 	public String SERVER_NAME_WELCOME;
 	public String WELCOME_TEXT;
-	public String MESSAGE_PREFIX = "@gre@Runescape Classic:@whi@ ";
+	public String MESSAGE_PREFIX = "@gre@System message:@whi@ ";
 	public String BAD_SYNTAX_PREFIX = MESSAGE_PREFIX +" Invalid Syntax: ::";
 	public boolean MEMBER_WORLD;
 	public int WORLD_NUMBER;

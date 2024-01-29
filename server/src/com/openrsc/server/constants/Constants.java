@@ -222,7 +222,7 @@ public final class Constants {
 		put (2 + 64, "15781888"); // yellow "I overheard the player being abusive to someone else"
 		put (3 + 64, "5069823"); // blue "Trade scam - lied about trade to steal items from me"
 		put (4 + 64, "5069823"); // blue "Asking players for their password / trying to steal accounts"
-		put (5 + 64, "5069823"); // blue "Attempting to buy/sell a RuneScape account"
+		put (5 + 64, "5069823"); // blue "Attempting to buy/sell a RS account"
 		put (6 + 64, "16776960"); // ff0 yellow Impersonating Jagex Staff
 		put (7 + 64, "10949120"); // report abuse red "Advertising scam website"
 		put (8 + 64, "0"); // black "Other"

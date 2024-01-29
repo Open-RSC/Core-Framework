@@ -1,8 +1,8 @@
-### Guide for running Open RuneScape Classic on Windows
+### Guide for running OpenRSC on Windows
 
 ## Install Java Development Kit (JDK)
 
-The Open RuneScape Classic project team recommends developers download Open JDK. A MSI installer for Windows is the simplest option. Any Java version 8 or later will work.
+The OpenRSC project recommends developers download Open JDK. A MSI installer for Windows is the simplest option. Any Java version 8 or later will work.
 
 <a href="https://adoptopenjdk.net/releases.html?variant=openjdk13&jvmVariant=hotspot">Download Adopt OpenJDK</a>
 

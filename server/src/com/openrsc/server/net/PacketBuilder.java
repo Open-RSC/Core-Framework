@@ -158,7 +158,7 @@ public class PacketBuilder {
 	}
 
 	/**
-	 * Writes a RuneScape string.
+	 * Writes an RSC string.
 	 *
 	 * @param string The string to write.
 	 * @return The PacketBuilder instance, for chaining.

@@ -493,12 +493,12 @@ Moderator Commands
   - If no percentage is specified, then 100 is used.
 - jail
   - Usage: `::jail [name]`
-  - Puts the specified player in RuneScape Jail, upstairs of Al Kharid palace.
+  - Puts the specified player in Jail, upstairs of Al Kharid palace.
   - You can not jail a player who has already been jailed.
   - You can not jail a staff member.
 - release
   - Usage: `::release [name]`
-  - Releases the specified player from RuneScape Jail to the location they were before being jailed.
+  - Releases the specified player from Jail to the location they were before being jailed.
 - getcache
   - Usage: `::getcache (name) [cache_key]`
   - Alias: `::gcache` or `::checkcache`

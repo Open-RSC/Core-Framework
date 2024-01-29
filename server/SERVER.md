@@ -52,7 +52,7 @@ dropping items, spawning game objects and ground items, and following other play
 
 ### Game Tick Events
 Game tick events are executed on a specific tick cycle, set in the config. This
-cycle is usually 600ms (Runescape's original tick timing), but has potential
+cycle is usually 640ms (the average tick cycle observed in 2018), but has potential
 to vary in custom servers. Game tick events handle most of the game's skill-based
 interactions, as well as a lot of other components.
 

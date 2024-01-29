@@ -129,7 +129,7 @@ public class Settings {
       }
 
 			FileOutputStream out = new FileOutputStream(Main.configFileLocation + "/launcherSettings.conf");
-			props.store(out, "---open runescape classic launcher config---");
+			props.store(out, "---openrsc launcher config---");
 			out.close();
 		} catch (IOException e) {
 			Logger.Error("Could not save launcher settings!");

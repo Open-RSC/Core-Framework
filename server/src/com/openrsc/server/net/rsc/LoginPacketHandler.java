@@ -947,7 +947,7 @@ public class LoginPacketHandler {
 		// The only clients we have with this behaviour are clients 39/40, but we can guess at the other times
 		// that the network protocol needed a new version.
 		switch (retrievedVersion) {
-			case 1: // initial RuneScape release
+			case 1: // initial RS release
 				return 14; // 2001-01-23
 			case 2:
 				// spellbook added

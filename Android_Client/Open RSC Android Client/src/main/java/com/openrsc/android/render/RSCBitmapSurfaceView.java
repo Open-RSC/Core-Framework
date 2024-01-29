@@ -167,7 +167,7 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 			canvas.drawText(state, x + 138, y + 10, paint);
 
 			if (!this.m_hb) {
-				canvas.drawText("Powered by Open RuneScape Classic", x + 138, y + 30, paint);
+				canvas.drawText("Powered by OpenRSC", x + 138, y + 30, paint);
 				canvas.drawText("We support open source", x + 138, y + 44, paint);
 			} else {
 				paint.setColor(Color.rgb(132, 132, 152));

@@ -1,5 +1,5 @@
 @echo off
-:# Open RuneScape Classic: Striving for a replica RSC game and more
+:# OpenRSC: Striving for a replica RSC game and more
 
 :# Variable paths:
 SET Portable_Windows="Portable_Windows\"
@@ -55,7 +55,7 @@ exit
 :compileandrun
 cls
 echo:
-echo Starting Open RuneScape Classic.
+echo Starting OpenRSC.
 echo:
 cd Portable_Windows && call START "" compileandrun.cmd && cd ..
 echo:
@@ -67,7 +67,7 @@ goto start
 :run
 cls
 echo:
-echo Starting Open RuneScape Classic.
+echo Starting OpenRSC.
 echo:
 cd Portable_Windows && call START "" run.cmd && cd ..
 echo:
@@ -88,7 +88,7 @@ echo   %RED%3%NC% - 2001scape (RSC as it was in the beginning)
 echo   %RED%4%NC% - OpenPK (Stork PK recreation based on the OpenRSC framework. Currently in alpha)
 echo   %RED%5%NC% - Return
 echo:
-SET /P type=Please enter a number choice from above: 
+SET /P type=Please enter a number choice from above:
 echo:
 
 if /i "%type%"=="1" (SET newtype=default

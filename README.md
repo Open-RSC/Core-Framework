@@ -1,6 +1,6 @@
 [![pipeline status](https://gitlab.com/open-runescape-classic/core/badges/master/pipeline.svg)](https://gitlab.com/open-runescape-classic/core/-/commits/master)
 
-# Open RuneScape Classic
+# OpenRSC
 
 # Table of contents <a name="top"></a>
 1. [Project Information](#general)
@@ -12,11 +12,11 @@
 7. [Thank you](#thankyou)
 
 ## Project Information<a name="general"></a>
-The original RuneScape Classic was closed down and abandoned after 17 years on August 6th, 2018. Through open source black box reverse engineering, the Open RuneScape Classic project team have brought forth Open RuneScape Classic (Open RSC) so that it may be enjoyed by fans once again. In this repository is everything needed to run the closest to authentic version of RuneScape Classic available. There are still issues to address but efforts are continually ongoing to fix them. This project has been built upon the efforts of the RuneScape Classic private server developer community spanning from 2008 to 2018. From the inception of the Open RSC project in June 2018, the team has reviewed thousands of hours of RSC+ replays to ensure an accurate and authentic in-game experience. We have rewritten the core server framework and expanded it to scale far beyond the original abilities of the original RuneScape Classic game. Included are several server configurations that allow many new game features to be activated without needing to change any code. Example: Runecrafting, running, custom sprites, faster game speeds, higher experience rates, new quests, auction house, clans, parties, pets, and so much more. We primarily use Discord to stay in touch and welcome anyone that would like to learn and help contribute code to the project. We host free to play public worlds as well - see our website for more information. One last thing: we do not accept any monetary donations whatsoever. This is a hobby and will only ever be a hobby. We don't believe anyone should profit using somebody else's work, even if it is considered abandonware.
+The original RSC was closed down and abandoned after nearly 18 years on August 6th, 2018. Through open-source cooperation & black box reverse engineering, the OpenRSC project has made it once again possible for fans to enjoy playing this game. In this repository is everything needed to run the closest to authentic version of RSC available. Efforts are continually ongoing to further improve authenticity and to add new features. This project has been built upon the efforts of the RSC private server developer community spanning from 2006 to 2018. From the inception of the Open RSC project in June 2018, the team has reviewed thousands of hours of RSC+ replays to ensure an accurate and authentic in-game experience. We have rewritten the core server framework and expanded it to scale far beyond the original abilities of the original RSC game. Included are several server configurations that allow many new game features to be activated without needing to change any code. Example: Runecrafting, custom sprites, faster game speeds, higher experience rates, new quests, auction house, clans, parties, pets, holiday events, and so much more. We primarily use Discord to stay in touch and welcome anyone that would like to learn and help contribute code to the project. We host free to play public worlds as well - see our website for more information. One last thing: we do not accept any monetary donations whatsoever. This is a hobby and will only ever be a hobby. We don't believe anyone should profit using somebody else's work, even if it is considered abandonware.
 
 
 ## How to Play<a name="play"></a>
-The Open RuneScape Classic project team suggests that before hosting a public server, developers learn the ins and outs of everything by running the game locally first.
+The OpenRSC team suggests that before hosting a public server, developers learn the ins and outs of everything by running the game locally first.
 
 <b>To run your own server locally, please see our guides:</b>
 - **Windows**: [Windows Getting Started Guide](https://github.com/Open-RSC/Core-Framework/blob/develop/Windows%20Getting%20Started%20Guide.md)
@@ -58,7 +58,7 @@ Feel free to submit bug reports in the repository issues section! If you would l
 
 - <a href="https://www.reddit.com/r/rsc">Reddit</a>
 
-- <a href="https://rsc.vet">Open RuneScape Classic Website</a>
+- <a href="https://rsc.vet">OpenRSC Website</a>
 
 
 ## In-Game Commands<a name="commands"></a>

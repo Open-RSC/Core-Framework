@@ -1,4 +1,4 @@
-### Guide for running Open RuneScape Classic on Linux
+### Guide for running OpenRSC on Linux
 
 ## Using the built-in installation script with Docker
 

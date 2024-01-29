@@ -153,7 +153,7 @@ public class Packet {
 	}
 
 	/**
-	 * Reads a RuneScape string.
+	 * Reads an RSC string.
 	 *
 	 * @return The string.
 	 */
@@ -166,7 +166,7 @@ public class Packet {
 	}
 
 	/**
-	 * Reads a RuneScape string.
+	 * Reads an RSC string.
 	 *
 	 * @return The string.
 	 */
@@ -182,7 +182,7 @@ public class Packet {
 	}
 
 	/**
-	 * Reads a RuneScape string.
+	 * Reads an RSC string.
 	 *
 	 * @return The string.
 	 */

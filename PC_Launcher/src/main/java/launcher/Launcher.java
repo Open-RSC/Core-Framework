@@ -28,10 +28,10 @@ public class Launcher extends Component {
     } else if (Settings.firstRun) {
       int response = JOptionPane.showConfirmDialog(
           this,
-          "The Open RSC Launcher has an automatic update feature.\n"
+          "The OpenRSC Launcher has an automatic update feature.\n"
               + "\n"
               + "Would you like to enable this feature?\n",
-          "Open RuneScape Classic",
+          "OpenRSC",
           JOptionPane.YES_NO_OPTION,
           JOptionPane.INFORMATION_MESSAGE,
           icon);
@@ -39,21 +39,21 @@ public class Launcher extends Component {
         Settings.autoUpdate = true;
         JOptionPane.showMessageDialog(
             this,
-            "The Open RSC Launcher is set to check for updates at every launch!",
-            "Open RuneScape Classic",
+            "The OpenRSC Launcher is set to check for updates at every launch!",
+            "OpenRSC",
             JOptionPane.INFORMATION_MESSAGE,
             icon);
       } else if (response == JOptionPane.NO_OPTION) {
         Settings.autoUpdate = false;
         JOptionPane.showMessageDialog(
             this,
-            "The Open RSC launcher will not check for updates automatically.\n"
+            "The OpenRSC launcher will not check for updates automatically.\n"
                 + "\n"
                 + "You will not get notified when new releases are available. To update the launcher, you\n"
                 + "will need to do it manually by replacing 'OpenRSC.jar'.\n"
                 + "\n"
                 + "You can enable automatic updates again in the localSettings.conf file.",
-            "Open RuneScape Classic",
+            "OpenRSC",
             JOptionPane.INFORMATION_MESSAGE,
             icon);
       }
@@ -77,7 +77,7 @@ public class Launcher extends Component {
                 + "\n"
                 + "\n"
                 + "Would you like to update now?",
-            "Open RuneScape Classic",
+            "OpenRSC",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.INFORMATION_MESSAGE,
             icon);
@@ -88,7 +88,7 @@ public class Launcher extends Component {
                 "The launcher has been updated successfully!\n"
                     + "\n"
                     + "The launcher requires a restart, and will now exit.",
-                "Open RuneScape Classic",
+                "OpenRSC",
                 JOptionPane.INFORMATION_MESSAGE,
                 icon);
             System.exit(0);
@@ -98,7 +98,7 @@ public class Launcher extends Component {
                 "The launcher has failed to update, please try again later.\n"
                     + "\n"
                     + "Would you like to continue without updating?",
-                "Open RuneScape Classic",
+                "OpenRSC",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.ERROR_MESSAGE,
                 icon);
