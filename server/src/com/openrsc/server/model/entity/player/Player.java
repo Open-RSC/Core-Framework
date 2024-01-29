@@ -1781,7 +1781,7 @@ public final class Player extends Mob {
 
 		// Check if the player is an Ironman and in a party
 		final boolean notIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !this.isIronMan();
-		if (this.getParty() != null && notIronMan) {
+		if (getConfig().WANT_PARTY_XP_SHARE && this.getParty() != null && notIronMan) {
 			ArrayList<PartyPlayer> sharers = new ArrayList<PartyPlayer>();
 			int xpLeftToReward = skillXP;
 

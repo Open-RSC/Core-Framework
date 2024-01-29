@@ -197,6 +197,7 @@ public class ServerConfiguration {
 	public boolean WANT_EQUIPMENT_TAB;
 	public boolean WANT_BANK_PRESETS;
 	public boolean WANT_PARTIES;
+	public boolean WANT_PARTY_XP_SHARE;
 	public boolean WANT_OPENPK_POINTS;
 	public boolean WANT_OPENPK_PRESETS;
 	public int OPENPK_POINTS_TO_GP_RATIO;
@@ -633,6 +634,7 @@ public class ServerConfiguration {
 
 		// Party settings
 		WANT_PARTIES = tryReadBool("want_parties").orElse(false);
+		WANT_PARTY_XP_SHARE = tryReadBool("want_party_xp_share").orElse(false);
 		PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER = tryReadDouble("party_additional_xp_percent_per_player")
 			.orElse(0.1);
 		PARTY_DISTANCE_PERCENT_DECREASE = tryReadDouble("party_distance_percent_decrease")
