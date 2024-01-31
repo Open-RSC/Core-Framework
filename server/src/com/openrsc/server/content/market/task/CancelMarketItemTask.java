@@ -31,7 +31,13 @@ public class CancelMarketItemTask extends MarketTask {
 			if (item != null) {
 				int itemIndex = item.getCatalogID();
 				int amount = item.getAmountLeft();
+				int seller = item.getSeller();
 				if (owner.getWorld().getPlayer(DataConversions.usernameToHash(owner.getUsername())) == null) {
+					return;
+				}
+				if (owner.getDatabaseID() != seller && !owner.isAdmin()) {
+					LOGGER.info("Auction Player Database ID Mismatch, possible auction cancel packet manipulation by " + owner.getUsername());
+					owner.getWorld().getServer().getDiscordService().playerLog(owner, "Auction Player Database ID Mismatch, possible auction cancel packet manipulation by " + owner.getUsername());
 					return;
 				}
 				ItemDefinition def = owner.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
