@@ -3,9 +3,7 @@
   <id>vet.rsc.OpenRSC.Launcher</id>
   <launchable type="desktop-id">vet.rsc.OpenRSC.Launcher.desktop</launchable>
   <name>OpenRSC</name>
-  <developer>
-    <name>OpenRSC</name>
-  </developer>
+  <developer_name>OpenRSC</developer_name>
   <summary>Launcher for OpenRSC Servers</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>AGPL-3.0-or-later</project_license>
