@@ -52,7 +52,7 @@ public class ClientUpdater {
   }
 
   public static void updateIdleRSC() throws SecurityException, IOException {
-    executeUpdate("/extras/idlersc/", "idlersc-master.zip", Defaults._IDLERSC_REPOSITORY_DL,
+    executeUpdate("/extras/idlersc/", "IdleRSC.zip", Defaults._IDLERSC_REPOSITORY_DL,
         "_IDLERSC_VERSION");
   }
 
