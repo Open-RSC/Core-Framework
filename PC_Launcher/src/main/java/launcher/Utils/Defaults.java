@@ -30,6 +30,6 @@ public class Defaults {
   public final static Double _APOS_VERSION = 20210521.081500;
   public final static Double _IDLERSC_VERSION = 20210521.081500;
   public final static Double _WINRUNE_VERSION = 20210906.0;
-  public final static Double _FLEACIRCUS_VERISION = 20210715.0;
-  public final static Double _RSCTIMES_VERISION = 20220228.0;
+  public final static Double _FLEACIRCUS_VERSION = 20210715.0;
+  public final static Double _RSCTIMES_VERSION = 20220228.0;
 }
