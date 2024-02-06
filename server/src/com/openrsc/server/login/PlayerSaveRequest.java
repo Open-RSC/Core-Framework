@@ -7,6 +7,8 @@ import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 /**
  * Used to verify save players on the Login thread
  */
@@ -40,9 +42,17 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 			boolean success = getServer().getPlayerService().savePlayer(player);
 			if (success && this.logout)
 				logoutSaveSuccess();
+			getPlayer().setSaving(false);
+			if (this.logout) {
+				getPlayer().setLoggingOut(false);
+			}
 		} catch (final GameDatabaseException ex) {
 			LOGGER.warn("Error saving the player, phantom player may have extra login count on their IP address now...!");
 			LOGGER.catching(ex);
+			if (getPlayer() != null) {
+				getPlayer().setSaving(false);
+				getPlayer().setLoggingOut(false);
+			}
 		}
 	}
 
@@ -79,4 +89,18 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 		world.getPartyManager().checkAndUnattachFromParty(getPlayer());
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PlayerSaveRequest request = (PlayerSaveRequest) o;
+		//We need to check both logout and player in both equals and hashCode because otherwise logouts may not start (like if there is already an auto-save happening on the same tick)
+		return logout == request.logout && Objects.equals(player, request.player);
+	}
+
+	@Override
+	public int hashCode() {
+		//We need to check both logout and player in both equals and hashCode because otherwise logouts may not start (like if there is already an auto-save happening on the same tick)
+		return Objects.hash(player, logout);
+	}
 }

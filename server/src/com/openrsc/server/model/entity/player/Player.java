@@ -384,6 +384,8 @@ public final class Player extends Mob {
 
 	private Npc interactingNpc = null;
 	private int lastNpcKilledId = -1;
+	private boolean isSaving = false;
+	private boolean isLoggingOut = false;
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -774,6 +776,22 @@ public final class Player extends Mob {
 			}
 		};
 		getWorld().getServer().getGameEventHandler().add(chargeEvent);
+	}
+
+	public boolean isSaving() {
+		return isSaving;
+	}
+
+	public void setSaving(boolean saving) {
+		isSaving = saving;
+	}
+
+	public boolean isLoggingOut() {
+		return isLoggingOut;
+	}
+
+	public void setLoggingOut(boolean loggingOut) {
+		isLoggingOut = loggingOut;
 	}
 
 	public void close() {
@@ -2641,10 +2659,18 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		save(false);
+		save(false, false);
 	}
 
-	public void save(boolean logout) {
+	public void save(boolean logout, boolean force) {
+		//If we want to log out (but we already mass-saved earlier in the same tick), we prioritize logging out over mass-saves so the player can log out the same tick. We make sure to check if they are already logging out in the same tick so that we only have one logout save per tick per player. Force saves always save.
+		if ((!logout || isLoggingOut()) && isSaving() && !force) {
+			return;
+		}
+		setSaving(true);
+		if (logout) {
+			setLoggingOut(true);
+		}
 		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this, logout));
 	}
 
@@ -2686,7 +2712,7 @@ public final class Player extends Mob {
 		getCache().set("gnomeball_goals", getAttribute("gnomeball_goals", 0));
 		getCache().set("gnomeball_npc", getAttribute("gnomeball_npc", 0));
 
-		save(true);
+		save(true, false);
 		LOGGER.info("Player save & logout request queued for " + this.getUsername());
 	}
 

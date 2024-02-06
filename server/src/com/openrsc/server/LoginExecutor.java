@@ -8,12 +8,12 @@ import com.openrsc.server.util.ServerAwareThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class LoginExecutor implements Runnable {
 	/**
@@ -23,11 +23,11 @@ public class LoginExecutor implements Runnable {
 
 	private ScheduledExecutorService scheduledExecutor;
 
-	private final Queue<LoginExecutorProcess> genericRequests;
+	private final Set<LoginExecutorProcess> genericRequests;
 
-	private final Queue<LoginExecutorProcess> loginRequests;
+	private final Set<LoginExecutorProcess> loginRequests;
 
-	private final Queue<PlayerSaveRequest> saveRequests;
+	private final Set<PlayerSaveRequest> saveRequests;
 
 	private boolean running;
 
@@ -41,9 +41,9 @@ public class LoginExecutor implements Runnable {
 	public LoginExecutor(final Server server) {
 		this.server = server;
 		this.running = false;
-		this.genericRequests = new ConcurrentLinkedQueue<>();
-		this.loginRequests = new ConcurrentLinkedQueue<>();
-		this.saveRequests = new ConcurrentLinkedQueue<>();
+		this.genericRequests = Collections.synchronizedSet(new HashSet<>());
+		this.loginRequests = Collections.synchronizedSet(new HashSet<>());
+		this.saveRequests = Collections.synchronizedSet(new HashSet<>());
 	}
 
 	public boolean add(final LoginExecutorProcess request) {
@@ -61,20 +61,15 @@ public class LoginExecutor implements Runnable {
 		try {
 			// Save requests should be run BEFORE logout requests or else we get duplication glitch because a user can login before they've saved, but after they've logged out.
 			// See Player.logout, save requests are added first before removal so we are good.
-			LoginExecutorProcess request;
 
-			while ((request = saveRequests.poll()) != null) {
-				request.process();
-			}
-
-			while ((request = genericRequests.poll()) != null) {
-				request.process();
-			}
-
-			while (loginsProcessedThisTick < server.getConfig().MAX_LOGINS_PER_SERVER_PER_TICK && (request = loginRequests.poll()) != null) {
-				request.process();
-				++loginsProcessedThisTick;
-			}
+			processAndClearSet(saveRequests, request -> request.process());
+			processAndClearSet(genericRequests, request -> request.process());
+			processAndClearSet(loginRequests, request -> {
+				if (loginsProcessedThisTick < server.getConfig().MAX_LOGINS_PER_SERVER_PER_TICK) {
+					request.process();
+					++loginsProcessedThisTick;
+				}
+			});
 
 		} catch (final Throwable e) {
 			LOGGER.catching(e);
@@ -115,10 +110,9 @@ public class LoginExecutor implements Runnable {
 
 		if (genericRequests.size() > 0 || saveRequests.size() > 0 || loginRequests.size() > 0) {
 			LOGGER.error("There were " + (genericRequests.size() + saveRequests.size() + loginRequests.size()) + " unprocessed requests. (Very bad!!!!!!!!!!)");
-			PlayerSaveRequest saveRequest;
-			while ((saveRequest = saveRequests.poll()) != null) {
+			processAndClearSet(saveRequests, saveRequest -> {
 				LOGGER.error("Could not save " + saveRequest.getPlayer() + " during LoginExecutor shutdown.");
-			}
+			});
 			clearRequests();
 		}
 	}
@@ -135,5 +129,14 @@ public class LoginExecutor implements Runnable {
 
 	public void resetRequestsThisTick() {
 		loginsProcessedThisTick = 0;
+	}
+
+	private <T> void processAndClearSet(Set<T> set, Consumer<T> processor) {
+		Iterator<T> iterator = set.iterator();
+		while (iterator.hasNext()) {
+			T item = iterator.next();
+			processor.accept(item);
+			iterator.remove();
+		}
 	}
 }

@@ -380,7 +380,7 @@ public final class Admins implements CommandTrigger {
 	private void saveAll(Player player) {
 		int count = 0;
 		for (Player playerToSave : player.getWorld().getPlayers()) {
-			playerToSave.save();
+			playerToSave.save(false, true);
 			count++;
 		}
 		player.message(messagePrefix + "Saved " + count + " players on server!");
