@@ -402,6 +402,11 @@ public final class SuperModerator implements CommandTrigger {
 	}
 
 	private void cleanIdleConnections(Player player, String command, String[] args) {
+		//This command causes networking issues like appearance issues after logging in, let's turn this command off for now as of Feb 2024.
+		if (true) {
+			player.message("This command has been temporarily disabled.");
+			return;
+		}
 		if (args.length < 1 || !(StringUtil.isIPv4Address(args[0]) || StringUtil.isIPv6Address(args[0]))) {
 			int numCleared = player.getWorld().getServer().getPacketFilter().cleanIdleConnections();
 			player.message(messagePrefix + "Cleaned " + numCleared + " connections not associated to players online");

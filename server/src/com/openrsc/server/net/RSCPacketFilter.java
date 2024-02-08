@@ -355,6 +355,10 @@ public class RSCPacketFilter {
 	}
 
 	public int cleanIdleConnections() {
+		//This causes networking issues like appearance issues after logging in, let's turn this off for now as of Feb 2024.
+		if (true) {
+			return 0;
+		}
 		synchronized (connections) {
 			int num = 0;
 			for (Map.Entry<String, ArrayList<Channel>> entry : connections.entrySet()) {
