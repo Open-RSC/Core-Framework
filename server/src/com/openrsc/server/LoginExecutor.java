@@ -9,10 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class LoginExecutor implements Runnable {
@@ -41,9 +38,9 @@ public class LoginExecutor implements Runnable {
 	public LoginExecutor(final Server server) {
 		this.server = server;
 		this.running = false;
-		this.genericRequests = Collections.synchronizedSet(new HashSet<>());
-		this.loginRequests = Collections.synchronizedSet(new HashSet<>());
-		this.saveRequests = Collections.synchronizedSet(new HashSet<>());
+		this.genericRequests = ConcurrentHashMap.newKeySet();
+		this.loginRequests = ConcurrentHashMap.newKeySet();
+		this.saveRequests = ConcurrentHashMap.newKeySet();
 	}
 
 	public boolean add(final LoginExecutorProcess request) {
