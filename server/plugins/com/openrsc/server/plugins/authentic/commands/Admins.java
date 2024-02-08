@@ -3382,8 +3382,8 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		String fromName = args[0].replaceAll("_", " ");
-		String toName = args[1].replaceAll("_", " ");
+		String fromName = args[0].replaceAll("[._]", " ");
+		String toName = args[1].replaceAll("[._]", " ");
 		Player fromPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(fromName));
 		Player toPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(toName));
 
