@@ -21,7 +21,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class MurderMystery implements QuestInterface, TalkNpcTrigger,
-	TakeObjTrigger, OpBoundTrigger, OpLocTrigger, UseInvTrigger {
+	TakeObjTrigger, OpBoundTrigger, OpLocTrigger, UseInvTrigger, UseLocTrigger {
 
 	@Override
 	public int getQuestId() {
@@ -1823,5 +1823,37 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 			}
 
 		}
+	}
+
+	@Override
+	public void onUseLoc(Player player, GameObject gameObject, Item item) {
+		// barrel of flour
+		if (gameObject.getID() == 1138) {
+			if (item.getCatalogId() == ItemId.MURDER_SCENE_POT.id()) {
+				mes("You probably shouldn't use evidence from a crime");
+				delay(3);
+				mes("scene to keep flour in...");
+				delay(3);
+				return;
+			}
+			if (item.getCatalogId() == ItemId.POT.id()) {
+				player.message("You take some flour from the barrel");
+				player.getCarriedItems().remove(new Item(ItemId.POT.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.POT_OF_FLOUR.id()));
+
+				player.message("Theres still plenty of flour left");
+				return;
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseLoc(Player player, GameObject gameObject, Item item) {
+		// barrel of flour
+		if (gameObject.getID() == 1138) {
+			return item.getCatalogId() == ItemId.MURDER_SCENE_POT.id() ||
+					item.getCatalogId() == ItemId.POT.id();
+		}
+		return false;
 	}
 }
