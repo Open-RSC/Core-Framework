@@ -42,14 +42,10 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 
 		player.resetAll();
 		Mob affectedMob = null;
-		int serverIndex = payload.serverIndex;
-		OpcodeIn packetOne = OpcodeIn.PLAYER_ATTACK;
-		OpcodeIn packetTwo = OpcodeIn.NPC_ATTACK;
-
-		if (pID == packetOne) {
-			affectedMob = player.getWorld().getPlayer(serverIndex);
-		} else if (pID == packetTwo) {
-			affectedMob = player.getWorld().getNpc(serverIndex);
+		if (pID == OpcodeIn.PLAYER_ATTACK) {
+			affectedMob = player.getWorld().getPlayer(payload.serverIndex);
+		} else if (pID == OpcodeIn.NPC_ATTACK) {
+			affectedMob = player.getWorld().getNpc(payload.serverIndex);
 		}
 		if (affectedMob == null || affectedMob.equals(player)) {
 			player.resetPath();
@@ -94,6 +90,22 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 		}
 
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
+
+			if (affectedMob.isPlayer()) {
+				int pidlessCatchingDistanceOffset = 0;
+				if (player.getConfig().PIDLESS_CATCHING && !player.willBeProcessedBefore((Player)affectedMob) && !affectedMob.finishedPath()) {
+					// other player has already moved this tick, meaning the gap is 1 more than is rendered on either person's client
+					pidlessCatchingDistanceOffset += 1;
+				}
+
+				// authentically, if you're more than a couple tiles away, the attack packet just resets your path.
+				// https://www.youtube.com/watch?v=ia02boQlVts&t=1131s
+				 if (player.getLocation().getDistanceTo(affectedMob.getLocation()) > player.getConfig().MAX_PVP_MELEE_ATTACK_DISTANCE + pidlessCatchingDistanceOffset) {
+					 player.resetPath();
+					 return;
+				 }
+			}
+
 			player.setFollowing(affectedMob, 0, false, true);
 
 			int radius = affectedMob.isPlayer() ? player.getConfig().PVP_CATCHING_DISTANCE : player.getConfig().PVM_CATCHING_DISTANCE;
@@ -117,7 +129,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 					}
 				}
 			});
-		} else {
+		} else { // Attack with ranged instead of melee
 			if (!player.checkAttack(affectedMob, true)) {
 				return;
 			}

@@ -45,6 +45,7 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.triggers.CatGrowthTrigger;
 import com.openrsc.server.plugins.triggers.DropObjTrigger;
 import com.openrsc.server.plugins.triggers.WineFermentTrigger;
+import com.openrsc.server.util.PidShuffler;
 import com.openrsc.server.util.UsernameChange;
 import com.openrsc.server.util.languages.PreferredLanguage;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -4389,5 +4390,22 @@ public final class Player extends Mob {
 
 	public void setLastNpcKilledId(int npcId) {
 		this.lastNpcKilledId = npcId;
+	}
+
+	public boolean willBeProcessedBefore(Player affectedMob) {
+		if (getConfig().SHUFFLE_PID_ORDER) {
+			// search for the pid of one of the two players involved
+			for (int curPid : PidShuffler.pidProcessingOrder) {
+				if (curPid == getIndex()) {
+					return true;
+				}
+				if (curPid == affectedMob.getIndex()) {
+					return false;
+				}
+			}
+			return false;
+		} else {
+			return getIndex() < affectedMob.getIndex();
+		}
 	}
 }

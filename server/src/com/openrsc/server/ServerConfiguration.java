@@ -331,6 +331,7 @@ public class ServerConfiguration {
 	public int PVM_CATCHING_DISTANCE;
 	public int PVP_CATCHING_DISTANCE;
 	public int PVP_REATTACK_TIMER;
+	public int MAX_PVP_MELEE_ATTACK_DISTANCE;
 	public int BABY_MODE_LEVEL_THRESHOLD;
 	public boolean SHUFFLE_PID_ORDER;
 	public int SHUFFLE_PID_ORDER_INTERVAL;
@@ -481,6 +482,7 @@ public class ServerConfiguration {
 		PVM_CATCHING_DISTANCE = tryReadInt("pvm_catching_distance").orElse(1);
 		PVP_CATCHING_DISTANCE = tryReadInt("pvp_catching_distance").orElse(1);
 		PVP_REATTACK_TIMER = tryReadInt("pvp_reattack_timer").orElse(5);
+		MAX_PVP_MELEE_ATTACK_DISTANCE = tryReadInt("max_pvp_melee_attack_distance").orElse(2);
 		BABY_MODE_LEVEL_THRESHOLD = tryReadInt("baby_mode_level_threshold").orElse(0);
 		SHUFFLE_PID_ORDER = tryReadBool("shuffle_pid_order").orElse(true);
 		SHUFFLE_PID_ORDER_INTERVAL = tryReadInt("shuffle_pid_order_interval").orElse(500);
