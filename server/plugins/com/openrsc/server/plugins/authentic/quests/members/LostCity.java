@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.RuneScript.changeleveldown;
 
 public class LostCity implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
@@ -334,8 +335,8 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			if (option == 1) {
 				player.message("You climb down the ladder");
 				delay(2);
-				teleport(player, 427, 3380);
-				/* What is the point of this? */
+				changeleveldown();
+
 				if (getCurrentLevel(player, Skill.PRAYER.id()) <= 3)
 					setCurrentLevel(player, Skill.PRAYER.id(), 1);
 				else if (getCurrentLevel(player, Skill.PRAYER.id()) <= 39)

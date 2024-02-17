@@ -76,6 +76,7 @@ public final class Event implements CommandTrigger {
 		.put("hero", Point.location(372, 438))
 		.put("digsite", Point.location(20, 527))
 		.put("legend", Point.location(513, 543))
+		.put("volcano", Point.location(413, 693))
 		.build();
 	private static final Map<String, Point> townLocationsRetro = new ImmutableMap.Builder<String, Point>()
 		.put("varrock", Point.location(122, 509))

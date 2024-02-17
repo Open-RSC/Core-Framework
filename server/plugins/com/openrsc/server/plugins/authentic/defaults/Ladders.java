@@ -266,8 +266,6 @@ public class Ladders {
 			player.message(player.MEMBER_MESSAGE);
 		} else if (obj.getID() == 6 && obj.getX() == 148 && obj.getY() == 1507) {
 			player.teleport(148, 563, false);
-		} else if (obj.getID() == 630 && obj.getX() == 576 && obj.getY() == 3577) {
-			// TODO ????
 		} else if (command.equals("climb-up") || command.equals("climb up")
 			|| command.equals("go up")) {
 			int[] coords = coordModifier(player, true, obj);

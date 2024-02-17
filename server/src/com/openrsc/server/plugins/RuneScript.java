@@ -16,6 +16,7 @@ import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -375,7 +376,7 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		final int newY = player.getY() - FLOOR_OFFSET;
+		final int newY = Formulae.getNewY(player.getY(), false);
 
 		// Check to see if the player will go below level 0
 		if (newY < 0) {

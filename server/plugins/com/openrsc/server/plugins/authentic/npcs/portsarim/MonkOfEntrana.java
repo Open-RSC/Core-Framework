@@ -405,19 +405,17 @@ public final class MonkOfEntrana implements OpLocTrigger,
 					"If so your weapons and armour must be left behind");
 			if (multi(player, npc, "No I don't wish to go",
 				"Yes, Okay I'm ready to go") == 1) {
-
 				mes("The monk quickly searches you");
-				delay(3);
+				delay(5);
 				if (playerNotAllowedOnEntrana(player)) {
 					npcsay(player, npc, "Sorry we cannow allow you on to our island",
 						"Make sure you are not carrying weapons or armour please");
 				} else {
 					mes("You board the ship");
-					delay(3);
+					delay(5);
 					player.teleport(418, 570, false);
 					delay(3);
 					mes("The ship arrives at Entrana");
-					delay(3);
 				}
 			}
 		}
