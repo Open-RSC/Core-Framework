@@ -1306,12 +1306,12 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 66, 20);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 330, 10);
 		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 50, 8);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
-		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 2, 6);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 6);
+		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 3, 3);
 		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 2, 5);
 		currentNpcDrops.addItemDrop(ItemId.MITHRIL_2_HANDED_SWORD.id(), 1, 4);
 		currentNpcDrops.addItemDrop(ItemId.MITHRIL_AXE.id(), 1, 3);
-		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 2, 3);
+		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 10, 3);
 		currentNpcDrops.addItemDrop(ItemId.MITHRIL_BATTLE_AXE.id(), 1, 3);
 		// TODO: As of now, the chocolate cake / addy bar rates are unclear (1 vs. 2).
 		currentNpcDrops.addItemDrop(ItemId.CHOCOLATE_CAKE.id(), 2, 1);
