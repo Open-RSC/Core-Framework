@@ -24,8 +24,6 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 	UseLocTrigger,
 	OpLocTrigger {
 
-	private int BUCKETS_USED = 0;
-
 	private static final int ALRENAS_CUPBOARD_OPEN = 452;
 	private static final int ALRENAS_CUPBOARD_CLOSED = 451;
 
@@ -800,7 +798,11 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 447) {
 			if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				if (player.getQuestStage(getQuestId()) == 2) {
-					if (BUCKETS_USED >= 3) {
+					int buckets = 0;
+					if (player.getCache().hasKey("soil_buckets")) {
+						buckets = player.getCache().getInt("soil_buckets");
+					}
+					if (buckets >= 4) {
 						mes("you poor the water onto the soil");
 						delay(3);
 						mes("the soil softens slightly");
@@ -818,7 +820,8 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 					}
 					player.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
-					BUCKETS_USED++;
+					buckets++;
+					player.getCache().set("soil_buckets", buckets);
 				} else {
 					player.message("You see no reason to do that at the moment");
 				}
