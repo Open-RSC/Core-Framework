@@ -91,16 +91,16 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 
-			if (affectedMob.isPlayer()) {
+			if (affectedMob.isPlayer() && !player.finishedPath() && !affectedMob.finishedPath()) {
 				int pidlessCatchingDistanceOffset = 0;
-				if (player.getConfig().PIDLESS_CATCHING && !player.willBeProcessedBefore((Player)affectedMob) && !affectedMob.finishedPath()) {
+				if (player.getConfig().PIDLESS_CATCHING && !player.willBeProcessedBefore((Player)affectedMob)) {
 					// other player has already moved this tick, meaning the gap is 1 more than is rendered on either person's client
 					pidlessCatchingDistanceOffset += 1;
 				}
 
-				// authentically, if you're more than a couple tiles away, the attack packet just resets your path.
+				// authentically, if you're more than a couple tiles away while already moving, the attack packet just resets your path.
 				// https://www.youtube.com/watch?v=ia02boQlVts&t=1131s
-				 if (player.getLocation().getDistanceTo(affectedMob.getLocation()) > player.getConfig().MAX_PVP_MELEE_ATTACK_DISTANCE + pidlessCatchingDistanceOffset) {
+				 if (player.getLocation().getDistancePythagoras(affectedMob.getLocation()) > player.getConfig().MAX_PVP_MELEE_ATTACK_DISTANCE + pidlessCatchingDistanceOffset) {
 					 player.resetPath();
 					 return;
 				 }
