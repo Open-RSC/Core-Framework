@@ -661,7 +661,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void setLocation(final Point point, boolean teleported) {
-		if (!teleported) {
+		if (!teleported && this.getLocation().isWithin1Tile(point)) {
 			this.setHasMoved(true);
 		} else {
 			setTeleporting(true);

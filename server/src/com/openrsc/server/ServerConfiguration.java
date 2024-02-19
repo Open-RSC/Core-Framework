@@ -78,6 +78,7 @@ public class ServerConfiguration {
 	public int NETWORK_FLOOD_IP_BAN_MINUTES;
 	public boolean WANT_PCAP_LOGGING;
 	public boolean WANT_THREADING__BREAK_PID_PRIORITY;
+	public boolean BREAK_NPC_LOCATION_CACHE;
 	public boolean IS_LOCALHOST_RESTRICTED;
 
 	// Location of the server conf files.
@@ -431,6 +432,7 @@ public class ServerConfiguration {
 		MEMBER_WORLD = tryReadBool("member_world").orElse(true);
 		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(false);
 		WANT_THREADING__BREAK_PID_PRIORITY = tryReadBool("want_threading__break_pid_priority").orElse(false);
+		BREAK_NPC_LOCATION_CACHE = tryReadBool("break_npc_location_cache").orElse(false);
 		WORLD_NUMBER = tryReadInt("world_number").orElse(1);
 		PLAYER_LEVEL_LIMIT = tryReadInt("player_level_limit").orElse(99);
 		WANT_EXPERIENCE_CAP = tryReadBool("want_experience_cap").orElse(false);

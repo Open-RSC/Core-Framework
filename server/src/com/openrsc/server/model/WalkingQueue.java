@@ -96,17 +96,17 @@ public class WalkingQueue {
 			return;
 		}
 
-		mob.face(Point.location(destX, destY));
-
 		if (mob.isNpc()) {
 			NPCLoc loc = ((Npc) mob).getLoc();
 			if (Point.location(destX, destY).inBounds(loc.minX() - 12, loc.minY() - 12,
 				loc.maxX() + 12, loc.maxY() + 12) || (destX == 0 && destY == 0)) {
+				mob.face(Point.location(destX, destY));
 				mob.setLocation(Point.location(destX, destY));
 			}
 		}
 		else {
 			Player player = (Player) mob;
+			player.face(Point.location(destX, destY));
 			player.setLocation(Point.location(destX, destY));
 			player.stepIncrementActivity();
 		}

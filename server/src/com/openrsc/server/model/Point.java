@@ -399,10 +399,10 @@ public class Point {
 		return "(" + x + ", " + y + ")";
 	}
 
-	public int getDistanceTo(Point o2) {
+	public boolean isWithin1Tile(Point o2) {
 		int xDiff = Math.abs(getX() - o2.getX());
 		int yDiff = Math.abs(getY() - o2.getY());
-		return xDiff + yDiff;
+		return xDiff <= 1 && yDiff <= 1;
 	}
 
 	public int getDistancePythagoras(Point o2) {

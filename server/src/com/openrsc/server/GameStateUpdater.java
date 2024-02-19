@@ -57,7 +57,6 @@ public final class GameStateUpdater {
 	public void unload() {
 	}
 
-	// private static final int PACKET_UPDATETIMEOUTS = 0;
 	public void sendUpdatePackets(final Player player) {
 		// TODO: Should be private
 		try {
@@ -175,7 +174,7 @@ public final class GameStateUpdater {
 			}
 			clearStruct.indices = clearIdx;
 			for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
-				if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
+				if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.isRemoved() || newNPC.isRespawning()
 					|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
 					|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
 					continue;
@@ -195,12 +194,19 @@ public final class GameStateUpdater {
 				mobsUpdate.add((byte) packed2);
 				mobsUpdate.add((byte) newNPC.getID());
 
-				playerToUpdate.getLocalNpcs().add(newNPC);
+				if (!playerToUpdate.getConfig().BREAK_NPC_LOCATION_CACHE) {
+					playerToUpdate.getLocalNpcs().add(newNPC);
+				}
 			}
 
 			struct.mobsUpdate = mobsUpdate;
 		} else {
 			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
+			final int MOVEMENT_UPDATE = 0;
+			final int UPDATE_NOT_REQUIRED = 0;
+			final int UPDATE_REQUIRED = 1;
+			final int NOT_MOVING = 1;
+			final int REMOVE_NPC = 3;
 
 			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getLocalNpcs().size(), 8));
 			for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
@@ -210,34 +216,39 @@ public final class GameStateUpdater {
 					if (playerToUpdate.getConfig().WANT_COMBAT_ODYSSEY
 						&& localNpc.getID() == NpcId.BIGGUM_FLODROT.id()
 						&& !playerToUpdate.canSeeBiggum()) {
-						it$.remove();
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(3, 2));
+						it$.remove(); // removes Biggum from player's localNpcs list (can happen if player restarts The Odyssey)
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(UPDATE_REQUIRED, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(NOT_MOVING, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(REMOVE_NPC, 2));
 					}
 				}
 
-				if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
-					it$.remove();
-					mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
-					mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
-					mobsUpdate.add(new AbstractMap.SimpleEntry<>(3, 2));
+				if (!localNpc.withinAuthenticRange(playerToUpdate) || // remove because they are out of range
+					localNpc.isRemoved() || // remove because they are removed
+					localNpc.isTeleporting() || // if they've teleported, then they may have moved more than one square, and thus require a full coordinate refresh
+					localNpc.inCombat() || // remove because when FIRST entering combat, they may have advanced towards the player, then their sprite is incompatible with a movement update (no direction, and > 7) TODO: should be inCombatChanged(), since it's only necessary on the first round of combat.
+					localNpc.isRespawning() // removed because they have not yet respawned; may not be necessary, but there's no scenario where this is true & they shouldn't be removed.
+					) {
+					it$.remove(); // removes NPC from player's localNpcs list
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(UPDATE_REQUIRED, 1));
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(NOT_MOVING, 1));
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(REMOVE_NPC, 2));
 				} else {
 					if (localNpc.hasMoved()) {
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(0, 1));
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(localNpc.getSprite(), 3));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(UPDATE_REQUIRED, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(MOVEMENT_UPDATE, 1)); // Tell player that the NPC has moved 1 tile in the direction that their sprite is facing
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(localNpc.getSprite(), 3)); // sprite is limited to 3 bits for 8 directions, since NPC can't be fighting while moving
 					} else if (localNpc.spriteChanged()) {
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(localNpc.getSprite(), 4));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(UPDATE_REQUIRED, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(NOT_MOVING, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(localNpc.getSprite(), 4)); // 4 bits to accommodate sprites 8 & 9, used for fighting
 					} else {
-						mobsUpdate.add(new AbstractMap.SimpleEntry<>(0, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(UPDATE_NOT_REQUIRED, 1));
 					}
 				}
 			}
-			for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 
+			for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 				if (playerToUpdate.getConfig().WANT_INSTANCED_NPCS && !playerToUpdate.isAdmin()) {
 					if (playerToUpdate.getConfig().WANT_COMBAT_ODYSSEY
 						&& newNPC.getID() == NpcId.BIGGUM_FLODROT.id()
@@ -245,16 +256,22 @@ public final class GameStateUpdater {
 						continue;
 					}
 				}
+				if (newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")) {
+					// TODO: probably this is incorrect & should be removed.
+					// There are authentically 4 versions of the Lady Lumbridge interior, to accommodate Ned being present or not & ship being crashed or not.
+					continue;
+				}
 
-				if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
-					|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
-					|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
+				if (playerToUpdate.getLocalNpcs().contains(newNPC) || // The NPC is cached & updated successfully. Don't refresh & don't duplicate them in the localNpcs cache.
+					newNPC.isRemoved() || // The NPC is removed & shouldn't be added.
+					newNPC.isRespawning() || // The NPC has not yet spawned & shouldn't be added.
+					!newNPC.withinAuthenticRange(playerToUpdate) //  || // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 tiles away
+					// (newNPC.isTeleporting() && !newNPC.inCombat()) // ??? Might be a bug. If they teleported this tick, and ended up within range, we want to refresh them for sure, right?
+				) {
 					continue;
 				} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 					break;
 				}
-				if (!newNPC.withinAuthenticRange(playerToUpdate))
-					continue; // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 away
 
 				final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
 				boolean forClient115 = playerToUpdate.isUsing115CompatibleClient();
@@ -267,7 +284,9 @@ public final class GameStateUpdater {
 				int numBits = forClient115 ? 8 : (forClient140 ? 9 : 10);
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getID(), numBits));
 
-				playerToUpdate.getLocalNpcs().add(newNPC);
+				if (!playerToUpdate.getConfig().BREAK_NPC_LOCATION_CACHE) {
+					playerToUpdate.getLocalNpcs().add(newNPC);
+				}
 			}
 
 			struct.mobs = mobsUpdate;
