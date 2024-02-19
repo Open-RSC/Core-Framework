@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,6 +15,7 @@ import com.openrsc.server.plugins.shared.constants.Quest;
 import com.openrsc.server.plugins.shared.model.QuestReward;
 import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 
@@ -227,7 +229,40 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 371 && obj.getY() == 3475) {
 			player.message("The gate is locked");
-			player.message("The gate will not open from here");
+			if (player.getConfig().WANT_FIXED_BROKEN_MECHANICS && player.getX() == obj.getX() - 1) {
+				// Custom behaviour, to prevent players getting locked in the dungeon rat cage.
+				// Getting trapped by another player was not captured in replays,
+				// but according to player MOONBOLT, it was authentic & you could really trap people here in RSC.
+				//
+				// It has been a problem on the live server lately,
+				// since this bug effectively allows anyone to ban a player who happens to be between the gates.
+				delay(2);
+				player.message("but it looks like you might be able to climb over");
+				player.message("Would you like to give it a shot?");
+				int climbGate = multi(player, "Yes, climb the gate", "No, I'll stay here for now");
+				if (climbGate == -1) return;
+				if (climbGate == 0) {
+					player.message("you place your feet on the horizontal bars of the gate and try to lift yourself up");
+					delay(3);
+					if (Formulae.cutWeb()) {
+						player.message("You hop the gate");
+						player.setLocation(new Point(obj.getX(), player.getY()));
+					} else {
+						if (player.getSkills().getLevel(Skill.HITS.id()) > 5) {
+							player.message("You cut yourself on the pointy bars of the gate...");
+							player.damage(1);
+						} else {
+							player.message("you scrape against the top of the ceiling");
+						}
+						player.setLocation(new Point(obj.getX(), player.getY()));
+						player.message("but manage to make it over");
+					}
+				} else {
+					player.message("You decide to wait instead.");
+				}
+			} else {
+				player.message("The gate will not open from here");
+			}
 		}
 	}
 
