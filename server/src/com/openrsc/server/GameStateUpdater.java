@@ -154,7 +154,7 @@ public final class GameStateUpdater {
 			for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
 				Npc localNpc = it$.next();
 
-				if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
+				if (!localNpc.withinAuthenticRangeAdditionally(playerToUpdate) || !playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat()) {
 					if (!localNpc.inCombat() || localNpc.getOpponent() != playerToUpdate) {
 						// TODO: check if more conditions need to be added from outer if
 						clearIdx.add(localNpc.getIndex());
@@ -176,14 +176,11 @@ public final class GameStateUpdater {
 			for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 				if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.isRemoved() || newNPC.isRespawning()
 					|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
-					|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
+					|| !newNPC.withinAuthenticRangeAdditionally(playerToUpdate) || !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
 					continue;
 				} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 					break;
 				}
-				if (!newNPC.withinAuthenticRange(playerToUpdate))
-					continue; // only have 5 bits in the rsc38 protocol, so the npc can only be shown up to 16 away
-
 				final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
 
 				int X = offsets[0];
@@ -223,7 +220,7 @@ public final class GameStateUpdater {
 					}
 				}
 
-				if (!localNpc.withinAuthenticRange(playerToUpdate) || // remove because they are out of range
+				if (!localNpc.withinAuthenticRangeAdditionally(playerToUpdate) || !playerToUpdate.withinRange(localNpc) || // remove because they are out of range
 					localNpc.isRemoved() || // remove because they are removed
 					localNpc.isTeleporting() || // if they've teleported, then they may have moved more than one square, and thus require a full coordinate refresh
 					localNpc.inCombat() || // remove because when FIRST entering combat, they may have advanced towards the player, then their sprite is incompatible with a movement update (no direction, and > 7) TODO: should be inCombatChanged(), since it's only necessary on the first round of combat.
@@ -265,8 +262,8 @@ public final class GameStateUpdater {
 				if (playerToUpdate.getLocalNpcs().contains(newNPC) || // The NPC is cached & updated successfully. Don't refresh & don't duplicate them in the localNpcs cache.
 					newNPC.isRemoved() || // The NPC is removed & shouldn't be added.
 					newNPC.isRespawning() || // The NPC has not yet spawned & shouldn't be added.
-					!newNPC.withinAuthenticRange(playerToUpdate) //  || // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 tiles away
-					// (newNPC.isTeleporting() && !newNPC.inCombat()) // ??? Might be a bug. If they teleported this tick, and ended up within range, we want to refresh them for sure, right?
+					!newNPC.withinAuthenticRangeAdditionally(playerToUpdate) || !playerToUpdate.withinRange(newNPC) // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 tiles away
+					// || (newNPC.isTeleporting() && !newNPC.inCombat()) // ??? Might be a bug. If they teleported this tick, and ended up within range, we want to refresh them for sure, right?
 				) {
 					continue;
 				} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
@@ -328,12 +325,10 @@ public final class GameStateUpdater {
 				for (final Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
 					final Player otherPlayer = it$.next();
 
-					if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
+					if (!otherPlayer.withinAuthenticRangeAdditionally(playerToUpdate) || !playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 						|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
-						|| otherPlayer.inCombat() || otherPlayer.hasMoved() || otherPlayer.isUnregistering()
-						|| !otherPlayer.withinAuthenticRange(playerToUpdate)) {
-						if ((!otherPlayer.hasMoved() || !playerToUpdate.withinRange(otherPlayer)
-							|| !otherPlayer.withinAuthenticRange(playerToUpdate)) && !otherPlayer.inCombat()) {
+						|| otherPlayer.inCombat() || otherPlayer.hasMoved() || otherPlayer.isUnregistering()) {
+						if ((!otherPlayer.hasMoved() || !otherPlayer.withinAuthenticRangeAdditionally(playerToUpdate) || !playerToUpdate.withinRange(otherPlayer)) && !otherPlayer.inCombat()) {
 							// TODO: check if more conditions need to be added from outer if
 							clearIdx.add(otherPlayer.getIndex());
 						}
@@ -362,13 +357,11 @@ public final class GameStateUpdater {
 
 				for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
 					if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
-						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn() || otherPlayer.isUnregistering()
+						|| !otherPlayer.withinAuthenticRangeAdditionally(playerToUpdate) || !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn() || otherPlayer.isUnregistering()
 						|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
 						|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 						continue;
 					}
-					if (!otherPlayer.withinAuthenticRange(playerToUpdate))
-						continue; // only have 5 bits in the rsc38 protocol, so the player can only be shown up to 16 tiles away
 
 					final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
 						playerToUpdate.getLocation());
@@ -411,10 +404,10 @@ public final class GameStateUpdater {
 				for (final Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
 					final Player otherPlayer = it$.next();
 
-					if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
+					if (!otherPlayer.withinAuthenticRangeAdditionally(playerToUpdate) || !playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 						|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
-						|| otherPlayer.inCombat() || otherPlayer.hasMoved()
-						|| !otherPlayer.withinAuthenticRange(playerToUpdate)) {
+						|| otherPlayer.inCombat() || otherPlayer.hasMoved())
+					{
 						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1)); //Needs Update
 						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1)); //Update Type
 						mobsUpdate.add(new AbstractMap.SimpleEntry<>(3, 2)); //Animation type (Remove)
@@ -440,13 +433,11 @@ public final class GameStateUpdater {
 
 				for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
 					if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
-						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
+						|| !otherPlayer.withinAuthenticRangeAdditionally(playerToUpdate) || !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
 						|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
 						|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 						continue;
 					}
-					if (!otherPlayer.withinAuthenticRange(playerToUpdate))
-						continue; // only have 5 bits in the rsc235 protocol, so the player can only be shown up to 16 tiles away
 
 					final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
 						playerToUpdate.getLocation());

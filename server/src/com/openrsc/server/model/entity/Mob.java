@@ -370,12 +370,15 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
-	public boolean withinAuthenticRange(final Player e) {
-		if (e != null) {
-			if (e.isUsingCustomClient() || getWorld().getServer().getConfig().VIEW_DISTANCE <= 2)
+	// Authentic protocol can only show up to 15 tiles away, so for instances where distance between entities
+	// determines if we will display something to a player or not, we potentially need to restrict distance further.
+	// This check can go before withinRange(Entity e) to shortcircuit & not have to check twice (unless View_distance is 1)
+	public boolean withinAuthenticRangeAdditionally(final Player playerToUpdate) {
+		if (playerToUpdate != null) {
+			if (playerToUpdate.isUsingCustomClient() || getWorld().getServer().getConfig().VIEW_DISTANCE <= 2)
 				return true; // don't need additional restraint in these cases
 
-			return getLocation().withinRange(e.getLocation(), 15);
+			return getLocation().withinRange(playerToUpdate.getLocation(), 15);
 		}
 		return false;
 	}
