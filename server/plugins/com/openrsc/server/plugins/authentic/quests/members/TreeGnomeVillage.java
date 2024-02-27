@@ -599,7 +599,6 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "what's wrong?");
 					npcsay(player, n, "the orb, they have the orb",
 						"it must be returned",
-						"i'm remsai, a tree gnome",
 						"or we're doomed");
 					break;
 				case 2:

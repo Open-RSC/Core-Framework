@@ -435,6 +435,9 @@ public class Npc extends Mob {
 		/* 4. Drop items that should always drop, that are not bones. */
 		ArrayList<Item> invariableItems = drops.invariableItems(owner);
 		for (Item item : invariableItems) {
+			if (!worldAllowsDrop(item)) {
+				continue;
+			}
 			GroundItem groundItem = new GroundItem(owner.getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
 			groundItem.setAttribute("npcdrop", true);
 			owner.getWorld().registerItem(groundItem);
@@ -450,13 +453,10 @@ public class Npc extends Mob {
 			ArrayList<Item> items = drops.rollItem(ringOfWealth, owner);
 			for (Item item : items) {
 				if (item != null) {
-					if ((getWorld().getServer().getConfig().RESTRICT_ITEM_ID >= 0 && item.getCatalogId() > getWorld().getServer().getConfig().RESTRICT_ITEM_ID)
-						|| (getWorld().getServer().getConfig().ONLY_BASIC_RUNES
-						&& getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName().endsWith("-Rune")
-						&& item.getCatalogId() >= ItemId.LIFE_RUNE.id())) {
-						// world does not allow drop
+					if (!worldAllowsDrop(item)) {
 						continue;
 					}
+
 					if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
 						dropStackItem(item.getCatalogId(), item.getAmount(), owner);
 					} else {
@@ -466,6 +466,19 @@ public class Npc extends Mob {
 			}
 		}
 	}
+
+	private boolean worldAllowsDrop(Item item) {
+		if ((getWorld().getServer().getConfig().RESTRICT_ITEM_ID >= 0 && item.getCatalogId() > getWorld().getServer().getConfig().RESTRICT_ITEM_ID)
+			|| (getWorld().getServer().getConfig().ONLY_BASIC_RUNES
+			&& getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName().endsWith("-Rune")
+			&& item.getCatalogId() >= ItemId.LIFE_RUNE.id())) {
+			// world does not allow drop
+			return false;
+		}
+        // No p2p drops on f2p world. On openrsc we can just drop nothing.
+        // In OSRS, they have a different f2p drop instead usually, but there wouldn't be data on this for RSC.
+        return getWorld().getServer().getConfig().MEMBER_WORLD || !item.getDef(getWorld()).isMembersOnly();
+    }
 
 	private int getBoneTier(int boneId) {
 		switch(ItemId.getById(boneId)) {
