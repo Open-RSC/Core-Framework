@@ -962,7 +962,7 @@ public class Payload235Parser implements PayloadParser<OpcodeIn> {
 					return payloadLength >= 2;
 				// COMMAND
 				case 38:
-					return payloadLength >= 3;
+					return payloadLength >= 2;
 				// PRIVACY_SETTINGS_CHANGED
 				case 64:
 					return payloadLength == 4;
