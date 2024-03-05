@@ -145,7 +145,7 @@ public class GemMining implements OpLocTrigger, UseLocTrigger {
 			GameObject object = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 			if (!player.getConfig().SHARED_GATHERING_RESOURCES || object != null) {
 				player.message(minedString(gem.getCatalogId()));
-				player.incExp(Skill.MINING.id(), 200, true); // always 50XP
+				player.incExp(Skill.MINING.id(), 260, true); // always 65XP
 				player.getCarriedItems().getInventory().add(gem);
 
 				if (EnchantedCrowns.shouldActivate(player, ItemId.CROWN_OF_THE_ITEMS)) {
