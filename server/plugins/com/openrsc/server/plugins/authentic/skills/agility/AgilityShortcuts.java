@@ -767,7 +767,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				if (cross) {
 					mes("You successfully cross the river");
 					player.teleport(successPoint.getX(), successPoint.getY());
-					player.incExp(Skill.AGILITY.id(), 280, true);
+					player.incExp(Skill.AGILITY.id(), 80, true);
 				} else {
 					mes("You slip and fall into the river");
 					player.damage(damage);
