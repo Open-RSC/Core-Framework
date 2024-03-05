@@ -47,6 +47,7 @@ import com.openrsc.server.util.SimpleSubscriber;
 import com.openrsc.server.util.ThreadSafeIPTracker;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
+import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -887,8 +888,17 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			player.getWorld().getServer().getGameEventHandler().add(
 				new DelayedEvent(player.getWorld(), null, 2500, "Free channel attachment memory") {
 				public void run() {
-					player.getChannel().attr(attachment).set(null);
-					stop();
+					try {
+						Channel playerChannel = player.getChannel();
+						playerChannel.attr(attachment).set(null);
+						player.close();
+						player.unsetChannel();
+						player.remove();
+						getServer().getPacketFilter().removePlayerConnPacket(playerChannel);
+						stop();
+					} catch (Exception e) {
+						LOGGER.catching(e);
+					}
 				}
 			});
 		} catch (final Exception e) {

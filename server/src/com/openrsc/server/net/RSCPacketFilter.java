@@ -320,6 +320,20 @@ public class RSCPacketFilter {
 		}
 	}
 
+	// Without this,
+	// RSCPacketFilter.addPacket() added the netty socket when they logged in,
+	// but it never gets removed when they log out.
+	// This function dereferences the player's NioSocketChannels.
+	public void removePlayerConnPacket(final Channel connection) {
+		synchronized (packets) {
+			if (!loggedInTracker.containsKey(connection.remoteAddress().toString())) {
+				if (packets.containsKey(connection)) {
+					packets.remove(connection);
+				}
+			}
+		}
+	}
+
 	private void addConnectionAttempt(final String hostAddress, final Channel channel) {
 		addConnection(hostAddress, channel);
 

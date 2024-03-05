@@ -37,7 +37,7 @@ public class StatRestorationEvent extends GameTickEvent {
 		boolean isPlayerAbsent = getOwner().isPlayer() && (getPlayerOwner() == null || getPlayerOwner().isRemoved());
 		boolean isNpcAbsent = getOwner().isNpc() && (getNpcOwner() == null || (getNpcOwner().isRemoved() && getNpcOwner().isUnregistering()));
 		if (getOwner() == null || isPlayerAbsent || isNpcAbsent) {
-			running = false;
+			stop();
 			return;
 		}
 

@@ -795,6 +795,10 @@ public final class Player extends Mob {
 		isLoggingOut = loggingOut;
 	}
 
+	public void unsetChannel() {
+		channel = null;
+	}
+
 	public void close() {
 		getChannel().close();
 	}
@@ -1012,6 +1016,11 @@ public final class Player extends Mob {
 			return usernameHash == player.getUsernameHash();
 		}
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(uuid);
 	}
 
 	public void checkEquipment2() {

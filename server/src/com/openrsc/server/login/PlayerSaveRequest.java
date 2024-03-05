@@ -40,8 +40,9 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 //		LOGGER.info("Saved player " + player.getUsername() + "");
 		try {
 			boolean success = getServer().getPlayerService().savePlayer(player);
-			if (success && this.logout)
+			if (success && this.logout) {
 				logoutSaveSuccess();
+			}
 			getPlayer().setSaving(false);
 			if (this.logout) {
 				getPlayer().setLoggingOut(false);
@@ -57,15 +58,18 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 	}
 
 	public void logoutSaveSuccess() {
-		/* IP Tracking in wilderness removal */
-		/*if(player.getLocation().inWilderness())
-		{
-			wildernessIPTracker.remove(player.getCurrentIP());
-		}*/
 
 		//Stop desert heat
 		if (getPlayer().desertHeatEvent != null)
 			getPlayer().desertHeatEvent.stop();
+
+		if (getPlayer().getStatRestorationEvent() != null) {
+			getPlayer().getStatRestorationEvent().stop();
+		}
+
+		if (getPlayer().getDrainer() != null) {
+			getPlayer().getDrainer().stop();
+		}
 
 		getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP(), getPlayer().getUsernameHash());
 
