@@ -57,6 +57,13 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 
 	@Override
 	public void onTalkNpc(final Player player, Npc n) {
+		// Shantay NPCs should not be interactable in F2P.
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD
+			&& player.getWorld().getServer().getEntityHandler().getNpcDef(n.getID()).isMembers()) {
+			// Do nothing, since NpcTalkTo.java will send a message about members world.
+			return;
+		}
+
 		if (n.getID() == NpcId.SHANTAY_PASS_GUARD_STANDING.id()) {
 			npcsay(player, n, "Hello there!", "What can I do for you?");
 			int menu = multi(player, n, "I'd like to go into the desert please.",
@@ -447,6 +454,12 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
+		// F2P cannot use bank or interact with Stone Gate.
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			player.message("you must be on a members' world to do that");
+			return;
+		}
+
 		if (obj.getID() == BANK_CHEST) {
 			if (player.isIronMan(2)) {
 				player.message("As an Ultimate Ironman, you cannot use the bank.");
