@@ -1557,7 +1557,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			delay(3);
 		}
 		else if (obj.getID() == WATCH_TOWER_UP) {
-			if (getCurrentLevel(player, Skill.AGILITY.id()) >= 25) {
+			if (config().WANT_FATIGUE && config().STOP_SKILLING_FATIGUED >= 1 &&
+					player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("you are too tired to climb up the tower");
+			} else if (getCurrentLevel(player, Skill.AGILITY.id()) >= 25) {
 				player.message("you jump up and grab hold of the platform");
 				player.teleport(710, 2364);
 				player.incExp(Skill.AGILITY.id(), 30, true);
