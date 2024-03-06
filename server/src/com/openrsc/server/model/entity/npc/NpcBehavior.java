@@ -116,7 +116,7 @@ public class NpcBehavior {
 					}
 
 					// Remove the opponent if the player has not been engaged in > 10 seconds
-					if (npc.getLastOpponent() == player && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 15 * tickFactor)) {
+					if (npc.getLastOpponent() != null && npc.getLastOpponent().equals(player) && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 15 * tickFactor)) {
 						npc.setLastOpponent(null);
 						setRoaming();
 					}

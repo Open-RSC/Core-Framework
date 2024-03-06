@@ -2556,7 +2556,7 @@ public final class Player extends Mob {
 	public void resetAll(boolean resetWalkAction, boolean resetFollowing) {
 		interruptPlugins();
 		Npc npc = getInteractingNpc();
-		if (npc != null && npc.getInteractingPlayer() == this) {
+		if (npc != null && npc.getInteractingPlayer().equals(this)) {
 			npc.setNpcInteraction(null);
 			npc.setInteractingPlayer(null);
 		}
@@ -2700,6 +2700,12 @@ public final class Player extends Mob {
 		if (opponent != null) {
 			resetCombatEvent();
 		}
+
+		Mob lastOpponent = getLastOpponent();
+		if (lastOpponent != null && this.equals(lastOpponent.getLastOpponent())) {
+			lastOpponent.setLastOpponent(null);
+		}
+
 		this.setLastOpponent(null);
 		if (trawlerInstance != null && trawlerInstance.getPlayers().contains(this)) {
 			trawlerInstance.disconnectPlayer(this, true);

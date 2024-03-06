@@ -805,7 +805,7 @@ public abstract class Mob extends Entity {
 
 			NpcInteraction interaction = NpcInteraction.NPC_ATTACK;
 			if (victim.isPlayer() && this.isNpc()) {
-				npcInteraction.setInteractions(((Npc)this), ((Player)victim), interaction);
+				NpcInteraction.setInteractions(((Npc)this), ((Player)victim), interaction);
 			}
 
 			combatEvent = new CombatEvent(getWorld(), this, victim);
