@@ -1270,11 +1270,13 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
+	/* TODO: implement hashCode
 	@Override
 	public int hashCode() {
 		return Objects.hash(uuid);
 	}
-
+	*/
+	
 	public void setNpcInteraction(NpcInteraction interaction) {
 		this.npcInteraction = interaction;
 	}

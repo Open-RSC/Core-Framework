@@ -1018,10 +1018,12 @@ public final class Player extends Mob {
 		return false;
 	}
 
+	/* TODO: implement hashCode
 	@Override
 	public int hashCode() {
 		return Objects.hash(uuid);
 	}
+	 */
 
 	public void checkEquipment2() {
 		for (int slot = 0; slot < Equipment.SLOT_COUNT; slot++) {

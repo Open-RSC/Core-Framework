@@ -890,7 +890,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				public void run() {
 					try {
 						Channel playerChannel = player.getChannel();
-						playerChannel.attr(attachment).set(null);
+						if (playerChannel != null && playerChannel.attr(attachment) != null) {
+							playerChannel.attr(attachment).set(null);
+						}
 						player.close();
 						player.unsetChannel();
 						getServer().getPacketFilter().removePlayerConnPacket(playerChannel);
