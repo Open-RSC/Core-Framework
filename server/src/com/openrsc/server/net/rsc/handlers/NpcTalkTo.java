@@ -46,7 +46,7 @@ public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, Opcode
 				}
 				getPlayer().resetAll(true, false);
 				Player otherPlayer = npc.getInteractingPlayer();
-				if (npc.isBusy() || System.currentTimeMillis() - npc.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
+				if (npc.isBusy() || System.currentTimeMillis() - npc.getCombatTimer() < player.getConfig().GAME_TICK * 5L) {
 					if (npc.isBusy()
 						&& npc.getNpcInteraction() == NpcInteraction.NPC_TALK_TO
 						&& otherPlayer != null && otherPlayer.getMenuHandler() != null

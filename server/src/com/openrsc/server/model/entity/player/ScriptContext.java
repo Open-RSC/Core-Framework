@@ -417,6 +417,14 @@ public class ScriptContext {
 			if (getContextPlayer().getOwnedPlugins().isEmpty()) {
 				getContextPlayer().setBusy(false);
 				getContextPlayer().setNpcInteraction(null);
+
+				// Reciprocate the interaction releasing
+				if (getContextPlayer().getInteractingNpc() != null
+					&& getContextPlayer().getInteractingNpc().getInteractingPlayer() != null
+					&& getContextPlayer().getInteractingNpc().getInteractingPlayer().equals(getContextPlayer())) {
+					getContextPlayer().getInteractingNpc().setInteractingPlayer(null);
+				}
+
 				getContextPlayer().setInteractingNpc(null);
 			}
 		}

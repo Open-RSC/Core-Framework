@@ -165,6 +165,16 @@ public class NpcBehavior {
 					Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
 				npc.walk(point.getX(), point.getY());
 			}
+
+			// Clear previous combatant player reference if it still exists
+			if (npc.getLastOpponent() != null) {
+				npc.setLastOpponent(null);
+			}
+
+			// Clear previous player interaction if it still exists
+			if (npc.getInteractingPlayer() != null) {
+				npc.setInteractingPlayer(null);
+			}
 		}
 	}
 

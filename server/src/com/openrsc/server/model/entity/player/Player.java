@@ -2558,7 +2558,7 @@ public final class Player extends Mob {
 	public void resetAll(boolean resetWalkAction, boolean resetFollowing) {
 		interruptPlugins();
 		Npc npc = getInteractingNpc();
-		if (npc != null && npc.getInteractingPlayer().equals(this)) {
+		if (npc != null && npc.getInteractingPlayer() != null && npc.getInteractingPlayer().equals(this)) {
 			npc.setNpcInteraction(null);
 			npc.setInteractingPlayer(null);
 		}
