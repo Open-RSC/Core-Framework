@@ -11,16 +11,16 @@
             <PatternLayout pattern="${logPattern}"/>
         </Console>
 
-        <RollingFile name="CatchAllAppender" filename="logs/default.log" append="true">
+        <RollingFile name="CatchAllAppender" filename="logs/default.log" immediateFlush="false" append="true">
             <filepattern>logs/default.%d{YYYYMMdd_HH:mm:ss}.log.gz</filepattern>
             <PatternLayout pattern="${logPattern}"/>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <TimeBasedTriggeringPolicy interval="86400" modulate="true"/>
             </Policies>
             <DefaultRolloverStrategy>
                 <Delete basePath="logs" maxDepth="1">
                     <IfFileName glob="*.log.gz"/>
-                    <IfLastModified age="7d"/>
+                    <IfLastModified age="P7D"/>
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
@@ -34,12 +34,12 @@
                         <filepattern>logs/${ctx:world.name}_${ctx:world.number}.%d{YYYYMMdd}.log.gz</filepattern>
                         <PatternLayout pattern="${logPattern}"/>
                         <Policies>
-                            <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                            <TimeBasedTriggeringPolicy interval="86400" modulate="true"/>
                         </Policies>
                         <DefaultRolloverStrategy>
                             <Delete basePath="logs" maxDepth="1">
                                 <IfFileName glob="*.log.gz"/>
-                                <IfLastModified age="7d"/>
+                                <IfLastModified age="P7D"/>
                             </Delete>
                         </DefaultRolloverStrategy>
                     </RollingFile>
