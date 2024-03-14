@@ -37,6 +37,10 @@ public class RSCPacketFilter {
 	 */
 	private final HashMap<String, ArrayList<Channel>> connections;
 	/**
+	 * Holds host address and it's login counts
+	 */
+	private final HashMap<String, Integer> connectionCounts;
+	/**
 	 * Holds host addresses that belong to admins
 	 */
 	private final ArrayList<String> adminHosts;
@@ -66,6 +70,7 @@ public class RSCPacketFilter {
 		this.connectionAttempts = new HashMap<>();
 		this.loginAttempts = new HashMap<>();
 		this.connections = new HashMap<>();
+		this.connectionCounts = new HashMap<>();
 		this.adminHosts = new ArrayList<>();
 		this.packets = new HashMap<>();
 		this.ipBans = new HashMap<>();
@@ -113,6 +118,10 @@ public class RSCPacketFilter {
 
 		synchronized (connections) {
 			connections.clear();
+		}
+
+		synchronized (connectionCounts) {
+			connectionCounts.clear();
 		}
 
 		synchronized (adminHosts) {
@@ -356,6 +365,9 @@ public class RSCPacketFilter {
 			hostConnections.add(channel);
 			connections.put(hostAddress, hostConnections);
 		}
+		synchronized (connectionCounts) {
+			connectionCounts.put(hostAddress, connectionCounts.getOrDefault(hostAddress, 0) + 1);
+		}
 	}
 
 	public void removeConnection(final String hostAddress, final Channel channel) {
@@ -364,6 +376,14 @@ public class RSCPacketFilter {
 			if (hostConnections != null) {
 				hostConnections.remove(channel);
 				connections.put(hostAddress, hostConnections);
+			}
+		}
+		synchronized (connectionCounts) {
+			Integer count = connectionCounts.getOrDefault(hostAddress, 0);
+			if (count > 1) {
+				connectionCounts.put(hostAddress, count - 1);
+			} else {
+				connectionCounts.remove(hostAddress);
 			}
 		}
 	}
@@ -518,13 +538,8 @@ public class RSCPacketFilter {
 	}
 
 	public final int getConnectionCount(final String hostAddress) {
-		synchronized (connections) {
-			if(connections.containsKey(hostAddress)) {
-				ArrayList<Channel> hostConnections = connections.get(hostAddress);
-				return hostConnections.size();
-			} else {
-				return 0;
-			}
+		synchronized (connectionCounts) {
+			return connectionCounts.getOrDefault(hostAddress, 0);
 		}
 	}
 
