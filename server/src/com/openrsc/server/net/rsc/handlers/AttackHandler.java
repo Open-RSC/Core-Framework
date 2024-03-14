@@ -160,6 +160,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 					getPlayer().face(getPlayer().getX() + 1, getPlayer().getY() - 1);
 
 					if (getPlayer().getRangeEquip() > 0) {
+						// TODO: replace with gameEventHandler.addOrUpdate()
 						final GameEventHandler gameEventHandler = getPlayer().getWorld()
 							.getServer()
 							.getGameEventHandler();
@@ -187,6 +188,7 @@ public class AttackHandler implements PayloadProcessor<TargetMobStruct, OpcodeIn
 						getPlayer().setRangeEvent(rangeEvent);
 						gameEventHandler.add(rangeEvent);
 					} else {
+						// TODO: replace with gameEventHandler.addOrUpdate()
 						final GameEventHandler gameEventHandler = getPlayer().getWorld()
 							.getServer()
 							.getGameEventHandler();

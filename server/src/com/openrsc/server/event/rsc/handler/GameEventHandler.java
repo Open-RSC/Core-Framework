@@ -131,6 +131,10 @@ public class GameEventHandler {
 		return eventStore.add(event);
 	}
 
+	public boolean addOrUpdate(final GameTickEvent event) {
+		return eventStore.addOrUpdate(event);
+	}
+
 	public boolean has(final GameTickEvent event) {
 		return eventStore.eventIsContained(event);
 	}

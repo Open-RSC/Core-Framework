@@ -73,6 +73,10 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		running = false;
 	}
 
+	public boolean isRunning() {
+		return running;
+	}
+
 	protected void setDelayTicks(long delayTicks) {
 		this.delayTicks = delayTicks;
 		resetCountdown();

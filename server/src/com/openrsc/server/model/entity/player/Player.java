@@ -2885,7 +2885,7 @@ public final class Player extends Mob {
 		};
 		sleepStateFatigue = fatigue;
 		ActionSender.sendSleepFatigue(this, sleepStateFatigue);
-		getWorld().getServer().getGameEventHandler().add(sleepEvent);
+		getWorld().getServer().getGameEventHandler().addOrUpdate(sleepEvent);
 	}
 
 	public void teleport(final int x, final int y, final boolean bubble) {

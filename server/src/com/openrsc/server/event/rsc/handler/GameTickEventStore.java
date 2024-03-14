@@ -68,6 +68,35 @@ class GameTickEventStore {
         }
     }
 
+	public boolean addOrUpdate(GameTickEvent event) {
+		{
+			synchronized (LOCK) {
+				final GameTickKey eventKey = getKey(event);
+	
+				if (events.containsKey(eventKey)) {
+					GameTickEvent existingEvent = events.get(eventKey);
+					if (existingEvent.isRunning()) {
+						// We already have an instance of this event that is running
+						// LOGGER.warn("Tried to add duplicate event: {}", eventKey);
+						return false;
+					}
+					// Remove existing stopped event
+					// LOGGER.warn("Replaced stopped event: {}", eventKey);
+					remove(existingEvent);
+				}
+	
+				events.put(eventKey, event);
+				byType.put(Key.get(event.getClass()), event);
+				if (isPlayerOwner(event)) {
+					byUsernameHash.put(((Player) event.getOwner()).getUsernameHash(), event);
+				} else {
+					nonPlayerEvents.put(eventKey, event);
+				}
+				return true;
+			}
+		}
+	}
+
     public boolean eventIsContained(GameTickEvent event) {
 		final GameTickKey eventKey = getKey(event);
 		return events.containsKey(eventKey);
