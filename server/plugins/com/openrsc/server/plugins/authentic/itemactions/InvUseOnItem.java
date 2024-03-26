@@ -14,18 +14,94 @@ import java.util.Optional;
 import org.apache.commons.lang.ArrayUtils;
 
 public class InvUseOnItem implements UseInvTrigger {
-	private int[] capes = {
-		ItemId.RED_CAPE.id(), ItemId.BLACK_CAPE.id(), ItemId.BLUE_CAPE.id(),
-		ItemId.GREEN_CAPE.id(), ItemId.YELLOW_CAPE.id(), ItemId.ORANGE_CAPE.id(),
-		ItemId.PURPLE_CAPE.id()
-	};
-	private int[] dye = {
-		ItemId.REDDYE.id(), ItemId.YELLOWDYE.id(), ItemId.BLUEDYE.id(),
-		ItemId.ORANGEDYE.id(), ItemId.GREENDYE.id(), ItemId.PURPLEDYE.id()
-	};
-	private int[] newCapes = {
-		ItemId.RED_CAPE.id(), ItemId.YELLOW_CAPE.id(), ItemId.BLUE_CAPE.id(),
-		ItemId.ORANGE_CAPE.id(), ItemId.GREEN_CAPE.id(), ItemId.PURPLE_CAPE.id()
+
+	private final class CapeDye {
+		final int capeId;
+		final int dyeId;
+		final int newId;
+		final String message;
+
+		CapeDye(int capeId, int dyeId, int newId, String message) {
+			this.capeId = capeId;
+			this.dyeId = dyeId;
+			this.newId = newId;
+			this.message = message;
+		}
+	}
+
+	private final CapeDye[] capeDye = {
+		new CapeDye(ItemId.BLACK_CAPE.id(), ItemId.REDDYE.id(), ItemId.RED_CAPE.id(),
+			"You dye the black cape red"),
+		new CapeDye(ItemId.BLACK_CAPE.id(), ItemId.YELLOWDYE.id(), ItemId.YELLOW_CAPE.id(),
+			"You dye the black cape yellow"),
+		new CapeDye(ItemId.BLACK_CAPE.id(), ItemId.BLUEDYE.id(), ItemId.BLUE_CAPE.id(),
+			"You dye the black cape blue"),
+		new CapeDye(ItemId.BLACK_CAPE.id(), ItemId.ORANGEDYE.id(), ItemId.ORANGE_CAPE.id(),
+			"You dye the black cape orange"),
+		new CapeDye(ItemId.BLACK_CAPE.id(), ItemId.GREENDYE.id(), ItemId.GREEN_CAPE.id(),
+			"You dye the black cape green"),
+		new CapeDye(ItemId.BLACK_CAPE.id(), ItemId.PURPLEDYE.id(), ItemId.PURPLE_CAPE.id(),
+			"You dye the black cape purple"),
+		new CapeDye(ItemId.RED_CAPE.id(), ItemId.YELLOWDYE.id(), ItemId.YELLOW_CAPE.id(),
+			"You dye the red cape yellow"),
+		new CapeDye(ItemId.RED_CAPE.id(), ItemId.BLUEDYE.id(), ItemId.BLUE_CAPE.id(),
+			"You dye the red cape blue"),
+		new CapeDye(ItemId.RED_CAPE.id(), ItemId.ORANGEDYE.id(), ItemId.ORANGE_CAPE.id(),
+			"You dye the red cape orange"),
+		new CapeDye(ItemId.RED_CAPE.id(), ItemId.GREENDYE.id(), ItemId.GREEN_CAPE.id(),
+			"You dye the red cape green"),
+		new CapeDye(ItemId.RED_CAPE.id(), ItemId.PURPLEDYE.id(), ItemId.PURPLE_CAPE.id(),
+			"You dye the red cape purple"),
+		new CapeDye(ItemId.BLUE_CAPE.id(), ItemId.YELLOWDYE.id(), ItemId.YELLOW_CAPE.id(),
+			"You dye the blue cape yellow"),
+		new CapeDye(ItemId.BLUE_CAPE.id(), ItemId.REDDYE.id(), ItemId.RED_CAPE.id(),
+			"You dye the blue cape red"),
+		new CapeDye(ItemId.BLUE_CAPE.id(), ItemId.ORANGEDYE.id(), ItemId.ORANGE_CAPE.id(),
+			"You dye the blue cape orange"),
+		new CapeDye(ItemId.BLUE_CAPE.id(), ItemId.GREENDYE.id(), ItemId.GREEN_CAPE.id(),
+			"You dye the blue cape green"),
+		new CapeDye(ItemId.BLUE_CAPE.id(), ItemId.PURPLEDYE.id(), ItemId.PURPLE_CAPE.id(),
+			"You dye the blue cape purple"),
+		new CapeDye(ItemId.YELLOW_CAPE.id(), ItemId.REDDYE.id(), ItemId.RED_CAPE.id(),
+			"You dye the yellow cape red"),
+		new CapeDye(ItemId.YELLOW_CAPE.id(), ItemId.BLUEDYE.id(), ItemId.BLUE_CAPE.id(),
+			"You dye the yellow cape blue"),
+		new CapeDye(ItemId.YELLOW_CAPE.id(), ItemId.ORANGEDYE.id(), ItemId.ORANGE_CAPE.id(),
+			"You dye the yellow cape orange"),
+		new CapeDye(ItemId.YELLOW_CAPE.id(), ItemId.GREENDYE.id(), ItemId.GREEN_CAPE.id(),
+			"You dye the yellow cape green"),
+		new CapeDye(ItemId.YELLOW_CAPE.id(), ItemId.PURPLEDYE.id(), ItemId.PURPLE_CAPE.id(),
+			"You dye the yellow cape purple"),
+		new CapeDye(ItemId.GREEN_CAPE.id(), ItemId.REDDYE.id(), ItemId.RED_CAPE.id(),
+			"You dye the green cape red"),
+		new CapeDye(ItemId.GREEN_CAPE.id(), ItemId.YELLOWDYE.id(), ItemId.YELLOW_CAPE.id(),
+			"You dye the green cape yellow"),
+		new CapeDye(ItemId.GREEN_CAPE.id(), ItemId.BLUEDYE.id(), ItemId.BLUE_CAPE.id(),
+			"You dye the green cape blue"),
+		new CapeDye(ItemId.GREEN_CAPE.id(), ItemId.ORANGEDYE.id(), ItemId.ORANGE_CAPE.id(),
+			"You dye the green cape orange"),
+		new CapeDye(ItemId.GREEN_CAPE.id(), ItemId.PURPLEDYE.id(), ItemId.PURPLE_CAPE.id(),
+			"You dye the green cape purple"),
+		new CapeDye(ItemId.ORANGE_CAPE.id(), ItemId.REDDYE.id(), ItemId.RED_CAPE.id(),
+			"You dye the orange cape red"),
+		new CapeDye(ItemId.ORANGE_CAPE.id(), ItemId.YELLOWDYE.id(), ItemId.YELLOW_CAPE.id(),
+			"You dye the orange cape yellow"),
+		new CapeDye(ItemId.ORANGE_CAPE.id(), ItemId.BLUEDYE.id(), ItemId.BLUE_CAPE.id(),
+			"You dye the orange cape blue"),
+		new CapeDye(ItemId.ORANGE_CAPE.id(), ItemId.GREENDYE.id(), ItemId.GREEN_CAPE.id(),
+			"You dye the orange cape green"),
+		new CapeDye(ItemId.ORANGE_CAPE.id(), ItemId.PURPLEDYE.id(), ItemId.PURPLE_CAPE.id(),
+			"You dye the orange cape purple"),
+		new CapeDye(ItemId.PURPLE_CAPE.id(), ItemId.REDDYE.id(), ItemId.RED_CAPE.id(),
+			"You dye the purple cape red"),
+		new CapeDye(ItemId.PURPLE_CAPE.id(), ItemId.YELLOWDYE.id(), ItemId.YELLOW_CAPE.id(),
+			"You dye the purple cape yellow"),
+		new CapeDye(ItemId.PURPLE_CAPE.id(), ItemId.BLUEDYE.id(), ItemId.BLUE_CAPE.id(),
+			"You dye the purple cape blue"),
+		new CapeDye(ItemId.PURPLE_CAPE.id(), ItemId.ORANGEDYE.id(), ItemId.ORANGE_CAPE.id(),
+			"You dye the purple cape orange"),
+		new CapeDye(ItemId.PURPLE_CAPE.id(), ItemId.GREENDYE.id(), ItemId.GREEN_CAPE.id(),
+			"You dye the purple cape green"),
 	};
 
 	@Override
@@ -133,7 +209,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.YELLOWDYE.id())) > -1
 					&& player.getCarriedItems().remove(new Item(ItemId.REDDYE.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.ORANGEDYE.id()));
-				player.message("You mix the Dyes");
+				player.message("You mix the two dyes and make an orange dye");
 
 				return;
 			}
@@ -143,7 +219,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.BLUEDYE.id())) > -1
 					&& player.getCarriedItems().remove(new Item(ItemId.REDDYE.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.PURPLEDYE.id()));
-				player.message("You mix the Dyes");
+				player.message("You mix the two dyes and make a purple dye");
 
 				return;
 			}
@@ -153,7 +229,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.BLUEDYE.id())) > -1
 					&& player.getCarriedItems().remove(new Item(ItemId.YELLOWDYE.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.GREENDYE.id()));
-				player.message("You mix the Dyes");
+				player.message("You mix the two dyes and make a green dye");
 
 				return;
 			}
@@ -163,7 +239,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.ORANGEDYE.id())) > -1
 					&& player.getCarriedItems().remove(new Item(ItemId.GOBLIN_ARMOUR.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.ORANGE_GOBLIN_ARMOUR.id()));
-				player.message("You dye the goblin armor");
+				player.message("You dye the goblin armour Orange");
 			}
 		}
 
@@ -171,7 +247,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.BLUEDYE.id())) > -1
 					&& player.getCarriedItems().remove(new Item(ItemId.GOBLIN_ARMOUR.id())) > -1) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BLUE_GOBLIN_ARMOUR.id()));
-				player.message("You dye the goblin armor");
+				player.message("You dye the goblin armour blue");
 			}
 		}
 
@@ -217,33 +293,14 @@ public class InvUseOnItem implements UseInvTrigger {
 			}
 		}
 
-		for (Integer il : capes) {
-			if (il == item1.getCatalogId()) {
-				for (int i = 0; i < dye.length; i++) {
-					if (dye[i] == item2.getCatalogId()) {
-						if (player.getCarriedItems().remove(new Item(item1.getCatalogId())) > -1
-								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
-							player.message("You dye the Cape");
-							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
-							player.incExp(Skill.CRAFTING.id(), 10, true);
-							return;
-						}
-					}
-				}
-			}
-
-			else if (il == item2.getCatalogId()) {
-				for (int i = 0; i < dye.length; i++) {
-					if (dye[i] == item1.getCatalogId()) {
-						if (player.getCarriedItems().remove(new Item(item1.getCatalogId())) > -1
-								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
-							player.message("You dye the Cape");
-							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
-							player.incExp(Skill.CRAFTING.id(), 10, true);
-							return;
-						}
-					}
-				}
+		for (final CapeDye cd : capeDye) {
+			if (compareItemsIds(item1, item2, cd.capeId, cd.dyeId)) {
+				player.getCarriedItems().remove(new Item(cd.capeId));
+				player.getCarriedItems().remove(new Item(cd.dyeId));
+				player.message(cd.message);
+				player.getCarriedItems().getInventory().add(new Item(cd.newId));
+				player.incExp(Skill.CRAFTING.id(), 10, true);
+				return;
 			}
 		}
 	}
@@ -314,12 +371,10 @@ public class InvUseOnItem implements UseInvTrigger {
 			return true;
 
 		if(!player.getWorld().getServer().getConfig().CANT_DYE_CAPES) {
-			if ((Arrays.stream(capes).anyMatch(c -> item1.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item2.getCatalogId() == d)) ||
-				(Arrays.stream(capes).anyMatch(c -> item2.getCatalogId() == c) && Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d))) {
-				boolean isDyeFirst = Arrays.stream(dye).anyMatch(d -> item1.getCatalogId() == d);
-				int dyeId = isDyeFirst ? item1.getCatalogId() : item2.getCatalogId();
-				int dyeIndex = ArrayUtils.indexOf(dye, dyeId);
-				return player.getWorld().canYield(new Item(newCapes[dyeIndex]));
+			for (final CapeDye cd : capeDye) {
+				if (compareItemsIds(item1, item2, cd.capeId, cd.dyeId)) {
+					return player.getWorld().canYield(new Item(cd.newId));
+				}
 			}
 		}
 
