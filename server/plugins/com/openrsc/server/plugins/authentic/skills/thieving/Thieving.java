@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.SkillCapes;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -223,7 +224,10 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		}
 
 		player.message("You find a trap on the chest");
+		SingleEvent chestValidationEvent = null;
 		if (!makeChestStuck) {
+			final int totalTime = (player.getWorld().getServer().getConfig().GAME_TICK * 8) + respawnTime;
+			chestValidationEvent = scheduleChestValidation(player.getWorld(), totalTime, obj);
 			tempChest.set(new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 			changeloc(obj, tempChest.get());
 		}
@@ -248,6 +252,9 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		mes("You find treasure inside!");
 		delay(3);
 		if (!makeChestStuck) {
+			if (chestValidationEvent != null) {
+				chestValidationEvent.stop();
+			}
 			changeloc(obj, respawnTime, 340);
 		}
 		if (teleLoc != null) {
@@ -255,6 +262,21 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			delay(3);
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);
 		}
+	}
+
+	private SingleEvent scheduleChestValidation(final World world, final int totalSpawnTime, final GameObject chest) {
+		final GameObject newChest = new GameObject(world, new Point(chest.getLoc().getX(), chest.getLoc().getY()),
+			chest.getID(), chest.getDirection(), chest.getType(), chest.getOwner());
+
+		final SingleEvent chestValidationEvent = new SingleEvent(world, null, totalSpawnTime, "Delayed chest validation") {
+			public void action() {
+				world.registerGameObject(newChest);
+			}
+		};
+
+		world.getServer().getGameEventHandler().submit(() ->
+			world.getServer().getGameEventHandler().add(chestValidationEvent), "Register chest validation");
+		return chestValidationEvent;
 	}
 
 	private ArrayList<LootItem> getLootAsList(LootItem... lootItem) {
