@@ -16,6 +16,7 @@ import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import com.openrsc.server.util.rsc.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,6 +85,8 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 		} else if (command.equalsIgnoreCase("check")) {
 			queryPlayerAlternateCharacters(player, command, args);
+		} else if (command.equalsIgnoreCase("uptime")) {
+			uptime(player);
 		}
 	}
 
@@ -1063,5 +1066,11 @@ public final class PlayerModerator implements CommandTrigger {
 			restoreHumanity(player);
 		}
 
+	}
+
+	private void uptime(Player player) {
+		long uptimeInMillis = (System.nanoTime() - player.getWorld().getServer().getServerStartedTime()) / 1_000_000;
+		String formattedUptime = StringUtil.convertLongToShortDuration(uptimeInMillis, player.isAdmin());
+		player.message("The server has been online for " + formattedUptime);
 	}
 }

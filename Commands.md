@@ -745,6 +745,9 @@ Player Moderator Commands
   - Usage: `::check (player)`
   - Shows all of the characters that were created by the same IP address.
   - Administrator accounts are able to actually see the IP address.
+- uptime
+  - Usage `::uptime`
+  - Displays the current uptime of the server.
 ------------------------
 Regular Player Commands
 ------------------------

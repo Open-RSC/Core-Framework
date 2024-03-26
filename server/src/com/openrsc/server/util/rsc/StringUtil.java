@@ -1,5 +1,6 @@
 package com.openrsc.server.util.rsc;
 
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.Arrays;
 
@@ -383,5 +384,60 @@ public class StringUtil {
 		}
 
 		return new String(stringBuilder, 0, formattedLength);
+	}
+
+	public static String convertLongToDuration(long time) {
+		if (time < 0) {
+			throw new IllegalArgumentException("Duration must be greater than zero!");
+		}
+
+		long days = TimeUnit.MILLISECONDS.toDays(time);
+		time -= TimeUnit.DAYS.toMillis(days);
+		long hours = TimeUnit.MILLISECONDS.toHours(time);
+		time -= TimeUnit.HOURS.toMillis(hours);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
+		time -= TimeUnit.MINUTES.toMillis(minutes);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
+
+		StringBuilder sb = new StringBuilder(64);
+		sb.append(days);
+		sb.append((days > 1 || days == 0) ? " days " : " day ");
+		sb.append(hours);
+		sb.append((hours > 1 || hours == 0) ? " hours " : " hour ");
+		sb.append(minutes);
+		sb.append((minutes > 1 || minutes == 0) ? " minutes " : " minute ");
+		sb.append(seconds);
+		sb.append((seconds > 1 || seconds == 0) ? " seconds" : " second");
+
+		return (sb.toString());
+	}
+
+	public static String convertLongToShortDuration(long time, boolean useSeconds) {
+		if (time < 0) {
+			throw new IllegalArgumentException("Duration must be greater than zero!");
+		}
+		long days = TimeUnit.MILLISECONDS.toDays(time);
+		time -= TimeUnit.DAYS.toMillis(days);
+		long hours = TimeUnit.MILLISECONDS.toHours(time);
+		time -= TimeUnit.HOURS.toMillis(hours);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(time);
+		time -= TimeUnit.MINUTES.toMillis(minutes);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(time);
+
+
+		StringBuilder sb = new StringBuilder(64);
+		sb.append(days);
+		sb.append("d ");
+		sb.append(hours);
+		sb.append("h ");
+		sb.append(minutes);
+		sb.append("m ");
+		if (useSeconds) {
+			sb.append(seconds);
+			sb.append("s ");
+		}
+
+
+		return (sb.toString());
 	}
 }
