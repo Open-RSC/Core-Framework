@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -24,7 +25,11 @@ public class CutWeb implements UseBoundTrigger,
 	@Override
 	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == WEB) {
-			if (item.getDef(player.getWorld()).getWieldPosition() != 4 && item.getCatalogId() != ItemId.KNIFE.id()) {
+			ItemDefinition def = item.getDef(player.getWorld());
+			String name = def.getName().toLowerCase();
+			if (name.contains("staff") || name.contains("bow") || name.contains("cythe") ||
+					(def.getWieldPosition() != 4 &&
+					item.getCatalogId() != ItemId.KNIFE.id())) {
 				player.message("Nothing interesting happens");
 				return;
 			}
@@ -49,7 +54,6 @@ public class CutWeb implements UseBoundTrigger,
 
 	@Override
 	public void onOpBound(Player player, GameObject obj, Integer click) {
-
 		boolean canCut = false;
 		//First, check their equipment for an appropriate weapon
 		if (config().WANT_EQUIPMENT_TAB) {
