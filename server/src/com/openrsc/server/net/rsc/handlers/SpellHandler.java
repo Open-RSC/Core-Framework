@@ -414,7 +414,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						return;
 					}
 
-					GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
+					GroundItem affectedItem = player.getViewArea().getVisibleGroundItem(itemId, location, player);
 					if (affectedItem == null) {
 						return;
 					}
@@ -537,7 +537,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				case CAST_ON_GROUND_ITEM:
 					Point location = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
 					int itemId = payload.targetIndex;
-					GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
+					GroundItem affectedItem = player.getViewArea().getVisibleGroundItem(itemId, location, player);
 					if (affectedItem == null) {
 						return;
 					}
@@ -1133,7 +1133,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		player.setWalkToAction(new WalkToPointAction(player, affectedItem.getLocation(), 4) {
 			public void executeInternal() {
 				getPlayer().resetPath();
-				if (!canCast(getPlayer()) || getPlayer().getViewArea().getGroundItem(affectedItem.getID(), getLocation()) == null || affectedItem.isRemoved()) {
+				if (!canCast(getPlayer()) || getPlayer().getViewArea().getVisibleGroundItem(affectedItem.getID(), getLocation(), getPlayer()) == null || affectedItem.isRemoved()) {
 					return;
 				}
 				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedItem.getLocation())) {

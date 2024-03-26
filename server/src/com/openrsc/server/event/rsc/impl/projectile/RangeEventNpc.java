@@ -88,7 +88,7 @@ public class RangeEventNpc extends GameTickEvent {
                 int damage = RangeUtils.doRangedDamage(getPlayerOwner(), ItemId.LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), victim, false);
 
                 if (Formulae.loseArrow(damage)) {
-                    GroundItem arrows = getArrows();
+                    GroundItem arrows = getArrows(getPlayerOwner());
                     if (arrows == null) {
                         for (Player p : getWorld().getPlayers()) {
                             getWorld().registerItem(new GroundItem(
@@ -112,8 +112,8 @@ public class RangeEventNpc extends GameTickEvent {
             }
     }
 
-    private GroundItem getArrows() {
-        return victim.getViewArea().getGroundItem(ItemId.BRONZE_ARROWS.id(), victim.getLocation());
+    private GroundItem getArrows(Player player) {
+        return victim.getViewArea().getVisibleGroundItem(ItemId.BRONZE_ARROWS.id(), victim.getLocation(), player);
     }
 
     private boolean isUnreachable(Mob mob) {

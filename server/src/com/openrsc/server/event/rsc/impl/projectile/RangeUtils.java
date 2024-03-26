@@ -184,7 +184,7 @@ public class RangeUtils {
 
     public static void handleArrowLossAndDrop(World world, Player player, Mob target, int damage, int arrowId) {
         if (Formulae.loseArrow(damage)) {
-            GroundItem arrows = getArrows(arrowId, target);
+            GroundItem arrows = getArrows(arrowId, target, player);
             if (!DropTable.handleRingOfAvarice(player, new Item(arrowId, 1))) {
                 if (arrows == null) {
                     world.registerItem(
@@ -204,8 +204,8 @@ public class RangeUtils {
         }
     }
 
-    private static GroundItem getArrows(int id, Mob target) {
-        return target.getViewArea().getGroundItem(id, target.getLocation());
+    private static GroundItem getArrows(int id, Mob target, Player player) {
+        return target.getViewArea().getVisibleGroundItem(id, target.getLocation(), player);
     }
 
     public static void applyPoison(Player player, Mob target, int arrowId) {

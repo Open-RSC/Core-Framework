@@ -41,7 +41,7 @@ public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, Op
 			return;
 		}
 
-		final GroundItem item = player.getViewArea().getGroundItem(itemId, location);
+		final GroundItem item = player.getViewArea().getVisibleGroundItem(itemId, location, player);
 
 		if (item == null) {
 			player.resetPath();

@@ -993,7 +993,7 @@ public class RuneScript {
 		if (interactingGroundItem == null) return false;
 
 
-		final boolean isObjectVisible = player.getViewArea().getGroundItem(interactingGroundItem.getID(), interactingGroundItem.getLocation()) != null
+		final boolean isObjectVisible = player.getViewArea().getVisibleGroundItem(interactingGroundItem.getID(), interactingGroundItem.getLocation(), player) != null
 			&& player.canReach(interactingGroundItem);
 		scriptContext.setExecutionFlag(isObjectVisible);
 		return isObjectVisible;
@@ -1026,8 +1026,8 @@ public class RuneScript {
 		final GroundItem interactingGroundItem = scriptContext.getInteractingGroundItem();
 		if (interactingGroundItem == null) return;
 
-		player.getViewArea().getGroundItem(interactingGroundItem.getID(),
-			interactingGroundItem.getLocation()).remove();
+		player.getViewArea().getVisibleGroundItem(interactingGroundItem.getID(),
+			interactingGroundItem.getLocation(), player).remove();
 	}
 
 	/**

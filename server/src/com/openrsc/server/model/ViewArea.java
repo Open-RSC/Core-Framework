@@ -72,10 +72,10 @@ public class ViewArea {
 		}
 		return null;
 	}
-
-	public GroundItem getGroundItem(final int id, final Point location) {
+	
+	public GroundItem getVisibleGroundItem(final int id, final Point location, final Player player) {
 		for (final GroundItem o : getItemsInView()) {
-			if (o.getID() == id && o.getLocation().equals(location)) {
+			if (!o.isInvisibleTo(player) && o.getID() == id && o.getLocation().equals(location)) {
 				return o;
 			}
 		}
