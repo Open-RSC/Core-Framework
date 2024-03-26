@@ -275,6 +275,14 @@ public class Skills {
 					ActionSender.sendSound((Player) getMob(), "advance");
 					player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
 						/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
+					boolean justGainedAbilityToGlobalChat = (getWorld().getServer().getConfig().WANT_GLOBAL_CHAT || getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) &&
+						player.getTotalLevel() >= getWorld().getServer().getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ &&
+						player.getTotalLevel() - levelDiff < getWorld().getServer().getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ &&
+						!player.isMuted() &&
+						!player.isGlobalMuted();
+					if (justGainedAbilityToGlobalChat) {
+						player.getSocial().messagePlayerTheyJustBecameEligibleForGlobalChat(player);
+					}
 				}
 				sendUpdate(skill);
 			}

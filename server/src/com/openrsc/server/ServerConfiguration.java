@@ -118,6 +118,7 @@ public class ServerConfiguration {
 	public String[] GLOBAL_RULES;
 	public int GLOBAL_MESSAGE_COOLDOWN;
 	public int GLOBAL_MESSAGE_TOTAL_LEVEL_REQ;
+	public boolean GLOBAL_MESSAGE_READING_RESTRICTED_BY_TOTAL_LEVEL;
 	public boolean WANT_SKILL_MENUS;
 	public boolean WANT_QUEST_MENUS;
 	public boolean WANT_EXPERIENCE_ELIXIRS;
@@ -449,6 +450,7 @@ public class ServerConfiguration {
 		IS_LOCALHOST_RESTRICTED = tryReadBool("is_localhost_restricted").orElse(true);
 		GLOBAL_MESSAGE_COOLDOWN = tryReadInt("global_message_cooldown").orElse(0);
 		GLOBAL_MESSAGE_TOTAL_LEVEL_REQ = tryReadInt("global_message_total_level_req").orElse(0);
+		GLOBAL_MESSAGE_READING_RESTRICTED_BY_TOTAL_LEVEL = tryReadBool("global_message_reading_restricted_by_total_level").orElse(true);
 		int CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
 		int CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
 		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);

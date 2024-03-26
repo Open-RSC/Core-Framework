@@ -3,7 +3,6 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.database.struct.PlayerFriend;
 import com.openrsc.server.database.struct.PlayerIgnore;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
@@ -139,10 +138,10 @@ public class Social {
 		}
 	}
 
-	public void addGlobalFriend(Player player) {
+	public void addGlobalFriend(Player player, boolean green) {
 		if (player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
 			player.getCache().store("setting_block_global_friend", false);
-			player.playerServerMessage(MessageType.QUEST, "@whi@You will now be able to see & participate in Global chat features!");
+			player.playerServerMessage(MessageType.QUEST, (green ? "@gre@" : "@whi@") + "You are now able to see & participate in Global chat features!");
 
 			// Long.MIN_VALUE is the usernameHash of the global friend
 			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE, "Global$", "");
@@ -179,6 +178,22 @@ public class Social {
 
 			// Long.MIN_VALUE is the usernameHash of the global friend
 			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE, "Global$", "");
+		}
+	}
+
+	public void messagePlayerTheyJustBecameEligibleForGlobalChat(Player player) {
+		if (!player.getConfig().WANT_GLOBAL_FRIEND) {
+			player.message("@gre@You have now met the total level requirement to participate in Global chat!");
+			player.message("@whi@Use the @gre@::g@whi@ command to send a message to everyone on the server.");
+			return;
+		}
+
+		if (player.getConfig().GLOBAL_MESSAGE_READING_RESTRICTED_BY_TOTAL_LEVEL) {
+			// player has never been able to read or message global chat before.
+			player.getSocial().addGlobalFriend(player, true);
+		} else {
+			// they were always able to read global chat, just not message it before
+			player.message("@gre@You have now met the total level requirement to participate in Global chat!");
 		}
 	}
 }

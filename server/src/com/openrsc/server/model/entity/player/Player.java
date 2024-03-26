@@ -3239,6 +3239,12 @@ public final class Player extends Mob {
 
 	public Boolean getBlockGlobalFriend() {
 		if (getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			if (getLocation().onTutorialIsland() && !isMod()) {
+				return true;
+			}
+			if (getConfig().GLOBAL_MESSAGE_READING_RESTRICTED_BY_TOTAL_LEVEL && getTotalLevel() < getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ && !isPlayerMod()) {
+				return true;
+			}
 			if (getCache().hasKey("setting_block_global_friend")) {
 				return getCache().getBoolean("setting_block_global_friend");
 			}

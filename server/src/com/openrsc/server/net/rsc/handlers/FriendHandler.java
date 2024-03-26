@@ -49,8 +49,12 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 					return;
 				}
 
-				if (friendIsGlobal) {
-					player.getSocial().addGlobalFriend(player);
+				if (friendIsGlobal && (player.getConfig().WANT_GLOBAL_CHAT || player.getConfig().WANT_GLOBAL_FRIEND)) {
+					if (player.getConfig().GLOBAL_MESSAGE_READING_RESTRICTED_BY_TOTAL_LEVEL && player.getTotalLevel() < player.getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ && !player.isPlayerMod()) {
+						player.message("You need " + player.getConfig().GLOBAL_MESSAGE_TOTAL_LEVEL_REQ + " total level to participate or read Global chat. Your total level is " + player.getTotalLevel() + ".");
+					} else {
+						player.getSocial().addGlobalFriend(player, false);
+					}
 					return;
 				}
 
@@ -152,7 +156,7 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				break;
 			}
 			case SOCIAL_SEND_PRIVATE_MESSAGE: {
-				if (player.getLocation().onTutorialIsland()) {
+				if (player.getLocation().onTutorialIsland() && !player.isMod()) {
 					player.message("@cya@Once you finish the tutorial, this lets you send messages to your friends");
 					return;
 				}
