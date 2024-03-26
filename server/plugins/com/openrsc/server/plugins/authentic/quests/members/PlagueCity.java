@@ -802,7 +802,8 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 					if (player.getCache().hasKey("soil_buckets")) {
 						buckets = player.getCache().getInt("soil_buckets");
 					}
-					if (buckets >= 4) {
+					if (buckets >= 3) {
+						// triggers on the fourth bucket
 						mes("you poor the water onto the soil");
 						delay(3);
 						mes("the soil softens slightly");
