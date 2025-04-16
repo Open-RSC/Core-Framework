@@ -9,7 +9,7 @@ public class Defaults {
   // EXTRAS
   public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/releases/download/Latest/rscplus-windows.zip";
   public final static String _APOS_REPOSITORY_DL = "https://github.com/Open-RSC/APOS/archive/master.zip";
-  public final static String _IDLERSC_REPOSITORY_DL = "https://gitlab.com/openrsc/idlersc/-/jobs/artifacts/master/raw/IdleRSC.zip?job=build";
+  public final static String _IDLERSC_REPOSITORY_DL = "https://gitlab.com/openrsc/idlersc/-/jobs/artifacts/main/raw/IdleRSC.zip?job=build";
   public final static String _WINRUNE_REPOSITORY_DL = "https://github.com/RSCPlus/WinRune/archive/refs/heads/master.zip";
   public final static String _RSCTIMES_REPOSITORY_DL = "https://github.com/RSCPlus/rsctimes/releases/download/Latest/rsctimes-windows.zip";
   public final static String _FLEACIRCUS_REPOSITORY_DL = "https://github.com/Hubcapp/fleacircus2000-deob/releases/download/Latest/fleacircus.zip";
