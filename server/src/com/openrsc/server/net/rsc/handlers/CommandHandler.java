@@ -93,14 +93,14 @@ public final class CommandHandler implements PayloadProcessor<CommandStruct, Opc
 				"robe",
 				"setrobe",
 				"setrobes",
-				"becomeNpc",
+				"become",
+				"becomenpc",
 				"morph",
-				"morphNpc",
+				"morphnpc",
 				"becomegod",
 				"speaktongues",
 				"restorehumanity",
 				"resetappearance",
-				"become",
 				"check",
 				"pr",
 				"pn",
@@ -115,7 +115,9 @@ public final class CommandHandler implements PayloadProcessor<CommandStruct, Opc
 				"stay",
 				"reset",
 				"uptime",
-				"enable_protocol_extensions"
+				"enable_protocol_extensions",
+				"kc",
+				"kills"
 			};
 			if (player.isPlayerMod() && !Arrays.asList(ignoredCommands).contains(cmd.toLowerCase())) {
 				player.getWorld().getServer().getDiscordService().staffCommandLog(player, "::" + cmd + " " + String.join(" ", args));

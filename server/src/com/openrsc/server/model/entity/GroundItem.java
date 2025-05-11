@@ -115,6 +115,17 @@ public class GroundItem extends Entity {
 				}
 			}
 		}
+
+		// If the player is an ironman,
+		if (player.getIronMan() != IronmanMode.None.id()) {
+			// This attribute should only be there if the loot pile was dropped by someone that was killed by a mob
+			long killedByMobOwner = getAttribute("killedByMob", -1L);
+			if (killedByMobOwner != -1L) {
+				// Can only pick it up if it's their own loot pile
+				return killedByMobOwner == player.getUsernameHash();
+			}
+		}
+
 		return player.getUsernameHash() == ownerUsernameHash || ownerUsernameHash == 0;
 	}
 
@@ -144,9 +155,11 @@ public class GroundItem extends Entity {
 			return false;
 		if (getID() > player.getClientLimitations().maxItemId)
 			return true;
-		// should be visible to everyone else after a time, just not lootable for ironmen
-		// if (!belongsTo(player) && player.getIronMan() != IronmanMode.None.id())
-		//	return true;
+		// If the killedByMob attribute exists, this means that the pile was dropped when another player was killed by a mob.
+		// The ironman should be able to see it, but still not pick it up.
+		if (player.getIronMan() != IronmanMode.None.id() && getAttribute("killedByMob", -1L) != -1) {
+			return false;
+		}
 
 		// One minute and four seconds to show to all.
 		return System.currentTimeMillis() - spawnedTime <= 64000;

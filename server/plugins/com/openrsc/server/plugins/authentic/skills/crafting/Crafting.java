@@ -1093,8 +1093,15 @@ public class Crafting implements UseInvTrigger,
 
 			delay(3);
 
+			String finishedPotteryItem = result.getDef(player.getWorld()).getName().toLowerCase();
+
+			// Remap pie dish -> dish
+			if (finishedPotteryItem.equals("pie dish")) {
+				finishedPotteryItem = "dish";
+			}
+
 			player.playerServerMessage(MessageType.QUEST, "You remove a "
-				+ result.getDef(player.getWorld()).getName().toLowerCase()
+				+ finishedPotteryItem
 				+ " from the oven");
 			player.getCarriedItems().getInventory().add(result);
 			player.incExp(Skill.CRAFTING.id(), exp, true);

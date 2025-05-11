@@ -79,6 +79,10 @@ public class RSCPacketFilter {
 	}
 
 	public void load() {
+		loadIpBans();
+	}
+
+	public void loadIpBans() {
 		synchronized (ipBans) {
 			int counter = 0;
 			File ipBansFile = new File(BAN_FILE_PATH);
@@ -102,9 +106,11 @@ public class RSCPacketFilter {
 		}
 	}
 
-	public void reload() {
-		ipBans.clear();
-		load();
+	public void reloadIpBans() {
+		synchronized (ipBans) {
+			ipBans.clear();
+		}
+		loadIpBans();
 	}
 
 	public void unload() {

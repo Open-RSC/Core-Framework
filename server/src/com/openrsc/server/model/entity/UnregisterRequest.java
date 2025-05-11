@@ -56,8 +56,10 @@ public class UnregisterRequest {
 				DelayedEvent unregisterEvent = new DelayedEvent(player.getWorld(), player, 500, "Unregister Player") {
 					@Override
 					public void run() {
-						if (getOwner().canLogout() || (!(getOwner().inCombat() && getOwner().getDuel().isDuelActive())
-							&& System.currentTimeMillis() - startDestroy > 60000)) {
+						if (getOwner().canLogout() ||
+							(!(getOwner().inCombat() && getOwner().getDuel().isDuelActive()) && System.currentTimeMillis() - startDestroy > 60000) || // not in duel and unable to log out for 1 minute
+							(System.currentTimeMillis() - startDestroy > 600000) // after 10 minutes the duel has been going on for too long and we will just end it, sorry folks
+							) {
 							getOwner().unregister(UnregisterForcefulness.FORCED, reason);
 							running = false;
 						}

@@ -60,12 +60,27 @@ public class IronMan implements
 				}
 			}
 
-			final int mode = player.getAttribute("ironman_mode");
+			final int mode = player.getAttribute("ironman_mode_new");
 			if (mode == -1) return;
-			player.setIronMan(mode);
-			player.message("You have downgraded your Ironman status.");
-			ActionSender.sendIronManMode(player);
-			ActionSender.sendIronManInterface(player);
+			mes( "Are you sure you wish to downgrade your Ironman status?");
+			// Confirmation for downgrading Ironman status
+			final int confirmation = multi(player,
+				"Yes, I am sure, please downgrade my Ironman status.", // 0
+				"No, I changed my mind, keep my Ironman status." // 1
+			);
+
+			switch (confirmation) {
+				case 0: // Confirm downgrade
+					player.setIronMan(mode);
+					player.setAttribute("ironman_mode", mode);
+					player.message("You have downgraded your Ironman status.");
+					break;
+				case 1: // Cancel downgrade
+				default:
+					player.message("You have chosen to keep your current Ironman status.");
+					break;
+			}
+
 			return;
 		}
 

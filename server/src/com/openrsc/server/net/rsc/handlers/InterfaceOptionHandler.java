@@ -183,7 +183,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					}
 
 					player.setAttribute("ironman_delete", true);
-					player.setAttribute("ironman_mode", mode);
+					player.setAttribute("ironman_mode_new", mode);
 
 					ironManNpc.initializeTalkScript(player);
 					break;

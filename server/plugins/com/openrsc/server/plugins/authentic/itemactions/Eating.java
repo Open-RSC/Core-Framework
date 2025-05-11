@@ -321,6 +321,7 @@ public class Eating implements OpInvTrigger {
 			hpRestored = 30;
 		} else if (rand <= 8) { // 7/32 or 21% chance of healing 10-20 hits
 			player.playerServerMessage(MessageType.QUEST, "That was a good kebab");
+			delay(2);
 			player.message("You feel a lot better");
 			hpRestored = DataConversions.random(10, 20);
 		} else if (rand <= 28) { // 20/32 or 62% chance of healing 10% max hits

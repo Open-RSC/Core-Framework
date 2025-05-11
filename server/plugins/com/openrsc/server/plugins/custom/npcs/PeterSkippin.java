@@ -21,8 +21,10 @@ public class PeterSkippin implements TalkNpcTrigger, KillNpcTrigger {
 		npcsay("Ok");
 
 		if (player.getIronMan() == IronmanMode.Hardcore.id()) {
-			npcsay("Have fun kid");
-			player.skipTutorial();
+			npcsay("You look like a pretty hardcore person",
+				"I'll let you handle skipping the tutorial on your own",
+				"You can either select the option from the Settings menu",
+				"Or type \"::skiptutorial\" in your chatbox");
 		} else {
 			npcattack();
 			say("What are you doing?!");

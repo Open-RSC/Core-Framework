@@ -341,7 +341,7 @@ public final class SuperModerator implements CommandTrigger {
 	}
 
 	private void syncIPBans(Player player, String command, String[] args) {
-		player.getWorld().getServer().getPacketFilter().reload();
+		player.getWorld().getServer().getPacketFilter().reloadIpBans();
 		player.message("IP bans reloaded!");
 	}
 

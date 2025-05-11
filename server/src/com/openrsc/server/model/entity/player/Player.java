@@ -810,7 +810,14 @@ public final class Player extends Mob {
 		if (denyAllLogoutRequests && System.currentTimeMillis() - getLastClientActivity() < 30000) {
 			return false;
 		}
-		return !isBusy() && (System.currentTimeMillis() - getLastClientActivity() > 30000 || System.currentTimeMillis() - getCombatTimer() > 10000)
+		if (inCombat() || getDuel().isDuelActive()) {
+			return false;
+		}
+		return !isBusy() && hasSatisfiedCooldown();
+	}
+
+	private boolean hasSatisfiedCooldown() {
+		return (System.currentTimeMillis() - getLastClientActivity() > 30000 || System.currentTimeMillis() - getCombatTimer() > 10000)
 			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
 			&& System.currentTimeMillis() - getLastExchangeTime() > 3000;
 	}
@@ -3074,7 +3081,7 @@ public final class Player extends Mob {
 
 	public int getRecentNpcKills() {
 		if (getLastNpcKilledId() == -1) return 0;
-		return getKillCache().get(getLastNpcKilledId());
+		return getKillCache().getOrDefault(getLastNpcKilledId(), 0);
 	}
 
 	public int getExpShared() {

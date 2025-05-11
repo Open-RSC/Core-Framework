@@ -673,7 +673,7 @@ public class DoorAction {
 							npcsay(player, dwarf, "Sorry only the top miners are allowed in there");
 						}
 						delay();
-						player.message("You need a mining of level 60 to enter");
+						player.message("The door won't open - you need a mining of level 60 to enter");
 					} else {
 						doDoor(obj, player);
 					}
