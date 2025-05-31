@@ -93,6 +93,7 @@ server/avatars/*.png
 server/*.jar
 server/out/
 server/local.conf
+server/connections.conf
 
 etc/logs/mariadb/*
 !etc/logs/mariadb/.gitsave
