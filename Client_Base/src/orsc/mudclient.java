@@ -5403,6 +5403,9 @@ public final class mudclient implements Runnable {
 							this.getSurface().drawString(
 								"Fatigue: " + this.statFatigue + "%", 7, i, 0xffffff, 1);
 						}
+						this.getSurface().drawString(
+							"Ammo: " + getAmmoCount() + "@whi@", 7, i, 0xffffff, 1);
+						i += 14;
 						if (Config.DEBUG) {
 							i += 14;
 							this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
@@ -16684,6 +16687,18 @@ public final class mudclient implements Runnable {
 
 	public void setStatFatigueAuthentic(int fatigue) {
 		this.statFatigueAuthentic = fatigue;
+	}
+
+	public int getAmmoCount() {
+		int ammo = 0;
+		for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
+			if (this.equippedItems[i] == null) {
+			} else {
+				if (equippedItems[i].isStackable())
+					ammo = equippedItemAmount[i];
+			}
+		}
+		return ammo;
 	}
 
 	public int getStatKills2() {
