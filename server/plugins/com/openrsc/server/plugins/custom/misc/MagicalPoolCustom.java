@@ -36,7 +36,7 @@ public class MagicalPoolCustom implements OpLocTrigger {
 				}
 				int option = multi(player, "Edgeville", "Varrock", "Lumbridge",
 					"Castle (dangerous)", "Graveyard (dangerous)", "Hobgoblins (dangerous)", "Altar (dangerous)",
-					"Dragon Maze (dangerous)", "Mage Arena (dangerous)", "Rune rocks (dangerous)", "dragons (dangerous)", "Seers", "Further underground mage arena");
+					"Dragon Maze (dangerous)", "Mage Arena (dangerous)", "Rune rocks (dangerous)", "Dragons (dangerous)", "Seers", "Further underground mage arena");
 
 				if (option == 0) {
 					player.teleport(218, 456);
