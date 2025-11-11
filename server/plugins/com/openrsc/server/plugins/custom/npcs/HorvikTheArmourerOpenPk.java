@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class HorvikTheArmourerOpenPk extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(),
+	private final Shop shop = new Shop(false, 500, 100, 60, 2, new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(),
 		100), new Item(ItemId.LARGE_IRON_HELMET.id(), 100), new Item(ItemId.IRON_PLATE_MAIL_BODY.id(), 100), new Item(ItemId.IRON_PLATE_MAIL_LEGS.id(), 100), new Item(ItemId.IRON_KITE_SHIELD.id(), 100), new Item(ItemId.STEEL_CHAIN_MAIL_BODY.id(),
 		100), new Item(ItemId.LARGE_STEEL_HELMET.id(), 100), new Item(ItemId.STEEL_PLATE_MAIL_BODY.id(), 100), new Item(ItemId.STEEL_PLATE_MAIL_LEGS.id(), 100), new Item(ItemId.STEEL_KITE_SHIELD.id(), 100), new Item(ItemId.BLACK_CHAIN_MAIL_BODY.id(),
 		100), new Item(ItemId.LARGE_BLACK_HELMET.id(), 100), new Item(ItemId.BLACK_PLATE_MAIL_BODY.id(), 100), new Item(ItemId.BLACK_PLATE_MAIL_LEGS.id(), 100), new Item(ItemId.BLACK_KITE_SHIELD.id(), 100), new Item(ItemId.MITHRIL_CHAIN_MAIL_BODY.id(),

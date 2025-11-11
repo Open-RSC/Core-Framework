@@ -45,7 +45,7 @@ public final class PointsStore extends AbstractShop {
 	public Shop[] getShops(World world) {
 		if (shops == null) {
 			shops = new Shop[1];
-			final Shop genShop = new Shop(false, 12400, 130, 40, 3, Arrays.copyOfRange(openPkShopItems, 0, openPkShopItems.length));
+			final Shop genShop = new Shop(false, 500, 130, 40, 3, Arrays.copyOfRange(openPkShopItems, 0, openPkShopItems.length));
 			shops[0] = new Shop(genShop, "General Store", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id(), NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id(), NpcId.SHOPKEEPER_VARROCK.id(), NpcId.SHOP_ASSISTANT_VARROCK.id());
 
 		}

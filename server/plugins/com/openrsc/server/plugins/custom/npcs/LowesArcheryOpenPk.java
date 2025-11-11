@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class LowesArcheryOpenPk extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 3000, 100, 55, 1, new Item(ItemId.IRON_ARROWS.id(),
+	private final Shop shop = new Shop(false, 500, 100, 55, 1, new Item(ItemId.IRON_ARROWS.id(),
 		250000), new Item(ItemId.STEEL_ARROWS.id(), 200000), new Item(ItemId.MITHRIL_ARROWS.id(), 150000), new Item(ItemId.ADAMANTITE_ARROWS.id(), 100000), new Item(ItemId.SHORTBOW.id(), 1000), new Item(
 		ItemId.LONGBOW.id(), 1000), new Item(ItemId.WILLOW_SHORTBOW.id(), 1000), new Item(ItemId.WILLOW_LONGBOW.id(), 1000), new Item(ItemId.MAPLE_SHORTBOW.id(), 1000), new Item(ItemId.MAPLE_LONGBOW.id(), 1000), new Item(ItemId.YEW_SHORTBOW.id(), 1000), new Item(ItemId.YEW_LONGBOW.id(), 1000), new Item(ItemId.MAGIC_LONGBOW.id(), 1000), new Item(ItemId.MAGIC_SHORTBOW.id(), 1000));
 

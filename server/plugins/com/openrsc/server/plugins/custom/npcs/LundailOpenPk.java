@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class LundailOpenPk extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 6000, 190, 60, 10, new Item(ItemId.AIR_RUNE.id(),
+	private final Shop shop = new Shop(false, 500, 190, 60, 10, new Item(ItemId.AIR_RUNE.id(),
 		50000), new Item(ItemId.FIRE_RUNE.id(), 50000), new Item(ItemId.WATER_RUNE.id(), 50000), new Item(ItemId.EARTH_RUNE.id(),
 		50000), new Item(ItemId.MIND_RUNE.id(), 50000), new Item(ItemId.BODY_RUNE.id(), 50000), new Item(ItemId.CHAOS_RUNE.id(), 5000), new Item(ItemId.NATURE_RUNE.id(), 1500), new Item(ItemId.DEATH_RUNE.id(), 1500), new Item(ItemId.BLOOD_RUNE.id(), 1000));
 

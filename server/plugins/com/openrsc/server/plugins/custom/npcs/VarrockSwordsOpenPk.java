@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class VarrockSwordsOpenPk extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 30000, 100, 60, 2,
+	private final Shop shop = new Shop(false, 500, 100, 60, 2,
 		new Item(ItemId.IRON_2_HANDED_SWORD.id(), 100),
 		new Item(ItemId.STEEL_2_HANDED_SWORD.id(), 100),
 		new Item(ItemId.BLACK_2_HANDED_SWORD.id(), 100),
