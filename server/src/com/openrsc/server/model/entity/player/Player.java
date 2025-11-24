@@ -2768,6 +2768,9 @@ public final class Player extends Mob {
 	}
 
 	public void sendQuestComplete(final int questId) { // REMEMBER THIS
+		if (getWorld().getServer().getConfig().WANT_OPENPK_POINTS) {
+			return;
+		}
 		if (getQuestStage(questId) != -1) {
 			getWorld().getQuest(questId).handleReward(this);
 			updateQuestStage(questId, -1);
@@ -2839,15 +2842,24 @@ public final class Player extends Mob {
 	}
 
 	public void setQuestStage(final int q, final int stage) {
+		if (getWorld().getServer().getConfig().WANT_OPENPK_POINTS) {
+			return;
+		}
 		getQuestStages().put(q, stage);
 	}
 
 	public void updateQuestStage(final int q, final int stage) {
+		if (getWorld().getServer().getConfig().WANT_OPENPK_POINTS) {
+			return;
+		}
 		getQuestStages().put(q, stage);
 		ActionSender.sendQuestInfo(this, q, stage);
 	}
 
 	public void updateQuestStage(final QuestInterface q, final int stage) {
+		if (getWorld().getServer().getConfig().WANT_OPENPK_POINTS) {
+			return;
+		}
 		getQuestStages().put(q.getQuestId(), stage);
 		ActionSender.sendQuestInfo(this, q.getQuestId(), stage);
 	}
