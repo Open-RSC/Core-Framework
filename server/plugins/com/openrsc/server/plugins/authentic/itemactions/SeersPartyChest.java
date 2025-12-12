@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.authentic.itemactions;
 
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -33,6 +34,14 @@ public class SeersPartyChest implements UseLocTrigger {
 		}
 
 		ActionSender.sendMessage(player, null, MessageType.QUEST, "You place the item into the chest...", 0, null);
+		player.getWorld().getServer().getGameLogger().addQuery(
+			new GenericLog(
+				player.getWorld(),
+				player.getUsername() + " placed " + item.getDef(player.getWorld()).getName() +
+				" x" + DataConversions.numberFormat(item.getAmount()) +
+				" into the Seers Party Chest at " + player.getLocation().toString()
+			)
+		);
 		final boolean upstairs = player.getLocation().isInSeersPartyHallUpstairs();
 		for (Player p : player.getWorld().getPlayers()) {
 			if((upstairs && p.getLocation().isInSeersPartyHallUpstairs()) || (!upstairs && p.getLocation().isInSeersPartyHallDownstairs())) {
@@ -55,6 +64,15 @@ public class SeersPartyChest implements UseLocTrigger {
 					}
 
 					getOwner().getWorld().registerItem(new GroundItem(getOwner().getWorld(), item.getCatalogId(), location.getX(), location.getY(), item.getAmount(), null, item.getNoted()));
+					getOwner().getWorld().getServer().getGameLogger().addQuery(
+						new GenericLog(
+							getOwner().getWorld(),
+							item.getDef(getOwner().getWorld()).getName() + " x" +
+								DataConversions.numberFormat(item.getAmount()) +
+								" spawned in Seers Party Hall at " + location +
+								" (original dropper: " + player.getUsername() + ")"
+						)
+					);
 					break;
 				}
 			}
