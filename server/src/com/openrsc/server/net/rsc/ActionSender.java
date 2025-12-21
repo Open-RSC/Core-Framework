@@ -1999,6 +1999,15 @@ public class ActionSender {
 		struct.catalogID = amount == 0 && player.isUsingCustomClient() ? 0 : newId.getCatalogId();
 		struct.amount = amount;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_BANK_UPDATE, struct, player);
+		/**
+		 * TODO: Logg would like an actual fix for updating bank items in the future.
+		 * Below is a quickfix to allow banks to update the bank screen when the bank has more than 256 items.
+		 * This is very similar to how the bank updates when using the sort/insert features in Cabbage bank.
+		 */
+		boolean sendWholeBank = (player.getClientVersion() == 10009 || player.getClientVersion() == 10010);
+		if (player.getConfig().WANT_CUSTOM_BANKS && sendWholeBank) {
+			showBank(player);
+		}
 	}
 
 	public static void sendRemoveProgressBar(Player player) {
