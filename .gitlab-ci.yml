@@ -1,33 +1,140 @@
-image: eclipse-temurin:8-jdk
+image: eclipse-temurin:21-jdk
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.caching=true"
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
 
 before_script:
+  - chmod +x ./server/gradlew
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes ant
 
 stages:
   - build
-  - upload
+  - test
+  - package
 
-build:
+# Build server components using Gradle (creates core.jar and plugins.jar)
+build:server:
   stage: build
   script:
-    - cd server && ant compile_core && ant compile_plugins && cd ../
-    - cd Client_Base && ant compile && cd ../
-    - cd PC_Launcher && ant compile && cd ../
+    - cd server
+    - ./gradlew clean build -x test
+    - ls -lh *.jar
   artifacts:
     paths:
-      - PC_Launcher/OpenRSC.jar
+      - server/core.jar
+      - server/plugins.jar
+      - server/build/libs/*.jar
+    expire_in: 1 hour
     when: on_success
-    expose_as: 'OpenRSC jar'  # (Optional) provides a direct download link in the job UI
 
-launcherUpload:
-  stage: upload
+# Build client components using Ant
+build:client:
+  stage: build
   script:
-    - echo "Uploading OpenRSC.jar"
-  needs:
-    - build
+    - cd Client_Base
+    - ant compile
+  artifacts:
+    paths:
+      - Client_Base/*.jar
+    expire_in: 1 hour
+    when: on_success
+
+# Build launcher using Ant
+build:launcher:
+  stage: build
+  script:
+    - cd PC_Launcher
+    - ant compile
   artifacts:
     paths:
       - PC_Launcher/OpenRSC.jar
       - PC_Launcher/vet.rsc.OpenRSC.Launcher.appdata.xml
+    expire_in: 1 week
     when: on_success
+    expose_as: 'OpenRSC Launcher'
+
+# Run server tests
+test:server:
+  stage: test
+  dependencies:
+    - build:server
+  script:
+    - cd server
+    - ./gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit: server/build/test-results/test/*.xml
+    paths:
+      - server/build/test-results/
+      - server/build/reports/tests/
+    expire_in: 1 week
+
+# Package all artifacts together
+package:
+  stage: package
+  dependencies:
+    - build:server
+    - build:client
+    - build:launcher
+  script:
+    - echo "All components built successfully"
+    - mkdir -p dist/server
+    - mkdir -p dist/client
+    - mkdir -p dist/launcher
+    # Server JARs
+    - cp server/core.jar dist/server/ || true
+    - cp server/plugins.jar dist/server/ || true
+    # Client JARs
+    - cp Client_Base/*.jar dist/client/ || true
+    # Launcher JARs
+    - cp PC_Launcher/OpenRSC.jar dist/launcher/ || true
+    - cp PC_Launcher/vet.rsc.OpenRSC.Launcher.appdata.xml dist/launcher/ || true
+    # List contents
+    - echo "=== Server artifacts ==="
+    - ls -lh dist/server/
+    - echo "=== Client artifacts ==="
+    - ls -lh dist/client/
+    - echo "=== Launcher artifacts ==="
+    - ls -lh dist/launcher/
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+    when: on_success
+
+# Optional: Create release artifacts with version tagging
+package:release:
+  stage: package
+  dependencies:
+    - build:server
+    - build:client
+    - build:launcher
+  script:
+    - echo "Creating release package"
+    - VERSION="${CI_COMMIT_TAG:-${CI_COMMIT_SHORT_SHA}}"
+    - mkdir -p release
+    # Create server package
+    - tar -czf release/openrsc-server-${VERSION}.tar.gz -C server core.jar plugins.jar
+    # Create client package
+    - tar -czf release/openrsc-client-${VERSION}.tar.gz -C Client_Base .
+    # Create launcher package
+    - tar -czf release/openrsc-launcher-${VERSION}.tar.gz -C PC_Launcher OpenRSC.jar vet.rsc.OpenRSC.Launcher.appdata.xml
+    - ls -lh release/
+  artifacts:
+    paths:
+      - release/*.tar.gz
+    expire_in: 1 month
+    when: on_success
+  only:
+    - tags
+    - main
+    - master
