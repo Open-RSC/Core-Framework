@@ -2596,6 +2596,10 @@ public class PacketHandler {
 		for (int eq = 0; eq < 5; ++eq) {
 			mc.setPlayerStatEquipment(eq, packetsIncoming.getUnsignedByte());
 		}
+		// Below is for newer clients to get armour stats as integers (will be ignored by older clients)
+		for (int eq = 0; eq < 5; ++eq) {
+			mc.setPlayerStatEquipment(eq, (int)(packetsIncoming.get32() & 0xffffffffL));
+		}
 	}
 
 	private void drawNearbyPlayers() {

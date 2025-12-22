@@ -324,6 +324,12 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) es.weaponPowerPoints);
 					builder.writeByte((byte) es.magicPoints);
 					builder.writeByte((byte) es.prayerPoints);
+					// Below is for newer clients to get armour stats as integers (will be ignored by older clients)
+					builder.writeInt(es.armourPoints);
+					builder.writeInt(es.weaponAimPoints);
+					builder.writeInt(es.weaponPowerPoints);
+					builder.writeInt(es.magicPoints);
+					builder.writeInt(es.prayerPoints);
 					break;
 
 				case SEND_QUESTS:
