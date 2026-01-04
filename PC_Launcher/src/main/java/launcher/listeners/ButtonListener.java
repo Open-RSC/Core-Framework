@@ -92,7 +92,7 @@ public class ButtonListener implements ActionListener {
         return;
       }
       case "discord": {
-        Utils.openWebpage("https://discord.gg/ABdFCqn");
+        Utils.openWebpage("https://openrsc.com/discord");
         return;
       }
 
