@@ -1037,8 +1037,14 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (player.getConfig().WANT_OPENPK_POINTS) {
 			for (Item starter : player.getWorld().getServer().getConstants().OPENPK_STARTER_ITEMS) {
 				if (starter == null) continue;
-				if (starter.getCatalogId() == affectedItem.getCatalogId()) {
+				if (affectedItem.getCatalogId() == starter.getCatalogId()) {
 					player.message("You can't alch starter items.");
+					return;
+				}
+			}
+			for (int item : player.getWorld().getServer().getConstants().OPENPK_NONSTARTER_UNALCHABLE_ITEMS) {
+				if (affectedItem.getCatalogId() == item) {
+					player.message("You can't alch this item.");
 					return;
 				}
 			}
@@ -1070,8 +1076,14 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (player.getConfig().WANT_OPENPK_POINTS) {
 			for (Item starter : player.getWorld().getServer().getConstants().OPENPK_STARTER_ITEMS) {
 				if (starter == null) continue;
-				if (starter.getCatalogId() == affectedItem.getCatalogId()) {
+				if (affectedItem.getCatalogId() == starter.getCatalogId()) {
 					player.message("You can't alch starter items.");
+					return;
+				}
+			}
+			for (int item : player.getWorld().getServer().getConstants().OPENPK_NONSTARTER_UNALCHABLE_ITEMS) {
+				if (affectedItem.getCatalogId() == item) {
+					player.message("You can't alch this item.");
 					return;
 				}
 			}
