@@ -107,6 +107,7 @@ server/logs/pcaps/**/*.gz
 
 Client_Base/Open_RSC_Client.jar
 Client_Base/Cache/credentials.txt
+Client_Base/clientSettings.conf
 
 Android_Client/import-summary.txt
 Android_Client/.idea/
