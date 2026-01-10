@@ -147,6 +147,13 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 					loadingComplete(loadedPlayer);
 					loadedPlayer.desertHeatInit();
 					ActionSender.sendReleasedNameExplanation(loadedPlayer, usernameChangeType);
+					boolean currentIpMuted = server.getPacketFilter().isHostIpMuted(loadedPlayer.getCurrentIP());
+					boolean lastIpMuted = server.getPacketFilter().isHostIpMuted(loadedPlayer.getLastIP());
+					if (currentIpMuted || lastIpMuted) {
+						if (loadedPlayer.getMuteExpires() == 0) {
+							loadedPlayer.setMuteExpires(currentIpMuted ? server.getPacketFilter().getIpMutes().get(loadedPlayer.getCurrentIP()) : server.getPacketFilter().getIpMutes().get(loadedPlayer.getLastIP()));
+						}
+					}
 				}
 			});
 

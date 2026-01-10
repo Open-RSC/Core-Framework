@@ -1057,8 +1057,12 @@ public class Server implements Runnable {
 	}
 
   	public final int clearAllIpBans() {
-    return packetFilter.clearAllIpBans();
-  }
+		return packetFilter.clearAllIpBans();
+	}
+
+	public final int clearAllIpMutes() {
+		return packetFilter.clearAllIpMutes();
+	}
 
 	public final int recalculateLoggedInCounts() {
 		return packetFilter.recalculateLoggedInCounts();

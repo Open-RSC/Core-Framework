@@ -153,3 +153,5 @@ Backups/*.zip
 Deployment_Scripts/.discordstaffmonitorwebhook
 server/ipbans.txt
 server/ipbans.temp
+server/ipmutes.txt
+server/ipmutes.temp

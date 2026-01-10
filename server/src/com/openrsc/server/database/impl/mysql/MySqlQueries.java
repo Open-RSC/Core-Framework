@@ -21,7 +21,7 @@ public class MySqlQueries {
 	public final String playerLoginDataByFormerName, userToId, usernameToProperUsername, idToUser, initializeOnlineUsers;
 	public final String npcKillSelectAll, npcKillSelect, npcKillInsert, npcKillUpdate, playerLastRecoveryTryId, cancelRecoveryChangeRequest;
 	public final String contactDetails, newContactDetails, updateContactDetails;
-	public final String dropLogSelect, dropLogInsert, dropLogUpdate, renamePlayer, renamePlayerUpdateFriendsList, renamePlayerUpdateIgnoresList, banPlayer, unbanPlayer;
+	public final String dropLogSelect, dropLogInsert, dropLogUpdate, renamePlayer, renamePlayerUpdateFriendsList, renamePlayerUpdateIgnoresList, banPlayer, unbanPlayer, unmutePlayersByLoginIp;
 	public final String addNpcSpawn, removeNpcSpawn, addObjectSpawn, removeObjectSpawn, addItemSpawn, removeItemSpawn;
 	public final String objects, npcLocs, groundItems, inUseItemIds;
 	public final String clans, clanMembers, newClan, saveClanMember, deleteClan, deleteClanMembers, updateClan, updateClanMember;
@@ -167,6 +167,10 @@ public class MySqlQueries {
 		renamePlayerUpdateIgnoresList = "UPDATE `" + PREFIX + "ignores` SET `ignore` = ?, `ignoreFormer` = ? WHERE `ignore` = ?";
 		banPlayer = "UPDATE `" + PREFIX + "players` SET `banned`=?, offences = offences + 1 WHERE `username` LIKE ?";
 		unbanPlayer = "UPDATE `" + PREFIX + "players` SET `banned`= 0 WHERE `username` LIKE ?";
+		unmutePlayersByLoginIp = "UPDATE " + PREFIX + "player_cache pc " +
+		"JOIN " + PREFIX + "players p ON p.id = pc.playerID " +
+		"SET pc.value = '0' " +
+		"WHERE p.login_ip = ? AND pc.key IN ('mute_expires', 'global_mute')";
 		initializeOnlineUsers = "UPDATE `" + PREFIX + "players` SET `online`='0' WHERE online='1'";
 		fetchPlayerIps = "SELECT `login_ip`, `creation_ip` FROM `" + PREFIX + "players` WHERE `username` like ?";
 		fetchLinkedPlayers = "SELECT p.`id`, p.`username`, p.`banned`, gm.`key` AS `global_mute_key`, gm.`value` AS `global_mute_value`, me.`key` AS `mute_expires_key`, me.`value` AS `mute_expires_value` FROM `"

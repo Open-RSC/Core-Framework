@@ -53,6 +53,11 @@ public class RSCPacketFilter {
 	 * Holds host address list that have been IP banned
 	 */
 	private final HashMap<String, Long> ipBans;
+
+	/**
+	 * Holds host address list that have been IP muted
+	 */
+	private final HashMap<String, Long> ipMutes;
 	/**
 	 * Holds track of logged in players per IP address
 	 */
@@ -64,6 +69,8 @@ public class RSCPacketFilter {
 
 	private static final String BAN_FILE_PATH = "ipbans.txt";
 	private static final String BAN_TEMPFILE_PATH = "ipbans.temp";
+	private static final String MUTE_FILE_PATH = "ipmutes.txt";
+	private static final String MUTE_TEMPFILE_PATH = "ipmutes.temp";
 
 	public RSCPacketFilter(final Server server) {
 		this.server = server;
@@ -74,12 +81,14 @@ public class RSCPacketFilter {
 		this.adminHosts = new ArrayList<>();
 		this.packets = new HashMap<>();
 		this.ipBans = new HashMap<>();
+		this.ipMutes = new HashMap<>();
 		this.loggedInTracker = new HashMap<>();
 		this.passwordAttempts = new HashMap<>();
 	}
 
 	public void load() {
 		loadIpBans();
+		loadIpMutes();
 	}
 
 	public void loadIpBans() {
@@ -106,11 +115,42 @@ public class RSCPacketFilter {
 		}
 	}
 
+	public void loadIpMutes() {
+		synchronized (ipMutes) {
+			int counter = 0;
+			File ipMutesFile = new File(MUTE_FILE_PATH);
+			try {
+				// creates new file only if ipbans.txt file doesn't already exist.
+				boolean newFile = ipMutesFile.createNewFile();
+				if (newFile) {
+					LOGGER.info("Created new IP mutes file at " + ipMutesFile.getAbsolutePath());
+					return;
+				}
+				BufferedReader reader = new BufferedReader(new FileReader(MUTE_FILE_PATH));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					counter++;
+					ipMutes.put(line.trim(), -1L);
+				}
+				LOGGER.info("Loaded " + counter + " muted IPs.");
+			} catch (IOException ex) {
+				LOGGER.catching(ex);
+			}
+		}
+	}
+
 	public void reloadIpBans() {
 		synchronized (ipBans) {
 			ipBans.clear();
 		}
 		loadIpBans();
+	}
+
+	public void reloadIpMutes() {
+		synchronized (ipMutes) {
+			ipMutes.clear();
+		}
+		loadIpMutes();
 	}
 
 	public void unload() {
@@ -140,6 +180,10 @@ public class RSCPacketFilter {
 
 		synchronized (ipBans) {
 			ipBans.clear();
+		}
+
+		synchronized (ipMutes) {
+			ipMutes.clear();
 		}
 
 		synchronized (loggedInTracker) {
@@ -204,9 +248,77 @@ public class RSCPacketFilter {
 			if (until != 0) {
 				LOGGER.info("IP Banned " + hostAddress + time + " for " + reason);
 			} else {
-				LOGGER.info("un-IP Banned " + hostAddress + time + " for " + reason);
+				LOGGER.info("un-IP Banned " + hostAddress + " for " + reason);
 			}
-			ipBans.put(hostAddress, until);
+			if (until == 0) {
+				ipBans.remove(hostAddress);
+			} else {
+				ipBans.put(hostAddress, until);
+			}
+		}
+	}
+
+	public void ipMuteHost(final String hostAddress, final long until, String reason) {
+		// Do not IP mute afmans!
+		if(isHostAdmin(hostAddress) || hostAddress.equals("127.0.0.1")) {
+			String time = (until == -1) ? "permanently" : "until " + DateFormat.getInstance().format(until);
+			if (until != 0) {
+				LOGGER.info("Won't IP mute Afman " + hostAddress + ", would have been muted " + time + " for " + reason);
+			} else {
+				LOGGER.info("Won't un-IP mute Afman " + hostAddress + " for " + reason);
+			}
+			return;
+		}
+		Path filePath = Paths.get(MUTE_FILE_PATH);
+		Path tempFilePath = Paths.get(MUTE_TEMPFILE_PATH);
+		synchronized(ipMutes) {
+			if (until == -1 && (!ipMutes.containsKey(hostAddress) || ipMutes.get(hostAddress) == 0)) { // Perm mute
+				try {
+
+					//Copy the contents of the original file to the temp file
+					Files.copy(filePath, tempFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+					//Append the new hostAddress to the temp file
+					try (BufferedWriter writer = Files.newBufferedWriter(tempFilePath, StandardCharsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.APPEND)) {
+						writer.write(hostAddress);
+						writer.newLine();
+					}
+
+					//Atomically move temp file to replace the original file
+					Files.move(tempFilePath, filePath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					LOGGER.catching(e);
+				}
+			} else if (until == 0 && ipMutes.containsKey(hostAddress) && ipMutes.get(hostAddress) != 0) { // Unmute
+				try {
+					//Read from original file and write to temp file
+					try (BufferedReader reader = Files.newBufferedReader(filePath);
+						 BufferedWriter writer = Files.newBufferedWriter(tempFilePath)) {
+						String currentLine;
+						while ((currentLine = reader.readLine()) != null) {
+							if (!currentLine.trim().equals(hostAddress)) {
+								writer.write(currentLine);
+								writer.newLine();
+							}
+						}
+					}
+					//Atomically move temp file to original file
+					Files.move(tempFilePath, filePath, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+				} catch (IOException e) {
+					LOGGER.catching(e);
+				}
+			}
+			String time = (until == -1) ? " permanently" : " until " + DateFormat.getInstance().format(until);
+			if (until != 0) {
+				LOGGER.info("IP Muted " + hostAddress + time + " for " + reason);
+			} else {
+				LOGGER.info("un-IP Muted " + hostAddress + " for " + reason);
+			}
+			if (until == 0) {
+				ipMutes.remove(hostAddress);
+			} else {
+				ipMutes.put(hostAddress, until);
+			}
 		}
 	}
 
@@ -217,6 +329,16 @@ public class RSCPacketFilter {
 
 		synchronized(ipBans) {
 			return ipBans.containsKey(hostAddress) && (ipBans.get(hostAddress) >= System.currentTimeMillis() || ipBans.get(hostAddress) == -1);
+		}
+	}
+
+	public final boolean isHostIpMuted(final String hostAddress) {
+		if(isHostAdmin(hostAddress)) {
+			return false;
+		}
+
+		synchronized(ipMutes) {
+			return ipMutes.containsKey(hostAddress) && (ipMutes.get(hostAddress) >= System.currentTimeMillis() || ipMutes.get(hostAddress) == -1);
 		}
 	}
 
@@ -592,12 +714,28 @@ public class RSCPacketFilter {
 	}
 
 	public int clearAllIpBans() {
-		//We could clear IP bans from the text file, but that would be a bit pointless if they are meant to be permanent.
+		//We could clear IP bans from the text file, but that would be a bit pointless if they are meant to be permanent. We can remove them from the text file individually anyway via the IP ban command.
 		synchronized(ipBans) {
 				int banListSize = ipBans.size();
 				if (banListSize > 0) {
 						ipBans.clear();
 						return banListSize;
+				}
+		}
+		return 0;
+	}
+
+	public HashMap<String, Long> getIpMutes() {
+		return ipMutes;
+	}
+
+	public int clearAllIpMutes() {
+		//We could clear IP mutes from the text file, but that would be a bit pointless if they are meant to be permanent. We can remove them from the text file individually anyway via the IP mute command.
+		synchronized(ipMutes) {
+				int muteListSize = ipMutes.size();
+				if (muteListSize > 0) {
+						ipMutes.clear();
+						return muteListSize;
 				}
 		}
 		return 0;

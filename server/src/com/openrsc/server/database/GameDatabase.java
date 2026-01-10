@@ -76,6 +76,10 @@ public abstract class GameDatabase {
 
 	protected abstract String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException;
 
+	protected abstract void queryBanPlayersByUsernames(List<String> usernames, long banUntil) throws GameDatabaseException;
+
+	protected abstract String queryUnmutePlayersByLoginIp(String ip) throws GameDatabaseException;
+
 	protected abstract NpcLocation[] queryNpcLocations() throws GameDatabaseException;
 
 	protected abstract SceneryObject[] queryObjects() throws GameDatabaseException;
@@ -293,6 +297,12 @@ public abstract class GameDatabase {
 
 	public abstract void queryUpdatePlayerMute(final int playerId, final long time, final int muteType) throws GameDatabaseException;
 
+	public abstract Map<String, Long> queryCheckPlayerMutesByUsernames(List<String> usernames, int muteType) throws GameDatabaseException;
+
+	public abstract void queryBatchInsertPlayerMutes(List<String> usernames, long muteExpireTimestamp, int muteType) throws GameDatabaseException;
+
+	public abstract void queryBatchUpdatePlayerMutes(List<String> usernames, long muteExpireTimestamp, int muteType) throws GameDatabaseException;
+
 	public abstract void queryUpdatePlayerLocation(final int playerId, final Point newLocation) throws GameDatabaseException;
 
 	public abstract void queryInsertFormerName(final int playerId, final String formerName, final String whoChanged, final int changeType, final String reason) throws GameDatabaseException;
@@ -469,6 +479,29 @@ public abstract class GameDatabase {
 		} catch (final GameDatabaseException e) {
 			return "There is not an account by that username";
 		}
+	}
+
+	public void banPlayersByUsernames(List<String> usernames, Player bannedBy, int minutes) throws GameDatabaseException {
+		if (usernames == null || usernames.isEmpty()) return;
+
+		// For logout for all bans but not unbans
+		if (minutes != 0) {
+			for (String username : usernames) {
+				Player pl = getServer().getWorld().getPlayer(DataConversions.usernameToHash(username));
+				if (pl != null) {
+					pl.unregister(UnregisterForcefulness.FORCED, "You have been banned by " + bannedBy.getUsername() + " " + (minutes == -1 ? "permanently" : " for " + minutes + " minutes"));
+				}
+			}
+		}
+
+		long banUntil = (minutes == -1) ? -1 : (System.currentTimeMillis() + minutes * 60000L);
+
+		queryBanPlayersByUsernames(usernames, banUntil);
+
+	}
+
+	public String unmutePlayersByLoginIp(String ip) {
+		return queryUnmutePlayersByLoginIp(ip);
 	}
 
 	public void copyPassword(final String username, final String hash, final String salt) throws GameDatabaseException {
@@ -1091,6 +1124,18 @@ public abstract class GameDatabase {
 			duration = System.currentTimeMillis() + (duration * 60000L);
 		}
 		queryUpdatePlayerMute(playerId, duration, muteType);
+	}
+
+	public Map<String, Long> checkPlayerMutesByUsernames(List<String> usernames, int muteType) {
+		return queryCheckPlayerMutesByUsernames(usernames, muteType);
+	}
+
+	public void batchInsertPlayerMutes(List<String> usernames, long muteExpireTimestamp, int muteType) {
+		queryBatchInsertPlayerMutes(usernames, muteExpireTimestamp, muteType);
+	}
+
+	public void batchUpdatePlayerMutes(List<String> usernames, long muteExpireTimestamp, int muteType) {
+		queryBatchUpdatePlayerMutes(usernames, muteExpireTimestamp, muteType);
 	}
 
 	public void updatePlayerLocation(final int playerId, final Point newLocation) throws GameDatabaseException {

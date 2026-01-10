@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MySqlGameDatabase extends JDBCDatabase {
 
@@ -247,6 +248,35 @@ public class MySqlGameDatabase extends JDBCDatabase {
 			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return replyMessage;
+	}
+
+	@Override
+	public void queryBanPlayersByUsernames(List<String> usernames, long banUntil) throws GameDatabaseException {
+		String placeholders = usernames.stream().map(u -> "?").collect(Collectors.joining(", "));
+		String query = "UPDATE " + getMySqlQueries().PREFIX + "players SET banned = ? WHERE LOWER(username) IN (" + placeholders + ")";
+
+		try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+			stmt.setLong(1, banUntil);
+			for (int i = 0; i < usernames.size(); i++) {
+				stmt.setString(i + 2, usernames.get(i).toLowerCase());
+			}
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, e.getMessage());
+		}
+	}
+
+	@Override
+	public String queryUnmutePlayersByLoginIp(String ipAddress) throws GameDatabaseException {
+		try (final PreparedStatement statement = getConnection().prepareStatement(
+			getMySqlQueries().unmutePlayersByLoginIp
+		)) {
+			statement.setString(1, ipAddress);
+			statement.executeUpdate();
+			return "Player(s) unmuted successfully";
+		} catch (SQLException e) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, e.getMessage());
+		}
 	}
 
 	@Override
@@ -2685,6 +2715,105 @@ public class MySqlGameDatabase extends JDBCDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+	}
+
+	public Map<String, Long> queryCheckPlayerMutesByUsernames(List<String> usernames, int muteType) throws GameDatabaseException {
+		final int REGULAR_MUTE = 0;
+		Map<String, Long> playerMutes = new HashMap<>();
+
+		if (usernames == null || usernames.isEmpty()) {
+			return playerMutes;
+		}
+
+		String placeholders = usernames.stream().map(u -> "?").collect(Collectors.joining(", "));
+		//Since we have a dynamic number of placeholders/parameters based on the number of usernames provided, we CANNOT use MySqlQueries for storing our queries since MySqlQueries won't know how many placeholders we have in total.
+		String finalQuery =
+			"SELECT p.username, pc.value FROM " + getMySqlQueries().PREFIX + "players p " +
+			"JOIN " + getMySqlQueries().PREFIX + "player_cache pc ON p.id = pc.playerID " +
+			"WHERE pc.key = ? AND pc.type = 3 AND LOWER(p.username) IN (" + placeholders + ")";
+
+		try (final PreparedStatement statement = getConnection().prepareStatement(finalQuery)) {
+			// Bind key (mute_expires or global_mute)
+			statement.setString(1, muteType == REGULAR_MUTE ? "mute_expires" : "global_mute");
+
+			// Bind usernames (starting from index 2)
+			for (int i = 0; i < usernames.size(); i++) {
+				statement.setString(i + 2, usernames.get(i).toLowerCase());
+			}
+
+			try (final ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					String username = resultSet.getString("username");
+					long muteExpires = resultSet.getLong("value");
+					playerMutes.put(username.toLowerCase(), muteExpires);
+				}
+			}
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+
+		return playerMutes;
+	}
+
+	public void queryBatchInsertPlayerMutes(List<String> usernames, long muteExpireTimestamp, int muteType) throws GameDatabaseException {
+		final int REGULAR_MUTE = 0;
+
+		if (usernames == null || usernames.isEmpty()) return;
+
+		String placeholders = usernames.stream().map(u -> "?").collect(Collectors.joining(", "));
+		//Since we have a dynamic number of placeholders/parameters based on the number of usernames provided, we CANNOT use MySqlQueries for storing our queries since MySqlQueries won't know how many placeholders we have in total.
+		String finalQuery =
+			"INSERT INTO " + getMySqlQueries().PREFIX + "player_cache (playerID, type, `key`, value) " +
+			"SELECT p.id, 3, ?, ? FROM " + getMySqlQueries().PREFIX + "players p " +
+			"WHERE LOWER(p.username) IN (" + placeholders + ")";
+
+		try (final PreparedStatement statement = getConnection().prepareStatement(finalQuery)) {
+			// Set mute key
+			statement.setString(1, muteType == REGULAR_MUTE ? "mute_expires" : "global_mute");
+
+			// Set mute timestamp
+			statement.setLong(2, muteExpireTimestamp);
+
+			// Set usernames
+			for (int i = 0; i < usernames.size(); i++) {
+				statement.setString(i + 3, usernames.get(i).toLowerCase());
+			}
+
+			statement.executeUpdate();
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
+		}
+	}
+
+	public void queryBatchUpdatePlayerMutes(List<String> usernames, long muteExpireTimestamp, int muteType) throws GameDatabaseException {
+		final int REGULAR_MUTE = 0;
+
+		if (usernames == null || usernames.isEmpty()) return;
+
+		String placeholders = usernames.stream().map(u -> "?").collect(Collectors.joining(", "));
+		//Since we have a dynamic number of placeholders/parameters based on the number of usernames provided, we CANNOT use MySqlQueries for storing our queries since MySqlQueries won't know how many placeholders we have in total.
+		String finalQuery =
+			"UPDATE " + getMySqlQueries().PREFIX + "player_cache pc " +
+			"JOIN " + getMySqlQueries().PREFIX + "players p ON p.id = pc.playerID " +
+			"SET pc.value = ? " +
+			"WHERE pc.key = ? AND LOWER(p.username) IN (" + placeholders + ")";
+
+		try (final PreparedStatement statement = getConnection().prepareStatement(finalQuery)) {
+			// Set mute timestamp
+			statement.setLong(1, muteExpireTimestamp);
+
+			// Set mute key
+			statement.setString(2, muteType == REGULAR_MUTE ? "mute_expires" : "global_mute");
+
+			// Set usernames
+			for (int i = 0; i < usernames.size(); i++) {
+				statement.setString(i + 3, usernames.get(i).toLowerCase());
+			}
+
+			statement.executeUpdate();
+		} catch (SQLException ex) {
 			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}

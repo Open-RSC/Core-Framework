@@ -125,6 +125,12 @@ public final class Admins implements CommandTrigger {
 			viewIpBan(player, command, args);
 		} else if (command.equalsIgnoreCase("viewipbanslist") || command.equalsIgnoreCase("viewipbanlist") || command.equalsIgnoreCase("checkipbanslist") || command.equalsIgnoreCase("checkipbanlist")) {
 			viewIpBansList(player);
+		} else if (command.equalsIgnoreCase("clearipmutes")) {
+			clearIpMutes(player);
+		} else if (command.equalsIgnoreCase("viewipmute") || command.equalsIgnoreCase("checkipmute")) {
+			viewIpMute(player, command, args);
+		} else if (command.equalsIgnoreCase("viewipmuteslist") || command.equalsIgnoreCase("viewipmutelist") || command.equalsIgnoreCase("checkipmuteslist") || command.equalsIgnoreCase("checkipmutelist")) {
+			viewIpMutesList(player);
 		} else if (command.equalsIgnoreCase("fixloggedincount")) {
 			recalcLoggedInCounts(player);
 		} else if (command.equalsIgnoreCase("getloggedincount")) {
@@ -816,6 +822,51 @@ public final class Admins implements CommandTrigger {
 				sb = new StringBuilder(); //Reset the StringBuilder for the next line
 			}
 		}
+	}
+
+	private void viewIpMute(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (ip)");
+			return;
+		}
+		String ipToCheck = args[0];
+		HashMap<String, Long> ipMutes = player.getWorld().getServer().getPacketFilter().getIpMutes();
+
+		if (ipMutes.containsKey(ipToCheck)) {
+			Long muteTimestamp = ipMutes.get(ipToCheck);
+			String muteDate = (muteTimestamp == -1) ? "Never" : DateFormat.getInstance().format(muteTimestamp);
+			player.message(messagePrefix + "IP " + ipToCheck + " is muted. Unmute date: " + muteDate);
+		} else {
+			player.message(messagePrefix + "IP " + ipToCheck + " is not muted.");
+		}
+	}
+
+	private void viewIpMutesList(Player player) {
+		HashMap<String, Long> ipMutes = player.getWorld().getServer().getPacketFilter().getIpMutes();
+		if (ipMutes.isEmpty()) {
+			player.message(messagePrefix + "There are no muted IPs.");
+			return;
+		}
+		player.message(messagePrefix + "The following IPs are currently muted: ");
+		StringBuilder sb = new StringBuilder();
+		int count = 0;
+		for (String ip : ipMutes.keySet()) {
+			sb.append(ip);
+			count++;
+			//Append a comma only if this is not the last IP in the group of three and not the last IP overall
+			if (count % 3 != 0 && count != ipMutes.size()) {
+				sb.append(", ");
+			}
+			if (count % 3 == 0 || count == ipMutes.size()) {
+				player.message(sb.toString());
+				sb = new StringBuilder(); //Reset the StringBuilder for the next line
+			}
+		}
+	}
+
+	private void clearIpMutes(Player player) {
+		int removedIpAddresses = player.getWorld().getServer().clearAllIpMutes();
+		player.message(messagePrefix + "Cleared " + removedIpAddresses + " from the Muted IP Table.");
 	}
 
 	private void recalcLoggedInCounts(Player player) {

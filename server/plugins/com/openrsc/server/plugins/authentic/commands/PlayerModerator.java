@@ -11,6 +11,7 @@ import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import java.util.stream.Collectors;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.AppearanceRetroConverter;
@@ -20,9 +21,9 @@ import com.openrsc.server.util.rsc.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import static com.openrsc.server.constants.AppearanceId.*;
 import static com.openrsc.server.plugins.Functions.*;
@@ -57,6 +58,10 @@ public final class PlayerModerator implements CommandTrigger {
 			mutePlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("unmute")) {
 			unmutePlayer(player, command, args);
+		} else if (command.equalsIgnoreCase("muteall")) {
+			mutePlayersByRelatedIps(player, command, args);
+		} else if (command.equalsIgnoreCase("unmuteall")) {
+			unmutePlayersByRelatedIps(player, command, args);
 		} else if (command.equalsIgnoreCase("alert")) {
 			showPlayerAlertBox(player, command, args);
 		} else if (command.equalsIgnoreCase("set_icon")) {
@@ -355,7 +360,7 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 	}
 
-	private void setupMute(Player player, String command, String[] args, int muteType) {
+	private void setupMute(Player player, String command, String[] args, int muteType, boolean muteAll) {
 		final Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 		int targetPlayerId = -1;
 		String targetPlayerUsername = "";
@@ -470,6 +475,130 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 
 		mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, shadowMute, reason, muteType);
+
+		if (muteAll) {
+			long muteExpireTimestamp = (minutes == -1) ? -1 : (System.currentTimeMillis() + minutes * 60000L);
+			try {
+				PlayerIps playerIps = player.getWorld().getServer().getDatabase().playerIps(targetPlayerUsername);
+
+				// Normalize localhost and fallback IPs
+				playerIps.creationIp = stripPort(playerIps.creationIp);
+				playerIps.loginIp = stripPort(playerIps.loginIp);
+				boolean localCreationIp = playerIps.creationIp.equals("127.0.0.1");
+				boolean localLoginIp = playerIps.loginIp.equals("127.0.0.1");
+				boolean neverLoggedIn = playerIps.loginIp.equals("0.0.0.0");
+				final String targetPlayerUsernameLambda = targetPlayerUsername;
+
+				if ((localCreationIp && localLoginIp) || (localCreationIp && neverLoggedIn)) {
+					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "MuteAll Localhost Check") {
+						@Override
+						public void action() {
+							player.message(messagePrefix + targetPlayerUsernameLambda + " was a webclient-only player.");
+						}
+					});
+					return;
+				} else if (localCreationIp) {
+					playerIps.creationIp = playerIps.loginIp;
+				} else if (localLoginIp || neverLoggedIn) {
+					playerIps.loginIp = playerIps.creationIp;
+				}
+
+				List<LinkedPlayer> linkedPlayers = new ArrayList<>(Arrays.asList(
+					player.getWorld().getServer().getDatabase().linkedPlayers(playerIps.loginIp, playerIps.creationIp)
+				));
+				//We use a CopyOnWriteArrayList so we can iterate through usernames, perform the mute if the player is online, and then remove the username from the list without generating a ConcurrentModificationException.
+				CopyOnWriteArrayList<String> usernames = linkedPlayers.stream()
+					.map(lp -> lp.username)
+					.collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+				System.out.println("Going to try " + (minutes == 0 ? "unmuting" : "muting") + " players: " + usernames);
+
+				for (String username : usernames) {
+					Player pl = player.getWorld().getPlayer(DataConversions.usernameToHash(username));
+					if (pl != null) {
+						mute(player, pl, pl.getDatabaseID(), pl.getUsername(), minutes, shadowMute, reason, muteType);
+						usernames.remove(pl.getUsername());
+					}
+				}
+
+				Map<String, Long> existingMutes = player.getWorld().getServer().getDatabase()
+					.queryCheckPlayerMutesByUsernames(usernames, muteType);
+
+				List<String> updateUsernames = new ArrayList<>(existingMutes.keySet());
+				System.out.println("Usernames to update mutes (mute type: " + muteType + ": " + updateUsernames);
+				List<String> insertUsernames = usernames.stream()
+					.map(String::toLowerCase)
+					.filter(u -> !existingMutes.containsKey(u))
+					.collect(Collectors.toList());
+				System.out.println("Usernames to insert mutes (mute type: " + muteType + ": " + insertUsernames);
+
+				player.getWorld().getServer().getDatabase().batchUpdatePlayerMutes(updateUsernames, muteExpireTimestamp, muteType);
+				player.getWorld().getServer().getDatabase().queryBatchInsertPlayerMutes(insertUsernames, muteExpireTimestamp, muteType);
+
+				player.message(messagePrefix + "All accounts related to " + targetPlayerUsername + " have been " + (minutes == 0 ? "unmuted." : "muted."));
+				LOGGER.info("[MUTEALL] " + player.getUsername() + " " + (minutes == 0 ? "unmuted" : "muted") + " all related to " + targetPlayerUsername);
+
+				String muteText = muteType == GLOBAL_MUTE ? " global " : " ";
+				String minuteText = minutes == -1 ? "permanent " : (minutes == 0 ? "" : minutes + " minute ");
+
+				String actionText = (minutes == 0)
+					? " had their" + muteText + "mute lifted."
+					: " was given a " + minuteText + muteText + "mute.";
+
+				String suffix = (reason != null && !reason.isEmpty()) ? " Reason: " + reason : "";
+
+				// Combine both update and insert usernames into one list
+				List<String> allLogged = new ArrayList<>();
+				allLogged.addAll(updateUsernames);
+				allLogged.addAll(insertUsernames);
+
+				// Loop through each player and log individually (database row per player could get laggy, except we run the queries on the database logger thread so it should be fine)
+				for (String username : allLogged) {
+					String msg = username + actionText + suffix;
+					player.getWorld().getServer().getGameLogger().addQuery(
+						new StaffLog(player, 0, null, msg));
+				}
+
+				boolean noBox = !player.getClientLimitations().supportsMessageBox;
+
+				StringBuilder builder = new StringBuilder();
+				builder.append((minutes == 0 ? "@gre@Unmuted:@whi@ " : "@red@Muted:@whi@ "));
+
+				List<String> affectedUsers = new ArrayList<>();
+				affectedUsers.addAll(updateUsernames);
+				affectedUsers.addAll(insertUsernames);
+
+				for (int i = 0; i < affectedUsers.size(); i++) {
+					String name = affectedUsers.get(i);
+					builder.append(name);
+					if (i != affectedUsers.size() - 1) {
+						builder.append("@whi@, ");
+					}
+					final String msg = builder.toString();
+					if (noBox) {
+						player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "MuteAll Player List") {
+							@Override
+							public void action() {
+								player.playerServerMessage(MessageType.QUEST, msg);
+							}
+						});
+						builder.setLength(0);
+					}
+				}
+
+				if (!noBox) {
+					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "MuteAll Box") {
+						@Override
+						public void action() {
+							ActionSender.sendBox(player, builder.toString(), affectedUsers.size() >= 8);
+						}
+					});
+				}
+
+			} catch (GameDatabaseException ex) {
+				player.message(messagePrefix + "A database error occurred while muting related accounts.");
+				LOGGER.catching(ex);
+			}
+		}
 	}
 
 	private void unmutePlayerGlobal(Player player, String command, String[] args) {
@@ -487,7 +616,7 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
-		setupMute(player, command, args, GLOBAL_MUTE);
+		setupMute(player, command, args, GLOBAL_MUTE, false);
 	}
 
 	private void unmutePlayer(Player player, String command, String[] args) {
@@ -505,7 +634,28 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
-		setupMute(player, command, args, REGULAR_MUTE);
+		setupMute(player, command, args, REGULAR_MUTE, false);
+	}
+
+	private void mutePlayersByRelatedIps(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
+			player.message("... (Shadow mute) (Reason)");
+			return;
+		}
+
+		setupMute(player, command, args, REGULAR_MUTE, true);
+	}
+
+	private void unmutePlayersByRelatedIps(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
+			return;
+		}
+
+		// Override args with time = 0 (unmute)
+		String[] newArgs = new String[]{ args[0], "0" };
+		setupMute(player, command, newArgs, REGULAR_MUTE, true);
 	}
 
 	private void showPlayerAlertBox(Player player, String command, String[] args) {
