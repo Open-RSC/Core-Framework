@@ -222,7 +222,8 @@ public final class RegularPlayer implements CommandTrigger {
 		if (config().WANT_GLOBAL_RULES_AGREEMENT) {
 			globalChatInfo.append(" Make sure to read the rules by typing @cya@::globalrules@whi@ at any time. % %");
 		}
-		globalChatInfo.append("Also, it is possible to change where global chat messages appear with the @cya@::gq@whi@ or @cya@::gp@whi@ commands.");
+		globalChatInfo.append("Also, it is possible to change where global chat messages appear with the @cya@::gq@whi@ or @cya@::gp@whi@ commands. % %");
+		globalChatInfo.append("You can send a global chat message by sending a private message to @cya@Global$@whi@ or by typing @cya@::g@whi@ with your message.");
 
 		if (player.getClientLimitations().supportsMessageBox) {
 			ActionSender.sendBox(player, globalChatInfo.toString(), true);
