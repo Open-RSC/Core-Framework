@@ -598,6 +598,10 @@ public class Bank {
 
 			// Add the item to the inventory (or fail and place it back into the bank).
 			if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
+				// If the client doesn't support the item, DON'T ADD IT BACK because it dropped on the ground.
+				if (player.getClientLimitations().maxItemId < item.getCatalogId()) {
+					return;
+				}
 				add(item);
 			}
 		} else {
@@ -611,6 +615,10 @@ public class Bank {
 
 				// Add the item to the inventory (or fail and place it back into the bank).
 				if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
+					// If the client doesn't support the item, DON'T ADD IT BACK because it dropped on the ground.
+					if (player.getClientLimitations().maxItemId < item.getCatalogId()) {
+						break;
+					}
 					add(item);
 					break;
 				}
