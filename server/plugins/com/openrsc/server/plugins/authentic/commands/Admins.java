@@ -272,6 +272,10 @@ public final class Admins implements CommandTrigger {
 			reloadSSLCert(player);
 		} else if (command.equalsIgnoreCase("sqlerrorreportingtest")) {
 			sqlErrorReportingTest(player, command, args);
+		} else if (command.equalsIgnoreCase("mip") || command.equalsIgnoreCase("smip") || command.equalsIgnoreCase("setmonitorip") || command.equalsIgnoreCase("monitorip")) {
+			setDowntimeMonitorIp(player, command, args);
+		} else if (command.equalsIgnoreCase("mas") || command.equalsIgnoreCase("smas") || command.equalsIgnoreCase("setmonitorautomaticshutdown") || command.equalsIgnoreCase("monitorautomaticshutdown")) {
+			setDowntimeMonitorAutomaticShutdown(player, command, args);
 		}
 
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
@@ -315,6 +319,37 @@ public final class Admins implements CommandTrigger {
 		}
 		player.getConfig().MONITOR_IP_TIMEOUT = newTimeoutMillis;
 		player.message("set player.getConfig().MONITOR_IP_TIMEOUT to " + player.getConfig().MONITOR_IP_TIMEOUT);
+	}
+
+	private void setDowntimeMonitorIp(Player player, String command, String[] args) {
+		if (args.length == 0) {
+			player.message("The current MONITOR_IP is " + player.getConfig().MONITOR_IP);
+			return;
+		}
+		player.getConfig().MONITOR_IP = args[0];
+		player.message("Set MONITOR_IP to " + player.getConfig().MONITOR_IP);
+	}
+
+	private void setDowntimeMonitorAutomaticShutdown(Player player, String command, String[] args) {
+		if (args.length == 0) {
+			player.message("The current MONITOR_AUTOMATIC_SHUTDOWN is " + player.getConfig().MONITOR_AUTOMATIC_SHUTDOWN);
+			return;
+		}
+
+		String input = args[0].toLowerCase();
+		boolean automaticShutdown;
+
+		if (input.equals("true") || input.equals("yes")) {
+			automaticShutdown = true;
+		} else if (input.equals("false") || input.equals("no")) {
+			automaticShutdown = false;
+		} else {
+			player.message("Invalid input. Please use true/false or yes/no.");
+			return;
+		}
+
+		player.getConfig().MONITOR_AUTOMATIC_SHUTDOWN = automaticShutdown;
+		player.message("Set MONITOR_AUTOMATIC_SHUTDOWN to " + automaticShutdown);
 	}
 
 	private void setPidShufflingSchedule(Player player, String command, String[] args) {

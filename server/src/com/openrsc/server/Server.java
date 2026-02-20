@@ -132,6 +132,9 @@ public class Server implements Runnable {
 
 	private final ListeningExecutorService sqlLoggingThreadPool;
 	private final ListeningExecutorService sqlThreadPool;
+	private final ListeningExecutorService onlineMonitorThreadPool;
+
+	private volatile boolean onlineReachable = true;
 
 	public static final String rscConnectionHandlerId = "handler";
 
@@ -299,6 +302,12 @@ public class Server implements Runnable {
 		sqlExecutor.allowCoreThreadTimeOut(false);
 		sqlExecutor.setThreadFactory(new NamedThreadFactory(getName() + " : SqlThread", getConfig()));
 		sqlThreadPool = MoreExecutors.listeningDecorator(sqlExecutor);
+		ThreadPoolExecutor onlineMonitorExecutor = new ThreadPoolExecutor(
+			1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>()
+		);
+		onlineMonitorExecutor.allowCoreThreadTimeOut(false);
+		onlineMonitorExecutor.setThreadFactory(new NamedThreadFactory(getName() + " : OnlineMonitorThread", getConfig()));
+		onlineMonitorThreadPool = MoreExecutors.listeningDecorator(onlineMonitorExecutor);
 		MessageFilter.loadGoodAndBadWordsFromDisk();
 		StringUtil.loadJagGoodAndBadWordsFromDisk(); // static/hardcoded jag good and badwords for retro protocols
 
@@ -749,20 +758,29 @@ public class Server implements Runnable {
 		}
 
 		try {
-			InetAddress address = InetAddress.getByName(getConfig().MONITOR_IP);
-			long timeOffline = System.currentTimeMillis();
-			boolean monitor_reachable = address.isReachable(getConfig().MONITOR_IP_TIMEOUT);
+			submitOnlineMonitor(() -> {
+				try {
+					LOGGER.info("Checking monitor IP " + getConfig().MONITOR_IP);
+					InetAddress address = InetAddress.getByName(getConfig().MONITOR_IP);
+					this.onlineReachable = address.isReachable(getConfig().MONITOR_IP_TIMEOUT);
+				} catch (IOException ex) {
+					LOGGER.catching(ex);
+					onlineReachable = false;
+				}
+			});
+
 			boolean unloadedPlayers = false;
-			final boolean OFFLINE_THIS_TICK = !monitor_reachable;
+			final boolean OFFLINE_THIS_TICK = !onlineReachable;
 			int playersOnline = 0;
-			if (!monitor_reachable) {
+			long timeOffline = System.currentTimeMillis();
+			if (!onlineReachable) {
 				// calculate number of affected users
 				for (Player p : getWorld().getPlayers()) {
 					playersOnline++;
 				}
 			}
-			while (!monitor_reachable) {
-				LOGGER.info(getConfig().SERVER_NAME + " has been offline for " + (System.currentTimeMillis() - timeOffline) + " millis!");
+			while (!onlineReachable) {
+				LOGGER.info(getConfig().SERVER_NAME + " has been offline from " + getConfig().MONITOR_IP +  " for " + (System.currentTimeMillis() - timeOffline) + " millis!");
 				// after 10 seconds offline, give up and unregister all players
 				if (System.currentTimeMillis() - timeOffline > 10000 && !unloadedPlayers) {
 					LOGGER.info(getConfig().SERVER_NAME + " server offline for over 10 seconds, unloading all players...");
@@ -770,14 +788,30 @@ public class Server implements Runnable {
 					LOGGER.info("unloaded all players on " + getConfig().SERVER_NAME + " as a result of being offline for over 10 seconds.");
 					unloadedPlayers = true;
 				}
-				monitor_reachable = address.isReachable(getConfig().MONITOR_IP_TIMEOUT);
+				onlineReachable =  InetAddress.getByName(getConfig().MONITOR_IP).isReachable(getConfig().MONITOR_IP_TIMEOUT);
 			}
 
 			// now back online
 			if (OFFLINE_THIS_TICK) {
+				LOGGER.info(getDowntimeReportForLogFile(timeOffline, System.currentTimeMillis(), unloadedPlayers, playersOnline));
 				// tell discord we were offline, for how long, and that we are now back online.
 				if (getDiscordService() != null) {
 					getDiscordService().reportDowntimeToDiscord(timeOffline, System.currentTimeMillis(), unloadedPlayers, playersOnline);
+				}
+
+				if (getConfig().MONITOR_AUTOMATIC_SHUTDOWN) {
+					LOGGER.info("Online connection restored, shutting down now...");
+					try {
+						String restartFileName = getConfig().configFile + "_shutdown.txt";
+						File restartFile = new File(restartFileName);
+						if (!restartFile.exists()) {
+							restartFile.createNewFile();
+						}
+						LOGGER.info("Created shutdown file: " + restartFileName);
+						System.exit(0); // Shutdown the server
+					} catch (IOException e) {
+						LOGGER.fatal("Failed to create shutdown file after automatic shutdown: " + e.getMessage());
+					}
 				}
 			}
 		} catch(IOException ex) {
@@ -785,6 +819,40 @@ public class Server implements Runnable {
 		}
 	}
 
+	private String getDowntimeReportForLogFile(long startmillis, long endmillis, boolean unloaded, int onlineCount) {
+		long downtime = endmillis - startmillis;
+		StringBuilder mainContent = new StringBuilder();
+		mainContent.append(getName());
+		mainContent.append(" is now back online...!\n\n");
+
+		mainContent.append("The server detected it was offline at ");
+		mainContent.append(new java.text.SimpleDateFormat("MMMM d, yyyy hh:mm a").format(new java.util.Date(startmillis)));
+		mainContent.append(" (");
+		mainContent.append(startmillis);
+		mainContent.append(") and recovered at ");
+		mainContent.append(new java.text.SimpleDateFormat("MMMM d, yyyy hh:mm a").format(new java.util.Date(endmillis)));
+		mainContent.append(" (");
+		mainContent.append(endmillis);
+		mainContent.append("). A total downtime of ");
+
+		if (downtime > 60000) {
+			mainContent.append(downtime / 60000);
+			mainContent.append(" minutes.");
+		} else {
+			mainContent.append(downtime / 1000);
+			mainContent.append(" seconds.");
+		}
+
+		if (unloaded) {
+			mainContent.append("\n\nBecause the downtime was so long, all players were unloaded from the server, after 10 seconds.");
+		}
+
+		mainContent.append("\n\n");
+		mainContent.append(onlineCount);
+		mainContent.append(" accounts were logged in at the time of the outage.");
+
+		return mainContent.toString();
+	}
 	private void dailyShutdownEvent() {
 		try {
 			if (getConfig().WANT_AUTO_SERVER_SHUTDOWN) {
@@ -962,6 +1030,14 @@ public class Server implements Runnable {
 
 	public <V> ListenableFuture<V> submitSqlLogging(Callable<V> callable) {
 		return sqlLoggingThreadPool.submit(callable);
+	}
+
+	public ListenableFuture<?> submitOnlineMonitor(Runnable runnable) {
+		return onlineMonitorThreadPool.submit(runnable);
+	}
+
+	public <V> ListenableFuture<V> submitOnlineMonitor(Callable<V> callable) {
+		return onlineMonitorThreadPool.submit(callable);
 	}
 
 	public ListenableFuture<?> submitSql(Runnable runnable) {

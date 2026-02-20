@@ -194,6 +194,7 @@ public class ServerConfiguration {
 	public boolean WANT_DISCORD_BOT;
 	public long CROSS_CHAT_CHANNEL;
 	public boolean MONITOR_ONLINE;
+	public boolean MONITOR_AUTOMATIC_SHUTDOWN;
 	public String MONITOR_IP;
 	public boolean WANT_DISCORD_DOWNTIME_REPORTS;
 
@@ -694,6 +695,7 @@ public class ServerConfiguration {
 		// Monitoring to ensure server is online
 		MONITOR_IP = tryReadString("monitor_ip").orElse("localhost");
 		MONITOR_ONLINE = tryReadBool("monitor_online").orElse(false);
+		MONITOR_AUTOMATIC_SHUTDOWN = tryReadBool("monitor_automatic_shutdown").orElse(false);
 		DISCORD_DOWNTIME_REPORTS_MILLISECONDS_DOWN_BEFORE_REPORT = tryReadInt("discord_downtime_reports_milliseconds_down_before_report").orElse(1000);
 		MONITOR_IP_TIMEOUT = tryReadInt("monitor_ip_timeout").orElse(100);
 		DISCORD_DOWNTIME_REPORT_WEBHOOK_URL = tryReadString("discord_downtime_report_webhook_url").orElse("null");

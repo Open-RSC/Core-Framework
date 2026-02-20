@@ -506,7 +506,7 @@ public class DiscordService implements Runnable{
 		generalLog(errorMessage);
 	}
 
-	private void generalLog(final String message) {
+	public void generalLog(final String message) {
 		if (getServer().getConfig().WANT_DISCORD_GENERAL_LOGGING) {
 			generalLogs.add(message);
 		}
