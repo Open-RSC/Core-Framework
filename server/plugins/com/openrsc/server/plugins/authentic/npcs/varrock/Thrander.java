@@ -50,6 +50,10 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 				newItemNameLower = newItemNameLower.substring(0, 1).toUpperCase() + newItemNameLower.substring(1);
 			}
 
+			if (!ifheld(item.getCatalogId(), 1)) {
+				mes("Nothing interesting happens.");
+				return;
+			}
 			remove(item.getCatalogId(), 1);
 
 			if (itemNameLower.contains("top") || itemNameLower.contains("body")) {
