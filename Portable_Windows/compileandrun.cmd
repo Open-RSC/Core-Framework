@@ -21,7 +21,6 @@ echo Waiting for server to be ready on port %serverport%...
 PING localhost -n 6 >NUL
 netstat -an | find ":%serverport%" | find "LISTENING" >NUL
 if errorlevel 1 (
-    echo Server not ready yet, waiting...
     goto wait_for_server
 )
 
