@@ -6,4 +6,5 @@ public class LinkedPlayer {
 	public long banned;
 	public long mute_expires;
 	public long global_mute;
+	public int group_id;
 }

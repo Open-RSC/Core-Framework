@@ -173,7 +173,7 @@ public class MySqlQueries {
 		"WHERE p.login_ip = ? AND pc.key IN ('mute_expires', 'global_mute')";
 		initializeOnlineUsers = "UPDATE `" + PREFIX + "players` SET `online`='0' WHERE online='1'";
 		fetchPlayerIps = "SELECT `login_ip`, `creation_ip` FROM `" + PREFIX + "players` WHERE `username` like ?";
-		fetchLinkedPlayers = "SELECT p.`id`, p.`username`, p.`banned`, gm.`key` AS `global_mute_key`, gm.`value` AS `global_mute_value`, me.`key` AS `mute_expires_key`, me.`value` AS `mute_expires_value` FROM `"
+		fetchLinkedPlayers = "SELECT p.`id`, p.`username`, p.`banned`, p.`group_id`, gm.`key` AS `global_mute_key`, gm.`value` AS `global_mute_value`, me.`key` AS `mute_expires_key`, me.`value` AS `mute_expires_value` FROM `"
 			+ PREFIX + "players` p LEFT JOIN `" + PREFIX + "player_cache` gm ON p.`id` = gm.`playerId` AND gm.`key` = 'global_mute' LEFT JOIN `"
 			+ PREFIX + "player_cache` me ON p.`id` = me.`playerId` AND me.`key` = 'mute_expires' WHERE (p.`login_ip` LIKE ? OR p.`login_ip` LIKE ? OR p.`creation_ip` LIKE ? OR p.`creation_ip` LIKE ?)";
 		addNpcSpawn = "INSERT INTO `" + PREFIX + "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES(?, ?, ?, ?, ?, ?, ?)";

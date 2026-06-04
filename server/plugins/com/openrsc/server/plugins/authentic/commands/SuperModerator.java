@@ -315,7 +315,7 @@ public final class SuperModerator implements CommandTrigger {
 				return;
 			}
 
-			if (minutes == -1 && !player.isAdmin()) {
+			if (minutes == -1 && !player.isMod()) {
 				player.message(messagePrefix + "You are not allowed to permanently ban users.");
 				return;
 			}
@@ -358,11 +358,17 @@ public final class SuperModerator implements CommandTrigger {
 			long newBanUntil = (minutes == -1) ? -1 : (System.currentTimeMillis() + minutes * 60000L);
 			List<String> usernamesToBan = new ArrayList<>();
 			List<String> skippedUsernames = new ArrayList<>();
+			List<String> skippedStaffUsernames = new ArrayList<>();
 			// linkedPlayers can return the same account more than once (it matches against both the login and
 			// creation IP), so de-duplicate by username to avoid banning or listing the same player twice.
 			Set<String> seenUsernames = new HashSet<>();
 			for (LinkedPlayer lp : linkedPlayers) {
 				if (!seenUsernames.add(lp.username.toLowerCase())) {
+					continue;
+				}
+				// Never action a staff account that outranks the issuer (a lower group_id is a higher rank).
+				if (lp.group_id < player.getGroupID()) {
+					skippedStaffUsernames.add(lp.username);
 					continue;
 				}
 				if (isRestrictionRedundant(lp.banned, newBanUntil, now, minutes == 0)) {
@@ -379,17 +385,20 @@ public final class SuperModerator implements CommandTrigger {
 
 			// Send message to the moderator
 			player.message(messagePrefix + usernamesToBan.size() + " account(s) related to " + targetPlayerUsername + " have been " + action + duration
-				+ (skippedUsernames.isEmpty() ? "" : " (" + skippedUsernames.size() + " skipped)"));
+				+ (skippedUsernames.isEmpty() ? "" : " (" + skippedUsernames.size() + " skipped)")
+				+ (skippedStaffUsernames.isEmpty() ? "" : " (" + skippedStaffUsernames.size() + " staff skipped)"));
 
 			// Log the full list to the console/file
 			LOGGER.info("[BANALL] " + player.getUsername() + " " + action + " all related to " + targetPlayerUsername + duration
 				+ " Affected (" + usernamesToBan.size() + "): " + usernamesToBan
-				+ (skippedUsernames.isEmpty() ? "" : " Skipped already " + action + " (" + skippedUsernames.size() + "): " + skippedUsernames));
+				+ (skippedUsernames.isEmpty() ? "" : " Skipped already " + action + " (" + skippedUsernames.size() + "): " + skippedUsernames)
+				+ (skippedStaffUsernames.isEmpty() ? "" : " Skipped staff of greater rank (" + skippedStaffUsernames.size() + "): " + skippedStaffUsernames));
 
 			// Log the full affected list to the staff commands Discord channel.
 			String discordMsg = action + " " + usernamesToBan.size() + " account(s) related to " + targetPlayerUsername + duration
 				+ (usernamesToBan.isEmpty() ? "" : " Affected: " + String.join(", ", usernamesToBan))
-				+ (skippedUsernames.isEmpty() ? "" : " | Skipped already " + action + ": " + String.join(", ", skippedUsernames));
+				+ (skippedUsernames.isEmpty() ? "" : " | Skipped already " + action + ": " + String.join(", ", skippedUsernames))
+				+ (skippedStaffUsernames.isEmpty() ? "" : " | Skipped staff: " + String.join(", ", skippedStaffUsernames));
 			if (player.getWorld().getServer().getDiscordService() != null) {
 				player.getWorld().getServer().getDiscordService().staffActionLog(player, discordMsg);
 			}

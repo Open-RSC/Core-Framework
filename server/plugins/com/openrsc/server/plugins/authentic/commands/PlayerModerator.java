@@ -551,10 +551,17 @@ public final class PlayerModerator implements CommandTrigger {
 				// creation IP), so de-duplicate by username to avoid processing or listing the same player twice.
 				Set<String> seenUsernames = new HashSet<>();
 				List<String> uniqueUsernames = new ArrayList<>();
+				List<String> skippedStaffUsernames = new ArrayList<>();
 				for (LinkedPlayer lp : linkedPlayers) {
-					if (seenUsernames.add(lp.username.toLowerCase())) {
-						uniqueUsernames.add(lp.username);
+					if (!seenUsernames.add(lp.username.toLowerCase())) {
+						continue;
 					}
+					// Never action a staff account that outranks the issuer (a lower group_id is a higher rank).
+					if (lp.group_id < player.getGroupID()) {
+						skippedStaffUsernames.add(lp.username);
+						continue;
+					}
+					uniqueUsernames.add(lp.username);
 				}
 
 				long now = System.currentTimeMillis();
@@ -640,7 +647,8 @@ public final class PlayerModerator implements CommandTrigger {
 				}
 
 				player.message(messagePrefix + affectedUsernames.size() + " account(s) related to " + targetPlayerUsername + " have been " + (minutes == 0 ? "unmuted." : "muted.")
-					+ (skippedUsernames.isEmpty() ? "" : " (" + skippedUsernames.size() + " skipped)"));
+					+ (skippedUsernames.isEmpty() ? "" : " (" + skippedUsernames.size() + " skipped)")
+					+ (skippedStaffUsernames.isEmpty() ? "" : " (" + skippedStaffUsernames.size() + " staff skipped)"));
 
 				String muteText = muteType == GLOBAL_MUTE ? " global " : " ";
 				String minuteText = minutes == -1 ? "permanent " : (minutes == 0 ? "" : minutes + " minute ");
@@ -654,13 +662,15 @@ public final class PlayerModerator implements CommandTrigger {
 				// Log the full list to the console/file.
 				LOGGER.info("[MUTEALL] " + player.getUsername() + " " + (minutes == 0 ? "unmuted" : "muted") + " all related to " + targetPlayerUsername
 					+ " Affected (" + affectedUsernames.size() + "): " + affectedUsernames
-					+ (skippedUsernames.isEmpty() ? "" : " Skipped already " + (minutes == 0 ? "unmuted" : "muted") + " (" + skippedUsernames.size() + "): " + skippedUsernames));
+					+ (skippedUsernames.isEmpty() ? "" : " Skipped already " + (minutes == 0 ? "unmuted" : "muted") + " (" + skippedUsernames.size() + "): " + skippedUsernames)
+					+ (skippedStaffUsernames.isEmpty() ? "" : " Skipped staff of greater rank (" + skippedStaffUsernames.size() + "): " + skippedStaffUsernames));
 
 				// Log the full affected list to the staff commands Discord channel.
 				String discordMsg = (minutes == 0 ? "unmuted " : "muted ") + affectedUsernames.size() + " account(s) related to " + targetPlayerUsername
 					+ (muteType == GLOBAL_MUTE ? " (global)" : "")
 					+ (affectedUsernames.isEmpty() ? "" : " Affected: " + String.join(", ", affectedUsernames))
-					+ (skippedUsernames.isEmpty() ? "" : " | Skipped already " + (minutes == 0 ? "unmuted" : "muted") + ": " + String.join(", ", skippedUsernames));
+					+ (skippedUsernames.isEmpty() ? "" : " | Skipped already " + (minutes == 0 ? "unmuted" : "muted") + ": " + String.join(", ", skippedUsernames))
+					+ (skippedStaffUsernames.isEmpty() ? "" : " | Skipped staff: " + String.join(", ", skippedStaffUsernames));
 				if (player.getWorld().getServer().getDiscordService() != null) {
 					player.getWorld().getServer().getDiscordService().staffActionLog(player, discordMsg);
 				}

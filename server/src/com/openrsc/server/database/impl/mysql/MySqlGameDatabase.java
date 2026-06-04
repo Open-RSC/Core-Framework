@@ -2405,6 +2405,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 					final int id = result.getInt("id");
 					final String user = result.getString("username");
 					final long banned = result.getLong("banned");
+					final int groupId = result.getInt("group_id");
 					final String globalMuteKey = result.getString("global_mute_key");
 					final long globalMuteValue = result.getLong("global_mute_value");
 					final String muteExpiresKey = result.getString("mute_expires_key");
@@ -2414,6 +2415,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 					linkedPlayer.id = id;
 					linkedPlayer.username = user;
 					linkedPlayer.banned = banned;
+					linkedPlayer.group_id = groupId;
 					if (globalMuteKey != null) {
 						linkedPlayer.global_mute = globalMuteValue;
 					}
