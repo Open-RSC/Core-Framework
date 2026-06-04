@@ -467,6 +467,39 @@ public class DiscordService implements Runnable{
 		}
 	}
 
+	// Logs a staff action (such as the list of accounts affected by banall/muteall) to the staff commands channel.
+	public void staffActionLog(final Player player, final String message) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar calendar = Calendar.getInstance();
+		final String prefix = String.format("%s %s %s %s: ",
+			"[" + dateFormat.format(calendar.getTime()) + "]",
+			"[" + player.getWorld().getServer().getConfig().SERVER_NAME + "]",
+			Group.getGlobalMessageName(player.getGroupID()),
+			player.getUsername()
+		);
+
+		// Discord rejects messages longer than 2000 characters, so split long player lists across multiple messages.
+		final int chunkLen = 1900 - prefix.length();
+		if (chunkLen <= 0 || message.length() <= chunkLen) {
+			staffCommandSendToDiscord(prefix + message);
+			return;
+		}
+
+		int start = 0;
+		while (start < message.length()) {
+			int end = Math.min(start + chunkLen, message.length());
+			// Prefer to break on a comma boundary so usernames are not split across messages.
+			if (end < message.length()) {
+				int boundary = message.lastIndexOf(", ", end);
+				if (boundary > start) {
+					end = boundary + 2;
+				}
+			}
+			staffCommandSendToDiscord(prefix + message.substring(start, end));
+			start = end;
+		}
+	}
+
 	public void playerLog(final Player player, final String text) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();

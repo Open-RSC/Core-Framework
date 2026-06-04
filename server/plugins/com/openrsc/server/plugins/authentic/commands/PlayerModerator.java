@@ -299,12 +299,13 @@ public final class PlayerModerator implements CommandTrigger {
 		// Player offline mute
 		if (targetPlayer == null) {
 			try {
-				// Check if the offline player has been muted before.
-				// If not, we need to insert the value into the cache.
-				if (player.getWorld().getServer().getDatabase().checkPlayerMute(targetPlayerId, muteType) == Integer.MIN_VALUE) {
-					player.getWorld().getServer().getDatabase().insertPlayerMute(targetPlayerId, duration, muteType);
-				} else {
-					player.getWorld().getServer().getDatabase().updatePlayerMute(targetPlayerId, duration, muteType);
+				persistOfflineMute(player, targetPlayerId, duration, muteType);
+				// A regular mute also covers global chat (mirrors Player.setMuteExpires, which writes both keys),
+				// so keep the global mute value in sync for offline regular mutes and unmutes too. Without this an
+				// offline regular unmute would leave a stale global_mute behind, and the force-check below (which
+				// reads global_mute) would then wrongly report the player as still muted.
+				if (muteType == REGULAR_MUTE) {
+					persistOfflineMute(player, targetPlayerId, duration, GLOBAL_MUTE);
 				}
 
 			} catch (GameDatabaseException ex) {
@@ -358,6 +359,39 @@ public final class PlayerModerator implements CommandTrigger {
 					+ " was given a " + minuteText + muteText + "mute."
 					+ (!reason.equals("") ? "Reason: " + reason : "")));
 		}
+	}
+
+	// Persists a single offline mute value, inserting the cache row if it does not yet exist or updating it otherwise.
+	private void persistOfflineMute(Player player, int targetPlayerId, int duration, int muteType) throws GameDatabaseException {
+		if (player.getWorld().getServer().getDatabase().checkPlayerMute(targetPlayerId, muteType) == Integer.MIN_VALUE) {
+			player.getWorld().getServer().getDatabase().insertPlayerMute(targetPlayerId, duration, muteType);
+		} else {
+			player.getWorld().getServer().getDatabase().updatePlayerMute(targetPlayerId, duration, muteType);
+		}
+	}
+
+	// Reads the current mute expiry (cache value) for an online player for the given mute type. Returns 0 when
+	// the player has never been muted of that type.
+	private long currentMuteExpiry(Player pl, int muteType) {
+		String key = (muteType == GLOBAL_MUTE) ? "global_mute" : "mute_expires";
+		return pl.getCache().hasKey(key) ? pl.getCache().getLong(key) : 0;
+	}
+
+	// Decides whether a ban/mute is redundant for a player who already has one. The stored value is 0 (none),
+	// -1 (permanent), or an epoch-millis expiry for a temp restriction. When lifting (unmute/unban) we only act
+	// on players who have something stored. When applying, we skip players already covered by an equal-or-longer
+	// restriction, but never skip a temp restriction when upgrading to permanent.
+	private boolean isRestrictionRedundant(long existing, long newExpiry, long now, boolean lifting) {
+		if (lifting) {
+			return existing == 0;
+		}
+		if (existing == -1) {
+			return true;
+		}
+		if (newExpiry == -1) {
+			return false;
+		}
+		return existing > now && existing >= newExpiry;
 	}
 
 	private void setupMute(Player player, String command, String[] args, int muteType, boolean muteAll) {
@@ -474,7 +508,11 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 		}
 
-		mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, shadowMute, reason, muteType);
+		// For a single mute we action the named target directly. For muteAll the target is processed together
+		// with its related accounts below, so it is subject to the same "already covered" skip logic.
+		if (!muteAll) {
+			mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, shadowMute, reason, muteType);
+		}
 
 		if (muteAll) {
 			long muteExpireTimestamp = (minutes == -1) ? -1 : (System.currentTimeMillis() + minutes * 60000L);
@@ -490,6 +528,8 @@ public final class PlayerModerator implements CommandTrigger {
 				final String targetPlayerUsernameLambda = targetPlayerUsername;
 
 				if ((localCreationIp && localLoginIp) || (localCreationIp && neverLoggedIn)) {
+					// No linkable IP, so there are no related accounts to process; action the named target directly.
+					mute(player, targetPlayer, targetPlayerId, targetPlayerUsername, minutes, shadowMute, reason, muteType);
 					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "MuteAll Localhost Check") {
 						@Override
 						public void action() {
@@ -506,36 +546,101 @@ public final class PlayerModerator implements CommandTrigger {
 				List<LinkedPlayer> linkedPlayers = new ArrayList<>(Arrays.asList(
 					player.getWorld().getServer().getDatabase().linkedPlayers(playerIps.loginIp, playerIps.creationIp)
 				));
-				//We use a CopyOnWriteArrayList so we can iterate through usernames, perform the mute if the player is online, and then remove the username from the list without generating a ConcurrentModificationException.
-				CopyOnWriteArrayList<String> usernames = linkedPlayers.stream()
-					.map(lp -> lp.username)
-					.collect(Collectors.toCollection(CopyOnWriteArrayList::new));
-				System.out.println("Going to try " + (minutes == 0 ? "unmuting" : "muting") + " players: " + usernames);
 
-				for (String username : usernames) {
+				// linkedPlayers can return the same account more than once (it matches against both the login and
+				// creation IP), so de-duplicate by username to avoid processing or listing the same player twice.
+				Set<String> seenUsernames = new HashSet<>();
+				List<String> uniqueUsernames = new ArrayList<>();
+				for (LinkedPlayer lp : linkedPlayers) {
+					if (seenUsernames.add(lp.username.toLowerCase())) {
+						uniqueUsernames.add(lp.username);
+					}
+				}
+
+				long now = System.currentTimeMillis();
+				List<String> affectedUsernames = new ArrayList<>();
+				List<String> skippedUsernames = new ArrayList<>();
+
+				// Mute/unmute any related accounts that happen to be online, skipping those already covered by an
+				// equal-or-stronger mute. Online mutes are applied to the live player; offline ones are batched below.
+				List<String> offlineUsernames = new ArrayList<>();
+				for (String username : uniqueUsernames) {
 					Player pl = player.getWorld().getPlayer(DataConversions.usernameToHash(username));
-					if (pl != null) {
+					if (pl == null) {
+						offlineUsernames.add(username);
+						continue;
+					}
+					long existing = currentMuteExpiry(pl, muteType);
+					if (isRestrictionRedundant(existing, muteExpireTimestamp, now, minutes == 0)) {
+						skippedUsernames.add(pl.getUsername());
+					} else {
 						mute(player, pl, pl.getDatabaseID(), pl.getUsername(), minutes, shadowMute, reason, muteType);
-						usernames.remove(pl.getUsername());
+						affectedUsernames.add(pl.getUsername());
 					}
 				}
 
 				Map<String, Long> existingMutes = player.getWorld().getServer().getDatabase()
-					.queryCheckPlayerMutesByUsernames(usernames, muteType);
+					.queryCheckPlayerMutesByUsernames(offlineUsernames, muteType);
 
-				List<String> updateUsernames = new ArrayList<>(existingMutes.keySet());
-				System.out.println("Usernames to update mutes (mute type: " + muteType + ": " + updateUsernames);
-				List<String> insertUsernames = usernames.stream()
-					.map(String::toLowerCase)
-					.filter(u -> !existingMutes.containsKey(u))
-					.collect(Collectors.toList());
-				System.out.println("Usernames to insert mutes (mute type: " + muteType + ": " + insertUsernames);
+				// Split the remaining (offline) accounts into those that need a mute row updated, those that need one
+				// inserted, and those we skip because they are already covered by an equal-or-stronger mute.
+				List<String> updateUsernames = new ArrayList<>();
+				List<String> insertUsernames = new ArrayList<>();
+				for (String username : offlineUsernames) {
+					String lower = username.toLowerCase();
+					if (minutes == 0) {
+						// Unmute: only lift accounts that actually have a mute stored.
+						if (existingMutes.containsKey(lower)) {
+							updateUsernames.add(lower);
+							affectedUsernames.add(username);
+						} else {
+							skippedUsernames.add(username);
+						}
+						continue;
+					}
+					if (!existingMutes.containsKey(lower)) {
+						insertUsernames.add(lower);
+						affectedUsernames.add(username);
+						continue;
+					}
+					if (isRestrictionRedundant(existingMutes.get(lower), muteExpireTimestamp, now, false)) {
+						skippedUsernames.add(username);
+					} else {
+						updateUsernames.add(lower);
+						affectedUsernames.add(username);
+					}
+				}
 
 				player.getWorld().getServer().getDatabase().batchUpdatePlayerMutes(updateUsernames, muteExpireTimestamp, muteType);
 				player.getWorld().getServer().getDatabase().queryBatchInsertPlayerMutes(insertUsernames, muteExpireTimestamp, muteType);
 
-				player.message(messagePrefix + "All accounts related to " + targetPlayerUsername + " have been " + (minutes == 0 ? "unmuted." : "muted."));
-				LOGGER.info("[MUTEALL] " + player.getUsername() + " " + (minutes == 0 ? "unmuted" : "muted") + " all related to " + targetPlayerUsername);
+				// A regular mute also covers global chat (mirrors Player.setMuteExpires, which writes both keys), so
+				// keep the global mute value in sync for these offline accounts too. Otherwise an offline regular
+				// unmute would leave a stale global_mute behind and the force-check (which reads global_mute) would
+				// later report the player as still muted.
+				if (muteType == REGULAR_MUTE) {
+					List<String> changedUsernames = new ArrayList<>();
+					changedUsernames.addAll(updateUsernames);
+					changedUsernames.addAll(insertUsernames);
+					if (!changedUsernames.isEmpty()) {
+						Map<String, Long> existingGlobalMutes = player.getWorld().getServer().getDatabase()
+							.queryCheckPlayerMutesByUsernames(changedUsernames, GLOBAL_MUTE);
+						List<String> globalUpdateUsernames = new ArrayList<>();
+						List<String> globalInsertUsernames = new ArrayList<>();
+						for (String changed : changedUsernames) {
+							if (existingGlobalMutes.containsKey(changed.toLowerCase())) {
+								globalUpdateUsernames.add(changed.toLowerCase());
+							} else {
+								globalInsertUsernames.add(changed.toLowerCase());
+							}
+						}
+						player.getWorld().getServer().getDatabase().batchUpdatePlayerMutes(globalUpdateUsernames, muteExpireTimestamp, GLOBAL_MUTE);
+						player.getWorld().getServer().getDatabase().queryBatchInsertPlayerMutes(globalInsertUsernames, muteExpireTimestamp, GLOBAL_MUTE);
+					}
+				}
+
+				player.message(messagePrefix + affectedUsernames.size() + " account(s) related to " + targetPlayerUsername + " have been " + (minutes == 0 ? "unmuted." : "muted.")
+					+ (skippedUsernames.isEmpty() ? "" : " (" + skippedUsernames.size() + " skipped)"));
 
 				String muteText = muteType == GLOBAL_MUTE ? " global " : " ";
 				String minuteText = minutes == -1 ? "permanent " : (minutes == 0 ? "" : minutes + " minute ");
@@ -546,12 +651,24 @@ public final class PlayerModerator implements CommandTrigger {
 
 				String suffix = (reason != null && !reason.isEmpty()) ? " Reason: " + reason : "";
 
-				// Combine both update and insert usernames into one list
+				// Log the full list to the console/file.
+				LOGGER.info("[MUTEALL] " + player.getUsername() + " " + (minutes == 0 ? "unmuted" : "muted") + " all related to " + targetPlayerUsername
+					+ " Affected (" + affectedUsernames.size() + "): " + affectedUsernames
+					+ (skippedUsernames.isEmpty() ? "" : " Skipped already " + (minutes == 0 ? "unmuted" : "muted") + " (" + skippedUsernames.size() + "): " + skippedUsernames));
+
+				// Log the full affected list to the staff commands Discord channel.
+				String discordMsg = (minutes == 0 ? "unmuted " : "muted ") + affectedUsernames.size() + " account(s) related to " + targetPlayerUsername
+					+ (muteType == GLOBAL_MUTE ? " (global)" : "")
+					+ (affectedUsernames.isEmpty() ? "" : " Affected: " + String.join(", ", affectedUsernames))
+					+ (skippedUsernames.isEmpty() ? "" : " | Skipped already " + (minutes == 0 ? "unmuted" : "muted") + ": " + String.join(", ", skippedUsernames));
+				if (player.getWorld().getServer().getDiscordService() != null) {
+					player.getWorld().getServer().getDiscordService().staffActionLog(player, discordMsg);
+				}
+
+				// Loop through each offline player and log individually (database row per player could get laggy, except we run the queries on the database logger thread so it should be fine)
 				List<String> allLogged = new ArrayList<>();
 				allLogged.addAll(updateUsernames);
 				allLogged.addAll(insertUsernames);
-
-				// Loop through each player and log individually (database row per player could get laggy, except we run the queries on the database logger thread so it should be fine)
 				for (String username : allLogged) {
 					String msg = username + actionText + suffix;
 					player.getWorld().getServer().getGameLogger().addQuery(
@@ -563,14 +680,10 @@ public final class PlayerModerator implements CommandTrigger {
 				StringBuilder builder = new StringBuilder();
 				builder.append((minutes == 0 ? "@gre@Unmuted:@whi@ " : "@red@Muted:@whi@ "));
 
-				List<String> affectedUsers = new ArrayList<>();
-				affectedUsers.addAll(updateUsernames);
-				affectedUsers.addAll(insertUsernames);
-
-				for (int i = 0; i < affectedUsers.size(); i++) {
-					String name = affectedUsers.get(i);
+				for (int i = 0; i < affectedUsernames.size(); i++) {
+					String name = affectedUsernames.get(i);
 					builder.append(name);
-					if (i != affectedUsers.size() - 1) {
+					if (i != affectedUsernames.size() - 1) {
 						builder.append("@whi@, ");
 					}
 					final String msg = builder.toString();
@@ -589,7 +702,7 @@ public final class PlayerModerator implements CommandTrigger {
 					player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "MuteAll Box") {
 						@Override
 						public void action() {
-							ActionSender.sendBox(player, builder.toString(), affectedUsers.size() >= 8);
+							ActionSender.sendBox(player, builder.toString(), affectedUsernames.size() >= 8);
 						}
 					});
 				}

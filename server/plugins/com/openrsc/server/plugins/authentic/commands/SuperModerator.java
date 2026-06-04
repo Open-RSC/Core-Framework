@@ -264,6 +264,23 @@ public final class SuperModerator implements CommandTrigger {
 		return ip;
 	}
 
+	// Decides whether a ban/mute is redundant for a player who already has one. The stored value is 0 (none),
+	// -1 (permanent), or an epoch-millis expiry for a temp restriction. When lifting (unban/unmute) we only act
+	// on players who have something stored. When applying, we skip players already covered by an equal-or-longer
+	// restriction, but never skip a temp restriction when upgrading to permanent.
+	private boolean isRestrictionRedundant(long existing, long newExpiry, long now, boolean lifting) {
+		if (lifting) {
+			return existing == 0;
+		}
+		if (existing == -1) {
+			return true;
+		}
+		if (newExpiry == -1) {
+			return false;
+		}
+		return existing > now && existing >= newExpiry;
+	}
+
 	private void unbanPlayersByRelatedIps(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [username]");
@@ -333,25 +350,52 @@ public final class SuperModerator implements CommandTrigger {
 			List<LinkedPlayer> linkedPlayers = new ArrayList<>(Arrays.asList(
 				player.getWorld().getServer().getDatabase().linkedPlayers(playerIps.loginIp, playerIps.creationIp)
 			));
-			List<String> usernames = linkedPlayers.stream()
-					.map(lp -> lp.username)
-					.collect(Collectors.toList());
 
-			System.out.println("Going to try " + (minutes == 0 ? "unbanning" : "banning") + " players: " + usernames);
+			// Decide who actually needs the ban applied. We skip accounts that are already covered by an
+			// equal-or-stronger ban so we do not ban them twice, but temp bans are still upgraded to the new
+			// (e.g. permanent) ban rather than being skipped, otherwise they would eventually expire (unban).
+			long now = System.currentTimeMillis();
+			long newBanUntil = (minutes == -1) ? -1 : (System.currentTimeMillis() + minutes * 60000L);
+			List<String> usernamesToBan = new ArrayList<>();
+			List<String> skippedUsernames = new ArrayList<>();
+			// linkedPlayers can return the same account more than once (it matches against both the login and
+			// creation IP), so de-duplicate by username to avoid banning or listing the same player twice.
+			Set<String> seenUsernames = new HashSet<>();
+			for (LinkedPlayer lp : linkedPlayers) {
+				if (!seenUsernames.add(lp.username.toLowerCase())) {
+					continue;
+				}
+				if (isRestrictionRedundant(lp.banned, newBanUntil, now, minutes == 0)) {
+					skippedUsernames.add(lp.username);
+				} else {
+					usernamesToBan.add(lp.username);
+				}
+			}
 
-			player.getWorld().getServer().getDatabase().banPlayersByUsernames(usernames, player, minutes);
+			player.getWorld().getServer().getDatabase().banPlayersByUsernames(usernamesToBan, player, minutes);
 
 			String action = (minutes == 0) ? "unbanned" : "banned";
 			String duration = (minutes == -1) ? " permanently." : (minutes == 0 ? "." : " for " + minutes + " minutes.");
 
 			// Send message to the moderator
-			player.message(messagePrefix + "All accounts related to " + targetPlayerUsername + " have been " + action + duration);
+			player.message(messagePrefix + usernamesToBan.size() + " account(s) related to " + targetPlayerUsername + " have been " + action + duration
+				+ (skippedUsernames.isEmpty() ? "" : " (" + skippedUsernames.size() + " skipped)"));
 
-			// Log it to the console/file
-			LOGGER.info("[BANALL] " + player.getUsername() + " " + action + " all related to " + targetPlayerUsername + duration);
+			// Log the full list to the console/file
+			LOGGER.info("[BANALL] " + player.getUsername() + " " + action + " all related to " + targetPlayerUsername + duration
+				+ " Affected (" + usernamesToBan.size() + "): " + usernamesToBan
+				+ (skippedUsernames.isEmpty() ? "" : " Skipped already " + action + " (" + skippedUsernames.size() + "): " + skippedUsernames));
+
+			// Log the full affected list to the staff commands Discord channel.
+			String discordMsg = action + " " + usernamesToBan.size() + " account(s) related to " + targetPlayerUsername + duration
+				+ (usernamesToBan.isEmpty() ? "" : " Affected: " + String.join(", ", usernamesToBan))
+				+ (skippedUsernames.isEmpty() ? "" : " | Skipped already " + action + ": " + String.join(", ", skippedUsernames));
+			if (player.getWorld().getServer().getDiscordService() != null) {
+				player.getWorld().getServer().getDiscordService().staffActionLog(player, discordMsg);
+			}
 
 			//Database row per player could get laggy, except we run the queries on the database logger thread so it should be fine.
-			for (String username : usernames) {
+			for (String username : usernamesToBan) {
 				String logAction = (minutes == 0)
 					? "was unbanned by"
 					: "was banned by";
@@ -368,10 +412,10 @@ public final class SuperModerator implements CommandTrigger {
 			StringBuilder builder = new StringBuilder();
 			builder.append((minutes == 0 ? "@gre@Unbanned:@whi@ " : "@red@Banned:@whi@ "));
 
-			for (int i = 0; i < usernames.size(); i++) {
-				String name = usernames.get(i);
+			for (int i = 0; i < usernamesToBan.size(); i++) {
+				String name = usernamesToBan.get(i);
 				builder.append(name);
-				if (i != usernames.size() - 1) {
+				if (i != usernamesToBan.size() - 1) {
 					builder.append("@whi@, ");
 				}
 				final String msg = builder.toString();
@@ -390,7 +434,7 @@ public final class SuperModerator implements CommandTrigger {
 				player.getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(player.getWorld(), "BanAll Box") {
 					@Override
 					public void action() {
-						ActionSender.sendBox(player, builder.toString(), usernames.size() >= 8);
+						ActionSender.sendBox(player, builder.toString(), usernamesToBan.size() >= 8);
 					}
 				});
 			}
