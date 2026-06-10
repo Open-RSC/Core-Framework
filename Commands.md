@@ -29,11 +29,11 @@ Admin Commands
   - Saves all users currently logged in.
 - winterholidayevent
   - Usage: `::winterholidayevent`
-  - Turns on the winter holiday event (spawns tree objects). Note: this is only functional on custom feature worlds, such as Cabbage and Coleslaw.	
+  - Turns on the winter holiday event (spawns tree objects). Note: This is only functional on custom feature worlds, such as Cabbage and Coleslaw.	
   - Alias: `::toggleholiday`
 - resetevent
   - Usage: `resetevent [hours] [minute]`
-  - Performs an hourly scenery reset on the server for objects. Example: this resets stuck objects. Not recommended to be used in production servers as long respawn scenery like runite ore rocks would reset at the same time hourly.
+  - Performs an hourly scenery reset on the server for objects. Example: This resets stuck objects. Not recommended to be used in production servers as long respawn scenery like runite ore rocks would reset at the same time hourly.
 - cabbagehalloweendrop
   - Usage: `::cabbagehalloweendrop [total hours] [minute of hour to drop scythes] [drop delay in minutes after scythes to drop halloween crackers]`
   - Drops scythes and halloween crackers at the specified times. 
@@ -80,11 +80,11 @@ Admin Commands
 - ritem
   - Usage: `::ritem [id or ItemId name] [amount] [player] (alert)"`
   - Removes an item for the specified player.
-  - Partial stacks of items can be removed by amount parameter
+  - Partial stacks of items can be removed by amount parameter.
 - rbitem
   - Usage: `::rbitem [id or ItemId name] (amount) (player) (alert)"`
   - Removes a bank item for the specified player.
-  - Partial stacks of items can be removed by amount parameter
+  - Partial stacks of items can be removed by amount parameter.
 - swapitem
   - Usage: `::swapitem [Inventory Slot # OR ItemId name] [Item Id OR ItemID name] [player]`
   - Inventory Slot # is zero-indexed, i.e. the first inventory slot is # 0, and the last inventory slot is typically # 29.
@@ -113,21 +113,21 @@ Admin Commands
   - Usage: `::sethp [name] [hp]`
   - Alias: `::hp` or `::hits`
   - Sets the specified player's current hits value to the specified value.
-  - You can not set hits of a staff member of equal or greater rank.
+  - You cannot set hits of a staff member of equal or greater rank.
 - setprayer
   - Usage: `::setprayer [name] [prayer]`
   - Alias: `::prayer`
   - Sets the specified player's current prayer value to the specified value.
-  - You can not set prayer of a staff member of equal or greater rank.
+  - You cannot set prayer of a staff member of equal or greater rank.
 - kill
   - Usage: `::kill [player]`
   - Kills the specified player.
-  - You can not kill a staff member of equal or greater rank.
+  - You cannot kill a staff member of equal or greater rank.
 - damage
   - Usage: `::damage [name] [amount]`
   - Alias: `::dmg`
   - Damages the specified player for the specified amount of hits levels.
-  - You can not damage a staff member of equal or greater rank.
+  - You cannot damage a staff member of equal or greater rank.
 - wipeinventory
   - Usage: `::wipeinventory [name]`
   - Alias: `::wipeinv`
@@ -146,7 +146,7 @@ Admin Commands
 - playertalk
   - Usage: `::playertalk [name] [msg]`
   - Causes the specified player to say the specified message to all players in the area.
-  - You can not talk as a staff member of equal or greater rank.
+  - You cannot talk as a staff member of equal or greater rank.
   - A similar effect is possible by using the `::possess` command (but only if you are an admin).
 - smitenpc
   - Usage: `::smitenpc [npc_id] (damage)`
@@ -158,7 +158,7 @@ Admin Commands
   - Spawns the specified number of the specified NPC. One random of the spawned NPCs will drop the specified loot. The NPCs will stay for the specified duration.
   - If no item amount is supplied, then 1 is used.
   - If no duration is specified, then 10 minutes is used.
-  - NOTE that this only happens one time immediately and is not an HourlyNpcLootEvent.
+  - Note: This only happens one time immediately and is not an HourlyNpcLootEvent.
   - Functionality is restricted on non-custom worlds.
 - chickenevent
   - Usage: `::chickenevent (hours) (chicken_amount) (item_amount) (chicken_lifetime)`
@@ -178,7 +178,7 @@ Admin Commands
   - Usage: `::wildrule [god/members] [startLevel] [endLevel]`
   - Changes the rules used for the wilderness.
   - If god is supplied as the first argument, then it determines which combat levels god spells are allowed to be cast in the wilderness.
-  - If members is supplied as the first argument, then it determines which combat levels members utems are allowed to be equipped in the wilderness.
+  - If members is supplied as the first argument, then it determines which combat levels members items are allowed to be equipped in the wilderness.
 - quickauction
   - Usage: `::quickauction`
   - Displays the auction house window.
@@ -188,7 +188,7 @@ Admin Commands
 - freezeexperience
   - Usage: `::freezeexperience [player] (boolean)`
   - Alias: `::freezeexp` or `::freezexp`
-  - Freezes the specified player's experience such that they can not gain anymore experience until the freeze is lifted.
+  - Freezes the specified player's experience such that they cannot gain anymore experience until the freeze is lifted.
   - If no boolean is supplied, then this command works as a toggle.
 - skull
   - Usage: `::skull [player]`
@@ -244,7 +244,7 @@ Admin Commands
   - Gives you rune pick, rune axe, harpoon, and sleeping bag, if you don't already have the item.
 - setstats
   - Usage: `::setstats [player] [level]` to set all of the specified player's stats to the specified level.
-  - Usage: `::setstats [player]` to set all of your stats to the specified level
+  - Usage: `::setstats [level]` to set all of your stats to the specified level
   - Usage: `::setstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
   - Usage: `::setstats [level] [stat]` to set your specified stat to the specified level
   - Alias: `::stats` or `::stat` or `::setstat` or `::setstats`
@@ -254,7 +254,7 @@ Admin Commands
   - If no stat is specified, then all stats are modified.
 - setxpstats
   - Usage: `::setxpstats [player] [experience]` to set all of the specified player's stats to the specified experience.
-  - Usage: `::setxpstats [player]` to set all of your stats to the specified experience
+  - Usage: `::setxpstats [experience]` to set all of your stats to the specified experience
   - Usage: `::setxpstats [player] [experience] [stat]` to set the specified player's specified stat to the specified experience.
   - Usage: `::setxpstats [experience] [stat]` to set your specified stat to the specified experience
   - Alias: `::xpstats` or `::xpstat` or `::setxpstat` or `::setxpstats` or `::setxp`
@@ -283,18 +283,18 @@ Admin Commands
 - setmaxplayersperip
   - Usage: `::setmaxplayersperip (number)`
   - Alias: `::smppi` 
-  - Sets the server allow a max number of players per ip
+  - Sets the server allow a max number of players per IP
 - setmaxconnectionsperip
   - Usage: `::setmaxconnectionsperip (number)`
   - Alias: `::smcpi`
-  - Sets the server allow a max number of connections per ip
+  - Sets the server allow a max number of connections per IP
 - setmaxconnectionspersecond
   - Usage: `::setmaxconnectionspersecond (number)`
   - Alias: `::smcps` max_connections_per_second: 80
   - Sets the server allow a max number of connections per second
 - yoptin
   - Usage: `::yoptin (name)`
-  - Displays the client version of the optional target player. Can display in-client Yoptin dialog if using client version 61 to 75.
+  - Displays the client version of the optional target player. Can display in-client yoptin dialog if using client version 61 to 75.
 - copypassword
   - Usage: `::copypassword [from_name] [to_name]`
   - Alias: `::copypass` or `::copypw`
@@ -302,11 +302,11 @@ Admin Commands
 - setdowntimereportmillis
   - Usage: `::setdowntimereportmillis [number]`
   - Alias: `::sddrmdbr`
-  - Part of the monitor ip feature, minimum number of milliseconds before it is considered a significant downtime event worth reporting to Discord webhook.
+  - Part of the monitor IP feature, minimum number of milliseconds before it is considered a significant downtime event worth reporting to Discord webhook.
 - setdowntimereportmillis
   - Usage: `::setmonitortimeoutmillis [number]`
   - Alias: `::smtm`
-  - Part of the monitor ip feature, maximum number of milliseconds before a ping fails.
+  - Part of the monitor IP feature, maximum number of milliseconds before a ping fails.
 - reloadsslcert
   - Usage: `::reloadsslcert`
   - Alias: `::refreshsslcert`
@@ -344,7 +344,7 @@ Developer Commands
   - If no coordinates are supplied, then the current player's position is used.
 - tile
   - Usage: `::tile`
-  - Shows debug information about the tile the current player is position on.
+  - Shows debug information about the tile the current player is positioned on.
 - debugregion
   - Usage: `::debugregion (debug_players) (debug_npcs) (debug_items) (debug_objects)`
   - Shows debug information about the region the current player is located in.
@@ -410,7 +410,7 @@ Moderator Commands
   - Usage: `::info (player)`
   - Alias: `::about`
   - Shows information about the specified player.
-  - If no player is specified, then it show info about the current player.
+  - If no player is specified, then it shows info about the current player.
 - inventory
   - Usage: `::inventory (player) (want catalog ids)`
   - Shows inventory information about the specified player.
@@ -418,12 +418,12 @@ Moderator Commands
 - ban
   - Usage: `::ban [name] [time in minutes, -1 for permanent, 0 to unban]`
   - Bans the specified player.
-  - You can not ban a staff member of equal or greater rank.
+  - You cannot ban a staff member of equal or greater rank.
 - ipban
   - Usage: `::ipban [ip] [time in minutes, -1 for permanent, 0 to unban]`
   - Alias: `::banip`
   - Bans the specified player.
-  - You can not ban a staff member of equal or greater rank.
+  - You cannot ban a staff member of equal or greater rank.
 - syncipbans
   - Usage: `::syncipbans`
   - Alias: `::sip`
@@ -432,14 +432,14 @@ Moderator Commands
   - Usage: `::bank (player) (want box) (want catalog ids)`
   - Shows bank information for the specified player.
   - If no player is specified, then it show bank info about the current player.
-  - Shows items in the normal bank interface by default, unless (want box) is specified
+  - Shows items in the normal bank interface by default, unless (want box) is specified.
 - summon
   - Usage: `::summon [player]`
   - Summons the specified player to the current player's location.
   - This command sets a return point which can be used with `::return [player]`
-  - Moderators can not summon players into the wilderness.
+  - Moderators cannot summon players into the wilderness.
   - Clears any previous summon flag.
-  - You can not summon a staff member of equal or greater rank.
+  - You cannot summon a staff member of equal or greater rank.
 - say
   - Usage `::say [message]`
   - Talk in global chat. This is never turned off for moderators.
@@ -497,8 +497,8 @@ Moderator Commands
 - jail
   - Usage: `::jail [name]`
   - Puts the specified player in Jail, upstairs of Al Kharid palace.
-  - You can not jail a player who has already been jailed.
-  - You can not jail a staff member.
+  - You cannot jail a player who has already been jailed.
+  - You cannot jail a staff member.
 - release
   - Usage: `::release [name]`
   - Releases the specified player from Jail to the location they were before being jailed.
@@ -581,17 +581,17 @@ Event Commands
 - teleport
   - Usage: `::teleport [town/player]` to teleport to a specified town or player
   - Usage: `::teleport [player] [town/player]` to teleport the specified player to the specified town or destination player.
-  - Usage: `::teleport [x] [y]` to teleport to the specified coordinates
+  - Usage: `::teleport [x] [y]` to teleport to the specified coordinates.
   - Usage: `::teleport [player] [x] [y]` to teleport the specified player to the specified coordinates.
   - Alias: `::tp` or `::town` or `::goto` or `::tpto` or `::teleportto`
   - Teleports the specified player.
-  - You can not teleport while you are jailed.
-  - You can not teleport a staff member of equal or greater rank.
+  - You cannot teleport while you are jailed.
+  - You cannot teleport a staff member of equal or greater rank.
 - return
   - Usage: `::return (player)`
   - Return the player to their previous location before being summoned and clear the summoned flag.
   - Event role can only use return on themselves.
-  - You can not return a staff member of equal or greater rank.
+  - You cannot return a staff member of equal or greater rank.
   - If no player is specified, then the current player is returned.
 - blink
   - Usage: `::blink`
@@ -599,7 +599,7 @@ Event Commands
 - invisible
   - Usage: `::invisible (player) (boolean)`
   - Alias: `::invis`
-  - Turn the specified player invisinble.
+  - Turn the specified player invisible.
   - If no player is specified, then the current player is turned invisible.
   - If no boolean is supplied, then this command works as a toggle.
 - norender
@@ -623,10 +623,15 @@ Event Commands
   - Sets yourself invisible and constantly at the same coordinates as the npc being possessed.
   - Npc instance id can be seen with RSC+ (ctrl-n with extended tooltip on), or by using the ResetCrystal on an npc.
   - Alias: `::posnpc`or `::pnpc`
+  Note: Leaving the NPC by walking or by the NPC dying will make you no longer invisible.
 - possessrandom 
   - Usage: `::possessrandom`
   - Selects a random player other than yourself to possess.
   - Alias: `::pr`
+- posssessnext
+  - Usage: `::possessnext`
+  - Selects the next player ID other than yourself to possess. If you are not possessing anyone it will begin at the lowest player ID.
+  - Alias: `::pn`
 - leapaboutinstantnavigator
   - Usage: `::leapaboutinstantnavigator (tick observation length) (serial)`
   - Automates `::possessnext` and `::possessrandom` commands, repeating on a tick interval.
@@ -668,11 +673,11 @@ Event Commands
   - Alias: `::setrank` or `::group` or `::rank`
   - Read or write the group of the specified player.
   - Only users of the rank Admin or above may change a player's rank.
-  - You may never change a players rank to be equal to or greater than your own.
+  - You may never change a player's rank to be equal to or greater than your own.
   - If no player is specified, then the current player is targeted.
 - setcurrentstats
   - Usage: `::setcurrentstats [player] [level]` to set all of the specified player's stats to the specified level.
-  - Usage: `::setcurrentstats [player]` to set all of your stats to the specified level
+  - Usage: `::setcurrentstats [level]` to set all of your stats to the specified level
   - Usage: `::setcurrentstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
   - Usage: `::setcurrentstats [level] [stat]` to set your specified stat to the specified level
   - Alias: `::currentstats` or `::currentstat` or `::setcurrentstat` or `::curstat` or `::curstats` or `::setcurstat` or `::setcurstats`
@@ -682,6 +687,7 @@ Event Commands
   - If no stat is specified, then all stats are modified.
 - npckills
   - Usage: `::npckills [name]`
+  - Alias: `::kills` or `::kc`
   - Shows total NPC kill count for name.
 - shufflepid
   - Usage: `::shufflepid [on/off]`
@@ -694,18 +700,18 @@ Player Moderator Commands
 - gmute
   - Usage: `::gmute [name] (time in minutes, -1 for permanent, 0 to unmute) (Shadow mute) (Reason)`
   - Mutes the specified player from global chat.
-  - You can not mute a staff member of equal or greater rank.
+  - You cannot mute a staff member of equal or greater rank.
   - time: Defaults to 60 minutes for player moderators and permanent (-1) for moderators and above. Player moderators cannot mute for longer than 1 week (10,080 minutes).
   - Shadow mute: If true, this will not notify the player they have been muted when the command is issued or when the player tries to speak in the future.
   - Reason: For database logging
 - ungmute
   - Usage: `::ungmute [name]`
   - Unmutes the specified player from global chat.
-  - You can not unmute a staff member of equal or greater rank.
+  - You cannot unmute a staff member of equal or greater rank.
 - mute
   - Usage: `::mute [name] (time in minutes, -1 for permanent, 0 to unmute) (Shadow mute) (Reason)`
   - Mutes the specified player from both in game and global chat.
-  - You can not mute a staff member of equal or greater rank.
+  - You cannot mute a staff member of equal or greater rank.
   - time: Defaults to 60 minutes for player moderators and permanent (-1) for moderators and above. Player moderators cannot mute for longer than 1 week (10,080 minutes).
   - Shadow mute: If true, this will not notify the player they have been muted when the command is issued or when the player tries to speak in the future.
   - Reason: For database logging
@@ -724,14 +730,11 @@ Player Moderator Commands
   - Temporarily overlays unobtainable Zamorak hat as well as Zamorak robes on the player
 - robe
   - Usage: `::robe [color] (player)`
-  - Alias: `::setrobe [color (player)`
-  - Alias: `::setrobes [color] (player)`
+  - Alias: `::setrobe` or `::setrobes`
   - Temporarily overlays robes of a specified color on the player
 - becomeNpc
   - Usage: `::becomenpc [npc name]  (player)`
-  - Alias: `::morph [npc name]  (player)`
-  - Alias: `::morphnpc [npc name]  (player)`
-  - Alias: `::become [npc name]  (player)`
+  - Alias: `::morph` or `::morphnpc` or `::become`
   - Temporarily replaces the player sprites with a NPC (scaled to the size of the player)
 - restoreHumanity
   - Usage: `::restorehumanity  (player)`
@@ -756,7 +759,7 @@ Regular Player Commands
 ------------------------
 - gang
   - Usage: `::gang`
-  - Shows which gang you are in: Black Arm, Phoneix, or none.
+  - Shows which gang you are in: Black Arm, Phoenix, or none.
 - c
   - Usage: `::c [message]`
   - Send message to clan chat.
@@ -767,7 +770,7 @@ Regular Player Commands
   - Allows a player to request to join a clan.
 - clanaccept
   - Usage: `::clanaccept`
-  - Accept an invication to a clan.
+  - Accept an invitation to a clan.
   - Clans must be enabled to use this command.
   - You must be NOT be in a clan to use this command.
 - claninvite
@@ -780,7 +783,7 @@ Regular Player Commands
   - Usage: `::clankick [name]`
   - Clans must be enabled to use this command.
   - You must be in a clan to use this command.
-  - You can not kick the clan leader.
+  - You cannot kick the clan leader.
   - You must be a clan general or clan leader to kick from the clan.
 - partyaccept
   - Usage: `::partyaccept [name]`
@@ -794,8 +797,8 @@ Regular Player Commands
 - event
   - Usage: `::event`
   - Join the currently running server PK Event.
-  - You can not participate in PK Events while you are jailed.
-  - You can not join PK Events while you are in the wilderness.
+  - You cannot participate in PK Events while you are jailed.
+  - You cannot join PK Events while you are in the wilderness.
   - You must meet the PK Event requirements to join.
 - g
   - Usage: `::g [message]`
