@@ -307,10 +307,6 @@ Admin Commands
   - Usage: `::setmonitortimeoutmillis [number]`
   - Alias: `::smtm`
   - Part of the monitor IP feature, maximum number of milliseconds before a ping fails.
-- reloadsslcert
-  - Usage: `::reloadsslcert`
-  - Alias: `::refreshsslcert`
-  - Used to reload the SSL certificate files used for websocket connections to the server.
 - sqlerrorreportingtest
   - Usage: `::sqlerrorreportingtest`
   - Sends a test message with the discord general logging webhook URL with a stacktrace in it, to test that the webhook is working.
@@ -575,6 +571,10 @@ Moderator Commands
 - toggletutorial
   - Usage: `::toggletutorial`
   - If completing tutorial island is currently mandatory, allow new users to skip. If the tutorial can currently be skipped, disable that ability.
+- reloadsslcert
+  - Usage: `::reloadsslcert`
+  - Alias: `::refreshsslcert`
+  - Used to reload the SSL certificate files used for websocket connections to the server.
 ------------------------
 Event Commands
 ------------------------

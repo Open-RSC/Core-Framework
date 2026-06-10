@@ -27,6 +27,11 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.net.ssl.SSLException;
+import java.io.File;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -140,6 +145,8 @@ public final class Moderator implements CommandTrigger {
 			toggleTutorial(player);
 		} else if (command.equalsIgnoreCase("babymode")) {
 			setBabyModeLevelThreshold(player, command, args);
+		} else if (command.equalsIgnoreCase("reloadsslcert") || command.equalsIgnoreCase("refreshsslcert")) {
+			reloadSSLCert(player);
 		}
 	}
 
@@ -1462,6 +1469,53 @@ public final class Moderator implements CommandTrigger {
 		player.message(messagePrefix + "You have released " + targetPlayer.getUsername() + " from jail to " + targetPlayer.getLocation() + " from " + originalLocation);
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash() && !player.isInvisibleTo(targetPlayer)) {
 			targetPlayer.message(messagePrefix + "You have been released from jail to " + targetPlayer.getLocation() + " from " + originalLocation + " by " + player.getStaffName());
+		}
+	}
+
+	private void reloadSSLCert(Player player) {
+		if (!player.getConfig().WANT_FEATURE_WEBSOCKETS) {
+			player.message("Websockets are currently not listening...!");
+			return;
+		}
+
+		if (player.getConfig().SSL_SERVER_CERT_PATH.trim().isEmpty() && player.getConfig().SSL_SERVER_KEY_PATH.trim().isEmpty()) {
+			player.message("Websocket certificate & private key file paths are not configured in connections.conf");
+			return;
+		}
+
+		if (player.getConfig().SSL_SERVER_CERT_PATH.trim().isEmpty()) {
+			player.message("Websocket certificate file path is not configured in connections.conf");
+			return;
+		}
+
+		if (player.getConfig().SSL_SERVER_KEY_PATH.trim().isEmpty()) {
+			player.message("Websocket private key file path is not configured in connections.conf");
+			return;
+		}
+
+		if (!(new File(player.getConfig().SSL_SERVER_CERT_PATH.trim())).exists()) {
+			player.message("Websocket certificate file does not exist at " + player.getConfig().SSL_SERVER_CERT_PATH);
+			return;
+		}
+		if (!(new File(player.getConfig().SSL_SERVER_KEY_PATH.trim())).exists()) {
+			player.message("Websocket private key file does not exist at " + player.getConfig().SSL_SERVER_KEY_PATH);
+			return;
+		}
+
+		try {
+			player.getWorld().getServer().refreshWebsocketSSLContext(player);
+		} catch (CertificateExpiredException certExpiredEx) {
+			player.message("New certificate is expired...! Make sure you've replaced it.");
+		} catch (CertificateNotYetValidException certNotYetValidEx) {
+			player.message("New certificate is not yet valid...! Unable to use.");
+		} catch (SSLException | CertificateException sslex) {
+			player.message("New certificate could not be parsed as a valid X.509 certificate file.");
+		} catch (Exception ex) {
+			player.message("Generic error occurred while reloading websocket sslcontext.");
+			player.message("Cert path: " + player.getConfig().SSL_SERVER_CERT_PATH);
+			player.message("Key path: " + player.getConfig().SSL_SERVER_KEY_PATH);
+			player.message("Check server logs for more information.");
+			LOGGER.error(ex);
 		}
 	}
 }
