@@ -281,6 +281,32 @@ public final class SuperModerator implements CommandTrigger {
 		return existing > now && existing >= newExpiry;
 	}
 
+	// Resolves an offline (or online) player's username to the single IP address we should ipban/ipmute.
+	// Returns null and messages the issuer with the reason if the username does not exist or only ever
+	// connected from localhost (webclient-only). Follows the same login/creation IP preference as ::banall.
+	private String resolveIpFromUsername(Player player, String username) throws GameDatabaseException {
+		PlayerIps playerIps = player.getWorld().getServer().getDatabase().playerIps(username);
+		if (playerIps == null) {
+			player.message(messagePrefix + "No player found with the username " + username + ".");
+			return null;
+		}
+		playerIps.creationIp = stripPort(playerIps.creationIp);
+		playerIps.loginIp = stripPort(playerIps.loginIp);
+		boolean localCreationIp = playerIps.creationIp.equals("127.0.0.1");
+		boolean localLoginIp = playerIps.loginIp.equals("127.0.0.1");
+		boolean neverLoggedIn = playerIps.loginIp.equals("0.0.0.0");
+
+		if ((localCreationIp && localLoginIp) || (localCreationIp && neverLoggedIn)) {
+			player.message(messagePrefix + username + " was a webclient-only player.");
+			return null;
+		} else if (localCreationIp) {
+			return playerIps.loginIp;
+		} else if (localLoginIp || neverLoggedIn) {
+			return playerIps.creationIp;
+		}
+		return playerIps.loginIp;
+	}
+
 	private void unbanPlayersByRelatedIps(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [username]");
@@ -472,7 +498,7 @@ public final class SuperModerator implements CommandTrigger {
 
 	private void banPlayerIP(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [ip] [time in minutes, -1 for permanent, 0 to unban]");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [ip or username] [time in minutes, -1 for permanent, 0 to unban]");
 			return;
 		}
 
@@ -482,16 +508,29 @@ public final class SuperModerator implements CommandTrigger {
 		int time;
 		if (StringUtil.isIPv4Address(args[0]) || StringUtil.isIPv6Address(args[0])) {
 			ipToBan = args[0];
+		} else if (ipToBan.equals("")) {
+			// Not a literal IP and not an online player, so resolve an offline player's username to their IP.
+			try {
+				ipToBan = resolveIpFromUsername(player, args[0].replace('.', ' '));
+			} catch (GameDatabaseException ex) {
+				player.message(messagePrefix + "A database error occurred while looking up that player's IP.");
+				LOGGER.catching(ex);
+				return;
+			}
+			if (ipToBan == null) {
+				// resolveIpFromUsername already messaged the issuer with the reason.
+				return;
+			}
 		}
 		if (ipToBan.equals("")) {
-			player.message(messagePrefix + "You must enter an IP address to ban.");
+			player.message(messagePrefix + "You must enter an IP address or username to ban.");
 			return;
 		}
 		if (args.length >= 2) {
 			try {
 				time = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [ip] (time in minutes, -1 for permanent, 0 to unban)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [ip or username] (time in minutes, -1 for permanent, 0 to unban)");
 				return;
 			}
 		} else {
@@ -561,7 +600,7 @@ public final class SuperModerator implements CommandTrigger {
 
 	private void mutePlayerIP(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [ip] [time in minutes, -1 for permanent, 0 to unmute]");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [ip or username] [time in minutes, -1 for permanent, 0 to unmute]");
 			return;
 		}
 
@@ -572,9 +611,22 @@ public final class SuperModerator implements CommandTrigger {
 
 		if (StringUtil.isIPv4Address(args[0]) || StringUtil.isIPv6Address(args[0])) {
 			ipToMute = args[0];
+		} else if (ipToMute.equals("")) {
+			// Not a literal IP and not an online player, so resolve an offline player's username to their IP.
+			try {
+				ipToMute = resolveIpFromUsername(player, args[0].replace('.', ' '));
+			} catch (GameDatabaseException ex) {
+				player.message(messagePrefix + "A database error occurred while looking up that player's IP.");
+				LOGGER.catching(ex);
+				return;
+			}
+			if (ipToMute == null) {
+				// resolveIpFromUsername already messaged the issuer with the reason.
+				return;
+			}
 		}
 		if (ipToMute.equals("")) {
-			player.message(messagePrefix + "You must enter an IP address to mute.");
+			player.message(messagePrefix + "You must enter an IP address or username to mute.");
 			return;
 		}
 
@@ -582,7 +634,7 @@ public final class SuperModerator implements CommandTrigger {
 			try {
 				time = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [ip] (time in minutes, -1 for permanent, 0 to unmute)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [ip or username] (time in minutes, -1 for permanent, 0 to unmute)");
 				return;
 			}
 		} else {
