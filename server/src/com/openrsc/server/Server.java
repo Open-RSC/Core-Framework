@@ -144,7 +144,8 @@ public class Server implements Runnable {
 		LOGGER = LogManager.getLogger();
 	}
 
-	private SslContext sslcontext = null;
+	private volatile SslContext sslcontext = null;
+	private Long lastSslContextReload = null;
 
 	private static String getDefaultConfigFileName() {
 		return "default.conf";
@@ -455,20 +456,18 @@ public class Server implements Runnable {
 
 				if (getConfig().WANT_FEATURE_WEBSOCKETS) {
 					if (!getConfig().SSL_SERVER_CERT_PATH.trim().isEmpty() && !getConfig().SSL_SERVER_KEY_PATH.trim().isEmpty()) {
-						LOGGER.info("Loading Websockets SSL cert...");
 						try {
-							setSSLContext(loadWebsocketSSLFiles(getConfig().SSL_SERVER_CERT_PATH, getConfig().SSL_SERVER_KEY_PATH, null));
-						} catch (CertificateExpiredException certExpiredEx) {
-							LOGGER.error("Websocket certificate is expired and can no longer be used...! Make sure to replace it.");
-						} catch (CertificateNotYetValidException certNotYetValidEx) {
-							LOGGER.error("Websocket certificate is not yet valid...! Unable to use.");
-						} catch (SSLException | CertificateException sslex) {
-							LOGGER.error(sslex);
-							LOGGER.error("Websocket certificate could not be parsed as a valid X.509 certificate file.");
-						} catch (Exception ex) {
-							LOGGER.error(ex);
-							LOGGER.error("Generic error occurred while loading the websocket SSL certificate.");
+							this.refreshWebsocketSSLContext(null);
+						} catch (Exception e) {
+							// Already logged, proceed.
 						}
+						scheduledExecutor.scheduleAtFixedRate(() -> {
+							try {
+								this.refreshWebsocketSSLContext(null);
+							} catch (Exception e) {
+								// Already logged, keep task alive
+							}
+						}, 1, 1, TimeUnit.HOURS);
 					} else {
 						LOGGER.warn("No SSL certificate configured for WebSocket connections...!");
 					}
@@ -1296,14 +1295,42 @@ public class Server implements Runnable {
 	}
 
 	public void refreshWebsocketSSLContext(Player player) throws Exception {
-		setSSLContext(loadWebsocketSSLFiles(getConfig().SSL_SERVER_CERT_PATH, getConfig().SSL_SERVER_KEY_PATH, player));
-    }
+		File sslServerCert = new File(getConfig().SSL_SERVER_CERT_PATH);
+		File sslServerKey = new File(getConfig().SSL_SERVER_KEY_PATH);
 
-	private static SslContext loadWebsocketSSLFiles(String sslServerCertPath, String sslServerKeyPath, Player player) throws Exception {
-		SslContext sslContext = SslContextBuilder.forServer(new File(sslServerCertPath), new File(sslServerKeyPath)).build();
+		long lastModified = Math.max(sslServerCert.lastModified(), sslServerKey.lastModified());
+
+		if (lastSslContextReload != null && lastSslContextReload == lastModified) {
+			LOGGER.debug("SSL certificate unchanged: {} == {}", lastModified, lastSslContextReload);
+			return;
+		}
+
+		LOGGER.info("Loading Websockets SSL cert...");
+		try {
+			setSSLContext(loadWebsocketSSLFiles(sslServerCert, sslServerKey, player));
+			lastSslContextReload = lastModified;
+		} catch (CertificateExpiredException e) {
+			LOGGER.error(
+				"Websocket certificate is expired and can no longer be used...! Make sure to replace it.", e);
+			throw e;
+		} catch (CertificateNotYetValidException e) {
+			LOGGER.error("Websocket certificate is not yet valid...! Unable to use.", e);
+			throw e;
+		} catch (SSLException | CertificateException e) {
+			LOGGER.error(
+				"Websocket certificate could not be parsed as a valid X.509 certificate file.", e);
+			throw e;
+		} catch (Exception e) {
+			LOGGER.error("Generic error occurred while loading the websocket SSL certificate.", e);
+			throw e;
+		}
+	}
+
+	private static SslContext loadWebsocketSSLFiles(File sslServerCert, File sslServerKey, Player player) throws Exception {
+		SslContext sslContext = SslContextBuilder.forServer(sslServerCert, sslServerKey).build();
 
 		X509Certificate websocketCert = (X509Certificate) CertificateFactory.getInstance("X.509")
-			.generateCertificate(Files.newInputStream(Paths.get(sslServerCertPath)));
+			.generateCertificate(Files.newInputStream(sslServerCert.toPath()));
 
 		LOGGER.info("Websocket Certificate Not Valid Before - {} ", websocketCert.getNotBefore());
 		LOGGER.info("Websocket Certificate Not Valid After  - {} ", websocketCert.getNotAfter());

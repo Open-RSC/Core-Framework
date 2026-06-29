@@ -1515,7 +1515,6 @@ public final class Moderator implements CommandTrigger {
 			player.message("Cert path: " + player.getConfig().SSL_SERVER_CERT_PATH);
 			player.message("Key path: " + player.getConfig().SSL_SERVER_KEY_PATH);
 			player.message("Check server logs for more information.");
-			LOGGER.error(ex);
 		}
 	}
 }
