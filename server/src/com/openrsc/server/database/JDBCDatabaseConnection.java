@@ -38,6 +38,21 @@ public abstract class JDBCDatabaseConnection {
         return getConnection().prepareStatement(statement, returnKeys);
     }
 
+    /**
+     * Verifies the underlying connection is still alive, and transparently
+     * reconnects if it has gone stale (e.g. dropped by a network device or
+     * the database server after a period of inactivity). Safe to call
+     * periodically on a schedule.
+     *
+     * @return true if the connection was already alive or was successfully reopened, false otherwise.
+     */
+    public synchronized boolean keepAlive() {
+        if (checkConnection()) {
+            return true;
+        }
+        return open();
+    }
+
     protected abstract Statement getStatement();
 
     public abstract Connection getConnection();
