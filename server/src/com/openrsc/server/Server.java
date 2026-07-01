@@ -1325,7 +1325,8 @@ public class Server implements Runnable {
 
 		long lastModified = Math.max(sslServerCert.lastModified(), sslServerKey.lastModified());
 
-		if (lastSslContextReload != null && lastSslContextReload == lastModified) {
+		//We only want the timestamp comparison if it's an automated refresh (meaning player is null), we always want manual refresh to reload the cert.
+		if (player == null && lastSslContextReload != null && lastSslContextReload == lastModified) {
 			LOGGER.debug("SSL certificate unchanged: {} == {}", lastModified, lastSslContextReload);
 			return;
 		}
