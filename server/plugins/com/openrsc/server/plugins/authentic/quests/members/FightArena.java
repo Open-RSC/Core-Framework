@@ -142,6 +142,9 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		else if (n.getID() == NpcId.BOUNCER.id()) {
+			if (player.getQuestStage(getQuestId()) != 2) {
+				return;
+			}
 			player.message("You defeat bouncer");
 			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, (int)TimeUnit.SECONDS.toMillis(1000));
 			delay(2);
