@@ -38,6 +38,7 @@ public class ClientDownloader {
         error.printStackTrace();
       } finally {
         Downloader.currently_updating = false;
+        Downloader.update_latch.countDown();
       }
     }).start();
   }
