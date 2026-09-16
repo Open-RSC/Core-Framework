@@ -12,14 +12,41 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import javax.swing.JOptionPane;
-
 public class ClientLauncher {
+	// Launch client automatically when updates are complete.
+	private static String autoPlayServer;
+	private static final Runnable autoPlayRunnable = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				Downloader.update_latch.await();
+			} catch (InterruptedException e) {
+				return;
+			}
+			String serverName = autoPlayServer;
+			autoPlayServer = null;
+			try {
+				launchClientForServer(serverName);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	};
+
 	public static void launchClientForServer(String serverName) throws IOException {
-    if (Downloader.currently_updating) {
-      JOptionPane.showMessageDialog(null, "Currently updating the client, please wait!");
-      return;
-    }
+		// Wait for updates to complete before launching.
+		if (autoPlayServer != null || Downloader.currently_updating) {
+			// Store server name.
+			boolean threadStarted = autoPlayServer != null;
+			autoPlayServer = serverName;
+			// Wait in background.
+			if (!threadStarted) {
+				Thread t = new Thread(autoPlayRunnable);
+				t.start();
+			}
+			return;
+		}
+		// Launch client.
 		switch (serverName) {
 			case "preservation": {
 				String ip = "game.openrsc.com";

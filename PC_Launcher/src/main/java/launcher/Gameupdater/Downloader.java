@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class Downloader implements Runnable {
 
@@ -21,6 +22,7 @@ public class Downloader implements Runnable {
 
   public static boolean offline_start = false;
   public static boolean currently_updating = false;
+  public static CountDownLatch update_latch = new CountDownLatch(1);
 
   private List<File> FILE_LIST = new ArrayList<>();
 
@@ -124,5 +126,6 @@ public class Downloader implements Runnable {
     }
     ProgressBar.setDownloadProgress(ProgressBar.doneText, ProgressBar.donePercent);
     currently_updating = false;
+    update_latch.countDown();
   }
 }
