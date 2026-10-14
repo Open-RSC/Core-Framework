@@ -72,8 +72,11 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 			sender.getUpdateFlags().setPluginChatMessage(false);
 		}
 
-		// We do not want muted/tutorial chat to be logged
+		// Muted chat is logged to the database with a (MUTED) prefix, other filtered/tutorial chat is not logged
 		if (mutedChat) {
+			if (sender.isMuted()) {
+				sender.getWorld().getServer().getGameLogger().addQuery(new ChatLog(sender.getWorld(), sender.getUsername(), "(MUTED) " + chatMessage.getMessageString()));
+			}
 			return;
 		}
 
