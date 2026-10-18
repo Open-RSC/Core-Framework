@@ -535,6 +535,8 @@ public class LoginPacketHandler {
 						cl.isAndroidClient = (packet.readUnsignedByte() & 0xFF) != 0;
 					}
 
+					LOGGER.info("Android client used for " + username + ": " + cl.isAndroidClient);
+
 					final LoginRequest request = new LoginRequest(server, channel, username, password, false, clientVersion, opcode == OpcodeIn.RELOGIN, null) {
 						@Override
 						public void loginValidated(int response) {
