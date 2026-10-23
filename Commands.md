@@ -513,11 +513,11 @@ Super/Senior Moderator Commands
   - Usage: `::banall [username] (time in minutes, -1 for permanent, 0 to unban)`
   - Bans every account linked to the specified player's login or creation IP address.
   - If no time is supplied, then permanent is used for admins and 60 minutes for everyone else.
-  - Only admins may ban for longer than a day or unban.
+  - Super moderators and above may ban for any length of time or unban.
   - Accounts already covered by an equal or stronger ban are skipped, and staff members of greater rank are never banned.
 - unbanall
   - Usage: `::unbanall [username]`
-  - Unbans every account linked to the specified player's login or creation IP address. Only usable by admins.
+  - Unbans every account linked to the specified player's login or creation IP address. Usable by super moderators and above.
 - simlogin
   - Usage: `::simlogin [name] (ip)`
   - Simulates a login attempt for the specified name and shows the login response code that would be returned.
