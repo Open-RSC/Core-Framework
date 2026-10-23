@@ -336,17 +336,17 @@ public final class SuperModerator implements CommandTrigger {
 			minutes = player.isAdmin() ? -1 : 60;
 		}
 		try {
-			if (minutes == 0 && !player.isAdmin()) {
+			if (minutes == 0 && !player.isSuperMod()) {
 				player.message(messagePrefix + "You are not allowed to unban users.");
 				return;
 			}
 
-			if (minutes == -1 && !player.isMod()) {
+			if (minutes == -1 && !player.isSuperMod()) {
 				player.message(messagePrefix + "You are not allowed to permanently ban users.");
 				return;
 			}
 
-			if (minutes > 1440 && !player.isAdmin()) {
+			if (minutes > 1440 && !player.isSuperMod()) {
 				player.message(messagePrefix + "You are not allowed to ban for more than a day.");
 				return;
 			}
