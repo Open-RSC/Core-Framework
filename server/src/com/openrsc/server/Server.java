@@ -20,6 +20,7 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.handler.GameEventHandler;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.model.entity.UnregisterForcefulness;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -664,6 +665,25 @@ public class Server implements Runnable {
 		}
 	}
 
+	private static final int FAILED_TICKS_BEFORE_KICK = 3;
+
+	// One player's exception must not end the tick for everyone: the per-player work (packets, walk-to actions, events,
+	// movement, logout) has no other guard, and a tick that ends early leaves every NPC that moved with an unsent step.
+	// A player who throws several ticks in a row is logged out under the normal combat rules, since their session is not going to recover on its own.
+	public void guardPlayer(final Player player, final String stage, final Runnable work) {
+		try {
+			work.run();
+			if (player.getAttribute("failedTicks", 0) > 0) player.removeAttribute("failedTicks");
+		} catch (final Exception e) {
+			final int failed = player.getAttribute("failedTicks", 0) + 1;
+			player.setAttribute("failedTicks", failed);
+			LOGGER.error("Exception during " + stage + " for player " + player.getUsername() + " (" + failed + " tick(s) in a row), skipping them for this tick", e);
+			if (failed >= FAILED_TICKS_BEFORE_KICK) {
+				player.unregister(UnregisterForcefulness.WAIT_UNTIL_COMBAT_ENDS, "Exception during " + stage); // never a forced logout: that would be a way out of combat
+			}
+		}
+	}
+
 	public long bench(final Runnable r) {
 		final long start = System.nanoTime();
 		r.run();
@@ -691,7 +711,7 @@ public class Server implements Runnable {
 								for (int curPid : PidShuffler.pidProcessingOrder) {
 									Player player = getWorld().getPlayer(curPid);
 									if (player != null) {
-										player.processTick();
+										guardPlayer(player, "tick processing", player::processTick);
 									}
 								}
 								if (getCurrentTick() % config.SHUFFLE_PID_ORDER_INTERVAL == 0) {
@@ -699,7 +719,7 @@ public class Server implements Runnable {
 								}
 							} else {
 								for (final Player player : getWorld().getPlayers()) {
-									player.processTick();
+									guardPlayer(player, "tick processing", player::processTick);
 								}
 							}
 
@@ -709,7 +729,7 @@ public class Server implements Runnable {
 							checkAndRespondToServerNotHavingAccessToInternet();
 
 							for (final Player player : getWorld().getPlayers()) {
-								player.processLogout();
+								guardPlayer(player, "logout processing", player::processLogout);
 							}
 							for (final Player player : getWorld().getPlayers()) {
 								player.sendUpdates();

@@ -1403,12 +1403,8 @@ public final class GameStateUpdater {
 				// Executed after all players have moved, we check a second time this tick
 				// if the higher pid player is now close enough to catch the lower pid player.
 				for (final Player player : getServer().getWorld().getPlayers()) {
-					if (player.getWalkToAction() != null) {
-						if (player.getWalkToAction().isPvPAttack()) {
-							if (player.getWalkToAction().shouldExecute()) {
-								player.getWalkToAction().execute();
-							}
-						}
+					if (player.getWalkToAction() != null && player.getWalkToAction().isPvPAttack() && player.getWalkToAction().shouldExecute()) {
+						getServer().guardPlayer(player, "pidless catching", player.getWalkToAction()::execute);
 					}
 				}
 			}
