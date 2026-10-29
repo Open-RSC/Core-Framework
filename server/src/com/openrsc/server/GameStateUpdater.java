@@ -128,10 +128,6 @@ public final class GameStateUpdater {
 			}
 		} else if (timeoutLimit > 0 && !player.isMod() &&
 				(curTime - player.getLastMoved()) >= timeoutLimit) {
-			if (player.isSleeping()) {
-				player.setSleeping(false);
-				ActionSender.sendWakeUp(player, false, false);
-			}
 			player.message("@cya@You have been standing here for " + (timeoutLimit / 60000)
 				+ " mins! Please move to a new area");
 			player.setWarnedToMove(true);
