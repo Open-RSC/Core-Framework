@@ -51,7 +51,7 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 					int coalDeposited = player.getCache().getInt("coal_truck");
 					player.getCache().set("coal_truck", coalDeposited + 1);
 				} else {
-					player.getCache().set("coal_truck", coalAmount);
+					player.getCache().set("coal_truck", 1);
 				}
 				player.playerServerMessage(MessageType.QUEST, "You put a piece of coal in the truck");
 				player.getCarriedItems().remove(new Item(ItemId.COAL.id()));
